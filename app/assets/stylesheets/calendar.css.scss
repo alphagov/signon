@@ -1,0 +1,46 @@
+#wrapper.calendar hgroup h1 {
+	background-image: url('/images/icon-calendar-l.png');
+}
+
+#wrapper.calendar smaller {
+  font-size: 1em;
+}
+
+/* tab overrides */
+.ui-widget-content,
+.ui-tabs .ui-tabs-nav {
+  background-color: inherit;
+}
+
+.ui-tabs .ui-tabs-nav li.ui-state-default {
+  background-color: #E9E8E7;
+}
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-selected {
+  background-color: inherit;
+}
+
+.ui-tabs .ui-tabs-nav li.ui-state-active {
+  border-bottom: 1px solid #fff !important;
+}
+
+.subscribe {
+  border: 0.185em solid #bbb;
+  -webkit-border-radius: 0.5em;
+  -moz-border-radius: 0.5em;
+  border-radius: 0.5em;
+  margin: 0 auto 2em;
+  padding: 0.5em 1em;
+  width: 50%;
+}
+
+.subscribe h3 {
+  margin: 0 0 0.5em;
+}
+
+.subscribe a {
+  background: url(/images/icon-calendar-16.png) no-repeat 0 50%;
+  display: block;
+  line-height: 1.4em;
+  padding-left: 18px;
+}

@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Calendars</title>
-  <%= stylesheet_link_tag    "application" %>
-  <%= javascript_include_tag "application" %>
-  <%= csrf_meta_tags %>
-</head>
+  <head>
+    <title><%= yield :title %> | Benefits and schemes | www.gov.uk</title>
+    <%= stylesheet_link_tag 'calendar' %>
+    <meta name="x-section-name" content="Calendars" />
+    <meta name="x-section-link" content="calendar" />
+    <%= csrf_meta_tags %>
+    <%= yield :head %>
+  </head>
 <body>
-
-<%= yield %>
-
+	<div id="wrapper" class="calendar">
+  	<%= yield %>
+	</div>
 </body>
 </html>

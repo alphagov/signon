@@ -1,0 +1,28 @@
+<table class="calendar">
+	<caption>
+		<%= calendar.year %> Bank Holidays in <%= calendar.formatted_division %>
+	</caption>
+	<thead>
+		<tr>
+			<th scope="col">Date</th>
+			<th scope="col">Day</th>
+			<th scope="col">Holiday Name</th>
+			<th scope="col">Notes</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% calendar.bank_holidays.each do |holiday| -%>
+		<tr>
+			<td><%= holiday.date.strftime('%d %B') %></td>
+			<td><%= holiday.date.strftime('%A') %></td>
+			<td><%= holiday.title %></td>
+			<td><small><%= holiday.notes %></small></td>
+		</tr>                                        
+		<% end -%>
+	</tbody>
+</table>
+
+<div class="subscribe">
+  <h3>Add to calendar</h3>
+  <p><%= link_to "Bank Holidays for #{calendar.year} in #{calendar.formatted_division}", calendar_url(calendar, :format => 'ics') %></p>
+</div>                                                      
