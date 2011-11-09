@@ -10,8 +10,10 @@ class Calendar
   
   def self.all_grouped_by_division
     calendars = []
+                                                                
+    @path_to_json = (Rails.env.test?) ? "./test/fixtures/bank_holidays.json" : "./lib/data/calendars.json"
                                   
-    data = JSON.parse( File.read( File.expand_path('./lib/data/calendars.json') ) ).symbolize_keys
+    data = JSON.parse( File.read( File.expand_path( @path_to_json ) ) ).symbolize_keys
     divisions = {}
   
     data[:divisions].each do |division|

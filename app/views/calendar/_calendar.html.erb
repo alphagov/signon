@@ -13,10 +13,10 @@
 	<tbody>
 		<% calendar.bank_holidays.each do |holiday| -%>
 		<tr>
-			<td><%= holiday.date.strftime('%d %B') %></td>
-			<td><%= holiday.date.strftime('%A') %></td>
-			<td><%= holiday.title %></td>
-			<td><small><%= holiday.notes %></small></td>
+			<td class="calendar_date"><%= holiday.date.strftime('%d %B') %></td>
+			<td class="calendar_day"><%= holiday.date.strftime('%A') %></td>
+			<td class="calendar_title"><%= holiday.title %></td>
+			<td class="calendar_notes"><small><%= holiday.notes %></small></td>
 		</tr>                                        
 		<% end -%>
 	</tbody>

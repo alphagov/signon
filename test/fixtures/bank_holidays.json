@@ -1,0 +1,126 @@
+{ "divisions": { 
+	"england-and-wales": [{ 
+		"2011": [{ 
+			"title": "New Year's Day", 
+			"date": "03/01/2011", 
+			"notes": "Substitute day" 
+		},{ 
+			"title": "Good Friday", 
+			"date": "22/04/2011", 
+			"notes": "" 
+		},{ 
+			"title": "Royal wedding", 
+			"date": "29/04/2011", 
+			"notes": "" 
+		},{ 
+			"title": "Christmas Day", 
+			"date": "26/12/2011", 
+			"notes": "Substitute day" 
+		},{ 
+			"title": "Boxing Day", 
+			"date": "27/12/2011", 
+			"notes": "Substitute day" 
+		}], 
+		"2012": [{
+			"title": "New Year's Day",
+			"date": "02/01/2012",
+			"notes": "Substitute day"
+		},{
+			"title": "Early May Bank Holiday",
+			"date": "07/05/2012",
+			"notes": ""
+		},{
+			"title": "Christmas Day",
+			"date": "25/12/2012",
+			"notes": ""
+		},{
+			"title": "Boxing Day",
+			"date": "26/12/2012",
+			"notes": ""
+		}] 
+  	}], 
+	"scotland": [{
+		"2011": [{
+			"title": "New Year's Day",
+			"date": "03/01/2011",
+			"notes": "Substitute day"
+		},{
+			"title": "Early May Bank Holiday",
+			"date": "02/05/2011",
+			"notes": ""
+		},{
+			"title": "St Andrew's Day",
+			"date": "30/11/11",
+			"notes": ""
+		},{
+			"title": "Christmas Day",
+			"date": "26/12/2011",
+			"notes": "Substitute day"
+		},{
+			"title": "Boxing Day",
+			"date": "27/12/2011",
+			"notes": "Substitute day"
+		}],
+		"2012": [{
+			"title": "New Year's Day",
+			"date": "02/01/2012",
+			"notes": "Substitute day"
+		},{
+			"title": "Spring Bank Holiday",
+			"date": "04/06/2012",
+			"notes": "Substitute day"
+		},{
+			"title": "Queen's Diamond Jubilee",
+			"date": "05/06/2012",
+			"notes": ""
+		},{
+			"title": "Christmas Day",
+			"date": "25/12/2012",
+			"notes": ""
+		},{
+			"title": "Boxing Day",
+			"date": "26/12/2012",
+			"notes": ""
+		}]
+	}], 
+	"ni": [{
+		"2011": [{
+			"title": "New Year's Day",
+			"date": "03/01/2011",
+			"notes": "Substitute day"
+		},{
+			"title": "Early May Bank Holiday",
+			"date": "02/05/2011",
+			"notes": ""
+		},{
+			"title": "Spring Bank Holiday",
+			"date": "30/05/2011",
+			"notes": ""
+		},{
+			"title": "Battle of the Boyne (Orangemen's Day)",
+			"date": "12/07/2011",
+			"notes": ""             
+		}],
+		"2012": [{
+			"title": "New Year's Day",
+			"date": "02/01/2012",
+			"notes": "Substitute day"
+		},{
+			"title": "Early May Bank Holiday",
+			"date": "07/05/2012",
+			"notes": ""
+		},{
+			"title": "Spring Bank Holiday",
+			"date": "04/06/2012",
+			"notes": ""
+		},{
+			"title": "Christmas Day",
+			"date": "25/12/2012",
+			"notes": ""
+		},{
+			"title": "Boxing Day",
+			"date": "26/12/2012",
+			"notes": ""
+		}]
+	}] 
+}}

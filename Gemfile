@@ -12,6 +12,19 @@ if ENV['SLIMMER_DEV']
 else
   gem 'slimmer', :git => 'git@github.com:alphagov/slimmer.git'
 end                
+  
+group :test do
+  gem 'factory_girl_rails'
+  gem 'mocha', :require => false
+  gem "shoulda", "~> 2.11.3"
+  gem 'simplecov', '0.4.2'
+  gem 'simplecov-rcov'
+  gem 'webmock', :require => false
+  gem 'ci_reporter'
+  gem 'test-unit'
+  # Pretty printed test output
+  gem 'turn', :require => false
+end
 
 group :assets do
   gem 'sass-rails', "  ~> 3.1.0"
