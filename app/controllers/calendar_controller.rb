@@ -2,18 +2,24 @@ class CalendarController < ApplicationController
   before_filter :find_calendar, :only => :show
 
   def index
-    @divisions = Calendar.all_grouped_by_division
+    @divisions = Calendar.all_grouped_by_division    
+    
+    respond_to do |format|
+      format.json { render :json => @divisions.to_json }
+      format.html { # render index.html.erb 
+        }
+    end
   end
   
   def show
-   #if @calendar
+   if @calendar
     respond_to do |format|
       format.json { render :json => @calendar.to_json } 
       format.ics { render :text => @calendar.to_ics }
     end
-   #else
-   #  render :file => "#{Rails.root}/public/404.html", :status => 404
-   #end
+   else
+     render :file => "#{Rails.root}/public/404.html", :status => 404
+   end
   end                         
   
   private
