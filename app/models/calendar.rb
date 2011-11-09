@@ -37,7 +37,8 @@ class Calendar
           division_calendars[calendar.year] = calendar                                                
         end                                                  
       end  
-    
+                                                         
+      division_calendars = ActiveSupport::OrderedHash[division_calendars.sort_by {|x| x[1].year }]
       divisions[division[0]] = { :division => division[0], :calendars => division_calendars }
     end
     

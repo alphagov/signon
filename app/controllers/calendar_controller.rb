@@ -4,7 +4,7 @@ class CalendarController < ApplicationController
 
   def index                             
     if @scope
-      @divisions = Calendar.all_grouped_by_division    
+      @divisions = Calendar.all_grouped_by_division
       respond_to do |format|
         format.json { render :json => @divisions.to_json }
         format.html { render "show_#{@scope_name}" }
@@ -28,7 +28,8 @@ class CalendarController < ApplicationController
   private
     def scopes
       {
-        :bank_holidays => 'bank_holidays.json'
+        :bank_holidays => 'bank_holidays.json',
+        :daylight_saving => 'daylight_saving.json'
       }
     end
     

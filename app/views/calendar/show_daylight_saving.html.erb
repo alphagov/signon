@@ -1,0 +1,69 @@
+<% content_for :title, "UK Bank Holidays" %>  
+<% content_for :wrapper_class, "wrapper" %>     
+
+<section id="content" role="main" class="group">
+
+	<header class="group">
+		<hgroup>
+			<h1><span>Calendars</span> Daylight Saving Time</h1>
+		</hgroup>
+	</header>
+
+	<div class="article-container group">
+
+		<article role="article" class="group">
+			<div class="inner">
+
+				<p class="summary">A bank holiday is a public holiday in the United Kingdom or a colloquialism for public holiday in Ireland. There is no automatic right to time off on these days, although the majority of the population is granted time off work or extra pay for working on these days, depending on their contract.</p>
+
+				<p>The first official bank holidays were the four days named in the Bank Holidays Act 1871, but today the term is colloquially used for public holidays which are not officially bank holidays, for example Good Friday and Christmas Day.</p>
+
+				<div id="guide-nav" class="group">
+                       
+					
+					<% @divisions['united-kingdom'][:calendars].each do |item| -%>
+							
+							<%= render :partial => 'calendar', :locals => { 
+								:calendar => item[1], 
+								:caption => "Daylight Saving Time in #{item[0]} in the United Kingdom",
+								:ics_caption => "#{item[0]} Daylight Saving Time in the United Kingdom" } %>
+					
+					<% end -%>
+					
+				</div>
+			</div>
+		</article>
+
+		<div class="meta-data">
+			<p class="modified-date">Last updated: time</p>
+			<p>Re-use this data:</p>
+			<ul class="api-links">
+				<li class="json"><%= link_to 'JSON', daylight_saving_url(:format => :json)%></li>
+			</ul>
+		</div>
+
+	</div>
+</section>
+
+<!-- related -->
+<div class="related-positioning">
+	<div class="related-container">
+
+		<div class="related">
+			<div class="inner group">
+				<h2>Related tools &amp; topics</h2>
+				<nav role="navigation">
+					<ul>
+						<li><a href="#">Related answer</a></li>
+						<li><a href="#">Related guide</a></li>
+						<li class="related-topic"><a href="#">View more in <span>section &rarr;</span></a></li>
+					</ul>
+				</nav>
+			</div>
+		</div>
+
+	</div>
+</div>
+<!-- end related -->                                           
+
+<%= javascript_include_tag '/javascripts/publisher-tabs.js', :defer=>"defer" %>

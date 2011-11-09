@@ -4,7 +4,7 @@ class CalendarTest < ActiveSupport::TestCase
   
   context "Calendar importer" do
     should "load calendar item successfully" do
-      Calendar.path_to_json = './test/fixtures/single_calendar.json'
+      Calendar.path_to_json = 'single_calendar.json'
       
       expected_outcome = { "england-and-wales" => { 
         :calendars => { 
