@@ -1,3 +1,7 @@
-class BankHoliday < ActiveRecord::Base            
-  default_scope order('date ASC')
+class BankHoliday
+  attr_accessor :title, :date, :notes
+  
+  def initialize( attributes )
+    self.title, self.date, self.notes = [ attributes[:title], attributes[:date], attributes[:notes] ]
+  end
 end

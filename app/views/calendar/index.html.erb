@@ -27,12 +27,12 @@
 							<li><a href="#ni" class="ni">Northern Ireland</a></li>
 						</ul>
 					</div>
-                    
-					<% @divisions.each do |division, calendars| -%>
 
-					<div id="<%= calendars.first.division %>">
+					<% @divisions.each do |division, item| -%>
 
-						<% calendars.each do |c| -%>
+					<div id="<%= division %>">
+
+						<% item[:calendars].each do |year, c| -%>
 							
 							<%= render :partial => 'calendar', :locals => { :calendar => c } %>
 
@@ -41,7 +41,7 @@
 					</div><!-- /england-and-wales -->    
 					
 					<% end -%>
-
+					
 				</div>
 			</div>
 		</article>

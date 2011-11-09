@@ -1,0 +1,92 @@
+{ "divisions": { 
+	"england-and-wales": [{ 
+		"2011": [{ 
+			"title": "New Year's Day", 
+			"date": "03/01/2011", 
+			"notes": "Substitute day" 
+		},{ 
+			"title": "Good Friday", 
+			"date": "22/04/2011", 
+			"notes": "" 
+		},{ 
+			"title": "Easter Monday", 
+			"date": "25/04/2011", 
+			"notes": "" 
+		},{ 
+			"title": "Royal wedding", 
+			"date": "29/04/2011", 
+			"notes": "" 
+		},{ 
+			"title": "Early May Bank Holiday", 
+			"date": "02/05/2011", 
+			"notes": "" 
+		},{ 
+			"title": "Spring Bank Holiday", 
+			"date": "30/05/2011", 
+			"notes": "" 
+		},{ 
+			"title": "Summer Bank Holiday", 
+			"date": "29/08/2011", 
+			"notes": "" 
+		},{ 
+			"title": "Christmas Day", 
+			"date": "26/12/2011", 
+			"notes": "Substitute day" 
+		},{ 
+			"title": "Boxing Day", 
+			"date": "27/12/2011", 
+			"notes": "Substitute day" 
+		}], 
+		"2012": [{
+			"title": "New Year's Day",
+			"date": "02/01/2012",
+			"notes": "Substitute day"
+		},{
+			"title": "Good Friday",
+			"date": "06/04/2012",
+			"notes": ""
+		},{
+			"title": "Easter Monday",
+			"date": "09/04/2012",
+			"notes": ""
+		},{
+			"title": "Early May Bank Holiday",
+			"date": "07/05/2012",
+			"notes": ""
+		},{
+			"title": "Spring Bank Holiday",
+			"date": "04/06/2012",
+			"notes": "Substitute day"
+		},{
+			"title": "Queen's Diamond Jubilee",
+			"date": "05/06/2012",
+			"notes": ""
+		},{
+			"title": "Summer Bank Holiday",
+			"date": "27/08/2012",
+			"notes": ""
+		},{
+			"title": "Christmas Day",
+			"date": "25/12/2012",
+			"notes": ""
+		},{
+			"title": "Boxing Day",
+			"date": "26/12/2012",
+			"notes": ""
+		}] 
+  	}], 
+	"scotland": [{
+		"2011": [{
+			"title": "New Year's Day",
+			"date": "03/01/2011",
+			"notes": "Substitute day"
+		},{
+			"title": "2nd January",
+			"date": "04/01/2011",
+			"notes": "Substitute day"
+		}]
+	}], 
+	"ni": [{
+	
+	}] 
+}}

@@ -1,7 +1,45 @@
-class Calendar < ActiveRecord::Base     
-  has_many :bank_holidays
-                               
-  default_scope order('year ASC')
+class Calendar    
+  
+  attr_accessor :division, :year, :bank_holidays
+  
+  def initialize( attributes )
+    self.year = attributes[:year]
+    self.division = attributes[:division]
+    self.bank_holidays = attributes[:bank_holidays] || []
+  end
+  
+  def self.all_grouped_by_division
+    calendars = []
+                                  
+    data = JSON.parse( File.read( File.expand_path('./lib/data/calendars.json') ) ).symbolize_keys
+    divisions = {}
+  
+    data[:divisions].each do |division|
+      division_calendars = {}
+    
+      division[1].each do |calendars|
+        calendars.to_a.each do |cal|     
+          calendar = Calendar.new( :year => cal[0], :division => division[0] )                
+          cal[1].each do |event|        
+            calendar.bank_holidays << BankHoliday.new( 
+              :title => event['title'], 
+              :date => Date.strptime(event['date'], "%d/%m/%Y"),                                                
+              :notes => event['notes']
+            )                     
+          end                   
+          division_calendars[calendar.year] = calendar                                                
+        end                                                  
+      end  
+    
+      divisions[division[0]] = { :division => division[0], :calendars => division_calendars }
+    end
+    
+    divisions
+  end  
+  
+  def self.find_by_division_and_year(division, year)
+    self.all_grouped_by_division[division][:calendars][year] 
+  end
   
   def formatted_division
     case division
@@ -12,7 +50,7 @@ class Calendar < ActiveRecord::Base
     when 'ni'
       "Northern Ireland"
     end
-  end 
+  end      
   
   def to_ics
     RiCal.Calendar do |cal|
