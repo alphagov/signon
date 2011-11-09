@@ -4,4 +4,7 @@ A Rails application to format and display calendar data, starting with [Bank Hol
 
 ### Usage
 
-The calendar data is currently stored in `lib/data/calendars.json`.	
+Each type of calendar (e.g. daylight saving, bank holidays) is known as a _scope_. A scope has its own view templates, JSON data source and primary route.
+
+JSON data files are stored in `lib/data/bank_holidays.json`, with a `divisions` hash for separate data per region (e.g. `england-and-wales`, `scotland` or `ni`).
+
