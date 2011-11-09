@@ -1,4 +1,4 @@
-class BankHoliday
+class Event
   attr_accessor :title, :date, :notes
   
   def initialize( attributes )

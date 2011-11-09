@@ -1,13 +1,13 @@
 class Calendar    
   
-  attr_accessor :division, :year, :bank_holidays
+  attr_accessor :division, :year, :events
          
   @@path_to_json = (Rails.env.test?) ? "./test/fixtures/bank_holidays.json" : "./lib/data/calendars.json"
   
   def initialize( attributes )
     self.year = attributes[:year]
     self.division = attributes[:division]
-    self.bank_holidays = attributes[:bank_holidays] || []
+    self.events = attributes[:events] || []
   end                   
   
   def self.path_to_json=(path)
@@ -27,7 +27,7 @@ class Calendar
         calendars.to_a.each do |cal|     
           calendar = Calendar.new( :year => cal[0], :division => division[0] )                
           cal[1].each do |event|        
-            calendar.bank_holidays << BankHoliday.new( 
+            calendar.events << Event.new( 
               :title => event['title'], 
               :date => Date.strptime(event['date'], "%d/%m/%Y"),                                                
               :notes => event['notes']
@@ -60,7 +60,7 @@ class Calendar
   
   def to_ics
     RiCal.Calendar do |cal|
-      self.bank_holidays.each do |bh|
+      self.events.each do |bh|
         cal.event do |event|
           event.summary         bh.title
           event.dtstart         bh.date
