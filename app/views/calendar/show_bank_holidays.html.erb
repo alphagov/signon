@@ -34,7 +34,10 @@
 
 						<% item[:calendars].each do |year, c| -%>
 							
-							<%= render :partial => 'calendar', :locals => { :calendar => c } %>
+							<%= render :partial => 'calendar', :locals => { 
+								:calendar => c, 
+								:caption => "#{c.year} Bank Holidays in #{c.formatted_division}",
+								:ics_caption => "Bank Holidays for #{c.year} in #{c.formatted_division}" } %>
 
 						<% end -%>
 
@@ -50,7 +53,7 @@
 			<p class="modified-date">Last updated: time</p>
 			<p>Re-use this data:</p>
 			<ul class="api-links">
-				<li class="json"><%= link_to 'JSON', calendars_url(:format => :json)%></li>
+				<li class="json"><%= link_to 'JSON', bank_holidays_url(:format => :json)%></li>
 			</ul>
 		</div>
 

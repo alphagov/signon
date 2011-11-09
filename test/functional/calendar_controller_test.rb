@@ -2,9 +2,9 @@ require 'test_helper'
 
 class CalendarControllerTest < ActionController::TestCase
   
-  context 'GET /calendars' do
+  context 'GET /bank-holidays/' do
     should "show a tab for each division" do
-      get :index             
+      get :index, :scope => "bank_holidays"             
       
       Calendar.all_grouped_by_division.each do |division, item|
         assert_select "#tabs li a.#{division}"
@@ -13,7 +13,7 @@ class CalendarControllerTest < ActionController::TestCase
     end                                        
     
     should "show a table for each calendar with the correct caption" do
-      get :index
+      get :index, :scope => "bank_holidays"
       
       Calendar.all_grouped_by_division.each do |division, item|
         assert_select "##{division} table", :count => item[:calendars].size
@@ -25,7 +25,7 @@ class CalendarControllerTest < ActionController::TestCase
     end                                                                    
         
     should "show a row for each bank holiday in the table" do
-      get :index
+      get :index, :scope => "bank_holidays"
       
       Calendar.all_grouped_by_division.each do |division, item|
         
@@ -48,7 +48,7 @@ class CalendarControllerTest < ActionController::TestCase
   
   context "GET /calendars/<calendar>.json" do
     should "contain calendar data" do
-      get :show, id: "england-and-wales-2011", format: :json
+      get :show, :id => "england-and-wales-2011", :scope => "bank_holidays", :format => :json
                          
       output = {
         "events" => [ 
@@ -68,7 +68,7 @@ class CalendarControllerTest < ActionController::TestCase
   
   context "GET /calendars/<calendar>.icl" do
      should "contain all calendar events" do
-       get :show, id: "england-and-wales-2011", format: :ics
+       get :show, :id => "england-and-wales-2011", :scope => "bank_holidays", :format => :ics
        
        output = "BEGIN:VCALENDAR\nPRODID;X-RICAL-TZSOURCE=TZINFO:-//com.denhaven2/NONSGML ri_cal gem//EN\nCALSCALE:GREGORIAN\nVERSION:2.0\n"
        

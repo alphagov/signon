@@ -2,7 +2,8 @@ class Calendar
   
   attr_accessor :division, :year, :events
          
-  @@path_to_json = (Rails.env.test?) ? "./test/fixtures/bank_holidays.json" : "./lib/data/calendars.json"
+  @@path_to_json = 'bank_holidays.json'
+  @@dir_to_json = (Rails.env.test?) ? "./test/fixtures/" : "./lib/data/"
   
   def initialize( attributes )
     self.year = attributes[:year]
@@ -17,7 +18,7 @@ class Calendar
   def self.all_grouped_by_division
     calendars = []
                                   
-    data = JSON.parse( File.read( File.expand_path( @@path_to_json ) ) ).symbolize_keys
+    data = JSON.parse( File.read( File.expand_path( "#{@@dir_to_json}#{@@path_to_json}" ) ) ).symbolize_keys
     divisions = {}
   
     data[:divisions].each do |division|

@@ -1,6 +1,6 @@
 <table class="calendar">
 	<caption>
-		<%= calendar.year %> Bank Holidays in <%= calendar.formatted_division %>
+		<%= caption %>
 	</caption>
 	<thead>
 		<tr>
@@ -24,5 +24,5 @@
 
 <div class="subscribe">
   <h3>Add to calendar</h3>
-  <p><%= link_to "Bank Holidays for #{calendar.year} in #{calendar.formatted_division}", calendar_url(calendar, :format => 'ics') %></p>
+  <p><%= link_to ics_caption, calendar_url(@scope_name, calendar, :format => 'ics') %></p>
 </div>                                                      
