@@ -1,3 +1,6 @@
+<% content_for :title, "When do the clocks change?" %>
+<% content_for :wrapper_class, "wrapper" %> 
+
 <section id="content" role="main" class="group">
 
   <header class="group">
@@ -26,7 +29,7 @@
 				<p class="modified-date">Last updated: <!-- date --></p>
 	      <p>Re-use this data:</p>
 			<ul class="api-links">
-	        <li class="json"><a href="#">JSON</a></li>
+	        <li class="json"><%= link_to 'JSON', division_url('when-do-the-clocks-change', 'united-kingdom', :format => :json)%></li>
 	      </ul>
 			</div>
 	</div>

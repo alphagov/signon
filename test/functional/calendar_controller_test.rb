@@ -47,7 +47,7 @@ class CalendarControllerTest < ActionController::TestCase
   end   
   
   context "GET /calendars/<calendar>.json" do
-    should "contain calendar data" do
+    should "contain calendar data with individual calendar" do
       get :show, :division => "england-and-wales", :year => "2011", :scope => "bank_holidays", :format => :json
                          
       output = {
@@ -60,6 +60,39 @@ class CalendarControllerTest < ActionController::TestCase
         ],
         "division"=>"england-and-wales",
         "year"=>"2011"
+      }
+       
+      assert_equal output, JSON.parse(@response.body)
+    end
+    
+    should "contain calendar with division" do
+      get :index, :division => "england-and-wales", :scope => "bank_holidays", :format => :json
+                         
+      output = {
+        "division" => "england-and-wales", 
+        "calendars" => {
+          "2011" => {
+            "year" => "2011",
+            "division" => "england-and-wales",
+            "events" => [ 
+              {"date"=>"2011-01-03", "notes"=>"Substitute day", "title"=>"New Year's Day"},
+              {"date"=>"2011-04-22", "notes"=>"", "title"=>"Good Friday"},
+              {"date"=>"2011-04-29", "notes"=>"", "title"=>"Royal wedding"},
+              {"date"=>"2011-12-26", "notes"=>"Substitute day", "title"=>"Christmas Day"},
+              {"date"=>"2011-12-27", "notes"=>"Substitute day", "title"=>"Boxing Day"}
+            ]
+          },
+          "2012" => {
+            "year" => "2012",
+            "division" => "england-and-wales",
+            "events" => [ 
+              {"date"=>"2012-01-02", "notes"=>"Substitute day", "title"=>"New Year's Day"},
+              {"date"=>"2012-05-07", "notes"=>"", "title"=>"Early May Bank Holiday"},
+              {"date"=>"2012-12-25", "notes"=>"", "title"=>"Christmas Day"},
+              {"date"=>"2012-12-26", "notes"=>"", "title"=>"Boxing Day"}
+            ]
+          }
+        }
       }
        
       assert_equal output, JSON.parse(@response.body)
