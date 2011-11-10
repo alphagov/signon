@@ -11,16 +11,18 @@
 	<div class="article-container group">
 	  	<article role="article" class="group">
 	     <div class="inner">
-	      <p>In the UK, the clocks go forward one hour on the last Sunday in March.  They go back one hour on the last Sunday in October.</p>
-	      <p>The period of time between March and October, when the clocks change to be an hour ahead, is referred to as British Summer Time (BST).  When not in British Summer Time, the UK is in Greenwich Mean Time (GMT).</p>
+	      <p>In the UK the clocks go forward 1 hour at 1am on the last Sunday in March, and back 1 hour at 2am on the last Sunday in October. </p>
 	                                                                            
 		<%= render :partial => 'clocks_calendar', :locals => { 
 			:calendars => @divisions['united-kingdom'][:calendars], 
-			:ics_caption => "Daylight Savings Time in the United Kingdom",
+			:ics_caption => "Clock changes in the UK",
 			:ics_link => division_url(params[:scope], 'united-kingdom', :format => 'ics') } %>                                      
 			
-         <p>The clocks <strong>go back</strong> at <strong>1am GMT</strong>, to become 2am BST, on the last Sunday of March.</p>
-         <p>The clocks <strong>go forward</strong> at <strong>2am BST</strong>, to become 1am GMT, on the last Sunday of October.</p>
+         <p>This clock change gives the UK an extra hour of daylight (sometimes called Daylight Saving Time).</p>
+
+		 <p>From March to October (when the clocks are 1 hour ahead) the UK is on British Summer Time (BST).</p> 
+
+		 <p>From October to March, the UK is on Greenwich Mean Time (GMT).</p>
          
  	       <!-- inner -->
 	     </div>
