@@ -1,16 +1,21 @@
 class CalendarController < ApplicationController
-  before_filter :find_scope
-  before_filter :find_calendar, :only => :show
+  before_filter :find_scope                    
+  before_filter :find_calendar, :only => :show       
 
   def index                             
-    if @scope
+   if @scope
       @divisions = Calendar.all_grouped_by_division
       respond_to do |format|
-        format.json { render :json => @divisions.to_json }
-        format.html { render "show_#{@scope_name}" }
+        if params[:division]
+          format.json { render :json => @divisions[params[:division]].to_json }
+          format.ics  { render :text => Calendar.combine(@divisions, params[:division]).to_ics }
+        else
+          format.html { render "show_#{@scope_name}" }      
+          format.json { render :json => @divisions.to_json }
+        end
       end      
     else
-     render :file => "#{Rails.root}/public/404.html", :status => 404
+      render :file => "#{Rails.root}/public/404.html", :status => 404
     end
   end
   
@@ -29,7 +34,7 @@ class CalendarController < ApplicationController
     def scopes
       {
         :bank_holidays => 'bank_holidays.json',
-        :daylight_saving => 'daylight_saving.json'
+        :when_do_the_clocks_change => 'daylight_saving.json'
       }
     end
     
@@ -46,15 +51,11 @@ class CalendarController < ApplicationController
     end                                            
     
     def normalize_scope(scope)
-      scope.sub('-','_')
+      scope.gsub('-','_')
     end
-    
-    def find_calendar
-      @matches = params[:id].match(/^([A-Za-z-]+)\-([0-9]{4})/) 
-      division = @matches[1] rescue nil
-      year = @matches[2] rescue nil
-    
-      @calendar = Calendar.find_by_division_and_year(division, year) 
+              
+    def find_calendar                                                  
+      @calendar = Calendar.find_by_division_and_year(params[:division], params[:year]) 
     rescue ArgumentError
       nil
     end         

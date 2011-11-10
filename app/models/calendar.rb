@@ -5,7 +5,7 @@ class Calendar
   @@path_to_json = 'bank_holidays.json'
   @@dir_to_json = (Rails.env.test?) ? "./test/fixtures/" : "./lib/data/"
   
-  def initialize( attributes )
+  def initialize( attributes = nil )
     self.year = attributes[:year]
     self.division = attributes[:division]
     self.events = attributes[:events] || []
@@ -47,7 +47,7 @@ class Calendar
   
   def self.find_by_division_and_year(division, year)
     self.all_grouped_by_division[division][:calendars][year] 
-  end
+  end     
   
   def formatted_division
     case division
@@ -70,7 +70,17 @@ class Calendar
         end                 
       end
     end.export                     
-  end         
+  end                 
+  
+  def self.combine( calendars, division )                                    
+    combined_calendar = Calendar.new( :title => nil, :year => nil )
+    
+    calendars[division][:calendars].each do |year, cal|
+      combined_calendar.events += cal.events
+    end  
+    
+    combined_calendar
+  end
   
   def to_param
     "#{self.division}-#{self.year}"

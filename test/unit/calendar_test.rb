@@ -2,7 +2,7 @@ require 'test_helper'
 
 class CalendarTest < ActiveSupport::TestCase
   
-  context "Calendar import" do
+  context "Calendar" do
     should "load calendar item successfully" do
       Calendar.path_to_json = 'single_calendar.json'       
       
@@ -31,7 +31,16 @@ class CalendarTest < ActiveSupport::TestCase
       assert_equal @calendar.events[2].title, "Royal wedding"
       assert_equal @calendar.events[2].date, Date.parse('29th April 2011')
       assert_equal @calendar.events[2].notes, ""
-    end
-  end
+    end   
+    
+    should "combine multiple calendars" do
+      Calendar.path_to_json = 'combine_calendar.json'
+      
+      @calendars = Calendar.all_grouped_by_division
+      @combined = Calendar.combine(@calendars, 'united-kingdom')
+                                             
+      assert_equal @combined.events.size, 4
+    end                    
+  end     
   
 end

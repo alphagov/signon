@@ -48,7 +48,7 @@ class CalendarControllerTest < ActionController::TestCase
   
   context "GET /calendars/<calendar>.json" do
     should "contain calendar data" do
-      get :show, :id => "england-and-wales-2011", :scope => "bank_holidays", :format => :json
+      get :show, :division => "england-and-wales", :year => "2011", :scope => "bank_holidays", :format => :json
                          
       output = {
         "events" => [ 
@@ -68,7 +68,7 @@ class CalendarControllerTest < ActionController::TestCase
   
   context "GET /calendars/<calendar>.icl" do
      should "contain all calendar events" do
-       get :show, :id => "england-and-wales-2011", :scope => "bank_holidays", :format => :ics
+       get :show, :division => "england-and-wales", :year => "2011", :scope => "bank_holidays", :format => :ics
        
        output = "BEGIN:VCALENDAR\nPRODID;X-RICAL-TZSOURCE=TZINFO:-//com.denhaven2/NONSGML ri_cal gem//EN\nCALSCALE:GREGORIAN\nVERSION:2.0\n"
        
