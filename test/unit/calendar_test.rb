@@ -2,27 +2,35 @@ require 'test_helper'
 
 class CalendarTest < ActiveSupport::TestCase
   
-  context "Calendar importer" do
+  context "Calendar import" do
     should "load calendar item successfully" do
-      Calendar.path_to_json = 'single_calendar.json'
+      Calendar.path_to_json = 'single_calendar.json'       
       
-      expected_outcome = { "england-and-wales" => { 
-        :calendars => { 
-          "2011" => Calendar.new(
-            :year => '2011', 
-            :division => 'england-and-wales', 
-            :evemts => [
-              Event.new(:title => "New Year's Day", :date => Date.parse('2nd Jan 2011'), :notes => "Substitute day")
-            ]
-          )
-        } 
-      } }            
+      @calendar = Calendar.all_grouped_by_division['england-and-wales'][:calendars]['2011']
       
-      assert_kind_of Calendar, Calendar.all_grouped_by_division['england-and-wales'][:calendars]['2011']
-      assert_equal Calendar.all_grouped_by_division['england-and-wales'][:calendars]['2011'].events.size, 1
-      assert_kind_of Event, Calendar.all_grouped_by_division['england-and-wales'][:calendars]['2011'].events[0]
-      assert_equal Calendar.all_grouped_by_division['england-and-wales'][:calendars]['2011'].events[0].title, "New Year's Day"
+      assert_kind_of Calendar, @calendar
+      assert_kind_of Event, @calendar.events[0]
       
+      assert_equal @calendar.events.size, 1    
+      assert_equal @calendar.events[0].title, "New Year's Day" 
+      assert_equal @calendar.events[0].date, Date.parse('2nd January 2011')
+      assert_equal @calendar.events[0].notes, "Substitute day"
+    end 
+    
+    should "load individual calendar given division and year" do
+      Calendar.path_to_json = 'bank_holidays.json'
+      
+      @calendar = Calendar.find_by_division_and_year( 'england-and-wales', '2011' )
+      
+      assert_kind_of Calendar, @calendar
+                                        
+      assert_equal @calendar.division, 'england-and-wales'
+      assert_equal @calendar.year, '2011' 
+      assert_equal @calendar.events.size, 5 
+      
+      assert_equal @calendar.events[2].title, "Royal wedding"
+      assert_equal @calendar.events[2].date, Date.parse('29th April 2011')
+      assert_equal @calendar.events[2].notes, ""
     end
   end
   
