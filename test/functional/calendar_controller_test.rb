@@ -67,7 +67,7 @@ class CalendarControllerTest < ActionController::TestCase
   end       
   
   context "GET /calendars/<calendar>.icl" do
-     should "contain all calendar events" do
+     should "contain all calendar events with an individual calendar" do
        get :show, :division => "england-and-wales", :year => "2011", :scope => "bank_holidays", :format => :ics
        
        output = "BEGIN:VCALENDAR\nPRODID;X-RICAL-TZSOURCE=TZINFO:-//com.denhaven2/NONSGML ri_cal gem//EN\nCALSCALE:GREGORIAN\nVERSION:2.0\n"
@@ -79,6 +79,20 @@ class CalendarControllerTest < ActionController::TestCase
        output += "END:VCALENDAR\n"
        
        assert_equal output, @response.body
-     end
+     end 
+     
+     should "contain all calendar events for combined calendars" do
+        get :index, :division => "england-and-wales", :scope => "bank_holidays", :format => :ics
+
+        output = "BEGIN:VCALENDAR\nPRODID;X-RICAL-TZSOURCE=TZINFO:-//com.denhaven2/NONSGML ri_cal gem//EN\nCALSCALE:GREGORIAN\nVERSION:2.0\n"
+
+        Calendar.combine( Calendar.all_grouped_by_division, 'england-and-wales' ).events.each do |event|
+          output += "BEGIN:VEVENT\nDTEND;VALUE=DATE:#{event.date.strftime('%Y%m%d')}\nDTSTART;VALUE=DATE:#{event.date.strftime('%Y%m%d')}\nSUMMARY:#{event.title}\nEND:VEVENT\n"
+        end
+
+        output += "END:VCALENDAR\n"
+
+        assert_equal output, @response.body
+      end
   end
 end
