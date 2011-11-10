@@ -1,6 +1,12 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.1'
+gem 'rails', '3.1.1'    
+
+# passenger compatability
+group :passenger_compatibility do
+  gem 'rack', '1.3.5'
+  gem 'rake', '0.9.2'
+end
              
 gem 'json'
 gem 'jquery-rails'   
