@@ -4,4 +4,4 @@ log/*.log
 tmp/
 .sass-cache/
 coverage
-text/reports
+test/reports
