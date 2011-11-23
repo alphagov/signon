@@ -13,6 +13,7 @@ gem 'jquery-rails'
 
 gem "ri_cal", "~> 0.8.8"
 gem 'plek', '0.1.7'     
+gem 'rummageable', :git => 'git@github.com:alphagov/rummageable.git'
 
 if ENV['SLIMMER_DEV']
   gem 'slimmer', :path => '../slimmer'
