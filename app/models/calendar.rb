@@ -6,9 +6,9 @@ class Calendar
   @@dir_to_json = (Rails.env.test?) ? "./test/fixtures/" : "./lib/data/"
 
   def initialize(attributes = nil)
-    self.year = attributes[:year]
+    self.year     = attributes[:year]
     self.division = attributes[:division]
-    self.events = attributes[:events] || []
+    self.events   = attributes[:events] || []
   end
 
   def self.path_to_json=(path)
