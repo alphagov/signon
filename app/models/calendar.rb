@@ -1,54 +1,52 @@
-class Calendar    
-  
+class Calendar
+
   attr_accessor :division, :year, :events
-         
+
   @@path_to_json = 'bank_holidays.json'
   @@dir_to_json = (Rails.env.test?) ? "./test/fixtures/" : "./lib/data/"
-  
+
   def initialize( attributes = nil )
     self.year = attributes[:year]
     self.division = attributes[:division]
     self.events = attributes[:events] || []
-  end                   
-  
+  end
+
   def self.path_to_json=(path)
     @@path_to_json = path
   end
-  
+
   def self.all_grouped_by_division
-    calendars = []
-                                  
     data = JSON.parse( File.read( File.expand_path( "#{@@dir_to_json}#{@@path_to_json}" ) ) ).symbolize_keys
     divisions = {}
-  
+
     data[:divisions].each do |division|
       division_calendars = {}
-    
+
       division[1].each do |calendars|
-        calendars.to_a.each do |cal|     
-          calendar = Calendar.new( :year => cal[0], :division => division[0] )                
-          cal[1].each do |event|        
-            calendar.events << Event.new( 
-              :title => event['title'], 
-              :date => Date.strptime(event['date'], "%d/%m/%Y"),                                                
+        calendars.to_a.each do |cal|
+          calendar = Calendar.new( :year => cal[0], :division => division[0] )
+          cal[1].each do |event|
+            calendar.events << Event.new(
+              :title => event['title'],
+              :date => Date.strptime(event['date'], "%d/%m/%Y"),
               :notes => event['notes']
-            )                     
-          end                   
-          division_calendars[calendar.year] = calendar                                                
-        end                                                  
-      end  
-                                                         
+            )
+          end
+          division_calendars[calendar.year] = calendar
+        end
+      end
+
       division_calendars = ActiveSupport::OrderedHash[division_calendars.sort_by {|x| x[1].year }]
       divisions[division[0]] = { :division => division[0], :calendars => division_calendars }
     end
-    
+
     divisions
-  end  
-  
+  end
+
   def self.find_by_division_and_year(division, year)
-    self.all_grouped_by_division[division][:calendars][year] 
-  end     
-  
+    self.all_grouped_by_division[division][:calendars][year]
+  end
+
   def formatted_division
     case division
     when 'england-and-wales'
@@ -58,8 +56,8 @@ class Calendar
     when 'ni'
       "Northern Ireland"
     end
-  end      
-  
+  end
+
   def to_ics
     RiCal.Calendar do |cal|
       self.events.each do |bh|
@@ -67,23 +65,23 @@ class Calendar
           event.summary         bh.title
           event.dtstart         bh.date
           event.dtend           bh.date
-        end                 
+        end
       end
-    end.export                     
-  end                 
-  
-  def self.combine( calendars, division )                                    
+    end.export
+  end
+
+  def self.combine( calendars, division )
     combined_calendar = Calendar.new( :title => nil, :year => nil )
-    
+
     calendars[division][:calendars].each do |year, cal|
       combined_calendar.events += cal.events
-    end  
-    
+    end
+
     combined_calendar
   end
-  
+
   def to_param
     "#{self.division}-#{self.year}"
   end
-  
+
 end
