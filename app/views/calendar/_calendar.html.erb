@@ -1,28 +1,28 @@
 <table class="calendar">
-	<caption>
-		<%= caption %>
-	</caption>
-	<thead>
-		<tr>
-			<th scope="col">Date</th>
-			<th scope="col">Day</th>
-			<th scope="col">Holiday Name</th>
-			<th scope="col">Notes</th>
-		</tr>
-	</thead>
-	<tbody>
-		<% calendar.events.each do |event| -%>
-		<tr>
-			<td class="calendar_date"><%= event.date.strftime('%d %B') %></td>
-			<td class="calendar_day"><%= event.date.strftime('%A') %></td>
-			<td class="calendar_title"><%= event.title %></td>
-			<td class="calendar_notes"><small><%= event.notes %></small></td>
-		</tr>                                        
-		<% end -%>
-	</tbody>
+  <caption>
+    <%= caption %>
+  </caption>
+  <thead>
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Day</th>
+      <th scope="col">Holiday Name</th>
+      <th scope="col">Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% calendar.events.each do |event| -%>
+    <tr>
+      <td class="calendar_date"><%= event.date.strftime('%d %B') %></td>
+      <td class="calendar_day"><%= event.date.strftime('%A') %></td>
+      <td class="calendar_title"><%= event.title %></td>
+      <td class="calendar_notes"><small><%= event.notes %></small></td>
+    </tr>
+    <% end -%>
+  </tbody>
 </table>
 
 <div class="subscribe">
   <h3>Add to calendar</h3>
   <p><%= link_to ics_caption, calendar_url(@scope_name, calendar.division, calendar.year, :format => 'ics') %></p>
-</div>                                                      
+</div>

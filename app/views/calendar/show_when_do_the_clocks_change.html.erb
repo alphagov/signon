@@ -1,5 +1,5 @@
 <% content_for :title, "When do the clocks change?" %>
-<% content_for :wrapper_class, "wrapper" %> 
+<% content_for :wrapper_class, "wrapper" %>
 
 <section id="content" role="main" class="group">
 
@@ -8,51 +8,51 @@
         <h1><span>Quick answer </span>When do the clocks change?</h1>
       </hgroup>
   </header>
-	<div class="article-container group">
-	  	<article role="article" class="group">
-	     <div class="inner">
-	      <p>In the UK the clocks go forward 1 hour at 1am on the last Sunday in March, and back 1 hour at 2am on the last Sunday in October. </p>
-	                                                                            
-		<%= render :partial => 'clocks_calendar', :locals => { 
-			:calendars => @divisions['united-kingdom'][:calendars], 
-			:ics_caption => "Clock changes in the UK",
-			:ics_link => division_url(params[:scope], 'united-kingdom', :format => 'ics') } %>                                      
-			
+  <div class="article-container group">
+      <article role="article" class="group">
+       <div class="inner">
+        <p>In the UK the clocks go forward 1 hour at 1am on the last Sunday in March, and back 1 hour at 2am on the last Sunday in October. </p>
+
+    <%= render :partial => 'clocks_calendar', :locals => {
+      :calendars => @divisions['united-kingdom'][:calendars],
+      :ics_caption => "Clock changes in the UK",
+      :ics_link => division_url(params[:scope], 'united-kingdom', :format => 'ics') } %>
+
          <p>This clock change gives the UK an extra hour of daylight (sometimes called Daylight Saving Time).</p>
 
-		 <p>From March to October (when the clocks are 1 hour ahead) the UK is on British Summer Time (BST).</p> 
+     <p>From March to October (when the clocks are 1 hour ahead) the UK is on British Summer Time (BST).</p>
 
-		 <p>From October to March, the UK is on Greenwich Mean Time (GMT).</p>
-         
- 	       <!-- inner -->
-	     </div>
-	   </article>
-		<div class="meta-data">
-				<p class="modified-date">Last updated: <!-- date --></p>
-	      <p>Re-use this data:</p>
-			<ul class="api-links">
-	        <li class="json"><%= link_to 'JSON', division_url('when-do-the-clocks-change', 'united-kingdom', :format => :json)%></li>
-	      </ul>
-			</div>
-	</div>
+     <p>From October to March, the UK is on Greenwich Mean Time (GMT).</p>
+
+          <!-- inner -->
+       </div>
+     </article>
+    <div class="meta-data">
+        <p class="modified-date">Last updated: <!-- date --></p>
+        <p>Re-use this data:</p>
+      <ul class="api-links">
+          <li class="json"><%= link_to 'JSON', division_url('when-do-the-clocks-change', 'united-kingdom', :format => :json)%></li>
+        </ul>
+      </div>
+  </div>
 </section>
 
 <!-- related -->
 <div class="related-positioning">
-	<div class="related-container">
+  <div class="related-container">
 
-		<div class="related">
-			<div class="inner group">
-				<h2>Related tools &amp; topics</h2>
-				<nav role="navigation">
-				  <ul>
-				    <li class="related-topic"><a href="#">View more in <span>section</span></a></li>
-				    
-				  </ul>
-				</nav>
-	   </div>
-	 </div>
+    <div class="related">
+      <div class="inner group">
+        <h2>Related tools &amp; topics</h2>
+        <nav role="navigation">
+          <ul>
+            <li class="related-topic"><a href="#">View more in <span>section</span></a></li>
 
-	</div>
+          </ul>
+        </nav>
+     </div>
+   </div>
+
+  </div>
 </div>
 <!-- end related -->
