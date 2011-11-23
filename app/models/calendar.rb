@@ -5,7 +5,7 @@ class Calendar
   @@path_to_json = 'bank_holidays.json'
   @@dir_to_json = (Rails.env.test?) ? "./test/fixtures/" : "./lib/data/"
 
-  def initialize( attributes = nil )
+  def initialize(attributes = nil)
     self.year = attributes[:year]
     self.division = attributes[:division]
     self.events = attributes[:events] || []
@@ -16,31 +16,27 @@ class Calendar
   end
 
   def self.all_grouped_by_division
-    data = JSON.parse( File.read( File.expand_path( "#{@@dir_to_json}#{@@path_to_json}" ) ) ).symbolize_keys
-    divisions = {}
+    path = File.expand_path("#{@@dir_to_json}#{@@path_to_json}")
+    data = JSON.parse(File.read(path)).symbolize_keys
 
-    data[:divisions].each do |division|
-      division_calendars = {}
-
-      division[1].each do |calendars|
-        calendars.to_a.each do |cal|
-          calendar = Calendar.new( :year => cal[0], :division => division[0] )
-          cal[1].each do |event|
-            calendar.events << Event.new(
-              :title => event['title'],
-              :date => Date.strptime(event['date'], "%d/%m/%Y"),
-              :notes => event['notes']
-            )
-          end
-          division_calendars[calendar.year] = calendar
-        end
-      end
-
-      division_calendars = ActiveSupport::OrderedHash[division_calendars.sort_by {|x| x[1].year }]
-      divisions[division[0]] = { :division => division[0], :calendars => division_calendars }
-    end
-
-    divisions
+    Hash[data[:divisions].map { |division, by_year|
+      calendars_for_division = {
+        division:  division,
+        calendars: Hash[by_year.sort.map { |year, events|
+          calendar = Calendar.new(year: year, division: division, events:
+            events.map { |event|
+              Event.new(
+                title: event['title'],
+                date:  Date.strptime(event['date'], "%d/%m/%Y"),
+                notes: event['notes']
+              )
+            }
+          )
+          [calendar.year, calendar]
+        }]
+      }
+      [division, calendars_for_division]
+    }]
   end
 
   def self.find_by_division_and_year(division, year)

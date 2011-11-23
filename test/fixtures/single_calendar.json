@@ -1,15 +1,13 @@
 {
   "divisions": {
-    "england-and-wales": [
-      {
-        "2011": [
-          {
-            "title": "New Year's Day",
-            "date": "02/01/2011",
-            "notes": "Substitute day"
-          }
-        ]
-      }
-    ]
+    "england-and-wales": {
+      "2011": [
+        {
+          "title": "New Year's Day",
+          "date": "02/01/2011",
+          "notes": "Substitute day"
+        }
+      ]
+    }
   }
 }
