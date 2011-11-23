@@ -4,9 +4,9 @@ class CalendarTest < ActiveSupport::TestCase
 
   context "Calendar" do
     should "load calendar item successfully" do
-      Calendar.path_to_json = 'single_calendar.json'
+      repository = Calendar::Repository.new("single_calendar")
 
-      @calendar = Calendar.all_grouped_by_division['england-and-wales'][:calendars]['2011']
+      @calendar = repository.all_grouped_by_division['england-and-wales'][:calendars]['2011']
 
       assert_kind_of Calendar, @calendar
       assert_kind_of Event, @calendar.events[0]
@@ -18,9 +18,9 @@ class CalendarTest < ActiveSupport::TestCase
     end
 
     should "load individual calendar given division and year" do
-      Calendar.path_to_json = 'bank_holidays.json'
+      repository = Calendar::Repository.new("bank_holidays")
 
-      @calendar = Calendar.find_by_division_and_year( 'england-and-wales', '2011' )
+      @calendar = repository.find_by_division_and_year( 'england-and-wales', '2011' )
 
       assert_kind_of Calendar, @calendar
 
@@ -34,9 +34,9 @@ class CalendarTest < ActiveSupport::TestCase
     end
 
     should "combine multiple calendars" do
-      Calendar.path_to_json = 'combine_calendar.json'
+      repository = Calendar::Repository.new("combine_calendar")
 
-      @calendars = Calendar.all_grouped_by_division
+      @calendars = repository.all_grouped_by_division
       @combined = Calendar.combine(@calendars, 'united-kingdom')
 
       assert_equal @combined.events.size, 4

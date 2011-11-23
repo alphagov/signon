@@ -2,45 +2,44 @@ class Calendar
 
   attr_accessor :division, :year, :events
 
-  @@path_to_json = 'bank_holidays.json'
-  @@dir_to_json = (Rails.env.test?) ? "./test/fixtures/" : "./lib/data/"
-
   def initialize(attributes = nil)
     self.year     = attributes[:year]
     self.division = attributes[:division]
     self.events   = attributes[:events] || []
   end
 
-  def self.path_to_json=(path)
-    @@path_to_json = path
-  end
+  class Repository
+    def initialize(name)
+      repository_path = Rails.env.test? ? "test/fixtures" : "lib/data"
+      @json_path = Rails.root.join(repository_path, name + ".json")
+    end
 
-  def self.all_grouped_by_division
-    path = File.expand_path("#{@@dir_to_json}#{@@path_to_json}")
-    data = JSON.parse(File.read(path)).symbolize_keys
+    def all_grouped_by_division
+      data = JSON.parse(File.read(@json_path)).symbolize_keys
 
-    Hash[data[:divisions].map { |division, by_year|
-      calendars_for_division = {
-        division:  division,
-        calendars: Hash[by_year.sort.map { |year, events|
-          calendar = Calendar.new(year: year, division: division, events:
-            events.map { |event|
-              Event.new(
-                title: event['title'],
-                date:  Date.strptime(event['date'], "%d/%m/%Y"),
-                notes: event['notes']
-              )
-            }
-          )
-          [calendar.year, calendar]
-        }]
-      }
-      [division, calendars_for_division]
-    }]
-  end
+      Hash[data[:divisions].map { |division, by_year|
+        calendars_for_division = {
+          division:  division,
+          calendars: Hash[by_year.sort.map { |year, events|
+            calendar = Calendar.new(year: year, division: division, events:
+              events.map { |event|
+                Event.new(
+                  title: event['title'],
+                  date:  Date.strptime(event['date'], "%d/%m/%Y"),
+                  notes: event['notes']
+                )
+              }
+            )
+            [calendar.year, calendar]
+          }]
+        }
+        [division, calendars_for_division]
+      }]
+    end
 
-  def self.find_by_division_and_year(division, year)
-    self.all_grouped_by_division[division][:calendars][year]
+    def find_by_division_and_year(division, year)
+      all_grouped_by_division[division][:calendars][year]
+    end
   end
 
   def formatted_division

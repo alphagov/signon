@@ -6,7 +6,8 @@ class CalendarControllerTest < ActionController::TestCase
     should "show a tab for each division" do
       get :index, :scope => "bank_holidays"
 
-      Calendar.all_grouped_by_division.each do |division, item|
+      repository = Calendar::Repository.new("bank_holidays")
+      repository.all_grouped_by_division.each do |division, item|
         assert_select "#tabs li a.#{division}"
         assert_select "#guide-nav ##{division}"
       end
@@ -15,7 +16,8 @@ class CalendarControllerTest < ActionController::TestCase
     should "show a table for each calendar with the correct caption" do
       get :index, :scope => "bank_holidays"
 
-      Calendar.all_grouped_by_division.each do |division, item|
+      repository = Calendar::Repository.new("bank_holidays")
+      repository.all_grouped_by_division.each do |division, item|
         assert_select "##{division} table", :count => item[:calendars].size
 
         item[:calendars].each do |year,cal|
@@ -27,7 +29,8 @@ class CalendarControllerTest < ActionController::TestCase
     should "show a row for each bank holiday in the table" do
       get :index, :scope => "bank_holidays"
 
-      Calendar.all_grouped_by_division.each do |division, item|
+      repository = Calendar::Repository.new("bank_holidays")
+      repository.all_grouped_by_division.each do |division, item|
 
         item[:calendars].each do |year,cal|
           assert_select "##{division} table" do
@@ -105,7 +108,8 @@ class CalendarControllerTest < ActionController::TestCase
 
        output = "BEGIN:VCALENDAR\nPRODID;X-RICAL-TZSOURCE=TZINFO:-//com.denhaven2/NONSGML ri_cal gem//EN\nCALSCALE:GREGORIAN\nVERSION:2.0\n"
 
-       Calendar.find_by_division_and_year('england-and-wales','2011').events.each do |event|
+       repository = Calendar::Repository.new("bank_holidays")
+       repository.find_by_division_and_year('england-and-wales','2011').events.each do |event|
          output += "BEGIN:VEVENT\nDTEND;VALUE=DATE:#{event.date.strftime('%Y%m%d')}\nDTSTART;VALUE=DATE:#{event.date.strftime('%Y%m%d')}\nSUMMARY:#{event.title}\nEND:VEVENT\n"
        end
 
@@ -119,7 +123,8 @@ class CalendarControllerTest < ActionController::TestCase
 
         output = "BEGIN:VCALENDAR\nPRODID;X-RICAL-TZSOURCE=TZINFO:-//com.denhaven2/NONSGML ri_cal gem//EN\nCALSCALE:GREGORIAN\nVERSION:2.0\n"
 
-        Calendar.combine( Calendar.all_grouped_by_division, 'england-and-wales' ).events.each do |event|
+        repository = Calendar::Repository.new("bank_holidays")
+        Calendar.combine(repository.all_grouped_by_division, 'england-and-wales').events.each do |event|
           output += "BEGIN:VEVENT\nDTEND;VALUE=DATE:#{event.date.strftime('%Y%m%d')}\nDTSTART;VALUE=DATE:#{event.date.strftime('%Y%m%d')}\nSUMMARY:#{event.title}\nEND:VEVENT\n"
         end
 

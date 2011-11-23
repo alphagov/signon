@@ -4,7 +4,8 @@ class CalendarController < ApplicationController
 
   def index
    if @scope
-      @divisions = Calendar.all_grouped_by_division
+      repository = Calendar::Repository.new(@scope)
+      @divisions = repository.all_grouped_by_division
       respond_to do |format|
         if params[:division]
           format.json { render :json => @divisions[params[:division]].to_json }
@@ -33,19 +34,14 @@ class CalendarController < ApplicationController
   private
     def scopes
       {
-        :bank_holidays => 'bank_holidays.json',
-        :when_do_the_clocks_change => 'daylight_saving.json'
+        :bank_holidays => 'bank_holidays',
+        :when_do_the_clocks_change => 'daylight_saving'
       }
     end
 
     def find_scope
-      @scope = nil
       @scope_name = normalize_scope(params[:scope]).to_sym
-
-      if scopes.has_key?(@scope_name)
-        @scope = scopes[@scope_name]
-        Calendar.path_to_json = @scope
-      end
+      @scope = scopes[@scope_name]
     rescue ArgumentError
       nil
     end
@@ -55,7 +51,8 @@ class CalendarController < ApplicationController
     end
 
     def find_calendar
-      @calendar = Calendar.find_by_division_and_year(params[:division], params[:year])
+      repository = Calendar::Repository.new(@scope)
+      @calendar = repository.find_by_division_and_year(params[:division], params[:year])
     rescue ArgumentError
       nil
     end
