@@ -1,13 +1,5 @@
 class Calendar
 
-  attr_accessor :division, :year, :events
-
-  def initialize(attributes = nil)
-    self.year     = attributes[:year]
-    self.division = attributes[:division]
-    self.events   = attributes[:events] || []
-  end
-
   class Repository
     def initialize(name)
       repository_path = Rails.env.test? ? "test/fixtures" : "lib/data"
@@ -40,6 +32,14 @@ class Calendar
     def find_by_division_and_year(division, year)
       all_grouped_by_division[division][:calendars][year]
     end
+  end
+
+  attr_accessor :division, :year, :events
+
+  def initialize(attributes = nil)
+    self.year     = attributes[:year]
+    self.division = attributes[:division]
+    self.events   = attributes[:events] || []
   end
 
   def formatted_division
@@ -78,5 +78,4 @@ class Calendar
   def to_param
     "#{self.division}-#{self.year}"
   end
-
 end
