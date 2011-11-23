@@ -30,55 +30,55 @@
 
           <% @divisions.each do |division, item| -%>
 
-          <div id="<%= division %>">
+            <div id="<%= division %>">
 
-            <% item[:calendars].each do |year, c| -%>
+              <% item[:calendars].each do |year, c| -%>
 
-              <%= render :partial => 'calendar', :locals => {
-                :calendar => c,
-                :caption => "#{c.year} Bank Holidays in #{c.formatted_division}",
-                :ics_caption => "Bank Holidays for #{c.year} in #{c.formatted_division}" } %>
+                <%= render :partial => 'calendar', :locals => {
+                  :calendar => c,
+                  :caption => "#{c.year} Bank Holidays in #{c.formatted_division}",
+                  :ics_caption => "Bank Holidays for #{c.year} in #{c.formatted_division}" } %>
+
+                <% end -%>
+
+              </div><!-- /england-and-wales -->
 
             <% end -%>
 
-          </div><!-- /england-and-wales -->
+          </div>
+        </div>
+      </article>
 
-          <% end -%>
+      <div class="meta-data">
+        <p class="modified-date">Last updated: time</p>
+        <p>Re-use this data:</p>
+        <ul class="api-links">
+          <li class="json"><%= link_to 'JSON', calendars_url('bank-holidays',:format => :json)%></li>
+        </ul>
+      </div>
 
+    </div>
+  </section>
+
+  <!-- related -->
+  <div class="related-positioning">
+    <div class="related-container">
+
+      <div class="related">
+        <div class="inner group">
+          <h2>Related tools &amp; topics</h2>
+          <nav role="navigation">
+            <ul>
+              <li><a href="#">Related answer</a></li>
+              <li><a href="#">Related guide</a></li>
+              <li class="related-topic"><a href="#">View more in <span>section &rarr;</span></a></li>
+            </ul>
+          </nav>
         </div>
       </div>
-    </article>
 
-    <div class="meta-data">
-      <p class="modified-date">Last updated: time</p>
-      <p>Re-use this data:</p>
-      <ul class="api-links">
-        <li class="json"><%= link_to 'JSON', calendars_url('bank-holidays',:format => :json)%></li>
-      </ul>
     </div>
-
   </div>
-</section>
+  <!-- end related -->
 
-<!-- related -->
-<div class="related-positioning">
-  <div class="related-container">
-
-    <div class="related">
-      <div class="inner group">
-        <h2>Related tools &amp; topics</h2>
-        <nav role="navigation">
-          <ul>
-            <li><a href="#">Related answer</a></li>
-            <li><a href="#">Related guide</a></li>
-            <li class="related-topic"><a href="#">View more in <span>section &rarr;</span></a></li>
-          </ul>
-        </nav>
-      </div>
-    </div>
-
-  </div>
-</div>
-<!-- end related -->
-
-<%= javascript_include_tag '/javascripts/publisher-tabs.js', :defer=>"defer" %>
+  <%= javascript_include_tag '/javascripts/publisher-tabs.js', :defer=>"defer" %>

@@ -57,16 +57,16 @@ class Calendar
     RiCal.Calendar do |cal|
       self.events.each do |bh|
         cal.event do |event|
-          event.summary         bh.title
-          event.dtstart         bh.date
-          event.dtend           bh.date
+          event.summary bh.title
+          event.dtstart bh.date
+          event.dtend   bh.date
         end
       end
     end.export
   end
 
-  def self.combine( calendars, division )
-    combined_calendar = Calendar.new( :title => nil, :year => nil )
+  def self.combine(calendars, division)
+    combined_calendar = Calendar.new(:title => nil, :year => nil)
 
     calendars[division][:calendars].each do |year, cal|
       combined_calendar.events += cal.events
