@@ -12,13 +12,13 @@ gem 'json'
 gem 'jquery-rails'   
 
 gem "ri_cal", "~> 0.8.8"
-gem 'plek', '0.1.7'     
+gem 'plek', '~> 0'     
 gem 'rummageable', :git => 'git@github.com:alphagov/rummageable.git'
 
 if ENV['SLIMMER_DEV']
   gem 'slimmer', :path => '../slimmer'
 else
-  gem 'slimmer', :git => 'git@github.com:alphagov/slimmer.git'
+  gem 'slimmer', '~> 1.1'
 end                
   
 group :test do
