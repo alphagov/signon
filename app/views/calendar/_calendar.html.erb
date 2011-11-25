@@ -16,13 +16,13 @@
         <td><%= event.date.strftime('%d %B') %></td>
         <td><%= event.date.strftime('%A') %></td>
         <td><%= event.title %></td>
-        <td><small><%= event.notes %></small></td>
+        <td><%= event.notes %></td>
       </tr>
     <% end -%>
   </tbody>
 </table>
 
 <div class="subscribe">
-  <h3>Add to calendar</h3>
+  <h3>Add dates to your calendar</h3>
   <p><%= link_to ics_caption, calendar_url(@scope_name, calendar.division, calendar.year, :format => 'ics') %></p>
 </div>
