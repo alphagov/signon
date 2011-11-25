@@ -13,10 +13,10 @@
   <tbody>
     <% calendar.events.each do |event| -%>
       <tr>
-        <td class="calendar_date"><%= event.date.strftime('%d %B') %></td>
-        <td class="calendar_day"><%= event.date.strftime('%A') %></td>
-        <td class="calendar_title"><%= event.title %></td>
-        <td class="calendar_notes"><small><%= event.notes %></small></td>
+        <td><%= event.date.strftime('%d %B') %></td>
+        <td><%= event.date.strftime('%A') %></td>
+        <td><%= event.title %></td>
+        <td><small><%= event.notes %></small></td>
       </tr>
     <% end -%>
   </tbody>
