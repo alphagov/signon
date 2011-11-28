@@ -1,19 +1,19 @@
 <table>
   <tbody>
     <tr>
-      <th>&nbsp;</th>
+      <th></th>
       <% calendars.each do |year,c| -%>
         <th><%= c.year%></th>
       <% end -%>
     </tr>
     <tr>
-      <th>Clocks go back</th>
+      <th scope="row">Clocks go back</th>
       <% calendars.each do |year,c| -%>
         <td><%= c.events[0].date.strftime('%d %B') %></td>
       <% end -%>
     </tr>
     <tr>
-      <th>Clocks go forward</th>
+      <th scope="row">Clocks go forward</th>
       <% calendars.each do |year,c| -%>
         <td><%= c.events[1].date.strftime('%d %B') %></td>
       <% end -%>
@@ -23,5 +23,4 @@
 
 <div class="subscribe">
   <h3>Add dates to your calendar</h3>
-  <p><%= link_to ics_caption, ics_link %></p>
-</div>
+  <p><%= link_to ics_caption,
