@@ -3,6 +3,7 @@ class CalendarController < ApplicationController
   before_filter :find_calendar, :only => :show
 
   def index
+    expires_in 24.hours, :public => true unless Rails.env.development?
     if @scope
       repository = Calendar::Repository.new(@scope)
       @divisions = repository.all_grouped_by_division
@@ -21,6 +22,7 @@ class CalendarController < ApplicationController
   end
 
   def show
+    expires_in 24.hours, :public => true unless Rails.env.development?
     if @scope and @calendar
       respond_to do |format|
         format.json { render :json => @calendar.to_json }
