@@ -3,6 +3,14 @@ require 'test_helper'
 class CalendarTest < ActiveSupport::TestCase
 
   context "Calendar" do
+
+    should "be able to access all calendars" do
+      assert_equal Calendar.all_slugs.size, 3
+      assert Calendar.all_slugs.include? '/bank_holidays'
+      assert Calendar.all_slugs.include? '/combine_calendar'
+      assert Calendar.all_slugs.include? '/single_calendar'
+    end
+
     should "load calendar item successfully" do
       repository = Calendar::Repository.new("single_calendar")
 

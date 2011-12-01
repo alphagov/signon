@@ -9,6 +9,7 @@ GIT
 
 GEM
   remote: http://rubygems.org/
+  remote: https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/
   specs:
     actionmailer (3.1.1)
       actionpack (= 3.1.1)
@@ -77,6 +78,7 @@ GEM
       metaclass (~> 0.0.1)
     multi_json (1.0.3)
     nokogiri (1.5.0)
+    null_logger (0.0.1)
     plek (0.1.8)
       builder
     polyglot (0.3.3)
@@ -110,6 +112,9 @@ GEM
     rest-client (1.6.7)
       mime-types (>= 1.16)
     ri_cal (0.8.8)
+    router-client (2.0.3)
+      builder
+      null_logger
     sass (3.1.10)
     sass-rails (3.1.4)
       actionpack (~> 3.1.0)
@@ -164,6 +169,7 @@ DEPENDENCIES
   rails (= 3.1.1)
   rake (= 0.9.2)
   ri_cal (~> 0.8.8)
+  router-client (= 2.0.3)
   rummageable!
   sass-rails (~> 3.1.0)
   shoulda (~> 2.11.3)
