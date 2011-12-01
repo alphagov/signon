@@ -14,25 +14,16 @@ namespace :router do
   task :register_application => :router_environment do
     platform = ENV['FACTER_govuk_platform']
     url = "calendars.#{platform}.alphagov.co.uk/"
-    begin
-      @logger.info "Registering application..."
-      @router.applications.create application_id: "calendars", backend_url: url
-    rescue Router::Conflict
-      application = @router.applications.find "calendars"
-      puts "Application already registered: #{application.inspect}"
-    end
+    @logger.info "Registering application..."
+    @router.applications.update application_id: "calendars", backend_url: url
   end
 
   task :register_routes => [ :router_environment, :environment ] do
     Calendar.all_slugs.each do |slug|
       path = "#{slug}"
       @logger.info "Registering #{path}"
-      begin
-        @router.routes.create application_id: "calendars", route_type: :full,
-          incoming_path: path
-      rescue => e
-        puts [ e.message, e.backtrace ].join("\n")
-      end
+      @router.routes.update application_id: "calendars", route_type: :full,
+        incoming_path: path
     end
   end
 
