@@ -25,7 +25,7 @@ namespace :router do
 
   task :register_routes => [ :router_environment, :environment ] do
     Calendar.all_slugs.each do |slug|
-      path = "/#{slug}"
+      path = "#{slug}"
       @logger.info "Registering #{path}"
       begin
         @router.routes.create application_id: "calendars", route_type: :full,
