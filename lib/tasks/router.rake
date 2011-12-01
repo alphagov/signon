@@ -18,7 +18,7 @@ namespace :router do
 
   task :register_routes => [ :router_environment, :environment ] do
     Calendar.all_slugs.each do |slug|
-      path = "#{slug}"
+      path = "#{slug}".gsub('_', '-')
       @logger.info "Registering #{path}"
       @router.routes.update application_id: "calendars", route_type: :full,
         incoming_path: path
