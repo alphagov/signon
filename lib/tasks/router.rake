@@ -6,9 +6,7 @@ namespace :router do
     @logger = Logger.new STDOUT
     @logger.level = Logger::DEBUG
 
-    http = Router::HttpClient.new "http://cache.cluster:8080/router", @logger
-
-    @router = Router::Client.new http
+    @router = Router::Client.new :logger => @logger
   end
 
   task :register_application => :router_environment do
