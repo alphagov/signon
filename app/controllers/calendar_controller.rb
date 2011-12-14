@@ -16,6 +16,12 @@ class CalendarController < ApplicationController
           format.json { render :json => @divisions.to_json }
         end
       end
+      set_slimmer_headers(
+        format:      "calendar",
+        proposition: "citizen",
+        need_id:     repository.need_id,
+        section:     repository.section
+      )
     else
       render :file => "#{Rails.root}/public/404.html", :status => 404
     end

@@ -25,6 +25,12 @@ class CalendarTest < ActiveSupport::TestCase
       assert_equal @calendar.events[0].notes, "Substitute day"
     end
 
+    should "expose calendar need_id and section" do
+      repository = Calendar::Repository.new("single_calendar")
+      assert_equal 42, repository.need_id
+      assert_equal "Curmudgeonship", repository.section
+    end
+
     should "load individual calendar given division and year" do
       repository = Calendar::Repository.new("bank_holidays")
 

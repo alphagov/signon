@@ -15,10 +15,20 @@ class Calendar
       @json_path = Rails.root.join(Calendar::REPOSITORY_PATH, name + ".json")
     end
 
-    def all_grouped_by_division
-      data = JSON.parse(File.read(@json_path)).symbolize_keys
+    def need_id
+      parsed_data[:need_id]
+    end
 
-      Hash[data[:divisions].map { |division, by_year|
+    def section
+      parsed_data[:section]
+    end
+
+    def parsed_data
+      @parsed_data ||= JSON.parse(File.read(@json_path)).symbolize_keys
+    end
+
+    def all_grouped_by_division
+      Hash[parsed_data[:divisions].map { |division, by_year|
         calendars_for_division = {
           division:  division,
           calendars: Hash[by_year.sort.map { |year, events|

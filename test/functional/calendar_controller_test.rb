@@ -47,6 +47,14 @@ class CalendarControllerTest < ActionController::TestCase
       end
     end
 
+    should "send analytics headers" do
+      get :index, scope: "bank-holidays"
+
+      assert_equal "Citizenship", @response.headers["X-Slimmer-Section"]
+      assert_equal "121",         @response.headers["X-Slimmer-Need-ID"].to_s
+      assert_equal "calendar",    @response.headers["X-Slimmer-Format"]
+      assert_equal "citizen",     @response.headers["X-Slimmer-Proposition"]
+    end
   end
 
   context "GET /calendars/<calendar>.json" do
