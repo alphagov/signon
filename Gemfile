@@ -1,26 +1,28 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.1'    
+gem 'rails', '3.1.1'
 
 # passenger compatability
 group :passenger_compatibility do
   gem 'rack', '1.3.5'
   gem 'rake', '0.9.2'
 end
-             
+
 gem 'json'
-gem 'jquery-rails'   
+gem 'jquery-rails'
 
 gem "ri_cal", "~> 0.8.8"
-gem 'plek', '~> 0'     
+gem 'plek', '~> 0'
 gem 'rummageable', :git => 'git@github.com:alphagov/rummageable.git'
+
+gem 'gelf'
 
 if ENV['SLIMMER_DEV']
   gem 'slimmer', :path => '../slimmer'
 else
   gem 'slimmer', '~> 1.1'
-end                
-  
+end
+
 group :test do
   gem 'factory_girl_rails'
   gem 'mocha', :require => false
