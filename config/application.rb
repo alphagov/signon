@@ -46,6 +46,15 @@ module Calendars
     # Enable the asset pipeline
     config.assets.enabled = true
 
+    # Path within public/ where assets are compiled to
+    config.assets.prefix = "calendars"
+    config.assets.manifest = Rails.root.join 'public/calendars'
+
+    # Paths used by helpers when generating links to assets
+    config.action_controller.assets_dir = Rails.root.join 'public/calendars'
+    config.action_controller.javascripts_dir = Rails.root.join 'public/calendars/javascripts'
+    config.action_controller.stylesheets_dir = Rails.root.join 'public/calendars/stylesheets'
+
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
   end

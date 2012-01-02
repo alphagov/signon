@@ -3,6 +3,14 @@ require 'test_helper'
 class CalendarTest < ActiveSupport::TestCase
 
   context "Calendar" do
+
+    should "be able to access all calendars" do
+      assert_equal Calendar.all_slugs.size, 3
+      assert Calendar.all_slugs.include? '/bank_holidays'
+      assert Calendar.all_slugs.include? '/combine_calendar'
+      assert Calendar.all_slugs.include? '/single_calendar'
+    end
+
     should "load calendar item successfully" do
       repository = Calendar::Repository.new("single_calendar")
 
@@ -15,6 +23,12 @@ class CalendarTest < ActiveSupport::TestCase
       assert_equal @calendar.events[0].title, "New Year's Day"
       assert_equal @calendar.events[0].date, Date.parse('2nd January 2011')
       assert_equal @calendar.events[0].notes, "Substitute day"
+    end
+
+    should "expose calendar need_id and section" do
+      repository = Calendar::Repository.new("single_calendar")
+      assert_equal 42, repository.need_id
+      assert_equal "Curmudgeonship", repository.section
     end
 
     should "load individual calendar given division and year" do

@@ -3,6 +3,7 @@ class CalendarController < ApplicationController
   before_filter :find_calendar, :only => :show
 
   def index
+    expires_in 24.hours, :public => true unless Rails.env.development?
     if @scope
       repository = Calendar::Repository.new(@scope)
       @divisions = repository.all_grouped_by_division
@@ -15,12 +16,19 @@ class CalendarController < ApplicationController
           format.json { render :json => @divisions.to_json }
         end
       end
+      set_slimmer_headers(
+        format:      "calendar",
+        proposition: "citizen",
+        need_id:     repository.need_id,
+        section:     repository.section
+      )
     else
       render :file => "#{Rails.root}/public/404.html", :status => 404
     end
   end
 
   def show
+    expires_in 24.hours, :public => true unless Rails.env.development?
     if @scope and @calendar
       respond_to do |format|
         format.json { render :json => @calendar.to_json }

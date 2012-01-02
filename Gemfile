@@ -1,6 +1,11 @@
 source 'http://rubygems.org'
+source 'https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/'
 
-gem 'rails', '3.1.1'
+gem 'rails', '3.1.3'
+
+group :router do
+  gem 'router-client', '2.0.3', :require => 'router/client'
+end
 
 # passenger compatability
 group :passenger_compatibility do
@@ -21,6 +26,12 @@ if ENV['SLIMMER_DEV']
   gem 'slimmer', :path => '../slimmer'
 else
   gem 'slimmer', '~> 1.1'
+end
+
+if ENV['API_DEV']
+  gem 'gds-api-adapters', :path => '../gds-api-adapters'
+else
+  gem 'gds-api-adapters', '~> 0.0.15'
 end
 
 group :test do

@@ -1,15 +1,34 @@
 class Calendar
 
+  REPOSITORY_PATH = Rails.env.test? ? "test/fixtures" : "lib/data"
+
+  def self.all_slugs
+    slugs = []
+    Dir.glob("#{REPOSITORY_PATH}/*.json").each do |path|
+      slugs << path.gsub(REPOSITORY_PATH, '').gsub('.json','')
+    end
+    slugs
+  end
+
   class Repository
     def initialize(name)
-      repository_path = Rails.env.test? ? "test/fixtures" : "lib/data"
-      @json_path = Rails.root.join(repository_path, name + ".json")
+      @json_path = Rails.root.join(Calendar::REPOSITORY_PATH, name + ".json")
+    end
+
+    def need_id
+      parsed_data[:need_id]
+    end
+
+    def section
+      parsed_data[:section]
+    end
+
+    def parsed_data
+      @parsed_data ||= JSON.parse(File.read(@json_path)).symbolize_keys
     end
 
     def all_grouped_by_division
-      data = JSON.parse(File.read(@json_path)).symbolize_keys
-
-      Hash[data[:divisions].map { |division, by_year|
+      Hash[parsed_data[:divisions].map { |division, by_year|
         calendars_for_division = {
           division:  division,
           calendars: Hash[by_year.sort.map { |year, events|

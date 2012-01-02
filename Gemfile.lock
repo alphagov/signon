@@ -1,6 +1,6 @@
 GIT
   remote: git@github.com:alphagov/rummageable.git
-  revision: 3409afd6d1801cbe7fccfa6008298204421650ee
+  revision: e66b12f47dadd466db2d8407628b31b7f29e8054
   specs:
     rummageable (0.1.0)
       json
@@ -9,34 +9,35 @@ GIT
 
 GEM
   remote: http://rubygems.org/
+  remote: https://gems.gemfury.com/vo6ZrmjBQu5szyywDszE/
   specs:
-    actionmailer (3.1.1)
-      actionpack (= 3.1.1)
+    actionmailer (3.1.3)
+      actionpack (= 3.1.3)
       mail (~> 2.3.0)
-    actionpack (3.1.1)
-      activemodel (= 3.1.1)
-      activesupport (= 3.1.1)
+    actionpack (3.1.3)
+      activemodel (= 3.1.3)
+      activesupport (= 3.1.3)
       builder (~> 3.0.0)
       erubis (~> 2.7.0)
       i18n (~> 0.6)
-      rack (~> 1.3.2)
+      rack (~> 1.3.5)
       rack-cache (~> 1.1)
       rack-mount (~> 0.8.2)
       rack-test (~> 0.6.1)
-      sprockets (~> 2.0.2)
-    activemodel (3.1.1)
-      activesupport (= 3.1.1)
+      sprockets (~> 2.0.3)
+    activemodel (3.1.3)
+      activesupport (= 3.1.3)
       builder (~> 3.0.0)
       i18n (~> 0.6)
-    activerecord (3.1.1)
-      activemodel (= 3.1.1)
-      activesupport (= 3.1.1)
+    activerecord (3.1.3)
+      activemodel (= 3.1.3)
+      activesupport (= 3.1.3)
       arel (~> 2.2.1)
       tzinfo (~> 0.3.29)
-    activeresource (3.1.1)
-      activemodel (= 3.1.1)
-      activesupport (= 3.1.1)
-    activesupport (3.1.1)
+    activeresource (3.1.3)
+      activemodel (= 3.1.3)
+      activesupport (= 3.1.3)
+    activesupport (3.1.3)
       multi_json (~> 1.0)
     addressable (2.2.6)
     ansi (1.4.0)
@@ -60,6 +61,9 @@ GEM
     factory_girl_rails (1.3.0)
       factory_girl (~> 2.2.0)
       railties (>= 3.0.0)
+    gds-api-adapters (0.0.15)
+      null_logger
+      plek
     gelf (1.3.2)
       json
     hike (1.2.1)
@@ -67,7 +71,7 @@ GEM
     jquery-rails (1.0.16)
       railties (~> 3.0)
       thor (~> 0.14)
-    json (1.6.1)
+    json (1.6.3)
     libv8 (3.3.10.2)
     mail (2.3.0)
       i18n (>= 0.4.0)
@@ -77,9 +81,10 @@ GEM
     mime-types (1.17.2)
     mocha (0.10.0)
       metaclass (~> 0.0.1)
-    multi_json (1.0.3)
+    multi_json (1.0.4)
     nokogiri (1.5.0)
-    plek (0.1.8)
+    null_logger (0.0.1)
+    plek (0.1.15)
       builder
     polyglot (0.3.3)
     rack (1.3.5)
@@ -91,27 +96,30 @@ GEM
       rack
     rack-test (0.6.1)
       rack (>= 1.0)
-    rails (3.1.1)
-      actionmailer (= 3.1.1)
-      actionpack (= 3.1.1)
-      activerecord (= 3.1.1)
-      activeresource (= 3.1.1)
-      activesupport (= 3.1.1)
+    rails (3.1.3)
+      actionmailer (= 3.1.3)
+      actionpack (= 3.1.3)
+      activerecord (= 3.1.3)
+      activeresource (= 3.1.3)
+      activesupport (= 3.1.3)
       bundler (~> 1.0)
-      railties (= 3.1.1)
-    railties (3.1.1)
-      actionpack (= 3.1.1)
-      activesupport (= 3.1.1)
+      railties (= 3.1.3)
+    railties (3.1.3)
+      actionpack (= 3.1.3)
+      activesupport (= 3.1.3)
       rack-ssl (~> 1.3.2)
       rake (>= 0.8.7)
       rdoc (~> 3.4)
       thor (~> 0.14.6)
     rake (0.9.2)
-    rdoc (3.11)
+    rdoc (3.12)
       json (~> 1.4)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     ri_cal (0.8.8)
+    router-client (2.0.3)
+      builder
+      null_logger
     sass (3.1.10)
     sass-rails (3.1.4)
       actionpack (~> 3.1.0)
@@ -125,9 +133,11 @@ GEM
     simplecov-html (0.4.5)
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
-    slimmer (1.1.1)
+    slimmer (1.1.11)
+      json
       nokogiri (~> 1.5.0)
-      plek (~> 0.1)
+      null_logger
+      plek (>= 0.1.8)
       rack (~> 1.3.5)
     sprockets (2.0.3)
       hike (~> 1.2)
@@ -158,15 +168,17 @@ DEPENDENCIES
   ci_reporter
   coffee-rails (~> 3.1.0)
   factory_girl_rails
+  gds-api-adapters (~> 0.0.15)
   gelf
   jquery-rails
   json
   mocha
   plek (~> 0)
   rack (= 1.3.5)
-  rails (= 3.1.1)
+  rails (= 3.1.3)
   rake (= 0.9.2)
   ri_cal (~> 0.8.8)
+  router-client (= 2.0.3)
   rummageable!
   sass-rails (~> 3.1.0)
   shoulda (~> 2.11.3)
