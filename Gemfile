@@ -15,6 +15,7 @@ end
 
 gem 'json'
 gem 'jquery-rails'
+gem 'exception_notification'
 
 gem 'aws-ses', :require => 'aws/ses'
 gem "ri_cal", "~> 0.8.8"
