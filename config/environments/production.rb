@@ -1,6 +1,8 @@
 Calendars::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
+  config.middleware.use "Graylog2Exceptions", { :hostname => 'graylog.cluster', :port => '12201', :facility => 'calendars'}
+
   # Code is not reloaded between requests
   config.cache_classes = true
 

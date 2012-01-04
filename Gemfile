@@ -23,6 +23,7 @@ gem 'plek', '~> 0'
 gem 'rummageable', :git => 'git@github.com:alphagov/rummageable.git'
 
 gem 'gelf'
+gem 'graylog2_exceptions'
 
 if ENV['SLIMMER_DEV']
   gem 'slimmer', :path => '../slimmer'
