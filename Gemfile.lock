@@ -1,4 +1,12 @@
 GIT
+  remote: git@github.com:alphagov/gds-api-adapters.git
+  revision: db15bfc4008cca81131eeab5861dc565fcf7ffbf
+  specs:
+    gds-api-adapters (0.0.18)
+      null_logger
+      plek
+
+GIT
   remote: git@github.com:alphagov/rummageable.git
   revision: e66b12f47dadd466db2d8407628b31b7f29e8054
   specs:
@@ -68,9 +76,6 @@ GEM
     factory_girl_rails (1.3.0)
       factory_girl (~> 2.2.0)
       railties (>= 3.0.0)
-    gds-api-adapters (0.0.18)
-      null_logger
-      plek
     gelf (1.3.2)
       json
     graylog2_exceptions (0.5.3)
@@ -180,7 +185,7 @@ DEPENDENCIES
   coffee-rails (~> 3.1.0)
   exception_notification
   factory_girl_rails
-  gds-api-adapters (~> 0.0.15)
+  gds-api-adapters!
   gelf
   graylog2_exceptions
   jquery-rails
