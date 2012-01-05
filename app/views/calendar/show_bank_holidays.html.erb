@@ -54,35 +54,22 @@
       </article>
 
       <div class="meta-data">
-        <p class="modified-date">Last updated: time</p>
-        <p>Re-use this data:</p>
-        <ul class="api-links">
-          <li class="json"><%= link_to 'JSON', calendars_url('bank-holidays', :format => :json)%></li>
-        </ul>
+        <div class="inner">
+          <div class="print-and-modified-date group">
+            <p class="modified-date">Last updated: FIXME</p>
+          </div>
+          <div class="data-reuse">
+            <p>Re-use this data:</p>
+            <ul class="api-links">
+              <li class="json"><%= link_to 'JSON', calendars_url('bank-holidays', :format => :json)%></li>
+            </ul>
+          </div>
+        </div>
       </div>
 
     </div>
   </section>
 
-  <!-- related -->
-  <div class="related-positioning">
-    <div class="related-container">
-
-      <div class="related">
-        <div class="inner group">
-          <h2>Related tools &amp; topics</h2>
-          <nav role="navigation">
-            <ul>
-              <li><a href="#">Related answer</a></li>
-              <li><a href="#">Related guide</a></li>
-              <li class="related-topic"><a href="#">View more in <span>section &rarr;</span></a></li>
-            </ul>
-          </nav>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  <!-- end related -->
+  <%= render 'related' %>
 
   <%= javascript_include_tag '/javascripts/publisher-tabs.js', :defer=>"defer" %>
