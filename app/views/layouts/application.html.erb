@@ -3,12 +3,12 @@
   <head>
     <title><%= yield :title %> | www.gov.uk</title>
     <%= stylesheet_link_tag 'calendar' %>
-    <meta name="x-section-name" content="Citizenship" />
-    <meta name="x-section-link" content="citizenship" />
+    <meta name="x-section-name" content="Life in the UK" />
+    <meta name="x-section-link" content="/browse/life-in-the-uk" />
     <%= csrf_meta_tags %>
     <%= yield :head %>
   </head>
-  <body>
+  <body class="citizen">
     <div id="wrapper" class="calendar">
       <%= yield %>
     </div>
