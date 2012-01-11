@@ -7,7 +7,7 @@ namespace :rummager do
         "In the UK the clocks go forward 1 hour at 1am on the last Sunday in "+
         "March, and back 1 hour at 2am on the last Sunday in October.",
       "format"            => "calendar",
-      "section"           => "citizenship",
+      "section"           => "life-in-the-uk",
       "link"              => "/when-do-the-clocks-change",
       "indexable_content" => %{
         This clock change gives the UK an extra hour of daylight (sometimes
@@ -20,7 +20,7 @@ namespace :rummager do
       "description"       =>
         "A bank holiday is a public holiday in the United Kingdom",
       "format"            => "calendar",
-      "section"           => "citizenship",
+      "section"           => "life-in-the-uk",
       "link"              => "/bank-holidays",
       "indexable_content" => "",
     }]
