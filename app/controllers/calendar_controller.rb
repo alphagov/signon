@@ -43,7 +43,7 @@ private
   def scopes
     {
       :bank_holidays => 'bank_holidays',
-      :when_do_the_clocks_change => 'daylight_saving'
+      :when_do_the_clocks_change => 'when_do_the_clocks_change'
     }
   end
 
