@@ -12,7 +12,7 @@ class CalendarController < ApplicationController
           format.json { render :json => @divisions[params[:division]].to_json }
           format.ics  { render :text => Calendar.combine(@divisions, params[:division]).to_ics }
         else
-          format.html { render "show_#{@scope_name}" }
+          format.html { render "show_#{@scope_view_name}" }
           format.json { render :json => @divisions.to_json }
         end
       end
@@ -40,22 +40,12 @@ class CalendarController < ApplicationController
   end
 
 private
-  def scopes
-    {
-      :bank_holidays => 'bank_holidays',
-      :when_do_the_clocks_change => 'when_do_the_clocks_change'
-    }
-  end
 
   def find_scope
-    @scope_name = normalize_scope(params[:scope]).to_sym
-    @scope = scopes[@scope_name]
+    @scope = params[:scope]
+    @scope_view_name = @scope.gsub('-','_')
   rescue ArgumentError
     nil
-  end
-
-  def normalize_scope(scope)
-    scope.gsub('-','_')
   end
 
   def find_calendar

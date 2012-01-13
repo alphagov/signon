@@ -6,13 +6,13 @@ class CalendarTest < ActiveSupport::TestCase
 
     should "be able to access all calendars" do
       assert_equal Calendar.all_slugs.size, 3
-      assert Calendar.all_slugs.include? '/bank_holidays'
-      assert Calendar.all_slugs.include? '/combine_calendar'
-      assert Calendar.all_slugs.include? '/single_calendar'
+      assert Calendar.all_slugs.include? '/bank-holidays'
+      assert Calendar.all_slugs.include? '/combine-calendar'
+      assert Calendar.all_slugs.include? '/single-calendar'
     end
 
     should "load calendar item successfully" do
-      repository = Calendar::Repository.new("single_calendar")
+      repository = Calendar::Repository.new("single-calendar")
 
       @calendar = repository.all_grouped_by_division['england-and-wales'][:calendars]['2011']
 
@@ -26,13 +26,13 @@ class CalendarTest < ActiveSupport::TestCase
     end
 
     should "expose calendar need_id and section" do
-      repository = Calendar::Repository.new("single_calendar")
+      repository = Calendar::Repository.new("single-calendar")
       assert_equal 42, repository.need_id
       assert_equal "Curmudgeonship", repository.section
     end
 
     should "load individual calendar given division and year" do
-      repository = Calendar::Repository.new("bank_holidays")
+      repository = Calendar::Repository.new("bank-holidays")
 
       @calendar = repository.find_by_division_and_year( 'england-and-wales', '2011' )
 
@@ -48,7 +48,7 @@ class CalendarTest < ActiveSupport::TestCase
     end
 
     should "combine multiple calendars" do
-      repository = Calendar::Repository.new("combine_calendar")
+      repository = Calendar::Repository.new("combine-calendar")
 
       @calendars = repository.all_grouped_by_division
       @combined = Calendar.combine(@calendars, 'united-kingdom')

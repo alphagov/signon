@@ -18,7 +18,7 @@
         <%= render :partial => 'clocks_calendar', :locals => {
           :calendars => @divisions['united-kingdom'][:calendars],
           :ics_caption => "Clock changes in the UK",
-          :ics_link => division_url(params[:scope], 'united-kingdom', :format => 'ics') } %>
+          :ics_link => division_path(params[:scope], 'united-kingdom', :format => 'ics') } %>
 
           <p>This clock change gives the UK an extra hour of daylight (sometimes called Daylight Saving Time).</p>
 
@@ -33,12 +33,12 @@
       <div class="meta-data">
         <div class="inner">
           <div class="print-and-modified-date group">
-            <p class="modified-date">Last updated: FIXME</p>
+            <p class="modified-date">Last updated: <%= last_updated_date.strftime('%d %B %Y') %></p>
           </div>
           <div class="data-reuse">
             <p>Re-use this data:</p>
             <ul class="api-links">
-              <li class="json"><%= link_to 'JSON', division_url('when-do-the-clocks-change', 'united-kingdom', :format => :json)%></li>
+              <li class="json"><%= link_to 'JSON', division_path('when-do-the-clocks-change', 'united-kingdom', :format => :json)%></li>
             </ul>
           </div>
         </div>

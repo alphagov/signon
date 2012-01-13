@@ -4,9 +4,9 @@ class CalendarControllerTest < ActionController::TestCase
 
   context 'GET /bank-holidays/' do
     should "show a tab for each division" do
-      get :index, :scope => "bank_holidays"
+      get :index, :scope => "bank-holidays"
 
-      repository = Calendar::Repository.new("bank_holidays")
+      repository = Calendar::Repository.new("bank-holidays")
       repository.all_grouped_by_division.each do |division, item|
         assert_select "#tabs li a.#{division}"
         assert_select "#guide-nav ##{division}"
@@ -14,9 +14,9 @@ class CalendarControllerTest < ActionController::TestCase
     end
 
     should "show a table for each calendar with the correct caption" do
-      get :index, :scope => "bank_holidays"
+      get :index, :scope => "bank-holidays"
 
-      repository = Calendar::Repository.new("bank_holidays")
+      repository = Calendar::Repository.new("bank-holidays")
       repository.all_grouped_by_division.each do |division, item|
         assert_select "##{division} table", :count => item[:calendars].size
 
@@ -27,9 +27,9 @@ class CalendarControllerTest < ActionController::TestCase
     end
 
     should "show a row for each bank holiday in the table" do
-      get :index, :scope => "bank_holidays"
+      get :index, :scope => "bank-holidays"
 
-      repository = Calendar::Repository.new("bank_holidays")
+      repository = Calendar::Repository.new("bank-holidays")
       repository.all_grouped_by_division.each do |division, item|
 
         item[:calendars].each do |year,cal|
@@ -59,7 +59,7 @@ class CalendarControllerTest < ActionController::TestCase
 
   context "GET /calendars/<calendar>.json" do
     should "contain calendar data with individual calendar" do
-      get :show, :division => "england-and-wales", :year => "2011", :scope => "bank_holidays", :format => :json
+      get :show, :division => "england-and-wales", :year => "2011", :scope => "bank-holidays", :format => :json
 
       output = {
         "events" => [
@@ -77,7 +77,7 @@ class CalendarControllerTest < ActionController::TestCase
     end
 
     should "contain calendar with division" do
-      get :index, :division => "england-and-wales", :scope => "bank_holidays", :format => :json
+      get :index, :division => "england-and-wales", :scope => "bank-holidays", :format => :json
 
       output = {
         "division" => "england-and-wales",
@@ -112,11 +112,11 @@ class CalendarControllerTest < ActionController::TestCase
 
   context "GET /calendars/<calendar>.icl" do
      should "contain all calendar events with an individual calendar" do
-       get :show, :division => "england-and-wales", :year => "2011", :scope => "bank_holidays", :format => :ics
+       get :show, :division => "england-and-wales", :year => "2011", :scope => "bank-holidays", :format => :ics
 
        output = "BEGIN:VCALENDAR\nPRODID;X-RICAL-TZSOURCE=TZINFO:-//com.denhaven2/NONSGML ri_cal gem//EN\nCALSCALE:GREGORIAN\nVERSION:2.0\n"
 
-       repository = Calendar::Repository.new("bank_holidays")
+       repository = Calendar::Repository.new("bank-holidays")
        repository.find_by_division_and_year('england-and-wales','2011').events.each do |event|
          output += "BEGIN:VEVENT\nDTEND;VALUE=DATE:#{event.date.strftime('%Y%m%d')}\nDTSTART;VALUE=DATE:#{event.date.strftime('%Y%m%d')}\nSUMMARY:#{event.title}\nEND:VEVENT\n"
        end
@@ -127,11 +127,11 @@ class CalendarControllerTest < ActionController::TestCase
      end
 
      should "contain all calendar events for combined calendars" do
-        get :index, :division => "england-and-wales", :scope => "bank_holidays", :format => :ics
+        get :index, :division => "england-and-wales", :scope => "bank-holidays", :format => :ics
 
         output = "BEGIN:VCALENDAR\nPRODID;X-RICAL-TZSOURCE=TZINFO:-//com.denhaven2/NONSGML ri_cal gem//EN\nCALSCALE:GREGORIAN\nVERSION:2.0\n"
 
-        repository = Calendar::Repository.new("bank_holidays")
+        repository = Calendar::Repository.new("bank-holidays")
         Calendar.combine(repository.all_grouped_by_division, 'england-and-wales').events.each do |event|
           output += "BEGIN:VEVENT\nDTEND;VALUE=DATE:#{event.date.strftime('%Y%m%d')}\nDTSTART;VALUE=DATE:#{event.date.strftime('%Y%m%d')}\nSUMMARY:#{event.title}\nEND:VEVENT\n"
         end
