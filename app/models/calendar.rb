@@ -25,6 +25,8 @@ class Calendar
 
     def parsed_data
       @parsed_data ||= JSON.parse(File.read(@json_path)).symbolize_keys
+    rescue
+      false
     end
 
     def all_grouped_by_division
