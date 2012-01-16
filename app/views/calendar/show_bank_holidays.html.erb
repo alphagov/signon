@@ -1,11 +1,14 @@
 <% content_for :title, "UK Bank Holidays" %>
+<% content_for :head do %>
+  <meta name="description" content="UK bank holidays calendar - see UK bank holidays and public holidays for 2012 and 2013">
+<% end %>
 <% content_for :wrapper_class, "wrapper" %>
 
 <section id="content" role="main" class="group">
 
   <header class="page-header group">
     <hgroup>
-      <h1><span>Quick answer</span> UK Bank Holidays</h1>
+      <h1><span>Quick answer</span> UK bank holidays</h1>
     </hgroup>
   </header>
 
@@ -14,13 +17,7 @@
     <article role="article" class="group">
       <div class="inner">
 
-        <div class="summary">
-          <p>Bank holidays are public holidays when banks and businesses close for the day.</p>
-        </div>
-
-        <p>Your employer doesn&rsquo;t have to give you time off but most employers do.</p>
-
-        <p>More information about <a href="/taking-annual-leave-your-rights">your holiday entitlement</a>.</p>
+        <p>These are the dates of UK bank holidays for 2012 and 2013. Your employer doesn’t have to give you paid leave on bank or public holidays.</p>
 
         <div id="guide-nav" class="group">
 
@@ -37,7 +34,6 @@
             <div id="<%= division %>">
 
               <% item[:calendars].each do |year, c| -%>
-
                 <%= render :partial => 'calendar', :locals => {
                   :calendar => c,
                   :caption => "#{c.year} Bank Holidays in #{c.formatted_division}",
@@ -46,10 +42,11 @@
                 <% end -%>
 
               </div><!-- /england-and-wales -->
-
             <% end -%>
 
           </div>
+          <p>If a bank holiday is on a weekend, a 'substitute' weekday becomes a bank holiday, normally the following Monday.</p>
+
         </div>
       </article>
 

@@ -9,7 +9,7 @@ namespace :panopticon do
     
     registerer = GdsApi::Panopticon::Registerer.new(owning_app: "calendars")
     calendars = {
-      :'bank-holidays' => "UK Bank Holidays",
+      :'bank-holidays' => "UK bank holidays",
       :'when-do-the-clocks-change' => "When do the clocks change?"
     }
     
