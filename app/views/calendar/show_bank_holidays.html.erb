@@ -36,8 +36,8 @@
               <% item[:calendars].each do |year, c| -%>
                 <%= render :partial => 'calendar', :locals => {
                   :calendar => c,
-                  :caption => "#{c.year} Bank Holidays in #{c.formatted_division}",
-                  :ics_caption => "Bank Holidays for #{c.year} in #{c.formatted_division}" } %>
+                  :caption => "#{c.year} bank holidays in #{c.formatted_division}",
+                  :ics_caption => "bank holidays for #{c.year} in #{c.formatted_division}" } %>
 
                 <% end -%>
 
