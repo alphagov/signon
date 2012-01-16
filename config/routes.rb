@@ -1,5 +1,5 @@
 Calendars::Application.routes.draw do
-
+  match '/warmup', controller: "GdsWarmupController::Warmup", action: :index
   match '/:scope', :to => 'calendar#index', :as => :calendars
 
   match '/:scope/:division-:year', :to => 'calendar#show', :as => :calendar, :constraints => { :year => /[0-9]{4}/ }
