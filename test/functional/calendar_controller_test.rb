@@ -21,7 +21,7 @@ class CalendarControllerTest < ActionController::TestCase
         assert_select "##{division} table", :count => item[:calendars].size
 
         item[:calendars].each do |year,cal|
-          assert_select "##{division} table caption", "#{cal.year} Bank Holidays in #{cal.formatted_division}"
+          assert_select "##{division} table caption", "#{cal.year} bank holidays in #{cal.formatted_division}"
         end
       end
     end
