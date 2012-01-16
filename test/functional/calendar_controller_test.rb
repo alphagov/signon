@@ -52,7 +52,7 @@ class CalendarControllerTest < ActionController::TestCase
 
       assert_equal "Life in the UK",  @response.headers["X-Slimmer-Section"]
       assert_equal "121",             @response.headers["X-Slimmer-Need-ID"].to_s
-      assert_equal "calendar",        @response.headers["X-Slimmer-Format"]
+      assert_equal "answer",          @response.headers["X-Slimmer-Format"]
       assert_equal "citizen",         @response.headers["X-Slimmer-Proposition"]
     end
   end
