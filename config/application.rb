@@ -43,7 +43,7 @@ module Calendars
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
 
-    config.assets.precompile += %w( publisher-tabs.js )
+    config.assets.precompile += %w( publisher-tabs.js calendar.css )
 
     # Enable the asset pipeline
     config.assets.enabled = true
