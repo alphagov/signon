@@ -6,7 +6,7 @@ namespace :rummager do
       "description"       =>
         "In the UK the clocks go forward 1 hour at 1am on the last Sunday in "+
         "March, and back 1 hour at 2am on the last Sunday in October.",
-      "format"            => "calendar",
+      "format"            => "answer",
       "section"           => "life-in-the-uk",
       "link"              => "/when-do-the-clocks-change",
       "indexable_content" => %{
@@ -16,10 +16,10 @@ namespace :rummager do
         From October to March, the UK is on Greenwich Mean Time (GMT).
       }
     }, {
-      "title"             => "UK Bank Holidays",
+      "title"             => "UK bank holidays",
       "description"       =>
-        "A bank holiday is a public holiday in the United Kingdom",
-      "format"            => "calendar",
+        "UK bank holidays calendar - see UK bank holidays and public holidays for 2012 and 2013",
+      "format"            => "answer",
       "section"           => "life-in-the-uk",
       "link"              => "/bank-holidays",
       "indexable_content" => "",

@@ -17,7 +17,7 @@ class CalendarController < ApplicationController
         end
       end
       set_slimmer_headers(
-        format:      "calendar",
+        format:      "answer",
         proposition: "citizen",
         need_id:     repository.need_id,
         section:     repository.section
