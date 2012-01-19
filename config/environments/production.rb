@@ -59,7 +59,7 @@ Calendars::Application.configure do
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
 
-  config.action_controller.asset_host = Plek.current.find('assets')
+  config.action_controller.asset_host = Plek.current.find('cdn')
   config.slimmer.asset_host = Plek.current.find('assets')
 
   config.action_mailer.default_url_options = { :host => Plek.current.find('calendars') }
