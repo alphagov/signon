@@ -5,6 +5,7 @@
 .ui-tabs .ui-tabs-nav {
   background-color: inherit;
   font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  padding-left:8px;
 }
 
 .ui-tabs .ui-tabs-nav li.ui-state-default {
@@ -36,19 +37,22 @@
     border-bottom-right-radius: 0px;
     border:none;
 }
-.ui-tabs .ui-tabs-nav li {
-    border-bottom: 0 none !important;
+.answer .ui-tabs .ui-tabs-nav li {
+    border-bottom: 0 none;
     float: left;
     list-style: none outside none;
-    margin: 0 0.2em 0 0;
+    margin: 0;
     padding: 0;
     position: relative;
-    /*top: 1px;*/
+    top: 1px;
+    
     white-space: nowrap;
 }
 .ui-tabs .ui-tabs-nav li.ui-state-default {
   background-color:#E1E8E8; 
-    border: medium none;
+  border: medium none;
+  border-right:1px solid #C9D0D0;
+  
     color: #000;
 }
 .ui-tabs .ui-tabs-nav li.ui-state-default a {
@@ -63,9 +67,15 @@
 }
 .ui-tabs .ui-tabs-nav  li.ui-state-hover{
   background-color: #97C5E5;
+  color:#fff;
 }
-
+.ui-tabs .ui-tabs-nav  li.ui-state-hover a{
+  color:#fff;
+}
 .ui-tabs .ui-tabs-panel{
   border:none;
+}
+.ui-widget-header{
+  padding-left:4px;
 }
 /* hover background-color: #97C5E5; */
