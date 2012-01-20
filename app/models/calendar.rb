@@ -2,6 +2,9 @@ class Calendar
 
   REPOSITORY_PATH = Rails.env.test? ? "test/fixtures" : "lib/data"
 
+  class CalendarNotFound < Exception
+  end
+
   def self.all_slugs
     slugs = []
     Dir.glob("#{REPOSITORY_PATH}/*.json").each do |path|
@@ -13,6 +16,10 @@ class Calendar
   class Repository
     def initialize(name)
       @json_path = Rails.root.join(Calendar::REPOSITORY_PATH, name + ".json")
+
+      unless File.exists? @json_path
+        raise Calendar::CalendarNotFound.new( @json_path )
+      end
     end
 
     def need_id

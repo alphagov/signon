@@ -5,8 +5,7 @@ class CalendarController < ApplicationController
   def index
     expires_in 24.hours, :public => true unless Rails.env.development?
     if @scope
-      repository = Calendar::Repository.new(@scope)
-      @divisions = repository.all_grouped_by_division
+      @divisions = @repository.all_grouped_by_division
       respond_to do |format|
         if params[:division]
           format.json { render :json => @divisions[params[:division]].to_json }
@@ -19,8 +18,8 @@ class CalendarController < ApplicationController
       set_slimmer_headers(
         format:      "answer",
         proposition: "citizen",
-        need_id:     repository.need_id,
-        section:     repository.section
+        need_id:     @repository.need_id,
+        section:     @repository.section
       )
     else
       render :file => "#{Rails.root}/public/404.html", :status => 404
@@ -42,17 +41,17 @@ class CalendarController < ApplicationController
 private
 
   def find_scope
-    if File.exists?( Rails.root.join(Calendar::REPOSITORY_PATH, params[:scope] + ".json") )
-      @scope = params[:scope]
-      @scope_view_name = @scope.gsub('-','_')
-    end
+    @scope = params[:scope]
+    @scope_view_name = @scope.gsub('-','_')
+    @repository = Calendar::Repository.new(@scope)
+  rescue Calendar::CalendarNotFound
+    @scope = false
   rescue ArgumentError
     nil
   end
 
   def find_calendar
-    repository = Calendar::Repository.new(@scope)
-    @calendar = repository.find_by_division_and_year(params[:division], params[:year])
+    @calendar = @repository.find_by_division_and_year(params[:division], params[:year])
   rescue ArgumentError
     nil
   end

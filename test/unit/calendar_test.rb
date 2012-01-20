@@ -25,6 +25,12 @@ class CalendarTest < ActiveSupport::TestCase
       assert_equal @calendar.events[0].notes, "Substitute day"
     end
 
+    should "throw exception when calendar does not exist" do
+      assert_raises Calendar::CalendarNotFound do
+        repository = Calendar::Repository.new("calendar-which-doesnt-exist")  
+      end
+    end
+
     should "expose calendar need_id and section" do
       repository = Calendar::Repository.new("single-calendar")
       assert_equal 42, repository.need_id
