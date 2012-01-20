@@ -47,7 +47,8 @@ group :test do
   gem 'webmock', :require => false
   gem 'ci_reporter'
   gem 'test-unit'
-  # Pretty printed test output
+  gem 'capybara'
+  gem "capybara-webkit"
   gem 'turn', :require => false
 end
 

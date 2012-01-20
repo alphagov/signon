@@ -42,8 +42,10 @@ class CalendarController < ApplicationController
 private
 
   def find_scope
-    @scope = params[:scope]
-    @scope_view_name = @scope.gsub('-','_')
+    if File.exists?( Rails.root.join(Calendar::REPOSITORY_PATH, params[:scope] + ".json") )
+      @scope = params[:scope]
+      @scope_view_name = @scope.gsub('-','_')
+    end
   rescue ArgumentError
     nil
   end

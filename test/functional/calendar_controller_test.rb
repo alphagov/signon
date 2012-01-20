@@ -3,6 +3,7 @@ require 'test_helper'
 class CalendarControllerTest < ActionController::TestCase
 
   context 'GET /bank-holidays/' do
+
     should "show a tab for each division" do
       get :index, :scope => "bank-holidays"
 
