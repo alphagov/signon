@@ -2,6 +2,8 @@ class CalendarController < ApplicationController
   before_filter :find_scope
   before_filter :find_calendar, :only => :show
 
+  rescue_from Calendar::CalendarNotFound, with: :simple_404
+
   def index
     expires_in 24.hours, :public => true unless Rails.env.development?
     if @scope
@@ -22,7 +24,7 @@ class CalendarController < ApplicationController
         section:     @repository.section
       )
     else
-      render :file => "#{Rails.root}/public/404.html", :status => 404
+      simple_404
     end
   end
 
@@ -34,7 +36,7 @@ class CalendarController < ApplicationController
         format.ics { render :text => @calendar.to_ics }
       end
     else
-      render :file => "#{Rails.root}/public/404.html", :status => 404
+      simple_404
     end
   end
 
@@ -44,8 +46,6 @@ private
     @scope = params[:scope]
     @scope_view_name = @scope.gsub('-','_')
     @repository = Calendar::Repository.new(@scope)
-  rescue Calendar::CalendarNotFound
-    @scope = false
   rescue ArgumentError
     nil
   end
@@ -54,5 +54,9 @@ private
     @calendar = @repository.find_by_division_and_year(params[:division], params[:year])
   rescue ArgumentError
     nil
+  end
+
+  def simple_404
+    head 404
   end
 end
