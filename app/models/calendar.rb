@@ -96,6 +96,8 @@ class Calendar
   def self.combine(calendars, division)
     combined_calendar = Calendar.new(:title => nil, :year => nil)
 
+    raise CalendarNotFound unless calendars[division]
+
     calendars[division][:calendars].each do |year, cal|
       combined_calendar.events += cal.events
     end

@@ -27,7 +27,13 @@ class CalendarTest < ActiveSupport::TestCase
 
     should "throw exception when calendar does not exist" do
       assert_raises Calendar::CalendarNotFound do
-        repository = Calendar::Repository.new("calendar-which-doesnt-exist")  
+        repository = Calendar::Repository.new("calendar-which-doesnt-exist")
+      end
+    end
+
+    should "throw exception when calendar exists but division doesn't" do
+      assert_raises Calendar::CalendarNotFound do
+        repository = Calendar.combine("bank-holidays", "fake-division")
       end
     end
 
