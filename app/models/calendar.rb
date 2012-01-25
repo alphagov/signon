@@ -70,6 +70,14 @@ class Calendar
     self.events   = attributes[:events] || []
   end
 
+  def upcoming_event
+    @events.select{|e| e.date > Date.today-1.day }.first
+  end
+
+  def event_today?
+    upcoming_event.date == Date.today
+  end
+
   def formatted_division
     case division
     when 'england-and-wales'
