@@ -53,6 +53,7 @@ class Calendar
             [calendar.year, calendar]
           }]
         }
+        calendars_for_division[:whole_calendar] = Calendar.combine_inside_division calendars_for_division[:calendars]
         [division, calendars_for_division]
       }]
     end
@@ -102,16 +103,17 @@ class Calendar
   end
 
   def self.combine(calendars, division)
-    combined_calendar = Calendar.new(:title => nil, :year => nil)
-
     raise CalendarNotFound unless calendars[division]
+    self.combine_inside_division calendars[division][:calendars]
+  end
 
-    calendars[division][:calendars].each do |year, cal|
+  def self.combine_inside_division(calendars)
+    combined_calendar = Calendar.new(:title => nil, :year => nil)
+    calendars.each do |year, cal|
       combined_calendar.events += cal.events
     end
-
     combined_calendar
-  end
+  end  
 
   def to_param
     "#{self.division}-#{self.year}"

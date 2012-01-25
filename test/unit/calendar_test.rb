@@ -77,6 +77,15 @@ class CalendarTest < ActiveSupport::TestCase
       end
     end
 
+    should "give correct upcoming event between multiple calendars" do
+      repository = Calendar::Repository.new("bank-holidays")
+      @calendar = repository.all_grouped_by_division['england-and-wales'][:whole_calendar]
+
+      Timecop.freeze(Date.parse('1st January 2012')) do
+        assert_equal "New Year's Day", @calendar.upcoming_event.title
+      end
+    end
+
     should "be able to check if an event is today" do
       repository = Calendar::Repository.new("bank-holidays")
       @calendar = repository.find_by_division_and_year( 'england-and-wales', '2011' )

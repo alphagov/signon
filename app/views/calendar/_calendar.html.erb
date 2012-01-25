@@ -1,12 +1,3 @@
-<% if calendar.upcoming_event %>
-  <div class="highlighted-event">
-    <p><%= calendar.upcoming_event.date.strftime("%e %B") %></p>
-  </div>
-  <% if calendar.event_today? %>
-    <div class="epic-bunting"></div>
-  <% end %>
-<% end %>
-
 <table class="calendar">
   <caption>
     <%= caption %>
