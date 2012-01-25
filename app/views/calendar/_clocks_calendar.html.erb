@@ -7,13 +7,13 @@
       <% end -%>
     </tr>
     <tr>
-      <th scope="row">Clocks go back</th>
+      <th scope="row">Clocks go forward</th>
       <% calendars.each do |year,c| -%>
         <td><%= c.events[0].date.strftime('%d %B') %></td>
       <% end -%>
     </tr>
     <tr>
-      <th scope="row">Clocks go forward</th>
+      <th scope="row">Clocks go back</th>
       <% calendars.each do |year,c| -%>
         <td><%= c.events[1].date.strftime('%d %B') %></td>
       <% end -%>
