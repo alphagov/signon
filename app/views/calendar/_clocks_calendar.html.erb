@@ -22,6 +22,8 @@
 </table>
 
 <div class="subscribe">
-  <h3>Add dates to your calendar</h3>
-  <p><%= link_to ics_caption, ics_link, :title => 'Download these dates so you can add them to a calendar application such as iCal or Outlook' %></p>
+  <p>Add dates to your calendar: <%=
+    link_to(ics_caption, ics_link,
+            :title => 'Download these dates so you can add them to a calendar application such as iCal or Outlook')
+  %>.</p>
 </div>
