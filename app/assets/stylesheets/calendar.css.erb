@@ -81,4 +81,29 @@
 .ui-widget-header{
   padding-left:4px;
 }
+.highlighted-event{
+  background-color:#D33883;
+  color:#fff;
+  text-align:center;
+  padding:0.1em 2em;
+  
+}
+.highlighted-event p{
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-size:4.8em;
+  font-weight:bold;
+}
+.epic-bunting{
+    background-image: url(<%= asset_path "bunting.png" %>);
+    background-color:transparent;
+    background-repeat:repeat-x;
+    width:100%;
+    position:absolute;
+    left:0;
+    top:300px;
+    height:87px;
+    -webkit-transform: rotate(-1deg); 
+    -moz-transform: rotate(-1deg); 
+    z-index:3;
+}
 /* hover background-color: #97C5E5; */

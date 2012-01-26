@@ -2,7 +2,7 @@
 <% content_for :head do %>
   <meta name="description" content="UK bank holidays calendar - see UK bank holidays and public holidays for 2012 and 2013">
 <% end %>
-<% content_for :wrapper_class, "wrapper" %>
+<% content_for :wrapper_class, "wrapper bank-holiday" %>
 
 <section id="content" role="main" class="group">
 
@@ -32,8 +32,8 @@
           <% @divisions.each do |division, item| -%>
 
             <div id="<%= division %>">
-
               <% if item[:whole_calendar].upcoming_event %>
+              <p>The next bank holiday in England and Wales is</p>
                 <div class="highlighted-event">
                   <p><%= item[:whole_calendar].event_today? ? "today" : item[:whole_calendar].upcoming_event.date.strftime("%e %B") %></p>
                 </div>
@@ -74,6 +74,7 @@
       </div>
 
     </div>
+   
   </section>
 
   <%= javascript_include_tag 'publisher-tabs.js', :defer=>"defer" %>
