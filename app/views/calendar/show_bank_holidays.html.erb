@@ -33,7 +33,7 @@
 
             <div id="<%= division %>">
               <% if item[:whole_calendar].upcoming_event %>
-              <p>The next bank holiday in England and Wales is</p>
+              <p>The next bank holiday in <%= item[:whole_calendar].formatted_division(division) %> is</p>
                 <div class="highlighted-event">
                   <p><%= item[:whole_calendar].event_today? ? "today" : item[:whole_calendar].upcoming_event.date.strftime("%e %B") %></p>
                 </div>

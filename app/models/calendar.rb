@@ -79,8 +79,8 @@ class Calendar
     upcoming_event.date == Date.today
   end
 
-  def formatted_division
-    case division
+  def formatted_division(str = division)
+    case str
     when 'england-and-wales'
       "England and Wales"
     when 'scotland'
