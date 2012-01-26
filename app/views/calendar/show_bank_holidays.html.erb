@@ -2,9 +2,9 @@
 <% content_for :head do %>
   <meta name="description" content="UK bank holidays calendar - see UK bank holidays and public holidays for 2012 and 2013">
 <% end %>
-<% content_for :wrapper_class, "wrapper bank-holiday" %>
+<% content_for :wrapper_class, "wrapper" %>
 
-<section id="content" role="main" class="group">
+<section id="content" role="main" class="group bank-holiday">
 
   <header class="page-header group">
     <hgroup>
@@ -38,7 +38,7 @@
                   <p><%= item[:whole_calendar].event_today? ? "today" : item[:whole_calendar].upcoming_event.date.strftime("%e %B") %></p>
                 </div>
                 <% if item[:whole_calendar].event_today? %>
-                  <div class="epic-bunting"></div>
+                  <div class="epic-bunting"><span></span></div>
                 <% end %>
               <% end %>
 

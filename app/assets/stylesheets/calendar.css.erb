@@ -94,16 +94,29 @@
   font-weight:bold;
 }
 .epic-bunting{
+  width:100%;
+  position:absolute;
+  left:0;
+  top:525px;
+  overflow:visible;
+}
+.epic-bunting span{
     background-image: url(<%= asset_path "bunting.png" %>);
     background-color:transparent;
     background-repeat:repeat-x;
-    width:100%;
+    width:99.9%;
     position:absolute;
-    left:0;
-    top:300px;
-    height:87px;
-    -webkit-transform: rotate(-1deg); 
-    -moz-transform: rotate(-1deg); 
-    z-index:3;
+    height:60px;
+    -webkit-transform: rotate(-3deg); 
+    -moz-transform: rotate(-3deg); 
+    -webkit-backface-visibility:hidden;
+  
+}
+.bank-holiday .ui-tabs,
+.bank-holiday .inner{
+  position:static;
+}
+.bank-holiday article{
+  position:static;
 }
 /* hover background-color: #97C5E5; */
