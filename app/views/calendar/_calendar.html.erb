@@ -25,7 +25,7 @@
 <div class="subscribe">
   <p>Add dates to your calendar: <%=
     link_to(ics_caption,
-            calendar_path(@scope, calendar.division, calendar.year, :format => 'ics')
+            calendar_path(@scope, calendar.division, calendar.year, :format => 'ics'),
             :title => 'Download these dates so you can add them to a calendar application such as iCal or Outlook')
   %>.</p>
 </div>
