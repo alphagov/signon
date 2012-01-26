@@ -50,17 +50,9 @@
         </div>
       </article>
 
-      <div class="meta-data">
+      <div class="meta-data group">
         <div class="inner">
-          <div class="print-and-modified-date group">
-            <p class="modified-date">Last updated: <%= last_updated_date.strftime('%d %B %Y') %></p>
-          </div>
-          <div class="data-reuse">
-            <p>Re-use this data:</p>
-            <ul class="api-links">
-              <li class="json"><%= link_to 'JSON', calendars_path('bank-holidays', :format => :json)%></li>
-            </ul>
-          </div>
+          <p class="modified-date">Last updated: <%= last_updated_date.strftime('%d %B %Y') %></p>
         </div>
       </div>
 
@@ -68,3 +60,7 @@
   </section>
 
   <%= javascript_include_tag 'publisher-tabs.js', :defer=>"defer" %>
+
+  <% content_for :head do %>
+  <link rel="alternate" type="application/json" href="<%= calendars_path('bank-holidays', :format => :json) %>">
+  <% end %>
