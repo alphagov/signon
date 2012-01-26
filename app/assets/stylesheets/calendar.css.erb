@@ -81,4 +81,49 @@
 .ui-widget-header{
   padding-left:4px;
 }
+.highlighted-event{
+  background-color:#D33883;
+  color:#fff;
+  text-align:center;
+  padding:0.1em 2em 0.2em 2em;
+  margin-bottom:1em;
+}
+.highlighted-event p{
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+  font-size:4.8em;
+  font-weight:bold;
+  line-height:0.70em;
+}
+.highlighted-event p span{
+  font-size:0.4em;
+  display:block;
+  opacity:0.4;
+  margin-top:-0.7em;
+}
+.epic-bunting{
+  width:100%;
+  position:fixed;
+  left:0;
+  top:65px;
+  overflow:visible;
+}
+.epic-bunting span{
+    background-image: url(<%= asset_path "bunting.png" %>);
+    background-color:transparent;
+    background-repeat:repeat-x;
+    width:99.9%;
+    position:absolute;
+    height:60px;
+ /*   -webkit-transform: rotate(-3deg); 
+    -moz-transform: rotate(-3deg); 
+    -webkit-backface-visibility:hidden;
+    z-index:3; */
+}
+.bank-holiday .ui-tabs,
+.bank-holiday .inner{
+  position:static;
+}
+.bank-holiday article{
+  position:static;
+}
 /* hover background-color: #97C5E5; */

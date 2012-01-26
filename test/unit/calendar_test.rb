@@ -27,7 +27,13 @@ class CalendarTest < ActiveSupport::TestCase
 
     should "throw exception when calendar does not exist" do
       assert_raises Calendar::CalendarNotFound do
-        repository = Calendar::Repository.new("calendar-which-doesnt-exist")  
+        repository = Calendar::Repository.new("calendar-which-doesnt-exist")
+      end
+    end
+
+    should "throw exception when calendar exists but division doesn't" do
+      assert_raises Calendar::CalendarNotFound do
+        repository = Calendar.combine("bank-holidays", "fake-division")
       end
     end
 
@@ -61,6 +67,38 @@ class CalendarTest < ActiveSupport::TestCase
 
       assert_equal @combined.events.size, 4
     end
+
+    should "give correct upcoming event" do
+      repository = Calendar::Repository.new("bank-holidays")
+      @calendar = repository.find_by_division_and_year( 'england-and-wales', '2011' )
+
+      Timecop.freeze(Date.parse('1 April 2011')) do
+        assert_equal @calendar.upcoming_event.title, "Good Friday"
+      end
+    end
+
+    should "give correct upcoming event between multiple calendars" do
+      repository = Calendar::Repository.new("bank-holidays")
+      @calendar = repository.all_grouped_by_division['england-and-wales'][:whole_calendar]
+
+      Timecop.freeze(Date.parse('1st January 2012')) do
+        assert_equal "New Year's Day", @calendar.upcoming_event.title
+      end
+    end
+
+    should "be able to check if an event is today" do
+      repository = Calendar::Repository.new("bank-holidays")
+      @calendar = repository.find_by_division_and_year( 'england-and-wales', '2011' )
+
+      Timecop.freeze(Date.parse('22 April 2011')) do
+        assert @calendar.event_today?
+      end
+
+      Timecop.freeze(Date.parse('30 April 2011')) do
+        assert !@calendar.event_today?
+      end
+    end
+
   end
 
 end

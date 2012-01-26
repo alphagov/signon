@@ -11,14 +11,18 @@
   <div class="article-container group">
     <article role="article" class="group">
       <div class="inner">
-        <div class="summary">
-          <p>In the UK the clocks go forward 1 hour at 1am on the last Sunday in March, and back 1 hour at 2am on the last Sunday in October. </p>
+        <div class="highlighted-event">
+          <p><span>The clocks go forward </span>25 March</p>
         </div>
 
         <%= render :partial => 'clocks_calendar', :locals => {
           :calendars => @divisions['united-kingdom'][:calendars],
           :ics_caption => "Clock changes in the UK",
           :ics_link => division_path(params[:scope], 'united-kingdom', :format => 'ics') } %>
+          
+          <div class="summary">
+            <p>In the UK the clocks go forward 1 hour at 1am on the last Sunday in March, and back 1 hour at 2am on the last Sunday in October. </p>
+          </div>
 
           <p>This clock change gives the UK an extra hour of daylight (sometimes called Daylight Saving Time).</p>
 
@@ -35,12 +39,12 @@
           <div class="print-and-modified-date group">
             <p class="modified-date">Last updated: <%= last_updated_date.strftime('%d %B %Y') %></p>
           </div>
-          <div class="data-reuse">
+          <!--<div class="data-reuse">
             <p>Re-use this data:</p>
             <ul class="api-links">
               <li class="json"><%= link_to 'JSON', division_path('when-do-the-clocks-change', 'united-kingdom', :format => :json)%></li>
             </ul>
-          </div>
+          </div>-->
         </div>
       </div>
   </section>

@@ -50,6 +50,7 @@ group :test do
   gem 'capybara'
   gem "capybara-webkit"
   gem 'turn', :require => false
+  gem 'timecop'
 end
 
 group :assets do
