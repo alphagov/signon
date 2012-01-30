@@ -8,6 +8,7 @@ namespace :rummager do
         "March, and back 1 hour at 2am on the last Sunday in October.",
       "format"            => "answer",
       "section"           => "life-in-the-uk",
+      "subsection"        => "rights-and-citizenship",
       "link"              => "/when-do-the-clocks-change",
       "indexable_content" => %{
         This clock change gives the UK an extra hour of daylight (sometimes
@@ -20,7 +21,8 @@ namespace :rummager do
       "description"       =>
         "UK bank holidays calendar - see UK bank holidays and public holidays for 2012 and 2013",
       "format"            => "answer",
-      "section"           => "life-in-the-uk",
+      "section"           => "work",
+      "subsection"        => "time-off",
       "link"              => "/bank-holidays",
       "indexable_content" => "",
     }]
