@@ -1,5 +1,13 @@
 <% content_for :title, "When do the clocks change?" %>
 <% content_for :wrapper_class, "wrapper" %>
+<% content_for :head do %>
+  <meta name="x-section-name" content="Life in the UK" />
+  <meta name="x-section-link" content="/browse/life-in-the-uk" />
+  <meta name="x-section-format" content="answer" />
+  
+  <link rel="alternate" type="application/json" href="/when-do-the-clocks-change/united-kingdom.json" />
+  <link rel="alternate" type="text/calendar" href="/when-do-the-clocks-change/united-kingdom.ics" />
+<% end %>
 
 <section id="content" role="main" class="group">
 
@@ -27,20 +35,15 @@
           <p>When the clocks go back, the UK is on Greenwich Mean Time (GMT).</p>
 
           <!-- inner -->
-        </div>
-      </article>
-      <div class="meta-data">
-        <div class="inner">
-          <div class="print-and-modified-date group">
-            <p class="modified-date">Last updated: <%= last_updated_date.strftime('%d %B %Y') %></p>
-          </div>
-          <!--<div class="data-reuse">
-            <p>Re-use this data:</p>
-            <ul class="api-links">
-              <li class="json"><%= link_to 'JSON', division_path('when-do-the-clocks-change', 'united-kingdom', :format => :json)%></li>
-            </ul>
-          </div>-->
+      </div>
+    </article>
+
+    <div class="meta-data">
+      <div class="inner">
+        <div class="print-and-modified-date group">
+          <p class="modified-date">Last updated: <%= last_updated_date.strftime('%d %B %Y') %></p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>

@@ -1,6 +1,16 @@
 <% content_for :title, "UK bank holidays" %>
 <% content_for :head do %>
   <meta name="description" content="UK bank holidays calendar - see UK bank holidays and public holidays for 2012 and 2013">
+  <meta name="x-section-name" content="Work" />
+  <meta name="x-section-link" content="/browse/work" />
+  <meta name="x-section-format" content="answer" />
+  
+  <link rel="alternate" type="application/json" href="/bank-holidays/england-and-wales.json" />
+  <link rel="alternate" type="application/json" href="/bank-holidays/scotland.json" />
+  <link rel="alternate" type="application/json" href="/bank-holidays/ni.json" />
+  <link rel="alternate" type="text/calendar" href="/bank-holidays/england-and-wales.ics" />
+  <link rel="alternate" type="text/calendar" href="/bank-holidays/scotland.ics" />
+  <link rel="alternate" type="text/calendar" href="/bank-holidays/ni.ics" />
 <% end %>
 <% content_for :wrapper_class, "wrapper" %>
 
