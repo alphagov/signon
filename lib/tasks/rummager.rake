@@ -18,8 +18,7 @@ namespace :rummager do
       }
     }, {
       "title"             => "UK bank holidays",
-      "description"       =>
-        "UK bank holidays calendar - see UK bank holidays and public holidays for 2012 and 2013",
+      "description"       => "UK bank holidays calendar - see UK bank holidays and public holidays for 2012 and 2013",
       "format"            => "answer",
       "section"           => "work",
       "subsection"        => "time-off",
