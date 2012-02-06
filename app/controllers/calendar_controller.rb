@@ -10,9 +10,9 @@ class CalendarController < ApplicationController
       @divisions = @repository.all_grouped_by_division
       respond_to do |format|
         if params[:division]
-          format.json { @divisions[params[:division]].delete(:whole_calendar)
-            render :json => @divisions[params[:division]].to_json }
-          format.ics  { render :text => Calendar.combine(@divisions, params[:division]).to_ics }
+          format.json { render :json => @repository.combined_calendar_for_division(params[:division]).to_json }
+          format.ics  { render :text => @repository.combined_calendar_for_division(params[:division]).to_ics }
+          format.html { simple_404 }
         else
           format.html { render "show_#{@scope_view_name}" }
           format.json { @divisions.each {|key, i| @divisions[key].delete(:whole_calendar) }
