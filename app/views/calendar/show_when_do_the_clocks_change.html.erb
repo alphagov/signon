@@ -19,9 +19,11 @@
   <div class="article-container group">
     <article role="article" class="group">
       <div class="inner">
+        <% if next_clock_change %>
         <div class="highlighted-event">
-          <p><span>The clocks go back </span>28 October</p>
+          <p><span>The <%=  next_clock_change_description %> </span><%= next_clock_change_date %></p>
         </div>
+        <% end %>
 
         <%= render :partial => 'clocks_calendar', :locals => {
           :calendars => @divisions['united-kingdom'][:calendars],
