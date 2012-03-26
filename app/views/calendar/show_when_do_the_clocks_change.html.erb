@@ -4,7 +4,7 @@
   <meta name="x-section-name" content="Life in the UK" />
   <meta name="x-section-link" content="/browse/life-in-the-uk" />
   <meta name="x-section-format" content="answer" />
-  
+
   <link rel="alternate" type="application/json" href="/when-do-the-clocks-change/united-kingdom.json" />
   <link rel="alternate" type="text/calendar" href="/when-do-the-clocks-change/united-kingdom.ics" />
 <% end %>
@@ -20,18 +20,18 @@
     <article role="article" class="group">
       <div class="inner">
         <div class="highlighted-event">
-          <p><span>The clocks go forward </span>25 March</p>
+          <p><span>The clocks go back </span>28 October</p>
         </div>
 
         <%= render :partial => 'clocks_calendar', :locals => {
           :calendars => @divisions['united-kingdom'][:calendars],
           :ics_caption => "Clock changes in the UK",
           :ics_link => division_path(params[:scope], 'united-kingdom', :format => 'ics') } %>
-          
+
           <p>In the UK the clocks go forward 1 hour at 1am on the last Sunday in March, and back 1 hour at 2am on the last Sunday in October. </p>
-          
+
           <p>The period when the clocks are 1 hour ahead is called British Summer Time (BST). There's more daylight in the evenings and less in the mornings (sometimes called Daylight Saving Time).</p>
-          
+
           <p>When the clocks go back, the UK is on Greenwich Mean Time (GMT).</p>
 
           <!-- inner -->
