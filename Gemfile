@@ -5,7 +5,7 @@ gem 'rails', '3.1.3'
 gem 'gds-warmup-controller'
 
 group :router do
-  gem 'router-client', '2.0.3', :require => 'router/client'
+  gem 'router-client', '2.0.3', require: 'router/client'
 end
 
 # passenger compatability
@@ -18,38 +18,38 @@ gem 'json'
 gem 'jquery-rails'
 gem 'exception_notification'
 
-gem 'aws-ses', :require => 'aws/ses'
+gem 'aws-ses', require: 'aws/ses'
 gem "ri_cal", "~> 0.8.8"
 gem 'plek', '~> 0'
-gem 'rummageable', :git => 'git@github.com:alphagov/rummageable.git'
+gem 'rummageable', git: 'git@github.com:alphagov/rummageable.git'
 
 gem 'gelf'
 gem 'graylog2_exceptions'
 
 if ENV['SLIMMER_DEV']
-  gem 'slimmer', :path => '../slimmer'
+  gem 'slimmer', path: '../slimmer'
 else
-  gem 'slimmer', '~> 1.1'
+  gem 'slimmer', '1.1.33'
 end
 
 if ENV['API_DEV']
-  gem 'gds-api-adapters', :path => '../gds-api-adapters'
+  gem 'gds-api-adapters', path: '../gds-api-adapters'
 else
-  gem 'gds-api-adapters', '~> 0.0.32'
+  gem 'gds-api-adapters', '0.0.43'
 end
 
 group :test do
   gem 'factory_girl_rails'
-  gem 'mocha', :require => false
+  gem 'mocha', require: false
   gem "shoulda", "~> 2.11.3"
   gem 'simplecov', '0.4.2'
   gem 'simplecov-rcov'
-  gem 'webmock', :require => false
+  gem 'webmock', require: false
   gem 'ci_reporter'
   gem 'test-unit'
   gem 'capybara'
   gem "capybara-webkit"
-  gem 'turn', :require => false
+  gem 'turn', require: false
   gem 'timecop'
 end
 

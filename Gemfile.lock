@@ -81,7 +81,7 @@ GEM
       factory_girl (~> 2.3.0)
       railties (>= 3.0.0)
     ffi (1.0.11)
-    gds-api-adapters (0.0.40)
+    gds-api-adapters (0.0.43)
       lrucache (~> 0.1.1)
       null_logger
       plek
@@ -109,7 +109,7 @@ GEM
     mocha (0.10.0)
       metaclass (~> 0.0.1)
     multi_json (1.0.4)
-    nokogiri (1.5.0)
+    nokogiri (1.5.2)
     null_logger (0.0.1)
     plek (0.1.20)
       builder
@@ -165,7 +165,7 @@ GEM
     simplecov-html (0.4.5)
     simplecov-rcov (0.2.3)
       simplecov (>= 0.4.1)
-    slimmer (1.1.27)
+    slimmer (1.1.33)
       json
       nokogiri (~> 1.5.0)
       null_logger
@@ -208,7 +208,7 @@ DEPENDENCIES
   coffee-rails (~> 3.1.0)
   exception_notification
   factory_girl_rails
-  gds-api-adapters (~> 0.0.32)
+  gds-api-adapters (= 0.0.43)
   gds-warmup-controller
   gelf
   graylog2_exceptions
@@ -226,7 +226,7 @@ DEPENDENCIES
   shoulda (~> 2.11.3)
   simplecov (= 0.4.2)
   simplecov-rcov
-  slimmer (~> 1.1)
+  slimmer (= 1.1.33)
   test-unit
   therubyracer (~> 0.9.4)
   timecop
