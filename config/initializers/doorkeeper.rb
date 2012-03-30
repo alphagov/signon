@@ -13,15 +13,9 @@ Doorkeeper.configure do
   # adding oauth authorized applications you need to declare the
   # block below
   admin_authenticator do |routes|
-     # Put your admin authentication logic here.
-     # If you want to use named routes from your app you need
-     # to call them on routes object eg.
-     # routes.new_admin_session_path
-     if current_user && [""].include?(current_user.email)
-       current_user
-     else
-       redirect_to(routes.new_admin_session_path)
-     end
+    # Prevent all access to admin web interface, only allow application management 
+    # from command line
+    render :text => "Access denied", :status => 403
   end
 
   # Access token expiration time (default 2 hours)
