@@ -40,4 +40,23 @@ namespace :users do
     user.unsuspend!
     puts "User account unsuspended"
   end
+
+  desc "Load all user records from signontron1"
+  task :import_from_signonotron1 => :environment do
+    class OldUser < ActiveRecord::Base
+      establish_connection(:signonotron1)
+      set_table_name 'users'
+    end
+
+    class NewUser < ActiveRecord::Base
+      set_table_name 'users'
+    end
+
+    OldUser.find_each do |old_user|
+      puts "Migrating #{old_user.email}"
+      u = NewUser.find_or_initialize_by_email(old_user.email)
+      u.attributes = old_user.attributes.select {|k,v| u.has_attribute? k}
+      u.save!
+    end
+  end
 end
