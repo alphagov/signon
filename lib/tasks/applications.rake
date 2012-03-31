@@ -1,6 +1,15 @@
 namespace :applications do
 
-  desc "Imports applications (clients) from Sign-on-o-tron1"
+  desc "Creates an application(OAuth client)"
+  task :create, [:name, :redirect_uri] => :environment do |t, args|
+    a = Doorkeeper::Application.create!(:name => args[:name], :redirect_uri => args[:redirect_uri])
+    puts "Application '#{a.name}' created."
+    puts 
+    puts "config.oauth_id     = '#{a.uid}'"
+    puts "config.oauth_secret = '#{a.secret}'"
+  end
+
+  desc "Imports applications (OAuth clients) from Sign-on-o-tron1"
   task :import_from_signonotron1 => :environment do
     class OldClient < ActiveRecord::Base
       establish_connection(:signonotron1)
