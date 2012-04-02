@@ -25,6 +25,7 @@ gem 'jquery-rails'
 group :test do
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
+  gem 'ruby-debug19', :require => false
 end
 
 # Gems used to provide Authentication and Authorization services.
