@@ -22,5 +22,9 @@ end
 
 gem 'jquery-rails'
 
+group :test do
+  gem 'cucumber-rails', :require => false
+end
+
 # Gems used to provide Authentication and Authorization services.
 gem 'devise'
