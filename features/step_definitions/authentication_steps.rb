@@ -9,7 +9,8 @@ end
 When /^I try to sign in with email "([^"]*)" and passphrase "([^"]*)"$/ do |email, passphrase|
   visit new_user_session_path
   fill_in "Email", with: email
-  fill_in "Passphrase", with: passphrase
+  #fill_in "Passphrase", with: passphrase
+  fill_in "Password", with: passphrase
   click_button "Sign in"
 end
 
@@ -34,7 +35,8 @@ end
 When /^I request a new passphrase for "([^"]*)"$/ do |email|
   visit new_user_password_path
   fill_in "Email", with: email
-  click_button "Send me passphrase reset instructions"
+  #click_button "Send me passphrase reset instructions"
+  click_button "Send me password reset instructions"
 end
 
 Then /^I should not see "([^"]*)"$/ do |content|
