@@ -30,3 +30,4 @@ end
 
 # Gems used to provide Authentication and Authorization services.
 gem 'devise'
+gem 'passphrase_entropy', '~> 0.1.2'
