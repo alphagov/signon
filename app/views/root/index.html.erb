@@ -4,10 +4,8 @@
   <h3>Your Account</h3>
 
   <ul>
-    <li><%= # link_to "Change your passphrase", edit_user_path
-    %></li>
-    <li><%= # link_to "Sign out", destroy_user_session_path
-    %></li>
+    <li><%= link_to "Change your passphrase", edit_user_password_path %></li>
+    <li><%= link_to "Sign out", destroy_user_session_path %></li>
   </ul>
 </section>
 
@@ -21,4 +19,3 @@
     </ul>
   </section>
 <%- end -%>
-
