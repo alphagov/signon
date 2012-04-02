@@ -10,16 +10,8 @@ module Devise
         scope :current, proc { |current| current == 't' ? active : suspended }
       end
     
-      def not_suspended?
-        ! suspended?
-      end
-    
-      if instance_methods.include?(:active?)
-        def active?
-          super && not_suspended?
-        end
-      else
-        alias :active? :not_suspended?
+      def active_for_authentication?
+        super && !suspended?
       end
     
       def inactive_message

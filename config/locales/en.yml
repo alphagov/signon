@@ -2,4 +2,7 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  devise:
+    failure:
+      user:
+        suspended: "Your account has been temporarily suspended as a result of too many unsuccessful signin attempts."
