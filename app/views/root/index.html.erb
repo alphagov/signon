@@ -5,7 +5,7 @@
 
   <ul>
     <li><%= link_to "Change your passphrase", edit_user_password_path %></li>
-    <li><%= link_to "Sign out", destroy_user_session_path %></li>
+    <li><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></li>
   </ul>
 </section>
 
