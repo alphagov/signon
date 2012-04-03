@@ -1,5 +1,12 @@
 class UsersController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, :except => :show
+  doorkeeper_for :show
+
+  def show
+    respond_to do |format|
+      format.json { render :json => current_resource_owner }
+    end
+  end
 
   def edit
   end

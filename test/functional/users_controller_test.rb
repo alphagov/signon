@@ -31,6 +31,34 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal orig_password, user.encrypted_password
   end
 
+  test "fetching json profile with a valid oauth token should succeed" do
+    user = FactoryGirl.create(:user)
+    application = FactoryGirl.create(:application)
+    token = FactoryGirl.create(:access_token, :application => application, :resource_owner_id => user.id)
+
+    @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
+    get :show, {:format => :json}
+
+    assert_equal "200", response.code
+    assert_equal user.to_json, response.body
+  end
+
+  test "fetching json profile with an invalid oauth token should not succeed" do
+    user = FactoryGirl.create(:user)
+    application = FactoryGirl.create(:application)
+    token = FactoryGirl.create(:access_token, :application => application, :resource_owner_id => user.id)
+
+    @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token.sub(/[0-9]/, 'x')}"
+    get :show, {:format => :json}
+
+    assert_equal "401", response.code
+  end
+
+  test "fetching json profile without any bearer header should not succeed" do
+    get :show, {:format => :json}
+    assert_equal "401", response.code
+  end
+
   private
 
   def change_user_password(user_factory, new_password)
