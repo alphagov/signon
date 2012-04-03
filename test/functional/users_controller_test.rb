@@ -40,7 +40,7 @@ class UsersControllerTest < ActionController::TestCase
     get :show, {:format => :json}
 
     assert_equal "200", response.code
-    assert_equal user.to_json, response.body
+    assert_equal user.to_sensible_json, response.body
   end
 
   test "fetching json profile with an invalid oauth token should not succeed" do

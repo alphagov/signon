@@ -4,7 +4,7 @@ class UsersController < ApplicationController
 
   def show
     respond_to do |format|
-      format.json { render :json => current_resource_owner }
+      format.json { render :json => current_resource_owner.to_sensible_json }
     end
   end
 
