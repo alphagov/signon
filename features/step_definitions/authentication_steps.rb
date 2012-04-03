@@ -50,8 +50,7 @@ end
 
 When /^I change the passphrase to "([^"]*)"$/ do |passphrase|
   visit edit_user_path
-  step "Then what?"
-  fill_in "New password", with: passphrase
-  fill_in "Confirm new password", with: passphrase
-  click_button "Change password"
+  fill_in "Passphrase", with: passphrase
+  fill_in "Confirm passphrase", with: passphrase
+  click_button "Change"
 end

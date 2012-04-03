@@ -1,0 +1,16 @@
+<section>
+  <%= form_for current_user, :url => user_path do |f| %>
+  <%- unless current_user.errors.empty? -%>
+    <ul class="errors">
+      <%- current_user.errors.full_messages.each do |msg| -%>
+      <li><%= msg %></li>
+      <%- end -%>
+    </ul>
+  <%- end -%>
+    <p><%= t(".change_passphrase") %></p>
+    <p><%= t("helpers.label.user.password_guidance") %></p>
+    <p><label><%= t(:passphrase) %> <%= f.password_field :password %></label></p>
+    <p><label><%= t(:confirm_passphrase) %> <%= f.password_field :password_confirmation %></label></p>
+    <p><%= f.submit t(".change") %></p>
+  <% end %>
+</section>
