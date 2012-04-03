@@ -35,8 +35,7 @@ end
 When /^I request a new passphrase for "([^"]*)"$/ do |email|
   visit new_user_password_path
   fill_in "Email", with: email
-  #click_button "Send me passphrase reset instructions"
-  click_button "Send me reset password instructions"
+  click_button "Send me passphrase reset instructions"
 end
 
 Then /^I should not see "([^"]*)"$/ do |content|

@@ -7,4 +7,4 @@ Feature: Passphrase reset
   Scenario: Successfully request a passphrase reset
     Given a user exists with email "email@example.com" and passphrase "some v3ry s3cure passphrase"
     When I request a new passphrase for "email@example.com"
-    Then I should see "You will receive an email with instructions about how to reset your password in a few minutes."
+    Then I should see "If your e-mail exists on our database, you will receive a passphrase recovery link on your e-mail"
