@@ -30,4 +30,4 @@ end
 
 # Gems used to provide Authentication and Authorization services.
 gem 'devise'
-gem 'passphrase_entropy', '~> 0.1.2'
+gem 'passphrase_entropy', :git => "git://github.com/alphagov/passphrase_entropy.git"

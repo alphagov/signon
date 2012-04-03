@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/alphagov/passphrase_entropy.git
+  revision: 70c37daeb0c85afe9832ad4231cc5c548efb3184
+  specs:
+    passphrase_entropy (0.1.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -94,7 +100,6 @@ GEM
     multi_json (1.2.0)
     nokogiri (1.5.2)
     orm_adapter (0.0.7)
-    passphrase_entropy (0.1.2)
     polyglot (0.3.3)
     rack (1.4.1)
     rack-cache (1.2)
@@ -172,7 +177,7 @@ DEPENDENCIES
   devise
   factory_girl_rails
   jquery-rails
-  passphrase_entropy (~> 0.1.2)
+  passphrase_entropy!
   rails (= 3.2.3)
   ruby-debug19
   sass-rails (~> 3.2.3)
