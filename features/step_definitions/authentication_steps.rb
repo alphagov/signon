@@ -18,10 +18,6 @@ When /^I try to sign in with email "([^"]*)" and passphrase "([^"]*)"$/ do |emai
   click_button "Sign in"
 end
 
-Then /^show me the page$/ do
-  save_and_open_page
-end
-
 When /^I try to sign in (\d+) times with email "([^"]*)" and passphrase "([^"]*)"$/ do |repeat, email, passphrase|
   repeat.to_i.times do
     step "I try to sign in with email \"#{email}\" and passphrase \"#{passphrase}\""
