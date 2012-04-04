@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 class User < ActiveRecord::Base
   devise :database_authenticatable, :recoverable, :trackable,
          :validatable, :timeoutable, :lockable,                # devise core model extensions
@@ -9,5 +11,14 @@ class User < ActiveRecord::Base
 
   def to_sensible_json
     to_json(:only => [:uid, :version, :name, :email, :github, :twitter])
+  end
+
+  def gravatar_url(opts = {})
+    opts.symbolize_keys!
+    qs = opts.select { |k, v| k == :s }.collect { |k, v| "#{k}=#{Rack::Utils.escape(v)}" }.join('&')
+    qs = "?" + qs unless qs == ""
+
+    "#{opts[:ssl] ? 'https://secure' : 'http://www'}.gravatar.com/avatar/" +
+      Digest::MD5.hexdigest(email.downcase) + qs
   end
 end
