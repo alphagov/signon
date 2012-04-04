@@ -30,7 +30,7 @@ To require Devise authentication in a controller (i.e., you want a user sitting 
 
 For example:
 
-```
+```ruby
 class SettingsController
   before_filter :authenticate_user!
 
@@ -44,7 +44,7 @@ To require Doorkeeper authentication in a controller (i.e., you want an applicat
 
 For example:
 
-```
+```ruby
 class AutomaticApiController
   doorkeeper_for :swizzle
 
