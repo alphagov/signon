@@ -1,10 +1,10 @@
-== Sign-on-o-Tron II
+# Sign-on-o-Tron II
 
 This is a centralised OAuth 2-based single sign-on provider for GDS services.
 
 We use [Devise](https://github.com/plataformatec/devise) to provide username / password sign-in, and [Doorkeeper](https://github.com/applicake/doorkeeper/) to provide an OAuth 2 provider.
 
-=== Usage
+## Usage
 
 The application has two rake tasks to create new users and client applications.
 
@@ -18,7 +18,7 @@ To create a new client application to which Sign-on-o-Tron will provide sign-on 
 
 which will create and return a client ID and secret that can be used in the app (normally via [GDS-SSO](http://github.com/alphagov/gds-sso)).
 
-=== Implementation Notes
+## Implementation Notes
 
 The application is divided into two parts: user management (User sign-on and passwords) and OAuth delegation (SSO service, contacts API).
 
