@@ -33,3 +33,16 @@ Doorkeeper.configure do
   #   scope :write,  :description => "Updating information"
   # end
 end
+
+# FIXME Doorkeeper isn't handing mass assignment very nicely, this is a hack to
+# make it work with rails 3.2.3 for the time being.
+class Doorkeeper::AccessGrant < ActiveRecord::Base
+  attr_accessible :application_id, :resource_owner_id, :expires_in, :redirect_uri, :scopes
+end
+
+class Doorkeeper::AccessToken < ActiveRecord::Base
+  attr_accessible :application_id, :resource_owner_id, :expires_in, :redirect_uri, :scopes, :use_refresh_token
+end
+# END FIXME
+
+
