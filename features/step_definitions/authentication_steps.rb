@@ -7,6 +7,19 @@ Given /^a signed\-in user exists with email "([^"]*)" and passphrase "([^"]*)"$/
   step "I try to sign in with email \"#{email}\" and passphrase \"#{passphrase}\""
 end
 
+Given /^a signed\-out user$/ do
+  @user = FactoryGirl.create(:user)
+end
+
+When /^I sign in$/ do
+  step "I try to sign in with email \"#{@user.email}\" and passphrase \"#{@user.password}\""
+end
+
+Given /^a signed\-in user$/ do
+  step 'a signed-out user'
+  step 'I sign in'
+end
+
 Given /^"([^"]*)" is a suspended account$/ do |email|
   User.find_by_email(email).suspend!
 end
