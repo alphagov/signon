@@ -1,5 +1,3 @@
-<%= # render :partial => 'shared/user_section'
-%>
 <section>
   <h3>Your Account</h3>
 
@@ -9,12 +7,12 @@
   </ul>
 </section>
 
-<%- unless true || current_user.authorisations.empty? %>
+<%- unless current_user.authorisations.empty? %>
   <section>
     <h3>Authorised Applications</h3>
     <ul>
     <%- current_user.authorisations.each do |authorisation| -%>
-      <li><%= authorisation.name %></li>
+      <li><%= authorisation.application.name %></li>
     <%- end -%>
     </ul>
   </section>
