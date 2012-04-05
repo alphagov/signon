@@ -12,13 +12,17 @@ Doorkeeper.configure do
   # If you want to restrict the access to the web interface for
   # adding oauth authorized applications you need to declare the
   # block below
-  # admin_authenticator do |routes|
-  #   # Put your admin authentication logic here.
-  #   # If you want to use named routes from your app you need
-  #   # to call them on routes object eg.
-  #   # routes.new_admin_session_path
-  #   Admin.find_by_id(session[:admin_id]) || redirect_to(routes.new_admin_session_path)
-  # end
+  admin_authenticator do |routes|
+     # Put your admin authentication logic here.
+     # If you want to use named routes from your app you need
+     # to call them on routes object eg.
+     # routes.new_admin_session_path
+     if current_user && [""].include?(current_user.email)
+       current_user
+     else
+       redirect_to(routes.new_admin_session_path)
+     end
+  end
 
   # Access token expiration time (default 2 hours)
   access_token_expires_in 2.hours
@@ -33,16 +37,3 @@ Doorkeeper.configure do
   #   scope :write,  :description => "Updating information"
   # end
 end
-
-# FIXME Doorkeeper isn't handing mass assignment very nicely, this is a hack to
-# make it work with rails 3.2.3 for the time being.
-class Doorkeeper::AccessGrant < ActiveRecord::Base
-  attr_accessible :application_id, :resource_owner_id, :expires_in, :redirect_uri, :scopes
-end
-
-class Doorkeeper::AccessToken < ActiveRecord::Base
-  attr_accessible :application_id, :resource_owner_id, :expires_in, :redirect_uri, :scopes, :use_refresh_token
-end
-# END FIXME
-
-
