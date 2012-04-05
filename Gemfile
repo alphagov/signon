@@ -3,6 +3,9 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.3'
 # gem 'mysql2'
 
+gem 'slimmer', :git => "git://github.com/alphagov/slimmer.git"
+gem 'plek'
+
 # Gems used to provide Authentication and Authorization services.
 gem 'devise'
 gem 'passphrase_entropy', :git => "git://github.com/alphagov/passphrase_entropy.git"

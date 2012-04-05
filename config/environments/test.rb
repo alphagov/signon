@@ -35,4 +35,8 @@ Signonotron2::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  config.slimmer.asset_host = "http://tests-should-not-depend-on-external-host.com"
 end
+
+require Rails.root.join("test/support/skip_slimmer")
