@@ -8,9 +8,12 @@
 </head>
 <body>
 
+<h1 id="site-title">Account Sign On</h1>
+
 <div id='wrapper'>
-<p class="notice"><%= notice %></p>
-<p class="alert"><%= alert %></p>
+
+<%- if notice %><p class="flash-notice"><%= notice %></p><% end -%>
+<%- if alert %><p class="flash-alert"><%= alert %></p><% end %>
 
 <%= yield %>
 </div>
