@@ -56,7 +56,8 @@ Then /^I should not see "([^"]*)"$/ do |content|
 end
 
 When /^I change the passphrase to "([^"]*)"$/ do |passphrase|
-  visit edit_user_path
+  visit root_path
+  click_link "Change your passphrase"
   fill_in "Passphrase", with: passphrase
   fill_in "Confirm passphrase", with: passphrase
   click_button "Change"
