@@ -9,7 +9,7 @@ class UserTest < ActiveSupport::TestCase
   # JSON Output
 
   test "sensible json output" do
-    assert_equal( { 'email' =>  @user.email }.to_json, @user.to_sensible_json )
+    assert_equal( { 'email' =>  @user.email, 'name' => @user.name, 'uid' => @user.uid }.to_json, @user.to_sensible_json )
   end
 
   # Gravatar URLs
