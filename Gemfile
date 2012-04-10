@@ -1,6 +1,12 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.1.3'
+
+group :passenger_compatibility do
+  gem 'rack', '1.3.5'
+  gem 'rake', '0.9.2'
+end
+
 gem 'mysql2'
 gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
