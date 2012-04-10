@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.3'
 gem 'mysql2'
-gem 'aws-ses'
+gem 'aws-ses', require: 'aws/ses'
 
 gem 'slimmer', :git => "git://github.com/alphagov/slimmer.git"
 gem 'plek'
