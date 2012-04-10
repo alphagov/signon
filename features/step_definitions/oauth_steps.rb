@@ -10,7 +10,7 @@ end
 When /^I authorise the app$/ do
   begin
     click_button 'Authorize'
-  rescue ActionController::RoutingError
+  rescue ActionController::RoutingError, SocketError
     # we don't care about following the non-existent redirect, but we needed to submit the form (which automatically redirects).
   end
 end
@@ -18,7 +18,7 @@ end
 When /^I decline to authorise the app$/ do
   begin
     click_button 'Deny'
-  rescue ActionController::RoutingError
+  rescue ActionController::RoutingError, SocketError
     # we don't care about following the non-existent redirect, but we need to submit the form (which automatically redirects).
   end
 end

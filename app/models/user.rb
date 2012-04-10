@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
   attr_accessible :uid, :name, :email, :password, :password_confirmation, :twitter, :github, :beard
   attr_readonly :uid
 
-  has_many :authorisations, :class_name => Doorkeeper::AccessToken, :foreign_key => :resource_owner_id
+  has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
 
   def to_sensible_json
     to_json(:only => [:uid, :version, :name, :email, :github, :twitter])
