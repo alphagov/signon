@@ -103,6 +103,7 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.18)
     multi_json (1.2.0)
+    mysql2 (0.3.11)
     nokogiri (1.5.2)
     null_logger (0.0.1)
     orm_adapter (0.0.7)
@@ -166,6 +167,7 @@ DEPENDENCIES
   devise
   doorkeeper
   factory_girl_rails
+  mysql2
   passphrase_entropy!
   plek
   rails (= 3.2.3)
