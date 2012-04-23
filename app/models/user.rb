@@ -1,6 +1,8 @@
 require 'digest/md5'
 
 class User < ActiveRecord::Base
+  self.include_root_in_json = true
+
   devise :database_authenticatable, :recoverable, :trackable,
          :validatable, :timeoutable, :lockable,                # devise core model extensions
          :suspendable,  # in signonotron2/lib/devise/models/suspendable.rb
