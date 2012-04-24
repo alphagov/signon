@@ -16,8 +16,11 @@ development: &development
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test: &test
-  <<: *development
-  database: signonotron2_test
+   adapter: sqlite3
+   database: db/test.sqlite3
+   pool: 5
+   timeout: 5000
+
 
 production:
   adapter: mysql2
