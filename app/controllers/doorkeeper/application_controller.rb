@@ -4,6 +4,6 @@ load Doorkeeper::Engine.config.root.join 'app', 'controllers', 'doorkeeper', 'ap
 
 Doorkeeper::ApplicationController.class_eval do
   before_filter do
-    headers["X-Slimmer-Skip"] = "1"
+    headers['X-Slimmer-Template'] = 'admin'
   end
 end

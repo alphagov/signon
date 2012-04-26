@@ -57,5 +57,9 @@ module Signonotron2
     config.assets.version = '1.0'
 
     config.middleware.insert_before Warden::Manager, Slimmer::App, config.slimmer.to_hash
+
+    config.to_prepare do
+      Doorkeeper::ApplicationController.layout "application"
+    end
   end
 end
