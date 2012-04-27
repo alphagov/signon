@@ -69,7 +69,7 @@ Signonotron2::Application.configure do
   config.slimmer.asset_host = Plek.current.find('assets')
 
   config.action_mailer.default_url_options = {
-    :host => URI.parse(Plek.current.find('signonotron')).host
+    :host => URI.parse(Plek.current.find('signon')).host
   }
   config.action_mailer.delivery_method = :ses
 end
