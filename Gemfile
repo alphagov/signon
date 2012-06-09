@@ -11,12 +11,12 @@ gem 'mysql2'
 gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
 
-gem 'slimmer', :git => "git://github.com/alphagov/slimmer.git"
+gem 'slimmer', git: "git://github.com/alphagov/slimmer.git"
 gem 'plek'
 
 # Gems used to provide Authentication and Authorization services.
 gem 'devise'
-gem 'passphrase_entropy', :git => "git://github.com/alphagov/passphrase_entropy.git"
+gem 'passphrase_entropy', git: "git://github.com/alphagov/passphrase_entropy.git"
 
 gem 'doorkeeper'
 
