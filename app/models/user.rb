@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
          :suspendable,  # in signonotron2/lib/devise/models/suspendable.rb
          :strengthened  # in signonotron2/lib/devise/models/strengthened.rb
 
-  attr_accessible :uid, :name, :email, :password, :password_confirmation, :twitter, :github, :beard
+  attr_accessible :uid, :name, :email, :password, :password_confirmation
   attr_readonly :uid
 
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
