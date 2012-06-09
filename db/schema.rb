@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120412131921) do
+ActiveRecord::Schema.define(:version => 20120609094354) do
 
   create_table "oauth_access_grants", :force => true do |t|
     t.integer  "resource_owner_id", :null => false
@@ -42,36 +42,34 @@ ActiveRecord::Schema.define(:version => 20120412131921) do
   add_index "oauth_access_tokens", ["token"], :name => "index_oauth_access_tokens_on_token", :unique => true
 
   create_table "oauth_applications", :force => true do |t|
-    t.string   "name",         :null => false
+    t.string   "name"
     t.string   "uid",          :null => false
     t.string   "secret",       :null => false
     t.string   "redirect_uri", :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
   add_index "oauth_applications", ["uid"], :name => "index_oauth_applications_on_uid", :unique => true
 
   create_table "users", :force => true do |t|
-    t.string   "email",                  :default => "", :null => false
-    t.string   "encrypted_password",     :default => "", :null => false
+    t.string   "name",                                                     :null => false
+    t.string   "email",                                 :default => "",    :null => false
+    t.string   "encrypted_password",     :limit => 128, :default => "",    :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
-    t.integer  "sign_in_count",          :default => 0
+    t.integer  "sign_in_count",                         :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.integer  "failed_attempts",        :default => 0
-    t.datetime "locked_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "uid",                                                      :null => false
+    t.integer  "failed_attempts",                       :default => 0
+    t.datetime "locked_at"
     t.datetime "suspended_at"
-    t.string   "name"
-    t.string   "uid"
+    t.boolean  "is_admin",                              :default => false, :null => false
   end
-
-  add_index "users", ["email"], :name => "index_users_on_email", :unique => true
-  add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
 end

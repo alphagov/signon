@@ -26,6 +26,16 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "https://secure.gravatar.com/avatar/#{Digest::MD5.hexdigest(@user.email)}", @user.gravatar_url(:ssl => true)
   end
 
+  # Attribute protection
+
+  test "the is_admin flag has to be specifically assigned" do
+    u = User.new(name: 'Bad User', is_admin: true)
+    refute u.is_admin?
+
+    u.is_admin = true
+    assert u.is_admin?
+  end
+
   # Password Validation
 
   test "it requires a password to be at least 10 characters long" do
