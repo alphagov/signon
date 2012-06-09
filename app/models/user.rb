@@ -11,6 +11,8 @@ class User < ActiveRecord::Base
   attr_accessible :uid, :name, :email, :password, :password_confirmation
   attr_readonly :uid
 
+  validates :name, presence: true
+
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
 
   before_create :generate_uid
