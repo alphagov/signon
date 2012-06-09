@@ -13,6 +13,12 @@ class User < ActiveRecord::Base
 
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
 
+  before_create :generate_uid
+
+  def generate_uid
+    self.uid = UUID.generate
+  end
+
   def to_sensible_json
     to_json(:only => [:uid, :version, :name, :email, :github, :twitter])
   end
