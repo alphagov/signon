@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
   validates :name, presence: true
 
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
+  has_many :permissions
 
   before_create :generate_uid
 
@@ -22,7 +23,11 @@ class User < ActiveRecord::Base
   end
 
   def to_sensible_json
-    to_json(:only => [:uid, :version, :name, :email, :github, :twitter])
+    sensible_permissions = {}
+    self.permissions.each do |permission|
+      sensible_permissions[permission.application.name] = permission.permissions
+    end
+    { user: { uid: uid, name: name, email: email, permissions: sensible_permissions } }.to_json
   end
 
   def gravatar_url(opts = {})

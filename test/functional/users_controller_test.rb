@@ -59,15 +59,26 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal "401", response.code
   end
 
+  test "fetching json profile should include permissions" do
+    user = FactoryGirl.create(:user)
+    application = FactoryGirl.create(:application)
+    permission = FactoryGirl.create(:permission, user_id: user.id, application_id: application.id)
+    token = FactoryGirl.create(:access_token, :application => application, :resource_owner_id => user.id)
+
+    @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
+    get :show, {:format => :json}
+    assert JSON.parse(response.body)['user']['permissions'].has_key?(application.name)
+  end
+
   private
 
   def change_user_password(user_factory, new_password)
     user = FactoryGirl.create(user_factory)
     orig_password = user.encrypted_password
     sign_in user
-    
+
     post :update, { user: { password: new_password, password_confirmation: new_password } }
-    
+
     return user, orig_password
   end
 end
