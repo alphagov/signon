@@ -11,12 +11,21 @@ Given /^a signed\-out user$/ do
   @user = FactoryGirl.create(:user)
 end
 
+Given /^a signed\-out admin user$/ do
+  @user = FactoryGirl.create(:user, is_admin: true)
+end
+
 When /^I sign in$/ do
   step "I try to sign in with email \"#{@user.email}\" and passphrase \"#{@user.password}\""
 end
 
 Given /^a signed\-in user$/ do
   step 'a signed-out user'
+  step 'I sign in'
+end
+
+Given /^a signed\-in admin user$/ do
+  step 'a signed-out admin user'
   step 'I sign in'
 end
 
