@@ -7,6 +7,15 @@
   </ul>
 </section>
 
+<% if current_user.is_admin? %>
+  <section>
+    <h3>Admin</h3>
+    <ul>
+      <li><%= link_to "Administer users", admin_users_path %></li>
+    </ul>
+  </section>
+<% end %>
+
 <%- unless current_user.authorisations.empty? %>
   <section>
     <h3>Authorised Applications</h3>

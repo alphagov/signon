@@ -1,0 +1,23 @@
+<%= link_to "Create an account", new_user_invitation_path %>
+<table>
+  <thead>
+    <tr>
+      <th>Email</th>
+      <th>Sign-in count</th>
+      <th>Created</th>
+      <th>Locked at</th>
+      <th>Suspended at</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td class="email"><%= "#{user.name} <#{user.email}>" %></td>
+        <td><%= user.sign_in_count %></td>
+        <td><%= user.created_at %></td>
+        <td><%= user.locked_at %></td>
+        <td><%= user.suspended_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
