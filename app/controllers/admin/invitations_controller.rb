@@ -1,5 +1,6 @@
 # https://raw.github.com/scambra/devise_invitable/master/app/controllers/devise/invitations_controller.rb
 class Admin::InvitationsController < Devise::InvitationsController
+  before_filter :authenticate_user!
   before_filter :must_be_admin, only: [:new, :create]
 
   def create
