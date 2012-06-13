@@ -1,8 +1,10 @@
 require 'test_helper'
 
-class Admin::UsersControllerTest < ActionController::TestCase
+class Admin::InvitationsControllerTest < ActionController::TestCase
+  include Devise::TestHelpers
 
   setup do
+    request.env["devise.mapping"] = Devise.mappings[:user]
     @user = FactoryGirl.create(:user, is_admin: true)
     sign_in @user
   end
