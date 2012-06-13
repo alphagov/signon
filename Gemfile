@@ -18,6 +18,7 @@ gem 'uuid'
 
 # Gems used to provide Authentication and Authorization services.
 gem 'devise'
+gem 'devise_invitable'
 gem 'passphrase_entropy', git: "git://github.com/alphagov/passphrase_entropy.git"
 
 gem 'doorkeeper'
@@ -30,5 +31,6 @@ group :test do
   gem 'cucumber-rails', :require => false
   gem 'database_cleaner'
   gem 'factory_girl_rails'
+  gem 'shoulda'
 end
 
