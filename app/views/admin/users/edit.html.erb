@@ -1,0 +1,21 @@
+<h2>Edit user <%= @user.name %></h2>
+
+<%= form_for [:admin, @user] do |f| %>
+
+  <p>
+    <%= f.label :name %>
+    <%= f.text_field :name %>
+  </p>
+  
+  <p>
+    <%= f.label :email %>
+    <%= f.text_field :email %>
+  </p>
+
+  <p>
+    <%= f.check_box :is_admin %>
+    <%= f.label :is_admin %>
+  </p>
+
+  <p><%= f.submit %></p>
+<% end %>
