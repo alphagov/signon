@@ -5,8 +5,7 @@
       <th>Email</th>
       <th>Sign-in count</th>
       <th>Created</th>
-      <th>Locked at</th>
-      <th>Suspended at</th>
+      <th>Admin?</th>
     </tr>
   </thead>
   <tbody>
@@ -14,9 +13,8 @@
       <tr>
         <td class="email"><%= link_to "#{user.name} <#{user.email}>", edit_admin_user_path(user) %></td>
         <td><%= user.sign_in_count %></td>
-        <td><%= user.created_at %></td>
-        <td><%= user.locked_at %></td>
-        <td><%= user.suspended_at %></td>
+        <td><%= time_ago_in_words(user.created_at) %> ago</td>
+        <td><%= user.is_admin ? "Yes" : "No" %></td>
       </tr>
     <% end %>
   </tbody>
