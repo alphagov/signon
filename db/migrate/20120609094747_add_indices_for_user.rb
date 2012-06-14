@@ -1,7 +1,15 @@
 class AddIndicesForUser < ActiveRecord::Migration
+  def try_to(&block)
+    begin
+      yield
+    rescue => e
+      puts e
+    end
+  end
+
   def up
-    add_index :users, :email, unique: true
-    add_index :users, :reset_password_token, unique: true
+    try_to { add_index :users, :email, unique: true }
+    try_to { add_index :users, :reset_password_token, unique: true }
   end
 
   def down
