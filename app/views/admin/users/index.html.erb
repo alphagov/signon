@@ -1,4 +1,6 @@
-<%= link_to "Create an account", new_user_invitation_path %>
+<p><%= link_to "Home", root_path %></p>
+<br>
+<%= link_to "Create an account", new_user_invitation_path, class: "button" %>
 <table>
   <thead>
     <tr>
@@ -6,6 +8,7 @@
       <th>Sign-in count</th>
       <th>Created</th>
       <th>Admin?</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -15,6 +18,7 @@
         <td><%= user.sign_in_count %></td>
         <td><%= time_ago_in_words(user.created_at) %> ago</td>
         <td><%= user.is_admin ? "Yes" : "No" %></td>
+        <td><%= link_to "Edit", edit_admin_user_path(user) %></td>
         <td>
           <% if user.invited_but_not_accepted %>
             <%= form_tag resend_user_invitation_path(user) do %>
