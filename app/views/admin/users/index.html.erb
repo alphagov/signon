@@ -15,6 +15,13 @@
         <td><%= user.sign_in_count %></td>
         <td><%= time_ago_in_words(user.created_at) %> ago</td>
         <td><%= user.is_admin ? "Yes" : "No" %></td>
+        <td>
+          <% if user.invited_but_not_accepted %>
+            <%= form_tag resend_user_invitation_path(user) do %>
+              <%= submit_tag "Resend signup email" %>
+            <% end %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

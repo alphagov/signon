@@ -39,4 +39,8 @@ class User < ActiveRecord::Base
     "#{opts[:ssl] ? 'https://secure' : 'http://www'}.gravatar.com/avatar/" +
       Digest::MD5.hexdigest(email.downcase) + qs
   end
+
+  def invited_but_not_accepted
+    !invitation_sent_at.nil? && invitation_accepted_at.nil?
+  end
 end

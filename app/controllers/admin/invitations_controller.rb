@@ -16,6 +16,13 @@ class Admin::InvitationsController < Devise::InvitationsController
     end
   end
 
+  def resend
+    user = User.find(params[:id])
+    user.invite!
+    flash[:notice] = "Resent account signup email to #{user.email}"
+    redirect_to admin_users_path
+  end
+
   private
     def must_be_admin
       if ! current_user.is_admin?
