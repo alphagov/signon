@@ -22,4 +22,11 @@ class Admin::UsersController < Admin::BaseController
       respond_with @user
     end
   end
+
+  def unlock
+    user = User.find(params[:id])
+    user.unlock_access!
+    flash[:notice] = "Unlocked #{user.email}"
+    redirect_to admin_users_path
+  end
 end

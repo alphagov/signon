@@ -19,13 +19,20 @@
         <td><%= time_ago_in_words(user.created_at) %> ago</td>
         <td><%= user.is_admin ? "Yes" : "No" %></td>
         <td><%= link_to "Edit", edit_admin_user_path(user) %></td>
-        <td>
-          <% if user.invited_but_not_accepted %>
+        <% if user.invited_but_not_accepted %>
+          <td>
             <%= form_tag resend_user_invitation_path(user) do %>
               <%= submit_tag "Resend signup email" %>
             <% end %>
-          <% end %>
-        </td>
+          </td>
+        <% end %>
+        <% if user.access_locked? %>
+          <td>
+            <%= form_tag unlock_admin_user_path(user) do %>
+              <%= submit_tag "Unlock" %>
+            <% end %>
+          </td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>

@@ -8,7 +8,11 @@ Signonotron2::Application.routes.draw do
   resource :user, :only => [:show, :edit, :update]
 
   namespace :admin do
-    resources :users
+    resources :users do
+      member do
+        post :unlock
+      end
+    end
   end
 
   # compatibility with Sign-on-o-tron 1
