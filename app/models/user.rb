@@ -17,6 +17,7 @@ class User < ActiveRecord::Base
   has_many :permissions
 
   before_create :generate_uid
+  after_create :create_everything_permission
 
   def generate_uid
     self.uid = UUID.generate
@@ -37,5 +38,14 @@ class User < ActiveRecord::Base
 
     "#{opts[:ssl] ? 'https://secure' : 'http://www'}.gravatar.com/avatar/" +
       Digest::MD5.hexdigest(email.downcase) + qs
+  end
+
+  def create_everything_permission
+    if everything_app = ::Doorkeeper::Application.find_by_name("Everything")
+      everything_app
+    else
+      everything_app = ::Doorkeeper::Application.create!(name: "Everything", uid: "not-a-real-app", secret: "does-not-have-a-secret", redirect_uri: "http://not-a-domain.com")
+    end
+    Permission.create!(user: self, application: everything_app, permissions: ["signin"])
   end
 end
