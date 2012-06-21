@@ -41,11 +41,9 @@ class User < ActiveRecord::Base
   end
 
   def create_everything_permission
-    if everything_app = ::Doorkeeper::Application.find_by_name("Everything")
-      everything_app
-    else
-      everything_app = ::Doorkeeper::Application.create!(name: "Everything", uid: "not-a-real-app", secret: "does-not-have-a-secret", redirect_uri: "http://not-a-domain.com")
-    end
+    everything_app = ::Doorkeeper::Application.find_by_name("Everything") ||
+        ::Doorkeeper::Application.create!(name: "Everything", uid: "not-a-real-app", secret: "does-not-have-a-secret", redirect_uri: "http://not-a-domain.com")
+
     Permission.create!(user: self, application: everything_app, permissions: ["signin"])
   end
 end

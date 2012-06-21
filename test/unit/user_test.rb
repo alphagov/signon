@@ -21,12 +21,12 @@ class UserTest < ActiveSupport::TestCase
     app1 = FactoryGirl.create(:application, name: "app1")
     FactoryGirl.create(:permission, application: app1, user: @user, permissions: ["signin", "coughing"])
     expected = {
-      'user' => {
-        'email' =>  @user.email,
-        'name' => @user.name,
-        'uid' => @user.uid,
-        'permissions' => {
-          'app1' => ["signin", "coughing"],
+      "user" => {
+        "email" =>  @user.email,
+        "name" => @user.name,
+        "uid" => @user.uid,
+        "permissions" => {
+          "app1" => ["signin", "coughing"],
           "Everything" => ["signin"]
         }
       }
