@@ -18,6 +18,7 @@ class User < ActiveRecord::Base
   has_many :permissions
 
   before_create :generate_uid
+  after_create :create_everything_permission
 
   def generate_uid
     self.uid = UUID.generate
@@ -42,5 +43,12 @@ class User < ActiveRecord::Base
 
   def invited_but_not_accepted
     !invitation_sent_at.nil? && invitation_accepted_at.nil?
+  end
+
+  def create_everything_permission
+    everything_app = ::Doorkeeper::Application.find_by_name("Everything") ||
+        ::Doorkeeper::Application.create!(name: "Everything", uid: "not-a-real-app", secret: "does-not-have-a-secret", redirect_uri: "http://not-a-domain.com")
+
+    Permission.create!(user: self, application: everything_app, permissions: ["signin"])
   end
 end

@@ -6,10 +6,32 @@ class UserTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user)
   end
 
+  # We need this as a stepping stone until we record real permissions
+  test "new users should get a special 'everything' permission" do
+    # everything_app = ::Doorkeeper::Application.create!(name: "Everything", uid: "not-a-real-app", secret: "does-not-have-a-secret", redirect_uri: "http://not-a-domain.com")
+    user = FactoryGirl.create(:user)
+    permission = user.permissions.first
+    assert_equal "Everything", permission.application.name
+    assert_equal ["signin"], permission.permissions
+  end
+
   # JSON Output
 
   test "sensible json output" do
-    assert_equal( { 'user' => { 'email' =>  @user.email, 'name' => @user.name, 'uid' => @user.uid, 'permissions' => {} } }, JSON.parse(@user.to_sensible_json) )
+    app1 = FactoryGirl.create(:application, name: "app1")
+    FactoryGirl.create(:permission, application: app1, user: @user, permissions: ["signin", "coughing"])
+    expected = {
+      "user" => {
+        "email" =>  @user.email,
+        "name" => @user.name,
+        "uid" => @user.uid,
+        "permissions" => {
+          "app1" => ["signin", "coughing"],
+          "Everything" => ["signin"]
+        }
+      }
+    }
+    assert_equal(expected, JSON.parse(@user.to_sensible_json) )
   end
 
   # Gravatar URLs
