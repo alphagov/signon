@@ -7,8 +7,7 @@ development: &development
   adapter: mysql2
   encoding: utf8
   reconnect: false
-#  database: signonotron2_development
-  database: signon_production
+  database: signonotron2_development
   pool: 5
   username: signonotron2
   password:
