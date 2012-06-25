@@ -4,7 +4,13 @@ end
 
 When /^I add "([^"]*)" permission to "([^"]*)"$/ do |permission, application|
   visit "/admin/users/#{@another_user.to_param}/edit"
-  select permission, :from => "Permissions for #{application}" #'user[permissions_attributes][1][permissions][]'
+  select permission, :from => "Permissions for #{application}"
+  click_button "Update User"
+end
+
+When /I give the user access to "([^"]*)"$/ do |application|
+  visit "/admin/users/#{@another_user.to_param}/edit"
+  check "Has access to #{application}?"
   click_button "Update User"
 end
 
