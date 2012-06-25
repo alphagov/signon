@@ -1,6 +1,16 @@
 <h2>Edit user <%= @user.name %></h2>
 
 <%= form_for [:admin, @user] do |f| %>
+  
+  <% if @user.errors.count > 0 %>
+    <div class="alert alert-error">
+      <ul>
+        <% @user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
   <p>
     <%= f.label :name %>
@@ -18,5 +28,33 @@
     <%= f.label :is_admin %>
   </p>
 
+  <table>
+    <thead>
+      <tr>
+        <th>Application</th>
+        <th>Permissions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @applications_and_permissions.each_with_index do |(application, permission), index| %>
+        <tr>
+          <td>
+            <%= application.name %>
+            <%= hidden_field_tag "user[permissions_attributes][#{index}][application_id]", application.id %>
+            <%= hidden_field_tag "user[permissions_attributes][#{index}][id]", permission.id %>
+          </td>
+          <td>
+            <%= label_tag "user[permissions_attributes][#{index}][permissions][]", "Permissions for #{application.name}", style: "display: none;" %>
+            <%= select_tag "user[permissions_attributes][#{index}][permissions][]", options_for_select(Permission::PERMISSIONS, permission.permissions), multiple: true, class: "chzn-select", "data-placeholder" => "Start typing to search for permissions" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
   <p><%= f.submit %></p>
 <% end %>
+
+<script type="text/javascript">
+  $(".chzn-select").chosen();
+</script>

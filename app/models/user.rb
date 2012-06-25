@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
          :strengthened  # in signonotron2/lib/devise/models/strengthened.rb
 
   attr_accessible :uid, :name, :email, :password, :password_confirmation
+  attr_accessible :uid, :name, :email, :password, :password_confirmation, :is_admin, :permissions_attributes, as: :admin
   attr_readonly :uid
 
   validates :name, presence: true
@@ -19,6 +20,8 @@ class User < ActiveRecord::Base
 
   before_create :generate_uid
   after_create :create_everything_permission
+
+  accepts_nested_attributes_for :permissions, :allow_destroy => true
 
   def generate_uid
     self.uid = UUID.generate

@@ -16,6 +16,17 @@
   </section>
 <% end %>
 
+<section>
+  <h3>Permissions</h3>
+  <ul>
+    <% current_user.permissions.each do |permission| %> 
+      <li>
+        <%= permission.application.name %> : <%= permission.permissions.nil? ? "None" : permission.permissions.map(&:humanize).join(",") %>
+      </li>
+    <% end %>
+  </ul>
+</section>
+
 <%- unless current_user.authorisations.empty? %>
   <section>
     <h3>Authorised Applications</h3>
