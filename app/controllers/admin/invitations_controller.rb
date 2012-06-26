@@ -1,17 +1,23 @@
 # https://raw.github.com/scambra/devise_invitable/master/app/controllers/devise/invitations_controller.rb
 class Admin::InvitationsController < Devise::InvitationsController
+  include UserPermissionsControllerMethods
+
   before_filter :authenticate_user!
   before_filter :must_be_admin, only: [:new, :create]
 
+  def new
+    build_resource
+    @applications_and_permissions = applications_and_permissions(self.resource)
+    render :new
+  end
+
   def create
-    self.resource = resource_class.invite!(params[resource_name], current_inviter)
-
-    self.resource.update_attribute(:is_admin, params[:user][:is_admin])
-
+    self.resource = resource_class.invite!(translate_faux_signin_permission(params[resource_name]), current_inviter)
     if resource.errors.empty?
       set_flash_message :notice, :send_instructions, :email => self.resource.email
       respond_with resource, :location => after_invite_path_for(resource)
     else
+      @applications_and_permissions = applications_and_permissions(resource)
       respond_with_navigational(resource) { render :new }
     end
   end
@@ -24,6 +30,7 @@ class Admin::InvitationsController < Devise::InvitationsController
   end
 
   private
+
     def must_be_admin
       if ! current_user.is_admin?
         flash[:alert] = "You must be an admin to do admin things."

@@ -1,0 +1,50 @@
+<p>
+  <%= f.label :name %>
+  <%= f.text_field :name %>
+</p>
+
+<p>
+  <%= f.label :email %>
+  <%= f.text_field :email %>
+</p>
+
+<p>
+  <%= f.check_box :is_admin %>
+  &nbsp;
+  <%= f.label :is_admin %>
+</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Application</th>
+      <th>Has access?</th>
+      <th>Other Permissions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @applications_and_permissions.each_with_index do |(application, permission), index| %>
+      <tr>
+        <td>
+          <%= application.name %>
+          <%= hidden_field_tag "user[permissions_attributes][#{index}][application_id]", application.id %>
+          <%= hidden_field_tag "user[permissions_attributes][#{index}][id]", permission.id %>
+        </td>
+        <td>
+          <!-- Emulate form.check_box helper http://api.rubyonrails.org/v3.1.3/classes/ActionView/Helpers/FormHelper.html#method-i-check_box -->
+          <%= hidden_field_tag "user[permissions_attributes][#{index}][signin_permission]", "0" %>
+          <%= label_tag "user[permissions_attributes][#{index}][signin_permission]", "Has access to #{application.name}?", style: "display: none;" %>
+          <%= check_box_tag "user[permissions_attributes][#{index}][signin_permission]", "1", permission.permissions.include?("signin") %>
+        </td>
+        <td>
+          <%= label_tag "user[permissions_attributes][#{index}][permissions][]", "Permissions for #{application.name}", style: "display: none;" %>
+          <%= select_tag "user[permissions_attributes][#{index}][permissions][]", options_for_select(Permission::PERMISSIONS - ["signin"], permission.permissions - ["signin"]), multiple: true, class: "chzn-select", "data-placeholder" => "Start typing to search for permissions" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<script type="text/javascript">
+  $(".chzn-select").chosen();
+</script>

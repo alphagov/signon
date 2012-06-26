@@ -3,22 +3,7 @@
 <%= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => {:method => :post} do |f| %>
   <%= devise_error_messages! %>
 
-  <p>
-    <%= f.label :name %>
-    <%= f.text_field :name %>
-  </p>
-  <% resource.class.invite_key_fields.each do |field| -%>
-    <p>
-      <%= f.label field %>
-      <%= f.text_field field %>
-    </p>
-  <% end -%>
-
-  <p>
-    <%= f.check_box :is_admin %>
-    &nbsp;
-    <%= f.label :is_admin %>
-  </p>
-
+  <%= render partial: "admin/users/form_fields", locals: { f: f } %>
+  
   <p><%= f.submit "Create user and send email" %></p>
 <% end %>

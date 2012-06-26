@@ -7,6 +7,6 @@ section#content {
   margin: 2.5em auto 0 auto;
 }
 
-form.edit_user .chzn-select {
+.chzn-select {
   width: 300px
 }

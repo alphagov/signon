@@ -51,7 +51,13 @@ class User < ActiveRecord::Base
   def create_everything_permission
     everything_app = ::Doorkeeper::Application.find_by_name("Everything") ||
         ::Doorkeeper::Application.create!(name: "Everything", uid: "not-a-real-app", secret: "does-not-have-a-secret", redirect_uri: "http://not-a-domain.com")
+    if self.permissions.where(application_id: everything_app.id).count == 0
+      Permission.create!(user: self, application: everything_app, permissions: ["signin"])
+    end
+  end
 
-    Permission.create!(user: self, application: everything_app, permissions: ["signin"])
+  # Required for devise_invitable to set is_admin and permissions
+  def self.inviter_role(inviter)
+    :admin
   end
 end
