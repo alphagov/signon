@@ -1,5 +1,6 @@
 class Admin::UsersController < Admin::BaseController
   include UserPermissionsControllerMethods
+  helper_method :applications_and_permissions
 
   respond_to :html
   before_filter :set_user, only: [:edit, :update, :unlock]
@@ -9,7 +10,6 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def edit
-    @applications_and_permissions = applications_and_permissions(@user)
   end
 
   def update
@@ -17,7 +17,6 @@ class Admin::UsersController < Admin::BaseController
       flash[:notice] = "Updated user #{@user.email} successfully"
       redirect_to admin_users_path
     else
-      applications_and_permissions = applications_and_permissions(@user)
       respond_with @user
     end
   end

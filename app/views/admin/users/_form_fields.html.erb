@@ -23,7 +23,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @applications_and_permissions.each_with_index do |(application, permission), index| %>
+    <% applications_and_permissions(f.object).each_with_index do |(application, permission), index| %>
       <tr>
         <td>
           <%= application.name %>

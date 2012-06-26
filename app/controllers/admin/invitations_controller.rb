@@ -1,15 +1,10 @@
 # https://raw.github.com/scambra/devise_invitable/master/app/controllers/devise/invitations_controller.rb
 class Admin::InvitationsController < Devise::InvitationsController
   include UserPermissionsControllerMethods
+  helper_method :applications_and_permissions
 
   before_filter :authenticate_user!
   before_filter :must_be_admin, only: [:new, :create]
-
-  def new
-    build_resource
-    @applications_and_permissions = applications_and_permissions(self.resource)
-    render :new
-  end
 
   def create
     self.resource = resource_class.invite!(translate_faux_signin_permission(params[resource_name]), current_inviter)
@@ -17,7 +12,6 @@ class Admin::InvitationsController < Devise::InvitationsController
       set_flash_message :notice, :send_instructions, :email => self.resource.email
       respond_with resource, :location => after_invite_path_for(resource)
     else
-      @applications_and_permissions = applications_and_permissions(resource)
       respond_with_navigational(resource) { render :new }
     end
   end
