@@ -68,7 +68,7 @@ class UsersControllerTest < ActionController::TestCase
     @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
     get :show, {:format => :json}
     json = JSON.parse(response.body)
-    assert_equal({ "Everything" => ["signin"], application.name => ["signin"] }, json['user']['permissions'])
+    assert_equal({ application.name => ["signin"] }, json['user']['permissions'])
   end
 
   private
