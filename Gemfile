@@ -11,7 +11,8 @@ gem 'mysql2'
 gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
 
-gem 'slimmer', git: "git://github.com/alphagov/slimmer.git"
+gem 'formtastic', git: 'git://github.com/justinfrench/formtastic.git', branch: '2.1-stable'
+gem 'formtastic-bootstrap', git: 'git://github.com/cgunther/formtastic-bootstrap.git', branch: 'bootstrap-2'
 gem 'plek'
 
 gem 'uuid'

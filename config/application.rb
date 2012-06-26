@@ -52,11 +52,10 @@ module Signonotron2
 
     # Enable the asset pipeline
     config.assets.enabled = true
-
-    # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+    config.assets.prefix = '/assets'
 
-    config.middleware.insert_before Warden::Manager, Slimmer::App, config.slimmer.to_hash
+    #config.middleware.insert_before Warden::Manager, Slimmer::App, config.slimmer.to_hash
 
     config.to_prepare do
       Doorkeeper::ApplicationController.layout "application"
