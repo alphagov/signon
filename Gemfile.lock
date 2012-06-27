@@ -4,23 +4,6 @@ GIT
   specs:
     passphrase_entropy (0.1.2)
 
-GIT
-  remote: git://github.com/cgunther/formtastic-bootstrap.git
-  revision: 3428fef4f7870b01241d65893b882ad32cfc18d8
-  branch: bootstrap-2
-  specs:
-    formtastic-bootstrap (1.2.0)
-      formtastic
-      rails (>= 3.1.0)
-
-GIT
-  remote: git://github.com/justinfrench/formtastic.git
-  revision: 7b7428fa4a6a44aea1e8278523f4f45f2570a33d
-  branch: 2.1-stable
-  specs:
-    formtastic (2.1.1)
-      actionpack (~> 3.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -190,8 +173,6 @@ DEPENDENCIES
   devise_invitable
   doorkeeper
   factory_girl_rails
-  formtastic!
-  formtastic-bootstrap!
   jquery-rails
   mysql2
   passphrase_entropy!
