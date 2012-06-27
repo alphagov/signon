@@ -3,7 +3,8 @@
 <head>
   <title>GOV.UK Signon</title>
   <%= csrf_meta_tags %>
-  <%= stylesheet_link_tag 'bootstrap.min.css', 'application.css' %>
+  <%= stylesheet_link_tag 'bootstrap', 'application' %>
+
   <%= javascript_include_tag 'application', 'bootstrap-alert', 'bootstrap-button', 'bootstrap-modal', 'bootstrap-transition' %>
 </head>
 <body>
@@ -23,12 +24,10 @@
 
   <div class="container">
 
-    <%- if notice %><p class="flash-notice"><%= notice %></p><% end -%>
-    <%- if alert %><p class="flash-alert"><%= alert %></p><% end %>
+    <%- if notice %><div class="alert alert-success"><%= notice %></div><% end -%>
+    <%- if alert %><div class="alert alert-error"><%= alert %></div><% end %>
 
-    <div class="hero-unit">
-      <%= yield %>
-    </div>
+    <%= yield %>
 
     <hr>
 
