@@ -12,11 +12,13 @@
  *= require_tree .
 */
 
-/*
-  *= require formtastic-bootstrap
-*/
+html {
+  font-size: 62.5%; /* reset to 10px default so 2.4rem == 24px */
+}
 
 body {
+  font-size: 18px;
+  font-size: 1.8rem;
   padding-top: 60px;
   padding-bottom: 40px;
 }
