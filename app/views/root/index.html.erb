@@ -1,15 +1,15 @@
-<section>
-  <h3>Your Account</h3>
+  <section>
+    <h1>Your Account</h1>
 
-  <ul>
-    <li><%= link_to "Change your passphrase", edit_user_path %></li>
-    <li><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></li>
-  </ul>
-</section>
+    <ul>
+      <li><%= link_to "Change your passphrase", edit_user_path %></li>
+      <li><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></li>
+    </ul>
+  </section>
 
 <% if current_user.is_admin? %>
   <section>
-    <h3>Admin</h3>
+    <h2>Admin</h2>
     <ul>
       <li><%= link_to "Administer users", admin_users_path %></li>
     </ul>

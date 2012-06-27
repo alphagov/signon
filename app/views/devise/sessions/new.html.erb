@@ -1,17 +1,20 @@
-<h2>Sign in</h2>
+<h1>Sign in</h1>
 
-<%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => 'formtastic' }) do |f| %>
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email %></div>
+<%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :class => '' }) do |f| %>
 
-  <div><%= f.label :password, "Passphrase" %><br />
-  <%= f.password_field :password %></div>
+  <%= f.label :email %>
+  <%= f.email_field :email %>
+
+  <%= f.label :password, "Passphrase" %>
+  <%= f.password_field :password %>
 
   <% if devise_mapping.rememberable? -%>
-    <div><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
+    <%= f.check_box :remember_me %> <%= f.label :remember_me %>
   <% end -%>
 
-  <div><%= f.submit "Sign in" %></div>
+  <hr>
+
+  <%= f.submit "Sign in", :class => 'btn btn-primary' %>
 <% end %>
 
 <%= render "links" %>
