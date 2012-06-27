@@ -1,22 +1,18 @@
-<h1>Edit user <%= @user.name %></h1>
+<h1>Edit user &ldquo;<%= @user.name %>&rdquo;</h1>
 
-<%= form_for [:admin, @user] do |f| %>
+<%= form_for [:admin, @user], :html => {:class => 'well'} do |f| %>
 
-  <p>
-    <%= f.label :name %>
-    <%= f.text_field :name %>
-  </p>
-  
-  <p>
-    <%= f.label :email %>
-    <%= f.text_field :email %>
-  </p>
+  <%= f.label :name %>
+  <%= f.text_field :name, :class => 'span6' %>
 
-  <p>
-    <%= f.check_box :is_admin %>
-    &nbsp;
-    <%= f.label :is_admin %>
-  </p>
+  <%= f.label :email %>
+  <%= f.text_field :email, :class => 'span6' %>
 
-  <p><%= f.submit %></p>
+  <label class="checkbox" for="user_is_admin">Is admin?
+    <%= f.check_box :is_admin, :class => 'checkbox' %>
+  </label>
+
+  <hr>
+
+  <%= f.submit :class => 'btn btn-primary' %>
 <% end %>

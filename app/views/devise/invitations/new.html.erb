@@ -1,24 +1,21 @@
-<h2>Create new user</h2>
+<h1>Create new user</h1>
 
-<%= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => {:method => :post} do |f| %>
+<%= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => {:method => :post, :class => 'well'} do |f| %>
   <%= devise_error_messages! %>
 
-  <p>
     <%= f.label :name %>
-    <%= f.text_field :name %>
-  </p>
+    <%= f.text_field :name, :class => 'span6' %>
+
   <% resource.class.invite_key_fields.each do |field| -%>
-    <p>
-      <%= f.label field %>
-      <%= f.text_field field %>
-    </p>
+    <%= f.label field %>
+    <%= f.text_field field, :class => 'span6' %>
   <% end -%>
 
-  <p>
-    <%= f.check_box :is_admin %>
-    &nbsp;
-    <%= f.label :is_admin %>
-  </p>
+  <label class="checkbox" for="user_is_admin">Is admin?
+    <%= f.check_box :is_admin, :class => 'checkbox' %>
+  </label>
 
-  <p><%= f.submit "Create user and send email" %></p>
+  <hr>
+
+  <%= f.submit "Create user and send email", :class => 'btn btn-success' %>
 <% end %>

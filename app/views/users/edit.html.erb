@@ -1,23 +1,29 @@
 <section>
   <%= form_for current_user, :url => user_path do |f| %>
   <%- unless current_user.errors.empty? -%>
-    <ul class="errors">
-      <%- current_user.errors.full_messages.each do |msg| -%>
-      <li><%= msg %></li>
-      <%- end -%>
-    </ul>
+    <div class="alert alert-danger">
+      <ul class="errors">
+        <%- current_user.errors.full_messages.each do |msg| -%>
+        <li><%= msg %></li>
+        <%- end -%>
+      </ul>
+    </div>
   <%- end -%>
 
-    <h1><%= t(".change_passphrase") %></h1>
+  <h1><%= t(".change_passphrase") %></h1>
+
+  <div class="well">
     <p><%= t("helpers.label.user.password_guidance") %></p>
 
-    <label></label>
-    <%= t(:passphrase) %> <%= f.password_field :password %>
+    <%= f.label(:password, "Passphrase") %>
+    <%= f.password_field :password, :class => 'span6' %>
     
-    <label></label>
-    <%= t(:confirm_passphrase) %> <%= f.password_field :password_confirmation %>
+    <%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation, :class => 'span6' %>
     
     <hr>
+    
     <%= f.submit t(".change"), :class => 'btn btn-primary' %></p>
-  <% end %>
+    <% end %>
+  </div>
 </section>
