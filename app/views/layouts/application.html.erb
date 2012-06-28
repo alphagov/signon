@@ -1,22 +1,40 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Signonotron2</title>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
-  <%= javascript_include_tag "application" %>
+  <title>GOV.UK Signon</title>
   <%= csrf_meta_tags %>
+  <%= stylesheet_link_tag 'application' %>
+  <%= javascript_include_tag 'application' %>
 </head>
-<body class="signonotron2">
+<body>
 
-<h1 id="site-title">Account Sign On</h1>
+  <div class="navbar navbar-fixed-top" role="banner">
+    <div class="navbar-inner">
+      <div class="container">
+        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </a>
+        <%= link_to "GOV.UK Signon", root_path, :class => 'brand' %>
+      </div>
+    </div>
+  </div>
 
-<div id='wrapper' class="wrapper">
+  <div class="container" role="main">
 
-<%- if notice %><p class="flash-notice"><%= notice %></p><% end -%>
-<%- if alert %><p class="flash-alert"><%= alert %></p><% end %>
+    <%- if notice %><div class="alert alert-success" role="alert"><%= notice %></div><% end -%>
+    <%- if alert %><div class="alert alert-error" role="alert"><%= alert %></div><% end %>
 
-<%= yield %>
-</div>
+    <%= yield %>
+
+    <hr>
+
+    <footer role="contentinfo">
+      <p>&copy; GDS. <span class="pull-right">Signon version 2.0</span></p>
+    </footer>
+
+  </div> <!-- /container -->
 
 </body>
 </html>
