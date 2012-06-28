@@ -41,7 +41,8 @@ class Admin::UsersControllerTest < ActionController::TestCase
     should "redisplay the form if save fails" do
       another_user = FactoryGirl.create(:user)
       put :update, id: another_user.id, user: { name: "" }
-      assert_select "form.edit_user"
+      # puts @response.body
+      assert_select "form#edit_user_#{another_user.id}"
     end
   end
 
