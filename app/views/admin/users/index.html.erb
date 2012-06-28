@@ -1,39 +1,45 @@
-<p><%= link_to "Home", root_path %></p>
-<br>
-<%= link_to "Create an account", new_user_invitation_path, class: "button" %>
-<table>
-  <thead>
-    <tr>
-      <th>Email</th>
-      <th>Sign-in count</th>
-      <th>Created</th>
-      <th>Admin?</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @users.each do |user| %>
+<h1>User accounts</h1>
+
+<div class="well">
+
+  <%= link_to "Create new account", new_user_invitation_path, class: "btn btn-success" %>
+
+  <hr>
+
+  <table class="table table-striped table-bordered">
+    <thead>
       <tr>
-        <td class="email"><%= link_to "#{user.name} <#{user.email}>", edit_admin_user_path(user) %></td>
-        <td><%= user.sign_in_count %></td>
-        <td><%= time_ago_in_words(user.created_at) %> ago</td>
-        <td><%= user.is_admin ? "Yes" : "No" %></td>
-        <td><%= link_to "Edit", edit_admin_user_path(user) %></td>
-        <% if user.invited_but_not_accepted %>
-          <td>
-            <%= form_tag resend_user_invitation_path(user) do %>
-              <%= submit_tag "Resend signup email" %>
-            <% end %>
-          </td>
-        <% end %>
-        <% if user.access_locked? %>
-          <td>
-            <%= form_tag unlock_admin_user_path(user) do %>
-              <%= submit_tag "Unlock" %>
-            <% end %>
-          </td>
-        <% end %>
+        <th scope="col">Email</th>
+        <th scope="col">Sign-in count</th>
+        <th scope="col">Created</th>
+        <th scope="col">Admin?</th>
+        <th scope="col">Actions</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td class="email"><%= link_to "#{user.name} <#{user.email}>", edit_admin_user_path(user) %></td>
+          <td><%= user.sign_in_count %></td>
+          <td><%= time_ago_in_words(user.created_at) %> ago</td>
+          <td><%= user.is_admin ? "Yes" : "No" %></td>
+          <td><%= link_to "Edit", edit_admin_user_path(user) %>
+            <% if user.invited_but_not_accepted %>
+              <%= form_tag resend_user_invitation_path(user) do %>
+                <%= submit_tag "Resend signup email", :class => 'btn btn-primary' %>
+              <% end %>
+            <% end %>
+          </td>
+          <% if user.access_locked? %>
+            <td>
+              <%= form_tag unlock_admin_user_path(user) do %>
+                <%= submit_tag "Unlock", :class => 'btn btn-danger' %>
+              <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+</div>
