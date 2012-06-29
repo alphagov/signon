@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
-
-require_relative "config/environment"
+require_relative "../config/environment"
 
 def config_for_app(application_dir)
   lines = IO.read("../#{application_dir}/config/initializers/gds-sso.rb").split("\n")
