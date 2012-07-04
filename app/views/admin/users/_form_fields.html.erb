@@ -38,7 +38,7 @@
         </td>
         <td>
           <%= label_tag "user[permissions_attributes][#{index}][permissions][]", "Permissions for #{application.name}", style: "display: none;" %>
-          <%= select_tag "user[permissions_attributes][#{index}][permissions][]", options_for_select(Permission::PERMISSIONS - ["signin"], permission.permissions - ["signin"]), multiple: true, class: "chzn-select", "data-placeholder" => "Start typing to search for permissions" %>
+          <%= select_tag "user[permissions_attributes][#{index}][permissions][]", options_for_select(application.supported_permission_strings - ["signin"], permission.permissions - ["signin"]), multiple: true, class: "chzn-select", "data-placeholder" => "Start typing to search for permissions" %>
         </td>
       </tr>
     <% end %>

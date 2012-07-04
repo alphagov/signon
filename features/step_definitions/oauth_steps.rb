@@ -2,6 +2,11 @@ Given /^an OAuth application called "([^"]*)"$/ do |application_name|
   FactoryGirl.create(:application, name: application_name)
 end
 
+Given /^an OAuth application called "([^"]*)" with SupportedPermission of "([^"]*)"$/ do |application_name, permission_name|
+  app = FactoryGirl.create(:application, name: application_name)
+  FactoryGirl.create(:supported_permission, application: app, name: permission_name)
+end
+
 When /^I visit the OAuth authorisation request endpoint for "([^"]*)"$/ do |application_name|
   app = Doorkeeper::Application.find_by_name(application_name)
   visit "/oauth/authorize?response_type=code&client_id=#{app.uid}&redirect_uri=#{app.redirect_uri}"
