@@ -53,7 +53,6 @@ module Signonotron2
     # Enable the asset pipeline
     config.assets.enabled = true
     config.assets.version = '1.0'
-    config.assets.prefix = '/vendor/assets'
 
     #config.middleware.insert_before Warden::Manager, Slimmer::App, config.slimmer.to_hash
 
