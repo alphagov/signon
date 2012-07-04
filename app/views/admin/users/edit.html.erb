@@ -1,16 +1,18 @@
 <h1>Edit user &ldquo;<%= @user.name %>&rdquo;</h1>
 
 <%= form_for [:admin, @user], :html => {:class => 'well'} do |f| %>
+  
+  <% if @user.errors.count > 0 %>
+    <div class="alert alert-error">
+      <ul>
+        <% @user.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
 
-  <%= f.label :name %>
-  <%= f.text_field :name, :class => 'span6' %>
-
-  <%= f.label :email %>
-  <%= f.text_field :email, :class => 'span6' %>
-
-  <label class="checkbox" for="user_is_admin">Is admin?
-    <%= f.check_box :is_admin, :class => 'checkbox' %>
-  </label>
+  <%= render partial: "form_fields", locals: { f: f } %>
 
   <hr>
 

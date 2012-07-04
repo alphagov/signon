@@ -3,19 +3,7 @@
 <%= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => {:method => :post, :class => 'well'} do |f| %>
   <%= devise_error_messages! %>
 
-    <%= f.label :name %>
-    <%= f.text_field :name, :class => 'span6' %>
-
-  <% resource.class.invite_key_fields.each do |field| -%>
-    <%= f.label field %>
-    <%= f.text_field field, :class => 'span6' %>
-  <% end -%>
-
-  <label class="checkbox" for="user_is_admin">Is admin?
-    <%= f.check_box :is_admin, :class => 'checkbox' %>
-  </label>
-
-  <hr>
-
+  <%= render partial: "admin/users/form_fields", locals: { f: f } %>
+  
   <%= f.submit "Create user and send email", :class => 'btn btn-success' %>
 <% end %>

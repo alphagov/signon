@@ -10,6 +10,7 @@ class User < ActiveRecord::Base
          :strengthened  # in signonotron2/lib/devise/models/strengthened.rb
 
   attr_accessible :uid, :name, :email, :password, :password_confirmation
+  attr_accessible :uid, :name, :email, :password, :password_confirmation, :is_admin, :permissions_attributes, as: :admin
   attr_readonly :uid
 
   validates :name, presence: true
@@ -18,6 +19,8 @@ class User < ActiveRecord::Base
   has_many :permissions
 
   before_create :generate_uid
+
+  accepts_nested_attributes_for :permissions, :allow_destroy => true
 
   def generate_uid
     self.uid = UUID.generate
@@ -42,5 +45,18 @@ class User < ActiveRecord::Base
 
   def invited_but_not_accepted
     !invitation_sent_at.nil? && invitation_accepted_at.nil?
+  end
+
+  def create_everything_permission
+    everything_app = ::Doorkeeper::Application.find_by_name("Everything") ||
+        ::Doorkeeper::Application.create!(name: "Everything", uid: "not-a-real-app", secret: "does-not-have-a-secret", redirect_uri: "http://not-a-domain.com")
+    if self.permissions.where(application_id: everything_app.id).count == 0
+      Permission.create!(user: self, application: everything_app, permissions: ["signin"])
+    end
+  end
+
+  # Required for devise_invitable to set is_admin and permissions
+  def self.inviter_role(inviter)
+    :admin
   end
 end

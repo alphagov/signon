@@ -1,21 +1,19 @@
 class Admin::UsersController < Admin::BaseController
+  include UserPermissionsControllerMethods
+  helper_method :applications_and_permissions
+
   respond_to :html
+  before_filter :set_user, only: [:edit, :update, :unlock]
 
   def index
     @users = User.order("created_at desc")
   end
 
   def edit
-    @user = User.find(params[:id])
   end
 
   def update
-    @user = User.find(params[:id])
-    @user.attributes = params[:user]
-    if params[:user][:is_admin]
-      @user.is_admin = params[:user][:is_admin]
-    end
-    if @user.save
+    if @user.update_attributes(translate_faux_signin_permission(params[:user]), as: :admin)
       flash[:notice] = "Updated user #{@user.email} successfully"
       redirect_to admin_users_path
     else
@@ -24,9 +22,13 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def unlock
-    user = User.find(params[:id])
-    user.unlock_access!
-    flash[:notice] = "Unlocked #{user.email}"
+    @user.unlock_access!
+    flash[:notice] = "Unlocked #{@user.email}"
     redirect_to admin_users_path
   end
+
+  private
+    def set_user
+      @user = User.find(params[:id])
+    end
 end
