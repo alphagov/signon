@@ -1,6 +1,6 @@
-<h2>Edit user <%= @user.name %></h2>
+<h1>Edit user &ldquo;<%= @user.name %>&rdquo;</h1>
 
-<%= form_for [:admin, @user] do |f| %>
+<%= form_for [:admin, @user], :html => {:class => 'well'} do |f| %>
   
   <% if @user.errors.count > 0 %>
     <div class="alert alert-error">
@@ -14,5 +14,7 @@
 
   <%= render partial: "form_fields", locals: { f: f } %>
 
-  <p><%= f.submit %></p>
+  <hr>
+
+  <%= f.submit :class => 'btn btn-primary' %>
 <% end %>

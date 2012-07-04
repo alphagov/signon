@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+require_relative "../config/environment"
+
+def config_for_app(application_dir)
+  lines = IO.read("../#{application_dir}/config/initializers/gds-sso.rb").split("\n")
+  config = {}
+  lines.each do |line|
+    next if line =~ Regexp.new(Regexp.escape("GDS::SSO.config do |config|"))
+    next if line =~ Regexp.new(/^end/)
+    next if line =~ Regexp.new(/^(\s)+?$/)
+    key = /config\.([^ ]+)/.match(line).to_a[1]
+    value = /=[\s]+?['|"]([^'"]+)['|"]/.match(line).to_a[1]
+    config[key] = value
+  end
+  config
+end
+
+::Doorkeeper::Application.all.each do |application|
+  next if application.name =~ /guides_test/i
+  next if application.name =~ /Contact-o-Tron/i
+  
+  local_config = config_for_app(application.name.downcase)
+
+  redirect_uri = application.redirect_uri.gsub(/production.alphagov.co.uk/, "dev.gov.uk").gsub(/https:/, "http:")
+  application.redirect_uri = redirect_uri
+  application.uid          = local_config["oauth_id"]
+  application.secret       = local_config["oauth_secret"]
+  puts "Updating application #{application.name} with config: #{application.changes}"
+  application.save!
+end

@@ -65,9 +65,6 @@ Signonotron2::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-  config.slimmer.cache_templates = true
-  config.slimmer.asset_host = Plek.current.find('assets')
-
   config.action_mailer.default_url_options = {
     :host => URI.parse(Plek.current.find('signon')).host
   }

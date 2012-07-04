@@ -1,17 +1,17 @@
 <p>
   <%= f.label :name %>
-  <%= f.text_field :name %>
+  <%= f.text_field :name, :class => 'span6' %>
 </p>
 
 <p>
   <%= f.label :email %>
-  <%= f.text_field :email %>
+  <%= f.text_field :email, :class => 'span6' %>
 </p>
 
 <p>
-  <%= f.check_box :is_admin %>
-  &nbsp;
-  <%= f.label :is_admin %>
+  <label class="checkbox" for="user_is_admin">Is admin?
+    <%= f.check_box :is_admin, :class => 'checkbox' %>
+  </label>
 </p>
 
 <table>

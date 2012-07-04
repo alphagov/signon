@@ -19,7 +19,6 @@ class User < ActiveRecord::Base
   has_many :permissions
 
   before_create :generate_uid
-  after_create :create_everything_permission
 
   accepts_nested_attributes_for :permissions, :allow_destroy => true
 

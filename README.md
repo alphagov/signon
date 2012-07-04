@@ -14,7 +14,7 @@ To create a new user, use the following syntax:
 
 To create a new client application to which Sign-on-o-Tron will provide sign-on services:
 
-`rake clients:create name=CientName`
+`rake clients:create name=ClientName`
 
 which will create and return a client ID and secret that can be used in the app (normally via [GDS-SSO](http://github.com/alphagov/gds-sso)).
 
