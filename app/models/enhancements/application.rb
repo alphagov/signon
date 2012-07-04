@@ -9,6 +9,6 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   end
 
   def supported_permission_strings
-    self.class.default_permission_strings + supported_permissions.map(&:name)
+    self.class.default_permission_strings + supported_permissions.order(:name).map(&:name)
   end
 end
