@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120704103854) do
+ActiveRecord::Schema.define(:version => 20120704154406) do
 
   create_table "oauth_access_grants", :force => true do |t|
     t.integer  "resource_owner_id", :null => false
@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(:version => 20120704103854) do
     t.datetime "updated_at"
   end
 
+  add_index "supported_permissions", ["application_id", "name"], :name => "index_supported_permissions_on_application_id_and_name", :unique => true
   add_index "supported_permissions", ["application_id"], :name => "index_supported_permissions_on_application_id"
 
   create_table "users", :force => true do |t|
