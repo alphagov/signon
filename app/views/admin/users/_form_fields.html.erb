@@ -14,12 +14,12 @@
   </label>
 </p>
 
-<table>
+<table class="table table-bordered table-striped table-condensed">
   <thead>
     <tr>
-      <th>Application</th>
-      <th>Has access?</th>
-      <th>Other Permissions</th>
+      <th class="span1">Application</th>
+      <th class="span1">Has access?</th>
+      <th class="span2">Other Permissions</th>
     </tr>
   </thead>
   <tbody>
@@ -33,11 +33,11 @@
         <td>
           <!-- Emulate form.check_box helper http://api.rubyonrails.org/v3.1.3/classes/ActionView/Helpers/FormHelper.html#method-i-check_box -->
           <%= hidden_field_tag "user[permissions_attributes][#{index}][signin_permission]", "0" %>
-          <%= label_tag "user[permissions_attributes][#{index}][signin_permission]", "Has access to #{application.name}?", style: "display: none;" %>
+          <%= label_tag "user[permissions_attributes][#{index}][signin_permission]", "Has access to #{application.name}?", class: "visuallyhidden" %>
           <%= check_box_tag "user[permissions_attributes][#{index}][signin_permission]", "1", permission.permissions.include?("signin") %>
         </td>
         <td>
-          <%= label_tag "user[permissions_attributes][#{index}][permissions][]", "Permissions for #{application.name}", style: "display: none;" %>
+          <%= label_tag "user[permissions_attributes][#{index}][permissions][]", "Permissions for #{application.name}", class: "visuallyhidden" %>
           <%= select_tag "user[permissions_attributes][#{index}][permissions][]", options_for_select(application.supported_permission_strings - ["signin"], permission.permissions - ["signin"]), multiple: true, class: "chzn-select", "data-placeholder" => "Start typing to search for permissions" %>
         </td>
       </tr>
