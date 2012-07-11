@@ -10,7 +10,7 @@ end
 gem 'mysql2'
 gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
-
+gem 'exception_notification'
 gem 'plek'
 
 gem 'uuid'
