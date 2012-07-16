@@ -20,7 +20,11 @@
     <tbody>
       <% @users.each do |user| %>
         <tr>
-          <td class="email"><%= link_to "#{user.name} <#{user.email}>", edit_admin_user_path(user) %></td>
+          <td class="email">
+            <%= user.suspended? ? "<del>".html_safe : "" %>
+              <%= link_to "#{user.name} <#{user.email}>", edit_admin_user_path(user) %>
+            <%= user.suspended? ? "</del>".html_safe : "" %>
+          </td>
           <td><%= user.sign_in_count %></td>
           <td><%= time_ago_in_words(user.created_at) %> ago</td>
           <td><%= user.is_admin ? "Yes" : "No" %></td>
