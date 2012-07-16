@@ -1,5 +1,7 @@
 <h1>Suspend user &ldquo;<%= @user.name %>&rdquo;</h1>
 
+<p><span class="label label-important">Warning: suspensions are currently only enforced at login time. If a user is logged in, they could remain logged in forever.</span></p>
+
 <%= form_tag admin_suspension_path(@user), method: "put", :class => 'well' do %>
   <p>
     <label class="checkbox">
