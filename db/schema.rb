@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120704154718) do
+ActiveRecord::Schema.define(:version => 20120716130107) do
 
   create_table "oauth_access_grants", :force => true do |t|
     t.integer  "resource_owner_id", :null => false
@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(:version => 20120704154718) do
     t.integer  "invitation_limit"
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
+    t.string   "reason_for_suspension"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

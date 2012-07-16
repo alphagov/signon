@@ -19,13 +19,15 @@ module Devise
       end
     
       # Suspends the user in the database.
-      def suspend!
+      def suspend!(reason = nil)
+        self.reason_for_suspension = reason
         self.suspended_at = Time.now.utc
         save!
       end
     
       # un-suspends the user in the database.
       def unsuspend!
+        self.reason_for_suspension = nil
         self.suspended_at = nil
         save!
       end

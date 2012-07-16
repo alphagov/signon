@@ -13,6 +13,8 @@ Signonotron2::Application.routes.draw do
         post :unlock
       end
     end
+
+    resources :suspensions, only: [:edit, :update]
   end
 
   # compatibility with Sign-on-o-tron 1
