@@ -29,14 +29,12 @@
                 <%= submit_tag "Resend signup email", :class => 'btn btn-primary' %>
               <% end %>
             <% end %>
-          </td>
-          <% if user.access_locked? %>
-            <td>
+            <% if user.access_locked? %>
               <%= form_tag unlock_admin_user_path(user) do %>
                 <%= submit_tag "Unlock", :class => 'btn btn-danger' %>
               <% end %>
-            </td>
-          <% end %>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>
