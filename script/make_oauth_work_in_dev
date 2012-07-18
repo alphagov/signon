@@ -27,6 +27,6 @@ end
   application.redirect_uri = redirect_uri
   application.uid          = local_config["oauth_id"]
   application.secret       = local_config["oauth_secret"]
-  puts "Updating application #{application.name} with config: #{application.changes}"
+  puts "Updating application #{application.name}"
   application.save!
 end
