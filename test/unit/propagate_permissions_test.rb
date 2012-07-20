@@ -20,7 +20,7 @@ class PropagatePermissionsTest < ActiveSupport::TestCase
     expected_body = @user.to_sensible_json
     expected_url = 
     request = stub_request(:put, url_for_app(@application)).with(body: expected_body)
-    PropagatePermissions.new([@permission]).attempt
+    PropagatePermissions.new(@user, @user.permissions.map(&:application)).attempt
     assert_requested request
   end
 
@@ -41,7 +41,7 @@ class PropagatePermissionsTest < ActiveSupport::TestCase
     stub_request(:put, url_for_app(not_supported_yet_app)).to_return(status: 404)
     stub_request(:put, url_for_app(slow_app)).to_timeout
   
-    results = PropagatePermissions.new(@user.permissions).attempt
+    results = PropagatePermissions.new(@user, @user.permissions.map(&:application)).attempt
 
     assert_equal [{ application: @application }], results[:successes]
     expected_failures = [

@@ -1,7 +1,7 @@
 class PropagatePermissions
-  def initialize(permissions)
-    @user = permissions.first.user
-    @applications = permissions.map(&:application)
+  def initialize(user, applications)
+    @user = user
+    @applications = applications
   end
 
   def attempt

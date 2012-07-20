@@ -3,6 +3,8 @@ require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 
 require 'shoulda'
+require "test/unit"
+require "mocha"
 require 'webmock/minitest'
 
 WebMock.disable_net_connect!(:allow_localhost => true)

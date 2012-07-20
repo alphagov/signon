@@ -28,8 +28,10 @@ class Admin::UsersControllerTest < ActionController::TestCase
     should "update the user" do
       another_user = FactoryGirl.create(:user)
       put :update, id: another_user.id, user: { email: "new@email.com" }
+
       assert_equal "new@email.com", another_user.reload.email
-      assert_redirected_to admin_users_path
+      assert_equal 200, response.status
+      assert_select "h2", "Successfully synced permissions with some applications"
     end
 
     should "let you set the is_admin flag" do
@@ -41,9 +43,37 @@ class Admin::UsersControllerTest < ActionController::TestCase
     should "redisplay the form if save fails" do
       another_user = FactoryGirl.create(:user)
       put :update, id: another_user.id, user: { name: "" }
-      # puts @response.body
       assert_select "form#edit_user_#{another_user.id}"
     end
+
+    should "push changes to permissions out to apps" do
+      another_user = FactoryGirl.create(:user)
+      app = FactoryGirl.create(:application)
+      permission = FactoryGirl.create(:permission, application: app, user: another_user)
+
+      PropagatePermissions.expects(:new).with(another_user, [app]).returns(mock("mock propagator", attempt: {}))
+
+      permissions_attributes = { 
+        permissions_attributes: { 
+          0 => { 
+            application_id: "#{app.id}",
+            id: "#{permission.id}",
+            signin_permission: "1",
+            permissions: ["banana"]
+          } 
+        } 
+      }      
+      put :update, { id: another_user.id, user: { email: "new@email.com" } }.merge(permissions_attributes)
+
+      assert_equal "new@email.com", another_user.reload.email
+      assert_equal 200, response.status
+      assert_select "h2", "Successfully synced permissions with some applications"
+    end
+
+    should_eventually "only push changes where the permissions have changed"
+
+    # Limit the sharing of knowledge
+    should_eventually "only push changes to apps that need to know about the user"
   end
 
   should "disallow access to non-admins" do

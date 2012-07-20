@@ -106,7 +106,10 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    metaclass (0.0.1)
     mime-types (1.18)
+    mocha (0.12.1)
+      metaclass (~> 0.0.1)
     multi_json (1.2.0)
     mysql2 (0.3.11)
     nokogiri (1.5.2)
@@ -191,6 +194,7 @@ DEPENDENCIES
   factory_girl_rails
   gds-api-adapters (= 0.2.1)
   jquery-rails
+  mocha (= 0.12.1)
   mysql2
   passphrase_entropy!
   plek
