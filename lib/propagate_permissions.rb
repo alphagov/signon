@@ -1,6 +1,22 @@
-require_relative 'gds_api_extensions/sso'
+require 'gds_api/base'
 
 class PropagatePermissions
+
+  class Client < GdsApi::Base
+    def initialize(options)
+      super(nil, options)
+    end
+
+    def update_user(user)
+      put_json!("#{base_url}/user", JSON.parse(user))
+    end
+
+    private
+      def base_url
+        "#{@endpoint}/auth/gds/api"
+      end
+  end
+
   def initialize(user, applications)
     @user = user
     @applications = applications
@@ -45,7 +61,7 @@ class PropagatePermissions
   private
     def update_application(user, application)
       options = { endpoint_url: application.url_without_path }.merge(GDS_API_CREDENTIALS)
-      api = GdsApi::SSO.new(options)    
+      api = Client.new(options)    
       api.update_user(user.to_sensible_json)
     end
 end
