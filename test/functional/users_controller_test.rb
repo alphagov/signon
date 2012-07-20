@@ -34,6 +34,7 @@ class UsersControllerTest < ActionController::TestCase
   test "fetching json profile with a valid oauth token should succeed" do
     user = FactoryGirl.create(:user)
     application = FactoryGirl.create(:application)
+    permission = FactoryGirl.create(:permission, user_id: user.id, application_id: application.id)
     token = FactoryGirl.create(:access_token, :application => application, :resource_owner_id => user.id)
 
     @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
@@ -69,6 +70,18 @@ class UsersControllerTest < ActionController::TestCase
     get :show, {:format => :json}
     json = JSON.parse(response.body)
     assert_equal({ application.name => ["signin"] }, json['user']['permissions'])
+  end
+
+  test "fetching json profile should update last_synced_at for the relevant app" do
+    user = FactoryGirl.create(:user)
+    application = FactoryGirl.create(:application)
+    permission = FactoryGirl.create(:permission, user_id: user.id, application_id: application.id)
+    token = FactoryGirl.create(:access_token, :application => application, :resource_owner_id => user.id)
+
+    @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
+    get :show, {:format => :json}
+    
+    assert_not_nil permission.reload.last_synced_at
   end
 
   private

@@ -15,14 +15,14 @@
 </p>
 
 <h2>Permissions</h2>
-<p><span class="label label-important">Warning: changes to permissions are currently not applied until a user logs out and back in.</span></p>
 
 <table class="table table-bordered table-striped table-condensed">
   <thead>
     <tr>
       <th class="span1">Application</th>
       <th class="span1">Has access?</th>
-      <th class="span2">Other Permissions</th>
+      <th class="span1">Other Permissions</th>
+      <th class="span2">Last synced at</th>
     </tr>
   </thead>
   <tbody>
@@ -42,6 +42,17 @@
         <td>
           <%= label_tag "user[permissions_attributes][#{index}][permissions][]", "Permissions for #{application.name}", class: "visuallyhidden" %>
           <%= select_tag "user[permissions_attributes][#{index}][permissions][]", options_for_select(application.supported_permission_strings - ["signin"], permission.permissions - ["signin"]), multiple: true, class: "chzn-select", "data-placeholder" => "Start typing to search for permissions" %>
+        </td>
+        <td>
+          <% if permission.last_synced_at %>
+            <% if permission.sync_needed? %>
+              <span class="label label-important"><%= time_ago_in_words(permission.last_synced_at) %> ago</span>
+            <% else %>
+              <span class="label label-success"><%= time_ago_in_words(permission.last_synced_at) %> ago</span>
+            <% end %>
+          <% else %>
+            <span class="label label-important">Never</span>
+          <% end %>
         </td>
       </tr>
     <% end %>
