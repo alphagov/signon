@@ -75,6 +75,8 @@ GEM
     doorkeeper (0.3.1)
       railties (~> 3.1)
     erubis (2.7.0)
+    exception_notification (2.5.2)
+      actionmailer (>= 3.0.4)
     factory_girl (3.1.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (3.1.0)
@@ -172,6 +174,7 @@ DEPENDENCIES
   devise
   devise_invitable
   doorkeeper
+  exception_notification
   factory_girl_rails
   jquery-rails
   mysql2
