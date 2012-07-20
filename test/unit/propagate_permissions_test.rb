@@ -18,7 +18,6 @@ class PropagatePermissionsTest < ActiveSupport::TestCase
 
   should "send a PUT to the related app with the user.json as in the OAuth exchange" do
     expected_body = @user.to_sensible_json
-    expected_url = 
     request = stub_request(:put, url_for_app(@application)).with(body: expected_body)
     PropagatePermissions.new(@user, @user.permissions.map(&:application)).attempt
     assert_requested request
@@ -56,5 +55,25 @@ class PropagatePermissionsTest < ActiveSupport::TestCase
       }
     ]
     assert_equal expected_failures, results[:failures]
+  end
+
+  context "successful update" do
+    should "record the last_synced_at timestamp on the permission" do
+      expected_body = @user.to_sensible_json
+      
+      stub_request(:put, url_for_app(@application)).with(body: expected_body)
+      PropagatePermissions.new(@user, @user.permissions.map(&:application)).attempt
+      assert_not_nil @permission.reload.last_synced_at
+    end
+  end
+
+  context "failed update" do
+    should "not record the last_synced_at timestamp on the permission" do
+      expected_body = @user.to_sensible_json
+      
+      stub_request(:put, url_for_app(@application)).to_timeout
+      PropagatePermissions.new(@user, @user.permissions.map(&:application)).attempt
+      assert_nil @permission.reload.last_synced_at
+    end
   end
 end

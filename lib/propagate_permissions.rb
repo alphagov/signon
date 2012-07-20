@@ -30,6 +30,13 @@ class PropagatePermissions
         results[:failures] << { application: application, message: e.message }
       end
     end
+
+    results[:successes].each do |success|
+      app = success[:application]
+      perm = @user.permissions.detect { |perm| perm.application_id == app.id }
+      perm.synced!
+    end
+
     results
   end
 
