@@ -9,4 +9,8 @@ class Permission < ActiveRecord::Base
   def synced!
     update_attribute(:last_synced_at, Time.now)
   end
+
+  def sync_needed?
+    updated_at > last_synced_at
+  end
 end

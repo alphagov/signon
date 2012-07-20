@@ -45,7 +45,11 @@
         </td>
         <td>
           <% if permission.last_synced_at %>
-            <span class="label label-success"><%= time_ago_in_words(permission.last_synced_at) %> ago</span>
+            <% if permission.sync_needed? %>
+              <span class="label label-important"><%= time_ago_in_words(permission.last_synced_at) %> ago</span>
+            <% else %>
+              <span class="label label-success"><%= time_ago_in_words(permission.last_synced_at) %> ago</span>
+            <% end %>
           <% else %>
             <span class="label label-important">Never</span>
           <% end %>
