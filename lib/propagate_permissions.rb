@@ -1,3 +1,5 @@
+require_relative 'gds_api_extensions/sso'
+
 class PropagatePermissions
   def initialize(user, applications)
     @user = user
