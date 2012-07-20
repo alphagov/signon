@@ -69,11 +69,6 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_equal 200, response.status
       assert_select "h2", "Successfully synced permissions with some applications"
     end
-
-    should_eventually "only push changes where the permissions have changed"
-
-    # Limit the sharing of knowledge
-    should_eventually "only push changes to apps that need to know about the user"
   end
 
   should "disallow access to non-admins" do
