@@ -7,8 +7,8 @@ class PropagatePermissions
       super(nil, options)
     end
 
-    def update_user(user)
-      put_json!("#{base_url}/user", JSON.parse(user))
+    def update_user(uid, user)
+      put_json!("#{base_url}/users/#{CGI.escape(uid)}", JSON.parse(user))
     end
 
     private
@@ -36,8 +36,6 @@ class PropagatePermissions
         results[:failures] << { application: application, message: "Timed out. Maybe the app is down?" }
       rescue GdsApi::HTTPErrorResponse => e
         message = case e.code
-        when 404
-          "This app doesn't seem to support syncing of permissions."
         when 502
           "Couldn't find the app. Maybe the app is down?"
         else
@@ -62,6 +60,6 @@ class PropagatePermissions
     def update_application(user, application)
       options = { endpoint_url: application.url_without_path }.merge(GDS_API_CREDENTIALS)
       api = Client.new(options)    
-      api.update_user(user.to_sensible_json)
+      api.update_user(user.uid, user.to_sensible_json)
     end
 end

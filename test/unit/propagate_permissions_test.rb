@@ -4,7 +4,7 @@ class PropagatePermissionsTest < ActiveSupport::TestCase
 
   def url_for_app(application)
     url = URI.parse(application.redirect_uri)
-    "http://api:defined_on_rollout_not@#{url.host}/auth/gds/api/user"
+    "http://api:defined_on_rollout_not@#{url.host}/auth/gds/api/users/#{CGI.escape(@user.uid)}"
   end
 
   setup do
@@ -24,9 +24,9 @@ class PropagatePermissionsTest < ActiveSupport::TestCase
   end
 
   should "return a structure of successful and failed pushes" do
-    not_supported_yet_app = FactoryGirl.create(:application, redirect_uri: "http://not-supported-yet.com/callback")
+    user_not_in_database = FactoryGirl.create(:application, redirect_uri: "http://user-not-in-database.com/callback")
     FactoryGirl.create(:permission, 
-                        application: not_supported_yet_app, 
+                        application: user_not_in_database, 
                         user: @user, 
                         permissions: ["ba"])
 
@@ -37,7 +37,7 @@ class PropagatePermissionsTest < ActiveSupport::TestCase
                         permissions: ["ba"])
 
     stub_request(:put, url_for_app(@application)).to_return(status: 200)
-    stub_request(:put, url_for_app(not_supported_yet_app)).to_return(status: 404)
+    stub_request(:put, url_for_app(user_not_in_database)).to_return(status: 404)
     stub_request(:put, url_for_app(slow_app)).to_timeout
   
     results = PropagatePermissions.new(@user, @user.permissions.map(&:application)).attempt
@@ -45,8 +45,8 @@ class PropagatePermissionsTest < ActiveSupport::TestCase
     assert_equal [{ application: @application }], results[:successes]
     expected_failures = [
       { 
-        application: not_supported_yet_app, 
-        message: "This app doesn't seem to support syncing of permissions.", 
+        application: user_not_in_database, 
+        message: "", 
         technical: "HTTP status code was: 404" 
       }, 
       { 
