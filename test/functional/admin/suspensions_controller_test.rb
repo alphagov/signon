@@ -9,7 +9,7 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
 
   context "PUT update" do
     should "be able to suspend the user" do
-      PropagateSuspension.any_instance.stubs(:attempt).returns({})
+      SuspensionUpdater.any_instance.stubs(:attempt).returns({})
       another_user = FactoryGirl.create(:user)
       put :update, id: another_user.id, user: { suspended: "1", reason_for_suspension: "Negligence" }
 
@@ -23,7 +23,7 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
       another_user = FactoryGirl.create(:user)
       app = FactoryGirl.create(:application)
 
-      PropagateSuspension.expects(:new).with(another_user, [app]).returns(mock("suspenders", attempt: {}))
+      SuspensionUpdater.expects(:new).with(another_user, [app]).returns(mock("suspenders", attempt: {}))
 
       put :update, id: another_user.id, user: { suspended: "1", reason_for_suspension: "Negligence" }
 

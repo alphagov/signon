@@ -51,7 +51,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
       app = FactoryGirl.create(:application)
       permission = FactoryGirl.create(:permission, application: app, user: another_user)
 
-      PropagatePermissions.expects(:new).with(another_user, [app]).returns(mock("mock propagator", attempt: {}))
+      PermissionUpdater.expects(:new).with(another_user, [app]).returns(mock("mock propagator", attempt: {}))
 
       permissions_attributes = { 
         permissions_attributes: { 
