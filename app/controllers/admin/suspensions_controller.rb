@@ -9,10 +9,13 @@ class Admin::SuspensionsController < Admin::BaseController
   def update
     if params[:user][:suspended] == "1"
       @user.suspend!(params[:user][:reason_for_suspension])
+      results = PropagateSuspension.new(@user, ::Doorkeeper::Application.all).attempt
+      @successes, @failures = results[:successes], results[:failures]
     else
       @user.unsuspend!
+      redirect_to admin_users_path
     end
-    redirect_to admin_users_path, notice: "#{@user.name} is now #{@user.suspended? ? "Suspended" : "Active"}"
+    flash[:notice] = "#{@user.name} is now #{@user.suspended? ? "Suspended" : "Active"}"
   end
 
   private
