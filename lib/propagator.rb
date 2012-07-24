@@ -1,33 +1,15 @@
-require 'gds_api/base'
-
-class PropagatePermissions
-
-  class Client < GdsApi::Base
-    def initialize(options)
-      super(nil, options)
-    end
-
-    def update_user(uid, user)
-      put_json!("#{base_url}/users/#{CGI.escape(uid)}", JSON.parse(user))
-    end
-
-    private
-      def base_url
-        "#{@endpoint}/auth/gds/api"
-      end
-  end
-
-  def initialize(user, applications)
-    @user = user
-    @applications = applications
+class Propagator
+  def initialize(user, applications, updater, on_success)
+    @user, @applications, @updater, @on_success = user, applications, updater, on_success
   end
 
   def attempt
     results = { successes: [], failures: [] }
     @applications.each do |application|
       begin
-        update_application(@user, application)
+        @updater.call(@user, application)
         results[:successes] << { application: application }
+        @on_success.call(@user, application)
       rescue URI::InvalidURIError
         results[:failures] << { application: application, message: "Haven't got a valid URL for that app.", technical: "URL I have is: #{application.redirect_uri}" }
       rescue GdsApi::EndpointNotFound, SocketError => e
@@ -46,20 +28,6 @@ class PropagatePermissions
         results[:failures] << { application: application, message: e.message }
       end
     end
-
-    results[:successes].each do |success|
-      app = success[:application]
-      perm = @user.permissions.detect { |perm| perm.application_id == app.id }
-      perm.synced!
-    end
-
     results
   end
-
-  private
-    def update_application(user, application)
-      options = { endpoint_url: application.url_without_path }.merge(GDS_API_CREDENTIALS)
-      api = Client.new(options)    
-      api.update_user(user.uid, user.to_sensible_json)
-    end
 end

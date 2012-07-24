@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class PropagatePermissionsTest < ActiveSupport::TestCase
+class PermissionUpdaterTest < ActiveSupport::TestCase
 
   def url_for_app(application)
     url = URI.parse(application.redirect_uri)
@@ -19,7 +19,7 @@ class PropagatePermissionsTest < ActiveSupport::TestCase
   should "send a PUT to the related app with the user.json as in the OAuth exchange" do
     expected_body = @user.to_sensible_json
     request = stub_request(:put, url_for_app(@application)).with(body: expected_body)
-    PropagatePermissions.new(@user, @user.permissions.map(&:application)).attempt
+    PermissionUpdater.new(@user, @user.permissions.map(&:application)).attempt
     assert_requested request
   end
 
@@ -40,7 +40,7 @@ class PropagatePermissionsTest < ActiveSupport::TestCase
     stub_request(:put, url_for_app(user_not_in_database)).to_return(status: 404)
     stub_request(:put, url_for_app(slow_app)).to_timeout
   
-    results = PropagatePermissions.new(@user, @user.permissions.map(&:application)).attempt
+    results = PermissionUpdater.new(@user, @user.permissions.map(&:application)).attempt
 
     assert_equal [{ application: @application }], results[:successes]
     expected_failures = [
@@ -62,7 +62,7 @@ class PropagatePermissionsTest < ActiveSupport::TestCase
       expected_body = @user.to_sensible_json
       
       stub_request(:put, url_for_app(@application)).with(body: expected_body)
-      PropagatePermissions.new(@user, @user.permissions.map(&:application)).attempt
+      PermissionUpdater.new(@user, @user.permissions.map(&:application)).attempt
       assert_not_nil @permission.reload.last_synced_at
     end
   end
@@ -72,7 +72,7 @@ class PropagatePermissionsTest < ActiveSupport::TestCase
       expected_body = @user.to_sensible_json
       
       stub_request(:put, url_for_app(@application)).to_timeout
-      PropagatePermissions.new(@user, @user.permissions.map(&:application)).attempt
+      PermissionUpdater.new(@user, @user.permissions.map(&:application)).attempt
       assert_nil @permission.reload.last_synced_at
     end
   end

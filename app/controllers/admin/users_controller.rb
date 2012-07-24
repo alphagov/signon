@@ -15,8 +15,8 @@ class Admin::UsersController < Admin::BaseController
   def update
     if @user.update_attributes(translate_faux_signin_permission(params[:user]), as: :admin)
       @user.permissions.reload
-      @results = PropagatePermissions.new(@user, @user.permissions.map(&:application)).attempt
-      @successes, @failures = @results[:successes], @results[:failures]
+      results = PermissionUpdater.new(@user, @user.permissions.map(&:application)).attempt
+      @successes, @failures = results[:successes], results[:failures]
 
       flash[:notice] = "Updated user #{@user.email} successfully"
     else

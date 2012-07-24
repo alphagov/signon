@@ -31,7 +31,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
       assert_equal "new@email.com", another_user.reload.email
       assert_equal 200, response.status
-      assert_select "h2", "Successfully synced permissions with some applications"
+      assert_equal "Updated user new@email.com successfully", flash[:notice]
     end
 
     should "let you set the is_admin flag" do
@@ -51,7 +51,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
       app = FactoryGirl.create(:application)
       permission = FactoryGirl.create(:permission, application: app, user: another_user)
 
-      PropagatePermissions.expects(:new).with(another_user, [app]).returns(mock("mock propagator", attempt: {}))
+      PermissionUpdater.expects(:new).with(another_user, [app]).returns(mock("mock propagator", attempt: {}))
 
       permissions_attributes = { 
         permissions_attributes: { 
@@ -67,7 +67,6 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
       assert_equal "new@email.com", another_user.reload.email
       assert_equal 200, response.status
-      assert_select "h2", "Successfully synced permissions with some applications"
     end
   end
 
