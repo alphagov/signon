@@ -15,6 +15,7 @@ Signonotron2::Application.routes.draw do
     end
 
     resources :suspensions, only: [:edit, :update]
+    root :to => 'users#index'
   end
 
   # Gracefully handle GET on page (e.g. hit refresh) reached by a render to a POST
