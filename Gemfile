@@ -21,12 +21,15 @@ gem 'devise_invitable'
 gem 'passphrase_entropy', git: "git://github.com/alphagov/passphrase_entropy.git"
 
 gem 'doorkeeper'
+gem 'lograge'
 
 gem "gds-api-adapters", "0.2.1"
 
 group :development do
   gem 'sqlite3'
 end
+
+gem 'lograge'
 
 group :test do
   gem 'cucumber-rails', :require => false
