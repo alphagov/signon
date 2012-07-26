@@ -21,7 +21,6 @@ gem 'devise_invitable'
 gem 'passphrase_entropy', git: "git://github.com/alphagov/passphrase_entropy.git"
 
 gem 'doorkeeper'
-gem 'lograge'
 
 gem "gds-api-adapters", "0.2.1"
 
