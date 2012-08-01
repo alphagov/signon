@@ -55,6 +55,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def authorised_applications
+    authorisations.group_by(&:application).map(&:first)
+  end
+
   # Required for devise_invitable to set is_admin and permissions
   def self.inviter_role(inviter)
     :admin

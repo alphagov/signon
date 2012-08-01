@@ -22,7 +22,7 @@ en:
       invalid_token: 'Invalid authentication token.'
       timeout: 'Your session expired, please sign in again to continue.'
       inactive: 'Your account was not activated yet.'
-      suspended: "Your account has been temporarily suspended as a result of too many unsuccessful signin attempts."
+      suspended: "Your account has been temporarily suspended."
     sessions:
       signed_in: 'Signed in successfully.'
       signed_out: 'Signed out successfully.'

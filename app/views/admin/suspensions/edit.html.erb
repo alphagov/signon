@@ -1,0 +1,16 @@
+<h1>Suspend user &ldquo;<%= @user.name %>&rdquo;</h1>
+
+<%= form_tag admin_suspension_path(@user), method: "put", :class => 'well' do %>
+  <p>
+    <label class="checkbox">
+      Suspended?
+      <%= check_box_tag "user[suspended]", "1", @user.suspended?, class: "checkbox" %>
+    </label>
+  </p>
+  <p>
+    <label for="user_reason_for_suspension">Reason for suspension</label>
+    <%= text_field_tag "user[reason_for_suspension]", @user.reason_for_suspension, class: "span6" %>
+  </p>
+  <%= submit_tag "Save", class: "btn btn-primary" %>
+  <%= link_to "Cancel", class: "btn" %>
+<% end %>

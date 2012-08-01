@@ -16,8 +16,10 @@ def config_for_app(application_dir)
 end
 
 ::Doorkeeper::Application.all.each do |application|
-  next if application.name =~ /guides_test/i
-  next if application.name =~ /Contact-o-Tron/i
+  if application.name =~ /(guides_test|Contact-o-Tron|licensify)/i
+    puts "WARNING Skipping #{application.name}, as it doesn't exist or doesn't use gds-sso"
+    next
+  end
   
   local_config = config_for_app(application.name.downcase)
 
@@ -25,6 +27,6 @@ end
   application.redirect_uri = redirect_uri
   application.uid          = local_config["oauth_id"]
   application.secret       = local_config["oauth_secret"]
-  puts "Updating application #{application.name} with config: #{application.changes}"
+  puts "Updating application #{application.name}"
   application.save!
 end

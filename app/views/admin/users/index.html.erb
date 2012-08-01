@@ -13,30 +13,34 @@
         <th scope="col">Sign-in count</th>
         <th scope="col">Created</th>
         <th scope="col">Admin?</th>
+        <th scope="col">Suspended?</th>
         <th scope="col">Actions</th>
       </tr>
     </thead>
     <tbody>
       <% @users.each do |user| %>
         <tr>
-          <td class="email"><%= link_to "#{user.name} <#{user.email}>", edit_admin_user_path(user) %></td>
+          <td class="email">
+            <%= user.suspended? ? "<del>".html_safe : "" %>
+              <%= link_to "#{user.name} <#{user.email}>", edit_admin_user_path(user) %>
+            <%= user.suspended? ? "</del>".html_safe : "" %>
+          </td>
           <td><%= user.sign_in_count %></td>
           <td><%= time_ago_in_words(user.created_at) %> ago</td>
           <td><%= user.is_admin ? "Yes" : "No" %></td>
+          <td><%= user.suspended? ? "Yes" : "No" %></td>
           <td><%= link_to "Edit", edit_admin_user_path(user) %>
             <% if user.invited_but_not_accepted %>
               <%= form_tag resend_user_invitation_path(user) do %>
                 <%= submit_tag "Resend signup email", :class => 'btn btn-primary' %>
               <% end %>
             <% end %>
-          </td>
-          <% if user.access_locked? %>
-            <td>
+            <% if user.access_locked? %>
               <%= form_tag unlock_admin_user_path(user) do %>
                 <%= submit_tag "Unlock", :class => 'btn btn-danger' %>
               <% end %>
-            </td>
-          <% end %>
+            <% end %>
+          </td>
         </tr>
       <% end %>
     </tbody>

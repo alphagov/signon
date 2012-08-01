@@ -27,8 +27,8 @@
 <%- unless current_user.authorisations.empty? %>
   <h2>Authorised applications</h2>
   <ul>
-  <%- current_user.authorisations.each do |authorisation| -%>
-    <li><%= authorisation.application.name %></li>
+  <%- current_user.authorised_applications.each do |application| -%>
+    <li><%= application.name %></li>
   <%- end -%>
   </ul>
 <%- end -%>
