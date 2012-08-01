@@ -12,7 +12,6 @@ gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
 gem 'aws-ses', :require => 'aws/ses' # Needed by exception_notification
 gem 'exception_notification'
-
 gem 'plek'
 
 gem 'uuid'
