@@ -7,7 +7,7 @@ class Permission < ActiveRecord::Base
   validates_presence_of :user_id
 
   def synced!
-    update_attribute(:last_synced_at, Time.now.utc)
+    update_attributes(last_synced_at: Time.now.utc)
   end
 
   def sync_needed?
