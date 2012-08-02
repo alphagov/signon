@@ -15,11 +15,11 @@ gem 'plek'
 gem 'uuid'
 
 # Gems used to provide Authentication and Authorization services.
-gem 'devise'
-gem 'devise_invitable'
-gem 'passphrase_entropy', git: "git://github.com/alphagov/passphrase_entropy.git"
+gem 'devise', '2.0.4'
+gem 'devise_invitable', '1.0.2'
+gem 'passphrase_entropy', '0.1.1'
 
-gem 'doorkeeper'
+gem 'doorkeeper', '0.3.1'
 
 gem "gds-api-adapters", "0.2.1"
 
