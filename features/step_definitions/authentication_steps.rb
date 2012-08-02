@@ -1,4 +1,5 @@
 require 'factory_girl'
+FactoryGirl.find_definitions
 
 Given /^a user exists with email "([^"]*)" and passphrase "([^"]*)"$/ do |email, passphrase|
   User.create!(email: email, password: passphrase, password_confirmation: passphrase, name: email.split('@').first)

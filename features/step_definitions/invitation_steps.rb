@@ -1,3 +1,7 @@
+ActionMailer::Base.delivery_method = :test
+ActionMailer::Base.perform_deliveries = true
+ActionMailer::Base.deliveries.clear
+  
 Given /an invited user/ do
   @user = User.invite!(name: "Jim", email: "jim@web.com")
 end
