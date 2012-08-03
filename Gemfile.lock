@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/alphagov/passphrase_entropy.git
+  revision: 70c37daeb0c85afe9832ad4231cc5c548efb3184
+  specs:
+    passphrase_entropy (0.1.2)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -112,7 +118,6 @@ GEM
     nokogiri (1.5.2)
     null_logger (0.0.1)
     orm_adapter (0.0.7)
-    passphrase_entropy (0.1.1)
     plek (0.1.20)
       builder
     polyglot (0.3.3)
@@ -193,7 +198,7 @@ DEPENDENCIES
   lograge
   mocha (= 0.12.1)
   mysql2
-  passphrase_entropy (= 0.1.1)
+  passphrase_entropy!
   plek
   rails (= 3.2.7)
   rake (= 0.9.2)
