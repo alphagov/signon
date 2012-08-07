@@ -1,9 +1,9 @@
 <h1>Sign in</h1>
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'well' }) do |f| %>
+<%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'well', autocomplete: 'off' }) do |f| %>
 
   <%= f.label :email %>
-  <%= f.email_field :email, class: 'span6' %>
+  <%= f.email_field :email, class: 'span6', autocomplete: 'off' %>
 
   <%= f.label :password, "Passphrase" %>
   <%= f.password_field :password, class: 'span6' %>
