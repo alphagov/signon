@@ -9,7 +9,7 @@ class Admin::SuspensionsController < Admin::BaseController
   def update
     if params[:user][:suspended] == "1"
       @user.suspend!(params[:user][:reason_for_suspension])
-      results = SuspensionUpdater.new(@user, ::Doorkeeper::Application.all).attempt
+      results = SuspensionUpdater.new(@user, @user.applications_used).attempt
       @successes, @failures = results[:successes], results[:failures]
     else
       @user.unsuspend!
