@@ -26,9 +26,10 @@ class User < ActiveRecord::Base
     self.uid = UUID.generate
   end
 
-  def to_sensible_json
+  def to_sensible_json(for_application)
     sensible_permissions = {}
-    self.permissions.each do |permission|
+    permissions = self.permissions.where(application_id: for_application.id)
+    permissions.each do |permission|
       sensible_permissions[permission.application.name] = permission.permissions
     end
     { user: { uid: uid, name: name, email: email, permissions: sensible_permissions } }.to_json
