@@ -46,10 +46,14 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_select "form#edit_user_#{another_user.id}"
     end
 
-    should "push changes to permissions out to apps" do
+    should "push changes to permissions out to apps (but only those ever used by them)" do
       another_user = FactoryGirl.create(:user)
       app = FactoryGirl.create(:application)
+      unused_app = FactoryGirl.create(:application)
       permission = FactoryGirl.create(:permission, application: app, user: another_user)
+      permission_for_unused_app = FactoryGirl.create(:permission, application: unused_app, user: another_user)
+      # simulate them having used (and 'authorized' the app)
+      ::Doorkeeper::AccessToken.create(resource_owner_id: another_user.id, application_id: app.id, token: "1234")
 
       PermissionUpdater.expects(:new).with(another_user, [app]).returns(mock("mock propagator", attempt: {}))
 
