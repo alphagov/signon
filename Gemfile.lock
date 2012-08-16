@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/alphagov/passphrase_entropy.git
+  remote: https://github.com/alphagov/passphrase_entropy.git
   revision: 70c37daeb0c85afe9832ad4231cc5c548efb3184
   specs:
     passphrase_entropy (0.1.2)
