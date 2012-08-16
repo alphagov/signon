@@ -26,9 +26,10 @@ class User < ActiveRecord::Base
     self.uid = UUID.generate
   end
 
-  def to_sensible_json
+  def to_sensible_json(for_application)
     sensible_permissions = {}
-    self.permissions.each do |permission|
+    permissions = self.permissions.where(application_id: for_application.id)
+    permissions.each do |permission|
       sensible_permissions[permission.application.name] = permission.permissions
     end
     { user: { uid: uid, name: name, email: email, permissions: sensible_permissions } }.to_json
@@ -58,6 +59,7 @@ class User < ActiveRecord::Base
   def authorised_applications
     authorisations.group_by(&:application).map(&:first)
   end
+  alias_method :applications_used, :authorised_applications
 
   # Required for devise_invitable to set is_admin and permissions
   def self.inviter_role(inviter)

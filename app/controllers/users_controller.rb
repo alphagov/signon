@@ -5,7 +5,9 @@ class UsersController < ApplicationController
   def show
     relevant_permission.synced!
     respond_to do |format|
-      format.json { render :json => current_resource_owner.to_sensible_json }
+      format.json do 
+        render json: current_resource_owner.to_sensible_json(application_making_request)
+      end
     end
   end
 
@@ -26,7 +28,13 @@ class UsersController < ApplicationController
 
   private
     def relevant_permission
-      application_id = doorkeeper_token.application_id
-      current_resource_owner.permissions.where(application_id: application_id).first
+      current_resource_owner
+          .permissions
+          .where(application_id: application_making_request.id)
+          .first
+    end
+
+    def application_making_request
+      ::Doorkeeper::Application.find(doorkeeper_token.application_id)
     end
 end

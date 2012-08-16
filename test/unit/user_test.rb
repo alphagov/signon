@@ -21,7 +21,7 @@ class UserTest < ActiveSupport::TestCase
         }
       }
     }
-    assert_equal(expected, JSON.parse(@user.to_sensible_json) )
+    assert_equal(expected, JSON.parse(@user.to_sensible_json(app1)) )
   end
 
   # Gravatar URLs

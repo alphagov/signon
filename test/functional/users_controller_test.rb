@@ -41,7 +41,7 @@ class UsersControllerTest < ActionController::TestCase
     get :show, {:format => :json}
 
     assert_equal "200", response.code
-    assert_equal user.to_sensible_json, response.body
+    assert_equal user.to_sensible_json(application), response.body
   end
 
   test "fetching json profile with an invalid oauth token should not succeed" do
@@ -64,6 +64,20 @@ class UsersControllerTest < ActionController::TestCase
     user = FactoryGirl.create(:user)
     application = FactoryGirl.create(:application)
     permission = FactoryGirl.create(:permission, user_id: user.id, application_id: application.id)
+    token = FactoryGirl.create(:access_token, :application => application, :resource_owner_id => user.id)
+
+    @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
+    get :show, {:format => :json}
+    json = JSON.parse(response.body)
+    assert_equal({ application.name => ["signin"] }, json['user']['permissions'])
+  end
+
+  test "fetching json profile should include only permissions for the relevant app" do
+    user = FactoryGirl.create(:user)
+    application = FactoryGirl.create(:application)
+    other_application = FactoryGirl.create(:application)
+    permission = FactoryGirl.create(:permission, user_id: user.id, application_id: application.id)
+    other_permission = FactoryGirl.create(:permission, user_id: user.id, application_id: other_application.id)
     token = FactoryGirl.create(:access_token, :application => application, :resource_owner_id => user.id)
 
     @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"

@@ -19,9 +19,13 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
       assert_equal "Negligence", another_user.reason_for_suspension
     end
 
-    should "push suspension out to the apps" do
+    should "push suspension out to the apps (but only those ever used by them)" do
       another_user = FactoryGirl.create(:user)
       app = FactoryGirl.create(:application)
+      unused_app = FactoryGirl.create(:application)
+      # simulate them having used (and 'authorized' the app)
+      ::Doorkeeper::AccessToken.create(resource_owner_id: another_user.id, application_id: app.id, token: "1234")
+
 
       SuspensionUpdater.expects(:new).with(another_user, [app]).returns(mock("suspenders", attempt: {}))
 
