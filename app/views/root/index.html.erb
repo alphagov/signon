@@ -7,25 +7,26 @@
     <li><%= link_to "Sign out", destroy_user_session_path, :method => :delete %></li>
   </ul>
 
-<% if current_user.is_admin? %>
-  <h2>Admin tasks</h2>
-  <ul>
-    <li><%= link_to "Administer users", admin_users_path %></li>
-  </ul>
-<% end %>
-
-<h3>My Applications</h3>
-<ul>
-  <% current_user.permissions.sort_by { |p| p.application.name }.each do |permission| %> 
-    <li>
-      <h4><%= link_to_if permission.application.home_uri, permission.application.name, permission.application.home_uri %></h4>
-
-      <% if permission.application.description.present? %>
-      <%= simple_format permission.application.description %>
-      <% end %>
-
-       <p>Roles: <em><%= permission.permissions.nil? ? "None" : permission.permissions.map(&:humanize).to_sentence %></em></p>
-
-    </li>
+  <% if current_user.is_admin? %>
+    <h2>Admin tasks</h2>
+    <ul>
+      <li><%= link_to "Administer users", admin_users_path %></li>
+    </ul>
   <% end %>
-</ul>
+
+  <h2>Your Applications</h2>
+  <ul>
+    <% current_user.permissions.sort_by { |p| p.application.name }.each do |permission| %>
+      <li>
+        <h3><%= link_to_if permission.application.home_uri, permission.application.name, permission.application.home_uri %></h3>
+
+        <% if permission.application.description.present? %>
+        <%= simple_format permission.application.description %>
+        <% end %>
+
+         <p>Roles: <em><%= permission.permissions.nil? ? "None" : permission.permissions.map(&:humanize).to_sentence %></em></p>
+
+      </li>
+    <% end %>
+  </ul>
+</div>
