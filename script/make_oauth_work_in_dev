@@ -15,6 +15,10 @@ def config_for_app(application_dir)
   config
 end
 
+def deverise_uri(uri)
+  uri.gsub(/production.alphagov.co.uk/, "dev.gov.uk").gsub(/https:/, "http:")
+end
+
 ::Doorkeeper::Application.all.each do |application|
   if application.name =~ /(guides_test|Contact-o-Tron|licensify)/i
     puts "WARNING Skipping #{application.name}, as it doesn't exist or doesn't use gds-sso"
@@ -23,8 +27,8 @@ end
   
   local_config = config_for_app(application.name.downcase)
 
-  redirect_uri = application.redirect_uri.gsub(/production.alphagov.co.uk/, "dev.gov.uk").gsub(/https:/, "http:")
-  application.redirect_uri = redirect_uri
+  application.redirect_uri = deverise_uri(application.redirect_uri)
+  application.home_uri     = deverise_uri(application.home_uri)
   application.uid          = local_config["oauth_id"]
   application.secret       = local_config["oauth_secret"]
   puts "Updating application #{application.name}"
