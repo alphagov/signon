@@ -11,8 +11,13 @@ module Devise
 
       protected
 
+      MINIMUM_ENTROPY = 20
+
       def strong_enough_password?
-        self.errors.add :password, :insufficient_entropy unless PassphraseEntropy.of(password) >= 20
+        entropy = PassphraseEntropy.of(password)
+        if entropy <= MINIMUM_ENTROPY
+          self.errors.add :password, "not strong enough. It scored #{entropy}. It must score at least #{MINIMUM_ENTROPY}." 
+        end
       end
 
       module ClassMethods
