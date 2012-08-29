@@ -3,7 +3,7 @@ class CreatePermissionsForLicensing < ActiveRecord::Migration
     belongs_to :application, class_name: 'Doorkeeper::Application'
   end
 
-  def change
+  def up
     licensify = ::Doorkeeper::Application.find_by_name("Licensify")
     if licensify
       SupportedPermission.create!(application: licensify, name: "GDSAdministrator")
@@ -133,5 +133,9 @@ class CreatePermissionsForLicensing < ActiveRecord::Migration
       SupportedPermission.create!(application: licensify, name: "Office-of-the-Registrar-of-Independent-Schools")
       SupportedPermission.create!(application: licensify, name: "Department-for-Culture-Arts-and-Leisure-Northern-Ireland")  
     end
+  end
+
+  def down
+    raise ActiveRecord::IrreversibleMigration
   end
 end
