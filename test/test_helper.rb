@@ -1,11 +1,15 @@
+if ENV["USE_SIMPLECOV"]
+  require "simplecov"
+end
+
 ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
-require 'rails/test_help'
 
+require 'rails/test_help'
 require 'shoulda'
 require "test/unit"
 require "mocha"
-require 'webmock/minitest'
+require 'webmock/test_unit'
 
 WebMock.disable_net_connect!(:allow_localhost => true)
 

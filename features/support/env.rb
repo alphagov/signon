@@ -6,6 +6,7 @@
 
 ENV["RAILS_ENV"] = "test"
 
+require 'simplecov'
 require 'cucumber/rails'
 
 # Capybara defaults to XPath selectors rather than Webrat's default of CSS3. In

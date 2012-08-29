@@ -18,3 +18,7 @@
 /tmp
 
 .*.swp
+
+# Simplecov
+coverage/*
+test/reports/*

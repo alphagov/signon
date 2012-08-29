@@ -42,7 +42,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "the is_admin flag has to be specifically assigned" do
     u = User.new(name: 'Bad User', is_admin: true)
-    refute u.is_admin?
+    assert ! u.is_admin?
 
     u.is_admin = true
     assert u.is_admin?
