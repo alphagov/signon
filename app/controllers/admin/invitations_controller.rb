@@ -7,12 +7,19 @@ class Admin::InvitationsController < Devise::InvitationsController
   before_filter :must_be_admin, only: [:new, :create]
 
   def create
-    self.resource = resource_class.invite!(translate_faux_signin_permission(params[resource_name]), current_inviter)
-    if resource.errors.empty?
-      set_flash_message :notice, :send_instructions, :email => self.resource.email
+    # Prevent an error when devise_invitable invites/updates an existing user,
+    # and accepts_nested_attributes_for tries to create duplicate permissions.
+    if self.resource = User.find_by_email(params[:user][:email])
+      flash[:alert] = "User already invited. If you want to, you can click 'Resend signup email'."
       respond_with resource, :location => after_invite_path_for(resource)
     else
-      respond_with_navigational(resource) { render :new }
+      self.resource = resource_class.invite!(translate_faux_signin_permission(params[resource_name]), current_inviter)
+      if resource.errors.empty?
+        set_flash_message :notice, :send_instructions, :email => self.resource.email
+        respond_with resource, :location => after_invite_path_for(resource)
+      else
+        respond_with_navigational(resource) { render :new }
+      end
     end
   end
 
