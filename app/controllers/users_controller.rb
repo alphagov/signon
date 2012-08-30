@@ -16,8 +16,8 @@ class UsersController < ApplicationController
 
   def update
     params[:user] ||= {}
-    password_params = params[:user].symbolize_keys.keep_if { |k, v| [:password, :password_confirmation].include?(k) }
-    if current_user.update_attributes(password_params)
+    password_params = params[:user].symbolize_keys.keep_if { |k, v| [:current_password, :password, :password_confirmation].include?(k) }
+    if current_user.update_with_password(password_params)
       flash[:notice] = t(:updated, :scope => 'devise.passwords')
       sign_in(current_user, :bypass => true)
       redirect_to root_path
