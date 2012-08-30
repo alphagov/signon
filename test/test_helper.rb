@@ -7,10 +7,11 @@ require File.expand_path('../../config/environment', __FILE__)
 
 require 'rails/test_help'
 require 'shoulda'
+require "test/unit"
 require "mocha"
-require 'webmock/minitest'
+require 'webmock/test_unit'
 
-WebMock.disable_net_connect!(allow_localhost: true)
+WebMock.disable_net_connect!(:allow_localhost => true)
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
@@ -18,7 +19,7 @@ class ActiveSupport::TestCase
   # Note: You'll currently still have to declare fixtures explicitly in integration tests
   # -- they do not yet inherit this setting
   # fixtures :all
-  include MiniTest::Assertions
+
   # Add more helper methods to be used by all tests here...
 
   teardown do

@@ -4,8 +4,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-if Rails.env.development? || Rails.env.test?
-  require 'ci/reporter/rake/minitest'
-end
-
 Signonotron2::Application.load_tasks
