@@ -2,6 +2,11 @@
 
 <p class="suspenders">
   This user is currently <%= @user.suspended? ? "suspended" : "active" %>.
+
+  <% if @user.suspended? and @user.reason_for_suspension.present? %>
+  They were suspended because <em><%= @user.reason_for_suspension %></em>
+  <% end %>
+
   <%= link_to "#{@user.suspended? ? "Uns" : "S"}uspend this user", edit_admin_suspension_path(@user), :class => 'btn btn-danger' %>
 </p>
 

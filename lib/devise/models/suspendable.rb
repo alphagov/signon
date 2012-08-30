@@ -19,7 +19,7 @@ module Devise
       end
     
       # Suspends the user in the database.
-      def suspend!(reason = nil)
+      def suspend!(reason)
         self.reason_for_suspension = reason
         self.suspended_at = Time.now.utc
         save!
