@@ -14,6 +14,7 @@ class User < ActiveRecord::Base
   attr_readonly :uid
 
   validates :name, presence: true
+  validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
 
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
   has_many :permissions

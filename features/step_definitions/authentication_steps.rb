@@ -35,10 +35,6 @@ Given /^"(.*?)" is a suspended account because of "(.*?)"$/ do |email, reason|
   User.find_by_email(email).suspend!(reason)
 end
 
-Given /^"([^"]*)" is a suspended account$/ do |email|
-  User.find_by_email(email).suspend!
-end
-
 When /^I try to sign in with email "([^"]*)" and passphrase "([^"]*)"$/ do |email, passphrase|
   visit new_user_session_path
   fill_in "Email", with: email

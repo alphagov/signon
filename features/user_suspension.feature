@@ -1,7 +1,7 @@
 Feature: User suspension
   Scenario: Suspended accounts can't sign in
     Given a user exists with email "email@example.com" and passphrase "some passphrase with various $ymb0l$"
-    And "email@example.com" is a suspended account
+    And "email@example.com" is a suspended account because of "reason required"
     When I try to sign in with email "email@example.com" and passphrase "some passphrase with various $ymb0l$"
     Then I should see "account has been temporarily suspended"
 
