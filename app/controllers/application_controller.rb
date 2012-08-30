@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   before_filter do
     headers['X-Slimmer-Template'] = 'admin'
+    headers['X-Frame-Options'] = 'SAMEORIGIN'
   end
 
   def current_resource_owner

@@ -12,4 +12,10 @@ class RootControllerTest < ActionController::TestCase
     get :index
     assert_equal "200", response.code
   end
+
+  test "sets the X-Frame-Options header to SAMEORIGIN" do
+    sign_in FactoryGirl.create(:user)
+    get :index
+    assert_equal "SAMEORIGIN", response.header['X-Frame-Options']
+  end
 end
