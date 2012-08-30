@@ -7,11 +7,9 @@ class Admin::InvitationsController < Devise::InvitationsController
   before_filter :must_be_admin, only: [:new, :create]
 
   def create
+    # Prevent an error when devise_invitable invites/updates an existing user,
+    # and accepts_nested_attributes_for tries to create duplicate permissions.
     if self.resource = User.find_by_email(params[:user][:email])
-      # The admin user has tried to invite an existing user.
-      # This would trigger an error when accepts_nested_attributes tries to create
-      # duplicate permissions.
-      # Therefore, let's catch it, rather than erroring.
       flash[:alert] = "User already invited. If you want to, you can click 'Resend signup email'."
       respond_with resource, :location => after_invite_path_for(resource)
     else
