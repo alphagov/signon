@@ -63,4 +63,10 @@ class UserTest < ActiveSupport::TestCase
     assert_empty u.errors[:password]
   end
 
+  test "it requires a reason for suspension to suspend a user" do
+    u = FactoryGirl.create(:user)
+    u.suspended_at = 1.minute.ago
+    assert ! u.valid?
+    assert_not_empty u.errors[:reason_for_suspension]
+  end
 end
