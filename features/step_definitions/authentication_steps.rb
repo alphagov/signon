@@ -67,27 +67,13 @@ Then /^I should not see "([^"]*)"$/ do |content|
 end
 
 When /^I try to change the passphrase from "([^"]*)" to "([^"]*)" and "([^"]*)"$/ do |old_passphrase, new_passphrase, other_new_passphrase|
-  visit root_path
-  click_link "Change your passphrase"
-  fill_in "Current passphrase", with: old_passphrase
-  fill_in "New passphrase", with: new_passphrase
-  fill_in "Confirm new passphrase", with: other_new_passphrase
-  click_button "Change"
+  change_password(old_passphrase, new_passphrase, other_new_passphrase)
 end
 
 When /^I change the passphrase from "([^"]*)" to "([^"]*)"$/ do |old_passphrase, new_passphrase|
-  visit root_path
-  click_link "Change your passphrase"
-  fill_in "Current passphrase", with: old_passphrase
-  fill_in "New passphrase", with: new_passphrase
-  fill_in "Confirm new passphrase", with: new_passphrase
-  click_button "Change"
+  change_password(old_passphrase, new_passphrase, new_passphrase)
 end
 
 When /^I enter a new passphrase of "(.*?)"$/ do |passphrase|
-  visit root_path
-  click_link "Change your passphrase"
-  fill_in "New passphrase", with: passphrase
-  fill_in "Confirm new passphrase", with: passphrase
-  click_button "Change"
+  change_password("", passphrase, passphrase)
 end
