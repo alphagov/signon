@@ -66,6 +66,15 @@ Then /^I should not see "([^"]*)"$/ do |content|
   assert ! page.has_content?(content)
 end
 
+When /^I try to change the passphrase from "([^"]*)" to "([^"]*)" and "([^"]*)"$/ do |old_passphrase, new_passphrase, other_new_passphrase|
+  visit root_path
+  click_link "Change your passphrase"
+  fill_in "Current passphrase", with: old_passphrase
+  fill_in "New passphrase", with: new_passphrase
+  fill_in "Confirm new passphrase", with: other_new_passphrase
+  click_button "Change"
+end
+
 When /^I change the passphrase from "([^"]*)" to "([^"]*)"$/ do |old_passphrase, new_passphrase|
   visit root_path
   click_link "Change your passphrase"
