@@ -1,7 +1,7 @@
 require 'factory_girl'
 
 Given /^a user exists with email "([^"]*)" and passphrase "([^"]*)"$/ do |email, passphrase|
-  User.create!(email: email, password: passphrase, password_confirmation: passphrase, name: email.split('@').first)
+  @user = User.create!(email: email, password: passphrase, password_confirmation: passphrase, name: email.split('@').first)
 end
 
 Given /^a signed\-in user exists with email "([^"]*)" and passphrase "([^"]*)"$/ do |email, passphrase|
@@ -66,10 +66,19 @@ Then /^I should not see "([^"]*)"$/ do |content|
   assert ! page.has_content?(content)
 end
 
-When /^I change the passphrase to "([^"]*)"$/ do |passphrase|
-  visit root_path
-  click_link "Change your passphrase"
-  fill_in "Passphrase", with: passphrase
-  fill_in "Confirm passphrase", with: passphrase
-  click_button "Change"
+When /^I try to change the passphrase from "([^"]*)" to "([^"]*)" and "([^"]*)"$/ do |old_passphrase, new_passphrase, other_new_passphrase|
+  change_password(old_passphrase, new_passphrase, other_new_passphrase)
+end
+
+When /^I change the passphrase from "([^"]*)" to "([^"]*)"$/ do |old_passphrase, new_passphrase|
+  change_password(old_passphrase, new_passphrase, new_passphrase)
+end
+
+When /^I enter a new passphrase of "(.*?)"$/ do |passphrase|
+  change_password("", passphrase, passphrase)
+end
+
+Then /^my passphrase should (?:still )?be "(.*?)"$/ do |passphrase|
+  @user.reload
+  @user.valid_password?(passphrase)
 end
