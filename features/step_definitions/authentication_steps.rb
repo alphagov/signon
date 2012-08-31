@@ -78,7 +78,7 @@ When /^I enter a new passphrase of "(.*?)"$/ do |passphrase|
   change_password("", passphrase, passphrase)
 end
 
-Then /^my passphrase should (?:|still )be "(.*?)"$/ do |passphrase|
+Then /^my passphrase should (?:still )?be "(.*?)"$/ do |passphrase|
   @user.reload
   @user.valid_password?(passphrase)
 end
