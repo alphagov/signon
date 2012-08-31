@@ -101,12 +101,19 @@ class UsersControllerTest < ActionController::TestCase
   private
 
   def change_user_password(user_factory, new_password)
-    user = FactoryGirl.create(user_factory)
-    orig_password = user.encrypted_password
+    original_password = "I am a very original password. Refrigerator weevil."
+    user = FactoryGirl.create(user_factory, password: original_password)
+    original_password_hash = user.encrypted_password
     sign_in user
 
-    post :update, { user: { password: new_password, password_confirmation: new_password } }
+    post :update, {
+      user: {
+        current_password: original_password,
+        password: new_password,
+        password_confirmation: new_password
+      }
+    }
 
-    return user, orig_password
+    return user, original_password_hash
   end
 end
