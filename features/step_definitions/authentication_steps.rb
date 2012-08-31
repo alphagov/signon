@@ -1,7 +1,7 @@
 require 'factory_girl'
 
 Given /^a user exists with email "([^"]*)" and passphrase "([^"]*)"$/ do |email, passphrase|
-  User.create!(email: email, password: passphrase, password_confirmation: passphrase, name: email.split('@').first)
+  @user = User.create!(email: email, password: passphrase, password_confirmation: passphrase, name: email.split('@').first)
 end
 
 Given /^a signed\-in user exists with email "([^"]*)" and passphrase "([^"]*)"$/ do |email, passphrase|
@@ -76,4 +76,9 @@ end
 
 When /^I enter a new passphrase of "(.*?)"$/ do |passphrase|
   change_password("", passphrase, passphrase)
+end
+
+Then /^my passphrase should (?:|still )be "(.*?)"$/ do |passphrase|
+  @user.reload
+  @user.valid_password?(passphrase)
 end
