@@ -56,29 +56,6 @@ Given /^no user exists with email "([^"]*)"$/ do |email|
   assert ! User.find_by_email(email)
 end
 
-When /^I request a new passphrase for "([^"]*)"$/ do |email|
-  visit new_user_password_path
-  fill_in "Email", with: email
-  click_button "Send me passphrase reset instructions"
-end
-
 Then /^I should not see "([^"]*)"$/ do |content|
   assert ! page.has_content?(content)
-end
-
-When /^I try to change the passphrase from "([^"]*)" to "([^"]*)" and "([^"]*)"$/ do |old_passphrase, new_passphrase, other_new_passphrase|
-  change_password(old_passphrase, new_passphrase, other_new_passphrase)
-end
-
-When /^I change the passphrase from "([^"]*)" to "([^"]*)"$/ do |old_passphrase, new_passphrase|
-  change_password(old_passphrase, new_passphrase, new_passphrase)
-end
-
-When /^I enter a new passphrase of "(.*?)"$/ do |passphrase|
-  change_password("", passphrase, passphrase)
-end
-
-Then /^my passphrase should (?:still )?be "(.*?)"$/ do |passphrase|
-  @user.reload
-  @user.valid_password?(passphrase)
 end
