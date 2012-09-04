@@ -16,7 +16,7 @@ end
 When /^I request user details with a revoked bearer token$/ do
   token = get_valid_token
   set_bearer_token(token.token)
-  token.destroy
+  token.revoke
   visit "/user.json"
 end
 
