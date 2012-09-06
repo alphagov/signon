@@ -17,10 +17,11 @@ gem 'uuid'
 # Gems used to provide Authentication and Authorization services.
 gem 'devise', '2.0.4'
 gem 'devise_invitable', '1.0.2'
-gem 'passphrase_entropy', git: "https://github.com/alphagov/passphrase_entropy.git"
+gem 'passphrase_entropy', git: 'https://github.com/alphagov/passphrase_entropy.git'
 
 gem 'doorkeeper', '0.3.1'
 
+gem 'gds-api-adapters', '0.2.1'
 gem 'statsd-ruby', '1.0.0'
 
 group :development do
