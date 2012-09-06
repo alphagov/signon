@@ -22,6 +22,7 @@ gem 'passphrase_entropy', git: "https://github.com/alphagov/passphrase_entropy.g
 gem 'doorkeeper', '0.3.1'
 
 gem "gds-api-adapters", "0.2.1"
+gem 'statsd-ruby', '1.0.0'
 
 group :development do
   gem 'sqlite3'
