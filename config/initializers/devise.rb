@@ -246,4 +246,13 @@ Devise.setup do |config|
   # ==> Custom Validators for Devise
   require 'devise/models/suspendable'
   require 'devise/models/strengthened'
+
+  # Metrics!
+  Warden::Manager.after_authentication do |user,auth,opts|
+    Statsd.new(::STATSD_HOST).increment("#{::STATSD_PREFIX}.logins.success")
+  end
+
+  Warden::Manager.before_failure do |env, opts|
+    Statsd.new(::STATSD_HOST).increment("#{::STATSD_PREFIX}.logins.failure")
+  end
 end
