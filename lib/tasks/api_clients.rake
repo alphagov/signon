@@ -1,4 +1,18 @@
 namespace :api_clients do
+  # Used to register an API client (API clients are just a type of user),
+  # grant them a given named permission in a named application,
+  # authorize them and create an appropriate token for use as a Bearer
+  # token.
+  #
+  # Parameters:
+  #    name - A friendly name for the "user"
+  #      (eg. "frontend application")
+  #    email - An email address for contact about that app
+  #      (eg. frontend@mydomain.com)
+  #    application_name - The *name* used for the app within signonotron
+  #      (eg. 'Panopticon')
+  #    permission - The *name* of the default permission to be granted
+  #      (eg. 'signin')
   desc "Create an API client for a registered application"
   task :create, [:name, :email, :application_name, :permission] => :environment do |t, args|
     # make sure we have all the pieces
