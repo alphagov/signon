@@ -1,6 +1,10 @@
 namespace :api_clients do
   desc "Create an API client for a registered application"
   task :create, [:name, :email, :application_name, :permission] => :environment do |t, args|
+    # make sure we have all the pieces
+    application = Doorkeeper::Application.find_by_name!(args[:application_name])
+    permission = application.supported_permissions.find_by_name!(args[:permission])
+
     # create as user
     default_password = SecureRandom.urlsafe_base64
     user = User.create!(
@@ -9,11 +13,6 @@ namespace :api_clients do
       password_confirmation: default_password,
       email: args[:email]
     )
-
-    application = Doorkeeper::Application.find_by_name!(args[:application_name])
-
-    # Ensure the permission exists
-    permission = application.supported_permissions.find_by_name!(args[:permission])
 
     # Grant authorisation and permissions
     user.permissions.create!(application: application, permissions: [permission.name])
