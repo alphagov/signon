@@ -23,6 +23,7 @@ gem 'doorkeeper', '0.3.1'
 
 gem 'gds-api-adapters', '0.2.1'
 gem 'statsd-ruby', '1.0.0'
+gem 'unicorn', '4.3.1'
 
 group :development do
   gem 'sqlite3'
