@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   def show
     relevant_permission.synced!
     respond_to do |format|
-      format.json do 
+      format.json do
         render json: current_resource_owner.to_sensible_json(application_making_request)
       end
     end
