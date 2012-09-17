@@ -49,14 +49,6 @@ class User < ActiveRecord::Base
     !invitation_sent_at.nil? && invitation_accepted_at.nil?
   end
 
-  def create_everything_permission
-    everything_app = ::Doorkeeper::Application.find_by_name("Everything") ||
-        ::Doorkeeper::Application.create!(name: "Everything", uid: "not-a-real-app", secret: "does-not-have-a-secret", redirect_uri: "http://not-a-domain.com")
-    if self.permissions.where(application_id: everything_app.id).count == 0
-      Permission.create!(user: self, application: everything_app, permissions: ["signin"])
-    end
-  end
-
   def authorised_applications
     authorisations.group_by(&:application).map(&:first)
   end
