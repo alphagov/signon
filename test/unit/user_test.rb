@@ -24,20 +24,6 @@ class UserTest < ActiveSupport::TestCase
     assert_equal(expected, JSON.parse(@user.to_sensible_json(app1)) )
   end
 
-  # Gravatar URLs
-
-  test "gravatar url should be generated" do
-    assert_equal "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(@user.email)}", @user.gravatar_url
-  end
-
-  test "differently sized gravatar url should be generatable" do
-    assert_equal "http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(@user.email)}?s=128", @user.gravatar_url(:s => 128)
-  end
-
-  test "secure gravatar urls should be generatable" do
-    assert_equal "https://secure.gravatar.com/avatar/#{Digest::MD5.hexdigest(@user.email)}", @user.gravatar_url(:ssl => true)
-  end
-
   # Attribute protection
 
   test "the is_admin flag has to be specifically assigned" do
