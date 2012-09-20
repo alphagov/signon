@@ -1,5 +1,3 @@
-require 'digest/md5'
-
 class User < ActiveRecord::Base
   self.include_root_in_json = true
 
@@ -34,15 +32,6 @@ class User < ActiveRecord::Base
       sensible_permissions[permission.application.name] = permission.permissions
     end
     { user: { uid: uid, name: name, email: email, permissions: sensible_permissions } }.to_json
-  end
-
-  def gravatar_url(opts = {})
-    opts.symbolize_keys!
-    qs = opts.select { |k, v| k == :s }.collect { |k, v| "#{k}=#{Rack::Utils.escape(v)}" }.join('&')
-    qs = "?" + qs unless qs == ""
-
-    "#{opts[:ssl] ? 'https://secure' : 'http://www'}.gravatar.com/avatar/" +
-      Digest::MD5.hexdigest(email.downcase) + qs
   end
 
   def invited_but_not_accepted
