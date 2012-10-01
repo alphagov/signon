@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 require_relative "../config/environment"
 
-def config_for_app(application_dir)
-  lines = IO.read("../#{application_dir}/config/initializers/gds-sso.rb").split("\n")
+def config_for_app(application_config_file)
+  lines = IO.read(application_config_file).split("\n")
   config = {}
   lines.each do |line|
     next if line =~ Regexp.new(Regexp.escape("GDS::SSO.config do |config|"))
@@ -19,13 +19,21 @@ def deverise_uri(uri)
   uri.gsub(/production.alphagov.co.uk/, "dev.gov.uk").gsub(/https:/, "http:")
 end
 
+def config_path_for_app(application)
+  if application.name =~ /Content API/i 
+    "../govuk_content_api/config/gds_sso_config.rb"
+  else
+    "../#{application.name.downcase}/config/initializers/gds-sso.rb"
+  end
+end
+
 ::Doorkeeper::Application.all.each do |application|
   if application.name =~ /(guides_test|Contact-o-Tron|licensify)/i
     puts "WARNING Skipping #{application.name}, as it doesn't exist or doesn't use gds-sso"
     next
   end
   
-  local_config = config_for_app(application.name.downcase)
+  local_config = config_for_app(config_path_for_app(application))
 
   application.redirect_uri = deverise_uri(application.redirect_uri)
   application.home_uri     = deverise_uri(application.home_uri)
