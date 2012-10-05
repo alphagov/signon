@@ -1,3 +1,5 @@
+require 'password_migration'
+
 class User < ActiveRecord::Base
   self.include_root_in_json = true
 
@@ -48,4 +50,6 @@ class User < ActiveRecord::Base
   def self.inviter_role(inviter)
     :admin
   end
+
+  include PasswordMigration
 end
