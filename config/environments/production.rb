@@ -57,7 +57,7 @@ Signonotron2::Application.configure do
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation can not be found)
   config.i18n.fallbacks = true
-  
+
   # Enable lograge
   config.lograge.enabled = true
 
@@ -69,7 +69,8 @@ Signonotron2::Application.configure do
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   config.action_mailer.default_url_options = {
-    :host => URI.parse(Plek.current.find('signon')).host
+    :host => URI.parse(Plek.current.find('signon')).host,
+    :protocol => 'https'
   }
   config.action_mailer.delivery_method = :ses
 end
