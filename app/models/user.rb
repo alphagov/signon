@@ -5,7 +5,8 @@ class User < ActiveRecord::Base
          :validatable, :timeoutable, :lockable,                # devise core model extensions
          :invitable,    # in devise_invitable gem
          :suspendable,  # in signonotron2/lib/devise/models/suspendable.rb
-         :strengthened  # in signonotron2/lib/devise/models/strengthened.rb
+         :strengthened, # in signonotron2/lib/devise/models/strengthened.rb
+         :encryptable
 
   attr_accessible :uid, :name, :email, :password, :password_confirmation
   attr_accessible :uid, :name, :email, :password, :password_confirmation, :is_admin, :permissions_attributes, as: :admin
