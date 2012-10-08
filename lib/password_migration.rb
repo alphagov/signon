@@ -4,7 +4,7 @@ module PasswordMigration
   def valid_legacy_password?(incoming_password)
     return false if encrypted_password.blank?
     bcrypt   = ::BCrypt::Password.new(encrypted_password)
-    password = ::BCrypt::Engine.hash_secret("#{incoming_password}", bcrypt.salt)
+    password = ::BCrypt::Engine.hash_secret(incoming_password, bcrypt.salt)
     Devise.secure_compare(password, encrypted_password)
   end
 
