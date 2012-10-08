@@ -15,8 +15,9 @@ gem 'plek'
 gem 'uuid'
 
 # Gems used to provide Authentication and Authorization services.
-gem 'devise', '2.0.4'
-gem 'devise_invitable', '1.0.2'
+gem 'devise', '2.1.2'
+gem 'devise_invitable', '1.1.0'
+gem 'devise-encryptable', '0.1.1'
 gem 'passphrase_entropy', git: 'https://github.com/alphagov/passphrase_entropy.git'
 
 gem 'doorkeeper', '0.3.1'
