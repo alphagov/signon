@@ -55,4 +55,35 @@ class UserTest < ActiveSupport::TestCase
     assert ! u.valid?
     assert_not_empty u.errors[:reason_for_suspension]
   end
+
+  # Password migration
+  test "it migrates old passwords on sign-in" do
+    password = ("4 l0nG sT!,ng " * 10)[0..127]
+    old_encrypted_password = ::BCrypt::Password.create("#{password}", :cost => 10).to_s
+
+    u = FactoryGirl.create(:user)
+    u.update_column :encrypted_password, old_encrypted_password
+    u.reload
+
+    assert u.valid_legacy_password?(password), "Not recognised as valid old-style password"
+    assert u.valid_password?(password), "Doesn't allow old-style password"
+    u.reload
+
+    assert_not_equal old_encrypted_password, u.encrypted_password, "Doesn't change password format"
+    assert u.valid_password?(password), "Didn't recognise correct password"
+  end
+
+  test "it doesn't migrate password unless correct one given" do
+    password = ("4 l0nG sT!,ng " * 10)[0..127]
+    old_encrypted_password = ::BCrypt::Password.create("#{password}", :cost => 10).to_s
+
+    u = FactoryGirl.create(:user)
+    u.update_column :encrypted_password, old_encrypted_password
+    u.reload
+
+    assert ! u.valid_password?("something else")
+    u.reload
+
+    assert_equal old_encrypted_password, u.encrypted_password, "Changed password"
+  end
 end

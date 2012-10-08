@@ -1,3 +1,5 @@
+require 'password_migration'
+
 class User < ActiveRecord::Base
   self.include_root_in_json = true
 
@@ -5,7 +7,8 @@ class User < ActiveRecord::Base
          :validatable, :timeoutable, :lockable,                # devise core model extensions
          :invitable,    # in devise_invitable gem
          :suspendable,  # in signonotron2/lib/devise/models/suspendable.rb
-         :strengthened  # in signonotron2/lib/devise/models/strengthened.rb
+         :strengthened, # in signonotron2/lib/devise/models/strengthened.rb
+         :encryptable
 
   attr_accessible :uid, :name, :email, :password, :password_confirmation
   attr_accessible :uid, :name, :email, :password, :password_confirmation, :is_admin, :permissions_attributes, as: :admin
@@ -47,4 +50,6 @@ class User < ActiveRecord::Base
   def self.inviter_role(inviter)
     :admin
   end
+
+  include PasswordMigration
 end
