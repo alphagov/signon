@@ -14,6 +14,8 @@ module PasswordMigration
     if valid_legacy_password?(incoming_password)
       update_legacy_password(incoming_password)
     end
+  rescue BCrypt::Errors::InvalidHash
+    false
   end
 
   def update_legacy_password(incoming_password)
