@@ -5,4 +5,4 @@
 # block your application. You do not need to have a statsd process
 # running locally on your development environment.
 STATSD_HOST = "localhost"
-STATSD_PREFIX = "govuk.app.signon"
+STATSD_PREFIX = ENV['GOVUK_STATSD_PREFIX']
