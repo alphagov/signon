@@ -22,6 +22,7 @@ module Devise
       def suspend!(reason)
         self.reason_for_suspension = reason
         self.suspended_at = Time.now.utc
+        Statsd.new(::STATSD_HOST).increment("#{::STATSD_PREFIX}.users.suspend")
         save!
       end
 
