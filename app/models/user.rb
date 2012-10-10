@@ -22,6 +22,8 @@ class User < ActiveRecord::Base
 
   before_create :generate_uid
 
+  after_create :update_stats
+
   accepts_nested_attributes_for :permissions, :allow_destroy => true
 
   def generate_uid
@@ -49,6 +51,10 @@ class User < ActiveRecord::Base
   # Required for devise_invitable to set is_admin and permissions
   def self.inviter_role(inviter)
     :admin
+  end
+
+  def update_stats
+    Statsd.new(::STATSD_HOST).increment("#{::STATSD_PREFIX}.users.created")
   end
 
   include PasswordMigration
