@@ -3,7 +3,7 @@ class UsersController < ApplicationController
   doorkeeper_for :show
 
   def show
-    relevant_permission.synced!
+    relevant_permission.synced! if relevant_permission
     respond_to do |format|
       format.json do
         render json: current_resource_owner.to_sensible_json(application_making_request)

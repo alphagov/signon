@@ -98,6 +98,17 @@ class UsersControllerTest < ActionController::TestCase
     assert_not_nil permission.reload.last_synced_at
   end
 
+  test "fetching json profile should succeed even if no permission for relevant app" do
+    user = FactoryGirl.create(:user)
+    application = FactoryGirl.create(:application)
+    token = FactoryGirl.create(:access_token, :application => application, :resource_owner_id => user.id)
+
+    @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
+    get :show, {:format => :json}
+
+    assert_response :ok
+  end
+
   private
 
   def change_user_password(user_factory, new_password)
