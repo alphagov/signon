@@ -1,6 +1,6 @@
 class CreateGdsAdminPermissionForLicensing < ActiveRecord::Migration
   def up
-  	licence_application.supported_permissions.find_or_create_by_name("GDSadministrator")    
+    create_permissions
   end
 
   def down
@@ -24,7 +24,16 @@ class CreateGdsAdminPermissionForLicensing < ActiveRecord::Migration
     end
   end
 
+   private
     def licence_application()
       Doorkeeper::Application.where(name: 'Licensify').first
     end
+
+    def create_permissions
+       app = licence_application()   
+
+       if(!app.nil?)
+          app.supported_permissions.find_or_create_by_name("GDSAdministrator")
+    end
+  end
 end
