@@ -6,7 +6,7 @@ class Admin::UsersController < Admin::BaseController
   before_filter :set_user, only: [:edit, :update, :unlock]
 
   def index
-    @users = User.order("created_at desc").page(params[:page]).per(100)
+    @users = User.order("created_at desc").alphabetical_group(params[:letter])
   end
 
   def edit
