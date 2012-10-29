@@ -6,6 +6,7 @@ group :passenger_compatibility do
   gem 'rake', '0.9.2'
 end
 
+gem 'kaminari', '0.14.1'
 gem 'mysql2'
 gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
