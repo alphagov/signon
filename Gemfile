@@ -6,7 +6,7 @@ group :passenger_compatibility do
   gem 'rake', '0.9.2'
 end
 
-gem 'paginate_alphabetically', git: "https://github.com/jamiecobbett/paginate_alphabetically.git", branch: "better_letter_usability"
+gem 'paginate_alphabetically', git: "https://github.com/jamiecobbett/paginate_alphabetically.git", branch: "better_letter_usability", ref: "487b538"
 gem 'mysql2'
 gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'

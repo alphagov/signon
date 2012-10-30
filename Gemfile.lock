@@ -6,7 +6,8 @@ GIT
 
 GIT
   remote: https://github.com/jamiecobbett/paginate_alphabetically.git
-  revision: bd6f68ee9bf2792cfc4283bda786269aef4e5922
+  revision: 487b53832335cb75e4da7146166c756c8409ff8d
+  ref: 487b538
   branch: better_letter_usability
   specs:
     paginate_alphabetically (0.3.3)
