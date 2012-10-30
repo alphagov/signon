@@ -27,7 +27,6 @@ def config_path_for_app(application)
   end
 end
 
-puts "Updating SSO config so that it works in development..."
 ::Doorkeeper::Application.all.each do |application|
   if application.name =~ /(guides_test|Contact-o-Tron|licensify)/i
     puts "WARNING Skipping #{application.name}, as it doesn't exist or doesn't use gds-sso"
