@@ -6,6 +6,8 @@
 
   <hr>
 
+  <%= alphabetically_paginate @users %>
+
   <table class="table table-striped table-bordered">
     <thead>
       <tr>
@@ -45,5 +47,7 @@
       <% end %>
     </tbody>
   </table>
+
+  <%= alphabetically_paginate @users %>
 
 </div>
