@@ -13,6 +13,14 @@ class Admin::UsersControllerTest < ActionController::TestCase
       get :index
       assert_select "td.email", /another_user@email.com/
     end
+
+    should "let you paginate by the first letter of the email address" do
+      FactoryGirl.create(:user, email: "a@email.com")
+      FactoryGirl.create(:user, email: "z@email.com")
+      get :index, letter: "Z"
+      assert_select "td.email", /z@email.com/
+      assert_select "tbody tr", count: 1
+    end
   end
 
   context "GET edit" do
