@@ -12,7 +12,6 @@ class Admin::UsersControllerTest < ActionController::TestCase
       FactoryGirl.create(:user, email: "another_user@email.com")
       get :index
       assert_select "td.email", /another_user@email.com/
-      assert_select "td.email", /#{@user.email}/
     end
   end
 
