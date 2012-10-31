@@ -21,6 +21,16 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_select "td.email", /z@email.com/
       assert_select "tbody tr", count: 1
     end
+
+    context "filter" do
+      should "filter results to users where their name or email contains the string" do
+        FactoryGirl.create(:user, email: "a@another.gov.uk")
+        FactoryGirl.create(:user, email: "a@dfid.gov.uk")
+        get :index, filter: "dfid"
+        assert_select "td.email", /a@dfid.gov.uk/
+        assert_select "tbody tr", count: 1
+      end
+    end
   end
 
   context "GET edit" do

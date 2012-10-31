@@ -1,0 +1,5 @@
+<% if !params[:filter].blank? %>
+  <%= paginate(@users) %>
+<% else %>
+  <%= alphabetically_paginate(@users) %>
+<% end %>
