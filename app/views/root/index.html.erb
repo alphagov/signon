@@ -28,7 +28,9 @@
           <% end %>
 
            <p>
-            Roles: <em><%= permission.permissions.nil? ? "None" : permission.permissions.map(&:humanize).to_sentence %></em>
+            <% if permission.permissions.any? %>
+              Roles: <em><%= permission.permissions.map(&:humanize).to_sentence %></em>
+            <% end %>
           </p>
         </li>
       <% end %>
