@@ -7,12 +7,12 @@ class Admin::UsersController < Admin::BaseController
 
   def index
     if params[:filter]
-      @users = User.order("email")
+      @users = User.order("name")
                     .where("email like ? or name like ?", "%#{params[:filter]}%", "%#{params[:filter]}%")
                     .page(params[:page])
                     .per(100)
     else
-      @users = User.order("email").alphabetical_group(params[:letter])
+      @users = User.order("name").alphabetical_group(params[:letter])
     end
   end
 

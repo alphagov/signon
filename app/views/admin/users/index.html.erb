@@ -7,7 +7,7 @@
       <div>
         <%= form_tag "", method: "get", class: "pull-left form-inline" do %>
           <label>
-            Filter by name or email: 
+            <strong>Filter by name or email:</strong>
             <%= text_field_tag "filter", params[:filter] %>
           </label>
           <%= submit_tag "Search", class: "btn btn-primary" %>
@@ -28,7 +28,7 @@
   <table class="table table-striped table-bordered">
     <thead>
       <tr>
-        <th scope="col">Email</th>
+        <th scope="col">Name and email</th>
         <th scope="col">Sign-in count</th>
         <th scope="col">Created</th>
         <th scope="col">Admin?</th>
