@@ -1,0 +1,6 @@
+<% if !params[:filter].blank? %>
+  <%= paginate(@users) %>
+<% else %>
+  <h4>Users by initial letter:</h4>
+  <%= alphabetically_paginate(@users) %>
+<% end %>
