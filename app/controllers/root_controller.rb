@@ -11,6 +11,6 @@ class RootController < ApplicationController
 
   private
     def should_list_app?(permission, application) 
-      permission.permissions.include?("signin") || application.name == "Support"
+      permission.permissions.include?("signin") || application.name.downcase == "support"
     end
 end
