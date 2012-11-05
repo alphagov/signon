@@ -14,9 +14,9 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_select "td.email", /another_user@email.com/
     end
 
-    should "let you paginate by the first letter of the email address" do
-      FactoryGirl.create(:user, email: "a@email.com")
-      FactoryGirl.create(:user, email: "z@email.com")
+    should "let you paginate by the first letter of the name" do
+      FactoryGirl.create(:user, name: "alf", email: "a@email.com")
+      FactoryGirl.create(:user, name: "zed", email: "z@email.com")
       get :index, letter: "Z"
       assert_select "td.email", /z@email.com/
       assert_select "tbody tr", count: 1
