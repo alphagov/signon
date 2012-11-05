@@ -18,19 +18,21 @@
   <ul>
     <% if current_user.permissions.any? %>
       <% current_user.permissions.sort_by { |p| p.application.name }.each do |permission| %>
-        <li>
-          <h3>
-            <%= link_to_if permission.application.home_uri, permission.application.name, permission.application.home_uri %>
-          </h3>
+        <% if should_list_app?(permission, permission.application) %>
+          <li>
+            <h3>
+              <%= link_to_if permission.application.home_uri, permission.application.name, permission.application.home_uri %>
+            </h3>
 
-          <% if permission.application.description.present? %>
-            <%= simple_format permission.application.description %>
-          <% end %>
+            <% if permission.application.description.present? %>
+              <%= simple_format permission.application.description %>
+            <% end %>
 
-           <p>
-            Roles: <em><%= permission.permissions.nil? ? "None" : permission.permissions.map(&:humanize).to_sentence %></em>
-          </p>
-        </li>
+             <p>
+              Roles: <em><%= permission.permissions.nil? ? "None" : permission.permissions.map(&:humanize).to_sentence %></em>
+            </p>
+          </li>
+        <% end %>
       <% end %>
     <% else %>
       <li>You aren't yet assigned to any applications.</li>
