@@ -1,0 +1,46 @@
+<h1>Edit application &ldquo;<%= @application.name %>&rdquo;</h1>
+
+<%= form_for [:admin, @application], :html => {:class => 'well'} do |f| %>
+  
+  <% if @application.errors.count > 0 %>
+    <div class="alert alert-error">
+      <ul>
+        <% @application.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p>
+    <%= f.label :name %>
+    <%= f.text_field :name, :class => 'span6', autofocus: true %>
+  </p>
+
+  <p>
+    UID:
+    <code><%= @application.uid %></code>
+  </p>
+
+  <p>
+    Secret:
+    <code><%= @application.secret %></code>
+  </p>
+
+  <p>
+    <%= f.label :description %>
+    <%= f.text_field :description, :class => 'span6' %>
+  </p>
+
+  <p>
+    <%= f.label :redirect_uri, "Redirect URI" %>
+    <%= f.text_field :redirect_uri, :class => 'span6' %>
+  </p>
+
+  <p>
+    <%= f.label :home_uri, "Home URI" %>
+    <%= f.text_field :home_uri, :class => 'span6' %>
+  </p>
+
+  <%= f.submit :class => 'btn btn-primary' %>
+<% end %>

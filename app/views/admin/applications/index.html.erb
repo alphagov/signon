@@ -1,0 +1,28 @@
+<h1>Single Sign On Applications</h1>
+
+<div class="well">  
+  <table class="table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Redirect URI</th>
+        <th scope="col">Home URI</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @applications.each do |application| %>
+        <tr>
+          <td>
+            <%= link_to application.name, edit_admin_application_path(application) %>
+            <br>
+            <%= application.description %>
+          </td>
+          <td><%= link_to application.redirect_uri %></td>
+          <td><%= link_to application.home_uri %></td>
+          <td><%= link_to "Edit", edit_admin_application_path(application) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
