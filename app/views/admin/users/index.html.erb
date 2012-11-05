@@ -3,11 +3,8 @@
 <div class="well">
 
   <div class="row-fluid">
-    <div class="span3">
-      <%= link_to "Create new account", new_user_invitation_path, class: "btn btn-success" %>
-    </div>
     <div class="span9">
-      <div class="pull-right">
+      <div>
         <%= form_tag "", method: "get", class: "pull-left form-inline" do %>
           <label>
             Filter by name or email: 
@@ -15,11 +12,14 @@
           </label>
           <%= submit_tag "Search", class: "btn btn-primary" %>
         <% end %>
-        <%= form_tag "", method: "get", class: "pull-right" do %>
+        <%= form_tag "", method: "get" do %>
           <%= hidden_field_tag "filter" %>
           <%= submit_tag "Clear", class: "btn offset" %>
         <% end %>
       </div>
+    </div>
+    <div class="span3">
+      <%= link_to "Create new account", new_user_invitation_path, class: "btn btn-success pull-right" %>
     </div>
   </div>
 
