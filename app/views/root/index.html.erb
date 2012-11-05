@@ -16,19 +16,21 @@
 
   <h2>Your Applications</h2>
   <ul>
-    <% if current_user.permissions.any? %>
-      <% current_user.permissions.sort_by { |p| p.application.name }.each do |permission| %>
+    <% if @applications_and_permissions.any? %>
+      <% @applications_and_permissions.each do |application, permission| %>
         <li>
           <h3>
-            <%= link_to_if permission.application.home_uri, permission.application.name, permission.application.home_uri %>
+            <%= link_to_if application.home_uri, application.name, application.home_uri %>
           </h3>
 
-          <% if permission.application.description.present? %>
-            <%= simple_format permission.application.description %>
+          <% if application.description.present? %>
+            <%= simple_format application.description %>
           <% end %>
 
            <p>
-            Roles: <em><%= permission.permissions.nil? ? "None" : permission.permissions.map(&:humanize).to_sentence %></em>
+            <% if permission.permissions.any? %>
+              Roles: <em><%= permission.permissions.map(&:humanize).to_sentence %></em>
+            <% end %>
           </p>
         </li>
       <% end %>
