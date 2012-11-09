@@ -1,0 +1,15 @@
+<h1>Your email could not be sent</h1>
+
+<div class="well">
+  <div class="alert alert-block">
+    <p>That email address has been blacklisted by our mail server. This probably means that the email address does not exist, or it has a problem such as the inbox being full.</p>
+    <p>This technical information might be useful:</p>
+    <p><code><%= @exception.message %></code></p>
+  </div>
+
+  <p>You could navigate back and try again, or follow one of these links:</p>
+  <% if current_user.is_admin? %>
+    <p><%= link_to "Administer users", admin_users_path %></p>
+  <% end %>
+  <p><%= link_to "Home", root_path %></p>
+</div>

@@ -6,6 +6,15 @@ class Admin::InvitationsController < Devise::InvitationsController
   before_filter :authenticate_user!
   before_filter :must_be_admin, only: [:new, :create]
 
+  rescue_from AWS::SES::ResponseError do |exception|
+    if exception.message =~ /Address blacklisted/i
+      @exception = exception
+      render "shared/address_blacklisted", status: 500
+    else
+      raise
+    end
+  end
+
   def create
     # Prevent an error when devise_invitable invites/updates an existing user,
     # and accepts_nested_attributes_for tries to create duplicate permissions.
