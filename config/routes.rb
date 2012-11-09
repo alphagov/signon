@@ -1,7 +1,10 @@
 Signonotron2::Application.routes.draw do
   mount Doorkeeper::Engine => '/oauth'
 
-  devise_for :users, :controllers => { :invitations => 'admin/invitations' } 
+  devise_for :users, :controllers => { 
+    :invitations => 'admin/invitations',
+    :passwords => 'passwords'
+  } 
 
   devise_scope :user do
     post "/users/invitation/resend/:id" => "admin/invitations#resend", :as => "resend_user_invitation"
