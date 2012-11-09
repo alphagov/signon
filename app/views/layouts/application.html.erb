@@ -12,6 +12,37 @@
     <div class="navbar-inner">
       <div class="container">
         <%= link_to "GOV.UK Signon", "/", :class => 'brand' %>
+        <% if user_signed_in? %>
+          <nav role="navigation" class="nav-collapse">
+            <ul class="nav">
+              <%= nav_link 'Dashboard', root_path %>
+              <% if current_user.is_admin? %>
+                <%= nav_link 'Administer users', admin_users_path %>
+                <%= nav_link 'Administer applications', admin_applications_path %>
+              <% end %>
+            </ul>
+            <ul class="nav pull-right">
+              <li class="dropdown">
+                <a href="#"
+                  class="dropdown-toggle"
+                  data-toggle="dropdown">
+                  Services
+                  <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a href="http://digital.cabinetoffice.gov.uk/">GDS blog</a></li>
+                  <li><a href="http://wiki.digital.cabinet-office.gov.uk/">GDS wiki</a></li>
+                  <li class="divider"></li>
+                  <li><%= link_to 'Analytics', 'https://www.google.com/analytics/web/#dashboard/default/a26179049w50705554p51337955/'%></li>
+                  <li class="divider"></li>
+                  <li><%= link_to 'Sign out', destroy_user_session_path, :method => :delete %></li>
+                </ul>
+              </li>
+            </ul>
+
+            <p class="navbar-text pull-right">Signed in as <%= current_user.name %></a></p>
+          </nav>
+        <% end %>
       </div>
     </div>
   </div>

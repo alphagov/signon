@@ -13,3 +13,4 @@
 //= require jquery
 //= require_tree .
 //= require chosen.jquery
+//= require bootstrap-dropdown
