@@ -12,7 +12,7 @@
     <div class="navbar-inner">
       <div class="container">
         <%= link_to "GOV.UK Signon", "/", :class => 'brand' %>
-        <% if user_signed_in? %>
+        <% if user_signed_in? && params[:controller] !~ %r{doorkeeper/} %>
           <nav role="navigation" class="nav-collapse">
             <ul class="nav">
               <%= nav_link 'Dashboard', root_path %>
