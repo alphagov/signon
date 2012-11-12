@@ -6,7 +6,7 @@ class AddDescriptionToApplications < ActiveRecord::Migration
     Doorkeeper::Application.reset_column_information
     Doorkeeper::Application.find_each do |app|
       p = URI.parse(app.redirect_uri)
-      app.update_attribute(:home_uri, "https://#{p.host}")
+      app.update_column(:home_uri, "https://#{p.host}")
     end
   end
 end
