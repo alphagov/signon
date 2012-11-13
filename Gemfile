@@ -7,7 +7,7 @@ group :passenger_compatibility do
 end
 
 gem 'kaminari', '0.14.1'
-gem 'paginate_alphabetically', git: "https://github.com/jamiecobbett/paginate_alphabetically.git", branch: "better_letter_usability", ref: "487b538"
+gem 'paginate_alphabetically', '0.4.0', git: "https://github.com/edendevelopment/paginate_alphabetically.git", ref: "18d33ddc8bf93788bde80719fb63a5d345fda403"
 gem 'mysql2'
 gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
