@@ -41,7 +41,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
     end
 
     should "show the pending email if applicable" do
-      another_user = FactoryGirl.create(:user, email: "old@email.com", unconfirmed_email: "pending@email.com")
+      another_user = FactoryGirl.create(:user_with_pending_email_change)
       get :edit, id: another_user.id
       assert_select "input[name='user[unconfirmed_email]'][value='#{another_user.unconfirmed_email}']"
     end
@@ -124,7 +124,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
   context "PUT cancel_email_change" do
     should "clear the unconfirmed_email and the confirmation_token" do
-      another_user = FactoryGirl.create(:user, email: "old@email.com", unconfirmed_email: "new@email.com", confirmation_token: "a1s2d3")
+      another_user = FactoryGirl.create(:user_with_pending_email_change)
       put :cancel_email_change, id: another_user.id
 
       another_user.reload

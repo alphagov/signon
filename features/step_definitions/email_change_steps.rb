@@ -11,7 +11,7 @@ Then /^a confirmation email should be sent to "(.*?)"$/ do |new_email|
 end
 
 Given /^a user with a pending email change$/ do
-  @user = FactoryGirl.create(:user, email: "old@email.com", unconfirmed_email: "new@email.com", confirmation_token: "a1s2d3")
+  @user = FactoryGirl.create(:user_with_pending_email_change)
 end
 
 When /^the confirm email link is clicked$/ do

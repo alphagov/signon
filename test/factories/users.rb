@@ -5,4 +5,10 @@ FactoryGirl.define do
     confirmed_at 1.day.ago
     name { "A name is now required" }
   end
+
+  factory :user_with_pending_email_change, parent: :user do
+    email "old@email.com"
+    unconfirmed_email "new@email.com"
+    confirmation_token { |n| "#{n}a1s2d3"}
+  end
 end
