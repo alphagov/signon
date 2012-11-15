@@ -79,6 +79,17 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
     end
 
+    should "change the email, and send a new invitation email for an email change" do
+      another_user = User.create(email: "old@email.com").invite!
+      put :update, id: another_user.id, user: { email: "new@email.com" }
+
+      another_user.reload
+      assert_equal "new@email.com", another_user.reload.email
+      signup_email = ActionMailer::Base.deliveries.last
+      assert_equal "Please confirm your account", signup_email.subject
+      assert_equal "new@email.com", signup_email.to[0]
+    end
+
     should "push changes to permissions out to apps (but only those ever used by them)" do
       another_user = FactoryGirl.create(:user)
       app = FactoryGirl.create(:application)
