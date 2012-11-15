@@ -25,7 +25,7 @@ class Admin::UsersController < Admin::BaseController
       @user.permissions.reload
       results = PermissionUpdater.new(@user, @user.applications_used).attempt
       @successes, @failures = results[:successes], results[:failures]
-      if email_before != @user.email
+      if @user.invited_but_not_yet_accepted? && (email_before != @user.email)
         @user.invite!
       end 
 
