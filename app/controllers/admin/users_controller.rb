@@ -3,7 +3,7 @@ class Admin::UsersController < Admin::BaseController
   helper_method :applications_and_permissions
 
   respond_to :html
-  before_filter :set_user, only: [:edit, :update, :unlock]
+  before_filter :set_user, only: [:edit, :update, :unlock, :cancel_email_change]
 
   def index
     if params[:filter]
@@ -39,6 +39,13 @@ class Admin::UsersController < Admin::BaseController
     @user.unlock_access!
     flash[:notice] = "Unlocked #{@user.email}"
     redirect_to admin_users_path
+  end
+
+  def cancel_email_change
+    @user.unconfirmed_email = nil
+    @user.confirmation_token = nil
+    @user.save(validate: false)
+    redirect_to edit_admin_user_path(@user)
   end
 
   private

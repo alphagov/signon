@@ -21,3 +21,8 @@ end
 When /^I sign-out$/ do
   visit destroy_user_session_path
 end
+
+When /^I cancel the email change$/ do
+  visit edit_admin_user_path(@user)
+  click_link "Cancel email change"
+end

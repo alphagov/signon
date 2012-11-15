@@ -93,7 +93,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
         end
       end
     end
-    
+
     should "push changes to permissions out to apps (but only those ever used by them)" do
       another_user = FactoryGirl.create(:user)
       app = FactoryGirl.create(:application)
@@ -119,6 +119,17 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
       assert_equal "New Name", another_user.reload.name
       assert_equal 200, response.status
+    end
+  end
+
+  context "PUT cancel_email_change" do
+    should "clear the unconfirmed_email and the confirmation_token" do
+      another_user = FactoryGirl.create(:user, email: "old@email.com", unconfirmed_email: "new@email.com", confirmation_token: "a1s2d3")
+      put :cancel_email_change, id: another_user.id
+
+      another_user.reload
+      assert_equal nil, another_user.unconfirmed_email
+      assert_equal nil, another_user.confirmation_token
     end
   end
 

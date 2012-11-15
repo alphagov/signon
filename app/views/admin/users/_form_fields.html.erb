@@ -19,6 +19,10 @@
     <p>
       <%= f.label :unconfirmed_email, "Pending email" %>
       <%= f.text_field :unconfirmed_email, readonly: "readonly", disabled: "disabled", :class => "span6" %>
+
+      <span class="help-inline">
+        <%= link_to "Cancel email change", cancel_email_change_admin_user_path(f.object), :method => :delete, :class => "btn btn-danger" %>
+      </span>
     </p>
   <% end %>
 
