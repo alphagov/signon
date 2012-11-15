@@ -6,6 +6,12 @@ class UserTest < ActiveSupport::TestCase
     @user = FactoryGirl.create(:user)
   end
 
+  test "email change tokens should expire" do
+    @user = FactoryGirl.create(:user_with_pending_email_change, confirmation_sent_at: 15.days.ago)
+    @user.confirm!
+    assert_equal "needs to be confirmed within 14 days, please request a new one", @user.errors[:email][0]
+  end
+
   # JSON Output
 
   test "sensible json output" do
