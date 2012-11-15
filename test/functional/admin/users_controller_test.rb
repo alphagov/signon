@@ -69,27 +69,31 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_select "form#edit_user_#{another_user.id}"
     end
 
-    should "stage the change, and send a confirmation email for an email change" do
-      another_user = FactoryGirl.create(:user, email: "old@email.com")
-      put :update, id: another_user.id, user: { email: "new@email.com" }
+    context "changing an email" do
+      should "stage the change, and send a confirmation email" do
+        another_user = FactoryGirl.create(:user, email: "old@email.com")
+        put :update, id: another_user.id, user: { email: "new@email.com" }
 
-      another_user.reload
-      assert_equal "new@email.com", another_user.reload.unconfirmed_email
-      assert_equal "old@email.com", another_user.reload.email
-      assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+        another_user.reload
+        assert_equal "new@email.com", another_user.reload.unconfirmed_email
+        assert_equal "old@email.com", another_user.reload.email
+        assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+      end
+
+      context "an invited-but-not-yet-accepted user" do
+        should "change the email, and send a new invitation email" do
+          another_user = User.invite!(name: "Ali", email: "old@email.com")
+          put :update, id: another_user.id, user: { email: "new@email.com" }
+
+          another_user.reload
+          assert_equal "new@email.com", another_user.reload.email
+          signup_email = ActionMailer::Base.deliveries.last
+          assert_equal "Please confirm your account", signup_email.subject
+          assert_equal "new@email.com", signup_email.to[0]
+        end
+      end
     end
-
-    should "change the email, and send a new invitation email for an invited-but-not-accepted user" do
-      another_user = User.invite!(name: "Ali", email: "old@email.com")
-      put :update, id: another_user.id, user: { email: "new@email.com" }
-
-      another_user.reload
-      assert_equal "new@email.com", another_user.reload.email
-      signup_email = ActionMailer::Base.deliveries.last
-      assert_equal "Please confirm your account", signup_email.subject
-      assert_equal "new@email.com", signup_email.to[0]
-    end
-
+    
     should "push changes to permissions out to apps (but only those ever used by them)" do
       another_user = FactoryGirl.create(:user)
       app = FactoryGirl.create(:application)
