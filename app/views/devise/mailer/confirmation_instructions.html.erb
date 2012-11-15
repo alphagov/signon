@@ -1,5 +1,9 @@
 <p>Hello <%= @resource.email %>,</p>
 
-<p>You can confirm your account email through the link below:</p>
+<p>You can confirm the email change through the link below:</p>
 
 <p><%= link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @resource.confirmation_token) %></p>
+
+<p>If you believe this has reached you in error, please ignore this email.<br />
+<p>Until you follow the link above, your registered address will be unchanged.</p>
+<p>The link will be valid for two weeks.</p>
