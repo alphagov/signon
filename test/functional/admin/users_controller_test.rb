@@ -79,8 +79,8 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
     end
 
-    should "change the email, and send a new invitation email for an email change" do
-      another_user = User.create(email: "old@email.com").invite!
+    should "change the email, and send a new invitation email for an invited-but-not-accepted user" do
+      another_user = User.invite!(name: "Ali", email: "old@email.com")
       put :update, id: another_user.id, user: { email: "new@email.com" }
 
       another_user.reload
