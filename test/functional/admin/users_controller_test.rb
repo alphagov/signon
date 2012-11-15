@@ -39,16 +39,22 @@ class Admin::UsersControllerTest < ActionController::TestCase
       get :edit, id: not_an_admin.id
       assert_select "input[name='user[email]'][value='#{not_an_admin.email}']"
     end
+
+    should "show the pending email if applicable" do
+      another_user = FactoryGirl.create(:user, email: "old@email.com", unconfirmed_email: "pending@email.com")
+      get :edit, id: another_user.id
+      assert_select "input[name='user[unconfirmed_email]'][value='#{another_user.unconfirmed_email}']"
+    end
   end
 
   context "PUT update" do
     should "update the user" do
-      another_user = FactoryGirl.create(:user)
-      put :update, id: another_user.id, user: { email: "new@email.com" }
+      another_user = FactoryGirl.create(:user, name: "Old Name")
+      put :update, id: another_user.id, user: { name: "New Name" }
 
-      assert_equal "new@email.com", another_user.reload.email
+      assert_equal "New Name", another_user.reload.name
       assert_equal 200, response.status
-      assert_equal "Updated user new@email.com successfully", flash[:notice]
+      assert_equal "Updated user #{another_user.email} successfully", flash[:notice]
     end
 
     should "let you set the is_admin flag" do
@@ -61,6 +67,16 @@ class Admin::UsersControllerTest < ActionController::TestCase
       another_user = FactoryGirl.create(:user)
       put :update, id: another_user.id, user: { name: "" }
       assert_select "form#edit_user_#{another_user.id}"
+    end
+
+    should "stage the change, and send a confirmation email for an email change" do
+      another_user = FactoryGirl.create(:user, email: "old@email.com")
+      put :update, id: another_user.id, user: { email: "new@email.com" }
+
+      another_user.reload
+      assert_equal "new@email.com", another_user.reload.unconfirmed_email
+      assert_equal "old@email.com", another_user.reload.email
+      assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
     end
 
     should "push changes to permissions out to apps (but only those ever used by them)" do
@@ -84,9 +100,9 @@ class Admin::UsersControllerTest < ActionController::TestCase
           } 
         } 
       }      
-      put :update, { id: another_user.id, user: { email: "new@email.com" } }.merge(permissions_attributes)
+      put :update, { id: another_user.id, user: { name: "New Name" } }.merge(permissions_attributes)
 
-      assert_equal "new@email.com", another_user.reload.email
+      assert_equal "New Name", another_user.reload.name
       assert_equal 200, response.status
     end
   end

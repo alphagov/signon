@@ -1,6 +1,6 @@
-Welcome <%= @resource.email %>!
-===============================
+Hello <%= @resource.email %>,
+=============================
 
-You can confirm your account by copying-and-pasting the link below into your browser's URL bar:
+You can confirm your account email by copying-and-pasting the link below into your browser's URL bar:
 
 <%= confirmation_url(@resource, :confirmation_token => @resource.confirmation_token) %>

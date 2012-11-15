@@ -20,10 +20,14 @@ class Admin::UsersController < Admin::BaseController
   end
 
   def update
+    email_before = @user.email
     if @user.update_attributes(translate_faux_signin_permission(params[:user]), as: :admin)
       @user.permissions.reload
       results = PermissionUpdater.new(@user, @user.applications_used).attempt
       @successes, @failures = results[:successes], results[:failures]
+      if email_before != @user.email
+        @user.invite!
+      end 
 
       flash[:notice] = "Updated user #{@user.email} successfully"
     else

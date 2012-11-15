@@ -11,7 +11,8 @@ class User < ActiveRecord::Base
          :invitable,    # in devise_invitable gem
          :suspendable,  # in signonotron2/lib/devise/models/suspendable.rb
          :strengthened, # in signonotron2/lib/devise/models/strengthened.rb
-         :encryptable
+         :encryptable,
+         :confirmable
 
   attr_accessible :uid, :name, :email, :password, :password_confirmation
   attr_accessible :uid, :name, :email, :password, :password_confirmation, :is_admin, :permissions_attributes, as: :admin
@@ -54,6 +55,32 @@ class User < ActiveRecord::Base
   # Required for devise_invitable to set is_admin and permissions
   def self.inviter_role(inviter)
     :admin
+  end
+
+  def accept_invitation!
+    # We want to "confirm" an account when a user accepts an invitation,
+    # otherwise confirmable won't let them log in.
+    # Unfortunately, this is also (for some reason) called when a password 
+    # is reset via email so, as a workaround, don't attempt confirmation 
+    # if already confirmed
+    self.confirm! unless confirmed_at.present?
+    super
+  end
+
+  # Override Devise so that, when a user has been invited with one address
+  # and then it is changed, we can send a new invitation email, rather than
+  # a confirmation email (and hence they'll be in the correct flow re setting
+  # their first password)
+  def postpone_email_change?
+    if invited_but_not_yet_accepted?
+      false
+    else
+      super
+    end
+  end
+
+  def invited_but_not_yet_accepted?
+    invitation_sent_at.present? && invitation_accepted_at.nil?
   end
 
   def update_stats
