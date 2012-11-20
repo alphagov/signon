@@ -8,6 +8,9 @@ Feature: Changing email addresses
   Scenario: Confirming an email change
     Given a user with a pending email change
     When the confirm email link is clicked
+    Then I should see "Confirm a change to your account email"
+    When I fill in the passphrase
+    And I submit
     Then I should see "Your account was successfully confirmed. You are now signed in."
 
   Scenario: Admin changes email of a user who hasn't accepted their invite yet

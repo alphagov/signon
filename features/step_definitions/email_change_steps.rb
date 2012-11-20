@@ -26,3 +26,11 @@ When /^I cancel the email change$/ do
   visit edit_admin_user_path(@user)
   click_link "Cancel email change"
 end
+
+When /^I fill in the passphrase$/ do
+  fill_in "Passphrase", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
+end
+
+When /^I submit$/ do
+  click_button "Confirm email change"
+end

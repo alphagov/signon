@@ -1,0 +1,17 @@
+<h1>Confirm a change to your account email</h1>
+<%= form_for resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :put, class: 'well'} do |f| %>
+  <%= hidden_field_tag :confirmation_token, params[:confirmation_token] %>
+  <p>
+    <%= f.label :email, "Current email" %>
+    <%= f.text_field :email, disabled: "disabled", readonly: "readonly", class: "span6" %>
+  </p>
+  <p>
+    <%= f.label :unconfirmed_email, "New email" %>
+    <%= f.text_field :unconfirmed_email, disabled: "disabled", readonly: "readonly", class: "span6" %>
+  </p>
+  <label> 
+    <%= f.label :password, "Passphrase" %>
+    <%= f.password_field :password, class: "span6", required: "required" %>
+  </label>
+  <%= f.submit "Confirm email change" %>
+<% end %>
