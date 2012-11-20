@@ -32,6 +32,7 @@ class ConfirmationsController < Devise::ConfirmationsController
         respond_with_navigational(resource.errors, :status => :unprocessable_entity){ render :new }
       end
     else
+      self.resource.errors[:password] << "was incorrect"
       render :show
     end
   end
