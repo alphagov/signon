@@ -9,7 +9,7 @@ FactoryGirl.define do
   factory :user_with_pending_email_change, parent: :user do
     email "old@email.com"
     unconfirmed_email "new@email.com"
-    confirmation_token { |n| "#{n}a1s2d3"}
+    sequence(:confirmation_token) { |n| "#{n}a1s2d3"}
     confirmation_sent_at Time.now
   end
 end
