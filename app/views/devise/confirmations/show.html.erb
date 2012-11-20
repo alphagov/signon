@@ -1,6 +1,12 @@
 <h1>Confirm a change to your account email</h1>
+
 <%= form_for resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :put, class: 'well'} do |f| %>
   <%= hidden_field_tag :confirmation_token, params[:confirmation_token] %>
+
+  <div class="alert alert-info">
+    For security, we need you to enter your passphrase before your account email can be changed.
+  </div>
+
   <p>
     <%= f.label :email, "Current email" %>
     <%= f.text_field :email, disabled: "disabled", readonly: "readonly", class: "span6" %>
@@ -13,5 +19,8 @@
     <%= f.label :password, "Passphrase" %>
     <%= f.password_field :password, class: "span6", required: "required" %>
   </label>
-  <%= f.submit "Confirm email change" %>
+  
+  <hr>
+
+  <%= f.submit "Confirm email change", class: "btn btn-primary" %>
 <% end %>
