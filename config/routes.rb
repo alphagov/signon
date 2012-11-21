@@ -18,6 +18,7 @@ Signonotron2::Application.routes.draw do
     resources :users, except: [:show] do
       member do
         post :unlock
+        put :resend_email_change
         delete :cancel_email_change
       end
     end

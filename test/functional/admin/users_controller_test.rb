@@ -122,6 +122,24 @@ class Admin::UsersControllerTest < ActionController::TestCase
     end
   end
 
+  context "PUT resend_email_change" do
+    should "send an email change confirmation email" do
+      another_user = FactoryGirl.create(:user_with_pending_email_change)
+      put :resend_email_change, id: another_user.id
+
+      assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+    end
+
+    should "use a new token if it's expired" do
+      another_user = FactoryGirl.create(:user_with_pending_email_change, 
+                                          confirmation_token: "old token", 
+                                          confirmation_sent_at: 15.days.ago)
+      put :resend_email_change, id: another_user.id
+
+      assert_not_equal "old token", another_user.reload.confirmation_token
+    end
+  end
+
   context "DELETE cancel_email_change" do
     should "clear the unconfirmed_email and the confirmation_token" do
       another_user = FactoryGirl.create(:user_with_pending_email_change)
