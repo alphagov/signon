@@ -7,11 +7,27 @@ class ConfirmationsControllerTest < ActionController::TestCase
     @user = FactoryGirl.create(:user_with_pending_email_change)
   end
 
+  context "GET new" do
+    should "be disabled" do
+      get :new
+      assert_redirected_to "/users/sign_in"
+      assert_match(/Please contact support/, flash[:alert])
+    end
+  end
+
+  context "POST create" do
+    should "be disabled" do
+      post :create, user: { email: @user.email }
+      assert_redirected_to "/users/sign_in"
+      assert_match(/Please contact support/, flash[:alert])
+    end
+  end
+
   context "GET show" do
     context "not signed in" do
       should "reject an invalid token" do
         get :show, confirmation_token: "fake"
-        assert_template "devise/confirmations/new"
+        assert_match(/Please contact support/, flash[:alert])
         assert_equal false, @controller.user_signed_in?
       end
 
@@ -35,7 +51,7 @@ class ConfirmationsControllerTest < ActionController::TestCase
 
       should "reject an invalid token" do
         get :show, confirmation_token: "fake"
-        assert_template "devise/confirmations/new"
+        assert_match(/Please contact support/, flash[:alert])
         assert_equal @user.reload.email, "old@email.com"
       end
 

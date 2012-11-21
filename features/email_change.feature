@@ -29,4 +29,4 @@ Feature: Changing email addresses
     When I cancel the email change
     And I sign-out
     When the confirm email link is clicked
-    Then I should see "Confirmation token is invalid"
+    Then I should see "Couldn't confirm email change. Please contact support to request a new confirmation email."

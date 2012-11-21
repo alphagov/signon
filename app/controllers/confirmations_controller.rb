@@ -1,6 +1,15 @@
 # Copied from 
 # https://github.com/plataformatec/devise/blob/v2.1.2/app/controllers/devise/confirmations_controller.rb#L19
 class ConfirmationsController < Devise::ConfirmationsController
+
+  def new
+    handle_new_token_needed
+  end
+
+  def create
+    handle_new_token_needed
+  end
+
   # GET /resource/confirmation?confirmation_token=abcdef
   def show
     if user_signed_in?
@@ -13,13 +22,13 @@ class ConfirmationsController < Devise::ConfirmationsController
           sign_in(resource_name, resource)
           respond_with_navigational(resource){ redirect_to after_confirmation_path_for(resource_name, resource) }
         else
-          respond_with_navigational(resource.errors, :status => :unprocessable_entity){ render :new }
+          respond_with_navigational(resource.errors, :status => :unprocessable_entity){ handle_new_token_needed }
         end
       end
     else
       self.resource = find_user
       if !self.resource.persisted?
-        respond_with_navigational(resource.errors, :status => :unprocessable_entity){ render :new }
+        respond_with_navigational(resource.errors, :status => :unprocessable_entity){ handle_new_token_needed }
       end
     end
   end
@@ -33,7 +42,7 @@ class ConfirmationsController < Devise::ConfirmationsController
         sign_in(resource_name, resource)
         respond_with_navigational(resource){ redirect_to after_confirmation_path_for(resource_name, resource) }
       else
-        respond_with_navigational(resource.errors, :status => :unprocessable_entity){ render :new }
+        respond_with_navigational(resource.errors, :status => :unprocessable_entity){ handle_new_token_needed }
       end
     else
       self.resource.errors[:password] << "was incorrect"
@@ -44,5 +53,10 @@ class ConfirmationsController < Devise::ConfirmationsController
   private
     def find_user
       resource_class.find_or_initialize_with_error_by(:confirmation_token, params[:confirmation_token])
+    end
+
+    def handle_new_token_needed
+      path = user_signed_in? ? root_path : new_user_session_path
+      redirect_to path, alert: "Couldn't confirm email change. Please contact support to request a new confirmation email."
     end
 end
