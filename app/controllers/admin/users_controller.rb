@@ -8,7 +8,7 @@ class Admin::UsersController < Admin::BaseController
   def index
     if params[:filter]
       @users = User.order("name")
-                    .where("email like ? or name like ?", "%#{params[:filter]}%", "%#{params[:filter]}%")
+                    .where("email like ? or name like ?", "%#{params[:filter].strip}%", "%#{params[:filter].strip}%")
                     .page(params[:page])
                     .per(100)
     else
