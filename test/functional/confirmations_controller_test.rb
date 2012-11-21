@@ -45,6 +45,19 @@ class ConfirmationsControllerTest < ActionController::TestCase
         assert_equal @user.reload.email, "new@email.com"
       end
     end
+
+    context "signed in as somebody else" do
+      setup do
+        sign_in FactoryGirl.create(:user)
+      end
+
+      should "reject the attempt" do
+        get :show, confirmation_token: @user.confirmation_token
+        assert_redirected_to "/"
+        assert_match(/It appears you followed a link meant for another user./, flash[:alert])
+        assert_equal "old@email.com", @user.reload.email
+      end
+    end
   end
 
   context "PUT update" do

@@ -4,13 +4,17 @@ class ConfirmationsController < Devise::ConfirmationsController
   # GET /resource/confirmation?confirmation_token=abcdef
   def show
     if user_signed_in?
-      self.resource = resource_class.confirm_by_token(params[:confirmation_token])
-      if resource.errors.empty?
-        set_flash_message(:notice, :confirmed) if is_navigational_format?
-        sign_in(resource_name, resource)
-        respond_with_navigational(resource){ redirect_to after_confirmation_path_for(resource_name, resource) }
+      if find_user.persisted? && (current_user.email != find_user.email)
+        redirect_to root_path, alert: "It appears you followed a link meant for another user."
       else
-        respond_with_navigational(resource.errors, :status => :unprocessable_entity){ render :new }
+        self.resource = resource_class.confirm_by_token(params[:confirmation_token])
+        if resource.errors.empty?
+          set_flash_message(:notice, :confirmed) if is_navigational_format?
+          sign_in(resource_name, resource)
+          respond_with_navigational(resource){ redirect_to after_confirmation_path_for(resource_name, resource) }
+        else
+          respond_with_navigational(resource.errors, :status => :unprocessable_entity){ render :new }
+        end
       end
     else
       self.resource = find_user
