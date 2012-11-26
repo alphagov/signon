@@ -13,7 +13,7 @@ class ConfirmationsController < Devise::ConfirmationsController
   # GET /resource/confirmation?confirmation_token=abcdef
   def show
     if user_signed_in?
-      if find_user.persisted? && (current_user.email != find_user.email)
+      if confirmation_user.persisted? && (current_user.email != confirmation_user.email)
         redirect_to root_path, alert: "It appears you followed a link meant for another user."
       else
         self.resource = resource_class.confirm_by_token(params[:confirmation_token])
@@ -26,7 +26,7 @@ class ConfirmationsController < Devise::ConfirmationsController
         end
       end
     else
-      self.resource = find_user
+      self.resource = confirmation_user
       if !self.resource.persisted?
         respond_with_navigational(resource.errors, :status => :unprocessable_entity){ handle_new_token_needed }
       end
@@ -34,7 +34,7 @@ class ConfirmationsController < Devise::ConfirmationsController
   end
 
   def update
-    self.resource = find_user
+    self.resource = confirmation_user
     if self.resource.valid_password?(params[:user][:password])
       self.resource = resource_class.confirm_by_token(params[:confirmation_token])
       if resource.errors.empty?
@@ -51,8 +51,8 @@ class ConfirmationsController < Devise::ConfirmationsController
   end
 
   private
-    def find_user
-      resource_class.find_or_initialize_with_error_by(:confirmation_token, params[:confirmation_token])
+    def confirmation_user
+      @confirmation_user ||= resource_class.find_or_initialize_with_error_by(:confirmation_token, params[:confirmation_token])
     end
 
     def handle_new_token_needed
