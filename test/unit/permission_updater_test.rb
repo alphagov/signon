@@ -46,7 +46,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
     expected_failures = [
       { 
         application: user_not_in_database, 
-        message: "", 
+        message: "GdsApi::HTTPNotFound",
         technical: "HTTP status code was: 404" 
       }, 
       { 
