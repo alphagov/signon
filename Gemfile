@@ -12,7 +12,7 @@ gem 'mysql2'
 gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
 gem 'exception_notification'
-gem 'plek'
+gem 'plek', '0.5.0'
 
 gem 'uuid'
 
@@ -24,7 +24,7 @@ gem 'passphrase_entropy', git: 'https://github.com/alphagov/passphrase_entropy.g
 
 gem 'doorkeeper', '0.3.1'
 
-gem 'gds-api-adapters', '0.2.1'
+gem 'gds-api-adapters', '4.1.3'
 gem 'statsd-ruby', '1.0.0'
 gem 'unicorn', '4.3.1'
 
