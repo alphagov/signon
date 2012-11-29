@@ -119,6 +119,14 @@ Devise.setup do |config|
   # the user cannot access the website without confirming his account.
   # config.allow_unconfirmed_access_for = 2.days
 
+  # A period that the user is allowed to confirm their account before their token
+  # becomes invalid. For example, if set to 3.days, the user can confirm their account
+  # within 3 days after the mail was sent, but on the fourth day their account can't be
+  # confirmed with the token any more
+  # Default is nil, meaning there is no restriction on how long a user can take before
+  # comfirming their account.
+  config.confirm_within = 2.weeks
+
   # If true, requires any email changes to be confirmed (exctly the same way as
   # initial account confirmation) to be applied. Requires additional unconfirmed_email
   # db field (see migrations). Until confirmed new email is stored in

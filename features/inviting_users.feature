@@ -7,6 +7,6 @@ Feature: Inviting users
     
   Scenario: Accepting an invitation
     Given an invited user
-    When I am at the invited user set password screen
+    When the invitation email link is clicked
     And I fill in the password
     Then I should see "You are now signed in"

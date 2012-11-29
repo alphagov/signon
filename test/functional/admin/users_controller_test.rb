@@ -39,16 +39,22 @@ class Admin::UsersControllerTest < ActionController::TestCase
       get :edit, id: not_an_admin.id
       assert_select "input[name='user[email]'][value='#{not_an_admin.email}']"
     end
+
+    should "show the pending email if applicable" do
+      another_user = FactoryGirl.create(:user_with_pending_email_change)
+      get :edit, id: another_user.id
+      assert_select "input[name='user[unconfirmed_email]'][value='#{another_user.unconfirmed_email}']"
+    end
   end
 
   context "PUT update" do
     should "update the user" do
-      another_user = FactoryGirl.create(:user)
-      put :update, id: another_user.id, user: { email: "new@email.com" }
+      another_user = FactoryGirl.create(:user, name: "Old Name")
+      put :update, id: another_user.id, user: { name: "New Name" }
 
-      assert_equal "new@email.com", another_user.reload.email
+      assert_equal "New Name", another_user.reload.name
       assert_equal 200, response.status
-      assert_equal "Updated user new@email.com successfully", flash[:notice]
+      assert_equal "Updated user #{another_user.email} successfully", flash[:notice]
     end
 
     should "let you set the is_admin flag" do
@@ -61,6 +67,31 @@ class Admin::UsersControllerTest < ActionController::TestCase
       another_user = FactoryGirl.create(:user)
       put :update, id: another_user.id, user: { name: "" }
       assert_select "form#edit_user_#{another_user.id}"
+    end
+
+    context "changing an email" do
+      should "stage the change, and send a confirmation email" do
+        another_user = FactoryGirl.create(:user, email: "old@email.com")
+        put :update, id: another_user.id, user: { email: "new@email.com" }
+
+        another_user.reload
+        assert_equal "new@email.com", another_user.reload.unconfirmed_email
+        assert_equal "old@email.com", another_user.reload.email
+        assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+      end
+
+      context "an invited-but-not-yet-accepted user" do
+        should "change the email, and send a new invitation email" do
+          another_user = User.invite!(name: "Ali", email: "old@email.com")
+          put :update, id: another_user.id, user: { email: "new@email.com" }
+
+          another_user.reload
+          assert_equal "new@email.com", another_user.reload.email
+          signup_email = ActionMailer::Base.deliveries.last
+          assert_equal "Please confirm your account", signup_email.subject
+          assert_equal "new@email.com", signup_email.to[0]
+        end
+      end
     end
 
     should "push changes to permissions out to apps (but only those ever used by them)" do
@@ -84,10 +115,39 @@ class Admin::UsersControllerTest < ActionController::TestCase
           } 
         } 
       }      
-      put :update, { id: another_user.id, user: { email: "new@email.com" } }.merge(permissions_attributes)
+      put :update, { id: another_user.id, user: { name: "New Name" } }.merge(permissions_attributes)
 
-      assert_equal "new@email.com", another_user.reload.email
+      assert_equal "New Name", another_user.reload.name
       assert_equal 200, response.status
+    end
+  end
+
+  context "PUT resend_email_change" do
+    should "send an email change confirmation email" do
+      another_user = FactoryGirl.create(:user_with_pending_email_change)
+      put :resend_email_change, id: another_user.id
+
+      assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+    end
+
+    should "use a new token if it's expired" do
+      another_user = FactoryGirl.create(:user_with_pending_email_change, 
+                                          confirmation_token: "old token", 
+                                          confirmation_sent_at: 15.days.ago)
+      put :resend_email_change, id: another_user.id
+
+      assert_not_equal "old token", another_user.reload.confirmation_token
+    end
+  end
+
+  context "DELETE cancel_email_change" do
+    should "clear the unconfirmed_email and the confirmation_token" do
+      another_user = FactoryGirl.create(:user_with_pending_email_change)
+      delete :cancel_email_change, id: another_user.id
+
+      another_user.reload
+      assert_equal nil, another_user.unconfirmed_email
+      assert_equal nil, another_user.confirmation_token
     end
   end
 

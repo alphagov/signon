@@ -54,7 +54,7 @@ en:
       failure: 'Could not authorize you from %{kind} because "%{reason}".'
     mailer:
       confirmation_instructions:
-        subject: 'Confirmation instructions'
+        subject: 'Confirm your email change'
       reset_password_instructions:
         subject: 'Reset passphrase instructions'
       unlock_instructions:

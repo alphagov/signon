@@ -3,11 +3,13 @@ Signonotron2::Application.routes.draw do
 
   devise_for :users, :controllers => { 
     :invitations => 'admin/invitations',
-    :passwords => 'passwords'
+    :passwords => 'passwords',
+    :confirmations => 'confirmations'
   } 
 
   devise_scope :user do
     post "/users/invitation/resend/:id" => "admin/invitations#resend", :as => "resend_user_invitation"
+    put "/users/confirmation" => "confirmations#update"
   end
 
   resource :user, :only => [:show, :edit, :update]
@@ -16,6 +18,8 @@ Signonotron2::Application.routes.draw do
     resources :users, except: [:show] do
       member do
         post :unlock
+        put :resend_email_change
+        delete :cancel_email_change
       end
     end
 

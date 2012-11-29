@@ -1,7 +1,7 @@
 require 'factory_girl'
 
 Given /^a user exists with email "([^"]*)" and passphrase "([^"]*)"$/ do |email, passphrase|
-  @user = User.create!(email: email, password: passphrase, password_confirmation: passphrase, name: email.split('@').first)
+  @user = FactoryGirl.create(:user, email: email, password: passphrase, password_confirmation: passphrase, name: email.split('@').first)
 end
 
 Given /^a signed\-in user exists with email "([^"]*)" and passphrase "([^"]*)"$/ do |email, passphrase|
@@ -49,7 +49,7 @@ When /^I try to sign in (\d+) times with email "([^"]*)" and passphrase "([^"]*)
 end
 
 Then /^I should see "([^"]*)"$/ do |content|
-  assert page.has_content?(content)
+  assert page.has_content?(content), page.body
 end
 
 Given /^no user exists with email "([^"]*)"$/ do |email|

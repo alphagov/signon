@@ -14,7 +14,7 @@ When /I create an admin user called "(.*)" with email "(.*)"/ do |name, email|
   click_button "Create user and send email"
 end
 
-When /I am at the invited user set password screen/ do
+When /the invitation email link is clicked/ do
   visit accept_user_invitation_path(invitation_token: @user.invitation_token)
 end
 
@@ -33,4 +33,5 @@ end
 Then /an invitation email should be sent to "(.*)"/ do |address|
   email = ActionMailer::Base.deliveries.last
   assert_equal address, email.to[0]
+  assert_match 'Please confirm your account', email.subject
 end
