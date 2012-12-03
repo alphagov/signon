@@ -16,7 +16,7 @@ def config_for_app(application_config_file)
 end
 
 def deverise_uri(uri)
-  uri.gsub(/production.alphagov.co.uk/, "dev.gov.uk").gsub(/https:/, "http:")
+  uri.gsub(/[a-z]*.alphagov.co.uk/, "dev.gov.uk").gsub(/https:/, "http:")
 end
 
 def config_path_for_app(application)
