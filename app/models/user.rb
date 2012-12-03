@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
     # Unfortunately, this is also (for some reason) called when a password 
     # is reset via email so, as a workaround, don't attempt confirmation 
     # if already confirmed
-    self.confirm! unless confirmed_at.present?
+    self.confirmed_at = Time.now.utc unless confirmed_at.present?
     super
   end
 
