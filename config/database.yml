@@ -33,9 +33,3 @@ production:
 
 cucumber:
   <<: *test
-
-signonotron1:
-  adapter: sqlite3
-  database: ../sign-on-o-tron/db/development.sqlite3
-  pool: 5
-  timeout: 5000
