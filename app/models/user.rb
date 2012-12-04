@@ -57,16 +57,6 @@ class User < ActiveRecord::Base
     :admin
   end
 
-  def accept_invitation!
-    # We want to "confirm" an account when a user accepts an invitation,
-    # otherwise confirmable won't let them log in.
-    # Unfortunately, this is also (for some reason) called when a password 
-    # is reset via email so, as a workaround, don't attempt confirmation 
-    # if already confirmed
-    self.confirmed_at = Time.now.utc unless confirmed_at.present?
-    super
-  end
-
   # Override Devise so that, when a user has been invited with one address
   # and then it is changed, we can send a new invitation email, rather than
   # a confirmation email (and hence they'll be in the correct flow re setting
