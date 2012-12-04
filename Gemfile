@@ -12,7 +12,7 @@ gem 'mysql2'
 gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
 gem 'exception_notification'
-gem 'plek', '0.5.0'
+gem 'plek', '1.0.0'
 
 gem 'uuid'
 
