@@ -56,6 +56,13 @@ module Signonotron2
 
     #config.middleware.insert_before Warden::Manager, Slimmer::App, config.slimmer.to_hash
 
+    # Prevent ActionDispatch::RemoteIp::IpSpoofAttackError when the client set a Client-IP
+    # header and the request IP was interrogated.
+    #
+    # In our infrastructure, the protection this would give is provided by nginx, so
+    # disabling it solves the above problem and doesn't give us additional risk.
+    config.action_dispatch.ip_spoofing_check = false
+
     config.to_prepare do
       Doorkeeper::ApplicationController.layout "application"
     end
