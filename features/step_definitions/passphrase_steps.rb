@@ -1,3 +1,8 @@
+Given /^SES will raise a blacklist error$/ do
+  Devise::Mailer.any_instance.expects(:mail).with(anything)
+      .raises(AWS::SES::ResponseError, OpenStruct.new(error: { 'Code' => "MessageRejected", 'Message' => "Address blacklisted." }))
+end
+
 When /^I request a new passphrase for "([^"]*)"$/ do |email|
   visit new_user_password_path
   fill_in "Email", with: email
