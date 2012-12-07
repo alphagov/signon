@@ -59,3 +59,7 @@ end
 Then /^I should not see "([^"]*)"$/ do |content|
   assert ! page.has_content?(content)
 end
+
+Given /^my requests include a Client-IP HTTP Header$/ do
+  page.driver.browser.header("Client-IP", "127.0.0.1")
+end
