@@ -1,5 +1,5 @@
 namespace :users do
-  desc "Create a new user (specify name, email and optional password in environment)"
+  desc "Create a new user (specify name and email in environment)"
   task :create => :environment do
     raise "Requires name and email specified in environment" unless ENV['name'] && ENV['email']
 
