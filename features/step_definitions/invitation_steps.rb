@@ -18,10 +18,10 @@ When /the invitation email link is clicked/ do
   visit accept_user_invitation_path(invitation_token: @user.invitation_token)
 end
 
-When /I fill in the password/ do
-  fill_in "Password", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
+When /I fill in my new passphrase/ do
+  fill_in "Passphrase", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
   fill_in "Confirm passphrase", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
-  click_button "Set my password"
+  click_button "Set my passphrase"
 end
 
 Then /an admin user should be created with the email "(.*)"/ do |email|

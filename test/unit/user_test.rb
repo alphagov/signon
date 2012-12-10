@@ -90,6 +90,6 @@ class UserTest < ActiveSupport::TestCase
     assert ! u.valid_password?("something else")
     u.reload
 
-    assert_equal old_encrypted_password, u.encrypted_password, "Changed password"
+    assert_equal old_encrypted_password, u.encrypted_password, "Changed passphrase"
   end
 end

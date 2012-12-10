@@ -14,7 +14,7 @@ When /^I complete the passphrase reset form setting my passphrase to "(.*?)"$/ d
   visit edit_user_password_path(reset_password_token: @user.reset_password_token)
   fill_in "New passphrase", with: new_phrase
   fill_in "Confirm new passphrase", with: new_phrase
-  click_button "Change my password"
+  click_button "Change my passphrase"
 end
 
 When /^I try to change the passphrase from "([^"]*)" to "([^"]*)" and "([^"]*)"$/ do |old_passphrase, new_passphrase, other_new_passphrase|

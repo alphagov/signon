@@ -8,5 +8,5 @@ Feature: Inviting users
   Scenario: Accepting an invitation
     Given an invited user
     When the invitation email link is clicked
-    And I fill in the password
+    And I fill in my new passphrase
     Then I should see "You are now signed in"

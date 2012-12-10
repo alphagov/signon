@@ -20,7 +20,7 @@ Feature: Changing email addresses
     And I sign-out
     Then an invitation email should be sent to "new@email.com"
     And the invitation email link is clicked
-    And I fill in the password
+    And I fill in my new passphrase
     Then I should see "You are now signed in"
 
   Scenario: Admin realises that an email change was in error

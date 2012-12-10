@@ -5,6 +5,11 @@ en:
   passphrase: "Passphrase"
   confirm_passphrase: "Confirm passphrase"
 
+  activerecord:
+    attributes:
+      user:
+        password: "Passphrase"
+
   helpers:
     label:
       user:
