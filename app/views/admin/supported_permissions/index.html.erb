@@ -1,0 +1,10 @@
+<h1>Single Sign On Application Permissions for <%= @application.name %></h1>
+
+<div class="well">
+  <h3>Permissions</h3>
+  <p>
+    <%= @application.supported_permissions.map{|sp| sp.name}.join(", ") %>
+  </p>
+  <%= link_to "Add", new_admin_application_supported_permission_path , class: "btn btn-primary"%>
+  <%= link_to "Cancel", edit_admin_application_path(@application) , class: "btn"%>
+</div>
