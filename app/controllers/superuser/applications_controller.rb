@@ -1,4 +1,4 @@
-class Admin::ApplicationsController < Admin::BaseController
+class Superuser::ApplicationsController < Superuser::BaseController
   respond_to :html
 
   def index
@@ -12,7 +12,7 @@ class Admin::ApplicationsController < Admin::BaseController
   def update
     @application = ::Doorkeeper::Application.find(params[:id])
     if @application.update_attributes(params[:application])
-      redirect_to admin_applications_path, notice: "Successfully updated #{@application.name}"
+      redirect_to superuser_applications_path, notice: "Successfully updated #{@application.name}"
     else
       respond_with @application
     end

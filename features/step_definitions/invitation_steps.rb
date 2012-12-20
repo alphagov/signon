@@ -10,7 +10,7 @@ When /I create an admin user called "(.*)" with email "(.*)"/ do |name, email|
   visit new_user_invitation_path
   fill_in "Name", with: name
   fill_in "Email", with: email
-  check "Is admin"
+  select "Admin", from: "Role"
   click_button "Create user and send email"
 end
 
@@ -27,7 +27,7 @@ end
 Then /an admin user should be created with the email "(.*)"/ do |email|
   @user = User.find_by_email(email)
   assert_not_nil @user
-  assert_equal true, @user.is_admin
+  assert_equal "admin", @user.role
 end
 
 Then /an invitation email should be sent to "(.*)"/ do |address|

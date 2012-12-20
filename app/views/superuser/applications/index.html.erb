@@ -14,13 +14,13 @@
       <% @applications.each do |application| %>
         <tr>
           <td>
-            <%= link_to application.name, edit_admin_application_path(application) %>
+            <%= link_to application.name, edit_superuser_application_path(application) %>
             <br>
             <%= application.description %>
           </td>
           <td><%= application.redirect_uri %></td>
           <td><%= link_to application.home_uri %></td>
-          <td><%= link_to "Edit", edit_admin_application_path(application) %></td>
+          <td><%= link_to "Edit", edit_superuser_application_path(application) %></td>
         </tr>
       <% end %>
     </tbody>

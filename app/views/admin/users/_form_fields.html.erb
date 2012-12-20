@@ -28,9 +28,8 @@
   <% end %>
 
 <p>
-  <label class="checkbox" for="user_is_admin">Is admin?
-    <%= f.check_box :is_admin, :class => 'checkbox' %>
-  </label>
+  <%= f.label :role %>
+  <%= f.select :role, options_for_select(User.roles.to_a, f.object.role) %>
 </p>
 
 <h2>Permissions</h2>

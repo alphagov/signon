@@ -7,11 +7,17 @@
     <li><%= link_to "Sign out", destroy_user_session_path %></li>
   </ul>
 
-  <% if current_user.is_admin? %>
+  <% if current_user.has_role?("admin") %>
     <h2>Admin tasks</h2>
     <ul>
       <li><%= link_to "Administer users", admin_users_path %></li>
-      <li><%= link_to "Administer applications", admin_applications_path %></li>
+    </ul>
+  <% end %>
+
+  <% if current_user.has_role?("superuser") %>
+    <h2>Superuser tasks</h2>
+    <ul>
+      <li><%= link_to "Administer applications", superuser_applications_path %></li>
     </ul>
   <% end %>
 

@@ -16,9 +16,11 @@
           <nav role="navigation" class="nav-collapse">
             <ul class="nav">
               <%= nav_link 'Dashboard', root_path %>
-              <% if current_user.is_admin? %>
+              <% if current_user.has_role?("admin") %>
                 <%= nav_link 'Administer users', admin_users_path %>
-                <%= nav_link 'Administer applications', admin_applications_path %>
+              <% end %>
+              <% if current_user.has_role?("superuser") %>
+                <%= nav_link 'Administer applications', superuser_applications_path %>
               <% end %>
             </ul>
             <ul class="nav pull-right">
