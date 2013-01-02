@@ -26,14 +26,16 @@
     </span>
   </p>
 <% end %>
-  
-<p>
-  <%= f.label :role %>
-  <%= f.select :role, options_for_select(User.roles.to_a, f.object.role) %>
-  <span class="help-inline">
-    Admins can create and edit users. Superusers can also edit applications.
-  </span>
-</p>
+
+<% if current_user.has_role?("superuser") %>
+  <p>
+    <%= f.label :role %>
+    <%= f.select :role, options_for_select(User.roles.to_a, f.object.role) %>
+    <span class="help-inline">
+      Admins can create and edit normal users. Superusers can create and edit all user types and edit applications.
+    </span>
+  </p>
+<% end %>
 
 <h2>Permissions</h2>
 

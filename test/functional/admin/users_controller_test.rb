@@ -57,16 +57,28 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_equal "Updated user #{another_user.email} successfully", flash[:notice]
     end
 
-    should "let you set the role" do
-      not_an_admin = FactoryGirl.create(:user)
-      put :update, id: not_an_admin.id, user: { role: "admin" }
-      assert_equal "admin", not_an_admin.reload.role
-    end
-
     should "redisplay the form if save fails" do
       another_user = FactoryGirl.create(:user)
       put :update, id: another_user.id, user: { name: "" }
       assert_select "form#edit_user_#{another_user.id}"
+    end
+
+    should "not let you set the role" do
+      not_an_admin = FactoryGirl.create(:user)
+      put :update, id: not_an_admin.id, user: { role: "admin" }
+      assert_equal "normal", not_an_admin.reload.role
+    end
+
+    context "you are a superuser" do
+      setup do
+        @user.update_column(:role, "superuser")
+      end
+
+      should "let you set the role" do
+        not_an_admin = FactoryGirl.create(:user)
+        put :update, id: not_an_admin.id, user: { role: "admin" }
+        assert_equal "admin", not_an_admin.reload.role
+      end
     end
 
     context "changing an email" do

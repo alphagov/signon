@@ -15,8 +15,8 @@ class User < ActiveRecord::Base
          :confirmable
 
   attr_accessible :uid, :name, :email, :password, :password_confirmation
-  attr_accessible :uid, :name, :email, :password, :password_confirmation, :role, :permissions_attributes, as: :admin
-  attr_accessible :uid, :name, :email, :password, :password_confirmation, :role, :permissions_attributes, as: :superuser
+  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, as: :admin
+  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, :role, as: :superuser
   attr_readonly :uid
 
   validates :name, presence: true

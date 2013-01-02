@@ -21,7 +21,7 @@ class Admin::UsersController < Admin::BaseController
 
   def update
     email_before = @user.email
-    if @user.update_attributes(translate_faux_signin_permission(params[:user]), as: :admin)
+    if @user.update_attributes(translate_faux_signin_permission(params[:user]), as: current_user.role.to_sym)
       @user.permissions.reload
       results = PermissionUpdater.new(@user, @user.applications_used).attempt
       @successes, @failures = results[:successes], results[:failures]
