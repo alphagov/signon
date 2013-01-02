@@ -30,6 +30,9 @@
 <p>
   <%= f.label :role %>
   <%= f.select :role, options_for_select(User.roles.to_a, f.object.role) %>
+  <span class="help-inline">
+    Admins can create and edit users. Superusers can also edit applications.
+  </span>
 </p>
 
 <h2>Permissions</h2>
