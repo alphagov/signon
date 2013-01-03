@@ -32,7 +32,7 @@ group :development do
   gem 'sqlite3'
 end
 
-gem 'lograge'
+gem 'lograge', '0.1.2'
 
 group :test do
   gem 'cucumber-rails', '1.3.0', require: false
