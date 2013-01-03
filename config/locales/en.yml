@@ -1,6 +1,5 @@
 # Sample localization file for English. Add more files in this directory for other locales.
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-
 en:
   passphrase: "Passphrase"
   confirm_passphrase: "Confirm passphrase"
@@ -8,7 +7,9 @@ en:
   activerecord:
     attributes:
       user:
+        current_password: "Current passphrase"
         password: "Passphrase"
+        password_confirmation: "Passphrase confirmation"
 
   helpers:
     label:
