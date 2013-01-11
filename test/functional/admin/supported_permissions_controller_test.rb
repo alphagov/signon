@@ -29,15 +29,13 @@ class Admin::SupportedPermissionsControllerTest < ActionController::TestCase
     end
   end
 
-  context "GET create" do
+  context "POST create" do
     should "create a new permission" do
       app = FactoryGirl.create(:application, name: "My first app")
-      perm = FactoryGirl.create(:supported_permission, application_id: app.id, name: "permission1")
-      post :create, application_id: app.id, post:{ permission: "permission2" }
+      post :create, application_id: app.id, post:{ permission: "permission1" }
       assert_redirected_to(:controller => "supported_permissions", :action => :index)
-      get :index, application_id: app.id
-      assert_select "h1", /My first app/
-      assert_select "p[id='permissions']", /permission1, permission2/
+      app.reload
+      assert_equal app.supported_permissions.first.name, "permission1"
      end
   end
 
