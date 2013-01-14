@@ -14,7 +14,7 @@ When /^I request user details with an expired bearer token$/ do
 end
 
 When /^I request user details with a revoked bearer token$/ do
-  set_bearer_token(get_expired_token.token)
+  set_bearer_token(get_revoked_token.token)
   visit "/user.json"
 end
 

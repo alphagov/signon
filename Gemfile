@@ -22,7 +22,7 @@ gem 'devise_invitable', '1.1.0'
 gem 'devise-encryptable', '0.1.1'
 gem 'passphrase_entropy', git: 'https://github.com/alphagov/passphrase_entropy.git'
 
-gem 'doorkeeper', '0.3.1'
+gem 'doorkeeper', '0.6.7'
 
 gem 'gds-api-adapters', '4.1.3'
 gem 'statsd-ruby', '1.0.0'

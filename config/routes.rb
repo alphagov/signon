@@ -1,5 +1,5 @@
 Signonotron2::Application.routes.draw do
-  mount Doorkeeper::Engine => '/oauth'
+  use_doorkeeper
 
   devise_for :users, :controllers => { 
     :invitations => 'admin/invitations',

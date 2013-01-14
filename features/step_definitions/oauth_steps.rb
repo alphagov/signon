@@ -4,14 +4,14 @@ end
 
 Given /^an OAuth application called "([^"]*)" with SupportedPermission of "([^"]*)"$/ do |application_name, permission_name|
   app = FactoryGirl.create(:application, name: application_name)
-  FactoryGirl.create(:supported_permission, application: app, name: permission_name)
+  FactoryGirl.create(:supported_permission, application_id: app.id, name: permission_name)
 end
 
 Given /^the user is authorized for "(.*?)" with permission to "(.*?)"$/ do |application_name, permission_name|
   app = Doorkeeper::Application.find_by_name(application_name)
   permission = app.supported_permissions.find_by_name!(permission_name)
-  @user.permissions.create!(application: app, permissions: [permission.name])
-  @user.authorisations.create!(application: app)
+  @user.permissions.create!(application_id: app.id, permissions: [permission.name])
+  @user.authorisations.create!(application_id: app.id)
 end
 
 When /^I visit the OAuth authorisation request endpoint for "([^"]*)"$/ do |application_name|

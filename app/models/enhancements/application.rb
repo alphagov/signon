@@ -1,8 +1,10 @@
-require "doorkeeper/application"
+require "doorkeeper/models/application"
 
 class ::Doorkeeper::Application < ActiveRecord::Base
   has_many :permissions, :dependent => :destroy
   has_many :supported_permissions, :dependent => :destroy
+
+  attr_accessible :name, :description, :uid, :secret, :redirect_uri, :home_uri
 
   def self.default_permission_strings
     ["signin"]
