@@ -30,4 +30,11 @@ Doorkeeper.configure do
   #   scope :public, :default => true, :description => "The public one"
   #   scope :write,  :description => "Updating information"
   # end
+
+  # Under some circumstances you might want to have applications auto-approved,
+  # so that the user skips the authorization step.
+  # For example if dealing with trusted a application.
+  skip_authorization do |resource_owner, client|
+    true
+  end
 end
