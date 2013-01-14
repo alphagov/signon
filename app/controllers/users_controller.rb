@@ -14,7 +14,7 @@ class UsersController < ApplicationController
   def edit
   end
 
-  def update
+  def update_passphrase
     params[:user] ||= {}
     password_params = params[:user].symbolize_keys.keep_if { |k, v| [:current_password, :password, :password_confirmation].include?(k) }
     if current_user.update_with_password(password_params)

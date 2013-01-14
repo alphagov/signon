@@ -117,7 +117,7 @@ class UsersControllerTest < ActionController::TestCase
     original_password_hash = user.encrypted_password
     sign_in user
 
-    post :update, {
+    post :update_passphrase, {
       user: {
         current_password: original_password,
         password: new_password,

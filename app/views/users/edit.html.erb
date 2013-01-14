@@ -1,5 +1,5 @@
 <section>
-  <%= form_for current_user, :url => user_path do |f| %>
+  <%= form_for current_user, :url => update_passphrase_user_path do |f| %>
   <%- unless current_user.errors.empty? -%>
     <div class="alert alert-danger">
       <ul class="errors">
