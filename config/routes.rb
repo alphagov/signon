@@ -23,7 +23,9 @@ Signonotron2::Application.routes.draw do
       end
     end
 
-    resources :applications, only: [:index, :edit, :update]
+    resources :applications, only: [:index, :edit, :update] do
+      resources :supported_permissions, only: [:index, :new, :create]
+    end  
 
     resources :suspensions, only: [:edit, :update]
     root :to => 'users#index'
