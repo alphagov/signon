@@ -50,6 +50,21 @@ class UsersControllerTest < ActionController::TestCase
     end
   end
 
+  context "GET edit" do
+    context "changing an email" do
+      setup do
+        @user = FactoryGirl.create(:user_with_pending_email_change)
+        sign_in @user
+      end
+
+      should "show the unconfirmed_email" do
+        get :edit
+
+        assert_select "input#user_unconfirmed_email[value=#{@user.unconfirmed_email}]" 
+      end
+    end
+  end
+
   context "PUT update" do
     setup do
       @user = FactoryGirl.create(:user, email: "old@email.com")

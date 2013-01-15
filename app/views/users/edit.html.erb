@@ -18,6 +18,13 @@
       <%= f.label(:email, "Email") %>
       <%= f.text_field :email, class: "span6" %>
 
+      <% if f.object.unconfirmed_email.present? %>
+        <p>
+          <%= f.label :unconfirmed_email, "You have a pending email change" %>
+          <%= f.text_field :unconfirmed_email, readonly: "readonly", disabled: "disabled", :class => "span6" %>
+        </p>
+      <% end %>
+
       <br>
 
       <%= f.submit "Change email", class: "btn btn-primary" %>
@@ -41,7 +48,7 @@
 
       <hr>
 
-      <%= f.submit t(".change"), :class => 'btn btn-primary' %></p>
+      <%= f.submit t(".change"), :class => 'btn btn-primary' %>
     <% end %>
   </section>
 </div>
