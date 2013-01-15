@@ -15,6 +15,8 @@ Signonotron2::Application.routes.draw do
   resource :user, :only => [:show, :edit, :update] do
     member do
       put :update_passphrase
+      put :resend_email_change
+      delete :cancel_email_change
     end
   end
 

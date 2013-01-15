@@ -86,6 +86,41 @@ class UsersControllerTest < ActionController::TestCase
     end
   end
 
+  context "PUT resend_email_change" do
+    should "send an email change confirmation email" do
+      @user = FactoryGirl.create(:user_with_pending_email_change)
+      sign_in @user
+      put :resend_email_change
+
+      assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+    end
+
+    should "use a new token if it's expired" do
+      @user = FactoryGirl.create(:user_with_pending_email_change,
+                                          confirmation_token: "old token",
+                                          confirmation_sent_at: 15.days.ago)
+      sign_in @user
+      put :resend_email_change, id: @user.id
+
+      assert_not_equal "old token", @user.reload.confirmation_token
+    end
+  end
+
+  context "DELETE cancel_email_change" do
+    setup do
+      @user = FactoryGirl.create(:user_with_pending_email_change)
+      sign_in @user
+    end
+
+    should "clear the unconfirmed_email and the confirmation_token" do
+      delete :cancel_email_change, id: @user.id
+
+      @user.reload
+      assert_equal nil, @user.unconfirmed_email
+      assert_equal nil, @user.confirmation_token
+    end
+  end
+
   context "GET show (as OAuth client application)" do
     should "fetching json profile with a valid oauth token should succeed" do
       user = FactoryGirl.create(:user)

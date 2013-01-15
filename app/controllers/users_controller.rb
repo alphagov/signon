@@ -35,6 +35,22 @@ class UsersController < ApplicationController
     end
   end
 
+  def resend_email_change
+    current_user.resend_confirmation_token
+    if current_user.errors.empty?
+      redirect_to root_path, notice: "Successfully resent email change email to #{current_user.unconfirmed_email}"
+    else
+      redirect_to edit_user_path(current_user), alert: "Failed to send email change email"
+    end
+  end
+
+  def cancel_email_change
+    current_user.unconfirmed_email = nil
+    current_user.confirmation_token = nil
+    current_user.save(validate: false)
+    redirect_to edit_user_path(current_user)
+  end
+
   private
     def relevant_permission
       current_resource_owner
