@@ -4,6 +4,12 @@ When /^I change their email to "(.*?)"$/ do |new_email|
   click_button "Update User"
 end
 
+When /^I change my email to "(.*?)"$/ do |new_email|
+  visit edit_user_path(@user)
+  fill_in "Email", with: new_email
+  click_button "Change email"
+end
+
 Then /^a confirmation email should be sent to "(.*?)"$/ do |new_email|
   email = ActionMailer::Base.deliveries.last
   assert_equal new_email, email.to[0]

@@ -12,7 +12,7 @@ Signonotron2::Application.routes.draw do
     put "/users/confirmation" => "confirmations#update"
   end
 
-  resource :user, :only => [:show, :edit] do
+  resource :user, :only => [:show, :edit, :update] do
     member do
       put :update_passphrase
     end

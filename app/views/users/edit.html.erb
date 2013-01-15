@@ -1,32 +1,47 @@
-<section>
-  <%= form_for current_user, :url => update_passphrase_user_path do |f| %>
-  <%- unless current_user.errors.empty? -%>
-    <div class="alert alert-danger">
-      <ul class="errors">
-        <%- current_user.errors.full_messages.each do |msg| -%>
-        <li><%= msg %></li>
-        <%- end -%>
-      </ul>
-    </div>
-  <%- end -%>
+<h1>Edit your account</h1>
 
-  <h1><%= t(".change_passphrase") %></h1>
+<%- unless current_user.errors.empty? -%>
+  <div class="alert alert-danger">
+    <ul class="errors">
+      <%- current_user.errors.full_messages.each do |msg| -%>
+      <li><%= msg %></li>
+      <%- end -%>
+    </ul>
+  </div>
+<%- end -%>
 
-  <div class="well">
+<div class="well">
+  <section>
+    <h2>Change your email address</h2>
+    <p>Changing your email address doesn't take effect until you follow the link in a confirmation email sent to the new address.</p>
+    <%= form_for current_user, url: "/user", method: :put do |f| %>
+      <%= f.label(:email, "Email") %>
+      <%= f.text_field :email, class: "span6" %>
+
+      <br>
+
+      <%= f.submit "Change email", class: "btn btn-primary" %>
+    <% end %>
+  </section>
+</div>
+<div class="well">
+  <section>
+    <h2><%= t(".change_passphrase") %></h2>
     <p><%= t("helpers.label.user.password_guidance") %></p>
 
-    <%= f.label(:current_password, "Current passphrase") %>
-    <%= f.password_field :current_password, class: 'span6', autofocus: true %>
+    <%= form_for current_user, :url => update_passphrase_user_path do |f| %>
+      <%= f.label(:current_password, "Current passphrase") %>
+      <%= f.password_field :current_password, class: 'span6' %>
 
-    <%= f.label(:password, "New passphrase") %>
-    <%= f.password_field :password, class: 'span6' %>
-    
-    <%= f.label :password_confirmation, "Confirm new passphrase" %>
-    <%= f.password_field :password_confirmation, class: 'span6' %>
-    
-    <hr>
-    
-    <%= f.submit t(".change"), :class => 'btn btn-primary' %></p>
+      <%= f.label(:password, "New passphrase") %>
+      <%= f.password_field :password, class: 'span6' %>
+
+      <%= f.label :password_confirmation, "Confirm new passphrase" %>
+      <%= f.password_field :password_confirmation, class: 'span6' %>
+
+      <hr>
+
+      <%= f.submit t(".change"), :class => 'btn btn-primary' %></p>
     <% end %>
-  </div>
-</section>
+  </section>
+</div>

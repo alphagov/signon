@@ -5,7 +5,7 @@ module PassPhraseSupport
     fill_in "Current passphrase", with: from
     fill_in "New passphrase", with: to
     fill_in "Confirm new passphrase", with: confirmation
-    click_button "Change"
+    click_button "Change passphrase"
   end
 end
 

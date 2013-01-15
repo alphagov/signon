@@ -50,6 +50,27 @@ class UsersControllerTest < ActionController::TestCase
     end
   end
 
+  context "PUT update" do
+    setup do
+      @user = FactoryGirl.create(:user, email: "old@email.com")
+      sign_in @user
+    end
+
+    context "changing an email" do
+      should "stage the change, and send a confirmation email" do
+        put :update, user: { email: "new@email.com" }
+
+        @user.reload
+        assert_equal "new@email.com", @user.unconfirmed_email
+        assert_equal "old@email.com", @user.email
+
+        email = ActionMailer::Base.deliveries.last
+        assert_equal "Confirm your email change", email.subject
+        assert_equal "new@email.com", email.to[0]
+      end
+    end
+  end
+
   context "GET show (as OAuth client application)" do
     should "fetching json profile with a valid oauth token should succeed" do
       user = FactoryGirl.create(:user)

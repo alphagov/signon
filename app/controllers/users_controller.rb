@@ -14,6 +14,15 @@ class UsersController < ApplicationController
   def edit
   end
 
+  def update
+    if current_user.update_attributes(email: params[:user][:email])
+      redirect_to root_path, notice: "An email has been sent to #{params[:user][:email]}. Follow the link in the email to update your address."
+    else
+      flash[:error] = "Failed to change email."
+      render :edit
+    end
+  end
+
   def update_passphrase
     params[:user] ||= {}
     password_params = params[:user].symbolize_keys.keep_if { |k, v| [:current_password, :password, :password_confirmation].include?(k) }
