@@ -15,7 +15,10 @@ class UsersController < ApplicationController
   end
 
   def update
-    if current_user.update_attributes(email: params[:user][:email])
+    if current_user.email == params[:user][:email].strip
+      flash[:alert] = "Nothing to update."
+      render :edit
+    elsif current_user.update_attributes(email: params[:user][:email])
       redirect_to root_path, notice: "An email has been sent to #{params[:user][:email]}. Follow the link in the email to update your address."
     else
       flash[:alert] = "Failed to change email."
