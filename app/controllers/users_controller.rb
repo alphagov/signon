@@ -18,7 +18,7 @@ class UsersController < ApplicationController
     if current_user.update_attributes(email: params[:user][:email])
       redirect_to root_path, notice: "An email has been sent to #{params[:user][:email]}. Follow the link in the email to update your address."
     else
-      flash[:error] = "Failed to change email."
+      flash[:alert] = "Failed to change email."
       render :edit
     end
   end
