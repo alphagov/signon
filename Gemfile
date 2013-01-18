@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.7'
+gem 'rails', '3.2.11'
 
 group :passenger_compatibility do
   gem 'rake', '0.9.2'
@@ -22,7 +22,7 @@ gem 'devise_invitable', '1.1.0'
 gem 'devise-encryptable', '0.1.1'
 gem 'passphrase_entropy', git: 'https://github.com/alphagov/passphrase_entropy.git'
 
-gem 'doorkeeper', '0.3.1'
+gem 'doorkeeper', '0.6.7'
 
 gem 'gds-api-adapters', '4.1.3'
 gem 'statsd-ruby', '1.0.0'
@@ -32,7 +32,7 @@ group :development do
   gem 'sqlite3'
 end
 
-gem 'lograge'
+gem 'lograge', '0.1.2'
 
 group :test do
   gem 'cucumber-rails', '1.3.0', require: false

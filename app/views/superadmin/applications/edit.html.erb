@@ -48,5 +48,9 @@
     <span class="help-inline">The app has a copy of this. Used in the signin redirect dance.</span>
   </p>
 
+  <p>
+    <%= link_to "Supported Permissions", superadmin_application_supported_permissions_path(@application) , class: "btn"%>
+  </p>
+
   <%= f.submit :class => 'btn btn-primary' %>
 <% end %>

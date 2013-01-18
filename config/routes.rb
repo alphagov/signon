@@ -1,5 +1,5 @@
 Signonotron2::Application.routes.draw do
-  mount Doorkeeper::Engine => '/oauth'
+  use_doorkeeper
 
   devise_for :users, :controllers => { 
     :invitations => 'admin/invitations',
@@ -28,7 +28,9 @@ Signonotron2::Application.routes.draw do
   end
 
   namespace :superadmin do
-    resources :applications, only: [:index, :edit, :update]
+    resources :applications, only: [:index, :edit, :update] do
+      resources :supported_permissions, only: [:index, :new, :create]
+    end
   end
 
   # Gracefully handle GET on page (e.g. hit refresh) reached by a render to a POST

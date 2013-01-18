@@ -4,20 +4,11 @@ Feature: Authorise Application
     And an OAuth application called "MyApp"
     When I visit the OAuth authorisation request endpoint for "MyApp"
     Then I should see "You need to sign in"
-    When I sign in
-    Then I should see "Authorize MyApp to use your account?"
-    When I authorise the app
+    When I sign in, ignoring routing errors
     Then there should be an authorisation code for the user
 
   Scenario: A signed-in user granting access to a registered OAuth application
     Given a signed-in user
     And an OAuth application called "MyApp"
     When I visit the OAuth authorisation request endpoint for "MyApp"
-    Then I should see "Authorize MyApp to use your account?"
-
-  Scenario: A signed-in user declinging access to a registered OAuth application
-    Given a signed-in user
-    And an OAuth application called "MyApp"
-    When I visit the OAuth authorisation request endpoint for "MyApp"
-    And I decline to authorise the app
-    Then there should not be an authorisation code for the user
+    Then there should be an authorisation code for the user
