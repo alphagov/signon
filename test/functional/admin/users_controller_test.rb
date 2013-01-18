@@ -69,9 +69,9 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_equal "normal", not_an_admin.reload.role
     end
 
-    context "you are a superuser" do
+    context "you are a superadmin" do
       setup do
-        @user.update_column(:role, "superuser")
+        @user.update_column(:role, "superadmin")
       end
 
       should "let you set the role" do

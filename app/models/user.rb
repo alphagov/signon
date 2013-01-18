@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
 
   attr_accessible :uid, :name, :email, :password, :password_confirmation
   attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, as: :admin
-  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, :role, as: :superuser
+  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, :role, as: :superadmin
   attr_readonly :uid
 
   validates :name, presence: true
@@ -25,7 +25,7 @@ class User < ActiveRecord::Base
     {
       "Normal user" => "normal",
       "Admin" => "admin",
-      "Superuser" => "superuser"
+      "Superadmin" => "superadmin"
     }
   end
   validates :role, inclusion: { in: roles.values }
@@ -67,7 +67,7 @@ class User < ActiveRecord::Base
   end
 
   def has_role?(possible)
-    if role == "superuser"
+    if role == "superadmin"
       true
     else
       role == possible

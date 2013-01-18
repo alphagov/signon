@@ -14,10 +14,10 @@
     </ul>
   <% end %>
 
-  <% if current_user.has_role?("superuser") %>
-    <h2>Superuser tasks</h2>
+  <% if current_user.has_role?("superadmin") %>
+    <h2>Superadmin tasks</h2>
     <ul>
-      <li><%= link_to "Administer applications", superuser_applications_path %></li>
+      <li><%= link_to "Administer applications", superadmin_applications_path %></li>
     </ul>
   <% end %>
 

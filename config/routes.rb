@@ -27,7 +27,7 @@ Signonotron2::Application.routes.draw do
     root :to => 'users#index'
   end
 
-  namespace :superuser do
+  namespace :superadmin do
     resources :applications, only: [:index, :edit, :update]
   end
 

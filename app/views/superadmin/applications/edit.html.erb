@@ -1,6 +1,6 @@
 <h1>Edit application &ldquo;<%= @application.name %>&rdquo;</h1>
 
-<%= form_for [:superuser, @application], :html => {:class => 'well'} do |f| %>
+<%= form_for [:superadmin, @application], :html => {:class => 'well'} do |f| %>
   
   <% if @application.errors.count > 0 %>
     <div class="alert alert-error">
