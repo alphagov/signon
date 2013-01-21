@@ -23,12 +23,14 @@ Signonotron2::Application.routes.draw do
       end
     end
 
-    resources :applications, only: [:index, :edit, :update] do
-      resources :supported_permissions, only: [:index, :new, :create]
-    end  
-
     resources :suspensions, only: [:edit, :update]
     root :to => 'users#index'
+  end
+
+  namespace :superadmin do
+    resources :applications, only: [:index, :edit, :update] do
+      resources :supported_permissions, only: [:index, :new, :create]
+    end
   end
 
   # Gracefully handle GET on page (e.g. hit refresh) reached by a render to a POST

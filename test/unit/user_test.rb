@@ -32,12 +32,12 @@ class UserTest < ActiveSupport::TestCase
 
   # Attribute protection
 
-  test "the is_admin flag has to be specifically assigned" do
-    u = User.new(name: 'Bad User', is_admin: true)
-    assert ! u.is_admin?
+  test "the role has to be specifically assigned" do
+    u = User.new(name: 'Bad User', role: "admin")
+    assert_not_equal "admin", u.role
 
-    u.is_admin = true
-    assert u.is_admin?
+    u.role = "admin"
+    assert_equal "admin", u.role
   end
 
   # Password Validation

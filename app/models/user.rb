@@ -15,11 +15,20 @@ class User < ActiveRecord::Base
          :confirmable
 
   attr_accessible :uid, :name, :email, :password, :password_confirmation
-  attr_accessible :uid, :name, :email, :password, :password_confirmation, :is_admin, :permissions_attributes, as: :admin
+  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, as: :admin
+  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, :role, as: :superadmin
   attr_readonly :uid
 
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
+  def self.roles
+    {
+      "Normal user" => "normal",
+      "Admin" => "admin",
+      "Superadmin" => "superadmin"
+    }
+  end
+  validates :role, inclusion: { in: roles.values }
 
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
   has_many :permissions
@@ -52,9 +61,17 @@ class User < ActiveRecord::Base
   end
   alias_method :applications_used, :authorised_applications
 
-  # Required for devise_invitable to set is_admin and permissions
+  # Required for devise_invitable to set role and permissions
   def self.inviter_role(inviter)
-    :admin
+    inviter.nil? ? :default : inviter.role.to_sym
+  end
+
+  def has_role?(possible)
+    if role == "superadmin"
+      true
+    else
+      role == possible
+    end
   end
 
   # Override Devise so that, when a user has been invited with one address
