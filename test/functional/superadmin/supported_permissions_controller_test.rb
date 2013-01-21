@@ -1,9 +1,9 @@
 require 'test_helper'
 
-class Admin::SupportedPermissionsControllerTest < ActionController::TestCase
+class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCase
 
   setup do
-    @user = FactoryGirl.create(:user, is_admin: true)
+    @user = FactoryGirl.create(:user, role: "superadmin")
     sign_in @user
   end
 

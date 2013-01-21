@@ -31,7 +31,6 @@
         <th scope="col">Name and email</th>
         <th scope="col">Sign-in count</th>
         <th scope="col">Created</th>
-        <th scope="col">Admin?</th>
         <th scope="col">Suspended?</th>
         <th scope="col">Actions</th>
       </tr>
@@ -46,7 +45,6 @@
           </td>
           <td><%= user.sign_in_count %></td>
           <td><%= time_ago_in_words(user.created_at) %> ago</td>
-          <td><%= user.is_admin ? "Yes" : "No" %></td>
           <td><%= user.suspended? ? "Yes" : "No" %></td>
           <td><%= link_to "Edit", edit_admin_user_path(user) %>
             <% if user.invited_but_not_accepted %>

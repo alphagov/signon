@@ -14,7 +14,7 @@ Given /^a signed\-out user$/ do
 end
 
 Given /^a signed\-out admin user$/ do
-  @user = FactoryGirl.create(:user, is_admin: true)
+  @user = FactoryGirl.create(:user, role: "admin")
 end
 
 When /^I sign in$/ do

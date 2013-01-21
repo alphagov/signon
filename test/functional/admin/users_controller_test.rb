@@ -3,7 +3,7 @@ require 'test_helper'
 class Admin::UsersControllerTest < ActionController::TestCase
 
   setup do
-    @user = FactoryGirl.create(:user, is_admin: true)
+    @user = FactoryGirl.create(:user, role: "admin")
     sign_in @user
   end
 
@@ -57,16 +57,28 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_equal "Updated user #{another_user.email} successfully", flash[:notice]
     end
 
-    should "let you set the is_admin flag" do
-      not_an_admin = FactoryGirl.create(:user)
-      put :update, id: not_an_admin.id, user: { is_admin: true }
-      assert_equal true, not_an_admin.reload.is_admin
-    end
-
     should "redisplay the form if save fails" do
       another_user = FactoryGirl.create(:user)
       put :update, id: another_user.id, user: { name: "" }
       assert_select "form#edit_user_#{another_user.id}"
+    end
+
+    should "not let you set the role" do
+      not_an_admin = FactoryGirl.create(:user)
+      put :update, id: not_an_admin.id, user: { role: "admin" }
+      assert_equal "normal", not_an_admin.reload.role
+    end
+
+    context "you are a superadmin" do
+      setup do
+        @user.update_column(:role, "superadmin")
+      end
+
+      should "let you set the role" do
+        not_an_admin = FactoryGirl.create(:user)
+        put :update, id: not_an_admin.id, user: { role: "admin" }
+        assert_equal "admin", not_an_admin.reload.role
+      end
     end
 
     context "changing an email" do
@@ -152,7 +164,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
   end
 
   should "disallow access to non-admins" do
-    @user.update_column(:is_admin, false)
+    @user.update_column(:role, nil)
     get :index
     assert_redirected_to root_path
   end

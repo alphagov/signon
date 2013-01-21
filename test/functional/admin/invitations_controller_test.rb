@@ -5,12 +5,12 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
 
   setup do
     request.env["devise.mapping"] = Devise.mappings[:user]
-    @user = FactoryGirl.create(:user, is_admin: true)
+    @user = FactoryGirl.create(:user, role: "admin")
     sign_in @user
   end
 
   should "disallow access to non-admins" do
-    @user.update_column(:is_admin, false)
+    @user.update_column(:role, nil)
     get :new
     assert_redirected_to root_path
   end
