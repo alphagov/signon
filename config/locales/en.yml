@@ -20,4 +20,4 @@ en:
   users:
     edit:
       change_passphrase: "Change your passphrase"
-      change: "Change"
+      change: "Change passphrase"
