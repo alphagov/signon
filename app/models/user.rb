@@ -44,12 +44,8 @@ class User < ActiveRecord::Base
   end
 
   def to_sensible_json(for_application)
-    sensible_permissions = {}
-    permissions = self.permissions.where(application_id: for_application.id)
-    permissions.each do |permission|
-      sensible_permissions[permission.application.name] = permission.permissions
-    end
-    { user: { uid: uid, name: name, email: email, permissions: sensible_permissions } }.to_json
+    permission = self.permissions.where(application_id: for_application.id).first
+    { user: { uid: uid, name: name, email: email, permissions: permission.nil? ? [] : permission.permissions } }.to_json
   end
 
   def invited_but_not_accepted
