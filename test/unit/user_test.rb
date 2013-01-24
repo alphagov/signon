@@ -22,9 +22,7 @@ class UserTest < ActiveSupport::TestCase
         "email" =>  @user.email,
         "name" => @user.name,
         "uid" => @user.uid,
-        "permissions" => {
-          "app1" => ["signin", "coughing"]
-        }
+        "permissions" => ["signin", "coughing"]
       }
     }
     assert_equal(expected, JSON.parse(@user.to_sensible_json(app1)) )
