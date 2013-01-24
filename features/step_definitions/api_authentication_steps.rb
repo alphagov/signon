@@ -32,5 +32,5 @@ Then /^the response should indicate it needs authorization$/ do
 end
 
 Then /^I should get a list of the user's permissions for "(.*?)"$/ do |arg1|
-  assert @parsed_response['user']['permissions']['MyApp'].is_a?(Array)
+  assert @parsed_response['user']['permissions'].is_a?(Array)
 end
