@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.11'
+gem 'rails', '3.2.12'
 
 group :passenger_compatibility do
   gem 'rake', '0.9.2'
@@ -13,6 +13,7 @@ gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
 gem 'exception_notification'
 gem 'plek', '0.5.0'
+gem 'json', '1.7.7'
 
 gem 'uuid'
 
