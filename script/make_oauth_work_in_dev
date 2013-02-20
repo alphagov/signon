@@ -27,14 +27,20 @@ def config_path_for_app(application)
   end
 end
 
+def uses_gds_sso? (application)
+  match = application.name =~ /(guides_test|Contact-o-Tron|licensify)/i
+  match.nil?
+end
+
 puts "Updating SSO config so that it works in development..."
 ::Doorkeeper::Application.all.each do |application|
-  if application.name =~ /(guides_test|Contact-o-Tron|licensify)/i
+  app_config_path = config_path_for_app(application)
+  if !uses_gds_sso?(application) || !File.exists?(app_config_path)
     puts "WARNING Skipping #{application.name}, as it doesn't exist or doesn't use gds-sso"
     next
   end
   
-  local_config = config_for_app(config_path_for_app(application))
+  local_config = config_for_app(app_config_path)
 
   application.redirect_uri = deverise_uri(application.redirect_uri)
   application.home_uri     = deverise_uri(application.home_uri)
