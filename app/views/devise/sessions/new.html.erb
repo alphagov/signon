@@ -3,7 +3,7 @@
 <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'well', autocomplete: 'off' }) do |f| %>
 
   <%= f.label :email %>
-  <%= f.email_field :email, class: 'span6', autocomplete: 'off' %>
+  <%= f.email_field :email, class: 'span6', autocomplete: 'off', autofocus: 'autofocus' %>
 
   <%= f.label :password, "Passphrase" %>
   <%= f.password_field :password, class: 'span6' %>
