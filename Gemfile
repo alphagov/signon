@@ -31,6 +31,7 @@ gem 'unicorn', '4.3.1'
 
 group :development do
   gem 'sqlite3'
+  gem 'quiet_assets'
 end
 
 gem 'lograge', '0.1.2'
