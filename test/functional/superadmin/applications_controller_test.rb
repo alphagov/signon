@@ -1,9 +1,9 @@
 require 'test_helper'
 
-class Admin::ApplicationsControllerTest < ActionController::TestCase
+class Superadmin::ApplicationsControllerTest < ActionController::TestCase
 
   setup do
-    @user = FactoryGirl.create(:user, is_admin: true)
+    @user = FactoryGirl.create(:user, role: "superadmin")
     sign_in @user
   end
 
@@ -29,7 +29,7 @@ class Admin::ApplicationsControllerTest < ActionController::TestCase
       put :update, id: app.id, application: { name: "A better name" }
       
       assert_equal "A better name", app.reload.name
-      assert_redirected_to admin_applications_path
+      assert_redirected_to superadmin_applications_path
       assert_match(/updated/, flash[:notice])
     end
 

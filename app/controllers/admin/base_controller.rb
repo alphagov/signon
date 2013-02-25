@@ -4,7 +4,7 @@ class Admin::BaseController < ApplicationController
 
   private
     def must_be_admin
-      if ! current_user.is_admin?
+      if ! current_user.has_role?("admin")
         flash[:alert] = "You must be an admin to do admin things."
         redirect_to root_path
       end

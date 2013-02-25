@@ -14,9 +14,7 @@ When /^I request user details with an expired bearer token$/ do
 end
 
 When /^I request user details with a revoked bearer token$/ do
-  token = get_valid_token
-  set_bearer_token(token.token)
-  token.revoke
+  set_bearer_token(get_revoked_token.token)
   visit "/user.json"
 end
 
@@ -34,5 +32,5 @@ Then /^the response should indicate it needs authorization$/ do
 end
 
 Then /^I should get a list of the user's permissions for "(.*?)"$/ do |arg1|
-  assert @parsed_response['user']['permissions']['MyApp'].is_a?(Array)
+  assert @parsed_response['user']['permissions'].is_a?(Array)
 end

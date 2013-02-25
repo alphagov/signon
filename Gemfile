@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.10'
+gem 'rails', '3.2.12'
 
 group :passenger_compatibility do
   gem 'rake', '0.9.2'
@@ -13,16 +13,17 @@ gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
 gem 'exception_notification'
 gem 'plek', '1.0.0'
+gem 'json', '1.7.7'
 
 gem 'uuid'
 
 # Gems used to provide Authentication and Authorization services.
-gem 'devise', '2.1.2', git: "https://github.com/plataformatec/devise.git", ref: "6e79c5c2427afbc5ca2d7bf0e4cc6f90fe36d97c"
-gem 'devise_invitable', '1.1.0'
+gem 'devise', '2.2.3'
+gem 'devise_invitable', '1.1.5'
 gem 'devise-encryptable', '0.1.1'
 gem 'passphrase_entropy', git: 'https://github.com/alphagov/passphrase_entropy.git'
 
-gem 'doorkeeper', '0.3.1'
+gem 'doorkeeper', '0.6.7'
 
 gem 'gds-api-adapters', '4.1.3'
 gem 'statsd-ruby', '1.0.0'

@@ -29,17 +29,17 @@ end
 
 puts "Updating SSO config so that it works in development..."
 ::Doorkeeper::Application.all.each do |application|
-  if application.name =~ /(guides_test|Contact-o-Tron|licensify)/i
-    puts "WARNING Skipping #{application.name}, as it doesn't exist or doesn't use gds-sso"
-    next
-  end
-  
-  local_config = config_for_app(config_path_for_app(application))
+  config_file = config_path_for_app(application)
+  if File.exists?(config_file)
+    local_config = config_for_app(config_file)
 
-  application.redirect_uri = deverise_uri(application.redirect_uri)
-  application.home_uri     = deverise_uri(application.home_uri)
-  application.uid          = local_config["oauth_id"]
-  application.secret       = local_config["oauth_secret"]
-  puts "Updating application #{application.name}"
-  application.save!
+    application.redirect_uri = deverise_uri(application.redirect_uri)
+    application.home_uri     = deverise_uri(application.home_uri)
+    application.uid          = local_config["oauth_id"]
+    application.secret       = local_config["oauth_secret"]
+    puts "Updating application #{application.name}"
+    application.save!
+  else
+    puts "WARNING Skipping #{application.name}, as it doesn't use gds-sso, is not checked out or the repo isn't \"#{application.name.downcase}\"."
+  end
 end

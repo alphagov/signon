@@ -15,6 +15,18 @@ class UsersController < ApplicationController
   end
 
   def update
+    if current_user.email == params[:user][:email].strip
+      flash[:alert] = "Nothing to update."
+      render :edit
+    elsif current_user.update_attributes(email: params[:user][:email])
+      redirect_to root_path, notice: "An email has been sent to #{params[:user][:email]}. Follow the link in the email to update your address."
+    else
+      flash[:alert] = "Failed to change email."
+      render :edit
+    end
+  end
+
+  def update_passphrase
     params[:user] ||= {}
     password_params = params[:user].symbolize_keys.keep_if { |k, v| [:current_password, :password, :password_confirmation].include?(k) }
     if current_user.update_with_password(password_params)
@@ -24,6 +36,22 @@ class UsersController < ApplicationController
     else
       render :edit
     end
+  end
+
+  def resend_email_change
+    current_user.resend_confirmation_token
+    if current_user.errors.empty?
+      redirect_to root_path, notice: "Successfully resent email change email to #{current_user.unconfirmed_email}"
+    else
+      redirect_to edit_user_path(current_user), alert: "Failed to send email change email"
+    end
+  end
+
+  def cancel_email_change
+    current_user.unconfirmed_email = nil
+    current_user.confirmation_token = nil
+    current_user.save(validate: false)
+    redirect_to edit_user_path(current_user)
   end
 
   private

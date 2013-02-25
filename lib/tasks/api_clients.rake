@@ -30,7 +30,11 @@ namespace :api_clients do
 
     # Grant authorisation and permissions
     user.permissions.create!(application: application, permissions: [permission.name])
-    authorisation = user.authorisations.create!(application: application, expires_in: 10.years.to_i)
+
+    # The application attribute is attr_protected, hence this form of setting it.
+    authorisation = user.authorisations.build(expires_in: 10.years.to_i)
+    authorisation.application = application
+    authorisation.save!
     
     puts "User created: user.name <#{user.name}>"
     puts "              user.email <#{user.email}>"

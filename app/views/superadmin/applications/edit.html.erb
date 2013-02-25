@@ -1,0 +1,56 @@
+<h1>Edit application &ldquo;<%= @application.name %>&rdquo;</h1>
+
+<%= form_for [:superadmin, @application], :html => {:class => 'well'} do |f| %>
+  
+  <% if @application.errors.count > 0 %>
+    <div class="alert alert-error">
+      <ul>
+        <% @application.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p>
+    <%= f.label :name %>
+    <%= f.text_field :name, :class => 'span6', required: "required" %>
+    <span class="help-inline">Shown on the Signon homepage.</span>
+  </p>
+
+  <p>
+    <%= f.label :description %>
+    <%= f.text_field :description, :class => 'span6', required: "required" %>
+    <span class="help-inline">Shown on the Signon homepage.</span>
+  </p>
+
+  <p>
+    <%= f.label :home_uri, "Home URI" %>
+    <%= f.text_field :home_uri, :class => 'span6', required: "required" %>
+    <span class="help-inline">Used to link to the app on the Signon homepage.</span>
+  </p>
+
+  <p>
+    <%= f.label :redirect_uri, "Redirect URI" %>
+    <%= f.text_field :redirect_uri, :class => 'span6', required: "required" %>
+    <span class="help-inline">The app should expect this URI. Used in the signin redirect dance.</span>
+  </p>
+
+  <p>
+    <%= f.label :uid, "UID" %>
+    <%= f.text_field :uid, class: 'span6', required: "required" %>
+    <span class="help-inline">The app has a copy of this. Used in the signin redirect dance.</span>
+  </p>
+
+  <p>
+    <%= f.label :secret %>
+    <%= f.text_field :secret, class: 'span6', required: "required" %>
+    <span class="help-inline">The app has a copy of this. Used in the signin redirect dance.</span>
+  </p>
+
+  <p>
+    <%= link_to "Supported Permissions", superadmin_application_supported_permissions_path(@application) , class: "btn"%>
+  </p>
+
+  <%= f.submit :class => 'btn btn-primary' %>
+<% end %>

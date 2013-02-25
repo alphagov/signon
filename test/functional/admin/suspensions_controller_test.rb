@@ -3,7 +3,7 @@ require 'test_helper'
 class Admin::SuspensionsControllerTest < ActionController::TestCase
 
   setup do
-    @user = FactoryGirl.create(:user, is_admin: true)
+    @user = FactoryGirl.create(:user, role: "admin")
     sign_in @user
   end
 
