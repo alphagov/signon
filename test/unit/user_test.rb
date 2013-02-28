@@ -90,4 +90,42 @@ class UserTest < ActiveSupport::TestCase
 
     assert_equal old_encrypted_password, u.encrypted_password, "Changed passphrase"
   end
+
+  test "can grant permissions to user application and permission name" do
+    app = FactoryGirl.create(:application, name: "my_app")
+    app.supported_permissions.create!(name: 'signin')
+    app.supported_permissions.create!(name: 'Create publications')
+    app.supported_permissions.create!(name: 'Delete publications')
+    user = FactoryGirl.create(:user)
+
+    user.grant_permission(app, "Create publications")
+
+    assert_user_has_permissions ['Create publications'], app, user
+  end
+
+  test "granting an unsupported permission raises an error" do
+    app = FactoryGirl.create(:application, name: "my_app")
+    app.supported_permissions.create!(name: 'signin')
+    user = FactoryGirl.create(:user)
+
+    assert_raises UnsupportedPermissionError do
+      user.grant_permission(app, "Unsupported")
+    end
+  end
+
+  test "granting an already granted permission doesn't cause duplicates" do
+    app = FactoryGirl.create(:application, name: "my_app")
+    user = FactoryGirl.create(:user)
+
+    user.grant_permission(app, "signin")
+    user.grant_permission(app, "signin")
+
+    assert_user_has_permissions ['signin'], app, user
+  end
+
+  def assert_user_has_permissions(expected_permissions, application, user)
+    permissions_for_my_app = user.permissions.reload.find_by_application_id(application.id)
+    assert_equal expected_permissions, permissions_for_my_app.permissions
+  end
+
 end
