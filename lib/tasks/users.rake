@@ -1,12 +1,21 @@
 namespace :users do
   desc "Create a new user (specify name and email in environment)"
   task :create => :environment do
-    raise "Requires name and email specified in environment" unless ENV['name'] && ENV['email']
+    raise "Requires name, email and applications specified in environment" unless ENV['name'] && ENV['email'] && ENV['applications']
+
+    applications = ENV['applications'].split(',').uniq.map do |application_name|
+      Doorkeeper::Application.find_by_name!(application_name)
+    end
 
     user = User.invite!(name: ENV['name'].dup, email: ENV['email'].dup)
+    applications.each do |application|
+      user.grant_permission(application, 'signin')
+    end
+
     invitation_url = "#{Plek.current.find("signon")}/users/invitation/accept?invitation_token=#{user.invitation_token}"
     puts "User created: user.name <#{user.name}>"
     puts "              user.email <#{user.email}>"
+    puts "              signin permissions for: '#{applications.map(&:name).join(%q{', '})}' "
     puts "              follow this link to set a password: #{invitation_url}"
   end
 

@@ -1,0 +1,2 @@
+class UnsupportedPermissionError < StandardError
+end
