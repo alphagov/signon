@@ -88,6 +88,16 @@ class User < ActiveRecord::Base
     end
   end
 
+  def invite!
+    # For us, a user is "confirmed" when they're created, even though this is
+    # conceptually confusing.
+    # It means that the password reset flow works when you've been invited but
+    # not yet accepted.
+    # Devise Invitable used to behave this way and then changed in v1.1.1
+    self.confirmed_at = Time.now.utc
+    super
+  end
+
   # Override Devise so that, when a user has been invited with one address
   # and then it is changed, we can send a new invitation email, rather than
   # a confirmation email (and hence they'll be in the correct flow re setting

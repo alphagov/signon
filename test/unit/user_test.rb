@@ -123,6 +123,16 @@ class UserTest < ActiveSupport::TestCase
     assert_user_has_permissions ['signin'], app, user
   end
 
+  test "inviting a user sets confirmed_at" do
+    if user = User.find_by_email("j@1.com")
+      user.delete
+    end
+    user = User.invite!(name: "John Smith", email: "j@1.com")
+    assert_not_nil user
+    assert user.persisted?
+    assert_not_nil user.confirmed_at
+  end
+
   def assert_user_has_permissions(expected_permissions, application, user)
     permissions_for_my_app = user.permissions.reload.find_by_application_id(application.id)
     assert_equal expected_permissions, permissions_for_my_app.permissions
