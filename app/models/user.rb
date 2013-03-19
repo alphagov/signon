@@ -94,7 +94,7 @@ class User < ActiveRecord::Base
     # It means that the password reset flow works when you've been invited but
     # not yet accepted.
     # Devise Invitable used to behave this way and then changed in v1.1.1
-    self.confirmed_at = Time.now.utc
+    self.confirmed_at = Time.zone.now
     super
   end
 
