@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.12'
+gem 'rails', '3.2.13'
 
 group :passenger_compatibility do
   gem 'rake', '0.9.2'
@@ -40,7 +40,7 @@ group :test do
   gem 'cucumber-rails', '1.3.0', require: false
   gem 'database_cleaner', '0.7.2'
   gem 'factory_girl_rails', '3.1.0'
-  gem 'mocha', '0.12.1', require: false
+  gem 'mocha', '0.13.3', require: false
   gem 'shoulda', '3.0.1'
   gem 'webmock', '1.8.7'
   gem 'test-unit', '2.5.2', require: false
