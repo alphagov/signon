@@ -10,6 +10,6 @@ FactoryGirl.define do
     email "old@email.com"
     unconfirmed_email "new@email.com"
     sequence(:confirmation_token) { |n| "#{n}a1s2d3"}
-    confirmation_sent_at Time.now
+    confirmation_sent_at Time.zone.now
   end
 end
