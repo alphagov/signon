@@ -29,6 +29,8 @@ Signonotron2::Application.routes.draw do
       end
     end
 
+    resources :batch_invitations, only: [:new, :create]
+
     resources :suspensions, only: [:edit, :update]
     root :to => 'users#index'
   end
