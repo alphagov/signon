@@ -11,7 +11,27 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130405143200) do
+ActiveRecord::Schema.define(:version => 20130405153812) do
+
+  create_table "batch_invitation_users", :force => true do |t|
+    t.integer  "batch_invitation_id"
+    t.string   "name"
+    t.string   "email"
+    t.string   "outcome"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "batch_invitation_users", ["batch_invitation_id"], :name => "index_batch_invitation_users_on_batch_invitation_id"
+
+  create_table "batch_invitations", :force => true do |t|
+    t.text     "applications_and_permissions"
+    t.string   "outcome"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+  end
+
+  add_index "batch_invitations", ["outcome"], :name => "index_batch_invitations_on_outcome"
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
