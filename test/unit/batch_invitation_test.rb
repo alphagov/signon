@@ -40,8 +40,6 @@ class BatchInvitationTest < ActiveSupport::TestCase
       assert_equal ["b@m.com"], email.to
     end
 
-    should "record the outcome against the user"
-
     should "record the outcome against the BatchInvitation" do
       @bi.perform
       assert_equal "success", @bi.outcome
@@ -105,14 +103,6 @@ class BatchInvitationTest < ActiveSupport::TestCase
         assert_nil User.find_by_email("a@m.com")
         assert_not_nil User.find_by_email("b@m.com")
       end
-
-      should "record the outcome against the user"
-    end
-
-    context "sending one of the emails fails" do
-      should "create the other users"
-
-      should "record the outcome against the user"
     end
   end
 end
