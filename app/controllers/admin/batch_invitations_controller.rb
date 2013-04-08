@@ -9,7 +9,7 @@ class Admin::BatchInvitationsController < Admin::BaseController
   end
 
   def create
-    @batch_invitation = BatchInvitation.new(applications_and_permissions: params[:user][:permissions_attributes])
+    @batch_invitation = BatchInvitation.new(applications_and_permissions: translate_faux_signin_permission(params[:user][:permissions_attributes]))
 
     user_names_and_emails_io = params[:batch_invitation].delete(:user_names_and_emails)
     unless user_names_and_emails_io.respond_to?(:read)
