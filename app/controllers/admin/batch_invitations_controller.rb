@@ -38,6 +38,7 @@ class Admin::BatchInvitationsController < Admin::BaseController
       # TODO consider https://github.com/zdennis/activerecord-import
       BatchInvitationUser.create(batch_invitation: bi, name: row["Name"], email: row["Email"])
     end
+    Delayed::Job.enqueue(BatchInvitation::Job.new(bi.id))
     flash[:notice] = "Scheduled invitation of #{bi.batch_invitation_users.count} users"
     redirect_to admin_batch_invitation_path(bi)
   end

@@ -39,6 +39,11 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
       assert_equal expected_names_and_emails, bi.batch_invitation_users.map { |u| [u.name, u.email] }
     end
 
+    should "queue a job to do the processing" do
+      Delayed::Job.expects(:enqueue).with(kind_of(BatchInvitation::Job))
+      post :create, user_names_and_emails: users_csv, user: {}
+    end
+
     should "redirect to the batch invitation page and show a flash message" do
       post :create, user_names_and_emails: users_csv, user: { permissions_attributes: {} }
 

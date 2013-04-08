@@ -4,4 +4,9 @@ class BatchInvitation < ActiveRecord::Base
   serialize :applications_and_permissions, Hash
 
   validates :outcome, inclusion: { :in => [nil, "success", "fail"] }
+
+  class Job < Struct.new(:id)
+    def perform(options = {})
+    end
+  end
 end
