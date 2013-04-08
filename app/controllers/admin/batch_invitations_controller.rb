@@ -17,7 +17,7 @@ class Admin::BatchInvitationsController < Admin::BaseController
     user_names_and_emails = []
 
     begin
-      csv = CSV.parse(user_names_and_emails_io, headers: true)
+      csv = CSV.parse(user_names_and_emails_io.read, headers: true)
     rescue CSV::MalformedCSVError => e
       flash[:alert] = "Couldn't understand that file: #{e.message}"
       render :new
