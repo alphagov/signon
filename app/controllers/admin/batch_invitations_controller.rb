@@ -5,10 +5,13 @@ class Admin::BatchInvitationsController < Admin::BaseController
   helper_method :applications_and_permissions
 
   def new
+    @batch_invitation = BatchInvitation.new
   end
 
   def create
-    user_names_and_emails_io = params.delete(:user_names_and_emails)
+    @batch_invitation = BatchInvitation.new(applications_and_permissions: params[:user][:permissions_attributes])
+
+    user_names_and_emails_io = params[:batch_invitation].delete(:user_names_and_emails)
     unless user_names_and_emails_io.respond_to?(:read)
       flash[:alert] = "You must upload a file"
       render :new
@@ -33,18 +36,18 @@ class Admin::BatchInvitationsController < Admin::BaseController
       return
     end
 
-    bi = BatchInvitation.create(applications_and_permissions: params[:user][:permissions_attributes])
+    @batch_invitation.save
     csv.each do |row|
       # TODO consider https://github.com/zdennis/activerecord-import
-      BatchInvitationUser.create(batch_invitation: bi, name: row["Name"], email: row["Email"])
+      BatchInvitationUser.create(batch_invitation: @batch_invitation, name: row["Name"], email: row["Email"])
     end
-    Delayed::Job.enqueue(BatchInvitation::Job.new(bi.id))
-    flash[:notice] = "Scheduled invitation of #{bi.batch_invitation_users.count} users"
-    redirect_to admin_batch_invitation_path(bi)
+    Delayed::Job.enqueue(BatchInvitation::Job.new(@batch_invitation.id))
+    flash[:notice] = "Scheduled invitation of #{@batch_invitation.batch_invitation_users.count} users"
+    redirect_to admin_batch_invitation_path(@batch_invitation)
   end
 
   def show
     @batch_invitation = BatchInvitation.find(params[:id])
-    @status_message = "#{@batch_invitation.batch_invitation_users.processed.count} of #{@batch_invitation.batch_invitation_users.count} users processed"
+    @status_message = "#{@batch_invitation.batch_invitation_users.processed.count} of #{@batch_invitation.batch_invitation_users.count} users processed."
   end
 end

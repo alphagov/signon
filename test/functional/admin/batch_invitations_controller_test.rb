@@ -30,7 +30,7 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
           "permissions" => []
         }
       }
-      post :create, user_names_and_emails: users_csv, user: { permissions_attributes: permissions_attributes }
+      post :create, batch_invitation: { user_names_and_emails: users_csv }, user: { permissions_attributes: permissions_attributes }
 
       bi = BatchInvitation.last
       assert_not_nil bi
@@ -41,11 +41,11 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
 
     should "queue a job to do the processing" do
       Delayed::Job.expects(:enqueue).with(kind_of(BatchInvitation::Job))
-      post :create, user_names_and_emails: users_csv, user: {}
+      post :create, batch_invitation: { user_names_and_emails: users_csv }, user: { permissions_attributes: {} }
     end
 
     should "redirect to the batch invitation page and show a flash message" do
-      post :create, user_names_and_emails: users_csv, user: { permissions_attributes: {} }
+      post :create, batch_invitation: { user_names_and_emails: users_csv }, user: { permissions_attributes: {} }
 
       assert_match(/Scheduled invitation of 2 users/i, flash[:notice])
       assert_redirected_to "/admin/batch_invitations/#{BatchInvitation.last.id}"
@@ -53,7 +53,7 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
 
     context "no file uploaded" do
       should "redisplay the form and show a flash message" do
-        post :create, user_names_and_emails: nil, user: { permissions_attributes: {} }
+        post :create, batch_invitation: { user_names_and_emails: nil }, user: { permissions_attributes: {} }
 
         assert_template :new
         assert_match(/You must upload a file/i, flash[:alert])
@@ -62,7 +62,7 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
 
     context "the CSV has all the fields, but not in the expected order" do
       should "process the fields by name" do
-        post :create, user_names_and_emails: users_csv("reversed_users.csv"), user: { permissions_attributes: {} }
+        post :create, batch_invitation: { user_names_and_emails: users_csv("reversed_users.csv") }, user: { permissions_attributes: {} }
 
         bi = BatchInvitation.last
         assert_not_nil bi.batch_invitation_users.find_by_email("a@hhg.com")
@@ -72,7 +72,7 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
 
     context "the CSV has no data rows" do
       should "redisplay the form and show a flash message" do
-        post :create, user_names_and_emails: users_csv("empty_users.csv"), user: { permissions_attributes: {} }
+        post :create, batch_invitation: { user_names_and_emails: users_csv("empty_users.csv") }, user: { permissions_attributes: {} }
 
         assert_template :new
         assert_match(/no rows/i, flash[:alert])
@@ -81,7 +81,7 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
 
     context "the CSV format is invalid" do
       should "redisplay the form and show a flash message" do
-        post :create, user_names_and_emails: users_csv("invalid_users.csv"), user: { permissions_attributes: {} }
+        post :create, batch_invitation: { user_names_and_emails: users_csv("invalid_users.csv") }, user: { permissions_attributes: {} }
 
         assert_template :new
         assert_match(/Couldn't understand that file/i, flash[:alert])
@@ -90,7 +90,7 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
 
     context "the CSV has no headers?" do
       should "redisplay the form and show a flash message" do
-        post :create, user_names_and_emails: users_csv("no_headers_users.csv"), user: { permissions_attributes: {} }
+        post :create, batch_invitation: { user_names_and_emails: users_csv("no_headers_users.csv") }, user: { permissions_attributes: {} }
 
         assert_template :new
         assert_match(/must have headers/i, flash[:alert])
