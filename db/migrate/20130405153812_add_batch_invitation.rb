@@ -1,7 +1,7 @@
 class AddBatchInvitation < ActiveRecord::Migration
   def up
     create_table :batch_invitations, force: true do |table|
-      table.text :applications_and_permissions # serialised: { application_name: ["signin", "admin"], ... }
+      table.text :applications_and_permissions
       table.string :outcome # nil, "success", "fail", "skipped"
       table.timestamps
     end

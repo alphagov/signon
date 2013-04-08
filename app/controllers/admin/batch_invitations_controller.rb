@@ -33,34 +33,12 @@ class Admin::BatchInvitationsController < Admin::BaseController
       return
     end
 
-    outcomes = batch_invite(csv)
-
-    if outcomes[:successes].any?
-      flash[:notice] = "Created #{outcomes[:successes].size} users"
+    bi = BatchInvitation.create(applications_and_permissions: params[:user][:permissions_attributes])
+    csv.each do |row|
+      # TODO consider https://github.com/zdennis/activerecord-import
+      BatchInvitationUser.create(batch_invitation: bi, name: row["Name"], email: row["Email"])
     end
-    if outcomes[:failures].any?
-      flash[:alert] = "Failed to create #{outcomes[:failures].size} users"
-    end
-    redirect_to admin_users_path
+    flash[:notice] = "Scheduled invitation of #{bi.batch_invitation_users.count} users"
+    redirect_to admin_batch_invitation_path(bi)
   end
-
-  private
-    def batch_invite(csv)
-      attributes = translate_faux_signin_permission(params[:user])
-      outcomes = { successes: [], prexisting: [], failures: [] }
-      csv.each do |row|
-        attributes = attributes.merge(name: row["Name"], email: row["Email"])
-        if User.find_by_email(row["Email"])
-          outcomes[:prexisting] << row
-        else
-          begin
-            User.invite!(attributes, current_user)
-            outcomes[:successes] << row
-          rescue StandardError => e
-            outcomes[:failures] << row
-          end
-        end
-      end
-      outcomes
-    end
 end
