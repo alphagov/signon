@@ -32,9 +32,16 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
       }
       post :create, batch_invitation: { user_names_and_emails: users_csv }, user: { permissions_attributes: permissions_attributes }
 
+      translated_permissions_attributes = {
+        0 => {
+          "application_id" => "#{app.id}",
+          "id" => "",
+          "permissions" => ["signin"]
+        }
+      }
       bi = BatchInvitation.last
       assert_not_nil bi
-      assert_equal(permissions_attributes, bi.applications_and_permissions)
+      assert_equal(translated_permissions_attributes, bi.applications_and_permissions)
       expected_names_and_emails = [["Arthur Dent","a@hhg.com"], ["Tricia McMillan","t@hhg.com"]]
       assert_equal expected_names_and_emails, bi.batch_invitation_users.map { |u| [u.name, u.email] }
     end
