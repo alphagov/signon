@@ -97,4 +97,52 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "GET show" do
+    setup do
+      @bi = FactoryGirl.create(:batch_invitation)
+      @user1 = FactoryGirl.create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
+      @user2 = FactoryGirl.create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
+    end
+
+    should "list the users being created" do
+      get :show, id: @bi.id
+      assert_select "table.batch-invitation-users tbody tr", 2
+      assert_select "table.batch-invitation-users td", "a@m.com"
+      assert_select "table.batch-invitation-users td", "b@m.com"
+    end
+
+    should "include a meta refresh" do
+      get :show, id: @bi.id
+      assert_select "head meta[http-equiv=refresh][content=3]"
+    end
+
+    should "show the state of the processing" do
+      @user1.update_column(:outcome, "failed")
+      get :show, id: @bi.id
+      assert_select "div.alert", /In progress/i
+      assert_select "div.alert", /1 of 2 users processed/i
+    end
+
+    should "show the outcome for each user" do
+      @user1.update_column(:outcome, "failed")
+      get :show, id: @bi.id
+      assert_select "td", /Failed/i
+    end
+
+    context "processing complete" do
+      setup do
+        @bi.update_column(:outcome, "success")
+        get :show, id: @bi.id
+      end
+
+      should "show the state of the processing" do
+        assert_select "div.alert", /Success/i
+      end
+
+      should "no longer include the meta refresh" do
+        assert_select "head meta[http-equiv=refresh]", count: 0
+      end
+    end
+  end
 end

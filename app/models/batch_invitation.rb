@@ -5,6 +5,10 @@ class BatchInvitation < ActiveRecord::Base
 
   validates :outcome, inclusion: { :in => [nil, "success", "fail"] }
 
+  def in_progress?
+    outcome.nil?
+  end
+
   class Job < Struct.new(:id)
     def perform(options = {})
     end

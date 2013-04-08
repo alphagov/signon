@@ -42,4 +42,9 @@ class Admin::BatchInvitationsController < Admin::BaseController
     flash[:notice] = "Scheduled invitation of #{bi.batch_invitation_users.count} users"
     redirect_to admin_batch_invitation_path(bi)
   end
+
+  def show
+    @batch_invitation = BatchInvitation.find(params[:id])
+    @status_message = "#{@batch_invitation.batch_invitation_users.processed.count} of #{@batch_invitation.batch_invitation_users.count} users processed"
+  end
 end
