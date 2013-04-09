@@ -10,8 +10,8 @@ class Admin::BatchInvitationsController < Admin::BaseController
   end
 
   def create
-    # TODO refactor
-    @batch_invitation = BatchInvitation.new(user: current_user, applications_and_permissions: translate_faux_signin_permission(params[:user])[:permissions_attributes])
+    @batch_invitation = BatchInvitation.new(user: current_user,
+        applications_and_permissions: translate_faux_signin_permission(params[:user])[:permissions_attributes])
 
     no_file = params[:batch_invitation].nil? || params[:batch_invitation][:user_names_and_emails].nil?
     return must_upload_a_file if no_file
@@ -39,7 +39,6 @@ class Admin::BatchInvitationsController < Admin::BaseController
 
     @batch_invitation.save
     csv.each do |row|
-      # TODO consider https://github.com/zdennis/activerecord-import
       BatchInvitationUser.create(batch_invitation: @batch_invitation, name: row["Name"], email: row["Email"])
     end
     Delayed::Job.enqueue(BatchInvitation::Job.new(@batch_invitation.id))
