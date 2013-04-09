@@ -4,7 +4,9 @@
       <th class="span1">Application</th>
       <th class="span1">Has access?</th>
       <th class="span1">Other Permissions</th>
-      <th class="span2">Last synced at</th>
+      <% if user_object.persisted? %>
+        <th class="span2">Last synced at</th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -25,17 +27,19 @@
           <%= label_tag "user[permissions_attributes][#{index}][permissions][]", "Permissions for #{application.name}", class: "visuallyhidden" %>
           <%= select_tag "user[permissions_attributes][#{index}][permissions][]", options_for_select(application.supported_permission_strings - ["signin"], permission.permissions - ["signin"]), multiple: true, class: "chzn-select", "data-placeholder" => "Start typing to search for permissions" %>
         </td>
-        <td>
-          <% if permission.last_synced_at %>
-            <% if permission.sync_needed? %>
-              <span class="label label-important"><%= time_ago_in_words(permission.last_synced_at) %> ago</span>
+        <% if user_object.persisted? %>
+          <td>
+            <% if permission.last_synced_at %>
+              <% if permission.sync_needed? %>
+                <span class="label label-important"><%= time_ago_in_words(permission.last_synced_at) %> ago</span>
+              <% else %>
+                <span class="label label-success"><%= time_ago_in_words(permission.last_synced_at) %> ago</span>
+              <% end %>
             <% else %>
-              <span class="label label-success"><%= time_ago_in_words(permission.last_synced_at) %> ago</span>
+              <span class="label label-important">Never</span>
             <% end %>
-          <% else %>
-            <span class="label label-important">Never</span>
-          <% end %>
-        </td>
+          </td>
+        <% end %>
       </tr>
     <% end %>
   </tbody>
