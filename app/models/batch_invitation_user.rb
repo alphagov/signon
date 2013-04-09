@@ -22,4 +22,14 @@ class BatchInvitationUser < ActiveRecord::Base
       end
     end
   end
+
+  def humanized_outcome
+    if outcome == "skipped"
+      "Skipped: user already existed."
+    elsif outcome.present?
+      outcome.capitalize
+    else
+      outcome
+    end
+  end
 end
