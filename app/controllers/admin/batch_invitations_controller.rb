@@ -13,12 +13,11 @@ class Admin::BatchInvitationsController < Admin::BaseController
     # TODO refactor
     @batch_invitation = BatchInvitation.new(user: current_user, applications_and_permissions: translate_faux_signin_permission(params[:user])[:permissions_attributes])
 
-    user_names_and_emails_io = params[:batch_invitation].delete(:user_names_and_emails)
-    unless user_names_and_emails_io.respond_to?(:read)
-      flash[:alert] = "You must upload a file"
-      render :new
-      return
-    end
+    no_file = params[:batch_invitation].nil? || params[:batch_invitation][:user_names_and_emails].nil?
+    return must_upload_a_file if no_file
+
+    user_names_and_emails_io = params[:batch_invitation][:user_names_and_emails]
+    return must_upload_a_file unless user_names_and_emails_io.respond_to?(:read)
     user_names_and_emails = []
 
     begin
@@ -53,7 +52,12 @@ class Admin::BatchInvitationsController < Admin::BaseController
   end
 
   private
-  def recent_batch_invitations
-    @_recent_batch_invitations ||= BatchInvitation.where("created_at > '#{3.days.ago}'").order("created_at desc")
-  end
+    def recent_batch_invitations
+      @_recent_batch_invitations ||= BatchInvitation.where("created_at > '#{3.days.ago}'").order("created_at desc")
+    end
+
+    def must_upload_a_file
+      flash[:alert] = "You must upload a file"
+      render :new
+    end
 end
