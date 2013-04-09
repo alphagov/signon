@@ -19,8 +19,10 @@
       </div>
     </div>
     <div class="span5">
-      <%= link_to "Create new account", new_user_invitation_path, class: "btn btn-success pull-right" %>
-      <%= link_to "Create a batch of users", new_admin_batch_invitation_path, class: "btn btn-success pull-right" %>
+      <div class="pull-right">
+        <%= link_to "Create new user", new_user_invitation_path, class: "btn btn-success text-left" %>
+        <%= link_to "Upload a batch of users", new_admin_batch_invitation_path, class: "btn text-right" %>
+      </div>
     </div>
   </div>
 
