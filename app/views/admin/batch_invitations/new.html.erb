@@ -1,5 +1,31 @@
 <h1>Create a batch of users</h1>
 
+<% if recent_batch_invitations.any? %>
+  <div class="alert alert-info alert-block">
+    <p>Recently created batches:</p>
+    <table class="recent-batches table">
+      <thead>
+        <tr>
+          <th>Summary</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% recent_batch_invitations.each do |batch_invitation| %>
+          <tr>
+            <td>
+              <%= link_to(admin_batch_invitation_path(batch_invitation)) do %>
+                <%= batch_invitation.batch_invitation_users.count %> users by <%= batch_invitation.user.name %> at <%= batch_invitation.created_at.strftime("%H:%M on %e %B %Y") %>
+              <% end %>
+            </td>
+            <td><%= status_message(batch_invitation) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% end %>
+
 <div class="well">
   <%= form_for([:admin, @batch_invitation]) do |f| %>
     <h2>Upload a CSV</h2>

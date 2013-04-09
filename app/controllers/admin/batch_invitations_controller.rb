@@ -3,6 +3,7 @@ require 'csv'
 class Admin::BatchInvitationsController < Admin::BaseController
   include UserPermissionsControllerMethods
   helper_method :applications_and_permissions
+  helper_method :recent_batch_invitations
 
   def new
     @batch_invitation = BatchInvitation.new
@@ -49,6 +50,10 @@ class Admin::BatchInvitationsController < Admin::BaseController
 
   def show
     @batch_invitation = BatchInvitation.find(params[:id])
-    @status_message = "#{@batch_invitation.batch_invitation_users.processed.count} of #{@batch_invitation.batch_invitation_users.count} users processed."
+  end
+
+  private
+  def recent_batch_invitations
+    @_recent_batch_invitations ||= BatchInvitation.where("created_at > '#{3.days.ago}'").order("created_at desc")
   end
 end

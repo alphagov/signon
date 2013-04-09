@@ -17,6 +17,20 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
       assert_response 200
       assert_select "input[type=file]"
     end
+
+    context "some batches created recently" do
+      setup do
+        @bi = FactoryGirl.create(:batch_invitation)
+        FactoryGirl.create(:batch_invitation_user, batch_invitation: @bi)
+      end
+
+      should "show a table summarising them" do
+        get :new
+        assert_select "table.recent-batches tbody tr", count: 1
+        assert_select "table.recent-batches tbody td", "1 users by #{@bi.user.name} at #{@bi.created_at.strftime("%H:%M on %e %B %Y")}"
+        assert_select "table.recent-batches tbody td", "In progress. 0 of 1 users processed."
+      end
+    end
   end
 
   context "POST create" do

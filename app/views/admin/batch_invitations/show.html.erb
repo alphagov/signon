@@ -9,18 +9,15 @@
 <div class="well">
   <% if @batch_invitation.in_progress? %>
     <div class="alert alert-info">
-      In progress.
-      <%= @status_message %>
+      <%= status_message(@batch_invitation) %>
     </div>
   <% elsif @batch_invitation.outcome == "success" %>
     <div class="alert alert-success">
-      Success!
-      <%= @status_message %>
+      <%= status_message(@batch_invitation) %>
     </div>
   <% elsif @batch_invitation.outcome == "failure" %>
     <div class="alert alert-error">
-      Failure!
-      <%= @status_message %>
+      <%= status_message(@batch_invitation) %>
     </div>
   <% end %>
 
