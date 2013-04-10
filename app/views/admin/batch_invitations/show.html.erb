@@ -21,7 +21,7 @@
     </div>
   <% end %>
 
-  <table class="batch-invitation-users table table-striped table-bordered">
+  <table class="batch-invitation-users table table-bordered">
     <thead>
       <tr>
         <th>Name</th>
@@ -31,7 +31,7 @@
     </thead>
     <tbody>
       <% @batch_invitation.batch_invitation_users.each do |user| %>
-        <tr>
+        <tr class="<%= user.outcome == "failed" ? "error" : "" %>">
           <td><%= user.name %></td>
           <td><%= user.email %></td>
           <td><%= user.humanized_outcome %></td>
