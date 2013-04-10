@@ -11,11 +11,11 @@
     <div class="alert alert-info">
       <%= status_message(@batch_invitation) %>
     </div>
-  <% elsif @batch_invitation.outcome == "success" %>
+  <% elsif @batch_invitation.all_successful? %>
     <div class="alert alert-success">
       <%= status_message(@batch_invitation) %>
     </div>
-  <% elsif @batch_invitation.outcome == "failure" %>
+  <% else %>
     <div class="alert alert-error">
       <%= status_message(@batch_invitation) %>
     </div>

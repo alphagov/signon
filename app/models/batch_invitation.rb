@@ -11,6 +11,10 @@ class BatchInvitation < ActiveRecord::Base
     outcome.nil?
   end
 
+  def all_successful?
+    batch_invitation_users.failed.count == 0
+  end
+
   def perform(options = {})
     self.batch_invitation_users.each do |bi_user|
       bi_user.invite(self.user, self.applications_and_permissions)
