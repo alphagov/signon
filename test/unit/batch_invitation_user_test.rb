@@ -26,6 +26,15 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
       end
     end
 
+    context "the user could not be saved (eg email is blank)" do
+      should "record it as a failure" do
+        bi = BatchInvitationUser.create!(name: "A", email: "")
+        bi.invite(@inviting_user, {})
+
+        assert_equal "failed", bi.reload.outcome
+      end
+    end
+
     context "email couldn't be sent" do
       setup do
         Devise::Mailer.any_instance.stubs(:mail).with(anything)

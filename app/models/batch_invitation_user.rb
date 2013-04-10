@@ -16,8 +16,12 @@ class BatchInvitationUser < ActiveRecord::Base
       self.update_column(:outcome, "skipped")
     else
       begin
-        User.invite!(attributes, inviting_user)
-        self.update_column(:outcome, "success")
+        user = User.invite!(attributes, inviting_user)
+        if user.persisted?
+          self.update_column(:outcome, "success")
+        else
+          self.update_column(:outcome, "failed")
+        end
       rescue StandardError => e
         self.update_column(:outcome, "failed")
       end
