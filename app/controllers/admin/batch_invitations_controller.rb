@@ -13,15 +13,14 @@ class Admin::BatchInvitationsController < Admin::BaseController
     @batch_invitation = BatchInvitation.new(user: current_user,
         applications_and_permissions: translate_faux_signin_permission(params[:user])[:permissions_attributes])
 
-    no_file = params[:batch_invitation].nil? || params[:batch_invitation][:user_names_and_emails].nil?
-    return must_upload_a_file if no_file
-
-    user_names_and_emails_io = params[:batch_invitation][:user_names_and_emails]
-    return must_upload_a_file unless user_names_and_emails_io.respond_to?(:read)
-    user_names_and_emails = []
+    unless file_uploaded?
+      flash[:alert] = "You must upload a file"
+      render :new
+      return
+    end
 
     begin
-      csv = CSV.parse(user_names_and_emails_io.read, headers: true)
+      csv = CSV.parse(params[:batch_invitation][:user_names_and_emails].read, headers: true)
     rescue CSV::MalformedCSVError => e
       flash[:alert] = "Couldn't understand that file: #{e.message}"
       render :new
@@ -55,8 +54,14 @@ class Admin::BatchInvitationsController < Admin::BaseController
       @_recent_batch_invitations ||= BatchInvitation.where("created_at > '#{3.days.ago}'").order("created_at desc")
     end
 
-    def must_upload_a_file
-      flash[:alert] = "You must upload a file"
-      render :new
+    def file_uploaded?
+      if params[:batch_invitation].nil? || params[:batch_invitation][:user_names_and_emails].nil?
+        false
+      elsif ! params[:batch_invitation][:user_names_and_emails].respond_to?(:read)
+        # IO objects should respond to `read`
+        false
+      else
+        true
+      end
     end
 end
