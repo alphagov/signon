@@ -11,7 +11,44 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130308163556) do
+ActiveRecord::Schema.define(:version => 20130408161502) do
+
+  create_table "batch_invitation_users", :force => true do |t|
+    t.integer  "batch_invitation_id"
+    t.string   "name"
+    t.string   "email"
+    t.string   "outcome"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
+  end
+
+  add_index "batch_invitation_users", ["batch_invitation_id"], :name => "index_batch_invitation_users_on_batch_invitation_id"
+
+  create_table "batch_invitations", :force => true do |t|
+    t.text     "applications_and_permissions"
+    t.string   "outcome"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+    t.integer  "user_id",                      :null => false
+  end
+
+  add_index "batch_invitations", ["outcome"], :name => "index_batch_invitations_on_outcome"
+
+  create_table "delayed_jobs", :force => true do |t|
+    t.integer  "priority",   :default => 0
+    t.integer  "attempts",   :default => 0
+    t.text     "handler"
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], :name => "delayed_jobs_priority"
 
   create_table "oauth_access_grants", :force => true do |t|
     t.integer  "resource_owner_id", :null => false

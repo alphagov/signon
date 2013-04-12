@@ -4,6 +4,7 @@ This is a centralised OAuth 2-based single sign-on provider for GDS services.
 
 We use [Devise](https://github.com/plataformatec/devise) to provide username / password sign-in, and [Doorkeeper](https://github.com/applicake/doorkeeper/) to provide an OAuth 2 provider.
 
+
 ## Usage
 
 The application has two rake tasks to create new users and client applications.
@@ -17,6 +18,16 @@ To create a new client application to which Sign-on-o-Tron will provide sign-on 
 `rake applications:create name=ClientName description="What does this app do" home_uri="https://myapp.com" redirect_uri="https://myapp.com/redirect"`
 
 which will create and return a client ID and secret that can be used in the app (normally via [GDS-SSO](http://github.com/alphagov/gds-sso)).
+
+
+## Running the Application
+
+The web application itself is run like any other Rails app, for example:
+`script/rails s`
+
+In development, you can run a DelayedJob worked to process background jobs:
+`rake jobs:work`
+
 
 ## Implementation Notes
 
