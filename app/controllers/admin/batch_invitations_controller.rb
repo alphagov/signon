@@ -40,7 +40,7 @@ class Admin::BatchInvitationsController < Admin::BaseController
     csv.each do |row|
       BatchInvitationUser.create(batch_invitation: @batch_invitation, name: row["Name"], email: row["Email"])
     end
-    Delayed::Job.enqueue(BatchInvitation::Job.new(@batch_invitation.id))
+    @batch_invitation.enqueue
     flash[:notice] = "Scheduled invitation of #{@batch_invitation.batch_invitation_users.count} users"
     redirect_to admin_batch_invitation_path(@batch_invitation)
   end

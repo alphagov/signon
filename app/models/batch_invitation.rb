@@ -15,6 +15,11 @@ class BatchInvitation < ActiveRecord::Base
     batch_invitation_users.failed.count == 0
   end
 
+  def enqueue
+    NoisyBatchInvitation.make_noise(self).deliver
+    Delayed::Job.enqueue(BatchInvitation::Job.new(self.id))
+  end
+
   def perform(options = {})
     self.batch_invitation_users.each do |bi_user|
       bi_user.invite(self.user, self.applications_and_permissions)

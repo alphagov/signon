@@ -65,6 +65,14 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
       post :create, batch_invitation: { user_names_and_emails: users_csv }, user: { permissions_attributes: {} }
     end
 
+    should "send an email to signon-alerts" do
+      post :create, batch_invitation: { user_names_and_emails: users_csv }, user: { permissions_attributes: {} }
+
+      email = ActionMailer::Base.deliveries.last
+      assert_not_nil email
+      assert_equal ["signon-alerts@digital.cabinet-office.gov.uk"], email.to
+    end
+
     should "redirect to the batch invitation page and show a flash message" do
       post :create, batch_invitation: { user_names_and_emails: users_csv }, user: { permissions_attributes: {} }
 
