@@ -12,4 +12,8 @@ FactoryGirl.define do
     sequence(:confirmation_token) { |n| "#{n}a1s2d3"}
     confirmation_sent_at Time.zone.now
   end
+
+  factory :admin_user, parent: :user do
+    role "admin"
+  end
 end

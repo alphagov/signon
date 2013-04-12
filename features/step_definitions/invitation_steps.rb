@@ -23,6 +23,13 @@ When /I fill in my new passphrase/ do
   click_button "Set my passphrase"
 end
 
+When /^I upload "(.*?)"$/ do |fixture_filename|
+  visit new_admin_batch_invitation_path
+  path = File.join(::Rails.root, "features", "fixtures", fixture_filename)
+  attach_file("Choose a CSV file of users with names and email addresses", path)
+  click_button "Create users and send emails"
+end
+
 Then /a user should be created with the email "(.*)"/ do |email|
   @user = User.find_by_email(email)
   assert_not_nil @user

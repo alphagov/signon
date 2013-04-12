@@ -6,6 +6,8 @@ group :passenger_compatibility do
   gem 'rake', '0.9.2'
 end
 
+gem 'delayed_job', '3.0.5'
+gem 'delayed_job_active_record', '0.4.4'
 gem 'kaminari', '0.14.1'
 gem 'paginate_alphabetically', '0.4.0', git: "https://github.com/edendevelopment/paginate_alphabetically.git", ref: "18d33ddc8bf93788bde80719fb63a5d345fda403"
 gem 'mysql2'
