@@ -24,7 +24,7 @@ namespace :users do
     raise "Requires email specified in environment" unless ENV['email']
     user = User.find_by_email(ENV['email'])
     raise "Couldn't find user" unless user
-    user.suspend!
+    user.suspend
     puts "User account suspended"
   end
 
@@ -33,7 +33,7 @@ namespace :users do
     raise "Requires email specified in environment" unless ENV['email']
     user = User.find_by_email(ENV['email'])
     raise "Couldn't find user" unless user
-    user.unsuspend!
+    user.unsuspend
     puts "User account unsuspended"
   end
 end

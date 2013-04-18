@@ -19,6 +19,12 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
       assert_equal "Negligence", another_user.reason_for_suspension
     end
 
+    should "redisplay the form if the reason is blank" do
+      another_user = FactoryGirl.create(:user)
+      put :update, id: another_user.id, user: { suspended: "1", reason_for_suspension: "" }
+      assert_template :edit
+    end
+
     should "push suspension out to the apps (but only those ever used by them)" do
       another_user = FactoryGirl.create(:user)
       app = FactoryGirl.create(:application)
@@ -42,7 +48,6 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
 
       assert_equal false, another_user.suspended?
       assert_equal nil, another_user.reason_for_suspension
-      assert_redirected_to admin_users_path
     end
   end
 end
