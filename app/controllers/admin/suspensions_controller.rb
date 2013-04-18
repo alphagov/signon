@@ -16,7 +16,7 @@ class Admin::SuspensionsController < Admin::BaseController
     if succeeded
       results = SuspensionUpdater.new(@user, @user.applications_used).attempt
       @successes, @failures = results[:successes], results[:failures]
-      flash[:notice] = "#{@user.name} is now #{@user.suspended? ? "Suspended" : "Active"}"
+      flash[:notice] = "#{@user.name} is now #{@user.suspended? ? "suspended" : "active"}"
     else
       flash[:alert] = "Failed"
       render :edit
