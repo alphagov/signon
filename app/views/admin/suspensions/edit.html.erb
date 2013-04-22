@@ -9,7 +9,7 @@
   </p>
   <p>
     <label for="user_reason_for_suspension">Reason for suspension</label>
-    <%= text_field_tag "user[reason_for_suspension]", @user.reason_for_suspension, class: "span6" %>
+    <%= text_field_tag "user[reason_for_suspension]", @user.reason_for_suspension, class: "span6", required: true %>
   </p>
   <%= submit_tag "Save", class: "btn btn-primary" %>
   <%= link_to "Cancel", class: "btn" %>

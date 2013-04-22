@@ -8,14 +8,19 @@ class Admin::SuspensionsController < Admin::BaseController
 
   def update
     if params[:user][:suspended] == "1"
-      @user.suspend!(params[:user][:reason_for_suspension])
+      succeeded = @user.suspend(params[:user][:reason_for_suspension])
+    else
+      succeeded = @user.unsuspend
+    end
+
+    if succeeded
       results = SuspensionUpdater.new(@user, @user.applications_used).attempt
       @successes, @failures = results[:successes], results[:failures]
+      flash[:notice] = "#{@user.name} is now #{@user.suspended? ? "suspended" : "active"}"
     else
-      @user.unsuspend!
-      redirect_to admin_users_path
+      flash[:alert] = "Failed"
+      render :edit
     end
-    flash[:notice] = "#{@user.name} is now #{@user.suspended? ? "Suspended" : "Active"}"
   end
 
   private

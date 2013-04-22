@@ -32,7 +32,7 @@ Given /^a signed\-in admin user$/ do
 end
 
 Given /^"(.*?)" is a suspended account because of "(.*?)"$/ do |email, reason|
-  User.find_by_email(email).suspend!(reason)
+  User.find_by_email(email).suspend(reason)
 end
 
 When /^I try to sign in with email "([^"]*)" and passphrase "([^"]*)"$/ do |email, passphrase|

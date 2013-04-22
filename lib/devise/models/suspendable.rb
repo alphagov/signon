@@ -19,18 +19,18 @@ module Devise
       end
 
       # Suspends the user in the database.
-      def suspend!(reason)
+      def suspend(reason)
         self.reason_for_suspension = reason
         self.suspended_at = Time.zone.now
         Statsd.new(::STATSD_HOST).increment("#{::STATSD_PREFIX}.users.suspend")
-        save!
+        save
       end
 
       # un-suspends the user in the database.
-      def unsuspend!
+      def unsuspend
         self.reason_for_suspension = nil
         self.suspended_at = nil
-        save!
+        save
       end
 
       def suspended?
