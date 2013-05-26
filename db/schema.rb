@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130430121058) do
+ActiveRecord::Schema.define(:version => 20130526064927) do
 
   create_table "batch_invitation_users", :force => true do |t|
     t.integer  "batch_invitation_id"
@@ -145,6 +145,7 @@ ActiveRecord::Schema.define(:version => 20130430121058) do
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
     t.string   "role",                                 :default => "normal"
+    t.datetime "password_changed_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
