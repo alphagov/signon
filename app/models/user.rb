@@ -12,7 +12,8 @@ class User < ActiveRecord::Base
          :suspendable,  # in signonotron2/lib/devise/models/suspendable.rb
          :strengthened, # in signonotron2/lib/devise/models/strengthened.rb
          :encryptable,
-         :confirmable
+         :confirmable,
+         :password_expirable
 
   attr_accessible :uid, :name, :email, :password, :password_confirmation
   attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, as: :admin
