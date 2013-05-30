@@ -65,7 +65,7 @@ class AutomaticApiController
 end
 ```
 
-## Using Sign-on-o-Tron to log users in to your application
+## Integrating with Sign-on-o-Tron
 
 The OAuth flow you need to follow is:
 
@@ -109,7 +109,11 @@ to retrieve a JSON response including permissions for that user.
 Check that the user is allowed to log in to your app. If yes, tell the user
 that they're signed in.
 
-## Examples
+### Examples
+
+The [gds-sso](https://github.com/alphagov/gds-sso) gem is a Ruby
+implementation of a Sign-on-o-Tron client. It implements the push API for
+revoking permissions without waiting for session expiration.
 
 [Backdrop](https://github.com/alphagov/backdrop) is a Python app for the
 Performance Platform that uses Sign-on-o-Tron to authenticate users.
