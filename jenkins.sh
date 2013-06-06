@@ -5,7 +5,7 @@
 # respective tasks with ruby -S which causes the following error to
 # appear: ruby: no Ruby script found in input (LoadError).
 if [ ! -f .ruby-version ]; then
-  export PATH=$(echo $PATH | awk 'BEGIN { RS=":"; ORS=":" } !/rbenv/' | sed 's/:$//')
+  export PATH=$(printf $PATH | awk 'BEGIN { RS=":"; ORS=":" } !/rbenv/' | sed 's/:$//')
 fi
 
 export USE_SIMPLECOV=true
