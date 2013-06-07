@@ -19,11 +19,19 @@ def deverise_uri(uri)
   uri.gsub(/[a-z]*.alphagov.co.uk/, "dev.gov.uk").gsub(/https:/, "http:")
 end
 
+def application_repo_name(application)
+  if application.name =~ /Content API/i
+    "govuk_content_api"
+  else
+    application.name.downcase.gsub(/\s/, '-')
+  end
+end
+
 def config_path_for_app(application)
   if application.name =~ /Content API/i 
-    "../govuk_content_api/config/gds_sso_config.rb"
+    "../#{application_repo_name(application)}/config/gds_sso_config.rb"
   else
-    "../#{application.name.downcase}/config/initializers/gds-sso.rb"
+    "../#{application_repo_name(application)}/config/initializers/gds-sso.rb"
   end
 end
 
@@ -40,6 +48,6 @@ puts "Updating SSO config so that it works in development..."
     puts "Updating application #{application.name}"
     application.save!
   else
-    puts "WARNING Skipping #{application.name}, as it doesn't use gds-sso, is not checked out or the repo isn't \"#{application.name.downcase}\"."
+    puts "WARNING Skipping #{application.name}, as it doesn't use gds-sso, is not checked out or the repo isn't \"#{application_repo_name(application)}\"."
   end
 end
