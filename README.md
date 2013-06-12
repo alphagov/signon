@@ -4,6 +4,7 @@ This is a centralised OAuth 2-based single sign-on provider for GDS services.
 
 We use [Devise](https://github.com/plataformatec/devise) to provide username / password sign-in, and [Doorkeeper](https://github.com/applicake/doorkeeper/) to provide an OAuth 2 provider.
 
+Details of our interpretation of OAuth are provided in [an accompanying document](doc/oauth.md)
 
 ## Usage
 
