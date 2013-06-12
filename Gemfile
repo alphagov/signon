@@ -23,6 +23,7 @@ gem 'uuid'
 gem 'devise', '2.2.3'
 gem 'devise_invitable', '1.1.5'
 gem 'devise-encryptable', '0.1.1'
+gem 'devise_security_extension', '0.7.2'
 gem 'passphrase_entropy', git: 'https://github.com/alphagov/passphrase_entropy.git'
 
 gem 'doorkeeper', '0.6.7'
