@@ -7,6 +7,13 @@ module PassPhraseSupport
     fill_in "Confirm new passphrase", with: confirmation
     click_button "Change passphrase"
   end
+
+  def reset_expired_passphrase(from, to, confirmation)
+    fill_in "Current passphrase",       with: from
+    fill_in "New passphrase",           with: to
+    fill_in "Confirm new passphrase",   with: confirmation
+    click_button "Change my passphrase"
+  end
 end
 
 World(PassPhraseSupport)
