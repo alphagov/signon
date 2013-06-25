@@ -93,6 +93,17 @@ class BatchInvitationTest < ActiveSupport::TestCase
       end
     end
 
+    context "arbitrary error occurs" do
+      should "mark it as failed and pass the error on for DelayedJob to record the error details" do
+        BatchInvitationUser.any_instance.expects(:invite).raises("ArbitraryError")
+
+        assert_raises "ArbitraryError" do
+          @bi.perform
+        end
+        assert_equal "fail", @bi.outcome
+      end
+    end
+
     context "one of the rows is missing a name or email" do
       setup do
         @user_a.update_column(:name, nil)

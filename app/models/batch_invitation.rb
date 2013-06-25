@@ -26,6 +26,9 @@ class BatchInvitation < ActiveRecord::Base
     end
     self.outcome = "success"
     self.save!
+  rescue StandardError => e
+    self.update_column(:outcome, "fail")
+    raise
   end
 
   class Job < Struct.new(:id)
