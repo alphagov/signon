@@ -11,6 +11,15 @@ Feature: Passphrase expiry
     Then I should see "Your new passphrase is saved"
       And I should be on the dashboard
 
+  Scenario: Returning to the exact path I wanted after changing passphrase
+    Given I am a user with email "email@example.com" and passphrase "some v3ry s3cure passphrase"
+    And I last changed my passphrase 91 days ago
+    And I visit "/user/edit?arbitrary=1"
+    When I sign in
+    And I fill in the form with existing passphrase "some v3ry s3cure passphrase" and new passphrase "some 3v3n more s3cure passphrase"
+    Then I should see "Your new passphrase is saved"
+    And I should be on "/user/edit?arbitrary=1"
+
   Scenario: Making a mistake when choosing a new passphrase
     Given I am being prompted for a new passphrase
     When I make a mistake entering my existing passphrase
