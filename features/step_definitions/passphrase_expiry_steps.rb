@@ -33,6 +33,16 @@ When /^I fill in the form with existing passphrase "(.*?)" and new passphrase "(
   reset_expired_passphrase(old_passphrase, new_passphrase, new_passphrase)
 end
 
+Given /^I visit "(.*?)"$/ do |fullpath|
+  visit fullpath
+end
+
+Then /^I should be on "(.*?)"$/ do |fullpath|
+  current_path_including_querystring = current_url.gsub(current_host, "")
+  assert_equal fullpath, current_path_including_querystring
+end
+
+
 Then /^I should be on the dashboard$/ do
   assert_equal root_url, current_url
 end
