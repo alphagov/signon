@@ -1,5 +1,8 @@
 source 'https://rubygems.org'
 
+#ruby=ruby-1.9.3-p374
+#ruby-gemset=quirkafleeg
+
 gem 'rails', '3.2.13'
 
 group :passenger_compatibility do
@@ -14,7 +17,7 @@ gem 'mysql2'
 gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
 gem 'exception_notification'
-gem 'plek', '1.3.1'
+gem 'plek', '1.4.0'
 gem 'json', '1.7.7'
 
 gem 'uuid'
