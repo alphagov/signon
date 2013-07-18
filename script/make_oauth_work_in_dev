@@ -9,7 +9,17 @@ def config_for_app(application_config_file)
     next if line =~ Regexp.new(/^end/)
     next if line =~ Regexp.new(/^(\s)+?$/)
     key = /config\.([^ ]+)/.match(line).to_a[1]
-    value = /=[\s]+?['|"]([^'"]+)['|"]/.match(line).to_a[1]
+    if /ENV\['[a-z_]+'\]/i.match(line)
+      # We've got a line like this:
+      #   config.oauth_id     = ENV['PUBLISHER_OAUTH_ID'] || "an_oauth_id"
+      # so extract "an_oauth_id":
+      value = /\|\| "(.+)"/.match(line).to_a[1]
+    else
+      # We've got a line like this:
+      #   config.oauth_id     = 'an_oauth_id'
+      # so extract "an_oauth_id":
+      value = /=[\s]+?['|"]([^'"]+)['|"]/.match(line).to_a[1]
+    end
     config[key] = value
   end
   config

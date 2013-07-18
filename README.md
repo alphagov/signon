@@ -10,15 +10,26 @@ Details of our interpretation of OAuth are provided in [an accompanying document
 
 The application has two rake tasks to create new users and client applications.
 
-To create a new user, use the following syntax:
-
-`rake users:create name='First Last' email=user@example.com [github=username] [twitter=username]`
-
 To create a new client application to which Sign-on-o-Tron will provide sign-on services:
 
-`rake applications:create name=ClientName description="What does this app do" home_uri="https://myapp.com" redirect_uri="https://myapp.com/redirect"`
+`rake applications:create name=ClientName description="What does this app do" home_uri="https://myapp.com" redirect_uri="https://myapp.com/auth/gds/callback"`
 
-which will create and return a client ID and secret that can be used in the app (normally via [GDS-SSO](http://github.com/alphagov/gds-sso)).
+This will create and return a client ID and secret that can be used in the app (normally via [GDS-SSO](http://github.com/alphagov/gds-sso)).
+
+You can then add the ID and secret to the app's `ENV` using your preferred method.
+
+To create a new user, use the following syntax:
+
+`rake users:create name='First Last' email=user@example.com applications=Comma,Seperated,ListOf,Application,Names* [github=username] [twitter=username]`
+
+\* You can also set the applications in a comma separated list via an `ENV['APPLICATIONS']` variable if you prefer.
+
+## Getting this working in development.
+
+More detail is contained in the [GDS-SSO Repo](https://github.com/alphagov/gds-sso#use-in-development-mode), but if you just want to get this working, follow the steps below:
+
+* If you haven't already set real tokens in your app's `ENV`, you'll first need to run the following command to make sure your signonotron2 database has got OAuth config that matches what the apps use in development mode: <br /><br />`bundle exec ./script/make_oauth_work_in_dev`<br /><br />
+* You must then make sure you set an environment variable when you run your app. e.g.: <br /><br />`GDS_SSO_STRATEGY=real bundle exec rails s`
 
 
 ## Running the Application
