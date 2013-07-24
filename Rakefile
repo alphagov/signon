@@ -6,4 +6,5 @@ require File.expand_path('../config/application', __FILE__)
 
 Signonotron2::Application.load_tasks
 
+Rake.application['default'].prerequisites.delete('cucumber') if Rake.application['default']
 task :default => [:test, :check_for_bad_time_handling]
