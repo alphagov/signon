@@ -22,6 +22,8 @@ gem 'json', '1.7.7'
 
 gem 'uuid'
 
+gem 'dotenv-rails'
+
 # Gems used to provide Authentication and Authorization services.
 gem 'devise', '2.2.3'
 gem 'devise_invitable', '1.1.5'
