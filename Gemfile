@@ -35,7 +35,6 @@ gem 'doorkeeper', '0.6.7'
 
 gem 'gds-api-adapters', '4.1.3'
 gem 'statsd-ruby', '1.0.0'
-gem 'unicorn', '4.3.1'
 
 group :development do
   gem 'sqlite3'
@@ -57,3 +56,7 @@ group :test do
   gem 'ci_reporter', '1.7.0'
 end
 
+group :production do
+  gem 'foreman'
+  gem 'thin'
+end
