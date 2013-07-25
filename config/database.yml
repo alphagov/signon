@@ -18,5 +18,13 @@ test: &test
    pool: 5
    timeout: 5000
 
+# Overwritten on real deployment
+production:
+  adapter: mysql2
+  database: signonotron2
+  username: signonotron2
+  password:
+  host: localhost
+
 cucumber:
   <<: *test
