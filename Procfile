@@ -1,1 +1,1 @@
-thin:    bundle exec thin start
+thin:    RACK_ENV=production bundle exec thin start
