@@ -70,5 +70,9 @@ module Signonotron2
     config.to_prepare do
       Doorkeeper::ApplicationController.layout "application"
     end
+    
+    # No need to boot app when precompiling assets
+    config.assets.initialize_on_precompile = false
+
   end
 end
