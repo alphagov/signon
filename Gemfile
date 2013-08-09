@@ -25,7 +25,7 @@ gem 'uuid'
 gem 'dotenv-rails'
 
 # Gems used to provide Authentication and Authorization services.
-gem 'devise', '2.2.3'
+gem 'devise', '2.2.5'
 gem 'devise_invitable', '1.1.5'
 gem 'devise-encryptable', '0.1.1'
 gem 'devise_security_extension', '0.7.2', git: "https://github.com/alphagov/devise_security_extension.git", branch: "graceful_return_to_behaviour"
