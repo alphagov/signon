@@ -31,6 +31,12 @@ More detail is contained in the [GDS-SSO Repo](https://github.com/alphagov/gds-s
 * If you haven't already set real tokens in your app's `ENV`, you'll first need to run the following command to make sure your signonotron2 database has got OAuth config that matches what the apps use in development mode: <br /><br />`bundle exec ./script/make_oauth_work_in_dev`<br /><br />
 * You must then make sure you set an environment variable when you run your app. e.g.: <br /><br />`GDS_SSO_STRATEGY=real bundle exec rails s`
 
+### Creating new permissions
+
+To create a new permission for an existing app, you first need to have the “superadmin” role on your account (or have access to someone who does): you’ll then be able to access the “Administer applications” menu item. Under the application you want to change, follow the “Supported Permissions” link and add a new permission from there.
+
+Note that this UI won’t let you edit or delete existing permissions.
+
 
 ## Running the Application
 
