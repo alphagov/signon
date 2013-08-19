@@ -56,7 +56,11 @@ puts "Updating SSO config so that it works in development..."
     application.uid          = local_config["oauth_id"]
     application.secret       = local_config["oauth_secret"]
     puts "Updating application #{application.name}"
-    application.save!
+    begin
+      application.save!
+    rescue ActiveRecord::RecordInvalid => e
+      puts "ERROR Failed to update #{application.name} because: #{e.message}"
+    end
   else
     puts "WARNING Skipping #{application.name}, as it doesn't use gds-sso, is not checked out or the repo isn't \"#{application_repo_name(application)}\"."
   end
