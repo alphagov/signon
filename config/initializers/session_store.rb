@@ -1,7 +1,7 @@
 # Be sure to restart your server when you modify this file.
 
 Signonotron2::Application.config.session_store :cookie_store, {
-  :secure => Rails.env.production?,
+  :secure => (ENV['GOVUK_APP_DOMAIN'] != ENV['DEV_DOMAIN']),
   :key => '_signonotron2_session'
 }
 
