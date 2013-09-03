@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>GOV.UK Signon</title>
+  <title>ODI Signon</title>
   <%= csrf_meta_tags %>
   <%= stylesheet_link_tag 'application' %>
   <%= javascript_include_tag 'application' %>
@@ -12,7 +12,7 @@
   <div class="navbar navbar-fixed-top" role="banner">
     <div class="navbar-inner">
       <div class="container">
-        <%= link_to "GOV.UK Signon", "/", :class => 'brand' %>
+        <%= link_to "Signon", "/", :class => 'brand' %>
         <% if user_signed_in? && params[:controller] !~ %r{doorkeeper/} %>
           <nav role="navigation" class="nav-collapse">
             <ul class="nav">
