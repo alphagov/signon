@@ -82,3 +82,57 @@ class AutomaticApiController
   end
 end
 ```
+
+## Integrating with Sign-on-o-Tron
+
+The OAuth flow you need to follow is:
+
+1. User gives your app permission to request user data
+2. App authenticates itself against Sign-on-o-Tron and gets `access_token`
+3. App uses `access_token` to get user data and check for permissions to your app.
+
+### User logs in to Sign-on-o-Tron II
+
+Provide a `/sign_in` URL in your app which redirects the user to
+`GET https://signonotron/oauth/authorize`.
+
+The parameters required on this redirect are:
+
+* `response_type` = `code`
+* `redirect_uri` = `https://yourapp/authorized`
+* `client_id` = [fooclient12]
+
+After they authenticate with Sign-on-o-Tron, it will redirect them back
+to `https://yourapp/authorized?code=12345` with an authorization
+code.
+
+### App authenticates itself with Sign-on-o-Tron
+
+Your app does a `POST` behind the scenes to `https://signonotron/oauth/token`
+with these parameters:
+
+* `grant_type` = `authorization_code`
+* `redirect_uri` = `https://yourapp/authorized`
+* `code` = [12345]
+* `client_id` = [fooclient12]
+* `client_secret` = [super_secret]
+
+Sign-on-o-Tron should return a `200` or `201` response including an access token
+in a bit of JSON. Store that access token.
+
+### Get user data from Sign-on-o-Tron
+
+Make a request to `https://signonotron/user.json?access_token=your-stored-access-token&client_id=fooclient12`
+to retrieve a JSON response including permissions for that user.
+Check that the user is allowed to log in to your app. If yes, tell the user
+that they're signed in.
+
+### Examples
+
+The [gds-sso](https://github.com/alphagov/gds-sso) gem is a Ruby
+implementation of a Sign-on-o-Tron client. It implements the push API for
+revoking permissions without waiting for session expiration.
+
+[Backdrop](https://github.com/alphagov/backdrop) is a Python app for the
+Performance Platform that uses Sign-on-o-Tron to authenticate users.
+Authentication is handled in the `backdrop/write/` directory.
