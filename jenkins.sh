@@ -8,5 +8,3 @@ bundle install --path "${HOME}/bundles/${JOB_NAME}" --deployment
 bundle exec rake stats
 bundle exec rake db:drop db:create db:schema:load
 bundle exec rake --trace
-RESULT=$?
-exit $RESULT
