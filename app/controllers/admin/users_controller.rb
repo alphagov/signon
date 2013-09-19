@@ -27,7 +27,7 @@ class Admin::UsersController < Admin::BaseController
       @successes, @failures = results[:successes], results[:failures]
       if @user.invited_but_not_yet_accepted? && (email_before != @user.email)
         @user.invite!
-      end 
+      end
 
       flash[:notice] = "Updated user #{@user.email} successfully"
     else
