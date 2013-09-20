@@ -60,6 +60,7 @@ Signonotron2::Application.configure do
 
   # Enable lograge
   config.lograge.enabled = true
+  config.lograge.formatter = Lograge::Formatters::Logstash.new
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
