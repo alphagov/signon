@@ -129,9 +129,9 @@ GEM
     kgio (2.7.4)
     libwebsocket (0.1.5)
       addressable
-    lograge (0.1.2)
-      actionpack
-      activesupport
+    logstash-event (1.2.02)
+    logstasher (0.2.8)
+      logstash-event
     lrucache (0.1.4)
       PriorityQueue (~> 0.1.2)
     macaddr (1.6.1)
@@ -247,7 +247,7 @@ DEPENDENCIES
   jquery-rails
   json (= 1.7.7)
   kaminari (= 0.14.1)
-  lograge (= 0.1.2)
+  logstasher (= 0.2.8)
   mocha (= 0.13.3)
   mysql2
   paginate_alphabetically (= 0.4.0)!
