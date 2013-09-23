@@ -58,8 +58,9 @@ Signonotron2::Application.configure do
   # the I18n.default_locale when a translation can not be found)
   config.i18n.fallbacks = true
 
-  # Enable lograge
-  config.lograge.enabled = true
+  config.logstasher.enabled = true
+  config.logstasher.logger = Logger.new("#{Rails.root}/log/#{Rails.env}.json.log")
+  config.logstasher.supress_app_log = true
 
   # Send deprecation notices to registered listeners
   config.active_support.deprecation = :notify
