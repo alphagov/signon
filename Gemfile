@@ -37,7 +37,7 @@ group :development do
   gem 'quiet_assets'
 end
 
-gem 'lograge', '0.1.2'
+gem 'logstasher', '0.2.8'
 
 group :test do
   gem 'cucumber-rails', '1.3.0', require: false
