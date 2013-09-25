@@ -26,8 +26,21 @@ class Admin::UsersControllerTest < ActionController::TestCase
       should "filter results to users where their name or email contains the string" do
         FactoryGirl.create(:user, email: "a@another.gov.uk")
         FactoryGirl.create(:user, email: "a@dfid.gov.uk")
-        get :index, filter: "dfid"
+        get :index, q: {name_or_email_cont: "dfid" }
+
         assert_select "td.email", /a@dfid.gov.uk/
+        assert_select "tbody tr", count: 1
+      end
+
+      should "filter results by application" do
+        another_user = FactoryGirl.create(:user, email: "a@another.gov.uk")
+        FactoryGirl.create(:user, email: "a@dfid.gov.uk")
+        app = FactoryGirl.create(:application)
+        permission = FactoryGirl.create(:permission, application: app, user: another_user)
+
+        get :index, q: {permissions_application_id_eq: app.id }
+
+        assert_select "td.email", /a@another.gov.uk/
         assert_select "tbody tr", count: 1
       end
     end

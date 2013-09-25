@@ -5,15 +5,16 @@
   <div class="row-fluid">
     <div class="span7">
       <div>
-        <%= form_tag "", method: "get", class: "pull-left form-inline" do %>
+        <%= search_form_for @q, url: admin_users_path,
+                        html: { method: :get, class: "pull-left form-inline" } do |f| %>
           <label>
             <strong>Filter by name or email:</strong>
-            <%= text_field_tag "filter", params[:filter] %>
+            <%= f.text_field "name_or_email_cont" %>
           </label>
           <%= submit_tag "Search", class: "btn btn-primary" %>
         <% end %>
-        <%= form_tag "", method: "get" do %>
-          <%= hidden_field_tag "filter" %>
+        <%= search_form_for @q, url: admin_users_path,
+                        html: { method: :get, class: "pull-left form-inline" } do |f| %>
           <%= submit_tag "Clear", class: "btn offset" %>
         <% end %>
       </div>
@@ -25,6 +26,21 @@
       </div>
     </div>
   </div>
+  <% if current_user.has_role?("admin") %>
+    <div class="row-fluid">
+      <div class="span12">
+        <div>
+          <%= search_form_for @q, url: admin_users_path,
+                          html: { method: :get, class: "pull-left form-inline" } do |f| %>
+            <strong>Filter by application:</strong>
+            <%= f.collection_select "permissions_application_id_eq", Doorkeeper::Application.all, :id, :name %>
+            <%= f.hidden_field "permissions_signin_permission_not_eq", value: "0" %>
+            <%= submit_tag "Search", class: "btn btn-primary" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
 
   <%= render partial: "pagination" %>
 

@@ -16,7 +16,7 @@ gem 'jquery-rails'
 gem 'exception_notification'
 gem 'plek', '1.4.0'
 gem 'json', '1.7.7'
-
+gem 'ransack', '1.0.0'
 gem 'uuid'
 
 # Gems used to provide Authentication and Authorization services.

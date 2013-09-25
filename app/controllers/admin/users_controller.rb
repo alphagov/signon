@@ -6,11 +6,9 @@ class Admin::UsersController < Admin::BaseController
   before_filter :set_user, only: [:edit, :update, :unlock, :resend_email_change, :cancel_email_change]
 
   def index
-    if params[:filter]
-      @users = User.order("name")
-                    .where("email like ? or name like ?", "%#{params[:filter].strip}%", "%#{params[:filter].strip}%")
-                    .page(params[:page])
-                    .per(100)
+    @q = User.search(params[:q])
+    if params[:q]
+      @users = @q.result(distinct: true).order("name").page(params[:page]).per(100)
     else
       @users = User.order("name").alphabetical_group(params[:letter])
     end

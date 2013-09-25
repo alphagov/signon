@@ -1,4 +1,4 @@
-<% if !params[:filter].blank? %>
+<% if params[:q].present? %>
   <%= paginate(@users) %>
 <% else %>
   <h4>Users by initial letter:</h4>

@@ -23,7 +23,6 @@ module UserPermissionsControllerMethods
           else
             has_signin = false
           end
-          attributes.delete(:signin_permission)
         end
       end
       user_params
