@@ -58,27 +58,27 @@ namespace :api_clients do
     applications = Doorkeeper::Application.all
 
     applications.each do |application|
-      print "#{application.name}:\n"
+      puts "#{application.name}:"
 
       if user.authorisations.where(application_id: application.id).any?
-        print "    authorisation already exists\n"
+        puts "    authorisation already exists"
       else
         user.authorisations.create(application_id: application.id, expires_in: 10.years)
-        print "    created authorisation\n"
+        puts "    created authorisation"
       end
 
       app_permissions = user.permissions.where(application_id: application.id).first
       if app_permissions.present?
         if PERMISSIONS_TO_GRANT & app_permissions.permissions == PERMISSIONS_TO_GRANT
-          print "    permissions already exist\n"
+          puts "    permissions already exist"
         else
           app_permissions.permissions = app_permissions.permissions | PERMISSIONS_TO_GRANT
           app_permissions.save!
-          print "    update permissions: #{app_permissions.permissions.join(', ')}\n"
+          puts "    update permissions: #{app_permissions.permissions.join(', ')}"
         end
       else
         app_permissions = user.permissions.create!(application: application, permissions: PERMISSIONS_TO_GRANT)
-        print "    grant new permissions: #{app_permissions.permissions.join(', ')}\n"
+        puts "    grant new permissions: #{app_permissions.permissions.join(', ')}"
       end
     end
   end
