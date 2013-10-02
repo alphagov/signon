@@ -7,7 +7,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   attr_accessible :name, :description, :uid, :secret, :redirect_uri, :home_uri
 
   def self.default_permission_strings
-    ["signin"]
+    ["signin", "user_update_permission"]
   end
 
   def supported_permission_strings
