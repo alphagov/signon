@@ -43,7 +43,7 @@ namespace :api_clients do
 
   desc "Grants the signon user the correct permissions for syncing to each app"
   task :ensure_signon_user_app_permissions, [:signon_user_email] => :environment do |t, args|
-    PERMISSIONS_TO_GRANT = ["update_user_permission"]
+    PERMISSIONS_TO_GRANT = ["user_update_permission"]
 
     email = args[:signon_user_email]
     unless email.present?
