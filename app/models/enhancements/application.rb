@@ -7,11 +7,11 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   attr_accessible :name, :description, :uid, :secret, :redirect_uri, :home_uri
 
   def self.default_permission_strings
-    ["signin", "user_update_permission"]
+    ["signin"]
   end
 
   def supported_permission_strings
-    self.class.default_permission_strings + supported_permissions.order(:name).map(&:name)
+    ["user_update_permission"] + self.class.default_permission_strings + supported_permissions.order(:name).map(&:name)
   end
 
   def url_without_path
