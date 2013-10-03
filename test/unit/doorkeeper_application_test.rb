@@ -5,7 +5,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     should "return a list of string permissions, merging in the defaults" do
       app = FactoryGirl.create(:application)
       FactoryGirl.create(:supported_permission, name: "write", application: app)
-      assert_equal ["signin", "write"], app.supported_permission_strings
+      assert_equal ["user_update_permission", "signin", "write"], app.supported_permission_strings
     end
   end
 end

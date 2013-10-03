@@ -11,7 +11,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   end
 
   def supported_permission_strings
-    self.class.default_permission_strings + supported_permissions.order(:name).map(&:name)
+    ["user_update_permission"] + self.class.default_permission_strings + supported_permissions.order(:name).map(&:name)
   end
 
   def url_without_path
