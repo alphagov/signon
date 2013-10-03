@@ -4,7 +4,7 @@ class SSOPushCredential
     "user_update_permission"
   ]
 
-  cattr_accessor :user_email
+  cattr_accessor :user_email, :user
 
   class UserNotFound < StandardError; end
   class UserNotProvided < StandardError; end

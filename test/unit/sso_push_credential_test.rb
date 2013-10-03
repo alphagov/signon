@@ -4,10 +4,14 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
 
   setup do
     @application = FactoryGirl.create(:application)
+
+    SSOPushCredential.user_email = nil
+    SSOPushCredential.user = nil
   end
 
   teardown do
     SSOPushCredential.user_email = nil
+    SSOPushCredential.user = nil
   end
 
   context "given an existing user" do
