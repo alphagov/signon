@@ -1,6 +1,7 @@
 class SSOPushCredential
 
   PERMISSIONS = [
+    "signin",
     "user_update_permission"
   ]
 
