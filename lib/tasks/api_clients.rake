@@ -40,46 +40,4 @@ namespace :api_clients do
     puts "              user.email <#{user.email}>"
     puts "Access token: #{authorisation.token}"
   end
-
-  desc "Grants the signon user the correct permissions for syncing to each app"
-  task :ensure_signon_user_app_permissions, [:signon_user_email] => :environment do |t, args|
-    PERMISSIONS_TO_GRANT = ["user_update_permission"]
-
-    email = args[:signon_user_email]
-    unless email.present?
-      raise "The email of the signon sync user must be provided to run this task."
-    end
-
-    user = User.find_by_email(email)
-    unless user.present?
-      raise "A user does not exist with the email '#{email}', exiting"
-    end
-
-    applications = Doorkeeper::Application.all
-
-    applications.each do |application|
-      puts "#{application.name}:"
-
-      if user.authorisations.where(application_id: application.id).any?
-        puts "    authorisation already exists"
-      else
-        user.authorisations.create(application_id: application.id, expires_in: 10.years)
-        puts "    created authorisation"
-      end
-
-      app_permissions = user.permissions.where(application_id: application.id).first
-      if app_permissions.present?
-        if PERMISSIONS_TO_GRANT & app_permissions.permissions == PERMISSIONS_TO_GRANT
-          puts "    permissions already exist"
-        else
-          app_permissions.permissions = app_permissions.permissions | PERMISSIONS_TO_GRANT
-          app_permissions.save!
-          puts "    update permissions: #{app_permissions.permissions.join(', ')}"
-        end
-      else
-        app_permissions = user.permissions.create!(application: application, permissions: PERMISSIONS_TO_GRANT)
-        puts "    grant new permissions: #{app_permissions.permissions.join(', ')}"
-      end
-    end
-  end
 end

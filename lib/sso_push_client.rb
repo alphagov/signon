@@ -2,7 +2,7 @@ require 'gds_api/base'
 
 class SSOPushClient < GdsApi::Base
   def initialize(application)
-    super(application.url_without_path, GDS_API_CREDENTIALS)
+    super(application.url_without_path, bearer_token: SSOPushCredential.credentials(application))
   end
 
   def update_user(uid, user)
