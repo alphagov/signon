@@ -5,4 +5,17 @@ class Organisation < ActiveRecord::Base
   validates :name, presence: true
   validates :organisation_type, presence: true
 
+  def web_url
+    root_url + '/government/organisations/' + slug
+  end
+
+private
+
+  def root_url
+    if Rails.env.development?
+      Plek.current.find('whitehall-admin')
+    else
+      Plek.current.find('www')
+    end
+  end
 end
