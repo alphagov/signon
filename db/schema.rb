@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(:version => 20130801170805) do
   add_index "oauth_access_tokens", ["token"], :name => "index_oauth_access_tokens_on_token", :unique => true
 
   create_table "oauth_applications", :force => true do |t|
-    t.string   "name"
+    t.string   "name",         :null => false
     t.string   "uid",          :null => false
     t.string   "secret",       :null => false
     t.string   "redirect_uri", :null => false
@@ -96,8 +96,8 @@ ActiveRecord::Schema.define(:version => 20130801170805) do
     t.integer  "user_id"
     t.integer  "application_id"
     t.text     "permissions"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
     t.datetime "last_synced_at"
   end
 
@@ -108,15 +108,14 @@ ActiveRecord::Schema.define(:version => 20130801170805) do
   create_table "supported_permissions", :force => true do |t|
     t.integer  "application_id"
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
   end
 
   add_index "supported_permissions", ["application_id", "name"], :name => "index_supported_permissions_on_application_id_and_name", :unique => true
   add_index "supported_permissions", ["application_id"], :name => "index_supported_permissions_on_application_id"
 
   create_table "users", :force => true do |t|
-    t.string   "name",                                                       :null => false
     t.string   "email",                                :default => "",       :null => false
     t.string   "encrypted_password",                   :default => ""
     t.string   "reset_password_token"
@@ -126,12 +125,13 @@ ActiveRecord::Schema.define(:version => 20130801170805) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "uid",                                                        :null => false
     t.integer  "failed_attempts",                      :default => 0
     t.datetime "locked_at"
+    t.datetime "created_at",                                                 :null => false
+    t.datetime "updated_at",                                                 :null => false
     t.datetime "suspended_at"
+    t.string   "name",                                                       :null => false
+    t.string   "uid"
     t.string   "invitation_token",       :limit => 60
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
