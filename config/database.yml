@@ -4,13 +4,10 @@
 #   Ensure the SQLite 3 gem is defined in your Gemfile
 #   gem 'sqlite3'
 development: &development
-  adapter: mysql2
-  encoding: utf8
-  reconnect: false
-  database: signonotron2_development
-  pool: 5
-  username: signonotron2
-  password:
+   adapter: sqlite3
+   database: db/development.sqlite3
+   pool: 5
+   timeout: 5000
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -21,15 +18,13 @@ test: &test
    pool: 5
    timeout: 5000
 
-
+# Overwritten on real deployment
 production:
   adapter: mysql2
-  encoding: utf8
-  reconnect: false
-  database: halberd_production
-  pool: 5
-  username: halberd
+  database: signonotron2
+  username: signonotron2
   password:
+  host: localhost
 
 cucumber:
   <<: *test

@@ -70,7 +70,7 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
 
       email = ActionMailer::Base.deliveries.last
       assert_not_nil email
-      assert_equal ["signon-alerts@digital.cabinet-office.gov.uk"], email.to
+      assert_equal ["signon-alerts@theodi.org"], email.to
     end
 
     should "redirect to the batch invitation page and show a flash message" do

@@ -1,5 +1,8 @@
 source 'https://rubygems.org'
 
+#ruby=ruby-1.9.3
+#ruby-gemset=quirkafleeg-signonotron2
+
 gem 'rails', '3.2.13'
 
 group :passenger_compatibility do
@@ -19,6 +22,8 @@ gem 'json', '1.7.7'
 
 gem 'uuid'
 
+gem 'dotenv-rails'
+
 # Gems used to provide Authentication and Authorization services.
 gem 'devise', '2.2.5'
 gem 'devise_invitable', '1.1.5'
@@ -30,7 +35,6 @@ gem 'doorkeeper', '0.6.7'
 
 gem 'gds-api-adapters', '4.1.3'
 gem 'statsd-ruby', '1.0.0'
-gem 'unicorn', '4.3.1'
 
 group :development do
   gem 'sqlite3'
@@ -52,3 +56,7 @@ group :test do
   gem 'ci_reporter', '1.7.0'
 end
 
+group :production do
+  gem 'foreman'
+  gem 'thin'
+end
