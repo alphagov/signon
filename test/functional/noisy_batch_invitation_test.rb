@@ -10,11 +10,11 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
     end
 
     should "come from noreply-signon@" do
-      assert_equal ["noreply-signon@digital.cabinet-office.gov.uk"], @email.from
+      assert_equal ["noreply-signon@theodi.org"], @email.from
     end
 
     should "send to noreply-signon@" do
-      assert_equal ["signon-alerts@digital.cabinet-office.gov.uk"], @email.to
+      assert_equal ["signon-alerts@theodi.org"], @email.to
     end
 
     should "have a subject" do

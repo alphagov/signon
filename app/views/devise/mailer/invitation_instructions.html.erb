@@ -1,6 +1,6 @@
 <p>Hello <%= @resource.name %>,</p>
 
-<p>Someone has invited you to GOV.UK Signon, you can accept it through the link below.</p>
+<p>Someone has invited you to ODI Signon, you can accept it through the link below.</p>
 
 <p><%= link_to 'Accept invitation', accept_invitation_url(@resource, :invitation_token => @resource.invitation_token) %></p>
 
