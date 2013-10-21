@@ -16,4 +16,14 @@ FactoryGirl.define do
   factory :admin_user, parent: :user do
     role "admin"
   end
+
+  factory :user_in_organisation, parent: :user do
+    ignore do
+      organisations_count 1
+    end
+
+    after_create do |user, evaluator|
+      FactoryGirl.create_list(:organisation, evaluator.organisations_count, users: [user])
+    end
+  end
 end

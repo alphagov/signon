@@ -45,6 +45,21 @@ class Admin::UsersControllerTest < ActionController::TestCase
       get :edit, id: another_user.id
       assert_select "input[name='user[unconfirmed_email]'][value='#{another_user.unconfirmed_email}']"
     end
+
+    should "show the organisations to which the user belongs" do
+      user_in_org = FactoryGirl.create(:user_in_organisation)
+      org_with_user = user_in_org.organisations.first
+      other_organisation = FactoryGirl.create(:organisation, abbreviation: 'ABBR')
+
+      get :edit, id: user_in_org.id
+
+      assert_select "select[name='user_organisation_ids[]']" do
+        assert_select "option", count: 2
+        assert_select "option[selected=selected]", count: 1
+        assert_select "option[value=#{org_with_user.id}][selected=selected]", text: org_with_user.name_with_abbreviation
+        assert_select "option[value=#{other_organisation.id}]", text: other_organisation.name_with_abbreviation
+      end
+    end
   end
 
   context "PUT update" do
@@ -55,6 +70,13 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_equal "New Name", another_user.reload.name
       assert_equal 200, response.status
       assert_equal "Updated user #{another_user.email} successfully", flash[:notice]
+    end
+
+    should "update the user's organisations" do
+      user = FactoryGirl.create(:user_in_organisation)
+      assert_equal 1, user.organisations.count
+      put :update, id: user.id, user_organisation_ids: []
+      assert_equal 0, user.organisations.count
     end
 
     should "redisplay the form if save fails" do

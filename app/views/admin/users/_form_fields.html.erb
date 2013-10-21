@@ -37,6 +37,11 @@
   </p>
 <% end %>
 
+<p>
+  <%= label_tag "user_organisation_ids", "Organisations" %>
+  <%= select_tag "user_organisation_ids", options_from_collection_for_select(Organisation.all, :id, :name_with_abbreviation, selected: f.object.organisation_ids), multiple: true, class: "chzn-select", "data-placeholder" => "Start typing to search for organisations" %>
+</p>
+
 <h2>Permissions</h2>
 
 <%= render partial: "admin/shared/user_permissions", locals: { user_object: f.object }%>
