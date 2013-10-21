@@ -1,3 +1,5 @@
+# encoding = utf-8
+
 require 'test_helper'
 
 class OrganisationTest < ActiveSupport::TestCase
@@ -15,7 +17,7 @@ class OrganisationTest < ActiveSupport::TestCase
   context "displaying name with abbreviation" do
     should "use abbreviation when it is not the same as name" do
       organisation = FactoryGirl.build(:organisation, name: 'An Organisation', abbreviation: "ABBR")
-      assert_equal "An Organisation | ABBR", organisation.name_with_abbreviation
+      assert_equal "An Organisation — ABBR", organisation.name_with_abbreviation
     end
 
     should "not use abbreviation when it is not present" do

@@ -1,3 +1,5 @@
+# encoding = utf-8
+
 class Organisation < ActiveRecord::Base
   has_and_belongs_to_many :users
 
@@ -7,7 +9,7 @@ class Organisation < ActiveRecord::Base
 
   def name_with_abbreviation
     if abbreviation.present? && abbreviation != name
-      "#{name} | #{abbreviation}"
+      "#{name} — #{abbreviation}"
     else
       name
     end
