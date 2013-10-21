@@ -26,8 +26,21 @@ class Admin::UsersControllerTest < ActionController::TestCase
       should "filter results to users where their name or email contains the string" do
         FactoryGirl.create(:user, email: "a@another.gov.uk")
         FactoryGirl.create(:user, email: "a@dfid.gov.uk")
-        get :index, filter: "dfid"
+        get :index, q: {name_or_email_cont: "dfid" }
+
         assert_select "td.email", /a@dfid.gov.uk/
+        assert_select "tbody tr", count: 1
+      end
+
+      should "filter results by application" do
+        another_user = FactoryGirl.create(:user, email: "a@another.gov.uk")
+        FactoryGirl.create(:user, email: "a@dfid.gov.uk")
+        app = FactoryGirl.create(:application)
+        permission = FactoryGirl.create(:permission, application: app, user: another_user)
+
+        get :index, q: {permissions_application_id_eq: app.id }
+
+        assert_select "td.email", /a@another.gov.uk/
         assert_select "tbody tr", count: 1
       end
     end
@@ -117,16 +130,16 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
       PermissionUpdater.expects(:new).with(another_user, [app]).returns(mock("mock propagator", attempt: {}))
 
-      permissions_attributes = { 
-        permissions_attributes: { 
-          0 => { 
+      permissions_attributes = {
+        permissions_attributes: {
+          0 => {
             application_id: "#{app.id}",
             id: "#{permission.id}",
             signin_permission: "1",
             permissions: ["banana"]
-          } 
-        } 
-      }      
+          }
+        }
+      }
       put :update, { id: another_user.id, user: { name: "New Name" } }.merge(permissions_attributes)
 
       assert_equal "New Name", another_user.reload.name
@@ -143,8 +156,8 @@ class Admin::UsersControllerTest < ActionController::TestCase
     end
 
     should "use a new token if it's expired" do
-      another_user = FactoryGirl.create(:user_with_pending_email_change, 
-                                          confirmation_token: "old token", 
+      another_user = FactoryGirl.create(:user_with_pending_email_change,
+                                          confirmation_token: "old token",
                                           confirmation_sent_at: 15.days.ago)
       put :resend_email_change, id: another_user.id
 

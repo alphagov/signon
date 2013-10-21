@@ -36,4 +36,14 @@ namespace :users do
     user.unsuspend
     puts "User account unsuspended"
   end
+
+  desc "Fix signin permission boolean"
+  task :fix_signin => :environment do
+    permissions_to_update = []
+    Permission.all.each do |permission|
+      permissions_to_update << permission.id if permission.permissions.include?("signin")
+    end
+    puts "Fixing #{permissions_to_update.count} permissions"
+    Permission.where(id: permissions_to_update).update_all(signin_permission: true)
+  end
 end

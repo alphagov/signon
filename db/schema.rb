@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(:version => 20130926134720) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "last_synced_at"
+    t.boolean  "signin_permission", :default => false
   end
 
   add_index "permissions", ["application_id", "user_id"], :name => "unique_permission_constraint", :unique => true

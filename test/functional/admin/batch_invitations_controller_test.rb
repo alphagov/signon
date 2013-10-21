@@ -50,6 +50,7 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
         0 => {
           "application_id" => "#{app.id}",
           "id" => "",
+          "signin_permission"=>"1",
           "permissions" => ["signin"]
         }
       }
