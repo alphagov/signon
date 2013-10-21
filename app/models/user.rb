@@ -34,6 +34,7 @@ class User < ActiveRecord::Base
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
   has_many :permissions
   has_many :batch_invitations
+  has_and_belongs_to_many :organisations
 
   before_create :generate_uid
 
