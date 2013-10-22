@@ -46,18 +46,38 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_select "input[name='user[unconfirmed_email]'][value='#{another_user.unconfirmed_email}']"
     end
 
-    should "show the organisations to which the user belongs" do
-      user_in_org = FactoryGirl.create(:user_in_organisation)
-      org_with_user = user_in_org.organisations.first
-      other_organisation = FactoryGirl.create(:organisation, abbreviation: 'ABBR')
+    context "when editing of user membership of organisations is enabled" do
+      should "show the organisations to which the user belongs" do
+        with_const_override(:DISABLE_MEMBERSHIP_EDITING, false) do
+          user_in_org = FactoryGirl.create(:user_in_organisation)
+          org_with_user = user_in_org.organisations.first
+          other_organisation = FactoryGirl.create(:organisation, abbreviation: 'ABBR')
 
-      get :edit, id: user_in_org.id
+          get :edit, id: user_in_org.id
 
-      assert_select "select[name='user_organisation_ids[]']" do
-        assert_select "option", count: 2
-        assert_select "option[selected=selected]", count: 1
-        assert_select "option[value=#{org_with_user.id}][selected=selected]", text: org_with_user.name_with_abbreviation
-        assert_select "option[value=#{other_organisation.id}]", text: other_organisation.name_with_abbreviation
+          assert_select "select[name='user_organisation_ids[]']" do
+            assert_select "option", count: 2
+            assert_select "option[selected=selected]", count: 1
+            assert_select "option[value=#{org_with_user.id}][selected=selected]", text: org_with_user.name_with_abbreviation
+            assert_select "option[value=#{other_organisation.id}]", text: other_organisation.name_with_abbreviation
+          end
+        end
+      end
+    end
+
+    context "when editing of user membership of organisations is disabled" do
+      should "not show the organisations to which the user belongs" do
+        with_const_override(:DISABLE_MEMBERSHIP_EDITING, true) do
+          user = FactoryGirl.create(:user)
+          organisation = FactoryGirl.create(:organisation)
+
+          get :edit, id: user.id
+
+          assert_select "select[name='user_organisation_ids[]']", false
+          assert_select ".container" do
+            assert_select "option", count: 0, text: organisation.name_with_abbreviation
+          end
+        end
       end
     end
   end
@@ -72,11 +92,26 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_equal "Updated user #{another_user.email} successfully", flash[:notice]
     end
 
-    should "update the user's organisations" do
-      user = FactoryGirl.create(:user_in_organisation)
-      assert_equal 1, user.organisations.count
-      put :update, id: user.id, user_organisation_ids: []
-      assert_equal 0, user.organisations.count
+    context "when editing of user membership of organisations is enabled" do
+      should "update the user's organisations" do
+        with_const_override(:DISABLE_MEMBERSHIP_EDITING, false) do
+          user = FactoryGirl.create(:user_in_organisation)
+          assert_equal 1, user.organisations.count
+          put :update, id: user.id, user_organisation_ids: []
+          assert_equal 0, user.organisations.count
+        end
+      end
+    end
+
+    context "when editing of user membership of organisations is disabled" do
+      should "not update the user's organisations" do
+        with_const_override(:DISABLE_MEMBERSHIP_EDITING, true) do
+          user = FactoryGirl.create(:user_in_organisation)
+          assert_equal 1, user.organisations.count
+          put :update, id: user.id, user_organisation_ids: []
+          assert_equal 1, user.organisations.count
+        end
+      end
     end
 
     should "redisplay the form if save fails" do
