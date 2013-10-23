@@ -19,7 +19,6 @@ private
       name: org_data.title,
       organisation_type: org_data.format,
       abbreviation: org_data.details.abbreviation,
-      closed_at: org_data.details.closed_at,
     }
     organisation.update_attributes!(update_data)
   rescue ActiveRecord::RecordInvalid => e

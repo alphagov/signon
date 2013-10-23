@@ -33,17 +33,12 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
 
   test "it saves values which are not validated for presence, when they are present in the data" do
     slug = 'ministry-of-fun'
-    details = organisation_details_for_slug slug
-    details["details"]["closed_at"] = 7.days.ago
-    stubs(:organisation_details_for_slug).with(slug).returns(details)
-
     organisations_api_has_organisations([slug])
 
     OrganisationsFetcher.new.call
 
     organisation = Organisation.find_by_slug(slug)
     assert_present(organisation.abbreviation)
-    assert_present(organisation.closed_at)
   end
 
   test "it raises an error when it receives invalid data" do

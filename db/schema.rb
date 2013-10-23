@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131021123740) do
+ActiveRecord::Schema.define(:version => 20131023081914) do
 
   create_table "batch_invitation_users", :force => true do |t|
     t.integer  "batch_invitation_id"
@@ -97,7 +97,6 @@ ActiveRecord::Schema.define(:version => 20131021123740) do
     t.string   "name",              :null => false
     t.string   "organisation_type", :null => false
     t.string   "abbreviation"
-    t.datetime "closed_at"
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
