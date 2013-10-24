@@ -16,6 +16,7 @@ gem 'jquery-rails'
 gem 'exception_notification'
 gem 'plek', '1.4.0'
 gem 'json', '1.7.7'
+gem 'whenever', '0.7.3', require: false
 
 gem 'uuid'
 
