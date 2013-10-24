@@ -1,5 +1,8 @@
 require 'gds_api/organisations'
 
+# Whitehall is the canonical source for organisations, so Signon needs to keep
+# its organisations up-to-date in order to provide accurate information on user
+# membership of organisations.
 class OrganisationsFetcher
 
   def call
