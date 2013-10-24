@@ -9,7 +9,7 @@ class Organisation < ActiveRecord::Base
 
   def name_with_abbreviation
     if abbreviation.present? && abbreviation != name
-      "#{name} — #{abbreviation}"
+      "#{name} – #{abbreviation}"
     else
       name
     end
