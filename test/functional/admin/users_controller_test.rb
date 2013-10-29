@@ -55,7 +55,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
           get :edit, id: user_in_org.id
 
-          assert_select "select[name='user_organisation_ids[]']" do
+          assert_select "select[name='user[organisation_ids][]']" do
             assert_select "option", count: 2
             assert_select "option[selected=selected]", count: 1
             assert_select "option[value=#{org_with_user.id}][selected=selected]", text: org_with_user.name_with_abbreviation
@@ -73,7 +73,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
           get :edit, id: user.id
 
-          assert_select "select[name='user_organisation_ids[]']", false
+          assert_select "select[name='user[organisation_ids][]']", false
           assert_select ".container" do
             assert_select "option", count: 0, text: organisation.name_with_abbreviation
           end
@@ -97,7 +97,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
         with_const_override(:DISABLE_MEMBERSHIP_EDITING, false) do
           user = FactoryGirl.create(:user_in_organisation)
           assert_equal 1, user.organisations.count
-          put :update, id: user.id, user_organisation_ids: []
+          put :update, id: user.id, user: { organisation_ids: [] }
           assert_equal 0, user.organisations.count
         end
       end

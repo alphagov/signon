@@ -16,8 +16,8 @@ class User < ActiveRecord::Base
          :password_expirable
 
   attr_accessible :uid, :name, :email, :password, :password_confirmation
-  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, as: :admin
-  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, :role, as: :superadmin
+  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, :organisation_ids, as: :admin
+  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, :organisation_ids, :role, as: :superadmin
   attr_readonly :uid
 
   validates :name, presence: true

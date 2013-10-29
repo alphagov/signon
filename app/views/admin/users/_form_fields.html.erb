@@ -39,8 +39,8 @@
 
 <% unless DISABLE_MEMBERSHIP_EDITING %>
   <p>
-    <%= label_tag "user_organisation_ids", "Organisations" %>
-    <%= select_tag "user_organisation_ids", options_from_collection_for_select(Organisation.all, :id, :name_with_abbreviation, selected: f.object.organisation_ids), multiple: true, class: "chzn-select", "data-placeholder" => "Start typing to search for organisations" %>
+    <%= f.label :organisation_ids, "Organisations" %>
+    <%= f.select :organisation_ids, options_from_collection_for_select(Organisation.all, :id, :name_with_abbreviation, selected: f.object.organisation_ids), {}, { multiple: true, class: "chzn-select", "data-placeholder" => "Start typing to search for organisations" } %>
   </p>
 <% end %>
 
