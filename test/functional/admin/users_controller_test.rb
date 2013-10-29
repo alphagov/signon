@@ -45,6 +45,41 @@ class Admin::UsersControllerTest < ActionController::TestCase
       get :edit, id: another_user.id
       assert_select "input[name='user[unconfirmed_email]'][value='#{another_user.unconfirmed_email}']"
     end
+
+    context "when editing of user membership of organisations is enabled" do
+      should "show the organisations to which the user belongs" do
+        with_const_override(:DISABLE_MEMBERSHIP_EDITING, false) do
+          user_in_org = FactoryGirl.create(:user_in_organisation)
+          org_with_user = user_in_org.organisations.first
+          other_organisation = FactoryGirl.create(:organisation, abbreviation: 'ABBR')
+
+          get :edit, id: user_in_org.id
+
+          assert_select "select[name='user[organisation_ids][]']" do
+            assert_select "option", count: 2
+            assert_select "option[selected=selected]", count: 1
+            assert_select "option[value=#{org_with_user.id}][selected=selected]", text: org_with_user.name_with_abbreviation
+            assert_select "option[value=#{other_organisation.id}]", text: other_organisation.name_with_abbreviation
+          end
+        end
+      end
+    end
+
+    context "when editing of user membership of organisations is disabled" do
+      should "not show the organisations to which the user belongs" do
+        with_const_override(:DISABLE_MEMBERSHIP_EDITING, true) do
+          user = FactoryGirl.create(:user)
+          organisation = FactoryGirl.create(:organisation)
+
+          get :edit, id: user.id
+
+          assert_select "select[name='user[organisation_ids][]']", false
+          assert_select ".container" do
+            assert_select "option", count: 0, text: organisation.name_with_abbreviation
+          end
+        end
+      end
+    end
   end
 
   context "PUT update" do
@@ -55,6 +90,28 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_equal "New Name", another_user.reload.name
       assert_equal 200, response.status
       assert_equal "Updated user #{another_user.email} successfully", flash[:notice]
+    end
+
+    context "when editing of user membership of organisations is enabled" do
+      should "update the user's organisations" do
+        with_const_override(:DISABLE_MEMBERSHIP_EDITING, false) do
+          user = FactoryGirl.create(:user_in_organisation)
+          assert_equal 1, user.organisations.count
+          put :update, id: user.id, user: { organisation_ids: [] }
+          assert_equal 0, user.organisations.count
+        end
+      end
+    end
+
+    context "when editing of user membership of organisations is disabled" do
+      should "not update the user's organisations" do
+        with_const_override(:DISABLE_MEMBERSHIP_EDITING, true) do
+          user = FactoryGirl.create(:user_in_organisation)
+          assert_equal 1, user.organisations.count
+          put :update, id: user.id, user_organisation_ids: []
+          assert_equal 1, user.organisations.count
+        end
+      end
     end
 
     should "redisplay the form if save fails" do
@@ -117,16 +174,16 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
       PermissionUpdater.expects(:new).with(another_user, [app]).returns(mock("mock propagator", attempt: {}))
 
-      permissions_attributes = { 
-        permissions_attributes: { 
-          0 => { 
+      permissions_attributes = {
+        permissions_attributes: {
+          0 => {
             application_id: "#{app.id}",
             id: "#{permission.id}",
             signin_permission: "1",
             permissions: ["banana"]
-          } 
-        } 
-      }      
+          }
+        }
+      }
       put :update, { id: another_user.id, user: { name: "New Name" } }.merge(permissions_attributes)
 
       assert_equal "New Name", another_user.reload.name
@@ -143,8 +200,8 @@ class Admin::UsersControllerTest < ActionController::TestCase
     end
 
     should "use a new token if it's expired" do
-      another_user = FactoryGirl.create(:user_with_pending_email_change, 
-                                          confirmation_token: "old token", 
+      another_user = FactoryGirl.create(:user_with_pending_email_change,
+                                          confirmation_token: "old token",
                                           confirmation_sent_at: 15.days.ago)
       put :resend_email_change, id: another_user.id
 

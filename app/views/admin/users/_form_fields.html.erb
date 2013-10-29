@@ -13,7 +13,7 @@
       <span class="help-inline">Changes are pending until confirmation via link in an email.</span>
     <% end %>
   <% end %>
-</p>  
+</p>
 
 <% if f.object.unconfirmed_email.present? %>
   <p>
@@ -34,6 +34,13 @@
     <span class="help-inline">
       Admins can create and edit normal users. Superadmins can create and edit all user types and edit applications.
     </span>
+  </p>
+<% end %>
+
+<% unless DISABLE_MEMBERSHIP_EDITING %>
+  <p>
+    <%= f.label :organisation_ids, "Organisations" %>
+    <%= f.select :organisation_ids, options_from_collection_for_select(Organisation.all, :id, :name_with_abbreviation, selected: f.object.organisation_ids), {}, { multiple: true, class: "chzn-select", "data-placeholder" => "Start typing to search for organisations" } %>
   </p>
 <% end %>
 

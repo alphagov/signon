@@ -16,6 +16,7 @@ gem 'jquery-rails'
 gem 'exception_notification'
 gem 'plek', '1.4.0'
 gem 'json', '1.7.7'
+gem 'whenever', '0.7.3', require: false
 
 gem 'uuid'
 
@@ -28,7 +29,7 @@ gem 'passphrase_entropy', git: 'https://github.com/alphagov/passphrase_entropy.g
 
 gem 'doorkeeper', '0.6.7'
 
-gem 'gds-api-adapters', '4.1.3'
+gem 'gds-api-adapters', '7.11.0'
 gem 'statsd-ruby', '1.0.0'
 gem 'unicorn', '4.3.1'
 
