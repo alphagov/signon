@@ -103,16 +103,6 @@ class UserTest < ActiveSupport::TestCase
     assert_user_has_permissions ['Create publications'], app, user
   end
 
-  test "granting an unsupported permission raises an error" do
-    app = FactoryGirl.create(:application, name: "my_app")
-    app.supported_permissions.create!(name: 'signin')
-    user = FactoryGirl.create(:user)
-
-    assert_raises UnsupportedPermissionError do
-      user.grant_permission(app, "Unsupported")
-    end
-  end
-
   test "granting an already granted permission doesn't cause duplicates" do
     app = FactoryGirl.create(:application, name: "my_app")
     user = FactoryGirl.create(:user)

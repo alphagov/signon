@@ -9,6 +9,10 @@ namespace :users do
 
     user = User.invite!(name: ENV['name'].dup, email: ENV['email'].dup)
     applications.each do |application|
+      unsupported_permissions = permissions - application.supported_permission_strings
+      if unsupported_permissions.any?
+        raise UnsupportedPermissionError, "Cannot grant '#{unsupported_permissions.join("', '")}' permission(s), they are not supported by the '#{application.name}' application"
+      end
       user.grant_permission(application, 'signin')
     end
 
