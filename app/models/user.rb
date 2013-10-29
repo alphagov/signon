@@ -65,11 +65,6 @@ class User < ActiveRecord::Base
   end
 
   def grant_permissions(application, permissions)
-    unsupported_permissions = permissions - application.supported_permission_strings
-    if unsupported_permissions.any?
-      raise UnsupportedPermissionError, "Cannot grant '#{unsupported_permissions.join("', '")}' permission(s), they are not supported by the '#{application.name}' application"
-    end
-
     permission_record = self.permissions.find_by_application_id(application.id) || self.permissions.build(application_id: application.id)
     new_permissions = Set.new(permission_record.permissions || [])
     new_permissions += permissions

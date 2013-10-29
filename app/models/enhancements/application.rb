@@ -7,11 +7,13 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   attr_accessible :name, :description, :uid, :secret, :redirect_uri, :home_uri
 
   def self.default_permission_strings
+    # Excludes user_update_permission which is granted automatically when needed
+    # to the special SSO Push User
     ["signin"]
   end
 
   def supported_permission_strings
-    ["user_update_permission"] + self.class.default_permission_strings + supported_permissions.order(:name).map(&:name)
+    self.class.default_permission_strings + supported_permissions.order(:name).map(&:name)
   end
 
   def url_without_path
