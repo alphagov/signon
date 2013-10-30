@@ -15,7 +15,8 @@ class PermissionUpdater
   def self.updater
     Proc.new do |user, application|
       api = SSOPushClient.new(application)
-      api.update_user(user.uid, JSON.parse(user.to_sensible_json(application)))
+      presenter = UserOAuthPresenter.new(user, application)
+      api.update_user(user.uid, presenter.as_hash)
     end
   end
 
