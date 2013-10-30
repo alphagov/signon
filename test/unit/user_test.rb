@@ -12,22 +12,6 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "needs to be confirmed within 14 days, please request a new one", @user.errors[:email][0]
   end
 
-  # JSON Output
-
-  test "sensible json output" do
-    app1 = FactoryGirl.create(:application, name: "app1")
-    FactoryGirl.create(:permission, application: app1, user: @user, permissions: ["signin", "coughing"])
-    expected = {
-      "user" => {
-        "email" =>  @user.email,
-        "name" => @user.name,
-        "uid" => @user.uid,
-        "permissions" => ["signin", "coughing"]
-      }
-    }
-    assert_equal(expected, JSON.parse(@user.to_sensible_json(app1)) )
-  end
-
   # Attribute protection
 
   test "the role has to be specifically assigned" do

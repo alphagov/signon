@@ -20,7 +20,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
   end
 
   should "send a PUT to the related app with the user.json as in the OAuth exchange" do
-    expected_body = @user.to_sensible_json(@application)
+    expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
     request = stub_request(:put, url_for_app(@application)).with(body: expected_body)
     PermissionUpdater.new(@user, @user.permissions.map(&:application)).attempt
     assert_requested request
@@ -71,7 +71,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
 
   context "successful update" do
     should "record the last_synced_at timestamp on the permission" do
-      expected_body = @user.to_sensible_json(@application)
+      expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
 
       stub_request(:put, url_for_app(@application)).with(body: expected_body)
       PermissionUpdater.new(@user, @user.permissions.map(&:application)).attempt
@@ -81,7 +81,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
 
   context "failed update" do
     should "not record the last_synced_at timestamp on the permission" do
-      expected_body = @user.to_sensible_json(@application)
+      expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
 
       stub_request(:put, url_for_app(@application)).to_timeout
       PermissionUpdater.new(@user, @user.permissions.map(&:application)).attempt
