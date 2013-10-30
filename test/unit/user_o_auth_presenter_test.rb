@@ -8,12 +8,16 @@ class UserOAuthPresenterTest < ActiveSupport::TestCase
   should "generate JSON" do
     app = FactoryGirl.create(:application)
     FactoryGirl.create(:permission, application: app, user: @user, permissions: ["signin", "coughing"])
+    justice_league = FactoryGirl.create(:organisation, slug: "justice-league")
+    @user.organisations << justice_league
+
     expected = {
       user: {
         email:  @user.email,
         name: @user.name,
         uid: @user.uid,
-        permissions: ["signin", "coughing"]
+        permissions: ["signin", "coughing"],
+        organisations: ["justice-league"],
       }
     }
     presenter = UserOAuthPresenter.new(@user, app)
