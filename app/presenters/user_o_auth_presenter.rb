@@ -8,7 +8,8 @@ class UserOAuthPresenter < Struct.new(:user, :application)
         uid: user.uid,
         name: user.name,
         email: user.email,
-        permissions: permissions_strings
+        permissions: permissions_strings,
+        organisations: organisations_strings,
       }
     }
   end
@@ -16,5 +17,9 @@ class UserOAuthPresenter < Struct.new(:user, :application)
   def permissions_strings
     permission = user.permissions.where(application_id: application.id).first
     permission.nil? ? [] : permission.permissions
+  end
+
+  def organisations_strings
+    user.organisations.pluck(:slug)
   end
 end
