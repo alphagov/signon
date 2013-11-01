@@ -9,7 +9,7 @@ class UserOAuthPresenter < Struct.new(:user, :application)
         name: user.name,
         email: user.email,
         permissions: permissions_strings,
-        organisations: organisations_strings,
+        organisation: organisation_slug,
       }
     }
   end
@@ -19,7 +19,8 @@ class UserOAuthPresenter < Struct.new(:user, :application)
     permission.nil? ? [] : permission.permissions
   end
 
-  def organisations_strings
-    user.organisations.pluck(:slug)
+  def organisation_slug
+    organisation = user.organisation
+    organisation.nil? ? nil : organisation.slug
   end
 end

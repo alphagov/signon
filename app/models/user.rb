@@ -16,8 +16,8 @@ class User < ActiveRecord::Base
          :password_expirable
 
   attr_accessible :uid, :name, :email, :password, :password_confirmation
-  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, :organisation_ids, as: :admin
-  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, :organisation_ids, :role, as: :superadmin
+  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, :organisation_id, as: :admin
+  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, :organisation_id, :role, as: :superadmin
   attr_readonly :uid
 
   validates :name, presence: true
@@ -34,7 +34,7 @@ class User < ActiveRecord::Base
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
   has_many :permissions
   has_many :batch_invitations
-  has_and_belongs_to_many :organisations
+  belongs_to :organisation
 
   before_create :generate_uid
 

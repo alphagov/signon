@@ -47,16 +47,16 @@ class Admin::UsersControllerTest < ActionController::TestCase
     end
 
     context "when editing of user membership of organisations is enabled" do
-      should "show the organisations to which the user belongs" do
+      should "show the organisation to which the user belongs" do
         with_const_override(:DISABLE_MEMBERSHIP_EDITING, false) do
           user_in_org = FactoryGirl.create(:user_in_organisation)
-          org_with_user = user_in_org.organisations.first
+          org_with_user = user_in_org.organisation
           other_organisation = FactoryGirl.create(:organisation, abbreviation: 'ABBR')
 
           get :edit, id: user_in_org.id
 
-          assert_select "select[name='user[organisation_ids][]']" do
-            assert_select "option", count: 2
+          assert_select "select[name='user[organisation_id]']" do
+            assert_select "option", count: 3  # including 'None'
             assert_select "option[selected=selected]", count: 1
             assert_select "option[value=#{org_with_user.id}][selected=selected]", text: org_with_user.name_with_abbreviation
             assert_select "option[value=#{other_organisation.id}]", text: other_organisation.name_with_abbreviation
@@ -66,14 +66,14 @@ class Admin::UsersControllerTest < ActionController::TestCase
     end
 
     context "when editing of user membership of organisations is disabled" do
-      should "not show the organisations to which the user belongs" do
+      should "not show the organisation to which the user belongs" do
         with_const_override(:DISABLE_MEMBERSHIP_EDITING, true) do
           user = FactoryGirl.create(:user)
           organisation = FactoryGirl.create(:organisation)
 
           get :edit, id: user.id
 
-          assert_select "select[name='user[organisation_ids][]']", false
+          assert_select "select[name='user[organisation_id]']", false
           assert_select ".container" do
             assert_select "option", count: 0, text: organisation.name_with_abbreviation
           end
@@ -93,12 +93,13 @@ class Admin::UsersControllerTest < ActionController::TestCase
     end
 
     context "when editing of user membership of organisations is enabled" do
-      should "update the user's organisations" do
+      should "update the user's organisation" do
         with_const_override(:DISABLE_MEMBERSHIP_EDITING, false) do
           user = FactoryGirl.create(:user_in_organisation)
-          assert_equal 1, user.organisations.count
-          put :update, id: user.id, user: { organisation_ids: [] }
-          assert_equal 0, user.organisations.count
+
+          assert_not_nil user.organisation
+          put :update, id: user.id, user: { organisation_id: nil }
+          assert_nil user.reload.organisation
         end
       end
     end
