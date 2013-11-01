@@ -103,17 +103,6 @@ class Admin::UsersControllerTest < ActionController::TestCase
       end
     end
 
-    context "when editing of user membership of organisations is disabled" do
-      should "not update the user's organisations" do
-        with_const_override(:DISABLE_MEMBERSHIP_EDITING, true) do
-          user = FactoryGirl.create(:user_in_organisation)
-          assert_equal 1, user.organisations.count
-          put :update, id: user.id, user_organisation_ids: []
-          assert_equal 1, user.organisations.count
-        end
-      end
-    end
-
     should "redisplay the form if save fails" do
       another_user = FactoryGirl.create(:user)
       put :update, id: another_user.id, user: { name: "" }
