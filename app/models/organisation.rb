@@ -14,18 +14,4 @@ class Organisation < ActiveRecord::Base
       name
     end
   end
-
-  def web_url
-    root_url + '/government/organisations/' + slug
-  end
-
-private
-
-  def root_url
-    if Rails.env.development?
-      Plek.current.find('whitehall-admin')
-    else
-      Plek.current.find('www')
-    end
-  end
 end
