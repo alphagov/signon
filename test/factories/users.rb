@@ -18,20 +18,6 @@ FactoryGirl.define do
   end
 
   factory :user_in_organisation, parent: :user do
-    # Using `ignore` here lets us pass in an organisations_count and have that
-    # number of organisations created and the user made a member of all of them:
-    #
-    # FactoryGirl.create(:user_in_organisation, organisations_count: 5)
-    #
-    # `ignore` means that organisations_count is available as an attribute on
-    # the factory but is not set on the user instance, and it is only accessible
-    # in the callback from the evaluator.
-    ignore do
-      organisations_count 1
-    end
-
-    after_create do |user, evaluator|
-      FactoryGirl.create_list(:organisation, evaluator.organisations_count, users: [user])
-    end
+    association :organisation, factory: :organisation
   end
 end

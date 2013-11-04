@@ -30,7 +30,7 @@
 <% if current_user.has_role?("superadmin") %>
   <p>
     <%= f.label :role %>
-    <%= f.select :role, options_for_select(User.roles.to_a, f.object.role) %>
+    <%= f.select :role, options_for_select(User.roles.to_a, f.object.role), {}, class: "chzn-select" %>
     <span class="help-inline">
       Admins can create and edit normal users. Superadmins can create and edit all user types and edit applications.
     </span>
@@ -39,8 +39,8 @@
 
 <% unless DISABLE_MEMBERSHIP_EDITING %>
   <p>
-    <%= f.label :organisation_ids, "Organisations" %>
-    <%= f.select :organisation_ids, options_from_collection_for_select(Organisation.all, :id, :name_with_abbreviation, selected: f.object.organisation_ids), {}, { multiple: true, class: "chzn-select", "data-placeholder" => "Start typing to search for organisations" } %>
+    <%= f.label :organisation_id, "Organisation" %>
+    <%= f.select :organisation_id, options_from_collection_for_select(Organisation.all, :id, :name_with_abbreviation, selected: f.object.organisation_id), { include_blank: 'None' }, { class: "chzn-select" } %>
   </p>
 <% end %>
 

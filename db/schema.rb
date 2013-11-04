@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131023081914) do
+ActiveRecord::Schema.define(:version => 20131101160634) do
 
   create_table "batch_invitation_users", :force => true do |t|
     t.integer  "batch_invitation_id"
@@ -103,14 +103,6 @@ ActiveRecord::Schema.define(:version => 20131023081914) do
 
   add_index "organisations", ["slug"], :name => "index_organisations_on_slug", :unique => true
 
-  create_table "organisations_users", :force => true do |t|
-    t.integer "organisation_id"
-    t.integer "user_id"
-  end
-
-  add_index "organisations_users", ["organisation_id"], :name => "index_organisations_users_on_organisation_id"
-  add_index "organisations_users", ["user_id"], :name => "index_organisations_users_on_user_id"
-
   create_table "permissions", :force => true do |t|
     t.integer  "user_id"
     t.integer  "application_id"
@@ -165,11 +157,13 @@ ActiveRecord::Schema.define(:version => 20131023081914) do
     t.string   "unconfirmed_email"
     t.string   "role",                                 :default => "normal"
     t.datetime "password_changed_at"
+    t.integer  "organisation_id"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["invitation_token"], :name => "index_users_on_invitation_token"
   add_index "users", ["invited_by_id"], :name => "index_users_on_invited_by_id"
+  add_index "users", ["organisation_id"], :name => "index_users_on_organisation_id"
   add_index "users", ["reset_password_token"], :name => "index_users_on_reset_password_token", :unique => true
 
 end

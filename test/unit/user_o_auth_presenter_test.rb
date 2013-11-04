@@ -9,7 +9,7 @@ class UserOAuthPresenterTest < ActiveSupport::TestCase
     app = FactoryGirl.create(:application)
     FactoryGirl.create(:permission, application: app, user: @user, permissions: ["signin", "coughing"])
     justice_league = FactoryGirl.create(:organisation, slug: "justice-league")
-    @user.organisations << justice_league
+    @user.organisation = justice_league
 
     expected = {
       user: {
@@ -17,7 +17,7 @@ class UserOAuthPresenterTest < ActiveSupport::TestCase
         name: @user.name,
         uid: @user.uid,
         permissions: ["signin", "coughing"],
-        organisations: ["justice-league"],
+        organisation: "justice-league",
       }
     }
     presenter = UserOAuthPresenter.new(@user, app)
