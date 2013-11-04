@@ -8,7 +8,6 @@
           <th>Name</th>
           <th>Abbreviation</th>
           <th>Organisation Type</th>
-          <th>Homepage</th>
         </tr>
       </thead>
       <tbody>
@@ -17,7 +16,6 @@
             <td><%= organisation.name %></td>
             <td><%= organisation.abbreviation %></td>
             <td><%= organisation.organisation_type %></td>
-            <td><%= link_to organisation.web_url, organisation.web_url %></td>
           </tr>
         <% end %>
       </tbody>
