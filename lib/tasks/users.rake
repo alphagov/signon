@@ -8,6 +8,8 @@ namespace :users do
     end
 
     user = User.invite!(name: ENV['name'].dup, email: ENV['email'].dup)
+    permissions = ENV.fetch('permissions', '').split(',').uniq
+
     applications.each do |application|
       unsupported_permissions = permissions - application.supported_permission_strings
       if unsupported_permissions.any?
