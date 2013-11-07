@@ -11,7 +11,8 @@ Details of our interpretation of OAuth are provided in
 
 ## Usage
 
-The application has two rake tasks to create new users and client applications.
+The application has Rake tasks to create new users, client applications and API
+clients.
 
 To create a new client application to which Sign-on-o-Tron will provide sign-on
 services:
@@ -37,6 +38,26 @@ applications=Comma,Seperated,ListOf,Application,Names* \
 
 \* You can also set the applications in a comma separated list via an
 `ENV['APPLICATIONS']` variable if you prefer.
+
+You may also need to create an API client, so one application can identify
+itself to another. Say, for instance, you have an API that requires
+authentication and you need to configure a frontend to make requests of it.
+Assuming you have your application set up in Sign-on-o-tron under the name
+"Stuff API", you will need to run the following command:
+
+```sh
+rake api_clients:create["Stuff Frontend","stuff-contact-email@example.com","Stuff API","signin"]
+```
+
+(`signin` is the implicit default permission for all apps.)
+
+This command will give you an access token, which you can pass with requests to
+the API. If you are using [our API adapters][api-adapters], you can pass this in
+as the `bearer_token` argument. If not, you can set the HTTP header manually:
+
+    Authorization: Bearer abcdef1234…
+
+[api-adapters]: https://github.com/alphagov/gds-api-adapters
 
 ## Getting this working in development.
 
