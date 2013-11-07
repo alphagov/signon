@@ -53,7 +53,9 @@ rake api_clients:create["Stuff Frontend","stuff-contact-email@example.com","Stuf
 
 This command will give you an access token, which you can pass with requests to
 the API. If you are using [our API adapters][api-adapters], you can pass this in
-as the `bearer_token` argument.
+as the `bearer_token` argument. If not, you can set the HTTP header manually:
+
+    Authorization: Bearer abcdef1234…
 
 [api-adapters]: https://github.com/alphagov/gds-api-adapters
 
