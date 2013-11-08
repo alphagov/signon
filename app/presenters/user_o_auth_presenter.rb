@@ -9,7 +9,7 @@ class UserOAuthPresenter < Struct.new(:user, :application)
         name: user.name,
         email: user.email,
         permissions: permissions_strings,
-        organisation: organisation_slug,
+        organisation_slug: organisation_slug,
       }
     }
   end
