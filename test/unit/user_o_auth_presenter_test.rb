@@ -17,7 +17,7 @@ class UserOAuthPresenterTest < ActiveSupport::TestCase
         name: @user.name,
         uid: @user.uid,
         permissions: ["signin", "coughing"],
-        organisation: "justice-league",
+        organisation_slug: "justice-league",
       }
     }
     presenter = UserOAuthPresenter.new(@user, app)
