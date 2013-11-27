@@ -1,0 +1,34 @@
+#!/usr/bin/env ruby
+
+require 'mysql2'
+
+# Usage:
+# WHITEHALL_DB=whitehall_production import_user_organisation_membership_from_whitehall
+
+whitehall_db = ENV.fetch('WHITEHALL_DB', 'whitehall_development')
+whitehall_user = ENV.fetch('WHITEHALL_USER', 'whitehall')
+whitehall_password = ENV.fetch('WHITEHALL_PASSWORD', 'whitehall')
+whitehall_host = ENV.fetch('WHITEHALL_HOST', 'localhost')
+
+signon_db = ENV.fetch('SIGNON_DB', 'signonotron2_development')
+signon_user = ENV.fetch('SIGNON_USER', 'signonotron2')
+signon_password = ENV.fetch('SIGNON_PASSWORD', '')
+signon_host = ENV.fetch('SIGNON_HOST', 'localhost')
+
+whitehall = Mysql2::Client.new(host: whitehall_host, database: whitehall_db, username: whitehall_user, password: whitehall_password)
+signon = Mysql2::Client.new(host: signon_host, database: signon_db, username: signon_user, password: signon_password)
+
+signon_organisations = signon.query('SELECT id, slug FROM organisations').map.with_object({}) do |row, lookup_table|
+  lookup_table[row['slug']] = row['id']
+end
+
+puts 'Loading data from whitehall db'
+results = whitehall.query('SELECT users.uid, organisations.slug FROM users LEFT OUTER JOIN organisations ON users.organisation_id = organisations.id WHERE users.uid IS NOT NULL').map do |row|
+  [row['uid'], signon_organisations[row['slug']]]
+end
+
+puts 'Updating user records in signon db'
+results.each do |(uid, organisation_id)|
+  org_id = organisation_id.nil? ? 'NULL' : organisation_id.to_i
+  signon.query("UPDATE users SET organisation_id = #{org_id} WHERE uid = '#{signon.escape(uid)}'")
+end
