@@ -2,17 +2,6 @@
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'well', autocomplete: 'off' }) do |f| %>
 
-  <div class="alert alert-warning" style="color: black;">
-    <p>
-      If you haven't changed your passphrase since 8pm on Wednesday 6th March you must
-      <%= link_to "click here", new_password_path(:user) %>
-      to request a passphrase reset.
-    </p>
-    <p>
-      From 6th March we have changed the GOV.UK passphrase policy. You must now change your passphrase at least once every 90 days.
-    </p>
-  </div>
-
   <%= f.label :email %>
   <%= f.email_field :email, class: 'span6', autocomplete: 'off', autofocus: 'autofocus' %>
 

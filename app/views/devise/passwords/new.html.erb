@@ -2,15 +2,6 @@
 
 <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post, :class => 'well' }) do |f| %>
 
-  <div class="alert alert-warning" style="color: black;">
-    <p>
-      If you haven't changed your passphrase since 8pm on Wednesday 6th March you must enter your email below to request a passphrase reset.
-    </p>
-    <p>
-      From 6th March we have changed the GOV.UK passphrase policy. You must now change your passphrase at least once every 90 days.
-    </p>
-  </div>
-
   <%= devise_error_messages! %>
 
   <%= f.label :email %>
