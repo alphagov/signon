@@ -1,22 +1,40 @@
 #!/usr/bin/env ruby
 
 require 'mysql2'
+require 'yaml'
+require 'pp'
 
-# Usage:
-# WHITEHALL_DB=whitehall_production import_user_organisation_membership_from_whitehall
+def usage(message = nil)
+  puts "Usage: #{File.basename(__FILE__)} <path/to/signon/database.yml> <path/to/whitehall/database.yml>"
+  puts
+  puts "Imports all user organisations from whitehall database into signonotron"
+  puts
+  puts "RAILS_ENV: '#{ENV['RAILS_ENV']}'"
+  puts "\n#{message}" if message
+  exit(1)
+end
 
-whitehall_db = ENV.fetch('WHITEHALL_DB', 'whitehall_development')
-whitehall_user = ENV.fetch('WHITEHALL_USER', 'whitehall')
-whitehall_password = ENV.fetch('WHITEHALL_PASSWORD', 'whitehall')
-whitehall_host = ENV.fetch('WHITEHALL_HOST', 'localhost')
+def load_config_file(config_path)
+  raise "File '#{config_path}' not found" unless File.exist?(config_path)
+  string_keys = YAML.load_file(config_path)[ENV['RAILS_ENV']].select {|k,v| %w{host username password database}.include?(k)}
+  Hash[string_keys.map {|k,v| [k.to_sym, v]}]
+end
 
-signon_db = ENV.fetch('SIGNON_DB', 'signonotron2_development')
-signon_user = ENV.fetch('SIGNON_USER', 'signonotron2')
-signon_password = ENV.fetch('SIGNON_PASSWORD', '')
-signon_host = ENV.fetch('SIGNON_HOST', 'localhost')
+def connect_to_mysql(params)
+  puts "Connecting to database='#{params[:database]}' host='#{params[:host]}' username='#{params[:username]}'"
+  Mysql2::Client.new(params)
+end
 
-whitehall = Mysql2::Client.new(host: whitehall_host, database: whitehall_db, username: whitehall_user, password: whitehall_password)
-signon = Mysql2::Client.new(host: signon_host, database: signon_db, username: signon_user, password: signon_password)
+if ENV['RAILS_ENV'].to_s == ''
+  usage("ERROR: RAILS_ENV required")
+elsif ARGV.size != 2
+  usage
+else
+  signon_config, whitehall_config = ARGV.map { |path| load_config_file(path) }
+end
+
+signon = connect_to_mysql(signon_config)
+whitehall = connect_to_mysql(whitehall_config)
 
 signon_organisations = signon.query('SELECT id, slug FROM organisations').map.with_object({}) do |row, lookup_table|
   lookup_table[row['slug']] = row['id']
