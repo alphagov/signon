@@ -76,8 +76,8 @@ class NumbersCsvTest < ActiveSupport::TestCase
 
   test "csv contains counts by application access per organisation" do
     app = FactoryGirl.create(:application, name: "WhiteCloud")
-    FactoryGirl.create(:supported_permission, name: "write", application: app)
-    User.first.grant_permission(app, "write")
+    FactoryGirl.create(:supported_permission, name: "signin", application: app)
+    User.first.grant_permission(app, "signin")
 
     org = FactoryGirl.create(:organisation, name: "Ministry of Digital")
     org.users << User.first
