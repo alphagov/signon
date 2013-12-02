@@ -13,7 +13,7 @@ module Metrics
   end
 
   def accounts_count_by_application
-    User.joins(permissions: :application).count(group: Doorkeeper::Application.arel_table['name'])
+    User.joins(permissions: :application).where("permissions like '%signin%'").count(group: Doorkeeper::Application.arel_table['name'])
   end
 
   def accounts_count_by_organisation
@@ -33,7 +33,7 @@ module Metrics
 
   def accounts_count_by_application_per_organisation
     Organisation.all.inject([]) do |result, org|
-      User.joins(permissions: :application).where(organisation_id: org.id).count(group: Doorkeeper::Application.arel_table['name']).to_a.map do |counts|
+      User.joins(permissions: :application).where(organisation_id: org.id).where("permissions like '%signin%'").count(group: Doorkeeper::Application.arel_table['name']).to_a.map do |counts|
         result << [org.name, counts].flatten
       end
       result
