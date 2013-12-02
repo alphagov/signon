@@ -1,7 +1,7 @@
 require 'factory_girl'
 
 Given /^a user exists with email "([^"]*)" and passphrase "([^"]*)"$/ do |email, passphrase|
-  @user = FactoryGirl.create(:user, email: email, password: passphrase, password_confirmation: passphrase, name: email.split('@').first)
+  @user = FactoryGirl.create(:user, email: email, password: passphrase, password_confirmation: passphrase, name: email.split('@').first.titleize)
 end
 
 Given /^a signed\-in user exists with email "([^"]*)" and passphrase "([^"]*)"$/ do |email, passphrase|

@@ -11,7 +11,7 @@ Feature: Restrictions around signin
     Given a user exists with email "email@example.com" and passphrase "some passphrase with various $ymb0l$"
       And they have been locked out
       And a signed-in admin user
-    When I go to the list of users
+    When I go to the list of users beginning with E
     Then I should see a button to unlock account
 
     When I press the unlock button

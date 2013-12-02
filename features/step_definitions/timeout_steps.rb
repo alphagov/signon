@@ -6,6 +6,10 @@ When /^I go to the list of users$/ do
   visit admin_users_path
 end
 
+When /^I go to the list of users beginning with (.)$/ do |letter|
+  visit admin_users_path(:letter => letter)
+end
+
 Then /^I should see a button to unlock account$/ do
   assert page.find_button('Unlock'), "Can't find unlock button"
 end
