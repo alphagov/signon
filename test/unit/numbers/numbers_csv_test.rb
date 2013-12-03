@@ -56,16 +56,21 @@ class NumbersCsvTest < ActiveSupport::TestCase
     assert numbers_csv.include? ["Active accounts count by organisation", "None assigned", "3"]
   end
 
-  test "csv contains counts by days of inactivity" do
-    [7, 15].each_with_index {|days_count, i| User.all[i].update_attribute(:current_sign_in_at, days_count.days.ago) }
+  test "csv contains counts by days since last sign-in" do
+    all_users = User.all
+    [6.days.ago, 14.days.ago, 1.minute.ago].each_with_index {|time, i| all_users[i].update_attribute(:current_sign_in_at, time) }
 
     NumbersCsv.generate
 
-    assert numbers_csv.include? ["Active accounts count by days inactive", "7+", "2"]
-    assert numbers_csv.include? ["Active accounts count by days inactive", "15+", "1"]
-    assert numbers_csv.include? ["Active accounts count by days inactive", "30+", "0"]
-    assert numbers_csv.include? ["Active accounts count by days inactive", "60+", "0"]
-    assert numbers_csv.include? ["Active accounts count by days inactive", "90+", "0"]
+    assert numbers_csv.include? ["Accounts count by days since last sign in", "0 - 7", "2"]
+    assert numbers_csv.include? ["Accounts count by days since last sign in", "7 - 15", "1"]
+    assert numbers_csv.include? ["Accounts count by days since last sign in", "15 - 30", "0"]
+    assert numbers_csv.include? ["Accounts count by days since last sign in", "30 - 45", "0"]
+    assert numbers_csv.include? ["Accounts count by days since last sign in", "45 - 60", "0"]
+    assert numbers_csv.include? ["Accounts count by days since last sign in", "60 - 90", "0"]
+    assert numbers_csv.include? ["Accounts count by days since last sign in", "90 - 180", "0"]
+    assert numbers_csv.include? ["Accounts count by days since last sign in", "180 - 10000000", "0"]
+    assert numbers_csv.include? ["Accounts count by days since last sign in", "never signed in", "1"]
   end
 
   test "csv contains counts by email domain" do
