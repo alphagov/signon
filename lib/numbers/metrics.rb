@@ -33,6 +33,18 @@ module Metrics
     end + [["never signed in", User.active.where(current_sign_in_at: nil).count]]
   end
 
+  def accounts_count_how_often_user_has_signed_in
+    [0, 1, 2...5, 5...10, 10...25, 25...50, 50...100, 100...200, 200...10000000].inject([]) do |result, range_or_value|
+      if range_or_value.is_a?(Range)
+        range = range_or_value
+        result << ["#{range.first} - #{range.last}", User.active.where(sign_in_count: range.first...range.last).count]
+      else
+        result << ["#{range_or_value} time(s)", User.active.where(sign_in_count: range_or_value).count]
+      end
+      result 
+    end
+  end
+
   def active_accounts_count_by_email_domain
     User.active.count(group: "substring_index(email, '@', -1)")
   end
