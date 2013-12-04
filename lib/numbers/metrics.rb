@@ -22,7 +22,7 @@ module Metrics
 
   def active_admin_user_names
     ["admin", "superadmin"].collect do |role|
-      [role, User.active.where(role: role).pluck(:name).sort.join(", ")]
+      [role, User.active.where(role: role).map {|u| "#{u.name} <#{u.email}>" }.sort.join(", ")]
     end
   end
 

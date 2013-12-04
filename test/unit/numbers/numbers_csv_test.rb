@@ -37,13 +37,13 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   test "csv contains admin and superadmin user names" do
-    FactoryGirl.create(:admin_user, name: "Margaret", role: "superadmin")
-    FactoryGirl.create(:admin_user, name: "David", role: "admin")
+    FactoryGirl.create(:admin_user, email: "maggie@gov.uk", name: "Margaret", role: "superadmin")
+    FactoryGirl.create(:admin_user, email: "dave@gov.uk", name: "David", role: "admin")
 
     NumbersCsv.generate
 
-    assert numbers_csv.include? ["Active admin user names", "admin", "David, Winston"]
-    assert numbers_csv.include? ["Active admin user names", "superadmin", "Margaret"]
+    assert numbers_csv.include? ["Active admin user names", "admin", "David <dave@gov.uk>, Winston <admin_user@admin.example.com>"]
+    assert numbers_csv.include? ["Active admin user names", "superadmin", "Margaret <maggie@gov.uk>"]
   end
 
   test "csv contains counts by application access" do
