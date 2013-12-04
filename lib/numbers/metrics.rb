@@ -20,6 +20,12 @@ module Metrics
     User.active.joins(:organisation).count(group: Organisation.arel_table['name']).to_a << ['None assigned', User.where(organisation_id: nil).count]
   end
 
+  def active_admin_user_names
+    ["admin", "superadmin"].collect do |role|
+      [role, User.active.where(role: role).pluck(:name).sort.join(", ")]
+    end
+  end
+
   def accounts_count_by_days_since_last_sign_in
     [0...7, 7...15, 15...30, 30...45, 45...60, 60...90, 90...180, 180...10000000].inject([]) do |result, range|
       result << ["#{range.first} - #{range.last}", User.active.where(current_sign_in_at: range.last.days.ago...range.first.days.ago).count]
