@@ -4,7 +4,7 @@ require Rails.root + 'lib/numbers/numbers_csv'
 class NumbersCsvTest < ActiveSupport::TestCase
 
   def setup
-    FactoryGirl.create(:admin_user, email: 'admin_user@admin.example.com')
+    FactoryGirl.create(:admin_user, email: 'admin_user@admin.example.com', name: "Winston")
     FactoryGirl.create_list(:user, 3)
   end
 
@@ -34,6 +34,16 @@ class NumbersCsvTest < ActiveSupport::TestCase
     NumbersCsv.generate
     assert numbers_csv.include? ["Active accounts count by role", "admin", "1"]
     assert numbers_csv.include? ["Active accounts count by role", "normal", "3"]
+  end
+
+  test "csv contains admin and superadmin user names" do
+    FactoryGirl.create(:admin_user, email: "maggie@gov.uk", name: "Margaret", role: "superadmin")
+    FactoryGirl.create(:admin_user, email: "dave@gov.uk", name: "David", role: "admin")
+
+    NumbersCsv.generate
+
+    assert numbers_csv.include? ["Active admin user names", "admin", "David <dave@gov.uk>, Winston <admin_user@admin.example.com>"]
+    assert numbers_csv.include? ["Active admin user names", "superadmin", "Margaret <maggie@gov.uk>"]
   end
 
   test "csv contains counts by application access" do
