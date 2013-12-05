@@ -17,7 +17,7 @@ module Metrics
   end
 
   def active_accounts_count_by_organisation
-    User.active.joins(:organisation).count(group: Organisation.arel_table['name']).to_a << ['None assigned', User.where(organisation_id: nil).count]
+    User.active.joins(:organisation).count(group: Organisation.arel_table['name']).to_a << ['None assigned', User.active.where(organisation_id: nil).count]
   end
 
   def active_admin_user_names
