@@ -8,12 +8,15 @@ class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCas
   end
 
   context "GET index" do
-    should "render the form" do
+    should "render the permissions list" do
       app = FactoryGirl.create(:application, name: "My first app")
-      perm = FactoryGirl.create(:supported_permission, application_id: app.id, name: "permission1")
+      perm = FactoryGirl.create(:supported_permission, application_id: app.id, name: "permission1", delegatable: true)
+
       get :index, application_id: app.id
+
       assert_select "h1", /My first app/
-      assert_select "p[id='permissions']", /permission1/
+      assert_select "td[class=name]", /permission1/
+      assert_select "td[class=delegatable]", /Yes/
       assert_select "a[id='add']", true
       assert_select "a[id='cancel']", true
     end
@@ -25,17 +28,53 @@ class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCas
       perm = FactoryGirl.create(:supported_permission, application_id: app.id, name: "permission1")
       get :new, application_id: app.id
       assert_select "h1", /My first app/
-      assert_select "input[name='post[permission]']", true
+      assert_select "input[name='supported_permission[name]']", true
     end
   end
 
   context "POST create" do
+    should "show error if name is not provided and not create a permission" do
+      app = FactoryGirl.create(:application, name: "My first app")
+
+      post :create, application_id: app.id, supported_permission: { name: "" }
+
+      assert_select "ul[class='errors'] li", ERB::Util.html_escape("Name can't be blank")
+      assert_empty app.reload.supported_permissions
+     end
+
     should "create a new permission" do
       app = FactoryGirl.create(:application, name: "My first app")
-      post :create, application_id: app.id, post:{ permission: "permission1" }
+
+      post :create, application_id: app.id, supported_permission: { name: "permission1" }
+
       assert_redirected_to(:controller => "supported_permissions", :action => :index)
-      app.reload
-      assert_equal app.supported_permissions.first.name, "permission1"
+      assert_equal "Successfully added permission permission1 to My first app", flash[:notice]
+      assert_equal app.reload.supported_permissions.first.name, "permission1"
+     end
+  end
+
+  context "PUT update" do
+    should "show error if name is not provided and not edit the permission" do
+      app = FactoryGirl.create(:application, name: "My first app")
+      perm = FactoryGirl.create(:supported_permission, application_id: app.id,
+                                  name: "permission1", delegatable: true, created_at: 2.days.ago)
+
+      put :update, application_id: app.id, id: perm.id, supported_permission: { name: "", delegatable: false }
+
+      assert_select "ul[class='errors'] li", ERB::Util.html_escape("Name can't be blank")
+      assert_true perm.reload.delegatable
+     end
+
+    should "edit permission" do
+      app = FactoryGirl.create(:application, name: "My first app")
+      perm = FactoryGirl.create(:supported_permission, application_id: app.id,
+                                  name: "permission1", delegatable: true, created_at: 2.days.ago)
+
+      put :update, application_id: app.id, id: perm.id, supported_permission: { delegatable: false }
+
+      assert_redirected_to(:controller => "supported_permissions", :action => :index)
+      assert_equal "Successfully updated permission permission1", flash[:notice]
+      assert_false perm.reload.delegatable
      end
   end
 

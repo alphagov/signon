@@ -1,11 +1,3 @@
 <h1>Single Sign On Application Permissions for <%= @application.name %></h1>
 
-<div class="well">  
-  <%= form_for @post, :as => :post, :url => superadmin_application_supported_permissions_path do |f| %>
-    <p>
-      <label for="permission">New Permission name</label>
-      <%= f.text_field "permission" %> 
-    </p>
-    <%= submit_tag "Save", class: "btn btn-primary" %>
-  <% end %>
-</div>
+<%= render 'form' %>

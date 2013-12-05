@@ -1,10 +1,44 @@
 <h1>Single Sign On Application Permissions for <%= @application.name %></h1>
 
 <div class="well">
-  <h3>Permissions</h3>
-  <p id="permissions">
-    <%= @application.supported_permissions.map{|sp| sp.name}.join(", ") %>
-  </p>
-  <%= link_to "Add", new_superadmin_application_supported_permission_path , id: "add", class: "btn btn-primary"%>
-  <%= link_to "Cancel", edit_superadmin_application_path(@application) , id: "cancel", class: "btn"%>
+  <div class="row right">
+    <%= link_to "Create new permission", new_superadmin_application_supported_permission_path, id: "add", class: "btn btn-primary"%>
+    <%= link_to "Cancel", edit_superadmin_application_path(@application), id: "cancel", class: "btn"%>
+  </div>
+  <table class="table table-striped table-bordered top-buffer">
+    <thead>
+      <tr>
+        <th>
+          Permission name
+        </th>
+        <th>
+          Created
+        </th>
+        <th>
+          Can be delegated
+        </th>
+        <th>
+          Actions
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @application.supported_permissions.each do |supported_permission| %>
+        <tr>
+          <td class="name">
+            <%= link_to supported_permission.name, edit_superadmin_application_supported_permission_path(@application, supported_permission) %>
+          </td>
+          <td>
+            <%= supported_permission.created_at.strftime('%m/%d/%Y') %>
+          </td>
+          <td class="delegatable">
+            <%= supported_permission.delegatable? ? 'Yes' : 'No' %>
+          </td>
+          <td>
+            <%= link_to 'Edit', edit_superadmin_application_supported_permission_path(@application, supported_permission) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 </div>
