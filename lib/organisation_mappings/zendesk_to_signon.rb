@@ -3,10 +3,14 @@ module OrganisationMappings
     def self.apply
       OrganisationMappings.domain_names_to_organisations.each do |domain_names, organisation_name|
         organisation = Organisation.find_by_name(organisation_name)
-        User.
-          where(organisation_id: nil).
-          where("substring_index(email, '@', -1) IN (?)", domain_names).
-          update_all(organisation_id: organisation.id) if organisation
+        if organisation
+          User.
+            where(organisation_id: nil).
+            where("substring_index(email, '@', -1) IN (?)", domain_names).
+            update_all(organisation_id: organisation.id)
+        else
+          puts "Could not find organisation matching name '#{organisation_name}'"
+        end
       end
     end
   end

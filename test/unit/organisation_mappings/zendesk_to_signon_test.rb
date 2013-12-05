@@ -2,13 +2,19 @@ require 'test_helper'
 require Rails.root + 'lib/organisation_mappings/zendesk_to_signon'
 
 class OrganisationMappings::ZendeskToSignonTest < ActiveSupport::TestCase
+  def apply_mappings
+    silence_stream(STDOUT) do # to stop warnings about missing orgs from printing out during test execution
+      OrganisationMappings::ZendeskToSignon.apply
+    end
+  end
+
 
   test "assigns organisation to users who have recognised domain names" do
     co = FactoryGirl.create(:organisation, name: "Cabinet Office")
     user = FactoryGirl.create(:user, email: 'foo@digital.cabinet-office.gov.uk')
 
     assert_empty co.users
-    OrganisationMappings::ZendeskToSignon.apply
+    apply_mappings
     assert_equal co, user.reload.organisation
   end
 
@@ -16,7 +22,7 @@ class OrganisationMappings::ZendeskToSignonTest < ActiveSupport::TestCase
     co = FactoryGirl.create(:organisation, name: "Cabinet Office")
     user = FactoryGirl.create(:user, email: 'foo@mailinator.com')
 
-    OrganisationMappings::ZendeskToSignon.apply
+    apply_mappings
     assert_nil user.organisation
   end
 
@@ -25,7 +31,7 @@ class OrganisationMappings::ZendeskToSignonTest < ActiveSupport::TestCase
     co = FactoryGirl.create(:organisation, name: "Cabinet Office")
     co.users << (co_user = FactoryGirl.create(:user, email: 'someone.important@hmrc.gsi.gov.uk'))
 
-    OrganisationMappings::ZendeskToSignon.apply
+    apply_mappings
     assert_equal co, co_user.reload.organisation
   end
 
