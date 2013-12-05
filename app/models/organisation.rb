@@ -1,6 +1,8 @@
 # encoding = utf-8
 
 class Organisation < ActiveRecord::Base
+  has_ancestry
+
   has_many :users
 
   validates :slug, presence: true, uniqueness: true

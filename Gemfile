@@ -28,6 +28,7 @@ gem 'devise_security_extension', '0.7.2', git: "https://github.com/alphagov/devi
 gem 'passphrase_entropy', git: 'https://github.com/alphagov/passphrase_entropy.git'
 
 gem 'doorkeeper', '0.6.7'
+gem 'ancestry', '2.0.0'
 
 gem 'gds-api-adapters', '7.11.0'
 gem 'statsd-ruby', '1.0.0'
