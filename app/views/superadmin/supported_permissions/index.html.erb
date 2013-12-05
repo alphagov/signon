@@ -23,7 +23,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @application.supported_permissions.each do |supported_permission| %>
+      <% @application.sorted_supported_permissions.each do |supported_permission| %>
         <tr>
           <td class="name">
             <%= link_to supported_permission.name, edit_superadmin_application_supported_permission_path(@application, supported_permission) %>

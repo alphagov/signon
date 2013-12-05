@@ -16,6 +16,14 @@ class ::Doorkeeper::Application < ActiveRecord::Base
     self.class.default_permission_strings + supported_permissions.order(:name).map(&:name)
   end
 
+  def signin_permission
+    supported_permissions.where(name: ['signin', 'Signin'])
+  end
+
+  def sorted_supported_permissions
+    signin_permission + (supported_permissions.order(:name) - signin_permission)
+  end
+
   def url_without_path
     parsed_url = URI.parse(redirect_uri)
     url_without_path = "#{parsed_url.scheme}://#{parsed_url.host}:#{parsed_url.port}"
