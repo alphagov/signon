@@ -25,7 +25,7 @@ gem 'devise', '2.2.5'
 gem 'devise_invitable', '1.1.5'
 gem 'devise-encryptable', '0.1.1'
 gem 'devise_security_extension', '0.7.2', git: "https://github.com/alphagov/devise_security_extension.git", branch: "graceful_return_to_behaviour"
-gem 'passphrase_entropy', git: 'https://github.com/alphagov/passphrase_entropy.git'
+gem 'devise_zxcvbn', git: 'https://github.com/bitzesty/devise_zxcvbn.git', branch: "master", ref: "d9969f817616c63115b75e7751ee6e776af47858"
 
 gem 'doorkeeper', '0.6.7'
 gem 'ancestry', '2.0.0'

@@ -2,7 +2,7 @@ require 'test_helper'
 
 class UsersControllerTest < ActionController::TestCase
   def change_user_password(user_factory, new_password)
-    original_password = "I am a very original password. Refrigerator weevil."
+    original_password = "proconsuls1102&sparkling"
     user = create(user_factory, password: original_password)
     original_password_hash = user.encrypted_password
     sign_in user
@@ -20,7 +20,7 @@ class UsersControllerTest < ActionController::TestCase
 
   context "PUT update_passphrase" do
     should "changing passwords to something strong should succeed" do
-      user, orig_password = change_user_password(:user, 'a new strong p4ssw0rd')
+      user, orig_password = change_user_password(:user, 'destabilizers842}orthophosphate')
 
       assert_equal "302", response.code
       assert_equal root_url, response.location
