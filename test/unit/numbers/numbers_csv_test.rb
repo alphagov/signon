@@ -83,6 +83,23 @@ class NumbersCsvTest < ActiveSupport::TestCase
     assert numbers_csv.include? ["Accounts count by days since last sign in", "never signed in", "1"]
   end
 
+  test "csv contains counts by how often users have signed in" do
+    all_users = User.all
+    [0, 1, 2, 123].each_with_index {|count, i| all_users[i].update_attribute(:sign_in_count, count) }
+
+    NumbersCsv.generate
+
+    assert numbers_csv.include? ["Accounts count how often user has signed in", "0 time(s)", "1"]
+    assert numbers_csv.include? ["Accounts count how often user has signed in", "1 time(s)", "1"]
+    assert numbers_csv.include? ["Accounts count how often user has signed in", "2 - 5", "1"]
+    assert numbers_csv.include? ["Accounts count how often user has signed in", "5 - 10", "0"]
+    assert numbers_csv.include? ["Accounts count how often user has signed in", "10 - 25", "0"]
+    assert numbers_csv.include? ["Accounts count how often user has signed in", "25 - 50", "0"]
+    assert numbers_csv.include? ["Accounts count how often user has signed in", "50 - 100", "0"]
+    assert numbers_csv.include? ["Accounts count how often user has signed in", "100 - 200", "1"]
+    assert numbers_csv.include? ["Accounts count how often user has signed in", "200 - 10000000", "0"]
+  end
+
   test "csv contains counts by email domain" do
     NumbersCsv.generate
     assert numbers_csv.include? ["Active accounts count by email domain", "admin.example.com", "1"]
