@@ -21,7 +21,11 @@
     <hr class="grey">
     <div class="row">
       <div class="span6">
-        <%= f.text_field :name, placeholder: t('supported_permissions.form.placeholder.name') %>
+        <% if f.object.name.try(:downcase) == 'signin' %>
+          <%= f.object.name %>
+        <% else %>
+          <%= f.text_field :name, placeholder: t('supported_permissions.form.placeholder.name') %>
+        <% end %>
       </div>
       <div class="span4">
         <%= f.check_box :delegatable %>
