@@ -12,10 +12,10 @@
   <%= form_for [:superadmin, @application, @supported_permission] do |f| %>
     <div class="row">
       <div class="span6">
-        <%= f.label :name, 'Permission name', class: 'bold' %>
+        <%= f.label :name, 'Permission name' %>
       </div>
       <div class="span4">
-        <%= f.label :delegatable, t('supported_permissions.form.delegatable'), class: 'bold' %>
+        <%= f.label :delegatable, t('supported_permissions.form.delegatable') %>
       </div>
     </div>
     <hr class="grey">
