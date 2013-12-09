@@ -34,7 +34,7 @@ module OrganisationMappings
       "thepensionservice.gsi.gov.uk",
       "jobcentreplus.gsi.gov.uk",
       "csa.gsi.gov.uk",
-      "childmaintenance.gsi.gov.uk"]=>"Department for Work and Pensions",
+      "childmaintenance.gsi.gov.uk"]=>"Department for Work & Pensions",
      ["dsa.gsi.gov.uk"]=>"Driving Standards Agency",
      ["dvla.gsi.gov.uk"]=>"Driver and Vehicle Licensing Agency",
      ["fco.gsi.gov.uk", "fco.gov.uk", "digital.fco.gov.uk"]=>
