@@ -8,6 +8,12 @@ class OrganisationTest < ActiveSupport::TestCase
     @organisation = FactoryGirl.create(:organisation)
   end
 
+  test "organisation has ancestry" do
+    assert_nothing_raised do
+      Organisation.new.ancestors
+    end
+  end
+
   test "creating a new organisation using an existing slug should raise an exception" do
     assert_raises ActiveRecord::RecordInvalid do
       FactoryGirl.create(:organisation, slug: @organisation.slug)
