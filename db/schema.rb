@@ -123,7 +123,6 @@ ActiveRecord::Schema.define(:version => 20131205160534) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "delegatable",    :default => false
   end
 
   add_index "supported_permissions", ["application_id", "name"], :name => "index_supported_permissions_on_application_id_and_name", :unique => true

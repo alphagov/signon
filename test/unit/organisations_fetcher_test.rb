@@ -5,7 +5,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
   include GdsApi::TestHelpers::Organisations
 
   test "it creates new organisations when none exist" do
-    organisation_slugs = %w(ministry-of-fun, tea-agency)
+    organisation_slugs = %w(ministry-of-fun tea-agency)
     organisations_api_has_organisations(organisation_slugs)
     assert_equal(0, Organisation.count)
 
@@ -29,6 +29,19 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
 
     assert_equal(1, Organisation.count)
     assert_equal('Ministry Of Fun', Organisation.find_by_slug(slug).name)
+  end
+
+  test "it updates the child organisation with information about it's parent" do
+    slug = 'ministry-of-fun'
+    fun = FactoryGirl.create(:organisation, name: 'Ministry of Fun', slug: slug)
+    child_slug = 'ministry-of-fun-child-1' # hard-coded in gds_api_adapters
+    movies = FactoryGirl.create(:organisation, name: 'Ministry of Movies', slug: child_slug)
+
+    organisations_api_has_organisations([slug])
+
+    OrganisationsFetcher.new.call
+
+    assert_equal [movies], fun.children
   end
 
   test "it saves values which are not validated for presence, when they are present in the data" do
