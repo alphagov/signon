@@ -10,7 +10,7 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
   end
 
   should "disallow access to non-admins" do
-    @user.update_column(:role, nil)
+    @user.update_column(:role, 'normal')
     get :new
     assert_redirected_to root_path
   end

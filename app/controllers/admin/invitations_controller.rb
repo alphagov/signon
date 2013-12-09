@@ -42,7 +42,7 @@ class Admin::InvitationsController < Devise::InvitationsController
   private
 
     def must_be_admin
-      if ! current_user.has_role?("admin")
+      if ! current_user.role? :admin
         flash[:alert] = "You must be an admin to do admin things."
         redirect_to root_path
       end

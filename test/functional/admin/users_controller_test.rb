@@ -211,7 +211,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
   end
 
   should "disallow access to non-admins" do
-    @user.update_column(:role, nil)
+    @user.update_column(:role, 'normal')
     get :index
     assert_redirected_to root_path
   end

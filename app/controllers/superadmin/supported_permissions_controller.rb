@@ -1,4 +1,8 @@
-class Superadmin::SupportedPermissionsController < Superadmin::BaseController
+class Superadmin::SupportedPermissionsController < ApplicationController
+  before_filter :authenticate_user!
+  load_and_authorize_resource :application, class: "Doorkeeper::Application"
+  load_and_authorize_resource :supported_permission, through: :application, class: "Doorkeeper::Application"
+
   respond_to :html
 
   before_filter :load_application
