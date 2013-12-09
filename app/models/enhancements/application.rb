@@ -17,11 +17,11 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   end
 
   def signin_permission
-    supported_permissions.where(name: ['signin', 'Signin'])
+    supported_permissions.where(name: ['signin', 'Signin']).first
   end
 
   def sorted_supported_permissions
-    signin_permission + (supported_permissions.order(:name) - signin_permission)
+    ([signin_permission] + (supported_permissions.order(:name) - [signin_permission])).compact
   end
 
   def url_without_path
