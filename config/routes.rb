@@ -1,11 +1,11 @@
 Signonotron2::Application.routes.draw do
   use_doorkeeper
 
-  devise_for :users, :controllers => { 
+  devise_for :users, :controllers => {
     :invitations => 'admin/invitations',
     :passwords => 'passwords',
     :confirmations => 'confirmations'
-  } 
+  }
 
   devise_scope :user do
     post "/users/invitation/resend/:id" => "admin/invitations#resend", :as => "resend_user_invitation"
@@ -39,7 +39,7 @@ Signonotron2::Application.routes.draw do
 
   namespace :superadmin do
     resources :applications, only: [:index, :edit, :update] do
-      resources :supported_permissions, only: [:index, :new, :create]
+      resources :supported_permissions, only: [:index, :new, :create, :edit, :update]
     end
   end
 

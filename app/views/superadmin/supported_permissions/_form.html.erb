@@ -1,0 +1,41 @@
+<%- unless @supported_permission.errors.empty? -%>
+  <div class="alert alert-danger top-buffer">
+    <ul class="errors">
+      <%- @supported_permission.errors.full_messages.each do |msg| -%>
+      <li><%= msg %></li>
+      <%- end -%>
+    </ul>
+  </div>
+<%- end -%>
+
+<div class="well">
+  <%= form_for [:superadmin, @application, @supported_permission] do |f| %>
+    <div class="row">
+      <div class="span6">
+        <%= f.label :name, 'Permission name' %>
+      </div>
+      <div class="span4">
+        <%= f.label :delegatable, t('supported_permissions.form.delegatable') %>
+      </div>
+    </div>
+    <hr class="grey">
+    <div class="row">
+      <div class="span6">
+        <% if f.object.name.try(:downcase) == 'signin' %>
+          <%= f.object.name %>
+        <% else %>
+          <%= f.text_field :name, placeholder: t('supported_permissions.form.placeholder.name') %>
+        <% end %>
+      </div>
+      <div class="span4">
+        <%= f.check_box :delegatable %>
+      </div>
+    </div>
+    <div class="row top-buffer">
+      <div class="span3">
+        <%= f.submit "Save", class: "btn btn-primary" %>
+        <%= link_to "Cancel", superadmin_application_supported_permissions_path(@application), class: "btn" %>
+      </div>
+    </div>
+  <% end %>
+</div>

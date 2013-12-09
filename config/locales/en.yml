@@ -21,3 +21,9 @@ en:
     edit:
       change_passphrase: "Change your passphrase"
       change: "Change passphrase"
+
+  supported_permissions:
+    form:
+      delegatable: 'Can be delegated'
+      placeholder:
+        name: 'Name of application permission'
