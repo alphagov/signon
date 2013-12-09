@@ -105,18 +105,4 @@ class NumbersCsvTest < ActiveSupport::TestCase
     assert numbers_csv.include? ["Active accounts count by email domain", "admin.example.com", "1"]
     assert numbers_csv.include? ["Active accounts count by email domain", "example.com", "3"]
   end
-
-  test "csv contains counts by application access per organisation" do
-    app = FactoryGirl.create(:application, name: "WhiteCloud")
-    FactoryGirl.create(:supported_permission, name: "signin", application: app)
-    User.first.grant_permission(app, "signin")
-
-    org = FactoryGirl.create(:organisation, name: "Ministry of Digital")
-    org.users << User.first
-
-    NumbersCsv.generate
-
-    assert numbers_csv.include? ["Active accounts count by application per organisation", "Ministry of Digital", "WhiteCloud", "1"]
-  end
-
 end

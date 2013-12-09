@@ -48,13 +48,4 @@ module Metrics
   def active_accounts_count_by_email_domain
     User.active.count(group: "substring_index(email, '@', -1)")
   end
-
-  def active_accounts_count_by_application_per_organisation
-    Organisation.all.inject([]) do |result, org|
-      User.active.joins(permissions: :application).where(organisation_id: org.id).where("permissions like '%signin%'").count(group: Doorkeeper::Application.arel_table['name']).to_a.map do |counts|
-        result << [org.name, counts].flatten
-      end
-      result
-    end
-  end
 end
