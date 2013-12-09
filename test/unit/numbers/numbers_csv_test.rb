@@ -1,11 +1,12 @@
 require 'test_helper'
-require Rails.root + 'lib/numbers/numbers_csv'
+require 'numbers/numbers_csv'
 
 class NumbersCsvTest < ActiveSupport::TestCase
+  include FactoryGirl::Syntax::Methods
 
   def setup
-    FactoryGirl.create(:admin_user, email: 'admin_user@admin.example.com', name: "Winston")
-    FactoryGirl.create_list(:user, 3)
+    create(:admin_user, email: 'admin_user@admin.example.com', name: "Winston")
+    create_list(:user, 3)
   end
 
   def teardown
@@ -37,8 +38,8 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   test "csv contains admin and superadmin user names" do
-    FactoryGirl.create(:admin_user, email: "maggie@gov.uk", name: "Margaret", role: "superadmin")
-    FactoryGirl.create(:admin_user, email: "dave@gov.uk", name: "David", role: "admin")
+    create(:admin_user, email: "maggie@gov.uk", name: "Margaret", role: "superadmin")
+    create(:admin_user, email: "dave@gov.uk", name: "David", role: "admin")
 
     NumbersCsv.generate
 
@@ -47,8 +48,8 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   test "csv contains counts by application access" do
-    app = FactoryGirl.create(:application, name: "WhiteCloud")
-    FactoryGirl.create(:supported_permission, name: "signin", application: app)
+    app = create(:application, name: "WhiteCloud")
+    create(:supported_permission, name: "signin", application: app)
     User.first.grant_permission(app, "signin")
 
     NumbersCsv.generate
@@ -57,7 +58,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   test "csv contains counts by organisation" do
-    org = FactoryGirl.create(:organisation, name: "Ministry of Digital")
+    org = create(:organisation, name: "Ministry of Digital")
     org.users << User.first
 
     NumbersCsv.generate
