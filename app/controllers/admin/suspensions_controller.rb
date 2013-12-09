@@ -1,10 +1,9 @@
-class Admin::SuspensionsController < Admin::BaseController
-  before_filter :set_user
+class Admin::SuspensionsController < ApplicationController
+  before_filter :authenticate_user!, :set_user
+
+  authorize_resource :user
 
   respond_to :html
-
-  def edit
-  end
 
   def update
     if params[:user][:suspended] == "1"
@@ -23,8 +22,10 @@ class Admin::SuspensionsController < Admin::BaseController
     end
   end
 
-  private
-    def set_user
-      @user = User.find(params[:id])
-    end
+private
+
+  def set_user
+    @user = User.find(params[:id])
+  end
+
 end

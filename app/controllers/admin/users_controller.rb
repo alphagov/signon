@@ -1,9 +1,11 @@
-class Admin::UsersController < Admin::BaseController
+class Admin::UsersController < ApplicationController
   include UserPermissionsControllerMethods
+  before_filter :authenticate_user!
+  load_and_authorize_resource
+
   helper_method :applications_and_permissions
 
   respond_to :html
-  before_filter :set_user, only: [:edit, :update, :unlock, :resend_email_change, :cancel_email_change]
 
   def index
     if params[:filter]
@@ -58,8 +60,4 @@ class Admin::UsersController < Admin::BaseController
     redirect_to edit_admin_user_path(@user)
   end
 
-  private
-    def set_user
-      @user = User.find(params[:id])
-    end
 end

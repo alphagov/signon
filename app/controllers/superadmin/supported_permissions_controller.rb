@@ -5,8 +5,6 @@ class Superadmin::SupportedPermissionsController < ApplicationController
 
   respond_to :html
 
-  before_filter :load_application
-
   def new
     @supported_permission = @application.supported_permissions.build
   end
@@ -36,10 +34,6 @@ class Superadmin::SupportedPermissionsController < ApplicationController
   end
 
 private
-
-  def load_application
-    @application = ::Doorkeeper::Application.find(params[:application_id])
-  end
 
   def supported_permission_parameters
     params[:supported_permission].slice(:name, :delegatable)

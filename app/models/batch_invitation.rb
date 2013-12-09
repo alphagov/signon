@@ -4,6 +4,8 @@ class BatchInvitation < ActiveRecord::Base
 
   serialize :applications_and_permissions, Hash
 
+  attr_accessor :user_names_and_emails
+
   validates :outcome, inclusion: { :in => [nil, "success", "fail"] }
   validates :user_id, presence: true
 

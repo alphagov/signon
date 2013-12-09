@@ -1,10 +1,11 @@
 # https://raw.github.com/scambra/devise_invitable/master/app/controllers/devise/invitations_controller.rb
 class Admin::InvitationsController < Devise::InvitationsController
   include UserPermissionsControllerMethods
-  helper_method :applications_and_permissions
-
   before_filter :authenticate_user!
-  before_filter :must_be_admin, only: [:new, :create]
+
+  authorize_resource class: 'User', only: [:new, :create, :resend]
+
+  helper_method :applications_and_permissions
 
   rescue_from AWS::SES::ResponseError do |exception|
     if exception.message =~ /Address blacklisted/i
@@ -40,13 +41,6 @@ class Admin::InvitationsController < Devise::InvitationsController
   end
 
   private
-
-    def must_be_admin
-      if ! current_user.role? :admin
-        flash[:alert] = "You must be an admin to do admin things."
-        redirect_to root_path
-      end
-    end
 
     def after_invite_path_for(resource)
       admin_users_path

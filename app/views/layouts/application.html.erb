@@ -17,7 +17,7 @@
           <nav role="navigation" class="nav-collapse">
             <ul class="nav">
               <%= nav_link 'Dashboard', root_path %>
-              <% if current_user.role? :admin %>
+              <% if can? :update, User %>
                 <%= nav_link 'Administer users', admin_users_path %>
               <% end %>
               <% if can? :read, Doorkeeper::Application %>
