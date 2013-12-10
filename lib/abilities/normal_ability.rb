@@ -3,6 +3,6 @@ class NormalAbility
 
   def initialize(user)
     can [:read, :update], User, id: user.id
-    cannot [:index], User
+    cannot [:index, :invite!], User
   end
 end

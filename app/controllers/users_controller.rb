@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_filter :authenticate_user!, :except => :show
   doorkeeper_for :show
 
-  # TODO - rule coming up in a separate commit
+  # it's okay for current_user to modify own attributes
   skip_authorization_check
 
   def show
@@ -13,9 +13,6 @@ class UsersController < ApplicationController
         render json: presenter.as_hash.to_json
       end
     end
-  end
-
-  def edit
   end
 
   def update

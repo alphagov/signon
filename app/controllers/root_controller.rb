@@ -1,8 +1,6 @@
 class RootController < ApplicationController
   include UserPermissionsControllerMethods
   before_filter :authenticate_user!
-
-  # TODO - rule coming up in a separate commit
   skip_authorization_check
 
   def index
