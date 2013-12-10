@@ -1,5 +1,6 @@
 class Admin::SuspensionsController < ApplicationController
-  before_filter :authenticate_user!, :set_user
+  before_filter :authenticate_user!
+  before_filter :set_user
 
   authorize_resource :user
 

@@ -2,8 +2,7 @@
 class Admin::InvitationsController < Devise::InvitationsController
   include UserPermissionsControllerMethods
   before_filter :authenticate_user!
-
-  authorize_resource class: 'User', only: [:new, :create, :resend]
+  before_filter :must_be_admin, only: [:new, :create, :resend]
 
   helper_method :applications_and_permissions
 
@@ -45,4 +44,9 @@ class Admin::InvitationsController < Devise::InvitationsController
     def after_invite_path_for(resource)
       admin_users_path
     end
+
+    def must_be_admin
+      redirect_to root_path unless current_user.role? :admin
+    end
+
 end

@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  check_authorization :unless => :devise_controller?
+  check_authorization unless: :devise_controller?
 
   before_filter do
     headers['X-Frame-Options'] = 'SAMEORIGIN'
@@ -16,5 +16,9 @@ class ApplicationController < ActionController::Base
 
   def current_resource_owner
     User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
+  end
+
+  def current_ability
+    "#{current_user.role}_ability".classify.constantize.new(current_user) if current_user
   end
 end
