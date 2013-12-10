@@ -7,7 +7,7 @@
     <li><%= link_to "Sign out", destroy_user_session_path %></li>
   </ul>
 
-  <% if current_user.role? :admin %>
+  <% if can? :perform_admin_tasks, User %>
     <h2>Admin tasks</h2>
     <ul>
       <li><%= link_to "View Organisations", admin_organisations_path %></li>

@@ -6,6 +6,6 @@ class AdminAbility
 
     can [:read], Organisation
     can [:read, :create], BatchInvitation
-    can [:read, :create, :update, :unlock, :invite!, :resend_email_change, :cancel_email_change], User
+    can [:read, :create, :update, :unlock, :invite!, :resend_email_change, :cancel_email_change, :perform_admin_tasks], User
   end
 end
