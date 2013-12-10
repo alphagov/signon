@@ -13,5 +13,6 @@ class Ability
       can [:read, :create], BatchInvitation
       can [:read, :create, :update, :unlock, :resend, :cancel_email_change, :resend_email_change], User
     end
+
   end
 end

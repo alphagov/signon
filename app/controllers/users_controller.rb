@@ -2,6 +2,9 @@ class UsersController < ApplicationController
   before_filter :authenticate_user!, :except => :show
   doorkeeper_for :show
 
+  # TODO - rule coming up in a separate commit
+  skip_authorization_check
+
   def show
     relevant_permission.synced! if relevant_permission
     respond_to do |format|
