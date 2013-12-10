@@ -18,7 +18,8 @@ class Metrics
   end
 
   def active_accounts_count_by_application
-    User.active.joins(permissions: :application).where("permissions like '%signin%'").count(group: Doorkeeper::Application.arel_table['name'])
+    enabled_applications_for_each_user = all_active.map {|u| u.permissions.select {|p| p.permissions.include?("signin") }.map {|p| p.application.name } }.flatten
+    count_values(enabled_applications_for_each_user.group_by(&:to_s))
   end
 
   def active_accounts_count_by_organisation

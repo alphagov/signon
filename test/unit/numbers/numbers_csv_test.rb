@@ -1,15 +1,17 @@
 require 'test_helper'
-require Rails.root + 'lib/numbers/numbers_csv'
+require 'numbers/numbers_csv'
+require 'numbers/user_segments'
 
 class NumbersCsvTest < ActiveSupport::TestCase
+  include FactoryGirl::Syntax::Methods
 
   def setup
-    FactoryGirl.create(:admin_user, email: 'admin_user@admin.example.com', name: "Winston")
-    FactoryGirl.create_list(:user, 3)
+    create(:admin_user, email: 'admin_user@admin.example.com', name: "Winston")
+    create_list(:user, 3)
   end
 
   def teardown
-    `rm ./numbers.csv`
+    `rm ./numbers.csv` if File.exist?("./numbers.csv")
   end
 
   def numbers_csv
@@ -37,8 +39,8 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   test "csv contains admin and superadmin user names" do
-    FactoryGirl.create(:admin_user, email: "maggie@gov.uk", name: "Margaret", role: "superadmin")
-    FactoryGirl.create(:admin_user, email: "dave@gov.uk", name: "David", role: "admin")
+    create(:admin_user, email: "maggie@gov.uk", name: "Margaret", role: "superadmin")
+    create(:admin_user, email: "dave@gov.uk", name: "David", role: "admin")
 
     NumbersCsv.generate
 
@@ -47,8 +49,8 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   test "csv contains counts by application access" do
-    app = FactoryGirl.create(:application, name: "WhiteCloud")
-    FactoryGirl.create(:supported_permission, name: "signin", application: app)
+    app = create(:application, name: "WhiteCloud")
+    create(:supported_permission, name: "signin", application: app)
     User.first.grant_permission(app, "signin")
 
     NumbersCsv.generate
@@ -57,7 +59,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   test "csv contains counts by organisation" do
-    org = FactoryGirl.create(:organisation, name: "Ministry of Digital")
+    org = create(:organisation, name: "Ministry of Digital")
     org.users << User.first
 
     NumbersCsv.generate
@@ -104,5 +106,26 @@ class NumbersCsvTest < ActiveSupport::TestCase
     NumbersCsv.generate
     assert numbers_csv.include? ["Active accounts count by email domain", "admin.example.com", "1"]
     assert numbers_csv.include? ["Active accounts count by email domain", "example.com", "3"]
+  end
+
+  test "licensing segmenting" do
+    licensing = create(:application, name: "Licensing")
+    create(:supported_permission, name: "signin", application: licensing)
+    another_app = create(:application, name: "Another app")
+    create(:supported_permission, name: "signin", application: another_app)
+
+    users = create_list(:user, 4)
+    users[0].grant_permission(licensing, "signin")
+
+    users[1].grant_permission(licensing, "signin")
+    users[1].grant_permission(another_app, "signin")
+
+    users[2].grant_permission(licensing, "another perm")
+
+    users.each { |u| u.extend(UserSegments::UserSegmentExtensions) }
+
+    assert users[0].licensing_user?
+    assert !users[1].licensing_user?
+    assert !users[2].licensing_user?
   end
 end
