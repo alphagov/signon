@@ -122,7 +122,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
 
     users[2].grant_permission(licensing, "another perm")
 
-    users.each { |u| u.extend(UserSegments::UserSegmentExtensions) }
+    users.each { |u| u.extend(UserSegments::SegmentExtensions) }
 
     assert users[0].licensing_user?
     assert !users[1].licensing_user?
