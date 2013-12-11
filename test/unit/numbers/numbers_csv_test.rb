@@ -11,7 +11,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   def teardown
-    `rm ./numbers.csv` if File.exist?("./numbers.csv")
+    Dir["numbers*.csv"].each { |file| File.delete(file) }
   end
 
   def numbers_csv
