@@ -1,7 +1,9 @@
-class Superadmin::SupportedPermissionsController < Superadmin::BaseController
-  respond_to :html
+class Superadmin::SupportedPermissionsController < ApplicationController
+  before_filter :authenticate_user!
+  load_and_authorize_resource :application, class: "Doorkeeper::Application"
+  load_and_authorize_resource :supported_permission, through: :application, class: "Doorkeeper::Application"
 
-  before_filter :load_application
+  respond_to :html
 
   def new
     @supported_permission = @application.supported_permissions.build
@@ -32,10 +34,6 @@ class Superadmin::SupportedPermissionsController < Superadmin::BaseController
   end
 
 private
-
-  def load_application
-    @application = ::Doorkeeper::Application.find(params[:application_id])
-  end
 
   def supported_permission_parameters
     params[:supported_permission].slice(:name, :delegatable)

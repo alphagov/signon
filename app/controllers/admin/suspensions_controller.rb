@@ -1,15 +1,15 @@
-class Admin::SuspensionsController < Admin::BaseController
-  before_filter :set_user
+class Admin::SuspensionsController < ApplicationController
+  before_filter :authenticate_user!
+  load_and_authorize_resource :user, parent: false
 
   respond_to :html
 
-  def edit
-  end
-
   def update
     if params[:user][:suspended] == "1"
+      authorize! :suspend, @user
       succeeded = @user.suspend(params[:user][:reason_for_suspension])
     else
+      authorize! :unsuspend, @user
       succeeded = @user.unsuspend
     end
 
@@ -23,8 +23,4 @@ class Admin::SuspensionsController < Admin::BaseController
     end
   end
 
-  private
-    def set_user
-      @user = User.find(params[:id])
-    end
 end

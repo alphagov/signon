@@ -16,20 +16,21 @@ class User < ActiveRecord::Base
          :password_expirable
 
   attr_accessible :uid, :name, :email, :password, :password_confirmation
-  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, :organisation_id, as: :admin
-  attr_accessible :uid, :name, :email, :password, :password_confirmation, :permissions_attributes, :organisation_id, :role, as: :superadmin
+  attr_accessible :uid, :name, :email, :password, :password_confirmation,
+                    :permissions_attributes, :organisation_id, :unconfirmed_email, :confirmation_token, as: :admin
+  attr_accessible :uid, :name, :email, :password, :password_confirmation,
+                    :permissions_attributes, :organisation_id, :role, as: :superadmin
   attr_readonly :uid
 
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
-  def self.roles
-    {
-      "Normal user" => "normal",
-      "Admin" => "admin",
-      "Superadmin" => "superadmin"
-    }
+
+  ROLES = %w[normal admin superadmin]
+  def role?(base_role)
+    # each role can do everything that the previous role can do
+    ROLES.index(base_role.to_s) <= ROLES.index(role)
   end
-  validates :role, inclusion: { in: roles.values }
+  validates :role, inclusion: { in: ROLES }
 
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
   has_many :permissions
@@ -71,14 +72,6 @@ class User < ActiveRecord::Base
   # Required for devise_invitable to set role and permissions
   def self.inviter_role(inviter)
     inviter.nil? ? :default : inviter.role.to_sym
-  end
-
-  def has_role?(possible)
-    if role == "superadmin"
-      true
-    else
-      role == possible
-    end
   end
 
   def invite!

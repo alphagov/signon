@@ -3,8 +3,8 @@ require 'test_helper'
 class Admin::SuspensionsControllerTest < ActionController::TestCase
 
   setup do
-    @user = FactoryGirl.create(:user, role: "admin")
-    sign_in @user
+    user = FactoryGirl.create(:user, role: "admin")
+    sign_in user
   end
 
   context "PUT update" do
@@ -31,7 +31,6 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
       unused_app = FactoryGirl.create(:application)
       # simulate them having used (and 'authorized' the app)
       ::Doorkeeper::AccessToken.create(resource_owner_id: another_user.id, application_id: app.id, token: "1234")
-
 
       SuspensionUpdater.expects(:new).with(another_user, [app]).returns(mock("suspenders", attempt: {}))
 

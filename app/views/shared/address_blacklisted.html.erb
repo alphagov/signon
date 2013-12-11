@@ -8,7 +8,7 @@
   </div>
 
   <p>You could navigate back and try again, or follow one of these links:</p>
-  <% if current_user.has_role?("admin") %>
+  <% if can? :index, User %>
     <p><%= link_to "Administer users", admin_users_path %></p>
   <% end %>
   <p><%= link_to "Home", root_path %></p>

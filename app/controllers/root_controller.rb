@@ -1,7 +1,7 @@
 class RootController < ApplicationController
   include UserPermissionsControllerMethods
-  
   before_filter :authenticate_user!
+  skip_authorization_check
 
   def index
     @applications_and_permissions = applications_and_permissions(current_user)
@@ -10,7 +10,7 @@ class RootController < ApplicationController
   end
 
   private
-    def should_list_app?(permission, application) 
+    def should_list_app?(permission, application)
       permission.permissions.include?("signin") || application.name.downcase == "support"
     end
 end
