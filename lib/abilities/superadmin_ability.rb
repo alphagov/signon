@@ -8,6 +8,7 @@ class SuperadminAbility
     can [:read, :create], BatchInvitation
     can [:read, :update], Doorkeeper::Application
     can [:read, :create, :update], SupportedPermission
-    can [:read, :create, :update, :assign_role, :unlock, :cancel_email_change, :resend_email_change, :perform_admin_tasks], User
+    can [:read, :create, :update, :assign_role, :unlock, :invite!,
+          :suspend, :unsuspend, :resend_email_change, :cancel_email_change], User
   end
 end
