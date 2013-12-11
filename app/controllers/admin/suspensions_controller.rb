@@ -1,6 +1,7 @@
 class Admin::SuspensionsController < ApplicationController
   before_filter :authenticate_user!
-  load_and_authorize_resource :user, parent: false
+  load_resource :user, parent: false
+  authorize_resource :user, parent:false, only: :edit
 
   respond_to :html
 

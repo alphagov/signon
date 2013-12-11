@@ -9,6 +9,6 @@ class SuperadminAbility
     can [:read, :update], Doorkeeper::Application
     can [:read, :create, :update], SupportedPermission
     can [:read, :create, :update, :assign_role, :unlock, :invite!,
-          :suspend, :unsuspend, :resend_email_change, :cancel_email_change], User
+          :perform_admin_tasks, :suspend, :unsuspend, :resend_email_change, :cancel_email_change], User
   end
 end

@@ -5,6 +5,6 @@ class Admin::OrganisationsController < ApplicationController
   respond_to :html
 
   def index
-    @organisations = Organisation.order(:name)
+    @organisations = Organisation.accessible_by(current_ability).order(:name)
   end
 end

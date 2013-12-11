@@ -2,6 +2,28 @@ require 'test_helper'
 
 class Admin::SuspensionsControllerTest < ActionController::TestCase
 
+  context "organisation admin" do
+    should "be unable to control suspension of a user outside his organisation" do
+      user = FactoryGirl.create(:suspended_user, reason_for_suspension: "Negligence")
+      admin = FactoryGirl.create(:user_in_organisation, role: 'organisation_admin')
+      sign_in admin
+
+      put :update, id: user.id, user: { suspended: "0" }
+
+      assert_true user.reload.suspended?
+    end
+
+    should "be able to control suspension of a user within his organisation" do
+      admin = FactoryGirl.create(:user_in_organisation, role: 'organisation_admin')
+      sign_in admin
+      user = FactoryGirl.create(:suspended_user, reason_for_suspension: "Negligence", organisation: admin.organisation)
+
+      put :update, id: user.id, user: { suspended: "0" }
+
+      assert_false user.reload.suspended?
+    end
+  end
+
   setup do
     user = FactoryGirl.create(:user, role: "admin")
     sign_in user
