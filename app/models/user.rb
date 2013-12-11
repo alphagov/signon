@@ -1,9 +1,6 @@
 require 'password_migration'
-require 'paginate_alphabetically'
 
 class User < ActiveRecord::Base
-  paginate_alphabetically :by => :name
-
   self.include_root_in_json = true
 
   devise :database_authenticatable, :recoverable, :trackable,
