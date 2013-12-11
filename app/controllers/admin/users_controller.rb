@@ -10,18 +10,20 @@ class Admin::UsersController < ApplicationController
 
   def index
     if params[:filter]
-      @users = User.order("name")
-                    .where("email like ? or name like ?", "%#{params[:filter].strip}%", "%#{params[:filter].strip}%")
-                    .page(params[:page])
-                    .per(100)
+      @users = @users.order("users.name")
+                      .where("users.email like ? or users.name like ?", "%#{params[:filter].strip}%", "%#{params[:filter].strip}%")
+                      .page(params[:page])
+                      .per(100)
+
     else
-      @users, @sorting_params = User.order("name").alpha_paginate(params[:letter], ALPHABETICAL_PAGINATE_CONFIG)
+      @users, @sorting_params = @users.alpha_paginate(params[:letter], ALPHABETICAL_PAGINATE_CONFIG)
     end
   end
 
   def update
-    email_before = @user.email
+    authorize! :read, Organisation.find(params[:user][:organisation_id]) if params[:user][:organisation_id].present?
 
+    email_before = @user.email
     if @user.update_attributes(translate_faux_signin_permission(params[:user]), as: current_user.role.to_sym)
       @user.permissions.reload
       results = PermissionUpdater.new(@user, @user.applications_used).attempt

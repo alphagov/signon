@@ -12,21 +12,19 @@ class User < ActiveRecord::Base
          :confirmable,
          :password_expirable
 
-  attr_accessible :uid, :name, :email, :password, :password_confirmation
-  attr_accessible :uid, :name, :email, :password, :password_confirmation,
-                    :permissions_attributes, :organisation_id, :unconfirmed_email, :confirmation_token, as: :admin
-  attr_accessible :uid, :name, :email, :password, :password_confirmation,
-                    :permissions_attributes, :organisation_id, :role, as: :superadmin
+  ROLES = %w[normal organisation_admin admin superadmin]
+  NORMAL_ATTRIBUTES = [:uid, :name, :email, :password, :password_confirmation]
+  attr_accessible *NORMAL_ATTRIBUTES
+
+  ADMIN_ATTRIBUTES = [:permissions_attributes, :organisation_id, :unconfirmed_email, :confirmation_token]
+  attr_accessible *(NORMAL_ATTRIBUTES + ADMIN_ATTRIBUTES), as: [:admin, :organisation_admin]
+
+  SUPERADMIN_ATTRIBUTES = [:role]
+  attr_accessible *(NORMAL_ATTRIBUTES + ADMIN_ATTRIBUTES + SUPERADMIN_ATTRIBUTES), as: :superadmin
   attr_readonly :uid
 
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
-
-  ROLES = %w[normal admin superadmin]
-  def role?(base_role)
-    # each role can do everything that the previous role can do
-    ROLES.index(base_role.to_s) <= ROLES.index(role)
-  end
   validates :role, inclusion: { in: ROLES }
 
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
@@ -35,10 +33,14 @@ class User < ActiveRecord::Base
   belongs_to :organisation
 
   before_create :generate_uid
-
   after_create :update_stats
 
   accepts_nested_attributes_for :permissions, :allow_destroy => true
+
+  def role?(base_role)
+    # each role can do everything that the previous role can do
+    ROLES.index(base_role.to_s) <= ROLES.index(role)
+  end
 
   def generate_uid
     self.uid = UUID.generate

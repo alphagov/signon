@@ -16,6 +16,8 @@ class Admin::InvitationsController < Devise::InvitationsController
   end
 
   def create
+    authorize! :read, Organisation.find(params[:user][:organisation_id]) if params[:user][:organisation_id].present?
+
     # Prevent an error when devise_invitable invites/updates an existing user,
     # and accepts_nested_attributes_for tries to create duplicate permissions.
     if self.resource = User.find_by_email(params[:user][:email])
