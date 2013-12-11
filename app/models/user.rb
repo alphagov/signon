@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
   validates :role, inclusion: { in: ROLES }
 
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
-  has_many :permissions
+  has_many :permissions, inverse_of: :user
   has_many :batch_invitations
   belongs_to :organisation
 
