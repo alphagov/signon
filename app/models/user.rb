@@ -26,6 +26,7 @@ class User < ActiveRecord::Base
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
   validates :role, inclusion: { in: ROLES }
+  validate :organisation_admin_belongs_to_organisation
 
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
   has_many :permissions, inverse_of: :user
@@ -104,4 +105,13 @@ class User < ActiveRecord::Base
   end
 
   include PasswordMigration
+
+private
+
+  def organisation_admin_belongs_to_organisation
+    if self.role == 'organisation_admin' && self.organisation_id.blank?
+      errors.add(:organisation_id, "can't be 'None' for an Organisation admin")
+    end
+  end
+
 end
