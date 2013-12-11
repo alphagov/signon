@@ -2,7 +2,7 @@ module UserPermissionsControllerMethods
   private
     def applications_and_permissions(user)
       ::Doorkeeper::Application.order(:name).all.map do |application|
-        permission_for_application = user.permissions.find_or_create_by_application_id(application.id)
+        permission_for_application = Permission.where(application_id: application.id, user_id: user.id).first_or_initialize
         [application, permission_for_application]
       end
     end
