@@ -13,8 +13,8 @@ Given /^a signed\-out user$/ do
   @user = FactoryGirl.create(:user)
 end
 
-Given /^a signed\-out admin user$/ do
-  @user = FactoryGirl.create(:user, role: "admin")
+Given /^a signed\-out (.*?) user$/ do |role|
+  @user = FactoryGirl.create(:user, role: role)
 end
 
 When /^I sign in$/ do
@@ -26,8 +26,8 @@ Given /^a signed\-in user$/ do
   step 'I sign in'
 end
 
-Given /^a signed\-in admin user$/ do
-  step 'a signed-out admin user'
+Given /^a signed\-in (.*?) user$/ do |role|
+  step "a signed-out #{role} user"
   step 'I sign in'
 end
 
