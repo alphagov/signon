@@ -22,7 +22,7 @@ module Roles
 
   module ClassMethods
     def role_classes
-      Roles.constants.map { |role| "Roles::#{role}".constantize }
+      (Roles.constants.select { |c| Class === Roles.const_get(c) }).map { |role| "Roles::#{role}".constantize }
     end
 
     def roles
