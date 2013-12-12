@@ -107,6 +107,13 @@ class UserTest < ActiveSupport::TestCase
     assert_not_nil user.confirmed_at
   end
 
+  test "performs validations before inviting" do
+    user = User.invite!(name: nil, email: "j@1.com")
+
+    assert_not_empty user.errors
+    assert_false user.persisted?
+  end
+
   def assert_user_has_permissions(expected_permissions, application, user)
     permissions_for_my_app = user.permissions.reload.find_by_application_id(application.id)
     assert_equal expected_permissions, permissions_for_my_app.permissions
