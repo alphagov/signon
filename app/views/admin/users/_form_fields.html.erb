@@ -30,7 +30,7 @@
 <% if can? :assign_role, User %>
   <p>
     <%= f.label :role %>
-    <%= f.select :role, options_for_select(User::ROLES.map(&:capitalize).zip(User::ROLES), f.object.role), {}, class: "chzn-select" %>
+    <%= f.select :role, options_for_select(User.roles.map(&:capitalize).zip(User.roles), f.object.role), {}, class: "chzn-select" %>
     <span class="help-inline">
       Admins can create and edit normal users. Superadmins can create and edit all user types and edit applications.
     </span>
