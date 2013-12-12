@@ -19,7 +19,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_ability
-    "#{current_user.role}_ability".classify.constantize.new(current_user) if current_user
+    "Abilities::#{current_user.role.classify}".constantize.new(current_user) if current_user
   end
 
 end

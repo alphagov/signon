@@ -1,6 +1,6 @@
-require 'password_migration'
-
 class User < ActiveRecord::Base
+  include Roles
+
   self.include_root_in_json = true
 
   devise :database_authenticatable, :recoverable, :trackable,
@@ -12,20 +12,10 @@ class User < ActiveRecord::Base
          :confirmable,
          :password_expirable
 
-  ROLES = %w[normal organisation_admin admin superadmin]
-  NORMAL_ATTRIBUTES = [:uid, :name, :email, :password, :password_confirmation]
-  attr_accessible *NORMAL_ATTRIBUTES
-
-  ADMIN_ATTRIBUTES = [:permissions_attributes, :organisation_id, :unconfirmed_email, :confirmation_token]
-  attr_accessible *(NORMAL_ATTRIBUTES + ADMIN_ATTRIBUTES), as: [:admin, :organisation_admin]
-
-  SUPERADMIN_ATTRIBUTES = [:role]
-  attr_accessible *(NORMAL_ATTRIBUTES + ADMIN_ATTRIBUTES + SUPERADMIN_ATTRIBUTES), as: :superadmin
   attr_readonly :uid
 
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
-  validates :role, inclusion: { in: ROLES }
   validate :organisation_admin_belongs_to_organisation
 
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
@@ -39,11 +29,6 @@ class User < ActiveRecord::Base
   accepts_nested_attributes_for :permissions, :allow_destroy => true
 
   scope :filter, lambda { |filter_param| where("users.email like ? OR users.name like ?", "%#{filter_param.strip}%", "%#{filter_param.strip}%") }
-
-  def role?(base_role)
-    # each role can do everything that the previous role can do
-    ROLES.index(base_role.to_s) <= ROLES.index(role)
-  end
 
   def generate_uid
     self.uid = UUID.generate
