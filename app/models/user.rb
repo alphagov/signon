@@ -38,6 +38,8 @@ class User < ActiveRecord::Base
 
   accepts_nested_attributes_for :permissions, :allow_destroy => true
 
+  scope :filter, lambda { |filter_param| where("users.email like ? OR users.name like ?", "%#{filter_param.strip}%", "%#{filter_param.strip}%") }
+
   def role?(base_role)
     # each role can do everything that the previous role can do
     ROLES.index(base_role.to_s) <= ROLES.index(role)

@@ -10,11 +10,7 @@ class Admin::UsersController < ApplicationController
 
   def index
     if params[:filter]
-      @users = @users.order("users.name")
-                      .where("users.email like ? or users.name like ?", "%#{params[:filter].strip}%", "%#{params[:filter].strip}%")
-                      .page(params[:page])
-                      .per(100)
-
+      @users = @users.filter(params[:filter]).page(params[:page]).per(100)
     else
       @users, @sorting_params = @users.alpha_paginate(params[:letter], ALPHABETICAL_PAGINATE_CONFIG)
     end
