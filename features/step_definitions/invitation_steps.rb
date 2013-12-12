@@ -13,6 +13,14 @@ When /I create a user called "(.*)" with email "(.*)"/ do |name, email|
   click_button "Create user and send email"
 end
 
+When /I create an admin called "(.*)" with email "(.*)"/ do |name, email|
+  visit new_user_invitation_path
+  fill_in "Name", with: name
+  fill_in "Email", with: email
+  select "Admin", from: "Role"
+  click_button "Create user and send email"
+end
+
 When /the invitation email link is clicked/ do
   visit accept_user_invitation_path(invitation_token: @user.invitation_token)
 end
