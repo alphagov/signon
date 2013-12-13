@@ -7,6 +7,11 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   attr_accessible :name, :description, :uid, :secret, :redirect_uri, :home_uri
 
   default_scope order(:name)
+  scope :can_signin, lambda { |user| joins(:permissions)
+                                      .where(permissions: { user_id: user.id })
+                                      .where('permissions.permissions LIKE ?', '%signin%') }
+  scope :with_signin_delegatable, joins(:supported_permissions)
+                                  .where(supported_permissions: { name: 'signin', delegatable: true })
 
   def self.default_permission_strings
     # Excludes user_update_permission which is granted automatically when needed

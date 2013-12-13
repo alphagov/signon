@@ -34,6 +34,25 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "organisation admin" do
+      should "can give permissions to only applications where signin is delegatable" do
+        admin = FactoryGirl.create(:user_in_organisation, role: "organisation_admin")
+        delegatable_application = FactoryGirl.create(:application)
+        delegatable_permission = FactoryGirl.create(:supported_permission, name: 'signin', delegatable: true, application: delegatable_application)
+        non_delegatable_application = FactoryGirl.create(:application)
+        non_delegatable_permission = FactoryGirl.create(:supported_permission, name: 'signin', delegatable: false, application: non_delegatable_application)
+
+        sign_in admin
+
+        get :new
+
+        assert_select ".container" do
+          assert_select "td", { count: 1, text: delegatable_application.name }
+          assert_select "td", { count: 0, text: non_delegatable_application.name }
+        end
+      end
+    end
   end
 
   context "POST create" do
