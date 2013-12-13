@@ -21,7 +21,9 @@
     <div class="span5">
       <div class="pull-right">
         <%= link_to "Create new user", new_user_invitation_path, class: "btn btn-success text-left" %>
-        <%= link_to "Upload a batch of users", new_admin_batch_invitation_path, class: "btn text-right" %>
+        <% if can? :create, BatchInvitation %>
+          <%= link_to "Upload a batch of users", new_admin_batch_invitation_path, class: "btn text-right" %>
+        <% end %>
       </div>
     </div>
   </div>

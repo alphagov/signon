@@ -1,8 +1,5 @@
-require 'password_migration'
-require 'paginate_alphabetically'
-
 class User < ActiveRecord::Base
-  paginate_alphabetically :by => :name
+  include Roles
 
   self.include_root_in_json = true
 
@@ -15,22 +12,11 @@ class User < ActiveRecord::Base
          :confirmable,
          :password_expirable
 
-  attr_accessible :uid, :name, :email, :password, :password_confirmation
-  attr_accessible :uid, :name, :email, :password, :password_confirmation,
-                    :permissions_attributes, :organisation_id, :unconfirmed_email, :confirmation_token, as: :admin
-  attr_accessible :uid, :name, :email, :password, :password_confirmation,
-                    :permissions_attributes, :organisation_id, :role, as: :superadmin
   attr_readonly :uid
 
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
-
-  ROLES = %w[normal admin superadmin]
-  def role?(base_role)
-    # each role can do everything that the previous role can do
-    ROLES.index(base_role.to_s) <= ROLES.index(role)
-  end
-  validates :role, inclusion: { in: ROLES }
+  validate :organisation_admin_belongs_to_organisation
 
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
   has_many :permissions, inverse_of: :user
@@ -38,10 +24,11 @@ class User < ActiveRecord::Base
   belongs_to :organisation
 
   before_create :generate_uid
-
   after_create :update_stats
 
   accepts_nested_attributes_for :permissions, :allow_destroy => true
+
+  scope :filter, lambda { |filter_param| where("users.email like ? OR users.name like ?", "%#{filter_param.strip}%", "%#{filter_param.strip}%") }
 
   def generate_uid
     self.uid = UUID.generate
@@ -105,4 +92,13 @@ class User < ActiveRecord::Base
   end
 
   include PasswordMigration
+
+private
+
+  def organisation_admin_belongs_to_organisation
+    if self.role == 'organisation_admin' && self.organisation_id.blank?
+      errors.add(:organisation_id, "can't be 'None' for an Organisation admin")
+    end
+  end
+
 end

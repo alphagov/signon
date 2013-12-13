@@ -80,6 +80,43 @@ class Admin::UsersControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "organisation admin" do
+      should "not be able to assign organisations outside his organisation subtree" do
+        admin = FactoryGirl.create(:user_in_organisation, role: "organisation_admin")
+        outside_organisation = FactoryGirl.create(:organisation)
+        sign_in admin
+
+        with_const_override(:DISABLE_MEMBERSHIP_EDITING, false) do
+          user = FactoryGirl.create(:user_in_organisation, organisation: admin.organisation)
+          assert_not_nil user.organisation
+
+          get :edit, id: user.id
+
+          assert_select ".container" do
+            assert_select "option", count: 0, text: outside_organisation.name_with_abbreviation
+          end
+        end
+      end
+
+      should "be able to assign organisations within his organisation subtree" do
+        admin = FactoryGirl.create(:user_in_organisation, role: "organisation_admin")
+        sub_organisation = FactoryGirl.create(:organisation, parent: admin.organisation)
+        sign_in admin
+
+        with_const_override(:DISABLE_MEMBERSHIP_EDITING, false) do
+          user = FactoryGirl.create(:user_in_organisation, organisation: sub_organisation)
+          assert_not_nil user.organisation
+
+          get :edit, id: user.id
+
+          assert_select ".container" do
+            assert_select "option", count: 1, text: sub_organisation.name_with_abbreviation
+            assert_select "option", count: 1, text: admin.organisation.name_with_abbreviation
+          end
+        end
+      end
+    end
   end
 
   context "PUT update" do
@@ -100,6 +137,36 @@ class Admin::UsersControllerTest < ActionController::TestCase
           assert_not_nil user.organisation
           put :update, id: user.id, user: { organisation_id: nil }
           assert_nil user.reload.organisation
+        end
+      end
+
+      context "organisation admin" do
+        should "be able to assign organisations under his organisation subtree" do
+          admin = FactoryGirl.create(:user_in_organisation, role: "organisation_admin")
+          sub_organisation = FactoryGirl.create(:organisation, parent: admin.organisation)
+          sign_in admin
+
+          with_const_override(:DISABLE_MEMBERSHIP_EDITING, false) do
+            user = FactoryGirl.create(:user_in_organisation, organisation: sub_organisation)
+            assert_not_nil user.organisation
+
+            put :update, id: user.id, user: { organisation_id: admin.organisation.id }
+            assert_equal admin.organisation.id, user.reload.organisation.id
+          end
+        end
+
+        should "not be able to assign organisations outside his organisation subtree" do
+          admin = FactoryGirl.create(:user_in_organisation, role: "organisation_admin")
+          outside_organisation = FactoryGirl.create(:organisation)
+          sign_in admin
+
+          with_const_override(:DISABLE_MEMBERSHIP_EDITING, false) do
+            user = FactoryGirl.create(:user_in_organisation, organisation: admin.organisation)
+            assert_not_nil user.organisation
+
+            put :update, id: user.id, user: { organisation_id: outside_organisation.id }
+            assert_not_equal outside_organisation.id, user.reload.organisation.id
+          end
         end
       end
     end

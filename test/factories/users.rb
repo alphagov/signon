@@ -17,6 +17,10 @@ FactoryGirl.define do
     role "admin"
   end
 
+  factory :suspended_user, parent: :user do
+    suspended_at Time.zone.now
+  end
+
   factory :user_in_organisation, parent: :user do
     association :organisation, factory: :organisation
   end

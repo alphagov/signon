@@ -30,7 +30,8 @@
 <% if can? :assign_role, User %>
   <p>
     <%= f.label :role %>
-    <%= f.select :role, options_for_select(User::ROLES.map(&:capitalize).zip(User::ROLES), f.object.role), {}, class: "chzn-select" %>
+    <% roles = Features::CREATE_ORGANISATION_ADMIN ? User.roles : User.roles - ['organisation_admin'] %>
+    <%= f.select :role, options_for_select(roles.map(&:humanize).zip(roles), f.object.role), {}, class: "chzn-select" %>
     <span class="help-inline">
       Admins can create and edit normal users. Superadmins can create and edit all user types and edit applications.
     </span>
@@ -40,7 +41,9 @@
 <% unless DISABLE_MEMBERSHIP_EDITING %>
   <p>
     <%= f.label :organisation_id, "Organisation" %>
-    <%= f.select :organisation_id, options_from_collection_for_select(Organisation.all, :id, :name_with_abbreviation, selected: f.object.organisation_id), { include_blank: 'None' }, { class: "chzn-select" } %>
+    <%= f.select :organisation_id, options_from_collection_for_select(Organisation.accessible_by(current_ability), :id, :name_with_abbreviation, selected: f.object.organisation_id),
+      { include_blank: current_user.role == 'organisation_admin' ? false : 'None' },
+      { class: "chzn-select" } %>
   </p>
 <% end %>
 

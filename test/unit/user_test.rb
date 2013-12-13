@@ -44,6 +44,13 @@ class UserTest < ActiveSupport::TestCase
     assert_not_empty u.errors[:reason_for_suspension]
   end
 
+  test "organisation admin must belong to an organisation" do
+    user = FactoryGirl.build(:user, role: 'organisation_admin', organisation_id: nil)
+
+    assert_false user.valid?
+    assert_equal "can't be 'None' for an Organisation admin", user.errors[:organisation_id].first
+  end
+
   # Password migration
   test "it migrates old passwords on sign-in" do
     password = ("4 l0nG sT!,ng " * 10)[0..127]
