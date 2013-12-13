@@ -9,9 +9,9 @@ module Roles
       validates :role, inclusion: { in: roles }
 
       attr_accessible *Roles::Normal.accessible_attributes
-      attr_accessible *Roles::Admin.accessible_attributes, as: :admin
-      attr_accessible *Roles::OrganisationAdmin.accessible_attributes, as: :organisation_admin
-      attr_accessible *Roles::Superadmin.accessible_attributes, as: :superadmin
+      admin_role_classes.each do |role|
+        attr_accessible *role.accessible_attributes, as: role.to_s.demodulize.underscore.to_sym
+      end
     end
   end
 
@@ -23,6 +23,10 @@ module Roles
   module ClassMethods
     def role_classes
       (Roles.constants.select { |c| Class === Roles.const_get(c) }).map { |role| "Roles::#{role}".constantize }
+    end
+
+    def admin_role_classes
+      role_classes - [Roles::Normal]
     end
 
     def roles
