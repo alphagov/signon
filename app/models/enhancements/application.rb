@@ -19,8 +19,13 @@ class ::Doorkeeper::Application < ActiveRecord::Base
     ["signin"]
   end
 
-  def supported_permission_strings
-    self.class.default_permission_strings + supported_permissions.order(:name).map(&:name)
+  def supported_permission_strings(user)
+    if user.role == 'organisation_admin'
+      supported_permissions.delegatable.map(&:name) &
+        user.permissions.find_by_application_id(id).permissions
+    else
+      self.class.default_permission_strings + supported_permissions.map(&:name)
+    end
   end
 
   def signin_permission

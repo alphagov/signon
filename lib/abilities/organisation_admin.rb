@@ -11,7 +11,7 @@ module Abilities
               User, organisation: { id: user.organisation.subtree.map(&:id) }
 
       cannot :manage, BatchInvitation
-      cannot :delegate_all, ::Doorkeeper::Application
+      cannot :delegate_all_permissions, ::Doorkeeper::Application
     end
   end
 end

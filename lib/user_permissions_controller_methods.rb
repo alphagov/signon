@@ -1,7 +1,7 @@
 module UserPermissionsControllerMethods
   private
     def applications_and_permissions(user)
-      if can? :delegate_all, ::Doorkeeper::Application
+      if can? :delegate_all_permissions, ::Doorkeeper::Application
         applications = ::Doorkeeper::Application.all
       else
         applications = ::Doorkeeper::Application.can_signin(current_user).with_signin_delegatable
