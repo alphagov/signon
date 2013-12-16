@@ -31,6 +31,15 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
         assert_select "table.recent-batches tbody td", "In progress. 0 of 1 users processed."
       end
     end
+
+    should "show an organisations to invite to for an organisation_admin" do
+      user = FactoryGirl.create(:user_in_organisation, role: 'organisation_admin')
+      sign_in user
+
+      get :new
+
+      assert_select "#batch_invitation_organisation_id option", user.organisation.name
+    end
   end
 
   context "POST create" do

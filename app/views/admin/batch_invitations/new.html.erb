@@ -44,6 +44,14 @@ Winston Churchill,winston@example.com
       </div>
     </div>
 
+    <% if !DISABLE_MEMBERSHIP_EDITING && can?(:create_for_specific_organisation, BatchInvitation) %>
+      <p>
+        <%= f.label :organisation_id, "Organisation" %>
+        <%= f.select :organisation_id, options_from_collection_for_select(Organisation.accessible_by(current_ability),
+                      :id, :name_with_abbreviation, selected: f.object.organisation_id), { class: "chzn-select" } %>
+      </p>
+    <% end %>
+
     <h2>Permissions for the users</h2>
 
     <%= render partial: "admin/shared/user_permissions", locals: { user_object: User.new } %>
