@@ -6,7 +6,7 @@ module Roles
       :permissions_attributes, :organisation_id, :unconfirmed_email, :confirmation_token]
     end
 
-    def self.name
+    def self.role_name
       'admin'
     end
 
