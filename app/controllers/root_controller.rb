@@ -4,8 +4,8 @@ class RootController < ApplicationController
   skip_authorization_check
 
   def index
-    applications = ::Doorkeeper::Application.can_signin(current_user) <<
-                    ::Doorkeeper::Application.where(name: 'Support').first
+    applications = (::Doorkeeper::Application.can_signin(current_user) <<
+                    ::Doorkeeper::Application.where(name: 'Support').first).compact
 
     @applications_and_permissions = zip_permissions(applications, current_user)
   end
