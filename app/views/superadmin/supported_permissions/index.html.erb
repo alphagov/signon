@@ -29,7 +29,7 @@
             <%= link_to supported_permission.name, edit_superadmin_application_supported_permission_path(@application, supported_permission) %>
           </td>
           <td>
-            <%= supported_permission.created_at.strftime('%m/%d/%Y') %>
+            <%= supported_permission.created_at.strftime('%d/%m/%Y') %>
           </td>
           <td class="delegatable">
             <%= supported_permission.delegatable? ? 'Yes' : 'No' %>
