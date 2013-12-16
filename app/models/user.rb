@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  include Roles
+  include Roles # adds validations and accessible attributes
 
   self.include_root_in_json = true
 

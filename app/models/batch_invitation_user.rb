@@ -10,6 +10,7 @@ class BatchInvitationUser < ActiveRecord::Base
     attributes = {
       name: self.name,
       email: self.email,
+      organisation_id: batch_invitation.organisation_id,
       permissions_attributes: applications_and_permissions
     }
     if User.find_by_email(self.email)
