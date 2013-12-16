@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131205160534) do
+ActiveRecord::Schema.define(:version => 20131216145229) do
 
   create_table "batch_invitation_users", :force => true do |t|
     t.integer  "batch_invitation_id"
@@ -30,6 +30,7 @@ ActiveRecord::Schema.define(:version => 20131205160534) do
     t.datetime "created_at",                   :null => false
     t.datetime "updated_at",                   :null => false
     t.integer  "user_id",                      :null => false
+    t.integer  "organisation_id"
   end
 
   add_index "batch_invitations", ["outcome"], :name => "index_batch_invitations_on_outcome"

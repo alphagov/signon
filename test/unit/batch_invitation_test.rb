@@ -18,6 +18,13 @@ class BatchInvitationTest < ActiveSupport::TestCase
     @user_b = create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
   end
 
+  should "can belong to an organisation" do
+    organisation = FactoryGirl.create(:organisation)
+    bi = FactoryGirl.create(:batch_invitation, organisation: organisation, applications_and_permissions: {})
+
+    assert_equal bi.organisation, organisation
+  end
+
   context "perform" do
     should "create the users and assign them permissions" do
       @bi.reload.perform
