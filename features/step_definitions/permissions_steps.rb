@@ -1,5 +1,5 @@
 Given /^another user$/ do
-  @another_user = FactoryGirl.create(:user)
+  @another_user = create(:user)
 end
 
 When /^I add "([^"]*)" permission to "([^"]*)"$/ do |permission, application|

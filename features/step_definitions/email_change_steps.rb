@@ -17,7 +17,7 @@ Then /^a confirmation email should be sent to "(.*?)"$/ do |new_email|
 end
 
 Given /^a user with a pending email change$/ do
-  @user = FactoryGirl.create(:user_with_pending_email_change)
+  @user = create(:user_with_pending_email_change)
 end
 
 Given /^I am a user with a pending email change$/ do

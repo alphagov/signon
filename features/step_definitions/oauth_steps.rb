@@ -1,10 +1,10 @@
 Given /^an OAuth application called "([^"]*)"$/ do |application_name|
-  FactoryGirl.create(:application, name: application_name)
+  create(:application, name: application_name)
 end
 
 Given /^an OAuth application called "([^"]*)" with SupportedPermission of "([^"]*)"$/ do |application_name, permission_name|
-  app = FactoryGirl.create(:application, name: application_name)
-  FactoryGirl.create(:supported_permission, application_id: app.id, name: permission_name)
+  app = create(:application, name: application_name)
+  create(:supported_permission, application_id: app.id, name: permission_name)
 end
 
 Given /^the user is authorized for "(.*?)" with permission to "(.*?)"$/ do |application_name, permission_name|
