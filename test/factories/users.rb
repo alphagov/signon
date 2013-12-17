@@ -17,7 +17,7 @@ FactoryGirl.define do
     role "admin"
   end
 
-  factory :organisation_admin, parent: :user do
+  factory :organisation_admin, parent: :user_in_organisation do
     role "organisation_admin"
   end
 

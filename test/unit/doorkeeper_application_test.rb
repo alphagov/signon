@@ -12,7 +12,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
 
     should "only show permissions that organisation admins themselves have" do
-      user = create(:user_in_organisation, role: 'organisation_admin')
+      user = create(:organisation_admin)
       app = create(:application, supported_permissions: [
         create(:delegatable_supported_permission, name: "write"),
         create(:delegatable_supported_permission, name: "approve")
@@ -23,7 +23,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
 
     should "only show delegatable permissions to organisation admins" do
-      user = create(:user_in_organisation, role: 'organisation_admin')
+      user = create(:organisation_admin)
       app = create(:application, supported_permissions: [
         create(:delegatable_supported_permission, name: "write"),
         create(:non_delegatable_supported_permission, name: "approve")

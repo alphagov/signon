@@ -83,7 +83,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
     context "organisation admin" do
       should "not be able to assign organisations outside his organisation subtree" do
-        admin = create(:user_in_organisation, role: "organisation_admin")
+        admin = create(:organisation_admin)
         outside_organisation = create(:organisation)
         sign_in admin
 
@@ -100,7 +100,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
       end
 
       should "be able to assign organisations within his organisation subtree" do
-        admin = create(:user_in_organisation, role: "organisation_admin")
+        admin = create(:organisation_admin)
         sub_organisation = create(:organisation, parent: admin.organisation)
         sign_in admin
 
@@ -142,7 +142,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
       context "organisation admin" do
         should "be able to assign organisations under his organisation subtree" do
-          admin = create(:user_in_organisation, role: "organisation_admin")
+          admin = create(:organisation_admin)
           sub_organisation = create(:organisation, parent: admin.organisation)
           sign_in admin
 
@@ -156,7 +156,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
         end
 
         should "not be able to assign organisations outside his organisation subtree" do
-          admin = create(:user_in_organisation, role: "organisation_admin")
+          admin = create(:organisation_admin)
           outside_organisation = create(:organisation)
           sign_in admin
 

@@ -18,7 +18,7 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
   context "GET new" do
     context "organisation admin" do
       should "can select only organisations under him" do
-        admin = create(:user_in_organisation, role: "organisation_admin")
+        admin = create(:organisation_admin)
         sub_organisation = create(:organisation, parent: admin.organisation)
         outside_organisation = create(:organisation)
         sign_in admin
@@ -37,7 +37,7 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
 
     context "organisation admin" do
       should "can give permissions to only applications where signin is delegatable and they have access to" do
-        admin = create(:user_in_organisation, role: "organisation_admin")
+        admin = create(:organisation_admin)
         delegatable_application = create(:application)
         delegatable_permission = create(:supported_permission, name: 'signin', delegatable: true, application: delegatable_application)
         create(:permission, application: delegatable_application, user: admin, permissions: ['signin'])
@@ -73,7 +73,7 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
 
     context "organisation admin" do
       should "cannot assign only organisations not under him" do
-        admin = create(:user_in_organisation, role: "organisation_admin")
+        admin = create(:organisation_admin)
         outside_organisation = create(:organisation)
         sign_in admin
 
@@ -83,7 +83,7 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
       end
 
       should "can assign only organisations under him" do
-        admin = create(:user_in_organisation, role: "organisation_admin")
+        admin = create(:organisation_admin)
         sub_organisation = create(:organisation, parent: admin.organisation)
         sign_in admin
 

@@ -5,7 +5,7 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
   context "organisation admin" do
     should "be unable to control suspension of a user outside his organisation" do
       user = create(:suspended_user, reason_for_suspension: "Negligence")
-      admin = create(:user_in_organisation, role: 'organisation_admin')
+      admin = create(:organisation_admin)
       sign_in admin
 
       put :update, id: user.id, user: { suspended: "0" }
@@ -14,7 +14,7 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
     end
 
     should "be able to control suspension of a user within his organisation" do
-      admin = create(:user_in_organisation, role: 'organisation_admin')
+      admin = create(:organisation_admin)
       sign_in admin
       user = create(:suspended_user, reason_for_suspension: "Negligence", organisation: admin.organisation)
 
