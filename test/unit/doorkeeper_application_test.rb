@@ -6,16 +6,17 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
 
     should "return a list of string permissions, merging in the defaults" do
       user = create(:user)
-      app = create(:application)
-      create(:supported_permission, name: "write", application: app)
+      app = create(:application, supported_permissions: [create(:supported_permission, name: "write")])
+
       assert_equal ["signin", "write"], app.supported_permission_strings(user)
     end
 
     should "only show permissions that organisation admins themselves have" do
       user = create(:user_in_organisation, role: 'organisation_admin')
-      app = create(:application)
-      create(:supported_permission, name: "write", application: app, delegatable: true)
-      create(:supported_permission, name: "approve", application: app, delegatable: true)
+      app = create(:application, supported_permissions: [
+        create(:delegatable_supported_permission, name: "write"),
+        create(:delegatable_supported_permission, name: "approve")
+      ])
       create(:permission, user: user, application: app, permissions: ['write'])
 
       assert_equal ["write"], app.supported_permission_strings(user)
@@ -23,9 +24,10 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
 
     should "only show delegatable permissions to organisation admins" do
       user = create(:user_in_organisation, role: 'organisation_admin')
-      app = create(:application)
-      create(:supported_permission, name: "write", application: app, delegatable: true)
-      create(:supported_permission, name: "approve", application: app, delegatable: false)
+      app = create(:application, supported_permissions: [
+        create(:delegatable_supported_permission, name: "write"),
+        create(:non_delegatable_supported_permission, name: "approve")
+      ])
       create(:permission, user: user, application: app, permissions: ['write', 'approve'])
 
       assert_equal ["write"], app.supported_permission_strings(user)
