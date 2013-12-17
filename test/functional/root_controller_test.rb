@@ -1,6 +1,11 @@
 require 'test_helper'
 
 class RootControllerTest < ActionController::TestCase
+
+  def setup
+    FactoryGirl.create(:application, name: 'Support')
+  end
+
   test "visiting root#index should require authentication" do
     get :index
     assert_equal "302", response.code
@@ -25,25 +30,23 @@ class RootControllerTest < ActionController::TestCase
     user = FactoryGirl.create(:user)
     FactoryGirl.create(:permission, user: user, application: exclusive_app, permissions: [])
     FactoryGirl.create(:permission, user: user, application: everybody_app, permissions: ["signin"])
-    
+
     sign_in user
 
     get :index
-    
+
     assert_select "h3", "Everybody app"
-    assert_select "h3", count: 1
+    assert_select "h3", "Support"
+    assert_select "h3", count: 2
   end
 
   # Because currently, permissions aren't required for the Support app
   test "Your Applications should include the 'Support' app if it exists, whether or not you have signin permission" do
-    app = FactoryGirl.create(:application, name: "Support")
     user = FactoryGirl.create(:user)
-    FactoryGirl.create(:permission, user: user, application: app, permissions: [])
-    
     sign_in user
 
     get :index
-    
+
     assert_select "h3", "Support"
   end
 end

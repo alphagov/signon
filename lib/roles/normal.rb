@@ -5,7 +5,7 @@ module Roles
       [:uid, :name, :email, :password, :password_confirmation]
     end
 
-    def self.name
+    def self.role_name
       'normal'
     end
 

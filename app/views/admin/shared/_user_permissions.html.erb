@@ -25,7 +25,13 @@
         </td>
         <td>
           <%= label_tag "user[permissions_attributes][#{index}][permissions][]", "Permissions for #{application.name}", class: "visuallyhidden" %>
-          <%= select_tag "user[permissions_attributes][#{index}][permissions][]", options_for_select(application.supported_permission_strings - ["signin"], permission.permissions - ["signin"]), multiple: true, class: "chzn-select", "data-placeholder" => "Start typing to search for permissions" %>
+          <%= select_tag "user[permissions_attributes][#{index}][permissions][]",
+                          options_for_select(application.supported_permission_strings(current_user) - ["signin"],
+                                              permission.permissions - ["signin"]),
+                          multiple: true,
+                          class: "chzn-select",
+                          "data-placeholder" => "Start typing to search for permissions"
+          %>
         </td>
         <% if user_object.persisted? %>
           <td>

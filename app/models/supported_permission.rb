@@ -6,6 +6,9 @@ class SupportedPermission < ActiveRecord::Base
 
   attr_accessible :application_id, :name, :delegatable
 
+  default_scope order(:name)
+  scope :delegatable, -> { where(delegatable: true) }
+
 private
 
   def signin_permission_name_not_changed
