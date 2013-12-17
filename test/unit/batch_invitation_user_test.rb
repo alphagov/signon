@@ -4,7 +4,7 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
 
   context "invite" do
     setup do
-      @inviting_user = FactoryGirl.create(:admin_user)
+      @inviting_user = create(:admin_user)
     end
 
     context "success" do
@@ -18,7 +18,7 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
 
     context "user already exists" do
       should "record the outcome against the user" do
-        FactoryGirl.create(:user, name: "A", email: "a@m.com")
+        create(:user, name: "A", email: "a@m.com")
         bi = BatchInvitationUser.create!(name: "A", email: "a@m.com")
         bi.invite(@inviting_user, {})
 

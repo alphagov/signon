@@ -3,7 +3,7 @@ require 'test_helper'
 class RootControllerTest < ActionController::TestCase
 
   def setup
-    FactoryGirl.create(:application, name: 'Support')
+    create(:application, name: 'Support')
   end
 
   test "visiting root#index should require authentication" do
@@ -13,23 +13,23 @@ class RootControllerTest < ActionController::TestCase
   end
 
   test "visiting root#index as a signed-in user should succeed" do
-    sign_in FactoryGirl.create(:user)
+    sign_in create(:user)
     get :index
     assert_equal "200", response.code
   end
 
   test "sets the X-Frame-Options header to SAMEORIGIN" do
-    sign_in FactoryGirl.create(:user)
+    sign_in create(:user)
     get :index
     assert_equal "SAMEORIGIN", response.header['X-Frame-Options']
   end
 
   test "Your Applications should include apps you have permission to signin to" do
-    exclusive_app = FactoryGirl.create(:application, name: "Exclusive app")
-    everybody_app = FactoryGirl.create(:application, name: "Everybody app")
-    user = FactoryGirl.create(:user)
-    FactoryGirl.create(:permission, user: user, application: exclusive_app, permissions: [])
-    FactoryGirl.create(:permission, user: user, application: everybody_app, permissions: ["signin"])
+    exclusive_app = create(:application, name: "Exclusive app")
+    everybody_app = create(:application, name: "Everybody app")
+    user = create(:user)
+    create(:permission, user: user, application: exclusive_app, permissions: [])
+    create(:permission, user: user, application: everybody_app, permissions: ["signin"])
 
     sign_in user
 
@@ -42,7 +42,7 @@ class RootControllerTest < ActionController::TestCase
 
   # Because currently, permissions aren't required for the Support app
   test "Your Applications should include the 'Support' app if it exists, whether or not you have signin permission" do
-    user = FactoryGirl.create(:user)
+    user = create(:user)
     sign_in user
 
     get :index

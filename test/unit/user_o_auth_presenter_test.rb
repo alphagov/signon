@@ -2,13 +2,13 @@ require 'test_helper'
 
 class UserOAuthPresenterTest < ActiveSupport::TestCase
   setup do
-    @user = FactoryGirl.create(:user)
+    @user = create(:user)
   end
 
   should "generate JSON" do
-    app = FactoryGirl.create(:application)
-    FactoryGirl.create(:permission, application: app, user: @user, permissions: ["signin", "coughing"])
-    justice_league = FactoryGirl.create(:organisation, slug: "justice-league")
+    app = create(:application)
+    create(:permission, application: app, user: @user, permissions: ["signin", "coughing"])
+    justice_league = create(:organisation, slug: "justice-league")
     @user.organisation = justice_league
 
     expected = {
@@ -25,14 +25,14 @@ class UserOAuthPresenterTest < ActiveSupport::TestCase
   end
 
   should "handle the user having nil permissions value for the app" do
-    app = FactoryGirl.create(:application)
-    FactoryGirl.create(:permission, application: app, user: @user, permissions: nil)
+    app = create(:application)
+    create(:permission, application: app, user: @user, permissions: nil)
     presenter = UserOAuthPresenter.new(@user, app)
     assert_equal([], presenter.as_hash[:user][:permissions])
   end
 
   should "handle the user having no permissions record for the app" do
-    app = FactoryGirl.create(:application)
+    app = create(:application)
     presenter = UserOAuthPresenter.new(@user, app)
     assert_equal([], presenter.as_hash[:user][:permissions])
   end

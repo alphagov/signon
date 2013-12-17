@@ -5,7 +5,7 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
 
   setup do
     request.env["devise.mapping"] = Devise.mappings[:user]
-    @user = FactoryGirl.create(:user, role: "admin")
+    @user = create(:user, role: "admin")
     sign_in @user
   end
 
@@ -18,9 +18,9 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
   context "GET new" do
     context "organisation admin" do
       should "can select only organisations under him" do
-        admin = FactoryGirl.create(:user_in_organisation, role: "organisation_admin")
-        sub_organisation = FactoryGirl.create(:organisation, parent: admin.organisation)
-        outside_organisation = FactoryGirl.create(:organisation)
+        admin = create(:user_in_organisation, role: "organisation_admin")
+        sub_organisation = create(:organisation, parent: admin.organisation)
+        outside_organisation = create(:organisation)
         sign_in admin
 
         with_const_override(:DISABLE_MEMBERSHIP_EDITING, false) do
@@ -37,14 +37,14 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
 
     context "organisation admin" do
       should "can give permissions to only applications where signin is delegatable and they have access to" do
-        admin = FactoryGirl.create(:user_in_organisation, role: "organisation_admin")
-        delegatable_application = FactoryGirl.create(:application)
-        delegatable_permission = FactoryGirl.create(:supported_permission, name: 'signin', delegatable: true, application: delegatable_application)
-        FactoryGirl.create(:permission, application: delegatable_application, user: admin, permissions: ['signin'])
+        admin = create(:user_in_organisation, role: "organisation_admin")
+        delegatable_application = create(:application)
+        delegatable_permission = create(:supported_permission, name: 'signin', delegatable: true, application: delegatable_application)
+        create(:permission, application: delegatable_application, user: admin, permissions: ['signin'])
 
-        non_delegatable_application = FactoryGirl.create(:application)
-        non_delegatable_permission = FactoryGirl.create(:supported_permission, name: 'signin', delegatable: false, application: non_delegatable_application)
-        FactoryGirl.create(:permission, application: non_delegatable_application, user: admin, permissions: ['signin'])
+        non_delegatable_application = create(:application)
+        non_delegatable_permission = create(:supported_permission, name: 'signin', delegatable: false, application: non_delegatable_application)
+        create(:permission, application: non_delegatable_application, user: admin, permissions: ['signin'])
 
         sign_in admin
 
@@ -73,8 +73,8 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
 
     context "organisation admin" do
       should "cannot assign only organisations not under him" do
-        admin = FactoryGirl.create(:user_in_organisation, role: "organisation_admin")
-        outside_organisation = FactoryGirl.create(:organisation)
+        admin = create(:user_in_organisation, role: "organisation_admin")
+        outside_organisation = create(:organisation)
         sign_in admin
 
         post :create, user: { name: "John Smith", email: "jsmith@digital.cabinet-office.gov.uk", organisation_id: outside_organisation.id }
@@ -83,8 +83,8 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
       end
 
       should "can assign only organisations under him" do
-        admin = FactoryGirl.create(:user_in_organisation, role: "organisation_admin")
-        sub_organisation = FactoryGirl.create(:organisation, parent: admin.organisation)
+        admin = create(:user_in_organisation, role: "organisation_admin")
+        sub_organisation = create(:organisation, parent: admin.organisation)
         sign_in admin
 
         post :create, user: { name: "John Smith", email: "jsmith@digital.cabinet-office.gov.uk", organisation_id: sub_organisation.id }

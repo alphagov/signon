@@ -4,7 +4,7 @@ class ConfirmationsControllerTest < ActionController::TestCase
 
   setup do
     request.env["devise.mapping"] = Devise.mappings[:user]
-    @user = FactoryGirl.create(:user_with_pending_email_change)
+    @user = create(:user_with_pending_email_change)
   end
 
   context "GET new" do
@@ -64,7 +64,7 @@ class ConfirmationsControllerTest < ActionController::TestCase
 
     context "signed in as somebody else" do
       setup do
-        sign_in FactoryGirl.create(:user)
+        sign_in create(:user)
       end
 
       should "reject the attempt" do
@@ -78,8 +78,8 @@ class ConfirmationsControllerTest < ActionController::TestCase
 
   context "PUT update" do
     should "authenticate with the correct token and password, and confirm the email change" do
-      put :update, 
-            confirmation_token: @user.confirmation_token, 
+      put :update,
+            confirmation_token: @user.confirmation_token,
             user: { password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z" }
       assert_redirected_to "/"
       assert @controller.user_signed_in?
@@ -87,24 +87,24 @@ class ConfirmationsControllerTest < ActionController::TestCase
     end
 
     should "reject with an incorrect token" do
-      put :update, 
-            confirmation_token: "fake", 
+      put :update,
+            confirmation_token: "fake",
             user: { password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z" }
       assert_equal false, @controller.user_signed_in?
       assert_equal @user.reload.email, "old@email.com"
     end
 
     should "reject with an incorrect passphrase" do
-      put :update, 
-            confirmation_token: @user.confirmation_token, 
+      put :update,
+            confirmation_token: @user.confirmation_token,
             user: { password: "not the real password" }
       assert_equal false, @controller.user_signed_in?
       assert_equal @user.reload.email, "old@email.com"
     end
 
     should "redisplay the form on failure" do
-      put :update, 
-            confirmation_token: @user.confirmation_token, 
+      put :update,
+            confirmation_token: @user.confirmation_token,
             user: { password: "not the real password" }
       assert_template "devise/confirmations/show"
     end

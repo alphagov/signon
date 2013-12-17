@@ -16,7 +16,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
 
   test "it updates an existing organisation when its data changes" do
     slug = 'ministry-of-fun'
-    FactoryGirl.create(
+    create(
       :organisation,
       name: 'Ministry Of Misery',
       slug: slug,
@@ -33,9 +33,9 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
 
   test "it updates the child organisation with information about it's parent" do
     slug = 'ministry-of-fun'
-    fun = FactoryGirl.create(:organisation, name: 'Ministry of Fun', slug: slug)
+    fun = create(:organisation, name: 'Ministry of Fun', slug: slug)
     child_slug = 'ministry-of-fun-child-1' # hard-coded in gds_api_adapters
-    movies = FactoryGirl.create(:organisation, name: 'Ministry of Movies', slug: child_slug)
+    movies = create(:organisation, name: 'Ministry of Movies', slug: child_slug)
 
     organisations_api_has_organisations([slug])
 

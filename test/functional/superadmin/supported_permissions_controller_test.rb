@@ -3,14 +3,14 @@ require 'test_helper'
 class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCase
 
   setup do
-    @user = FactoryGirl.create(:user, role: "superadmin")
+    @user = create(:user, role: "superadmin")
     sign_in @user
   end
 
   context "GET index" do
     should "render the permissions list" do
-      app = FactoryGirl.create(:application, name: "My first app")
-      perm = FactoryGirl.create(:supported_permission, application_id: app.id, name: "permission1", delegatable: true)
+      app = create(:application, name: "My first app")
+      perm = create(:supported_permission, application_id: app.id, name: "permission1", delegatable: true)
 
       get :index, application_id: app.id
 
@@ -24,8 +24,8 @@ class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCas
 
   context "GET new" do
     should "render the form" do
-      app = FactoryGirl.create(:application, name: "My first app")
-      perm = FactoryGirl.create(:supported_permission, application_id: app.id, name: "permission1")
+      app = create(:application, name: "My first app")
+      perm = create(:supported_permission, application_id: app.id, name: "permission1")
       get :new, application_id: app.id
       assert_select "h1", /My first app/
       assert_select "input[name='supported_permission[name]']", true
@@ -34,7 +34,7 @@ class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCas
 
   context "POST create" do
     should "show error if name is not provided and not create a permission" do
-      app = FactoryGirl.create(:application, name: "My first app")
+      app = create(:application, name: "My first app")
 
       post :create, application_id: app.id, supported_permission: { name: "" }
 
@@ -43,7 +43,7 @@ class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCas
      end
 
     should "create a new permission" do
-      app = FactoryGirl.create(:application, name: "My first app")
+      app = create(:application, name: "My first app")
 
       post :create, application_id: app.id, supported_permission: { name: "permission1" }
 
@@ -55,8 +55,8 @@ class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCas
 
   context "PUT update" do
     should "show error if name is not provided and not edit the permission" do
-      app = FactoryGirl.create(:application, name: "My first app")
-      perm = FactoryGirl.create(:supported_permission, application_id: app.id,
+      app = create(:application, name: "My first app")
+      perm = create(:supported_permission, application_id: app.id,
                                   name: "permission1", delegatable: true, created_at: 2.days.ago)
 
       put :update, application_id: app.id, id: perm.id, supported_permission: { name: "", delegatable: false }
@@ -66,8 +66,8 @@ class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCas
      end
 
     should "edit permission" do
-      app = FactoryGirl.create(:application, name: "My first app")
-      perm = FactoryGirl.create(:supported_permission, application_id: app.id,
+      app = create(:application, name: "My first app")
+      perm = create(:supported_permission, application_id: app.id,
                                   name: "permission1", delegatable: true, created_at: 2.days.ago)
 
       put :update, application_id: app.id, id: perm.id, supported_permission: { delegatable: false }

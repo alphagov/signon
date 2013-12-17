@@ -3,7 +3,7 @@ require 'test_helper'
 class PasswordsControllerTest < ActionController::TestCase
   setup do
     request.env["devise.mapping"] = Devise.mappings[:user]
-    @user = FactoryGirl.create(:user)
+    @user = create(:user)
     @user.__send__(:generate_reset_password_token!)
   end
 

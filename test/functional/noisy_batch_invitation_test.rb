@@ -3,9 +3,9 @@ require 'test_helper'
 class NoisyBatchInvitationTest < ActionMailer::TestCase
   context "make_noise" do
     setup do
-      user = FactoryGirl.create(:user, name: "Bob Loblaw")
-      @batch_invitation = FactoryGirl.create(:batch_invitation, user: user)
-      FactoryGirl.create(:batch_invitation_user, batch_invitation: @batch_invitation)
+      user = create(:user, name: "Bob Loblaw")
+      @batch_invitation = create(:batch_invitation, user: user)
+      create(:batch_invitation_user, batch_invitation: @batch_invitation)
       @email = NoisyBatchInvitation.make_noise(@batch_invitation).deliver
     end
 
