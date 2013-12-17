@@ -5,7 +5,7 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
 
   setup do
     request.env["devise.mapping"] = Devise.mappings[:user]
-    @user = create(:user, role: "admin")
+    @user = create(:admin_user)
     sign_in @user
   end
 

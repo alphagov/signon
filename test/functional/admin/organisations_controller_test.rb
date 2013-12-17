@@ -3,7 +3,7 @@ require 'test_helper'
 class Admin::OrganisationsControllerTest < ActionController::TestCase
 
   setup do
-    @user = create(:user, role: "admin")
+    @user = create(:admin_user)
     sign_in @user
   end
 

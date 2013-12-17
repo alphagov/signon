@@ -7,7 +7,7 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
   end
 
   setup do
-    @user = create(:user, role: "admin")
+    @user = create(:admin_user)
     sign_in @user
   end
 
