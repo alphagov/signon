@@ -7,7 +7,7 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
   end
 
   setup do
-    @user = FactoryGirl.create(:user, role: "admin")
+    @user = create(:admin_user)
     sign_in @user
   end
 
@@ -20,8 +20,8 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
 
     context "some batches created recently" do
       setup do
-        @bi = FactoryGirl.create(:batch_invitation)
-        FactoryGirl.create(:batch_invitation_user, batch_invitation: @bi)
+        @bi = create(:batch_invitation)
+        create(:batch_invitation_user, batch_invitation: @bi)
       end
 
       should "show a table summarising them" do
@@ -35,7 +35,7 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
 
   context "POST create" do
     should "create a BatchInvitation and BatchInvitationUsers" do
-      app = FactoryGirl.create(:application)
+      app = create(:application)
       permissions_attributes = {
         0 => {
           "application_id" => "#{app.id}",
@@ -129,9 +129,9 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
 
   context "GET show" do
     setup do
-      @bi = FactoryGirl.create(:batch_invitation)
-      @user1 = FactoryGirl.create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
-      @user2 = FactoryGirl.create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
+      @bi = create(:batch_invitation)
+      @user1 = create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
+      @user2 = create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
     end
 
     should "list the users being created" do

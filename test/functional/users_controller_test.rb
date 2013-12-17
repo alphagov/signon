@@ -3,7 +3,7 @@ require 'test_helper'
 class UsersControllerTest < ActionController::TestCase
   def change_user_password(user_factory, new_password)
     original_password = "I am a very original password. Refrigerator weevil."
-    user = FactoryGirl.create(user_factory, password: original_password)
+    user = create(user_factory, password: original_password)
     original_password_hash = user.encrypted_password
     sign_in user
 
@@ -53,21 +53,21 @@ class UsersControllerTest < ActionController::TestCase
   context "GET edit" do
     context "changing an email" do
       setup do
-        @user = FactoryGirl.create(:user_with_pending_email_change)
+        @user = create(:user_with_pending_email_change)
         sign_in @user
       end
 
       should "show the unconfirmed_email" do
         get :edit
 
-        assert_select "input#user_unconfirmed_email[value=#{@user.unconfirmed_email}]" 
+        assert_select "input#user_unconfirmed_email[value=#{@user.unconfirmed_email}]"
       end
     end
   end
 
   context "PUT update" do
     setup do
-      @user = FactoryGirl.create(:user, email: "old@email.com")
+      @user = create(:user, email: "old@email.com")
       sign_in @user
     end
 
@@ -88,7 +88,7 @@ class UsersControllerTest < ActionController::TestCase
 
   context "PUT resend_email_change" do
     should "send an email change confirmation email" do
-      @user = FactoryGirl.create(:user_with_pending_email_change)
+      @user = create(:user_with_pending_email_change)
       sign_in @user
       put :resend_email_change
 
@@ -96,7 +96,7 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     should "use a new token if it's expired" do
-      @user = FactoryGirl.create(:user_with_pending_email_change,
+      @user = create(:user_with_pending_email_change,
                                           confirmation_token: "old token",
                                           confirmation_sent_at: 15.days.ago)
       sign_in @user
@@ -108,7 +108,7 @@ class UsersControllerTest < ActionController::TestCase
 
   context "DELETE cancel_email_change" do
     setup do
-      @user = FactoryGirl.create(:user_with_pending_email_change)
+      @user = create(:user_with_pending_email_change)
       sign_in @user
     end
 
@@ -123,10 +123,10 @@ class UsersControllerTest < ActionController::TestCase
 
   context "GET show (as OAuth client application)" do
     should "fetching json profile with a valid oauth token should succeed" do
-      user = FactoryGirl.create(:user)
-      application = FactoryGirl.create(:application)
-      permission = FactoryGirl.create(:permission, user_id: user.id, application_id: application.id)
-      token = FactoryGirl.create(:access_token, :application => application, :resource_owner_id => user.id)
+      user = create(:user)
+      application = create(:application)
+      permission = create(:permission, user_id: user.id, application_id: application.id)
+      token = create(:access_token, :application => application, :resource_owner_id => user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
       get :show, {:format => :json}
@@ -137,9 +137,9 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     should "fetching json profile with an invalid oauth token should not succeed" do
-      user = FactoryGirl.create(:user)
-      application = FactoryGirl.create(:application)
-      token = FactoryGirl.create(:access_token, :application => application, :resource_owner_id => user.id)
+      user = create(:user)
+      application = create(:application)
+      token = create(:access_token, :application => application, :resource_owner_id => user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token.sub(/[0-9]/, 'x')}"
       get :show, {:format => :json}
@@ -153,10 +153,10 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     should "fetching json profile should include permissions" do
-      user = FactoryGirl.create(:user)
-      application = FactoryGirl.create(:application)
-      permission = FactoryGirl.create(:permission, user_id: user.id, application_id: application.id)
-      token = FactoryGirl.create(:access_token, :application => application, :resource_owner_id => user.id)
+      user = create(:user)
+      application = create(:application)
+      permission = create(:permission, user_id: user.id, application_id: application.id)
+      token = create(:access_token, :application => application, :resource_owner_id => user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
       get :show, {:format => :json}
@@ -165,12 +165,12 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     should "fetching json profile should include only permissions for the relevant app" do
-      user = FactoryGirl.create(:user)
-      application = FactoryGirl.create(:application)
-      other_application = FactoryGirl.create(:application)
-      permission = FactoryGirl.create(:permission, user_id: user.id, application_id: application.id)
-      other_permission = FactoryGirl.create(:permission, user_id: user.id, application_id: other_application.id)
-      token = FactoryGirl.create(:access_token, :application => application, :resource_owner_id => user.id)
+      user = create(:user)
+      application = create(:application)
+      other_application = create(:application)
+      permission = create(:permission, user_id: user.id, application_id: application.id)
+      other_permission = create(:permission, user_id: user.id, application_id: other_application.id)
+      token = create(:access_token, :application => application, :resource_owner_id => user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
       get :show, {:format => :json}
@@ -179,21 +179,21 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     should "fetching json profile should update last_synced_at for the relevant app" do
-      user = FactoryGirl.create(:user)
-      application = FactoryGirl.create(:application)
-      permission = FactoryGirl.create(:permission, user_id: user.id, application_id: application.id)
-      token = FactoryGirl.create(:access_token, :application => application, :resource_owner_id => user.id)
+      user = create(:user)
+      application = create(:application)
+      permission = create(:permission, user_id: user.id, application_id: application.id)
+      token = create(:access_token, :application => application, :resource_owner_id => user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
       get :show, {:format => :json}
-      
+
       assert_not_nil permission.reload.last_synced_at
     end
 
     should "fetching json profile should succeed even if no permission for relevant app" do
-      user = FactoryGirl.create(:user)
-      application = FactoryGirl.create(:application)
-      token = FactoryGirl.create(:access_token, :application => application, :resource_owner_id => user.id)
+      user = create(:user)
+      application = create(:application)
+      token = create(:access_token, :application => application, :resource_owner_id => user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
       get :show, {:format => :json}

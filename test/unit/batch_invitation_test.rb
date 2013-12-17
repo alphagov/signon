@@ -4,7 +4,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
   setup do
     ActionMailer::Base.deliveries = []
 
-    @app = FactoryGirl.create(:application)
+    @app = create(:application)
 
     permissions_attributes = {
       0 => {
@@ -13,9 +13,9 @@ class BatchInvitationTest < ActiveSupport::TestCase
         permissions: ["signin"]
       }
     }
-    @bi = FactoryGirl.create(:batch_invitation, applications_and_permissions: permissions_attributes)
-    @user_a = FactoryGirl.create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
-    @user_b = FactoryGirl.create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
+    @bi = create(:batch_invitation, applications_and_permissions: permissions_attributes)
+    @user_a = create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
+    @user_b = create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
   end
 
   context "perform" do
@@ -47,7 +47,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
 
     context "one of the users already exists" do
       setup do
-        @user = FactoryGirl.create(:user, name: "Arthur Dent", email: "a@m.com")
+        @user = create(:user, name: "Arthur Dent", email: "a@m.com")
         @bi.perform
       end
 
@@ -60,9 +60,9 @@ class BatchInvitationTest < ActiveSupport::TestCase
       end
 
       should "skip that user entirely, including not altering permissions" do
-        app = FactoryGirl.create(:application)
-        another_app = FactoryGirl.create(:application)
-        FactoryGirl.create(:supported_permission, application_id: another_app.id, name: "foo")
+        app = create(:application)
+        another_app = create(:application)
+        create(:supported_permission, application_id: another_app.id, name: "foo")
         @user.grant_permissions(another_app, ["signin", "foo"])
 
         permissions_attributes = {

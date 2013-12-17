@@ -3,8 +3,6 @@ require 'numbers/numbers_csv'
 require 'numbers/user_segments'
 
 class NumbersCsvTest < ActiveSupport::TestCase
-  include FactoryGirl::Syntax::Methods
-
   def setup
     create(:admin_user, email: 'admin_user@admin.example.com', name: "Winston")
     create_list(:user, 3)

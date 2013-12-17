@@ -8,12 +8,12 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
   end
 
   setup do
-    @sso_push_user = FactoryGirl.create(:user, name: "SSO Push User")
+    @sso_push_user = create(:user, name: "SSO Push User")
     SSOPushCredential.stubs(:user_email).returns(@sso_push_user.email)
 
-    @user = FactoryGirl.create(:user)
-    @application = FactoryGirl.create(:application, redirect_uri: "http://app.com/callback")
-    @permission = FactoryGirl.create(:permission,
+    @user = create(:user)
+    @application = create(:application, redirect_uri: "http://app.com/callback")
+    @permission = create(:permission,
                                       application: @application,
                                       user: @user,
                                       permissions: ["ba"])
@@ -27,14 +27,14 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
   end
 
   should "return a structure of successful and failed pushes" do
-    user_not_in_database = FactoryGirl.create(:application, redirect_uri: "http://user-not-in-database.com/callback")
-    FactoryGirl.create(:permission,
+    user_not_in_database = create(:application, redirect_uri: "http://user-not-in-database.com/callback")
+    create(:permission,
                         application: user_not_in_database,
                         user: @user,
                         permissions: ["ba"])
 
-    slow_app = FactoryGirl.create(:application, redirect_uri: "http://slow.com/callback")
-    FactoryGirl.create(:permission,
+    slow_app = create(:application, redirect_uri: "http://slow.com/callback")
+    create(:permission,
                         application: slow_app,
                         user: @user,
                         permissions: ["ba"])

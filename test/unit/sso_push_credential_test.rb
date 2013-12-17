@@ -3,7 +3,7 @@ require 'test_helper'
 class SSOPushCredentialTest < ActiveSupport::TestCase
 
   setup do
-    @application = FactoryGirl.create(:application)
+    @application = create(:application)
 
     SSOPushCredential.user_email = nil
     SSOPushCredential.user = nil
@@ -16,7 +16,7 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
 
   context "given an existing user" do
     setup do
-      @user = FactoryGirl.create(:user, email: "sso-push-user@gov.uk")
+      @user = create(:user, email: "sso-push-user@gov.uk")
       SSOPushCredential.user_email = "sso-push-user@gov.uk"
     end
 

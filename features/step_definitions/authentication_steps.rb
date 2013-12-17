@@ -1,7 +1,7 @@
 require 'factory_girl'
 
 Given /^a user exists with email "([^"]*)" and passphrase "([^"]*)"$/ do |email, passphrase|
-  @user = FactoryGirl.create(:user, email: email, password: passphrase, password_confirmation: passphrase, name: email.split('@').first.titleize)
+  @user = create(:user, email: email, password: passphrase, password_confirmation: passphrase, name: email.split('@').first.titleize)
 end
 
 Given /^a signed\-in user exists with email "([^"]*)" and passphrase "([^"]*)"$/ do |email, passphrase|
@@ -10,11 +10,11 @@ Given /^a signed\-in user exists with email "([^"]*)" and passphrase "([^"]*)"$/
 end
 
 Given /^a signed\-out user$/ do
-  @user = FactoryGirl.create(:user)
+  @user = create(:user)
 end
 
 Given /^a signed\-out (.*?) user$/ do |role|
-  @user = FactoryGirl.create(:user, role: role)
+  @user = create(:user, role: role)
 end
 
 When /^I sign in$/ do

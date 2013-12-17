@@ -7,11 +7,11 @@ class SuspensionUpdaterTest < ActiveSupport::TestCase
   end
 
   setup do
-    @sso_push_user = FactoryGirl.create(:user, name: "SSO Push User")
+    @sso_push_user = create(:user, name: "SSO Push User")
     SSOPushCredential.stubs(:user_email).returns(@sso_push_user.email)
 
-    @user = FactoryGirl.create(:user)
-    @application = FactoryGirl.create(:application, redirect_uri: "http://app.com/callback")
+    @user = create(:user)
+    @application = create(:application, redirect_uri: "http://app.com/callback")
   end
 
   should "send an empty POST to the app" do
@@ -30,8 +30,8 @@ class SuspensionUpdaterTest < ActiveSupport::TestCase
   end
 
   should "return a structure of successful and failed pushes" do
-    user_not_in_database = FactoryGirl.create(:application, redirect_uri: "http://user-not-in-database.com/callback")
-    slow_app = FactoryGirl.create(:application, redirect_uri: "http://slow.com/callback")
+    user_not_in_database = create(:application, redirect_uri: "http://user-not-in-database.com/callback")
+    slow_app = create(:application, redirect_uri: "http://slow.com/callback")
 
     stub_request(:post, url_for_app(@application)).to_return(status: 200)
     stub_request(:post, url_for_app(user_not_in_database)).to_return(status: 404)
