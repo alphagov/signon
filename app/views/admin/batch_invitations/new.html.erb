@@ -44,11 +44,13 @@ Winston Churchill,winston@example.com
       </div>
     </div>
 
-    <% if !DISABLE_MEMBERSHIP_EDITING && can?(:create_for_specific_organisation, BatchInvitation) %>
+    <% unless DISABLE_MEMBERSHIP_EDITING %>
       <p>
         <%= f.label :organisation_id, "Organisation" %>
         <%= f.select :organisation_id, options_from_collection_for_select(Organisation.accessible_by(current_ability),
-                      :id, :name_with_abbreviation, selected: f.object.organisation_id), { class: "chzn-select" } %>
+                          :id, :name_with_abbreviation, selected: f.object.organisation_id),
+                        { include_blank: current_user.role == 'organisation_admin' ? false : 'None' },
+                        { class: "chzn-select" } %>
       </p>
     <% end %>
 

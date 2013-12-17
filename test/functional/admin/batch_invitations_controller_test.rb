@@ -32,12 +32,8 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
       end
     end
 
-    should "show an organisations to invite to for an organisation_admin" do
-      user = create(:user_in_organisation, role: 'organisation_admin')
-      sign_in user
-
+    should "allow selection of an organisation to invite users to" do
       get :new
-
       assert_select "#batch_invitation_organisation_id option", user.organisation.name
     end
   end
