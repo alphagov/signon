@@ -9,7 +9,7 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
     end
 
     should "store invitation attributes against a user" do
-      user = FactoryGirl.create(:batch_invitation_user, batch_invitation: @batch_invitation)
+      user = create(:batch_invitation_user, batch_invitation: @batch_invitation)
       invitation_attributes = {
         name: user.name,
         email: user.email,
@@ -23,7 +23,7 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
 
     context "success" do
       should "record the outcome against the user" do
-        user = FactoryGirl.create(:batch_invitation_user, batch_invitation: @batch_invitation)
+        user = create(:batch_invitation_user, batch_invitation: @batch_invitation)
         user.invite(@inviting_user, {})
 
         assert_equal "success", user.reload.outcome
@@ -33,7 +33,7 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
     context "user already exists" do
       should "record the outcome against the user" do
         create(:user, name: "A", email: "a@m.com")
-        user = FactoryGirl.create(:batch_invitation_user, batch_invitation: @batch_invitation, email: 'a@m.com')
+        user = create(:batch_invitation_user, batch_invitation: @batch_invitation, email: 'a@m.com')
         user.invite(@inviting_user, {})
 
         assert_equal "skipped", user.reload.outcome
@@ -42,7 +42,7 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
 
     context "the user could not be saved (eg email is blank)" do
       should "record it as a failure" do
-        user = FactoryGirl.create(:batch_invitation_user, batch_invitation: @batch_invitation, email: nil)
+        user = create(:batch_invitation_user, batch_invitation: @batch_invitation, email: nil)
         user.invite(@inviting_user, {})
 
         assert_equal "failed", user.reload.outcome
@@ -56,7 +56,7 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
       end
 
       should "record the outcome against the user" do
-        user = FactoryGirl.create(:batch_invitation_user, batch_invitation: @batch_invitation)
+        user = create(:batch_invitation_user, batch_invitation: @batch_invitation)
         user.invite(@inviting_user, {})
 
         assert_equal "failed", user.reload.outcome

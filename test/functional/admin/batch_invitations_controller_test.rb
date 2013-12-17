@@ -33,7 +33,7 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
     end
 
     should "show an organisations to invite to for an organisation_admin" do
-      user = FactoryGirl.create(:user_in_organisation, role: 'organisation_admin')
+      user = create(:user_in_organisation, role: 'organisation_admin')
       sign_in user
 
       get :new

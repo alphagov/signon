@@ -19,8 +19,8 @@ class BatchInvitationTest < ActiveSupport::TestCase
   end
 
   should "can belong to an organisation" do
-    organisation = FactoryGirl.create(:organisation)
-    bi = FactoryGirl.create(:batch_invitation, organisation: organisation, applications_and_permissions: {})
+    organisation = create(:organisation)
+    bi = create(:batch_invitation, organisation: organisation, applications_and_permissions: {})
 
     assert_equal bi.organisation, organisation
   end
