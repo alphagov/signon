@@ -23,14 +23,12 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
         outside_organisation = create(:organisation)
         sign_in admin
 
-        with_const_override(:DISABLE_MEMBERSHIP_EDITING, false) do
-          get :new
+        get :new
 
-          assert_select ".container" do
-            assert_select "option", count: 0, text: outside_organisation.name_with_abbreviation
-            assert_select "option", count: 1, text: admin.organisation.name_with_abbreviation
-            assert_select "option", count: 1, text: sub_organisation.name_with_abbreviation
-          end
+        assert_select ".container" do
+          assert_select "option", count: 0, text: outside_organisation.name_with_abbreviation
+          assert_select "option", count: 1, text: admin.organisation.name_with_abbreviation
+          assert_select "option", count: 1, text: sub_organisation.name_with_abbreviation
         end
       end
     end
