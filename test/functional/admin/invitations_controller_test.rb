@@ -35,22 +35,17 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
 
     context "organisation admin" do
       should "can give permissions to only applications where signin is delegatable and they have access to" do
-        admin = create(:organisation_admin)
-        delegatable_application = create(:application)
-        delegatable_permission = create(:supported_permission, name: 'signin', delegatable: true, application: delegatable_application)
-        create(:permission, application: delegatable_application, user: admin, permissions: ['signin'])
-
-        non_delegatable_application = create(:application)
-        non_delegatable_permission = create(:supported_permission, name: 'signin', delegatable: false, application: non_delegatable_application)
-        create(:permission, application: non_delegatable_application, user: admin, permissions: ['signin'])
+        delegatable_app = create(:application, with_delegatable_supported_permissions: ["signin"])
+        non_delegatable_app = create(:application, with_supported_permissions: ["signin"])
+        admin = create(:organisation_admin, with_signin_permissions_for: [ delegatable_app, non_delegatable_app ] )
 
         sign_in admin
 
         get :new
 
         assert_select ".container" do
-          assert_select "td", { count: 1, text: delegatable_application.name }
-          assert_select "td", { count: 0, text: non_delegatable_application.name }
+          assert_select "td", { count: 1, text: delegatable_app.name }
+          assert_select "td", { count: 0, text: non_delegatable_app.name }
         end
       end
     end

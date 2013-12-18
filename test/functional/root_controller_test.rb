@@ -27,9 +27,7 @@ class RootControllerTest < ActionController::TestCase
   test "Your Applications should include apps you have permission to signin to" do
     exclusive_app = create(:application, name: "Exclusive app")
     everybody_app = create(:application, name: "Everybody app")
-    user = create(:user)
-    create(:permission, user: user, application: exclusive_app, permissions: [])
-    create(:permission, user: user, application: everybody_app, permissions: ["signin"])
+    user = create(:user, with_permissions: { exclusive_app => [], everybody_app => ["signin"] })
 
     sign_in user
 

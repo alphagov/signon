@@ -9,8 +9,7 @@ class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCas
 
   context "GET index" do
     should "render the permissions list" do
-      app = create(:application, name: "My first app")
-      perm = create(:supported_permission, application_id: app.id, name: "permission1", delegatable: true)
+      app = create(:application, name: "My first app", with_delegatable_supported_permissions: ["permission1"])
 
       get :index, application_id: app.id
 
@@ -24,8 +23,7 @@ class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCas
 
   context "GET new" do
     should "render the form" do
-      app = create(:application, name: "My first app")
-      perm = create(:supported_permission, application_id: app.id, name: "permission1")
+      app = create(:application, name: "My first app", with_supported_permissions: ["permission1"])
       get :new, application_id: app.id
       assert_select "h1", /My first app/
       assert_select "input[name='supported_permission[name]']", true

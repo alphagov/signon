@@ -153,9 +153,8 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     should "fetching json profile should include permissions" do
-      user = create(:user)
       application = create(:application)
-      permission = create(:permission, user_id: user.id, application_id: application.id)
+      user = create(:user, with_signin_permissions_for: [ application ])
       token = create(:access_token, :application => application, :resource_owner_id => user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
@@ -165,11 +164,9 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     should "fetching json profile should include only permissions for the relevant app" do
-      user = create(:user)
-      application = create(:application)
-      other_application = create(:application)
-      permission = create(:permission, user_id: user.id, application_id: application.id)
-      other_permission = create(:permission, user_id: user.id, application_id: other_application.id)
+      application, other_application = create_pair(:application)
+      user = create(:user, with_signin_permissions_for: [ application, other_application ])
+
       token = create(:access_token, :application => application, :resource_owner_id => user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"

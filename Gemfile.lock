@@ -102,10 +102,10 @@ GEM
     erubis (2.7.0)
     exception_notification (2.6.1)
       actionmailer (>= 3.0.4)
-    factory_girl (3.1.1)
+    factory_girl (4.3.0)
       activesupport (>= 3.0.0)
-    factory_girl_rails (3.1.0)
-      factory_girl (~> 3.1.0)
+    factory_girl_rails (4.3.0)
+      factory_girl (~> 4.3.0)
       railties (>= 3.0.0)
     ffi (1.1.5)
     gds-api-adapters (7.11.0)
@@ -250,7 +250,7 @@ DEPENDENCIES
   devise_security_extension (= 0.7.2)!
   doorkeeper (= 0.6.7)
   exception_notification
-  factory_girl_rails (= 3.1.0)
+  factory_girl_rails (= 4.3.0)
   gds-api-adapters (= 7.11.0)
   jquery-rails
   json (= 1.7.7)
