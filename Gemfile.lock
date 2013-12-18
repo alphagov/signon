@@ -130,9 +130,9 @@ GEM
     libwebsocket (0.1.5)
       addressable
     link_header (0.0.7)
-    logstash-event (1.2.02)
-    logstasher (0.2.8)
-      logstash-event
+    logstash-event (1.1.5)
+    logstasher (0.4.0)
+      logstash-event (~> 1.1.0)
     lrucache (0.1.4)
       PriorityQueue (~> 0.1.2)
     macaddr (1.6.1)
@@ -255,7 +255,7 @@ DEPENDENCIES
   jquery-rails
   json (= 1.7.7)
   kaminari (= 0.14.1)
-  logstasher (= 0.2.8)
+  logstasher (= 0.4.0)
   mocha (= 0.13.3)
   mysql2
   passphrase_entropy!
