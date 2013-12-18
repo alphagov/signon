@@ -31,14 +31,3 @@ end
 class ActionController::TestCase
   include Devise::TestHelpers
 end
-
-def with_const_override(const_sym, value)
-  old_value = Object.send :remove_const, const_sym
-  begin
-    Object.send :const_set, const_sym, value
-    yield
-  ensure
-    Object.send :remove_const, const_sym
-    Object.send :const_set, const_sym, old_value
-  end
-end
