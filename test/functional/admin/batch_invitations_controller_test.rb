@@ -33,8 +33,10 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
     end
 
     should "allow selection of an organisation to invite users to" do
+      organisation = create(:organisation)
       get :new
-      assert_select "#batch_invitation_organisation_id option", user.organisation.name
+
+      assert_select "#batch_invitation_organisation_id option", organisation.name
     end
   end
 

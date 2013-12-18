@@ -44,12 +44,10 @@ Winston Churchill,winston@example.com
       </div>
     </div>
 
-  <% unless DISABLE_MEMBERSHIP_EDITING %>
     <p>
       <%= f.label :organisation_id, "Organisation" %>
       <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chzn-select" } %>
     </p>
-  <% end %>
 
     <h2>Permissions for the users</h2>
 
