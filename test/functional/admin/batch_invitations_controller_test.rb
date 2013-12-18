@@ -31,6 +31,13 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
         assert_select "table.recent-batches tbody td", "In progress. 0 of 1 users processed."
       end
     end
+
+    should "allow selection of an organisation to invite users to" do
+      organisation = create(:organisation)
+      get :new
+
+      assert_select "#batch_invitation_organisation_id option", organisation.name
+    end
   end
 
   context "POST create" do
@@ -58,6 +65,16 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
       assert_equal(translated_permissions_attributes, bi.applications_and_permissions)
       expected_names_and_emails = [["Arthur Dent","a@hhg.com"], ["Tricia McMillan","t@hhg.com"]]
       assert_equal expected_names_and_emails, bi.batch_invitation_users.map { |u| [u.name, u.email] }
+    end
+
+    should "store the organisation to invite users to" do
+      post :create, user: { permissions_attributes: {} },
+        batch_invitation: { user_names_and_emails: users_csv, organisation_id: 3 }
+
+      bi = BatchInvitation.last
+
+      assert_not_nil bi
+      assert_equal 3, bi.organisation_id
     end
 
     should "queue a job to do the processing" do

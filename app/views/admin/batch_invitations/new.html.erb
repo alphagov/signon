@@ -44,6 +44,11 @@ Winston Churchill,winston@example.com
       </div>
     </div>
 
+    <p>
+      <%= f.label :organisation_id, "Organisation" %>
+      <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chzn-select" } %>
+    </p>
+
     <h2>Permissions for the users</h2>
 
     <%= render partial: "admin/shared/user_permissions", locals: { user_object: User.new } %>
