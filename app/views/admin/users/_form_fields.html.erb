@@ -39,9 +39,7 @@
 
 <p>
   <%= f.label :organisation_id, "Organisation" %>
-  <%= f.select :organisation_id, options_from_collection_for_select(Organisation.accessible_by(current_ability), :id, :name_with_abbreviation, selected: f.object.organisation_id),
-    { include_blank: current_user.role == 'organisation_admin' ? false : 'None' },
-    { class: "chzn-select" } %>
+  <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chzn-select" } %>
 </p>
 
 <h2>Permissions</h2>
