@@ -6,18 +6,14 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
 
     should "return a list of string permissions, merging in the defaults" do
       user = create(:user)
-      app = create(:application, supported_permissions: [create(:supported_permission, name: "write")])
+      app = create(:application, with_supported_permissions: ["write"])
 
       assert_equal ["signin", "write"], app.supported_permission_strings(user)
     end
 
     should "only show permissions that organisation admins themselves have" do
-      user = create(:organisation_admin)
-      app = create(:application, supported_permissions: [
-        create(:delegatable_supported_permission, name: "write"),
-        create(:delegatable_supported_permission, name: "approve")
-      ])
-      create(:permission, user: user, application: app, permissions: ['write'])
+      app = create(:application, with_delegatable_supported_permissions: ["write", "approve"])
+      user = create(:organisation_admin, with_permissions: { app => ["write"] })
 
       assert_equal ["write"], app.supported_permission_strings(user)
     end

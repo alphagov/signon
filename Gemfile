@@ -45,7 +45,7 @@ gem 'logstasher', '0.2.8'
 group :test do
   gem 'cucumber-rails', '1.3.0', require: false
   gem 'database_cleaner', '0.7.2'
-  gem 'factory_girl_rails', '3.1.0'
+  gem 'factory_girl_rails', '4.3.0'
   gem 'mocha', '0.13.3', require: false
   gem 'shoulda', '3.0.1'
   gem 'webmock', '1.8.7'
