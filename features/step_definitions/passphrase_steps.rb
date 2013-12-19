@@ -17,18 +17,6 @@ When /^I complete the passphrase reset form setting my passphrase to "(.*?)"$/ d
   click_button "Change my passphrase"
 end
 
-When /^I try to change the passphrase from "([^"]*)" to "([^"]*)" and "([^"]*)"$/ do |old_passphrase, new_passphrase, other_new_passphrase|
-  change_password(old: old_passphrase, new: new_passphrase, new_confirmation: other_new_passphrase)
-end
-
-When /^I change the passphrase from "([^"]*)" to "([^"]*)"$/ do |old_passphrase, new_passphrase|
-  change_password(old: old_passphrase, new: new_passphrase, new_confirmation: new_passphrase)
-end
-
-When /^I enter a new passphrase of "(.*?)"$/ do |passphrase|
-  change_password(old: "", new: passphrase, new_confirmation: passphrase)
-end
-
 Then /^my passphrase should (?:still )?be "(.*?)"$/ do |passphrase|
   @user.reload
   @user.valid_password?(passphrase)
