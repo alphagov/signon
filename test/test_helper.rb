@@ -12,6 +12,8 @@ require "mocha/setup"
 require 'webmock/test_unit'
 require 'capybara/rails'
 
+require 'helpers/user_helpers'
+
 WebMock.disable_net_connect!(:allow_localhost => true)
 
 class ActiveSupport::TestCase
@@ -35,4 +37,5 @@ end
 
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
+  include UserHelpers
 end
