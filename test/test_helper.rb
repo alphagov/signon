@@ -10,6 +10,7 @@ require 'shoulda'
 require "test/unit"
 require "mocha/setup"
 require 'webmock/test_unit'
+require 'capybara/rails'
 
 WebMock.disable_net_connect!(:allow_localhost => true)
 
@@ -30,4 +31,8 @@ end
 
 class ActionController::TestCase
   include Devise::TestHelpers
+end
+
+class ActionDispatch::IntegrationTest
+  include Capybara::DSL
 end
