@@ -10,7 +10,7 @@ class ApiAuthenticationTest < ActionDispatch::IntegrationTest
     user.authorisations.create!(application_id: app.id)
   end
 
-  test "that a user with a valid access token can access their user details" do
+  should "grant access to the user details with a valid access token" do
     set_bearer_token(get_valid_token.token)
     visit "/user.json"
 
@@ -19,27 +19,27 @@ class ApiAuthenticationTest < ActionDispatch::IntegrationTest
     assert parsed_response['user']['permissions'].is_a?(Array)
   end
 
-  test "without an access token" do
+  should "not grant access without an access token" do
     visit "/user.json"
 
     assert_equal 401, page.status_code
   end
 
-  test "with an invalid access token" do
+  should "not grant access with an invalid access token" do
     set_bearer_token(get_valid_token.token.reverse)
     visit "/user.json"
 
     assert_equal 401, page.status_code
   end
 
-  test "when access token has expired" do
+  should "not grant access when access token has expired" do
     set_bearer_token(get_expired_token.token)
     visit "/user.json"
 
     assert_equal 401, page.status_code
   end
 
-  test "when access token has been revoked" do
+  should "not grant access when access token has been revoked" do
     set_bearer_token(get_revoked_token.token)
     visit "/user.json"
 
