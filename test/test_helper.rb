@@ -38,4 +38,8 @@ end
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
   include UserHelpers
+
+  def assert_response_contains(content)
+    assert page.has_content?(content), page.body
+  end
 end
