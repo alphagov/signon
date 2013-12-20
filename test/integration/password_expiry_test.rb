@@ -4,6 +4,8 @@ require 'helpers/passphrase_support'
 class PassphraseExpiryTest < ActionDispatch::IntegrationTest
   include PassPhraseSupport
 
+  PROMPT_TO_CHANGE_PASSWORD = "Your passphrase has expired. Please choose a new passphrase"
+
   setup do
     @user = create(:user, password_changed_at: 91.days.ago)
     @new_password = "some 3v3n more s3cure passphrase"
@@ -14,7 +16,7 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
 
       signin(@user)
-      assert_prompted_to_reset_password
+      assert_response_contains(PROMPT_TO_CHANGE_PASSWORD)
 
       reset_expired_passphrase(@user.password, @new_password, @new_password)
       assert_response_contains("Your new passphrase is saved")
@@ -28,7 +30,7 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
       signin(@user)
       reset_expired_passphrase(@user.password, @new_password, @new_password)
 
-      assert_equal "/user/edit?arbitrary=1", current_path_with_params
+      assert_current_url "/user/edit?arbitrary=1"
     end
 
     should "continue prompting for a new password if the reset didn't work" do
@@ -38,7 +40,7 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
       reset_expired_passphrase("nonsense", @new_password, @new_password)
 
       visit new_user_session_path
-      assert_prompted_to_reset_password
+      assert_response_contains(PROMPT_TO_CHANGE_PASSWORD)
     end
 
     should "continue prompting for a new password if the user navigates away from the password reset page" do
@@ -46,16 +48,7 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
       signin(@user)
 
       visit new_user_session_path
-      assert_prompted_to_reset_password
+      assert_response_contains(PROMPT_TO_CHANGE_PASSWORD)
     end    
-  end
-
-  private
-  def assert_prompted_to_reset_password
-    assert_response_contains("Your passphrase has expired. Please choose a new passphrase")
-  end
-
-  def current_path_with_params
-    current_url.gsub(current_host, "")
   end
 end

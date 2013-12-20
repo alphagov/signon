@@ -4,12 +4,14 @@ require 'helpers/passphrase_support'
 class PassphraseResetTest < ActionDispatch::IntegrationTest
   include PassPhraseSupport
 
+  BLANKET_RESET_MESSAGE = "If your e-mail exists on our database, you will receive a passphrase recovery link on your e-mail"
+
   should "reset a user's password and let them set a new one" do
     user = create(:user)
     new_password = "some v3ry s3cure passphrase"
 
     trigger_reset_for(user.email)
-    assert_blanket_reset_message
+    assert_response_contains(BLANKET_RESET_MESSAGE)
     
     user.reload
     complete_password_reset(reset_password_token: user.reset_password_token, new_password: new_password)
@@ -23,7 +25,7 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
     trigger_reset_for("non-existent-email@example.com")
 
     assert !page.has_content?("Email not found"), page.body
-    assert_blanket_reset_message
+    assert_response_contains(BLANKET_RESET_MESSAGE)
   end
 
   should "not give away whether an email is on the SES blacklist" do
@@ -33,11 +35,6 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
     trigger_reset_for(user.email)
 
     assert !page.has_content?("Email not found"), page.body
-    assert_blanket_reset_message
-  end  
-
-  private
-  def assert_blanket_reset_message
-    assert_response_contains("If your e-mail exists on our database, you will receive a passphrase recovery link on your e-mail")
+    assert_response_contains(BLANKET_RESET_MESSAGE)
   end
 end
