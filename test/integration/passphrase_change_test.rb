@@ -7,6 +7,7 @@ class PassphraseChangeTest < ActionDispatch::IntegrationTest
   setup do
     @original_password = "some v3ry s3cure passphrase"
     @user = create(:user, password: @original_password)
+    visit new_user_session_path
     signin(@user)
   end
 
