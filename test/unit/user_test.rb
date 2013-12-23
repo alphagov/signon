@@ -22,6 +22,23 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "admin", u.role
   end
 
+  # Scopes
+
+  test "fetches users who signed_in X days ago" do
+    signed_in_2_days_ago = create(:user, current_sign_in_at: 2.days.ago)
+    signed_in_8_days_ago = create(:user, current_sign_in_at: 8.days.ago)
+
+    assert_equal [signed_in_2_days_ago], User.last_signed_in_on(2.days.ago)
+  end
+
+  test "fetches users who signed_in before X days ago" do
+    signed_in_6_days_ago = create(:user, current_sign_in_at: 6.days.ago)
+    signed_in_7_days_ago = create(:user, current_sign_in_at: 7.days.ago)
+    signed_in_8_days_ago = create(:user, current_sign_in_at: 8.days.ago)
+
+    assert_equal [signed_in_7_days_ago, signed_in_8_days_ago], User.last_signed_in_before(6.days.ago)
+  end
+
   # Password Validation
 
   test "it requires a password to be at least 10 characters long" do
