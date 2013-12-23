@@ -37,6 +37,16 @@ namespace :users do
     end
   end
 
+  desc "Suspend users who have not signed-in since SUSPENSION_THRESHOLD_PERIOD"
+  task :suspend_inactive => :environment do
+    if VolatileLock.new('signon:suspend_inactive').obtained?
+      count = InactiveUsersSuspender.new.suspend
+      puts "#{count} users were suspended because they had not logged in since #{User::SUSPENSION_THRESHOLD_PERIOD.inspect}"
+    else
+      puts "InactiveUsersSuspender: skipping, couldn't obtain lock"
+    end
+  end
+
   desc "Suspend a user's access to the site (specify email in environment)"
   task :suspend => :environment do
     raise "Requires email specified in environment" unless ENV['email']
