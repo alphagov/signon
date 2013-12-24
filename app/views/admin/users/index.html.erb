@@ -34,6 +34,7 @@
     <thead>
       <tr>
         <th scope="col">Name and email</th>
+        <th scope="col">Role</th>
         <th scope="col">Sign-in count</th>
         <th scope="col">Created</th>
         <th scope="col">Suspended?</th>
@@ -48,6 +49,7 @@
               <%= link_to "#{user.name} <#{user.email}>", edit_admin_user_path(user) %>
             <%= user.suspended? ? "</del>".html_safe : "" %>
           </td>
+          <td class="role"><%= user.role.humanize %></td>
           <td><%= user.sign_in_count %></td>
           <td><%= time_ago_in_words(user.created_at) %> ago</td>
           <td><%= user.suspended? ? "Yes" : "No" %></td>

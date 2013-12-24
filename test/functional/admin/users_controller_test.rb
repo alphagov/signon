@@ -14,6 +14,12 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_select "td.email", /another_user@email.com/
     end
 
+    should "show user roles" do
+      create(:admin_user, email: "another_user@email.com")
+      get :index
+      assert_select "td.role", "Admin"
+    end
+
     should "let you paginate by the first letter of the name" do
       create(:user, name: "alf", email: "a@email.com")
       create(:user, name: "zed", email: "z@email.com")
