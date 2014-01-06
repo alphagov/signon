@@ -40,7 +40,7 @@ group :development do
   gem 'quiet_assets'
 end
 
-gem 'logstasher', '0.4.0'
+gem 'logstasher', '0.4.1'
 
 group :test do
   gem 'cucumber-rails', '1.3.0', require: false
