@@ -97,10 +97,10 @@ The web application itself is run like any other Rails app, for example:
 script/rails s
 ```
 
-In development, you can run a DelayedJob worked to process background jobs:
+In development, you can run sidekiq to process background jobs:
 
 ```sh
-rake jobs:work
+bundle exec sidekiq -C config/sidekiq.yml
 ```
 
 ## Implementation Notes

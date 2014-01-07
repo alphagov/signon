@@ -22,15 +22,15 @@ class Admin::UsersController < ApplicationController
     email_before = @user.email
     if @user.update_attributes(translate_faux_signin_permission(params[:user]), as: current_user.role.to_sym)
       @user.permissions.reload
-      results = PermissionUpdater.new(@user, @user.applications_used).attempt
-      @successes, @failures = results[:successes], results[:failures]
+
+      UpdateUserPermission.perform_async(@user.id)
+
       if @user.invited_but_not_yet_accepted? && (email_before != @user.email)
         @user.invite!
       end
 
       flash[:notice] = "Updated user #{@user.email} successfully"
-    else
-      render :edit
+      redirect_to admin_users_path
     end
   end
 

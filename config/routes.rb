@@ -1,4 +1,10 @@
 Signonotron2::Application.routes.draw do
+  
+  if Rails.env.development?
+    require 'sidekiq/web'
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   use_doorkeeper
 
   devise_for :users, :controllers => {

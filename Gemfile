@@ -6,8 +6,6 @@ group :passenger_compatibility do
   gem 'rake', '0.9.2'
 end
 
-gem 'delayed_job', '3.0.5'
-gem 'delayed_job_active_record', '0.4.4'
 gem 'kaminari', '0.14.1'
 gem 'alphabetical_paginate', '2.1.0'
 gem 'mysql2'
@@ -34,10 +32,14 @@ gem 'cancan', '1.6.10'
 gem 'gds-api-adapters', '7.11.0'
 gem 'statsd-ruby', '1.0.0'
 gem 'unicorn', '4.3.1'
+gem 'sidekiq'
+
 
 group :development do
   gem 'sqlite3'
   gem 'quiet_assets'
+  gem 'sinatra', '>= 1.3.0', :require => nil
+  gem 'sprockets'
 end
 
 gem 'logstasher', '0.4.1'
