@@ -42,10 +42,3 @@ When /^I cancel my email change$/ do
   click_link "Cancel email change"
 end
 
-When /^I fill in the passphrase$/ do
-  fill_in "Passphrase", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
-end
-
-When /^I submit$/ do
-  click_button "Confirm email change"
-end
