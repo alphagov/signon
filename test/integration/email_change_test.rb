@@ -1,28 +1,47 @@
 require 'test_helper'
+require 'helpers/user_account_operations'
  
 class EmailChangeTest < ActionDispatch::IntegrationTest
+  include UserAccountOperations
+
   context "by an admin" do
+    setup do
+      @admin = create(:user, role: "admin")
+    end
+
     context "for an active user" do
       should "trigger a confirmation email to the user" do
-        admin = create(:user, role: "admin")
-        another_user = create(:user)
+        user = create(:user)
 
         visit new_user_session_path
-        signin(admin)
-        admin_changes_email_address(user: another_user, new_email: "new@email.com")
-        signout
+        signin(@admin)
+        admin_changes_email_address(user: user, new_email: "new@email.com")
 
         assert_equal "new@email.com", last_email.to[0]
         assert_equal 'Confirm your email change', last_email.subject
 
-        another_user.reload
-        visit user_confirmation_path(confirmation_token: another_user.confirmation_token)
-
-        assert_response_contains("Confirm a change to your account email")
-        fill_in "Passphrase", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
-        click_button "Confirm email change"
-
+        user.reload
+        confirm_email_change(confirmation_token: user.confirmation_token,
+                             password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z")
         assert_response_contains("Your account was successfully confirmed. You are now signed in.")
+      end
+    end
+
+    context "for a user who hasn't accepted their invite yet" do
+      should "resend a confirmation email" do
+        user = User.invite!(name: "Jim", email: "jim@web.com")
+
+        visit new_user_session_path
+        signin(@admin)
+        admin_changes_email_address(user: user, new_email: "new@email.com")
+
+        assert_equal "new@email.com", last_email.to[0]
+        assert_equal 'Please confirm your account', last_email.subject
+
+        user.reload
+        accept_invitation(invitation_token: user.invitation_token,
+                          password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z")
+        assert_response_contains("Your passphrase was set successfully. You are now signed in.")
       end
     end
   end
