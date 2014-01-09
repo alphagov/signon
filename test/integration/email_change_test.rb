@@ -44,5 +44,21 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         assert_response_contains("Your passphrase was set successfully. You are now signed in.")
       end
     end
+
+    context "when the change was made in error" do
+      should "be cancellable" do
+        user = create(:user_with_pending_email_change)
+
+        visit new_user_session_path
+        signin(@admin)
+        visit edit_admin_user_path(user)
+        click_link "Cancel email change"
+
+        user.reload
+        signout
+        visit user_confirmation_path(confirmation_token: user.confirmation_token)
+        assert_response_contains("Couldn't confirm email change. Please contact support to request a new confirmation email.")
+      end
+    end
   end
 end
