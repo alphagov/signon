@@ -63,18 +63,31 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
   end
 
   context "by a user themselves" do
-    should "trigger a confirmation email to the user" do
-      user = create(:user)
-
+    setup do
+      @user = create(:user)
       visit new_user_session_path
-      signin(user)
+      signin(@user)
+    end
 
-      visit edit_user_path(user)
+    should "trigger a confirmation email to the user" do
+      visit edit_user_path(@user)
       fill_in "Email", with: "new@email.com"
       click_button "Change email"
 
       assert_equal "new@email.com", last_email.to[0]
       assert_equal 'Confirm your email change', last_email.subject
-    end        
+    end
+
+    should "be cancellable" do
+      @user.update_column(:unconfirmed_email, "new@email.com")
+
+      visit edit_user_path(@user)
+      click_link "Cancel email change"
+
+      @user.reload
+      signout
+      visit user_confirmation_path(confirmation_token: @user.confirmation_token)
+      assert_response_contains("Couldn't confirm email change. Please contact support to request a new confirmation email.")
+    end
   end
 end
