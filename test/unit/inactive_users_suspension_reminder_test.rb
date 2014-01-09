@@ -46,7 +46,9 @@ class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
   end
 
   test "returns number of reminders sent" do
-    assert_equal 4, InactiveUsersSuspensionReminder.new.send_reminders
+    signed_in_48_days_ago = create(:user, current_sign_in_at: 48.days.ago)
+
+    assert_equal 5, InactiveUsersSuspensionReminder.new.send_reminders
   end
 
 end

@@ -7,7 +7,7 @@ class InactiveUsersSuspensionReminder
         UserMailer.suspension_reminder(user, days).deliver
       end
     end
-    mailing_list.values.uniq.count
+    mailing_list.values.flatten.uniq.count
   end
 
   def users_by_days_to_suspension
