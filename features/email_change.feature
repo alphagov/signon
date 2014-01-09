@@ -1,9 +1,4 @@
 Feature: Changing email addresses
-  Scenario: User changes their own email
-    Given a signed-in user
-    When I change my email to "new@email.com"
-    Then a confirmation email should be sent to "new@email.com"
-
   Scenario: User realises that an email change was in error
     Given a signed-in user
     And I am a user with a pending email change

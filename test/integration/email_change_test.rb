@@ -61,4 +61,20 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       end
     end
   end
+
+  context "by a user themselves" do
+    should "trigger a confirmation email to the user" do
+      user = create(:user)
+
+      visit new_user_session_path
+      signin(user)
+
+      visit edit_user_path(user)
+      fill_in "Email", with: "new@email.com"
+      click_button "Change email"
+
+      assert_equal "new@email.com", last_email.to[0]
+      assert_equal 'Confirm your email change', last_email.subject
+    end        
+  end
 end
