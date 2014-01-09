@@ -28,7 +28,10 @@ class User < ActiveRecord::Base
 
   accepts_nested_attributes_for :permissions, :allow_destroy => true
 
+  scope :not_suspended, where(suspended_at: nil)
   scope :filter, lambda { |filter_param| where("users.email like ? OR users.name like ?", "%#{filter_param.strip}%", "%#{filter_param.strip}%") }
+  scope :last_signed_in_on, lambda { |date| not_suspended.where('date(current_sign_in_at) = date(?)', date) }
+  scope :last_signed_in_before, lambda { |date| not_suspended.where('date(current_sign_in_at) < date(?)', date) }
 
   def generate_uid
     self.uid = UUID.generate
