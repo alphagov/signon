@@ -25,6 +25,12 @@ namespace :users do
     puts "              follow this link to set a password: #{invitation_url}"
   end
 
+  desc "Remind users that their account will get suspended"
+  task :send_suspension_reminders => :environment do
+    count = InactiveUsersSuspensionReminder.new.send_reminders
+    puts "#{count} users were reminded about account suspension"
+  end
+
   desc "Suspend a user's access to the site (specify email in environment)"
   task :suspend => :environment do
     raise "Requires email specified in environment" unless ENV['email']
