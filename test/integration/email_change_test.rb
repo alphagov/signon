@@ -64,7 +64,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
   context "by a user themselves" do
     setup do
-      @user = create(:user)
+      @user = create(:user, email: "original@email.com")
       visit new_user_session_path
       signin(@user)
     end
@@ -88,6 +88,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       signout
       visit user_confirmation_path(confirmation_token: @user.confirmation_token)
       assert_response_contains("Couldn't confirm email change. Please contact support to request a new confirmation email.")
+      assert_equal "original@email.com", @user.email
     end
   end
 end
