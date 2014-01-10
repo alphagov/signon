@@ -27,8 +27,14 @@ namespace :users do
 
   desc "Remind users that their account will get suspended"
   task :send_suspension_reminders => :environment do
-    count = InactiveUsersSuspensionReminder.new.send_reminders
-    puts "#{count} users were reminded about account suspension"
+    require 'lib/volatile_lock'
+
+    if VolatileLock.new('signon:send_suspension_reminders').obtained?
+      count = InactiveUsersSuspensionReminder.new.send_reminders
+      puts "InactiveUsersSuspensionReminder: #{count} users were reminded about account suspension"
+    else
+      puts "InactiveUsersSuspensionReminder: skipping, couldn't obtain lock"
+    end
   end
 
   desc "Suspend a user's access to the site (specify email in environment)"

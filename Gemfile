@@ -35,6 +35,8 @@ gem 'gds-api-adapters', '7.11.0'
 gem 'statsd-ruby', '1.0.0'
 gem 'unicorn', '4.3.1'
 
+gem 'redis', '3.0.6'
+
 group :development do
   gem 'sqlite3'
   gem 'quiet_assets'
