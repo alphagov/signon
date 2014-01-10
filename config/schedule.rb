@@ -9,7 +9,3 @@ job_type :rake, "cd :path && govuk_setenv signon bundle exec rake :task :output"
 every :day, at: '3am' do
   rake "organisations:fetch"
 end
-
-every :day, at: '2am' do
-  rake "users:send_suspension_reminders"
-end
