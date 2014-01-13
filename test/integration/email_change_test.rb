@@ -48,6 +48,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
     context "when the change was made in error" do
       should "be cancellable" do
         user = create(:user_with_pending_email_change)
+        original_email = user.email
 
         visit new_user_session_path
         signin(@admin)
@@ -58,6 +59,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         signout
         visit user_confirmation_path(confirmation_token: user.confirmation_token)
         assert_response_contains("Couldn't confirm email change. Please contact support to request a new confirmation email.")
+        assert_equal original_email, user.email
       end
     end
   end
