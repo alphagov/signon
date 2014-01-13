@@ -13,6 +13,7 @@ require 'webmock/test_unit'
 require 'capybara/rails'
 
 require 'helpers/user_helpers'
+require 'helpers/email_helpers'
 
 WebMock.disable_net_connect!(:allow_localhost => true)
 
@@ -38,6 +39,7 @@ end
 class ActionDispatch::IntegrationTest
   include Capybara::DSL
   include UserHelpers
+  include EmailHelpers
 
   def assert_response_contains(content)
     assert page.has_content?(content), page.body
