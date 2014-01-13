@@ -4,7 +4,7 @@ class PermissionUpdater
   end
 
   def attempt
-    Propagator.new(
+    ::Propagator.new(
       @user,
       @applications,
       self.class.updater,
