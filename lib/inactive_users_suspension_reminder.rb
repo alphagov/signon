@@ -5,9 +5,15 @@ class InactiveUsersSuspensionReminder
       users.each do |user|
         tries = 3
         begin
+          Rails.logger.info "#{self.class}: Sending email to #{user.email}."
           UserMailer.suspension_reminder(user, days).deliver
+          Rails.logger.info "#{self.class}: Successfully sent email to #{user.email}."
         rescue *network_errors => e
+          Rails.logger.debug "#{self.class}: #{e.class} - #{e.message} while sending email to #{user.email} during attempt (#{(tries..3).count}/3)."
           retry if (tries -= 1) > 0
+
+          Rails.logger.warn "#{self.class}: Failed to send suspension reminder email to #{user.email}."
+          ExceptionNotifier::Notifier.background_exception_notification e, data: { receiver_email: user.email }
         end
       end
     end
