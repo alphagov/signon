@@ -14,6 +14,9 @@ class InactiveUsersSuspensionReminder
 
           Rails.logger.warn "#{self.class}: Failed to send suspension reminder email to #{user.email}."
           ExceptionNotifier::Notifier.background_exception_notification e, data: { receiver_email: user.email }
+        rescue AWS::SES::ResponseError => e
+          Rails.logger.warn "#{self.class}: #{e.response.error.message} while sending email to #{user.email}."
+          ExceptionNotifier::Notifier.background_exception_notification e, data: { receiver_email: user.email }
         end
       end
     end
