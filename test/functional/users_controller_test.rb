@@ -2,7 +2,7 @@ require 'test_helper'
 
 class UsersControllerTest < ActionController::TestCase
   def change_user_password(user_factory, new_password)
-    original_password = "proconsuls1102&sparkling"
+    original_password = "I am a very original password. Refrigerator weevil."
     user = create(user_factory, password: original_password)
     original_password_hash = user.encrypted_password
     sign_in user
