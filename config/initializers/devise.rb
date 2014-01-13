@@ -248,7 +248,10 @@ Devise.setup do |config|
 
   # ==> Custom Validators for Devise
   require 'devise/models/suspendable'
-  require 'devise/models/strengthened'
+
+  # ==> Password strength test
+  # default devise_zxcvbn minimum password score
+  # config.min_password_score = 4
 
   # Metrics!
   Warden::Manager.after_authentication do |user,auth,opts|

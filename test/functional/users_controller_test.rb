@@ -20,7 +20,7 @@ class UsersControllerTest < ActionController::TestCase
 
   context "PUT update_passphrase" do
     should "changing passwords to something strong should succeed" do
-      user, orig_password = change_user_password(:user, 'a new strong p4ssw0rd')
+      user, orig_password = change_user_password(:user, 'destabilizers842}orthophosphate')
 
       assert_equal "302", response.code
       assert_equal root_url, response.location
