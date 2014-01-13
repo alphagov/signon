@@ -179,6 +179,7 @@ GEM
     rake (0.9.2)
     rdoc (3.12.2)
       json (~> 1.4)
+    redis (3.0.6)
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rubyzip (0.9.9)
@@ -263,6 +264,7 @@ DEPENDENCIES
   quiet_assets
   rails (= 3.2.16)
   rake (= 0.9.2)
+  redis (= 3.0.6)
   shoulda (= 3.0.1)
   simplecov (= 0.6.4)
   simplecov-rcov (= 0.2.3)
