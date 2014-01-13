@@ -19,8 +19,8 @@ class ::Doorkeeper::Application < ActiveRecord::Base
     ["signin"]
   end
 
-  def supported_permission_strings(user)
-    if user.role == 'organisation_admin'
+  def supported_permission_strings(user=nil)
+    if user && user.role == 'organisation_admin'
       supported_permissions.delegatable.map(&:name) &
         user.permissions.find_by_application_id(id).permissions
     else
