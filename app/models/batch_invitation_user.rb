@@ -4,6 +4,7 @@ class BatchInvitationUser < ActiveRecord::Base
   validates :outcome, inclusion: { :in => [nil, "success", "failed", "skipped"] }
 
   scope :processed, where("outcome IS NOT NULL")
+  scope :unprocessed, where("outcome IS NULL")
   scope :failed, where(outcome: "failed")
 
   def invite(inviting_user, applications_and_permissions)
