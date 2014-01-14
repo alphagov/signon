@@ -1,7 +1,10 @@
 module UserHelpers  
-  def signin(user)
-    fill_in "Email", with: user.email
-    fill_in "Passphrase", with: user.password
+  def signin(user_or_options)
+    email = user_or_options.is_a?(Hash) ? user_or_options[:email] : user_or_options.email
+    password = user_or_options.is_a?(Hash) ? user_or_options[:password] : user_or_options.password
+
+    fill_in "Email", with: email
+    fill_in "Passphrase", with: password
     click_button "Sign in"
   end
 
