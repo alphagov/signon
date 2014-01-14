@@ -15,7 +15,7 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
 
     InactiveUsersSuspender.new.suspend
 
-    assert_equal "User has not logged in for 45 days since #{(46.days.ago).strftime('%d/%m/%Y')}", inactive_user.reload.reason_for_suspension
+    assert_equal "User has not logged in for 45 days since #{(46.days.ago).strftime('%d %B %Y')}", inactive_user.reload.reason_for_suspension
   end
 
   test "doesn't suspend users who have logged suspension threshold days back" do

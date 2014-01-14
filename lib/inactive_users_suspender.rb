@@ -16,6 +16,6 @@ private
 
   def reason
     "User has not logged in for #{@suspension_threshold} days since " +
-      "#{@suspension_threshold.next.days.ago.strftime('%d/%m/%Y')}"
+      "#{@suspension_threshold.next.days.ago.strftime('%d %B %Y')}"
   end
 end
