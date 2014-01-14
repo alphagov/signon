@@ -20,7 +20,7 @@ class BatchInvitation < ActiveRecord::Base
 
   def enqueue
     NoisyBatchInvitation.make_noise(self).deliver
-    Delayed::Job.enqueue(BatchInvitation::Job.new(self.id))
+    Worker.perform_async(self.id)
   end
 
   def perform(options = {})
@@ -34,8 +34,9 @@ class BatchInvitation < ActiveRecord::Base
     raise
   end
 
-  class Job < Struct.new(:id)
-    def perform(options = {})
+  class Worker
+    include Sidekiq::Worker
+    def perform(id, options = {})
       BatchInvitation.find(id).perform(options)
     end
   end
