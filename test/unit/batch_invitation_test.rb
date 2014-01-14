@@ -122,5 +122,19 @@ class BatchInvitationTest < ActiveSupport::TestCase
         assert_not_nil User.find_by_email("b@m.com")
       end
     end
+
+    context "idempotence" do
+      should "not re-invite users that have already been processed" do
+        create(:user, :email => @user_a.email)
+        @user_a.update_column(:outcome, "success")
+
+        @bi.perform
+        assert_equal 1, ActionMailer::Base.deliveries.size
+
+        # Assert user_a status hasn't been set to skipped.
+        @user_a.reload
+        assert_equal "success", @user_a.outcome
+      end
+    end
   end
 end
