@@ -25,7 +25,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   end
 
   def signin_permission
-    supported_permissions.where(name: ['signin', 'Signin']).first
+    supported_permissions.where(name: 'signin').first
   end
 
   def sorted_supported_permissions
