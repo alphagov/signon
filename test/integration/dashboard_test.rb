@@ -11,7 +11,7 @@ class DashboardTest < ActionDispatch::IntegrationTest
   end
 
   should "show the user's assigned applications" do
-    app = create(:application, name: "MyApp", with_supported_permissions: ["signin"])
+    app = create(:application, name: "MyApp")
     user = create(:user, with_signin_permissions_for: [ app ] )
 
     visit root_path

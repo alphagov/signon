@@ -101,7 +101,6 @@ class UserTest < ActiveSupport::TestCase
 
   test "can grant permissions to user application and permission name" do
     app = create(:application, name: "my_app", supported_permissions: [
-            create(:supported_permission, name: 'signin'),
             create(:supported_permission, name: 'Create publications'),
             create(:supported_permission, name: 'Delete publications')
           ])

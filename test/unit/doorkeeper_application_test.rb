@@ -2,9 +2,13 @@ require 'test_helper'
 
 class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
 
+  should "have a signin supported permission on create" do
+    assert_not_nil create(:application).signin_permission
+  end
+
   context "supported_permission_strings" do
 
-    should "return a list of string permissions, merging in the defaults" do
+    should "return a list of string permissions" do
       user = create(:user)
       app = create(:application, with_supported_permissions: ["write"])
 
@@ -50,17 +54,13 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
 
     should "return applications that support delegation of signin permission" do
-      application = create(:application)
-      permission = create(:supported_permission, name: 'signin',
-                    delegatable: true, application: application)
+      application = create(:application, with_delegatable_supported_permissions: ['signin'])
 
       assert_include Doorkeeper::Application.with_signin_delegatable, application
     end
 
     should "not return applications that don't support delegation of signin permission" do
-      application = create(:application)
-      permission = create(:supported_permission, name: 'signin',
-                    delegatable: false, application: application)
+      application = create(:application, with_supported_permissions: ['signin'])
 
       assert_empty Doorkeeper::Application.with_signin_delegatable
     end

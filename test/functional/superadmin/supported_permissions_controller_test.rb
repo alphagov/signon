@@ -37,7 +37,7 @@ class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCas
       post :create, application_id: app.id, supported_permission: { name: "" }
 
       assert_select "ul[class='errors'] li", ERB::Util.html_escape("Name can't be blank")
-      assert_empty app.reload.supported_permissions
+      assert_equal app.reload.supported_permissions, [app.signin_permission]
      end
 
     should "create a new permission" do
