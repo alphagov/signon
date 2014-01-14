@@ -13,7 +13,7 @@ class UserSuspensionTest < ActionDispatch::IntegrationTest
     assert_response_contains("account has been temporarily suspended")
   end
 
-  should "persist the reason for suspension" do
+  should "show the suspension reason to admins" do
     admin = create(:user, role: 'admin')
     visit new_user_session_path
     signin(admin)
