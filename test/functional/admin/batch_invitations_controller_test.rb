@@ -78,8 +78,9 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
     end
 
     should "queue a job to do the processing" do
-      Delayed::Job.expects(:enqueue).with(kind_of(BatchInvitation::Job))
+      jobs = BatchInvitation::Worker.jobs.size
       post :create, batch_invitation: { user_names_and_emails: users_csv }, user: { permissions_attributes: {} }
+      assert_equal jobs + 1, BatchInvitation::Worker.jobs.size
     end
 
     should "send an email to signon-alerts" do

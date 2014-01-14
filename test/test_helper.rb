@@ -15,6 +15,9 @@ require 'capybara/rails'
 require 'helpers/user_helpers'
 require 'helpers/email_helpers'
 
+require 'sidekiq/testing'
+Sidekiq::Testing.fake!
+
 WebMock.disable_net_connect!(:allow_localhost => true)
 
 class ActiveSupport::TestCase
