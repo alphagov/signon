@@ -4,10 +4,10 @@ class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
 
   context "users by days to suspension" do
     setup do
-      @in_1  = create(:user, current_sign_in_at: SUSPENSION_THRESHOLD_PERIOD.days.ago)
-      @in_3  = create(:user, current_sign_in_at: (SUSPENSION_THRESHOLD_PERIOD - 2).days.ago)
-      @in_7  = create(:user, current_sign_in_at: (SUSPENSION_THRESHOLD_PERIOD - 6).days.ago)
-      @in_14 = create(:user, current_sign_in_at: (SUSPENSION_THRESHOLD_PERIOD - 13).days.ago)
+      @in_1  = create(:user, current_sign_in_at: User::SUSPENSION_THRESHOLD_PERIOD.ago)
+      @in_3  = create(:user, current_sign_in_at: (User::SUSPENSION_THRESHOLD_PERIOD - 2.days).ago)
+      @in_7  = create(:user, current_sign_in_at: (User::SUSPENSION_THRESHOLD_PERIOD - 6.days).ago)
+      @in_14 = create(:user, current_sign_in_at: (User::SUSPENSION_THRESHOLD_PERIOD - 13.days).ago)
     end
 
     def users_by_days_to_suspension
@@ -30,7 +30,7 @@ class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
       assert_equal [@in_14], users_by_days_to_suspension[14]
     end
 
-    should "select users whose signed-in more than SUSPENSION_THRESHOLD_PERIOD days ago" do
+    should "select users whose signed-in more than User::SUSPENSION_THRESHOLD_PERIOD ago" do
       signed_in_48_days_ago = create(:user, current_sign_in_at: 48.days.ago)
       assert_include users_by_days_to_suspension[1], signed_in_48_days_ago
     end
@@ -38,10 +38,10 @@ class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
 
   context "sucessfully sending mails" do
     setup do
-      @in_1  = create(:user, current_sign_in_at: SUSPENSION_THRESHOLD_PERIOD.days.ago)
-      @in_3  = create(:user, current_sign_in_at: (SUSPENSION_THRESHOLD_PERIOD - 2).days.ago)
-      @in_7  = create(:user, current_sign_in_at: (SUSPENSION_THRESHOLD_PERIOD - 6).days.ago)
-      @in_14 = create(:user, current_sign_in_at: (SUSPENSION_THRESHOLD_PERIOD - 13).days.ago)
+      @in_1  = create(:user, current_sign_in_at: User::SUSPENSION_THRESHOLD_PERIOD.ago)
+      @in_3  = create(:user, current_sign_in_at: (User::SUSPENSION_THRESHOLD_PERIOD - 2.days).ago)
+      @in_7  = create(:user, current_sign_in_at: (User::SUSPENSION_THRESHOLD_PERIOD - 6.days).ago)
+      @in_14 = create(:user, current_sign_in_at: (User::SUSPENSION_THRESHOLD_PERIOD - 13.days).ago)
     end
 
     should "send mails to users to remind" do
@@ -64,7 +64,7 @@ class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
 
   context "failing to send emails with SES down" do
     setup do
-      create(:user, current_sign_in_at: SUSPENSION_THRESHOLD_PERIOD.days.ago)
+      create(:user, current_sign_in_at: User::SUSPENSION_THRESHOLD_PERIOD.ago)
       @mailer = mock()
       @mailer.expects(:deliver).raises(Errno::ETIMEDOUT).at_most(3)
     end

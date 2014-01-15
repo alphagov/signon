@@ -1,6 +1,6 @@
 <p>Hello <%= @user.name %>,
 
-<p>We have noticed that you have not used your GOV.UK applications for some time. GOV.UK application accounts are suspended after <%= SUSPENSION_THRESHOLD_PERIOD %> days of inactivity. </p>
+<p>We have noticed that you have not used your GOV.UK applications for some time. GOV.UK application accounts are suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity. </p>
 
 <p>Your account will be suspended <%= @days == 1 ? 'tomorrow' : 'in ' + distance_of_time_in_words(@days.days) %>.</p>
 

@@ -3,6 +3,8 @@ class User < ActiveRecord::Base
 
   self.include_root_in_json = true
 
+  SUSPENSION_THRESHOLD_PERIOD = 45.days
+
   devise :database_authenticatable, :recoverable, :trackable,
          :validatable, :timeoutable, :lockable,                # devise core model extensions
          :invitable,    # in devise_invitable gem
