@@ -9,7 +9,7 @@ class Admin::UsersController < ApplicationController
   respond_to :html
 
   def index
-    if params[:filter]
+    if params[:filter].present?
       @users = @users.filter(params[:filter]).page(params[:page]).per(100)
     else
       @users, @sorting_params = @users.alpha_paginate(params[:letter], ALPHABETICAL_PAGINATE_CONFIG)
