@@ -2,7 +2,7 @@ require 'test_helper'
 
 class InactiveUsersSuspenderTest < ActiveSupport::TestCase
 
-  test "suspends users who have not logged in for more than suspension threshold days" do
+  test "suspends users who have not logged-in for more than suspension threshold days" do
     inactive_user = create(:user, current_sign_in_at: 46.days.ago)
 
     InactiveUsersSuspender.new.suspend
@@ -18,7 +18,7 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
     assert_equal "User has not logged in for 45 days since #{(46.days.ago).strftime('%d %B %Y')}", inactive_user.reload.reason_for_suspension
   end
 
-  test "doesn't suspend users who have logged suspension threshold days back" do
+  test "doesn't suspend users who have logged-in suspension threshold days ago" do
     active_user = create(:user, current_sign_in_at: 45.days.ago)
 
     InactiveUsersSuspender.new.suspend
@@ -26,7 +26,7 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
     assert_false active_user.reload.suspended?
   end
 
-  test "doesn't suspend users who have logged in since suspension threshold days back" do
+  test "doesn't suspend users who have logged-in since suspension threshold days ago" do
     active_user = create(:user, current_sign_in_at: 44.days.ago)
 
     InactiveUsersSuspender.new.suspend

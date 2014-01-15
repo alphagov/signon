@@ -37,7 +37,7 @@ namespace :users do
     end
   end
 
-  desc "Suspend users who have not signed-in since 45 days"
+  desc "Suspend users who have not signed-in for 45 days"
   task :suspend_inactive => :environment do
     if VolatileLock.new('signon:suspend_inactive').obtained?
       count = InactiveUsersSuspender.new.suspend

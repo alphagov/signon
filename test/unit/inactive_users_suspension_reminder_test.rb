@@ -14,7 +14,7 @@ class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
       InactiveUsersSuspensionReminder.new.users_by_days_to_suspension
     end
 
-    should "select users whose accounts will get suspended in 1 days" do
+    should "select users whose accounts will get suspended in 1 day" do
       assert_equal [@in_1], users_by_days_to_suspension[1]
     end
 
@@ -30,7 +30,7 @@ class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
       assert_equal [@in_14], users_by_days_to_suspension[14]
     end
 
-    should "select users whose signed-in more than User::SUSPENSION_THRESHOLD_PERIOD ago" do
+    should "select users who signed-in more than suspension threshold days ago" do
       signed_in_48_days_ago = create(:user, current_sign_in_at: 48.days.ago)
       assert_include users_by_days_to_suspension[1], signed_in_48_days_ago
     end
