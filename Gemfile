@@ -46,7 +46,7 @@ end
 gem 'logstasher', '0.4.1'
 
 group :test do
-  gem 'cucumber-rails', '1.3.0', require: false
+  gem 'capybara', '2.2.1'
   gem 'database_cleaner', '0.7.2'
   gem 'factory_girl_rails', '4.3.0'
   gem 'mocha', '0.13.3', require: false
