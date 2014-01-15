@@ -101,7 +101,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
     end
 
     context "arbitrary error occurs" do
-      should "mark it as failed and pass the error on for DelayedJob to record the error details" do
+      should "mark it as failed and pass the error on for the worker to record the error details" do
         BatchInvitationUser.any_instance.expects(:invite).raises("ArbitraryError")
 
         assert_raises "ArbitraryError" do
