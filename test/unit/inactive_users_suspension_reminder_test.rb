@@ -46,7 +46,7 @@ class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
 
     should "send mails to users to remind" do
       mailer = mock()
-      mailer.expects(:deliver).returns(true).at_most(4)
+      mailer.expects(:deliver).returns(true).times(4)
       UserMailer.expects(:suspension_reminder).with(@in_1, 1).returns(mailer)
       UserMailer.expects(:suspension_reminder).with(@in_3, 3).returns(mailer)
       UserMailer.expects(:suspension_reminder).with(@in_7, 7).returns(mailer)
@@ -66,17 +66,17 @@ class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
     setup do
       create(:user, current_sign_in_at: User::SUSPENSION_THRESHOLD_PERIOD.ago)
       @mailer = mock()
-      @mailer.expects(:deliver).raises(Errno::ETIMEDOUT).at_most(3)
+      @mailer.expects(:deliver).raises(Errno::ETIMEDOUT).times(3)
     end
 
     should "retry twice if there are errors connecting to SES" do
-      UserMailer.expects(:suspension_reminder).returns(@mailer).at_most(3)
+      UserMailer.expects(:suspension_reminder).returns(@mailer).times(3)
       InactiveUsersSuspensionReminder.new.send_reminders
     end
 
     should "send an exception notification if retries fail" do
       ExceptionNotifier::Notifier.expects(:background_exception_notification).once
-      UserMailer.expects(:suspension_reminder).returns(@mailer).at_most(3)
+      UserMailer.expects(:suspension_reminder).returns(@mailer).times(3)
 
       InactiveUsersSuspensionReminder.new.send_reminders
     end
