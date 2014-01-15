@@ -3,10 +3,10 @@ require 'test_helper'
 class SupportedPermissionTest < ActiveSupport::TestCase
 
   test "name of signin permission cannot be changed" do
-    @signin = create(:supported_permission, name: 'signin')
+    application = create(:application)
 
     assert_raises ActiveRecord::RecordInvalid do
-      @signin.update_attributes!(name: 'sign-in')
+      application.signin_permission.update_attributes!(name: 'sign-in')
     end
   end
 
