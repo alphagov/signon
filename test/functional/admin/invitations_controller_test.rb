@@ -17,7 +17,7 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
 
   context "GET new" do
     context "organisation admin" do
-      should "can select only organisations under him" do
+      should "can select only organisations under them" do
         admin = create(:organisation_admin)
         sub_organisation = create(:organisation, parent: admin.organisation)
         outside_organisation = create(:organisation)
@@ -71,7 +71,7 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
     end
 
     context "organisation admin" do
-      should "not assign organisations not under him" do
+      should "not assign organisations not under them" do
         admin = create(:organisation_admin)
         outside_organisation = create(:organisation)
         sign_in admin
@@ -81,7 +81,7 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
         assert_redirected_to root_path
       end
 
-      should "assign only organisations under him" do
+      should "assign only organisations under them" do
         admin = create(:organisation_admin)
         sub_organisation = create(:organisation, parent: admin.organisation)
         sign_in admin
