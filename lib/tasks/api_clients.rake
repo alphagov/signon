@@ -23,12 +23,14 @@ namespace :api_clients do
 
     # create as user
     default_password = SecureRandom.urlsafe_base64
-    user = User.create!(
+    user = User.new(
       name: args[:name],
       password: default_password,
       password_confirmation: default_password,
       email: args[:email]
     )
+    user.api_user = true
+    user.save!
 
     # Grant authorisation and permissions
     user.permissions.create!(application: application, permissions: [args[:permission]])
