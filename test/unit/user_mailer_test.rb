@@ -24,6 +24,10 @@ class UserMailerTest < ActionMailer::TestCase
     should "not include an instance name in the subject" do
       assert_include @email.subject, "Your GOV.UK Signon account"
     end
+
+    should "not include an instance name in the body" do
+      assert_body_includes "Your account will be suspended"
+    end
   end
 
   context "emailing a user to be suspended tomorrow" do
@@ -50,6 +54,10 @@ class UserMailerTest < ActionMailer::TestCase
 
     should "include the instance name in the subject" do
       assert_include @email.subject, "Your GOV.UK Signon test account"
+    end
+
+    should "include the instance name in the body" do
+      assert_body_includes "Your test account will be suspended"
     end
   end
 end

@@ -1,15 +1,11 @@
 Hello <%= @user.name %>,
 
-We have noticed that you have not used your GOV.UK applications for some time. GOV.UK application accounts are suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.
+GOV.UK Signon accounts are suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.
 
-Your account will be suspended <%= suspension_time %>.
+Your <%= account_name %> will be suspended <%= suspension_time %> and you will not be able to access any GOV.UK applications.
 
-If you do not sign-in to your account, it will be suspended and you will no longer be able to access these applications.
-
-All you need to do in order to prevent the suspension is sign-in:
+You’ll need to sign in to your account to stop it being suspended.
 
 <%= new_user_session_url(protocol: 'https') %>
 
-If you are unable to sign-in to your account because you've forgotten your login details, you can reset your password:
-
-<%= new_user_password_url(protocol: 'https') %>
+If you’re unable to sign in to your account because you’ve forgotten your passphrase, you can request a new one on the sign in screen.
