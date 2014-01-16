@@ -52,6 +52,12 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
   end
 
   context "POST create" do
+    should "not allow creation of api users" do
+      post :create, user: { name: 'Testing APIs', email: 'api@example.com', api_user: true }
+
+      assert_empty User.where(api_user: true)
+    end
+
     context "SES has blacklisted the address" do
       should "show the user a helpful message" do
         Devise::Mailer.any_instance.expects(:mail).with(anything)
@@ -65,7 +71,7 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
     end
 
     context "organisation admin" do
-      should "cannot assign only organisations not under him" do
+      should "not assign organisations not under him" do
         admin = create(:organisation_admin)
         outside_organisation = create(:organisation)
         sign_in admin
@@ -75,7 +81,7 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
         assert_redirected_to root_path
       end
 
-      should "can assign only organisations under him" do
+      should "assign only organisations under him" do
         admin = create(:organisation_admin)
         sub_organisation = create(:organisation, parent: admin.organisation)
         sign_in admin

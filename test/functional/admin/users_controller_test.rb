@@ -14,6 +14,12 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_select "td.email", /another_user@email.com/
     end
 
+    should "not list api users" do
+      create(:api_user, email: "api_user@email.com")
+      get :index
+      assert_select "td.email", count: 0, text: /api_user@email.com/
+    end
+
     should "show user roles" do
       create(:admin_user, email: "another_user@email.com")
       get :index
@@ -109,6 +115,14 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_equal "New Name", another_user.reload.name
       assert_equal 200, response.status
       assert_equal "Updated user #{another_user.email} successfully", flash[:notice]
+    end
+
+    should "not update an api user" do
+      api_user = create(:api_user)
+      put :update, id: api_user.id, user: { api_user: false }
+
+      assert_redirected_to root_path
+      assert_equal 'You do not have permission to perform this action.', flash[:alert]
     end
 
     should "update the user's organisation" do
