@@ -42,4 +42,10 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
     assert_true suspended_user.reload.suspended?
   end
 
+  test "returns the count of users who got suspended" do
+    create_list(:user, 2, current_sign_in_at: 46.days.ago)
+
+    assert_equal 2, InactiveUsersSuspender.new.suspend
+  end
+
 end
