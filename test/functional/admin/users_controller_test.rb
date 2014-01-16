@@ -74,7 +74,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
     end
 
     context "organisation admin" do
-      should "not be able to assign organisations outside his organisation subtree" do
+      should "not be able to assign organisations outside their organisation subtree" do
         admin = create(:organisation_admin)
         outside_organisation = create(:organisation)
         sign_in admin
@@ -89,7 +89,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
         end
       end
 
-      should "be able to assign organisations within his organisation subtree" do
+      should "be able to assign organisations within their organisation subtree" do
         admin = create(:organisation_admin)
         sub_organisation = create(:organisation, parent: admin.organisation)
         sign_in admin
@@ -134,7 +134,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
     end
 
     context "organisation admin" do
-      should "be able to assign organisations under his organisation subtree" do
+      should "be able to assign organisations under their organisation subtree" do
         admin = create(:organisation_admin)
         sub_organisation = create(:organisation, parent: admin.organisation)
         sign_in admin
@@ -146,7 +146,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
         assert_equal admin.organisation.id, user.reload.organisation.id
       end
 
-      should "not be able to assign organisations outside his organisation subtree" do
+      should "not be able to assign organisations outside their organisation subtree" do
         admin = create(:organisation_admin)
         outside_organisation = create(:organisation)
         sign_in admin

@@ -3,7 +3,7 @@ require 'test_helper'
 class Admin::SuspensionsControllerTest < ActionController::TestCase
 
   context "organisation admin" do
-    should "be unable to control suspension of a user outside his organisation" do
+    should "be unable to control suspension of a user outside their organisation" do
       user = create(:suspended_user, reason_for_suspension: "Negligence")
       admin = create(:organisation_admin)
       sign_in admin
@@ -13,7 +13,7 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
       assert_true user.reload.suspended?
     end
 
-    should "be able to control suspension of a user within his organisation" do
+    should "be able to control suspension of a user within their organisation" do
       admin = create(:organisation_admin)
       sign_in admin
       user = create(:suspended_user, reason_for_suspension: "Negligence", organisation: admin.organisation)
