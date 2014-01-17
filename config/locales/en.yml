@@ -14,7 +14,6 @@ en:
   helpers:
     label:
       user:
-        password_guidance: "Choose a strong passphrase that’s easy for you to remember. This doesn’t have to be cryptic, and it can be as long as you like. You can even use spaces. Examples of strong passwords are: (a) four or more random words; (b) a mixture of at least ten letters, numbers and symbols."
         password_confirmation: "Confirm passphrase"
 
   users:
