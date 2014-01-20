@@ -72,6 +72,15 @@ class UserTest < ActiveSupport::TestCase
     assert_empty u.errors[:password]
   end
 
+  test "it discourages weak passwords which reuse parts of the email" do
+    u = build(:user, email: "sleuth@gmail.com", password: "sherlock holmes baker street")
+    assert u.valid?
+
+    u = build(:user, email: "sherlock.holmes@bakerstreet.com", password: "sherlock holmes baker street")
+    assert !u.valid?
+    assert_not_empty u.errors[:password]
+  end
+
   test "it requires a reason for suspension to suspend a user" do
     u = create(:user)
     u.suspended_at = 1.minute.ago
