@@ -11,7 +11,7 @@ gem 'alphabetical_paginate', '2.1.0'
 gem 'mysql2'
 gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
-gem 'exception_notification'
+gem 'exception_notification', '4.0.1'
 gem 'plek', '1.4.0'
 gem 'json', '1.7.7'
 gem 'whenever', '0.7.3', require: false
