@@ -48,7 +48,7 @@ GEM
       mail (> 2.2.5)
       mime-types
       xml-simple
-    bcrypt-ruby (3.1.1)
+    bcrypt-ruby (3.1.2)
     builder (3.0.4)
     cancan (1.6.10)
     capybara (2.2.1)
@@ -76,7 +76,7 @@ GEM
       actionmailer (~> 3.0)
       devise (>= 2.1.1)
       railties (~> 3.0)
-    devise_zxcvbn (1.0.0)
+    devise_zxcvbn (1.1.0)
       devise
       zxcvbn-ruby (>= 0.0.2)
     doorkeeper (0.6.7)
@@ -122,12 +122,12 @@ GEM
     mini_portile (0.5.2)
     mocha (0.13.3)
       metaclass (~> 0.0.1)
-    multi_json (1.8.2)
+    multi_json (1.8.4)
     mysql2 (0.3.11)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
     null_logger (0.0.1)
-    orm_adapter (0.4.0)
+    orm_adapter (0.5.0)
     plek (1.4.0)
     polyglot (0.3.3)
     quiet_assets (1.0.1)
@@ -230,7 +230,7 @@ DEPENDENCIES
   devise-encryptable (= 0.1.1)
   devise_invitable (= 1.1.5)
   devise_security_extension (= 0.7.2)!
-  devise_zxcvbn (= 1.0.0)
+  devise_zxcvbn (= 1.1.0)
   doorkeeper (= 0.6.7)
   exception_notification
   factory_girl_rails (= 4.3.0)
