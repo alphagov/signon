@@ -13,7 +13,7 @@ private
     if @days == 1
       "tomorrow"
     else
-      "in #{@days} days' time"
+      "in #{@days} days"
     end
   end
 
