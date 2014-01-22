@@ -184,7 +184,7 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
       end
 
       should "show the state of the processing" do
-        assert_select "div.alert", /Success/i
+        assert_select "div.alert", "2 users processed."
       end
 
       should "no longer include the meta refresh" do
