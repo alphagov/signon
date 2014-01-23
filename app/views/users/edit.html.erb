@@ -39,21 +39,37 @@
   <section>
     <h2><%= t(".change_passphrase") %></h2>
 
-    <%= render "users/password_guidance" %>
-
     <%= form_for current_user, :url => update_passphrase_user_path do |f| %>
-      <%= f.label(:current_password, "Current passphrase") %>
-      <%= f.password_field :current_password, class: 'span6' %>
+      <div class="row-fluid">
+        <div class="span8">
+          <%= f.label(:current_password, "Current passphrase") %>
+          <%= f.password_field :current_password, class: 'span11' %>
 
-      <%= f.label(:password, "New passphrase") %>
-      <%= f.password_field :password, class: 'span6' %>
+          <div id="password-control-group" class="control-group">
+            <%= f.label(:password, "New passphrase") %>
+            <div class="input-append">
+              <%= f.password_field :password, class: 'span11',
+                                   :"data-weak-words" => user_email_tokens.join(","),
+                                   :"data-min-password-length" => minimum_password_length %>
+              <span id="password-result-span" class="add-on"><i id="password-result"></i></span>
+            </div>
+          </div>
 
-      <%= f.label :password_confirmation, "Confirm new passphrase" %>
-      <%= f.password_field :password_confirmation, class: 'span6' %>
+          <div id="password-configuration-control-group" class="control-group">
+            <%= f.label :password_confirmation, "Confirm new passphrase" %>
+            <%= f.password_field :password_confirmation, class: 'span11' %>
+          </div>
 
-      <hr>
+          <%= f.submit t(".change"), :class => 'btn btn-primary' %>
+        </div>
 
-      <%= f.submit t(".change"), :class => 'btn btn-primary' %>
+        <div id="password-guidance" class="span4 well">
+          <strong>The new passphrase</strong>
+          <p id="password-too-short"><i class="icon-warning-sign"></i> must be at least 10 characters</p>
+          <p id="parts-of-email"><i class="icon-warning-sign"></i> shouldn't include part or all of your email address in your passphrase</p>
+          <p id="password-entropy"><i class="icon-warning-sign"></i> must be more complex. Consider using whole sentences (with spaces), lyrics or phrases to make your passphrase more memorable</p>
+        </div>
+      </div>
     <% end %>
   </section>
 </div>

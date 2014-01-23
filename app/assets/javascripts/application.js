@@ -14,3 +14,4 @@
 //= require jquery_ujs
 //= require chosen.jquery
 //= require bootstrap-dropdown
+//= require password-strength-indicator
