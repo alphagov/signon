@@ -48,4 +48,16 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
     assert_equal 2, InactiveUsersSuspender.new.suspend
   end
 
+  test "sends suspension notification to users who got suspended" do
+    users = create_list(:user, 2, current_sign_in_at: 46.days.ago)
+
+    mailer = mock()
+    mailer.expects(:deliver).returns(true).twice
+    users.each { |user| UserMailer.expects(:suspension_notification)
+                                  .with(responds_with(:email, user.email))
+                                  .returns(mailer).once }
+
+    InactiveUsersSuspender.new.suspend
+  end
+
 end

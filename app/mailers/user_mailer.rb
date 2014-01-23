@@ -5,7 +5,12 @@ class UserMailer < ActionMailer::Base
 
   def suspension_reminder(user, days)
     @user, @days = user, days
-    mail(to: @user.email, subject: subject)
+    mail(to: @user.email, subject: suspension_reminder_subject)
+  end
+
+  def suspension_notification(user)
+    @user = user
+    mail(to: @user.email, subject: suspension_notification_subject)
   end
 
 private
@@ -17,8 +22,12 @@ private
     end
   end
 
-  def subject
+  def suspension_reminder_subject
     "Your #{app_name} account will be suspended #{suspension_time}"
+  end
+
+  def suspension_notification_subject
+    "Your #{app_name} account has been suspended"
   end
 
   def app_name
