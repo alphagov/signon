@@ -16,7 +16,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
       click_button "Create users and send emails"
 
       assert_response_contains("Creating a batch of users")
-      assert_response_contains("Success! 1 users processed")
+      assert_response_contains("1 users processed")
 
       assert_not_nil User.find_by_email("fred@example.com")
       assert_equal "fred@example.com", last_email.to[0]

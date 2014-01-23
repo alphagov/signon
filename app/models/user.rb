@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
          :validatable, :timeoutable, :lockable,                # devise core model extensions
          :invitable,    # in devise_invitable gem
          :suspendable,  # in signonotron2/lib/devise/models/suspendable.rb
+         :async,        # in devise_async gem, send mailers async'ly
          :zxcvbnable,
          :encryptable,
          :confirmable,
