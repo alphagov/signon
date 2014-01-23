@@ -1,3 +1,5 @@
+# coding: utf-8
+
 class User < ActiveRecord::Base
   include Roles # adds validations and accessible attributes
 
@@ -26,6 +28,7 @@ class User < ActiveRecord::Base
   has_many :batch_invitations
   belongs_to :organisation
 
+  before_validation :fix_apostrophe_in_email
   before_create :generate_uid
   after_create :update_stats
 
@@ -106,6 +109,10 @@ private
     if self.role == 'organisation_admin' && self.organisation_id.blank?
       errors.add(:organisation_id, "can't be 'None' for an Organisation admin")
     end
+  end
+
+  def fix_apostrophe_in_email
+    self.email.tr!(%q(’), %q(')) if email_changed?
   end
 
 end
