@@ -173,6 +173,13 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "mario's.castle@wii.com", user.email
   end
 
+  test "emails can't contain non-ASCII characters" do
+    user = User.new(email: "mariõs.castle@wii.com") # unicode tilde character
+
+    assert_false user.valid?
+    assert_equal ["can't contain non-ASCII characters"], user.errors[:email]
+  end
+
   def assert_user_has_permissions(expected_permissions, application, user)
     permissions_for_my_app = user.permissions.reload.find_by_application_id(application.id)
     assert_equal expected_permissions, permissions_for_my_app.permissions
