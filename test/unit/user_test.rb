@@ -180,6 +180,25 @@ class UserTest < ActiveSupport::TestCase
     assert_equal ["can't contain non-ASCII characters"], user.errors[:email]
   end
 
+  context "authorised applications" do
+    setup do
+      @user = create(:user)
+      @app = create(:application)
+
+      # authenticate access
+      ::Doorkeeper::AccessToken.create(resource_owner_id: @user.id, application_id: @app.id, token: "1234")
+    end
+
+    should "include applications the user is authorised for" do
+      assert_include @user.authorised_applications, @app
+    end
+
+    should "not include applications the user is not authorised for" do
+      unused_app = create(:application)
+      assert_not_include @user.authorised_applications, unused_app
+    end
+  end
+
   def assert_user_has_permissions(expected_permissions, application, user)
     permissions_for_my_app = user.permissions.reload.find_by_application_id(application.id)
     assert_equal expected_permissions, permissions_for_my_app.permissions
