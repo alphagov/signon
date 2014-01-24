@@ -1,4 +1,4 @@
-class SuspensionUpdater
+class ReauthEnforcer
   def initialize(user, applications)
     @user, @applications = user, applications
   end

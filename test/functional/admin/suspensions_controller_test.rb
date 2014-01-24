@@ -31,7 +31,7 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
 
   context "PUT update" do
     should "be able to suspend the user" do
-      SuspensionUpdater.any_instance.stubs(:attempt).returns({})
+      ReauthEnforcer.any_instance.stubs(:attempt).returns({})
       another_user = create(:user)
       put :update, id: another_user.id, user: { suspended: "1", reason_for_suspension: "Negligence" }
 
@@ -54,7 +54,7 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
       # simulate them having used (and 'authorized' the app)
       ::Doorkeeper::AccessToken.create(resource_owner_id: another_user.id, application_id: app.id, token: "1234")
 
-      SuspensionUpdater.expects(:new).with(another_user, [app]).returns(mock("suspenders", attempt: {}))
+      ReauthEnforcer.expects(:new).with(another_user, [app]).returns(mock("suspenders", attempt: {}))
 
       put :update, id: another_user.id, user: { suspended: "1", reason_for_suspension: "Negligence" }
 

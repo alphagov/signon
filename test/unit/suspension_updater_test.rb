@@ -16,7 +16,7 @@ class SuspensionUpdaterTest < ActiveSupport::TestCase
 
   should "send an empty POST to the app" do
     request = stub_request(:post, url_for_app(@application)).with(body: "{}")
-    SuspensionUpdater.new(@user, [@application]).attempt
+    ReauthEnforcer.new(@user, [@application]).attempt
     assert_requested request
   end
 
@@ -24,7 +24,7 @@ class SuspensionUpdaterTest < ActiveSupport::TestCase
     SSOPushCredential.stubs(:credentials).with(@application).returns('foo')
 
     request = stub_request(:post, url_for_app(@application)).with(headers: { 'Authorization' => 'Bearer foo' })
-    SuspensionUpdater.new(@user, [@application]).attempt
+    ReauthEnforcer.new(@user, [@application]).attempt
 
     assert_requested request
   end
@@ -37,7 +37,7 @@ class SuspensionUpdaterTest < ActiveSupport::TestCase
     stub_request(:post, url_for_app(user_not_in_database)).to_return(status: 404)
     stub_request(:post, url_for_app(slow_app)).to_timeout
 
-    results = SuspensionUpdater.new(@user, ::Doorkeeper::Application.all).attempt
+    results = ReauthEnforcer.new(@user, ::Doorkeeper::Application.all).attempt
 
     assert_equal [{ application: @application }], results[:successes]
     expected_failures = [
