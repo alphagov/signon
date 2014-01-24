@@ -1,3 +1,4 @@
+# coding: utf-8
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
@@ -163,6 +164,20 @@ class UserTest < ActiveSupport::TestCase
 
     assert_not_empty user.errors
     assert_false user.persisted?
+  end
+
+  test "unicode apostrophe in email is converted to ascii equivalent" do
+    user = create(:user, email: "mario’s.castle@wii.com") # unicode apostrophe character
+
+    assert_true user.email.ascii_only?
+    assert_equal "mario's.castle@wii.com", user.email
+  end
+
+  test "emails can't contain non-ASCII characters" do
+    user = User.new(email: "mariõs.castle@wii.com") # unicode tilde character
+
+    assert_false user.valid?
+    assert_equal ["can't contain non-ASCII characters"], user.errors[:email]
   end
 
   def assert_user_has_permissions(expected_permissions, application, user)

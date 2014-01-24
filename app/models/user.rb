@@ -1,3 +1,5 @@
+# coding: utf-8
+
 class User < ActiveRecord::Base
   include Roles # adds validations and accessible attributes
 
@@ -20,12 +22,14 @@ class User < ActiveRecord::Base
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
   validate :organisation_admin_belongs_to_organisation
+  validate :email_is_ascii_only
 
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
   has_many :permissions, inverse_of: :user
   has_many :batch_invitations
   belongs_to :organisation
 
+  before_validation :fix_apostrophe_in_email
   before_create :generate_uid
   after_create :update_stats
 
@@ -106,6 +110,14 @@ private
     if self.role == 'organisation_admin' && self.organisation_id.blank?
       errors.add(:organisation_id, "can't be 'None' for an Organisation admin")
     end
+  end
+
+  def email_is_ascii_only
+    errors.add(:email, "can't contain non-ASCII characters") unless email.ascii_only?
+  end
+
+  def fix_apostrophe_in_email
+    self.email.tr!(%q(’), %q(')) if email_changed?
   end
 
 end
