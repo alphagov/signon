@@ -31,7 +31,6 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
 
   context "PUT update" do
     should "be able to suspend the user" do
-      SuspensionUpdater.any_instance.stubs(:attempt).returns({})
       another_user = create(:user)
       put :update, id: another_user.id, user: { suspended: "1", reason_for_suspension: "Negligence" }
 
@@ -41,24 +40,17 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
       assert_equal "Negligence", another_user.reason_for_suspension
     end
 
+    should "enforce reauth on downstream apps" do
+      another_user = create(:user)
+      ReauthEnforcer.expects(:perform_on).with(another_user)
+
+      put :update, id: another_user.id, user: { suspended: "1", reason_for_suspension: "Negligence" }
+    end
+
     should "redisplay the form if the reason is blank" do
       another_user = create(:user)
       put :update, id: another_user.id, user: { suspended: "1", reason_for_suspension: "" }
       assert_template :edit
-    end
-
-    should "push suspension out to the apps (but only those ever used by them)" do
-      another_user = create(:user)
-      app = create(:application)
-      unused_app = create(:application)
-      # simulate them having used (and 'authorized' the app)
-      ::Doorkeeper::AccessToken.create(resource_owner_id: another_user.id, application_id: app.id, token: "1234")
-
-      SuspensionUpdater.expects(:new).with(another_user, [app]).returns(mock("suspenders", attempt: {}))
-
-      put :update, id: another_user.id, user: { suspended: "1", reason_for_suspension: "Negligence" }
-
-      assert_equal 200, response.status
     end
 
     should "be able to unsuspend the user" do

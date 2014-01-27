@@ -15,9 +15,9 @@ class Admin::SuspensionsController < ApplicationController
     end
 
     if succeeded
-      results = SuspensionUpdater.new(@user, @user.applications_used).attempt
-      @successes, @failures = results[:successes], results[:failures]
-      flash[:notice] = "#{@user.name} is now #{@user.suspended? ? "suspended" : "active"}"
+      ReauthEnforcer.perform_on(@user)
+      flash[:notice] = "#{@user.name} is now #{@user.suspended? ? 'suspended' : 'active'}."
+      redirect_to edit_admin_user_path(@user)
     else
       flash[:alert] = "Failed"
       render :edit
