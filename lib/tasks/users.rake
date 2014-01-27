@@ -27,7 +27,7 @@ namespace :users do
 
   desc "Remind users that their account will get suspended"
   task :send_suspension_reminders => :environment do
-    require 'lib/volatile_lock'
+    require_relative '../volatile_lock'
 
     if VolatileLock.new('signon:send_suspension_reminders').obtained?
       count = InactiveUsersSuspensionReminder.new.send_reminders
@@ -39,6 +39,8 @@ namespace :users do
 
   desc "Suspend users who have not signed-in for 45 days"
   task :suspend_inactive => :environment do
+    require_relative '../volatile_lock'
+
     if VolatileLock.new('signon:suspend_inactive').obtained?
       count = InactiveUsersSuspender.new.suspend
       puts "#{count} users were suspended because they had not logged in since #{User::SUSPENSION_THRESHOLD_PERIOD.inspect}"
