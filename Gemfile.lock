@@ -1,4 +1,13 @@
 GIT
+  remote: https://github.com/alphagov/airbrake
+  revision: 86643188677e494a8404d8306d943e3dc56ce31f
+  branch: disable_unless_configured
+  specs:
+    airbrake (3.1.15)
+      builder
+      multi_json
+
+GIT
   remote: https://github.com/alphagov/devise_security_extension.git
   revision: 4d14ed4c9ae8f23da0e9d5de2b6b69d9b53cd73d
   branch: graceful_return_to_behaviour
@@ -222,6 +231,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  airbrake (= 3.1.15)!
   alphabetical_paginate (= 2.1.0)
   ancestry (= 2.0.0)
   aws-ses
