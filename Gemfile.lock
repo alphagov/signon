@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/alphagov/airbrake
-  revision: 86643188677e494a8404d8306d943e3dc56ce31f
+  revision: 49fb7d1a3004970e2830f4e7b5b6b95f1bcb70fc
   branch: disable_unless_configured
   specs:
     airbrake (3.1.15)
