@@ -47,6 +47,8 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
     context "when the change was made in error" do
       should "be cancellable" do
+        use_javascript_driver
+
         user = create(:user_with_pending_email_change)
         original_email = user.email
 
@@ -67,11 +69,12 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
   context "by a user themselves" do
     setup do
       @user = create(:user, email: "original@email.com")
-      visit new_user_session_path
-      signin(@user)
     end
 
     should "trigger a confirmation email to the user" do
+      visit new_user_session_path
+      signin(@user)
+
       visit edit_user_path(@user)
       fill_in "Email", with: "new@email.com"
       click_button "Change email"
@@ -81,6 +84,11 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
     end
 
     should "be cancellable" do
+      use_javascript_driver
+
+      visit new_user_session_path
+      signin(@user)
+
       @user.update_column(:unconfirmed_email, "new@email.com")
 
       visit edit_user_path(@user)

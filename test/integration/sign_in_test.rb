@@ -1,5 +1,5 @@
 require 'test_helper'
- 
+
 class SignInTest < ActionDispatch::IntegrationTest
   setup do
     @user = create(:user, email: "email@example.com", password: "some passphrase with various $ymb0l$")
@@ -23,5 +23,16 @@ class SignInTest < ActionDispatch::IntegrationTest
     visit root_path
     signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
     assert_response_contains("Signed in successfully.")
+  end
+
+  should "not accept the login with an invalid CSRF token" do
+    visit root_path
+
+    find('#new_user input[name=authenticity_token]').set('not_the_authenticity_token')
+
+    fill_in "Email", with: @user.email
+    fill_in "Passphrase", with: @user.password
+    click_button "Sign in"
+    assert_response_contains("You need to sign in or sign up before continuing.")
   end
 end

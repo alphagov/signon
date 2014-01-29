@@ -246,7 +246,7 @@ Devise.setup do |config|
   #   manager.default_strategies(:scope => :user).unshift :some_external_strategy
   # end
   Warden::Manager.before_logout do |user, auth, opts|
-    ReauthEnforcer.perform_on(user)
+    ReauthEnforcer.perform_on(user) if user
   end
 
   # ==> Custom Validators for Devise
