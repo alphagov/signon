@@ -11,6 +11,17 @@ require "test/unit"
 require "mocha/setup"
 require 'webmock/test_unit'
 require 'capybara/rails'
+Capybara.register_driver :rack_test do |app|
+  # capybara/rails sets up the rack-test driver to respect data-method attributes.
+  # https://github.com/jnicklas/capybara/blob/2.2_stable/lib/capybara/rails.rb#L18-L20
+  #
+  # This is problematic because it's not a javascript driver, and therefore isn't running
+  # the javascript that would use these, and insert the CSRF token.
+  #
+  # It's better to not respect these attributes in this driver, because it then behaves like
+  # a normal browser with javascript disabled.
+  Capybara::RackTest::Driver.new(app)
+end
 
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
@@ -81,8 +92,15 @@ class ActionDispatch::IntegrationTest
     DatabaseCleaner.strategy = :truncation
   end
 
+  setup do
+    # Enable CSRF protection in integration tests
+    @original_forgery_protection_value, ActionController::Base.allow_forgery_protection = true, ActionController::Base.allow_forgery_protection
+  end
+
   teardown do
     Capybara.reset_sessions!
     Capybara.use_default_driver
+
+    ActionController::Base.allow_forgery_protection = @original_forgery_protection_value
   end
 end
