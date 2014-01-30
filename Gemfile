@@ -2,10 +2,6 @@ source 'https://rubygems.org'
 
 gem 'rails', '3.2.16'
 
-group :passenger_compatibility do
-  gem 'rake', '0.9.2'
-end
-
 gem 'kaminari', '0.14.1'
 gem 'alphabetical_paginate', '2.1.0'
 gem 'mysql2'
