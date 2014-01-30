@@ -7,6 +7,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   attr_accessible :name, :description, :uid, :secret, :redirect_uri, :home_uri
 
   default_scope order(:name)
+  scope :support_push_updates, where(supports_push_updates: true)
   scope :can_signin, lambda { |user| joins(:permissions)
                                       .where(permissions: { user_id: user.id })
                                       .where('permissions.permissions LIKE ?', '%signin%') }
