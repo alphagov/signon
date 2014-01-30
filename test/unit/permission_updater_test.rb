@@ -49,12 +49,11 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
     expected_failures = [
       {
         application: user_not_in_database,
-        message: "GdsApi::HTTPNotFound",
-        technical: "HTTP status code was: 404"
+        message: "SSOPushError: Error pushing to #{user_not_in_database.name} for user with uid #{@user.uid}, got response 404"
       },
       {
         application: slow_app,
-        message: "Timed out. Maybe the app is down?"
+        message: "SSOPushError: Error pushing to #{slow_app.name} for user with uid #{@user.uid}. Timeout connecting to application."
       }
     ]
     assert_equal expected_failures, results[:failures]
