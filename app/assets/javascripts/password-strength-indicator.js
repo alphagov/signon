@@ -28,8 +28,10 @@
         guidance.push('password_too_short');
       }
 
-      /* this isn't quite correct */
-      if ($.inArray(password, options["weak_words"]) >= 0) {
+      var aWeakWordFoundInPassword = $(options["weak_words"]).is(function(i, weak_word) {
+        return (password.indexOf(weak_word) >= 0);
+      });
+      if (aWeakWordFoundInPassword) {
         guidance.push('parts_of_email')
       }
 
@@ -46,37 +48,39 @@
 }).call(this);
 
 $(function() {
-  var $passwordField = $("form #password-control-group input[type=password]");
-  var passwordStrengthGuidance = $('#password-guidance');
-  var $parent = $passwordField.parent();
+  $("form #password-control-group input[type=password]").each(function(){
+    var $passwordField = $(this);
+    var passwordStrengthGuidance = $('#password-guidance');
+    var $parent = $passwordField.parent();
 
-  passwordStrengthGuidance.hide();
+    passwordStrengthGuidance.hide();
 
-  new GOVUK.passwordStrengthIndicator({
-    password_field: $passwordField,
-    password_strength_guidance: passwordStrengthGuidance,
+    new GOVUK.passwordStrengthIndicator({
+      password_field: $passwordField,
+      password_strength_guidance: passwordStrengthGuidance,
 
-    weak_words: $passwordField.data('weak-words').split(","),
-    strong_passphrase_boundary: 4,
-    min_password_length: $passwordField.data('min-password-length'),
+      weak_words: $passwordField.data('weak-words').split(","),
+      strong_passphrase_boundary: 4,
+      min_password_length: $passwordField.data('min-password-length'),
 
-    update_indicator: function(guidance) {
-      if ($.inArray('no_password_provided', guidance) >= 0) {
-        passwordStrengthGuidance.hide();
-        $('#password-result-span').hide();
-      } else if ( guidance.length === 0 ) { /* success */
-        passwordStrengthGuidance.hide();
-        $('#password-result-span').show();
-        $('#password-result').removeClass('icon-remove').addClass('icon-ok');
-      } else {
-        passwordStrengthGuidance.show();
-        $('#password-result-span').show();
-        $('#password-result').removeClass('icon-ok').addClass('icon-remove');
+      update_indicator: function(guidance) {
+        if ($.inArray('no_password_provided', guidance) >= 0) {
+          passwordStrengthGuidance.hide();
+          $('#password-result-span').hide();
+        } else if ( guidance.length === 0 ) { /* success */
+          passwordStrengthGuidance.hide();
+          $('#password-result-span').show();
+          $('#password-result').removeClass('icon-remove').addClass('icon-ok');
+        } else {
+          passwordStrengthGuidance.show();
+          $('#password-result-span').show();
+          $('#password-result').removeClass('icon-ok').addClass('icon-remove');
 
-        $('#password-entropy').toggle($.inArray('not_strong_enough', guidance) >= 0);
-        $('#password-too-short').toggle($.inArray('password_too_short', guidance) >= 0);
-        $('#parts-of-email').toggle($.inArray('parts_of_email', guidance) >= 0);
+          $('#password-entropy').toggle($.inArray('not_strong_enough', guidance) >= 0);
+          $('#password-too-short').toggle($.inArray('password_too_short', guidance) >= 0);
+          $('#parts-of-email').toggle($.inArray('parts_of_email', guidance) >= 0);
+        }
       }
-    }
+    });
   });
 });

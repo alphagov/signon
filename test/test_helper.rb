@@ -73,6 +73,10 @@ class ActionDispatch::IntegrationTest
     assert page.has_content?(content), page.body
   end
 
+  def refute_response_contains(content)
+    assert !page.has_content?(content), page.body
+  end
+
   def assert_current_url(path_with_query, options = {})
     expected = URI.parse(path_with_query)
     current = URI.parse(current_url)
