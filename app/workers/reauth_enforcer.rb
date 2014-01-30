@@ -1,5 +1,8 @@
+require 'signon_sidekiq_worker'
+require 'sso_push_client'
+
 class ReauthEnforcer
-  include Sidekiq::Worker
+  include SignonSidekiqWorker
 
   def self.perform_on(user)
     user.applications_used.each { |application| self.perform_async(user.uid, application.id) }
