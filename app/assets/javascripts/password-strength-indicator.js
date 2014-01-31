@@ -42,7 +42,7 @@
     } else {
       guidance.push("no_password_provided");
     }
-    options["update_indicator"](guidance);
+    options["update_indicator"](guidance, result.score);
   };
 
   GOVUK.passwordStrengthIndicator = PasswordStrengthIndicator;
@@ -87,6 +87,7 @@ $(function() {
     var $passwordConfirmationField = $("form #password-confirmation-control-group input[type=password]");
     var $passwordStrengthGuidance = $('#password-guidance');
     var $passwordConfirmationGuidance = $('#password-confirmation-guidance');
+    $passwordField.parent().append('<input type="hidden" id="password-strength-score" name="password-strength-score" value=""/>');
 
     $passwordStrengthGuidance.hide();
 
@@ -98,7 +99,8 @@ $(function() {
       strong_passphrase_boundary: 4,
       min_password_length: $passwordField.data('min-password-length'),
 
-      update_indicator: function(guidance) {
+      update_indicator: function(guidance, strengthScore) {
+        $('#password-strength-score').val(strengthScore);
         if ($.inArray('no_password_provided', guidance) >= 0) {
           $passwordStrengthGuidance.hide();
           $('#password-result-span').hide();
