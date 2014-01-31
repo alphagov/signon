@@ -87,7 +87,11 @@ class PassphraseChangeTest < ActionDispatch::IntegrationTest
     refute_response_contains("must be more complex")
     refute_response_contains("The new passphrase")
 
+    fill_in "Confirm new passphrase", with: "stronger password"
+    assert_response_contains("confirmation must match the password")
     fill_in "Confirm new passphrase", with: "stronger password purple monkey dishwasher"
+    refute_response_contains("confirmation must match the password")
+
     click_button "Change passphrase"
 
     assert_response_contains("Your passphrase was changed successfully")
