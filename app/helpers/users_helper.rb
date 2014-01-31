@@ -9,8 +9,8 @@ module UsersHelper
     { include_blank: current_user.role == 'organisation_admin' ? false : 'None' }
   end
 
-  def user_email_tokens
-    [ current_user.email ] + DeviseZxcvbn::EmailTokeniser.split(current_user.email)
+  def user_email_tokens(user = current_user)
+    [ user.email ] + DeviseZxcvbn::EmailTokeniser.split(user.email)
   end
 
   def minimum_password_length

@@ -40,44 +40,9 @@
     <h2><%= t(".change_passphrase") %></h2>
 
     <%= form_for current_user, :url => update_passphrase_user_path do |f| %>
-      <div class="row-fluid">
-        <div class="span8">
-          <%= f.label(:current_password, "Current passphrase") %>
-          <%= f.password_field :current_password, class: 'span11' %>
+      <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: current_user, updating_password: true } %>
 
-          <div id="password-control-group" class="control-group">
-            <%= f.label(:password, "New passphrase") %>
-            <div class="input-append">
-              <%= f.password_field :password, class: 'span11',
-                                   :"data-weak-words" => user_email_tokens.join(","),
-                                   :"data-min-password-length" => minimum_password_length %>
-              <span id="password-result-span" class="add-on"><i id="password-result"></i></span>
-            </div>
-          </div>
-
-          <div id="password-confirmation-control-group" class="control-group">
-            <%= f.label :password_confirmation, "Confirm new passphrase" %>
-            <div class="input-append">
-              <%= f.password_field :password_confirmation, class: 'span11' %>
-              <span id="password-confirmation-result-span" class="add-on"><i id="password-confirmation-result"></i></span>
-            </div>
-          </div>
-
-          <%= f.submit t(".change"), :class => 'btn btn-primary' %>
-        </div>
-
-        <div id="guidance-panel" class="span4">
-          <div id="password-guidance">
-            <strong>The new passphrase</strong>
-            <p id="password-too-short"><i class="icon-warning-sign"></i> must be at least 10 characters</p>
-            <p id="parts-of-email"><i class="icon-warning-sign"></i> shouldn't include part or all of your email address in your passphrase</p>
-            <p id="password-entropy"><i class="icon-warning-sign"></i> must be more complex. Consider using whole sentences (with spaces), lyrics or phrases to make your passphrase more memorable</p>
-          </div>
-          <div id="password-confirmation-guidance">
-            <p id="password-confirmation-match"><i class="icon-warning-sign"></i> The confirmation must match the password</p>
-          </div>
-        </div>
-      </div>
+      <%= f.submit t(".change"), :class => 'btn btn-primary' %>
     <% end %>
   </section>
 </div>

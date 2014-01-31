@@ -1,20 +1,11 @@
 <h2>Choose a new passphrase</h2>
 
 <div class="well">
-  <%= render "users/password_guidance" %>
+  <%= form_for(resource, :as => resource_name, :url => [resource_name, :password_expired], :html => { :method => :put }) do |f| %>
+    <%= devise_error_messages! %>
 
-<%= form_for(resource, :as => resource_name, :url => [resource_name, :password_expired], :html => { :method => :put }) do |f| %>
-  <%= devise_error_messages! %>
+    <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: resource, updating_password: true } %>
 
-  <div><%= f.label :current_password, "Current passphrase" %>
-  <%= f.password_field :current_password %></div>
-
-  <div><%= f.label :password, "New passphrase" %>
-  <%= f.password_field :password %></p>
-
-  <div><%= f.label :password_confirmation, "Confirm new passphrase" %>
-  <%= f.password_field :password_confirmation %></div>
-
-  <div><%= f.submit "Change my passphrase", class: "btn btn-primary" %></div>
-<% end %>
+    <div><%= f.submit "Change my passphrase", class: "btn btn-primary" %></div>
+  <% end %>
 </div>
