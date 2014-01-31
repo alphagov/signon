@@ -63,6 +63,7 @@
       <p>&copy; GDS. <span class="pull-right">Signon release: <%= CURRENT_RELEASE_SHA %></span></p>
     </footer>
 
+    <%= yield :optional_javascripts if content_for?(:optional_javascripts) %>
   </div> <!-- /container -->
 
 </body>
