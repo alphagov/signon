@@ -17,6 +17,7 @@
     });
 
     $(options["password_strength_guidance"]).attr("aria-live", "polite");
+    $(options["password_field"]).attr('aria-controls', $(options["password_strength_guidance"]).attr('id'));
   };
 
   PasswordStrengthIndicator.prototype.updateStrengthIndicator = function(password, options) {
@@ -58,6 +59,7 @@
     });
 
     $(options["password_confirmation_guidance"]).attr("aria-live", "polite");
+    $(options["password_confirmation_field"]).attr('aria-controls', $(options["password_confirmation_guidance"]).attr('id'));
   };
 
   PasswordConfirmationIndicator.prototype.updateIndicator = function(password, passwordConfirmation, options) {
