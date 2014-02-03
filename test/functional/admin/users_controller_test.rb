@@ -113,7 +113,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
       put :update, id: another_user.id, user: { name: "New Name" }
 
       assert_equal "New Name", another_user.reload.name
-      assert_equal 200, response.status
+      assert_redirected_to admin_users_path
       assert_equal "Updated user #{another_user.email} successfully", flash[:notice]
     end
 
@@ -208,31 +208,11 @@ class Admin::UsersControllerTest < ActionController::TestCase
       end
     end
 
-    should "push changes to permissions out to apps (but only those ever used by them)" do
-      another_user = create(:user)
-      app = create(:application)
-      unused_app = create(:application)
-      permission = create(:permission, application: app, user: another_user)
-      permission_for_unused_app = create(:permission, application: unused_app, user: another_user)
-      # simulate them having used (and 'authorized' the app)
-      ::Doorkeeper::AccessToken.create(resource_owner_id: another_user.id, application_id: app.id, token: "1234")
+    should "push changes out to apps" do
+      another_user = create(:user, name: "Old Name")
+      PermissionUpdater.expects(:perform_on).with(another_user).once
 
-      PermissionUpdater.expects(:new).with(another_user, [app]).returns(mock("mock propagator", attempt: {}))
-
-      permissions_attributes = {
-        permissions_attributes: {
-          0 => {
-            application_id: "#{app.id}",
-            id: "#{permission.id}",
-            signin_permission: "1",
-            permissions: ["banana"]
-          }
-        }
-      }
-      put :update, { id: another_user.id, user: { name: "New Name" } }.merge(permissions_attributes)
-
-      assert_equal "New Name", another_user.reload.name
-      assert_equal 200, response.status
+      put :update, id: another_user.id, user: { name: "New Name" }
     end
   end
 
