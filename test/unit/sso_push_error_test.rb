@@ -15,7 +15,7 @@ class SSOPushErrorTest < ActiveSupport::TestCase
     should "add application name, user uid and response error code to exception message" do
       ex = GdsApi::HTTPErrorResponse.new(504)
       SSOPushClient.any_instance.stubs(:post_json!).raises(ex)
-      @error_message_template = "SSOPushError: Error pushing to %s for user with uid %s, got response %d"
+      @error_message_template = "Error pushing to %s for user with uid %s, got response %d"
 
       exception = assert_raise(SSOPushError) do
         SSOPushClient.new(@application).reauth_user(@user.uid)
@@ -28,7 +28,7 @@ class SSOPushErrorTest < ActiveSupport::TestCase
     should "add application name, user uid and error message to exception message" do
       ex = GdsApi::TimedOutException.new()
       SSOPushClient.any_instance.stubs(:post_json!).raises(ex)
-      @error_message_template = "SSOPushError: Error pushing to %s for user with uid %s. %s"
+      @error_message_template = "Error pushing to %s for user with uid %s. %s"
 
       exception = assert_raise(SSOPushError) do
         SSOPushClient.new(@application).reauth_user(@user.uid)
@@ -42,7 +42,7 @@ class SSOPushErrorTest < ActiveSupport::TestCase
     should "add application name, user uid and message to exception message" do
       ex = StandardError.new()
       SSOPushClient.any_instance.stubs(:post_json!).raises(ex)
-      @error_message_template = "SSOPushError: Error pushing to %s for user with uid %s. StandardError"
+      @error_message_template = "Error pushing to %s for user with uid %s. StandardError"
 
       exception = assert_raise(SSOPushError) do
         SSOPushClient.new(@application).reauth_user(@user.uid)

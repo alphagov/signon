@@ -25,7 +25,7 @@ class Propagator
         end
         results[:failures] << { application: application, message: message, technical: "HTTP status code was: #{e.code}" }
       rescue GdsApi::BaseError, StandardError => e
-        results[:failures] << { application: application, message: e.message }
+        results[:failures] << { application: application, message: "#{e.class.name}: #{e.message}" }
       end
     end
     results
