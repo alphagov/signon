@@ -5,8 +5,10 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   has_many :supported_permissions, :dependent => :destroy
 
   attr_accessible :name, :description, :uid, :secret, :redirect_uri, :home_uri
+  attr_accessible :supports_push_updates, role: :superadmin
 
   default_scope order(:name)
+  scope :support_push_updates, where(supports_push_updates: true)
   scope :can_signin, lambda { |user| joins(:permissions)
                                       .where(permissions: { user_id: user.id })
                                       .where('permissions.permissions LIKE ?', '%signin%') }

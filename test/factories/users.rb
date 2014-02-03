@@ -43,6 +43,11 @@ FactoryGirl.define do
     role "admin"
   end
 
+  factory :superadmin_user, parent: :user do
+    sequence(:email) { |n| "superadmin#{n}@example.com" }
+    role "superadmin"
+  end
+
   factory :api_user, parent: :user do
     sequence(:email) { |n| "api-#{n}@example.com" }
     api_user true

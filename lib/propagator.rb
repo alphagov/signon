@@ -5,7 +5,7 @@ class Propagator
 
   def attempt
     results = { successes: [], failures: [] }
-    @applications.each do |application|
+    @applications.select(&:supports_push_updates?).each do |application|
       begin
         @updater.call(@user, application)
         results[:successes] << { application: application }

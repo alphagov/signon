@@ -5,7 +5,8 @@ class ReauthEnforcer
   include SignonSidekiqWorker
 
   def self.perform_on(user)
-    user.applications_used.each { |application| self.perform_async(user.uid, application.id) }
+    user.applications_used.select(&:supports_push_updates?)
+      .each { |application| self.perform_async(user.uid, application.id) }
   end
 
   def perform(uid, application_id)

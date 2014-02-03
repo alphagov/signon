@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140123152440) do
+ActiveRecord::Schema.define(:version => 20140203105954) do
 
   create_table "batch_invitation_users", :force => true do |t|
     t.integer  "batch_invitation_id"
@@ -65,13 +65,14 @@ ActiveRecord::Schema.define(:version => 20140123152440) do
 
   create_table "oauth_applications", :force => true do |t|
     t.string   "name"
-    t.string   "uid",          :null => false
-    t.string   "secret",       :null => false
-    t.string   "redirect_uri", :null => false
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.string   "uid",                                     :null => false
+    t.string   "secret",                                  :null => false
+    t.string   "redirect_uri",                            :null => false
+    t.datetime "created_at",                              :null => false
+    t.datetime "updated_at",                              :null => false
     t.string   "home_uri"
     t.string   "description"
+    t.boolean  "supports_push_updates", :default => true
   end
 
   add_index "oauth_applications", ["name"], :name => "unique_application_name", :unique => true
