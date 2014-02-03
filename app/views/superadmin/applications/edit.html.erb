@@ -48,8 +48,13 @@
     <span class="help-inline">The app has a copy of this. Used in the signin redirect dance.</span>
   </p>
 
+  <p>
+    <%= f.check_box :supports_push_updates, required: "required" %>
+    <%= f.label :supports_push_updates, 'Send push updates to this app', style: 'display: inline-block;' %>
+  </p>
+
   <% if can? :update, SupportedPermission %>
-    <p>
+    <p class="top-buffer">
       <%= link_to "Supported Permissions", superadmin_application_supported_permissions_path(@application) , class: "btn"%>
     </p>
   <% end %>
