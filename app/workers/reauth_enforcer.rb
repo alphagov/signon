@@ -1,13 +1,8 @@
-require 'signon_sidekiq_worker'
+require 'push_user_updates_worker'
 require 'sso_push_client'
 
 class ReauthEnforcer
-  include SignonSidekiqWorker
-
-  def self.perform_on(user)
-    user.applications_used.select(&:supports_push_updates?)
-      .each { |application| self.perform_async(user.uid, application.id) }
-  end
+  include PushUserUpdatesWorker
 
   def perform(uid, application_id)
     api = SSOPushClient.new(::Doorkeeper::Application.find(application_id))
