@@ -8,14 +8,12 @@ class SSOPushClient < GdsApi::Base
   end
 
   def update_user(uid, user)
-    @uid = uid
     with_exception_handling do
       put_json!("#{base_url}/users/#{CGI.escape(uid)}", user)
     end
   end
 
   def reauth_user(uid)
-    @uid = uid
     with_exception_handling do
       post_json!("#{base_url}/users/#{CGI.escape(uid)}/reauth", {})
     end
@@ -29,15 +27,15 @@ class SSOPushClient < GdsApi::Base
     def with_exception_handling
       yield
     rescue URI::InvalidURIError
-      raise SSOPushError.new(@application, @uid, message: "Invalid URL for application.")
+      raise SSOPushError.new(@application, message: "Invalid URL for application.")
     rescue GdsApi::EndpointNotFound, SocketError => e
-      raise SSOPushError.new(@application, @uid, message: "Couldn't find the application. Maybe the application is down?")
+      raise SSOPushError.new(@application, message: "Couldn't find the application. Maybe the application is down?")
     rescue Errno::ETIMEDOUT, Timeout::Error, GdsApi::TimedOutException
-      raise SSOPushError.new(@application, @uid, message: "Timeout connecting to application.")
+      raise SSOPushError.new(@application, message: "Timeout connecting to application.")
     rescue GdsApi::HTTPErrorResponse => e
-      raise SSOPushError.new(@application, @uid, response_code: e.code)
+      raise SSOPushError.new(@application, response_code: e.code)
     rescue *network_errors, StandardError => e
-      raise SSOPushError.new(@application, @uid, message: e.message)
+      raise SSOPushError.new(@application, message: e.message)
     end
 
     def network_errors
