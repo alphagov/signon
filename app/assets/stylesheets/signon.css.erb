@@ -72,3 +72,32 @@ hr.grey {
 #password-result-span, #password-confirmation-result-span {
   display: none;
 }
+
+.js-enabled #password-guidance {
+  display: none;
+}
+
+.js-enabled .not-strong-enough #password-guidance,
+.js-enabled .not-strong-enough #password-entropy,
+.js-enabled .password-too-short #password-guidance,
+.js-enabled .password-too-short #password-too-short,
+.js-enabled .parts-of-email #password-guidance,
+.js-enabled .parts-of-email #parts-of-email,
+.js-enabled .confirmation-not-matching #password-confirmation-guidance {
+  display: block;
+}
+
+.js-enabled .not-strong-enough #password-result-span,
+.js-enabled .password-too-short #password-result-span,
+.js-enabled .parts-of-email #password-result-span,
+.js-enabled .good-password #password-result-span,
+.js-enabled .confirmation-not-matching #password-confirmation-result-span,
+.js-enabled .confirmation-matching #password-confirmation-result-span {
+  display: inline;
+}
+
+.js-enabled #password-entropy,
+.js-enabled #password-too-short,
+.js-enabled #parts-of-email {
+  display: none;
+}

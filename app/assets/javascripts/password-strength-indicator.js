@@ -26,24 +26,33 @@
     var result = zxcvbn(password, options["weak_words"]);
     if (password.length > 0) {
       if (options["min_password_length"] && password.length < parseInt(options["min_password_length"])) {
-        guidance.push('password_too_short');
+        guidance.push('password-too-short');
       }
+
+      var isPasswordNotStrongEnough = (result.score < options["strong_passphrase_boundary"]);
 
       var aWeakWordFoundInPassword = $(options["weak_words"]).is(function(i, weak_word) {
         return (password.indexOf(weak_word) >= 0);
       });
-      if (aWeakWordFoundInPassword) {
-        guidance.push('parts_of_email')
+      if (isPasswordNotStrongEnough && aWeakWordFoundInPassword) {
+        guidance.push('parts-of-email');
       }
 
-      if (result.score < options["strong_passphrase_boundary"]) {
-        guidance.push('not_strong_enough');
+      if (isPasswordNotStrongEnough) {
+        guidance.push('not-strong-enough');
+      } else {
+        guidance.push('good-password');
       }
-    } else {
-      guidance.push("no_password_provided");
     }
     options["update_indicator"](guidance, result.score);
   };
+
+  GOVUK.passwordStrengthPossibleGuidance = [
+    'password-too-short',
+    'parts-of-email',
+    'not-strong-enough',
+    'good-password'
+  ]
 
   GOVUK.passwordStrengthIndicator = PasswordStrengthIndicator;
 
@@ -67,33 +76,36 @@
 
     if (passwordConfirmation.length > 0) {
       if (password === passwordConfirmation) {
-        guidance.push("confirmation_matching");
+        guidance.push("confirmation-matching");
       } else {
-        guidance.push("confirmation_not_matching");
+        guidance.push("confirmation-not-matching");
       }
     } else {
-      guidance.push("no_password_confirmation_provided");
+      guidance.push("no-password-confirmation-provided");
     }
 
     options["update_indicator"](guidance);
   };
+
+  GOVUK.passwordConfirmationPossibleGuidance = [
+    'confirmation-matching',
+    'confirmation-not-matching',
+    'no-password-confirmation-provided'
+  ]
 
   GOVUK.passwordConfirmationIndicator = PasswordConfirmationIndicator;
 }).call(this);
 
 $(function() {
   $("form #password-control-group input[type=password]").each(function(){
-    var $passwordField = $(this);
-    var $passwordConfirmationField = $("form #password-confirmation-control-group input[type=password]");
-    var $passwordStrengthGuidance = $('#password-guidance');
-    var $passwordConfirmationGuidance = $('#password-confirmation-guidance');
-    $passwordField.parent().append('<input type="hidden" id="password-strength-score" name="password-strength-score" value=""/>');
+    var $passwordChangePanel = $('#password-change-panel');
 
-    $passwordStrengthGuidance.hide();
+    var $passwordField = $(this);
+    $passwordField.parent().append('<input type="hidden" id="password-strength-score" name="password-strength-score" value=""/>');
 
     new GOVUK.passwordStrengthIndicator({
       password_field: $passwordField,
-      password_strength_guidance: $passwordStrengthGuidance,
+      password_strength_guidance: $('#password-guidance'),
 
       weak_words: $passwordField.data('weak-words').split(","),
       strong_passphrase_boundary: 4,
@@ -101,40 +113,29 @@ $(function() {
 
       update_indicator: function(guidance, strengthScore) {
         $('#password-strength-score').val(strengthScore);
-        if ($.inArray('no_password_provided', guidance) >= 0) {
-          $passwordStrengthGuidance.hide();
-          $('#password-result-span').hide();
-        } else if ( guidance.length === 0 ) { /* success */
-          $passwordStrengthGuidance.hide();
-          $('#password-result-span').show();
+
+        $passwordChangePanel.removeClass(GOVUK.passwordStrengthPossibleGuidance.join(" "));
+        $passwordChangePanel.addClass(guidance.join(" "));
+
+        if ($.inArray('good-password', guidance) >= 0) {
           $('#password-result').removeClass('icon-remove').addClass('icon-ok');
         } else {
-          $passwordStrengthGuidance.show();
-          $('#password-result-span').show();
           $('#password-result').removeClass('icon-ok').addClass('icon-remove');
-
-          $('#password-entropy').toggle($.inArray('not_strong_enough', guidance) >= 0);
-          $('#password-too-short').toggle($.inArray('password_too_short', guidance) >= 0);
-          $('#parts-of-email').toggle($.inArray('parts_of_email', guidance) >= 0);
         }
       }
     });
 
     new GOVUK.passwordConfirmationIndicator({
       password_field: $passwordField,
-      password_confirmation_field: $passwordConfirmationField,
-      password_confirmation_guidance: $passwordConfirmationGuidance,
+      password_confirmation_field: $("form #password-confirmation-control-group input[type=password]"),
+      password_confirmation_guidance: $('#password-confirmation-guidance'),
       update_indicator: function(guidance) {
-        if ($.inArray('no_password_confirmation_provided', guidance) >= 0) {
-          $passwordConfirmationGuidance.hide();
-          $('#password-confirmation-result-span').hide();
-        } else if ($.inArray('confirmation_not_matching', guidance) >= 0) {
-          $passwordConfirmationGuidance.show();
-          $('#password-confirmation-result-span').show();
+        $passwordChangePanel.removeClass(GOVUK.passwordConfirmationPossibleGuidance.join(" "));
+        $passwordChangePanel.addClass(guidance.join(" "));
+
+        if ($.inArray('confirmation-not-matching', guidance) >= 0) {
           $('#password-confirmation-result').removeClass('icon-ok').addClass('icon-remove');
         } else { /* password and confirmation match */
-          $passwordConfirmationGuidance.hide();
-          $('#password-confirmation-result-span').show();
           $('#password-confirmation-result').removeClass('icon-remove').addClass('icon-ok');
         }
       }
