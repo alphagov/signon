@@ -90,10 +90,15 @@ hr.grey {
 .js-enabled .not-strong-enough #password-result-span,
 .js-enabled .password-too-short #password-result-span,
 .js-enabled .parts-of-email #password-result-span,
+.js-enabled .confirmation-not-matching #password-confirmation-result-span {
+  display: inline;
+  background-color: red;
+}
+
 .js-enabled .good-password #password-result-span,
-.js-enabled .confirmation-not-matching #password-confirmation-result-span,
 .js-enabled .confirmation-matching #password-confirmation-result-span {
   display: inline;
+  background-color: lightgreen;
 }
 
 .js-enabled #password-entropy,
