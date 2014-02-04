@@ -76,6 +76,7 @@ class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
 
     should "send an exception notification if retries fail" do
       ExceptionNotifier.expects(:notify_exception).once
+      Airbrake.expects(:notify_or_ignore).once
       UserMailer.expects(:suspension_reminder).returns(@mailer).times(3)
 
       InactiveUsersSuspensionReminder.new.send_reminders
