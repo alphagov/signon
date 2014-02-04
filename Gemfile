@@ -9,8 +9,7 @@ gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
 gem 'exception_notification', '4.0.1'
 
-# Using our branch until https://github.com/airbrake/airbrake/pull/268 is merged
-gem 'airbrake', '3.1.15', :git => "https://github.com/alphagov/airbrake", :branch => "disable_unless_configured"
+gem 'airbrake', '3.1.15'
 gem 'plek', '1.4.0'
 gem 'json', '1.7.7'
 gem 'whenever', '0.7.3', require: false
