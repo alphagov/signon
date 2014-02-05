@@ -9,7 +9,8 @@ GIT
 
 GIT
   remote: https://github.com/alphagov/sidekiq-statsd.git
-  revision: 0b94f81b402fc6eb1e07871dd631e5b8dd086c04
+  revision: 866e2b5941d3ce276834a9221acd6bfd008609ed
+  ref: 866e2b5
   branch: more-metrics
   specs:
     sidekiq-statsd (0.1.1)
