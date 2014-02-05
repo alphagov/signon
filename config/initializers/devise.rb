@@ -245,9 +245,6 @@ Devise.setup do |config|
   #   manager.intercept_401 = false
   #   manager.default_strategies(:scope => :user).unshift :some_external_strategy
   # end
-  Warden::Manager.before_logout do |user, auth, opts|
-    ReauthEnforcer.perform_on(user) if user
-  end
 
   # ==> Custom Validators for Devise
   require 'devise/models/suspendable'
