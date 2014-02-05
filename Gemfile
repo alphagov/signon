@@ -32,7 +32,7 @@ gem 'gds-api-adapters', '7.11.0'
 gem 'statsd-ruby', '1.0.0'
 gem 'unicorn', '4.3.1'
 gem 'sidekiq', '2.17.2'
-gem 'sidekiq-statsd', git: "https://github.com/alphagov/sidekiq-statsd.git", branch: "more-metrics"
+gem 'sidekiq-statsd', git: "https://github.com/alphagov/sidekiq-statsd.git", branch: "more-metrics", ref: "866e2b5"
 
 gem 'redis', '3.0.6'
 
