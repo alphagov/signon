@@ -35,4 +35,18 @@ class SignInTest < ActionDispatch::IntegrationTest
     click_button "Sign in"
     assert_response_contains("You need to sign in or sign up before continuing.")
   end
+
+  should "not remotely sign out user when visiting with an expired session cookie" do
+    visit root_path
+    signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+    assert_response_contains("Signed in successfully.")
+
+    ReauthEnforcer.expects(:perform_on).never
+
+    Timecop.travel(User.timeout_in + 5.minutes)
+
+    visit root_path
+    signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+    assert_response_contains("Signed in successfully.")
+  end
 end

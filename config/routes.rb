@@ -3,6 +3,7 @@ Signonotron2::Application.routes.draw do
 
   devise_for :users, :controllers => {
     :invitations => 'admin/invitations',
+    :sessions => 'sessions',
     :passwords => 'passwords',
     :confirmations => 'confirmations'
   }

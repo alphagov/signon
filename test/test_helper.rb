@@ -55,6 +55,7 @@ class ActiveSupport::TestCase
   end
 
   teardown do
+    Timecop.return
     WebMock.reset!
     DatabaseCleaner.clean
   end
