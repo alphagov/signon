@@ -6,8 +6,8 @@ module UserAccountOperations
 
     signout
     visit accept_user_invitation_path(invitation_token: options[:invitation_token])
-    fill_in "Passphrase", with: options[:password]
-    fill_in "Confirm passphrase", with: options[:password]
+    fill_in "New passphrase", with: options[:password]
+    fill_in "Confirm new passphrase", with: options[:password]
     click_button "Set my passphrase"
   end
 

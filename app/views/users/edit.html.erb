@@ -39,19 +39,8 @@
   <section>
     <h2><%= t(".change_passphrase") %></h2>
 
-    <%= render "users/password_guidance" %>
-
     <%= form_for current_user, :url => update_passphrase_user_path do |f| %>
-      <%= f.label(:current_password, "Current passphrase") %>
-      <%= f.password_field :current_password, class: 'span6' %>
-
-      <%= f.label(:password, "New passphrase") %>
-      <%= f.password_field :password, class: 'span6' %>
-
-      <%= f.label :password_confirmation, "Confirm new passphrase" %>
-      <%= f.password_field :password_confirmation, class: 'span6' %>
-
-      <hr>
+      <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: current_user, updating_password: true } %>
 
       <%= f.submit t(".change"), :class => 'btn btn-primary' %>
     <% end %>
