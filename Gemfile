@@ -7,7 +7,6 @@ gem 'alphabetical_paginate', '2.1.0'
 gem 'mysql2'
 gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
-gem 'exception_notification', '4.0.1'
 
 gem 'airbrake', '3.1.15'
 gem 'plek', '1.4.0'
