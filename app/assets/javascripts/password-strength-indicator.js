@@ -15,8 +15,7 @@
       instance.updateStrengthIndicator(password, options);
     });
 
-    $(options["password_strength_guidance"]).attr("aria-live", "polite");
-    $(options["password_field"]).attr('aria-controls', $(options["password_strength_guidance"]).attr('id'));
+    $(options["password_strength_guidance"]).attr("aria-live", "polite").attr("aria-atomic", "true");
   };
 
   PasswordStrengthIndicator.prototype.updateStrengthIndicator = function(password, options) {
@@ -66,8 +65,7 @@
       });
     });
 
-    $(options["password_confirmation_guidance"]).attr("aria-live", "polite");
-    $(options["password_confirmation_field"]).attr('aria-controls', $(options["password_confirmation_guidance"]).attr('id'));
+    $(options["password_confirmation_guidance"]).attr("aria-live", "polite").attr("aria-atomic", "true");
   };
 
   PasswordConfirmationIndicator.prototype.updateIndicator = function(password, passwordConfirmation, options) {
