@@ -9,7 +9,7 @@ gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
 
 gem 'airbrake', '3.1.15'
-gem 'plek', '1.4.0'
+gem 'plek', '1.7.0'
 gem 'json', '1.7.7'
 gem 'whenever', '0.7.3', require: false
 
@@ -56,4 +56,3 @@ group :test do
   gem 'ci_reporter', '1.7.0'
   gem 'timecop', '0.7.1'
 end
-
