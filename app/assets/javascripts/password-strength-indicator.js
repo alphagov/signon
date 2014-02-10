@@ -115,24 +115,30 @@ $(function() {
         $passwordChangePanel.addClass(guidance.join(" "));
 
         if ($.inArray('good-password', guidance) >= 0) {
+          $passwordField.attr('aria-invalid', "false");
           $('#password-result').removeClass('icon-remove').addClass('icon-ok');
         } else {
+          $passwordField.attr('aria-invalid', "true");
           $('#password-result').removeClass('icon-ok').addClass('icon-remove');
         }
       }
     });
 
+    var $passwordConfirmationField = $("form #password-confirmation-control-group input[type=password]");
+
     new GOVUK.passwordConfirmationIndicator({
       password_field: $passwordField,
-      password_confirmation_field: $("form #password-confirmation-control-group input[type=password]"),
+      password_confirmation_field: $passwordConfirmationField,
       password_confirmation_guidance: $('#password-confirmation-guidance'),
       update_indicator: function(guidance) {
         $passwordChangePanel.removeClass(GOVUK.passwordConfirmationPossibleGuidance.join(" "));
         $passwordChangePanel.addClass(guidance.join(" "));
 
         if ($.inArray('confirmation-not-matching', guidance) >= 0) {
+          $passwordConfirmationField.attr('aria-invalid', "true");
           $('#password-confirmation-result').removeClass('icon-ok').addClass('icon-remove');
         } else { /* password and confirmation match */
+          $passwordConfirmationField.attr('aria-invalid', "false");
           $('#password-confirmation-result').removeClass('icon-remove').addClass('icon-ok');
         }
       }
