@@ -3,6 +3,17 @@ require 'redis_client'
 class VolatileLock
   class FailedToSetExpiration < StandardError; end
 
+  module DSL
+    def with_lock(key)
+      # lock for next 10.minutes
+      if VolatileLock.new(key).obtained?
+        yield
+      else
+        puts "Skipping task on #{Socket.gethostname}, couldn't obtain lock: #{key}"
+      end
+    end
+  end
+
   # expiration_time takes care of time-drifts on our
   # servers. defaults to 10.minutes assuming our servers
   # won't realistically have a greater time-drift.
