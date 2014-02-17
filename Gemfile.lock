@@ -112,7 +112,7 @@ GEM
     kgio (2.7.4)
     link_header (0.0.7)
     logstash-event (1.1.5)
-    logstasher (0.4.1)
+    logstasher (0.4.8)
       logstash-event (~> 1.1.0)
     lrucache (0.1.4)
       PriorityQueue (~> 0.1.2)
@@ -254,7 +254,7 @@ DEPENDENCIES
   jquery-rails
   json (= 1.7.7)
   kaminari (= 0.14.1)
-  logstasher (= 0.4.1)
+  logstasher (= 0.4.8)
   mocha (= 0.13.3)
   mysql2
   plek (= 1.7.0)
