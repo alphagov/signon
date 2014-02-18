@@ -49,7 +49,7 @@ group :test do
   gem 'factory_girl_rails', '4.3.0'
   gem 'mocha', '0.13.3', require: false
   gem 'shoulda', '3.0.1'
-  gem 'webmock', '1.8.7'
+  gem 'webmock', '1.17.3'
   gem 'test-unit', '2.5.2', require: false
   gem 'simplecov', '0.6.4'
   gem 'simplecov-rcov', '0.2.3'
