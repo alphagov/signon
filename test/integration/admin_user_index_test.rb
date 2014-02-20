@@ -4,17 +4,33 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
   context "logged in as an admin" do
     setup do
+      current_time = Time.zone.now
+      Timecop.freeze(current_time)
+
       @admin = create(:admin_user, :name => "Admin User", :email => "admin@example.com")
       visit new_user_session_path
       signin(@admin)
 
-      create(:user, :name => "Aardvark", :email => "aardvark@example.com")
+      create(:user, :name => "Aardvark", :email => "aardvark@example.com", :current_sign_in_at => current_time - 5.minutes)
       create(:user, :name => "Abbey", :email => "abbey@example.com")
       create(:user, :name => "Abbot", :email => "mr_ab@example.com")
       create(:user, :name => "Bert", :email => "bbbert@example.com")
       create(:user, :name => "Ed", :email => "ed@example.com")
       create(:user, :name => "Eddie", :email => "eddie_bb@example.com")
       create(:user, :name => "Ernie", :email => "ernie@example.com")
+    end
+
+    teardown do
+      Timecop.return
+    end
+
+    should "see when the user last logged in" do
+      visit "/admin/users"
+
+      assert page.has_content?("Last sign-in")
+
+      actual_last_sign_in_strings = page.all('table tr td.last-sign-in').map(&:text).map(&:strip)[0..1]
+      assert_equal ["5 minutes ago", "never signed in"], actual_last_sign_in_strings
     end
 
     should "see list of users paginated alphabetically" do
