@@ -58,6 +58,14 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [signed_in_7_days_ago, signed_in_8_days_ago], User.last_signed_in_before(6.days.ago)
   end
 
+  test "fetches web users who signed_in after X days ago" do
+    signed_in_0_days_ago = create(:user, current_sign_in_at: 0.days.ago)
+    signed_in_1_day_ago  = create(:user, current_sign_in_at: 1.day.ago)
+    signed_in_2_days_ago = create(:user, current_sign_in_at: 2.days.ago)
+
+    assert_equal [signed_in_0_days_ago, signed_in_1_day_ago], User.last_signed_in_at(1.days.ago)
+  end
+
   # Password Validation
 
   test "it requires a password to be at least 10 characters long" do
