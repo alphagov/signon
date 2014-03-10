@@ -1,10 +1,20 @@
 <h1>Sign in</h1>
-<br/>
-<div class="alert alert-danger">
-  <h2>
-    <p>There will be downtime on 25 March 2014 18:00 until 23:00 due to a platform change. Please avoid publishing content at that time.</p>
-  </h2>
-</div>
+
+<% if Date.today >= Date.new(2014,03,11) && Date.today < Date.new(2014,03,24) %>
+  <br/>
+  <div class="alert alert-block">
+    <h2>
+      <p>There will be downtime on 25 March 2014 18:00 until 23:00 due to a platform change. Please avoid publishing content at that time.</p>
+    </h2>
+  </div>
+<% elsif Date.today >= Date.new(2014,03,24) && Date.today < Date.new(2014,03,26) %>
+  <br/>
+  <div class="alert alert-danger">
+    <h2>
+      <p>There will be downtime on 25 March 2014 18:00 until 23:00 due to a platform change. Please avoid publishing content at that time.</p>
+    </h2>
+  </div>
+<% end %>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'well', autocomplete: 'on' }) do |f| %>
 
