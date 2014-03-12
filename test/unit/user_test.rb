@@ -63,7 +63,7 @@ class UserTest < ActiveSupport::TestCase
     signed_in_1_day_ago  = create(:user, current_sign_in_at: 1.day.ago)
     signed_in_2_days_ago = create(:user, current_sign_in_at: 2.days.ago)
 
-    assert_equal [signed_in_0_days_ago, signed_in_1_day_ago], User.last_signed_in_at(1.days.ago)
+    assert_equal [signed_in_0_days_ago, signed_in_1_day_ago], User.last_signed_in_after(1.day.ago)
   end
 
   # Password Validation

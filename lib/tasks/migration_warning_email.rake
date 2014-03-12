@@ -15,7 +15,7 @@ namespace :recent_users do
       end
     end
 
-    User.last_signed_in_at(90.days.ago).each do |user|
+    User.last_signed_in_after(90.days.ago).each do |user|
       MigrationEmail.notification_email(user).deliver
     end
 
