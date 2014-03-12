@@ -1,17 +1,17 @@
 <h1>Sign in</h1>
 
-<% if Date.today >= Date.new(2014,03,11) && Date.today < Date.new(2014,03,24) %>
+<% if Date.today >= Date.new(2014,03,12) && Date.today < Date.new(2014,03,17) %>
   <br/>
   <div class="alert alert-block">
     <h2>
-      <p>There will be downtime on 25 March 2014 from 18:00 until 23:00 due to a platform change. Please avoid publishing content at that time.</p>
+      <p>The GOV.UK Infrastructure Team will be doing planned maintenance from 6pm GMT on Tue, 25 Mar 2014 until 9am GMT on Wed, 26 Mar 2014. You will be unable to use Signon or any of the applications that depend on it--including all publishing tools--during this time.</p>
     </h2>
   </div>
-<% elsif Date.today >= Date.new(2014,03,24) && Date.today < Date.new(2014,03,26) %>
+<% elsif Date.today >= Date.new(2014,03,17) && Date.today < Date.new(2014,03,26) %>
   <br/>
   <div class="alert alert-danger">
     <h2>
-      <p>There will be downtime on 25 March 2014 from 18:00 until 23:00 due to a platform change. Please avoid publishing content at that time.</p>
+      <p>The GOV.UK Infrastructure Team will be doing planned maintenance from 6pm GMT on Tue, 25 Mar 2014 until 9am GMT on Wed, 26 Mar 2014. You will be unable to use Signon or any of the applications that depend on it--including all publishing tools--during this time.</p>
     </h2>
   </div>
 <% end %>
