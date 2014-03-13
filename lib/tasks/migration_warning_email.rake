@@ -16,7 +16,12 @@ namespace :recent_users do
     end
 
     User.last_signed_in_after(90.days.ago).each do |user|
-      MigrationEmail.notification_email(user).deliver
+      begin
+        $stdout.puts("Attempting to email: #{user.email}")
+        MigrationEmail.notification_email(user).deliver
+      rescue Exception => err
+        $stderr.puts("   FAILED trying to email: #{user.email}. Error: #{err}")
+      end
     end
 
   end
