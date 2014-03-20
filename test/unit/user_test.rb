@@ -66,6 +66,50 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [signed_in_0_days_ago, signed_in_1_day_ago], User.last_signed_in_after(1.day.ago)
   end
 
+  context "email validation" do
+    should "accept valid emails" do
+      user = build(:user)
+      [
+        'foo@example.com',
+        'foo_bar@example.COM',
+        'foo@example-domain.com',
+        'user-foo+bar@really.long.domain.co.uk',
+      ].each do |email|
+        user.email = email
+
+        assert user.valid?, "Expected user to be valid with email: '#{email}'"
+      end
+    end
+
+    should "reject emails with invalid domain parts" do
+      user = build(:user)
+      [
+        'foo@example.com,',
+        'foo@example_domain.com',
+        'foo@no-dot-domain',
+      ].each do |email|
+        user.email = email
+
+        assert_false user.valid?, "Expected user to be invalid with email: '#{email}'"
+        assert_equal ["is invalid"], user.errors[:email]
+      end
+    end
+
+    should "convert unicode apostrophe in email to ascii equivalent" do
+      user = build(:user, email: "mario’s.castle@wii.com") # unicode apostrophe character
+
+      assert user.valid?
+      assert_equal "mario's.castle@wii.com", user.email
+    end
+
+    should "emails can't contain non-ASCII characters" do
+      user = build(:user, email: "mariõs.castle@wii.com") # unicode tilde character
+
+      assert_false user.valid?
+      assert_equal ["can't contain non-ASCII characters"], user.errors[:email]
+    end
+  end
+
   # Password Validation
 
   test "it requires a password to be at least 10 characters long" do
@@ -172,20 +216,6 @@ class UserTest < ActiveSupport::TestCase
 
     assert_not_empty user.errors
     assert_false user.persisted?
-  end
-
-  test "unicode apostrophe in email is converted to ascii equivalent" do
-    user = create(:user, email: "mario’s.castle@wii.com") # unicode apostrophe character
-
-    assert_true user.email.ascii_only?
-    assert_equal "mario's.castle@wii.com", user.email
-  end
-
-  test "emails can't contain non-ASCII characters" do
-    user = User.new(email: "mariõs.castle@wii.com") # unicode tilde character
-
-    assert_false user.valid?
-    assert_equal ["can't contain non-ASCII characters"], user.errors[:email]
   end
 
   context "authorised applications" do
