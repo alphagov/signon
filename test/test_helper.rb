@@ -71,11 +71,11 @@ class ActionDispatch::IntegrationTest
   include EmailHelpers
 
   def assert_response_contains(content)
-    assert page.has_content?(content), page.body
+    assert page.has_content?(content), "Expected to find '#{content}' in:\n#{page.text}"
   end
 
   def refute_response_contains(content)
-    assert !page.has_content?(content), page.body
+    assert !page.has_content?(content), "Expected not to find '#{content}' in:\n#{page.text}"
   end
 
   def assert_current_url(path_with_query, options = {})
