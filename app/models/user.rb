@@ -114,11 +114,11 @@ private
   end
 
   def email_is_ascii_only
-    errors.add(:email, "can't contain non-ASCII characters") unless email.ascii_only?
+    errors.add(:email, "can't contain non-ASCII characters") unless email.blank? or email.ascii_only?
   end
 
   def fix_apostrophe_in_email
-    self.email.tr!(%q(’), %q(')) if email_changed?
+    self.email.tr!(%q(’), %q(')) if email.present? and email_changed?
   end
 
 end

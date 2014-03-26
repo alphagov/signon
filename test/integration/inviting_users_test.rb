@@ -29,6 +29,18 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
       assert_response_contains("You are now signed in")
     end
+
+    should "show an error message when attempting to create a user without an email" do
+      admin = create(:user, role: "admin")
+      visit root_path
+      signin(admin)
+
+      visit new_user_invitation_path
+      fill_in "Name", with: "Fred Bloggs"
+      click_button "Create user and send email"
+
+      assert_response_contains("Email can't be blank")
+    end
   end
 
   context "for an admin by a superadmin" do
