@@ -67,6 +67,13 @@ class UserTest < ActiveSupport::TestCase
   end
 
   context "email validation" do
+    should "require an email" do
+      user = build(:user, email: nil)
+
+      assert_false user.valid?
+      assert_equal ["can't be blank"], user.errors[:email]
+    end
+
     should "accept valid emails" do
       user = build(:user)
       [

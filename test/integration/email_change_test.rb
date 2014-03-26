@@ -1,6 +1,6 @@
 require 'test_helper'
 require 'helpers/user_account_operations'
- 
+
 class EmailChangeTest < ActionDispatch::IntegrationTest
   include UserAccountOperations
 
@@ -24,6 +24,17 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         confirm_email_change(confirmation_token: user.confirmation_token,
                              password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z")
         assert_response_contains("Your account was successfully confirmed. You are now signed in.")
+      end
+
+      should "show an error and not trigger a confirmation if the email is blank" do
+        user = create(:user)
+
+        visit new_user_session_path
+        signin(@admin)
+        admin_changes_email_address(user: user, new_email: "")
+
+        assert_response_contains("Email can't be blank")
+        assert_nil last_email
       end
     end
 
@@ -81,6 +92,19 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
       assert_equal "new@email.com", last_email.to[0]
       assert_equal 'Confirm your email change', last_email.subject
+    end
+
+    should "show an error and not send a confirmation if the email is blank" do
+      visit new_user_session_path
+      signin(@user)
+
+      visit edit_user_path(@user)
+      fill_in "Email", with: ""
+      click_button "Change email"
+
+      assert_response_contains "Email can't be blank"
+
+      assert_nil last_email
     end
 
     should "be cancellable" do
