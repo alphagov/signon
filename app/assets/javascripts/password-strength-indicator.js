@@ -10,15 +10,18 @@
   var PasswordStrengthIndicator = function(options) {
     var instance = this;
 
-    options["password_field"].keyup(function() {
-      var password = $(this).val();
-      instance.updateStrengthIndicator(password, options);
+    $.each([options["password_field"], options["password_confirmation_field"]], function(i, password_field) {
+      $(password_field).keyup(function() {
+        var password = $(options["password_field"]).val(),
+            passwordConfirmation = $(options["password_confirmation_field"]).val();
+        instance.updateIndicator(password, passwordConfirmation, options);
+      });
     });
 
     $(options["password_strength_guidance"]).attr("aria-live", "polite").attr("aria-atomic", "true");
   };
 
-  PasswordStrengthIndicator.prototype.updateStrengthIndicator = function(password, options) {
+  PasswordStrengthIndicator.prototype.updateIndicator = function(password, passwordConfirmation, options) {
     var guidance = [];
 
     var result = zxcvbn(password, options["weak_words"]);
@@ -42,34 +45,6 @@
         guidance.push('good-password');
       }
     }
-    options["update_indicator"](guidance, result.score);
-  };
-
-  GOVUK.passwordStrengthPossibleGuidance = [
-    'password-too-short',
-    'parts-of-email',
-    'not-strong-enough',
-    'good-password'
-  ]
-
-  GOVUK.passwordStrengthIndicator = PasswordStrengthIndicator;
-
-  var PasswordConfirmationIndicator = function(options) {
-    var instance = this;
-
-    $.each([options["password_field"], options["password_confirmation_field"]], function(i, password_field) {
-      $(password_field).keyup(function() {
-        var password = $(options["password_field"]).val();
-        var passwordConfirmation = $(options["password_confirmation_field"]).val();
-        instance.updateIndicator(password, passwordConfirmation, options);
-      });
-    });
-
-    $(options["password_confirmation_guidance"]).attr("aria-live", "polite").attr("aria-atomic", "true");
-  };
-
-  PasswordConfirmationIndicator.prototype.updateIndicator = function(password, passwordConfirmation, options) {
-    var guidance = [];
 
     if (passwordConfirmation.length > 0) {
       if (password === passwordConfirmation) {
@@ -81,8 +56,15 @@
       guidance.push("no-password-confirmation-provided");
     }
 
-    options["update_indicator"](guidance);
+    options["update_indicator"](guidance, result.score);
   };
+
+  GOVUK.passwordStrengthPossibleGuidance = [
+    'password-too-short',
+    'parts-of-email',
+    'not-strong-enough',
+    'good-password'
+  ]
 
   GOVUK.passwordConfirmationPossibleGuidance = [
     'confirmation-matching',
@@ -90,7 +72,7 @@
     'no-password-confirmation-provided'
   ]
 
-  GOVUK.passwordConfirmationIndicator = PasswordConfirmationIndicator;
+  GOVUK.passwordStrengthIndicator = PasswordStrengthIndicator;
 }).call(this);
 
 $(function() {
@@ -98,11 +80,15 @@ $(function() {
     var $passwordChangePanel = $('#password-change-panel');
 
     var $passwordField = $(this);
+    var $passwordConfirmationField = $("form #password-confirmation-control-group input[type=password]");
     $passwordField.parent().append('<input type="hidden" id="password-strength-score" name="password-strength-score" value=""/>');
 
     new GOVUK.passwordStrengthIndicator({
       password_field: $passwordField,
       password_strength_guidance: $('#password-guidance'),
+
+      password_confirmation_field: $passwordConfirmationField,
+      password_confirmation_guidance: $('#password-confirmation-guidance'),
 
       weak_words: $passwordField.data('weak-words').split(","),
       strong_passphrase_boundary: 4,
@@ -121,16 +107,7 @@ $(function() {
           $passwordField.attr('aria-invalid', "true");
           $('#password-result').removeClass('icon-ok').addClass('icon-remove');
         }
-      }
-    });
 
-    var $passwordConfirmationField = $("form #password-confirmation-control-group input[type=password]");
-
-    new GOVUK.passwordConfirmationIndicator({
-      password_field: $passwordField,
-      password_confirmation_field: $passwordConfirmationField,
-      password_confirmation_guidance: $('#password-confirmation-guidance'),
-      update_indicator: function(guidance) {
         $passwordChangePanel.removeClass(GOVUK.passwordConfirmationPossibleGuidance.join(" "));
         $passwordChangePanel.addClass(guidance.join(" "));
 
@@ -143,7 +120,7 @@ $(function() {
           $passwordConfirmationField.attr('aria-invalid', "false");
           indicator.removeClass('icon-remove');
           // Add tick only if password field is also valid.
-          if($passwordField.attr('aria-invalid') == "false") {
+          if($.inArray('good-password', guidance) >= 0) {
             indicator.addClass('icon-ok');
             indicator.parent().addClass('confirmation-matching');
           }
