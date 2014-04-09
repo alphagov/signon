@@ -134,12 +134,19 @@ $(function() {
         $passwordChangePanel.removeClass(GOVUK.passwordConfirmationPossibleGuidance.join(" "));
         $passwordChangePanel.addClass(guidance.join(" "));
 
+        var indicator = $('#password-confirmation-result');
         if ($.inArray('confirmation-not-matching', guidance) >= 0) {
           $passwordConfirmationField.attr('aria-invalid', "true");
-          $('#password-confirmation-result').removeClass('icon-ok').addClass('icon-remove');
+          indicator.removeClass('icon-ok').addClass('icon-remove');
+          indicator.parent().removeClass('confirmation-matching');
         } else { /* password and confirmation match */
           $passwordConfirmationField.attr('aria-invalid', "false");
-          $('#password-confirmation-result').removeClass('icon-remove').addClass('icon-ok');
+          indicator.removeClass('icon-remove');
+          // Add tick only if password field is also valid.
+          if($passwordField.attr('aria-invalid') == "false") {
+            indicator.addClass('icon-ok');
+            indicator.parent().addClass('confirmation-matching');
+          }
         }
       }
     });
