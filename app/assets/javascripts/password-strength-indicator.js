@@ -1,4 +1,5 @@
 //= require zxcvbn
+//= require jquery-debounce
 
 (function() {
   "use strict"
@@ -11,11 +12,12 @@
     var instance = this;
 
     $.each([options["password_field"], options["password_confirmation_field"]], function(i, password_field) {
-      $(password_field).keyup(function() {
+      var update = function() {
         var password = $(options["password_field"]).val(),
             passwordConfirmation = $(options["password_confirmation_field"]).val();
         instance.updateIndicator(password, passwordConfirmation, options);
-      });
+      };
+      $(password_field).debounce("keyup", update, 50);
     });
 
     $(options["password_strength_guidance"]).attr("aria-live", "polite").attr("aria-atomic", "true");
