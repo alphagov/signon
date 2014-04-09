@@ -116,7 +116,7 @@ $(function() {
           $passwordConfirmationField.attr('aria-invalid', "true");
           indicator.removeClass('icon-ok').addClass('icon-remove');
           indicator.parent().removeClass('confirmation-matching');
-        } else { /* password and confirmation match */
+        } else if ($.inArray('confirmation-matching', guidance) >= 0) {
           $passwordConfirmationField.attr('aria-invalid', "false");
           indicator.removeClass('icon-remove');
           // Add tick only if password field is also valid.
