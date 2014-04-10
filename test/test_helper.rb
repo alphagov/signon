@@ -75,7 +75,7 @@ class ActionDispatch::IntegrationTest
   end
 
   def refute_response_contains(content)
-    assert !page.has_content?(content), "Expected not to find '#{content}' in:\n#{page.text}"
+    assert page.has_no_content?(content), "Expected not to find '#{content}' in:\n#{page.text}"
   end
 
   def assert_current_url(path_with_query, options = {})
