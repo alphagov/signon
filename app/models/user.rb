@@ -15,7 +15,8 @@ class User < ActiveRecord::Base
          :zxcvbnable,
          :encryptable,
          :confirmable,
-         :password_expirable
+         :password_expirable,
+         :password_archivable
 
   attr_readonly :uid
 
