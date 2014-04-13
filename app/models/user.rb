@@ -103,8 +103,6 @@ class User < ActiveRecord::Base
     Statsd.new(::STATSD_HOST).increment("#{::STATSD_PREFIX}.users.created")
   end
 
-  include PasswordMigration
-
 private
 
   def organisation_admin_belongs_to_organisation
