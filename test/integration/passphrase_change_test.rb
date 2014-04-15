@@ -97,6 +97,12 @@ class PassphraseChangeTest < ActionDispatch::IntegrationTest
     assert_response_contains("Your passphrase was changed successfully")
   end
 
+  should "not accept a recently used password as the new password" do
+    change_password_to(@original_password)
+
+    assert_response_contains "Passphrase was already taken in the past"
+  end
+
   private
   def change_password_to(new_password)
     change_password(old: @user.password,

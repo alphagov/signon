@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140320162328) do
+ActiveRecord::Schema.define(:version => 20140409170000) do
 
   create_table "batch_invitation_users", :force => true do |t|
     t.integer  "batch_invitation_id"
@@ -77,6 +77,16 @@ ActiveRecord::Schema.define(:version => 20140320162328) do
 
   add_index "oauth_applications", ["name"], :name => "unique_application_name", :unique => true
   add_index "oauth_applications", ["uid"], :name => "index_oauth_applications_on_uid", :unique => true
+
+  create_table "old_passwords", :force => true do |t|
+    t.string   "encrypted_password",       :null => false
+    t.string   "password_salt"
+    t.integer  "password_archivable_id",   :null => false
+    t.string   "password_archivable_type", :null => false
+    t.datetime "created_at"
+  end
+
+  add_index "old_passwords", ["password_archivable_type", "password_archivable_id"], :name => "index_password_archivable"
 
   create_table "organisations", :force => true do |t|
     t.string   "slug",              :null => false
