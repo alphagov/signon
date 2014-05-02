@@ -1,7 +1,7 @@
 en:
   errors:
     messages:
-      taken_in_past: "was already taken in the past!"
+      taken_in_past: "was used previously. Please choose a different one."
       equal_to_current_password: "must be different to the current passphrase!"
   devise:
     invalid_captcha: "The captcha input is not valid!"
