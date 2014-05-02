@@ -100,7 +100,7 @@ class PassphraseChangeTest < ActionDispatch::IntegrationTest
   should "not accept a recently used password as the new password" do
     change_password_to(@original_password)
 
-    assert_response_contains "Passphrase was already taken in the past"
+    assert_response_contains "Passphrase was used previously. Please choose a different one."
   end
 
   private
