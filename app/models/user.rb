@@ -104,7 +104,26 @@ class User < ActiveRecord::Base
     Statsd.new(::STATSD_HOST).increment("#{::STATSD_PREFIX}.users.created")
   end
 
+  # Override Devise::Model::Lockable#lock_access! to add event logging
+  def lock_access!
+    EventLog.record_event(User.find_by_email(self.email),EventLog::ACCOUNT_LOCKED)
+    super
+  end
+
+  def need_change_password?
+    super.tap do |result|
+      EventLog.record_event(self, EventLog::PASSPHRASE_EXPIRED) if result
+    end
+  end
+
 private
+
+  # Override devise_security_extension for updating expired passwords
+  def update_password_changed
+    super.tap do |result|
+      EventLog.record_event(self, EventLog::SUCCESSFUL_PASSPHRASE_CHANGE) if result
+    end
+  end
 
   def organisation_admin_belongs_to_organisation
     if self.role == 'organisation_admin' && self.organisation_id.blank?

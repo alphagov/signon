@@ -35,6 +35,7 @@ class UsersController < ApplicationController
       sign_in(current_user, :bypass => true)
       redirect_to root_path
     else
+      EventLog.record_event(current_user, EventLog::UNSUCCESSFUL_PASSPHRASE_CHANGE)
       render :edit
     end
   end
