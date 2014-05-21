@@ -18,6 +18,6 @@ class EventLog < ActiveRecord::Base
   end
 
   def self.for(user)
-    EventLog.where(uid: user.uid)
+    EventLog.order('created_at DESC').where(uid: user.uid).limit(100)
   end
 end
