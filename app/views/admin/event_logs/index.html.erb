@@ -1,0 +1,14 @@
+<h2>Event log for <%= @user.name %></h2>
+<br/>
+<table class="table table-bordered table-striped">
+  <tr class="change-header-color">
+    <th>Event</th>
+    <th>Time</th>
+  </tr>
+  <% @logs.each do |log| %>
+  <tr>
+    <td><%= log.event %></td>
+    <td><%= I18n.l log.created_at, format: :govuk_date %></td>
+  </tr>
+  <% end %>
+</table>

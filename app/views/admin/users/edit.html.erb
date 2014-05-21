@@ -10,6 +10,11 @@
   <%= link_to "#{@user.suspended? ? "Uns" : "S"}uspend this user", edit_admin_suspension_path(@user), :class => 'btn btn-danger' %>
 </p>
 
+<p>
+  Event log for <%= @user.name %>
+  <%= link_to "Event logs", admin_user_event_logs_path(@user) %>
+</p>
+
 <%= form_for [:admin, @user], :html => {:class => 'well'} do |f| %>
   
   <% if @user.errors.count > 0 %>
