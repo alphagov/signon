@@ -259,6 +259,12 @@ Devise.setup do |config|
     Statsd.new(::STATSD_HOST).increment("#{::STATSD_PREFIX}.logins.success")
   end
 
+  Warden::Manager.after_authentication do |user, auth, opts|
+    if user.need_change_password?
+      EventLog.record_event(user, EventLog::PASSPHRASE_EXPIRED)
+    end
+  end
+
   Warden::Manager.before_failure do |env, opts|
     Statsd.new(::STATSD_HOST).increment("#{::STATSD_PREFIX}.logins.failure")
   end

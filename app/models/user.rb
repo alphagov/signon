@@ -110,12 +110,6 @@ class User < ActiveRecord::Base
     super
   end
 
-  def need_change_password?
-    super.tap do |result|
-      EventLog.record_event(self, EventLog::PASSPHRASE_EXPIRED) if result
-    end
-  end
-
 private
 
   # Override devise_security_extension for updating expired passwords

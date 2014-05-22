@@ -112,7 +112,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit root_path
     signin @user
 
-    assert_equal EventLog.for(@user).last.event, EventLog::PASSPHRASE_EXPIRED
+    assert_equal EventLog.for(@user).first.event, EventLog::PASSPHRASE_EXPIRED
   end
 
   test "users don't have permission to view account access log" do
