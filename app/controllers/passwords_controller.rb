@@ -36,7 +36,7 @@ class PasswordsController < Devise::PasswordsController
 
   private
     def user_from_params
-      User.find_by_email(params[:user][:email])
+      User.find_by_email(params[:user][:email]) if params[:user].present?
     end
 
     def record_password_reset_request
