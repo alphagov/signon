@@ -5,8 +5,8 @@ class EventLogTest < ActionDispatch::IntegrationTest
   include PassPhraseSupport
 
   setup do
-    @admin = create(:user, role: "admin")
-    @user = create(:user, name: "James R Holden")
+    @admin = create(:admin_user)
+    @user = create(:user)
   end
 
   test "record successful login" do
@@ -91,8 +91,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
   end
 
   test "record user unsuspension" do
-    user = create(:user, name: 'Juliette Andromeda Mao',
-                         suspended_at: 5.days.ago,
+    user = create(:user, suspended_at: 5.days.ago,
                          reason_for_suspension: 'Gross negligence')
 
     visit root_path
