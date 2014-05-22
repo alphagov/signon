@@ -1,19 +1,16 @@
 <h1>Edit user &ldquo;<%= @user.name %>&rdquo;</h1>
 
 <p class="suspenders">
-  This user is currently <%= @user.suspended? ? "suspended" : "active" %>.
-
-  <% if @user.suspended? and @user.reason_for_suspension.present? %>
-  They were suspended because <em><%= @user.reason_for_suspension %></em>
-  <% end %>
-
-  <%= link_to "#{@user.suspended? ? "Uns" : "S"}uspend this user", edit_admin_suspension_path(@user), :class => 'btn btn-danger' %>
+  User <strong><%= @user.suspended? ? "suspended" : "active" %></strong> &bull;
+  <%= link_to "Account access log", admin_user_event_logs_path(@user) %> &bull;
+  <%= link_to "#{@user.suspended? ? "Uns" : "S"}uspend user", edit_admin_suspension_path(@user) %>
 </p>
 
-<p>
-  Event log for <%= @user.name %>
-  <%= link_to "Event logs", admin_user_event_logs_path(@user) %>
-</p>
+<% if @user.suspended? and @user.reason_for_suspension.present? %>
+  <p class="alert">
+    <strong>User suspended:</strong> <em><%= @user.reason_for_suspension %></em>
+  </p>
+<% end %>
 
 <%= form_for [:admin, @user], :html => {:class => 'well'} do |f| %>
   
