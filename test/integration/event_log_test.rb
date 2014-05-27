@@ -73,7 +73,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     click_on 'Unlock'
 
     # multiple events are registered with the same time, order changes.
-    assert(EventLog.for(@user).map(&:event).include? EventLog::AUTOMATIC_ACCOUNT_UNLOCK)
+    assert(EventLog.for(@user).map(&:event).include? EventLog::MANUAL_ACCOUNT_UNLOCK)
   end
 
   test "record user suspension" do
