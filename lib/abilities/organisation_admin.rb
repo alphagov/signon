@@ -12,6 +12,8 @@ module Abilities
               User, { organisation: { id: user.organisation.subtree.map(&:id) }, api_user: false }
 
       cannot :delegate_all_permissions, ::Doorkeeper::Application
+
+      can [:read], EventLog, id: user.organisation.subtree.map(&:id)
     end
   end
 end

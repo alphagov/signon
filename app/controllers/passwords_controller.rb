@@ -21,7 +21,7 @@ class PasswordsController < Devise::PasswordsController
       self.resource = resource_class.send_reset_password_instructions(resource_params)
     rescue AWS::SES::ResponseError => exception
       if exception.message =~ /Address blacklisted/i
-        self.resource = User.find_by_email(params[:user][:email])
+        self.resource = user_from_params
       else
         raise
       end
@@ -35,7 +35,12 @@ class PasswordsController < Devise::PasswordsController
   end
 
   private
+    def user_from_params
+      User.find_by_email(params[:user][:email]) if params[:user].present?
+    end
+
     def record_password_reset_request
+      EventLog.record_event(user_from_params, EventLog::PASSPHRASE_RESET_REQUEST) if user_from_params
       Statsd.new(::STATSD_HOST).increment(
         "#{::STATSD_PREFIX}.users.password_reset_request"
       )

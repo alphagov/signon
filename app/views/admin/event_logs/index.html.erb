@@ -1,0 +1,20 @@
+<ol class="breadcrumb">
+  <li><%= link_to @user.name, admin_user_path(@user) %> <span class="divider">/</span> </li>
+  <li class="active">Account access log</li>
+</ol>
+
+<div class="page-header">
+  <h1>Account access log</h1>
+</div>
+<table class="table table-bordered table-striped">
+  <tr class="change-header-color">
+    <th style="width: 200px">Time</th>
+    <th>Event</th>
+  </tr>
+  <% @logs.each do |log| %>
+  <tr>
+    <td><%= I18n.l log.created_at, format: :govuk_date %></td>
+    <td><%= log.event %></td>
+  </tr>
+  <% end %>
+</table>

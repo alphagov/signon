@@ -26,3 +26,7 @@ en:
       delegatable: 'Can be delegated'
       placeholder:
         name: 'Name of application permission'
+
+  time:
+      formats:
+        govuk_date: "%-I:%M%P, %-e %B %Y" # 1:15pm, 1 January 2013 https://www.gov.uk/design-principles/style-guide/style-points#style-dates-and-times

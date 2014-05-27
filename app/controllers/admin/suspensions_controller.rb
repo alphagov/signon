@@ -9,12 +9,15 @@ class Admin::SuspensionsController < ApplicationController
     if params[:user][:suspended] == "1"
       authorize! :suspend, @user
       succeeded = @user.suspend(params[:user][:reason_for_suspension])
+      action = EventLog::ACCOUNT_SUSPENDED
     else
       authorize! :unsuspend, @user
       succeeded = @user.unsuspend
+      action = EventLog::ACCOUNT_UNSUSPENDED
     end
 
     if succeeded
+      EventLog.record_event(@user, action)
       ReauthEnforcer.perform_on(@user)
       flash[:notice] = "#{@user.name} is now #{@user.suspended? ? 'suspended' : 'active'}."
       redirect_to edit_admin_user_path(@user)
