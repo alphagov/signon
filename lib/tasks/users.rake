@@ -28,8 +28,11 @@ namespace :users do
   desc "Remind users that their account will get suspended"
   task :send_suspension_reminders => :environment do
     with_lock('signon:users:send_suspension_reminders') do
-      count = InactiveUsersSuspensionReminder.new.send_reminders
-      puts "InactiveUsersSuspensionReminder: #{count} users were reminded about account suspension"
+      suspension_reminder_mailing_list = InactiveUsersSuspensionReminderMailingList.new(User::SUSPENSION_THRESHOLD_PERIOD).generate
+      suspension_reminder_mailing_list.each do |days_to_suspension, users|
+        InactiveUsersSuspensionReminder.new(users, days_to_suspension).send_reminders
+        puts "InactiveUsersSuspensionReminder: #{users_to_remind.count} users were reminded about their account getting suspended in #{days_to_suspension} days"
+      end
     end
   end
 
