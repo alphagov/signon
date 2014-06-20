@@ -22,7 +22,22 @@ class UserLockingTest < ActionDispatch::IntegrationTest
     signin(admin)
     first_letter_of_name = user.name[0]
     visit admin_users_path(letter: first_letter_of_name)
-    click_button 'Unlock'
+    click_button 'Unlock account'
+
+    user.reload
+    assert ! user.access_locked?
+  end
+
+  should "be reversible from the user edit page" do
+    admin = create(:user, role: "admin")
+    user = create(:user)
+    user.lock_access!
+
+    visit root_path
+    signin(admin)
+    visit edit_admin_user_path(user)
+
+    click_button 'Unlock account'
 
     user.reload
     assert ! user.access_locked?
