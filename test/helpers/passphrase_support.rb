@@ -31,6 +31,6 @@ module PassPhraseSupport
 
   def given_email_is_on_ses_blacklist
     Devise::Mailer.any_instance.expects(:mail).with(anything)
-    .raises(AWS::SES::ResponseError, OpenStruct.new(error: { 'Code' => "MessageRejected", 'Message' => "Address blacklisted." }))
+    .raises(Net::SMTPFatalError, OpenStruct.new(error: { 'Code' => "MessageRejected", 'Message' => "Address blacklisted." }))
   end
 end
