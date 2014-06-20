@@ -19,7 +19,7 @@ class PasswordsController < Devise::PasswordsController
   def create
     begin
       self.resource = resource_class.send_reset_password_instructions(resource_params)
-    rescue AWS::SES::ResponseError => exception
+    rescue Net::SMTPFatalError => exception
       if exception.message =~ /Address blacklisted/i
         self.resource = user_from_params
       else

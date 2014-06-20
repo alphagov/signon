@@ -5,7 +5,6 @@ gem 'rails', '3.2.18'
 gem 'kaminari', '0.14.1'
 gem 'alphabetical_paginate', '2.1.0'
 gem 'mysql2'
-gem 'aws-ses', require: 'aws/ses'
 gem 'jquery-rails'
 
 gem 'airbrake', '3.1.15'

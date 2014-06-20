@@ -6,7 +6,7 @@ class Admin::InvitationsController < Devise::InvitationsController
 
   helper_method :applications_and_permissions
 
-  rescue_from AWS::SES::ResponseError do |exception|
+  rescue_from Net::SMTPFatalError do |exception|
     if exception.message =~ /Address blacklisted/i
       @exception = exception
       render "shared/address_blacklisted", status: 500

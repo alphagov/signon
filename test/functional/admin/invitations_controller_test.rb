@@ -61,7 +61,7 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
     context "SES has blacklisted the address" do
       should "show the user a helpful message" do
         Devise::Mailer.any_instance.expects(:mail).with(anything)
-            .raises(AWS::SES::ResponseError, OpenStruct.new(error: { 'Code' => "MessageRejected", 'Message' => "Address blacklisted." }))
+            .raises(Net::SMTPFatalError, OpenStruct.new(error: { 'Code' => "MessageRejected", 'Message' => "Address blacklisted." }))
 
         post :create, user: { name: "John Smith", email: "jsmith@restrictivemailserver.com" }
 
