@@ -35,7 +35,7 @@ class Admin::UsersController < ApplicationController
     EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK)
     @user.unlock_access!
     flash[:notice] = "Unlocked #{@user.email}"
-    redirect_to admin_users_path
+    redirect_to :back
   end
 
   def resend_email_change

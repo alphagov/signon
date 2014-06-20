@@ -69,7 +69,7 @@
             <% end %>
             <% if user.access_locked? %>
               <%= form_tag unlock_admin_user_path(user) do %>
-                <%= submit_tag "Unlock", :class => 'btn btn-danger' %>
+                <%= submit_tag "Unlock account", :class => 'btn' %>
               <% end %>
             <% end %>
           </td>

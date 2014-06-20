@@ -6,6 +6,16 @@
   <%= link_to "#{@user.suspended? ? "Uns" : "S"}uspend user", edit_admin_suspension_path(@user) %>
 </p>
 
+<% if @user.access_locked? %>
+  <div class="alert">
+    <strong>Account has been locked after too many unsuccessful login attempts.</strong><br/>
+    Locked accounts are automatically unlocked after 1 hour.
+    <%= form_tag unlock_admin_user_path(@user), class: 'unlock-account-form' do %>
+      <%= submit_tag "Unlock account", :class => 'btn top-buffer' %>
+    <% end %>
+  </div>
+<% end %>
+
 <% if @user.suspended? and @user.reason_for_suspension.present? %>
   <p class="alert">
     <strong>User suspended:</strong> <em><%= @user.reason_for_suspension %></em>
