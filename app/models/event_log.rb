@@ -8,6 +8,7 @@ class EventLog < ActiveRecord::Base
   SUCCESSFUL_PASSPHRASE_CHANGE = "Successful passphrase change"
   SUCCESSFUL_LOGIN = "Successful login"
   UNSUCCESSFUL_LOGIN = "Unsuccessful login"
+  SUSPENDED_ACCOUNT_AUTHENTICATED_LOGIN = "Unsuccessful login attempt to a suspended account, with the correct username and password"
   UNSUCCESSFUL_PASSPHRASE_CHANGE = "Unsuccessful passphrase change"
 
   validates :uid, presence: true

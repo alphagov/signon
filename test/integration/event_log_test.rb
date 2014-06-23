@@ -13,6 +13,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit root_path
     signin @user
 
+    assert_equal 1, EventLog.for(@user).count
     assert_equal EventLog::SUCCESSFUL_LOGIN, EventLog.for(@user).last.event
   end
 
@@ -20,6 +21,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit root_path
     signin(email: @user.email, password: :incorrect)
 
+    assert_equal 1, EventLog.for(@user).count
     assert_equal EventLog::UNSUCCESSFUL_LOGIN, EventLog.for(@user).last.event
   end
 
@@ -88,6 +90,15 @@ class EventLogTest < ActionDispatch::IntegrationTest
     click_on 'Save'
 
     assert_equal EventLog::ACCOUNT_SUSPENDED, EventLog.for(@user).last.event
+  end
+
+  test "record suspended user's attempt to login with correct credentials" do
+    @user.suspend('Assaulting superior officer')
+
+    visit root_path
+    signin @user
+
+    assert_equal EventLog.for(@user).last.event, EventLog::SUSPENDED_ACCOUNT_AUTHENTICATED_LOGIN
   end
 
   test "record user unsuspension" do
