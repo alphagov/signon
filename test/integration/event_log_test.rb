@@ -13,14 +13,14 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit root_path
     signin @user
 
-    assert_equal EventLog.for(@user).last.event, EventLog::SUCCESSFUL_LOGIN
+    assert_equal EventLog::SUCCESSFUL_LOGIN, EventLog.for(@user).last.event
   end
 
   test "record unsuccessful login" do
     visit root_path
     signin(email: @user.email, password: :incorrect)
 
-    assert_equal EventLog.for(@user).last.event, EventLog::UNSUCCESSFUL_LOGIN
+    assert_equal EventLog::UNSUCCESSFUL_LOGIN, EventLog.for(@user).last.event
   end
 
   test "record passphrase reset request" do
@@ -29,8 +29,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     fill_in "Email", with: @user.email
     click_on "Send me passphrase reset instructions"
 
-    log = EventLog.for(@user).first
-    assert_equal log.event, EventLog::PASSPHRASE_RESET_REQUEST
+    assert_equal EventLog::PASSPHRASE_RESET_REQUEST, EventLog.for(@user).first.event
   end
 
   test "record successful passphrase change" do
@@ -41,7 +40,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
                     new: new_password,
                     new_confirmation: new_password)
 
-    assert_equal EventLog.for(@user).last.event, EventLog::SUCCESSFUL_PASSPHRASE_CHANGE
+    assert_equal EventLog::SUCCESSFUL_PASSPHRASE_CHANGE, EventLog.for(@user).last.event
   end
 
   test "record unsuccessful passphrase change" do
@@ -52,7 +51,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
                     new_confirmation: @user.password)
 
     # multiple events are registered with the same time, order changes.
-    assert(EventLog.for(@user).map(&:event).include? EventLog::UNSUCCESSFUL_PASSPHRASE_CHANGE)
+    assert_include EventLog.for(@user).map(&:event), EventLog::UNSUCCESSFUL_PASSPHRASE_CHANGE
   end
 
   test "record account locked if password entered too many times" do
@@ -60,7 +59,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     7.times { signin(email: @user.email, password: :incorrect) }
 
     # multiple events are registered with the same time, order changes.
-    assert(EventLog.for(@user).map(&:event).include? EventLog::ACCOUNT_LOCKED)
+    assert_include EventLog.for(@user).map(&:event), EventLog::ACCOUNT_LOCKED
   end
 
   test "record account unlocked" do
@@ -73,7 +72,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     click_on 'Unlock'
 
     # multiple events are registered with the same time, order changes.
-    assert(EventLog.for(@user).map(&:event).include? EventLog::MANUAL_ACCOUNT_UNLOCK)
+    assert_include EventLog.for(@user).map(&:event), EventLog::MANUAL_ACCOUNT_UNLOCK
   end
 
   test "record user suspension" do
@@ -87,7 +86,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     fill_in 'Reason for suspension', with: 'Assaulting superior officer'
     click_on 'Save'
 
-    assert_equal EventLog.for(@user).last.event, EventLog::ACCOUNT_SUSPENDED
+    assert_equal EventLog::ACCOUNT_SUSPENDED, EventLog.for(@user).last.event
   end
 
   test "record user unsuspension" do
@@ -103,7 +102,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     uncheck 'Suspended?'
     click_on 'Save'
 
-    assert_equal EventLog.for(user).last.event, EventLog::ACCOUNT_UNSUSPENDED
+    assert_equal EventLog::ACCOUNT_UNSUSPENDED, EventLog.for(user).last.event
   end
 
   test "record password expiration" do
@@ -112,7 +111,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit root_path
     signin @user
 
-    assert_equal EventLog.for(@user).first.event, EventLog::PASSPHRASE_EXPIRED
+    assert_equal EventLog::PASSPHRASE_EXPIRED, EventLog.for(@user).first.event
   end
 
   test "users don't have permission to view account access log" do
@@ -132,7 +131,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit admin_user_path(@user)
     click_on 'Account access log'
 
-    assert_account_access_log_page_cotent(@user)
+    assert_account_access_log_page_content(@user)
   end
 
   test "superadmins have permission to view account access log" do
@@ -144,7 +143,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit admin_user_path(@user)
     click_on 'Account access log'
 
-    assert_account_access_log_page_cotent(@user)
+    assert_account_access_log_page_content(@user)
   end
 
   test "organisation admins have permission to view their own users access log" do
@@ -157,7 +156,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit admin_user_path(user)
     click_on 'Account access log'
 
-    assert_account_access_log_page_cotent(user)
+    assert_account_access_log_page_content(user)
   end
 
   test "organisation admins don't have permission to view other users' access logs" do
@@ -170,7 +169,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     assert page.has_content?("You do not have permission to perform this action")
   end
 
-  def assert_account_access_log_page_cotent(user)
+  def assert_account_access_log_page_content(user)
     assert page.has_content?('Time')
     assert page.has_content?('Event')
     assert page.has_content?('Account locked')
