@@ -32,7 +32,7 @@ class Admin::UsersController < ApplicationController
   end
 
   def unlock
-    EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK)
+    EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK, current_user)
     @user.unlock_access!
     flash[:notice] = "Unlocked #{@user.email}"
     redirect_to :back
