@@ -40,7 +40,8 @@ class EventLogTest < ActionDispatch::IntegrationTest
                     new: new_password,
                     new_confirmation: new_password)
 
-    assert_equal EventLog::SUCCESSFUL_PASSPHRASE_CHANGE, EventLog.for(@user).last.event
+    # multiple events are registered with the same time, order changes.
+    assert_include EventLog.for(@user).map(&:event), EventLog::SUCCESSFUL_PASSPHRASE_CHANGE
   end
 
   test "record unsuccessful passphrase change" do
