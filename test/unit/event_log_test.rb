@@ -2,15 +2,15 @@ require 'test_helper'
 
 class EventLogTest < ActiveSupport::TestCase
   test "can create a valid eventlog" do
-    assert EventLog.create(uid: :uid, event: :event).valid?
+    assert EventLog.new(uid: :uid, event: :event).valid?
   end
 
   test "requires a user uid" do
-    assert_false EventLog.create(event: :event).valid?
+    assert_false EventLog.new(event: :event).valid?
   end
 
   test "requires an event" do
-    assert_false EventLog.create(uid: :uid).valid?
+    assert_false EventLog.new(uid: :uid).valid?
   end
 
   test "can use a helper to create the eventlog" do
