@@ -12,14 +12,14 @@ module Devise
 
       def active_for_authentication?
         if super
-          return true if !suspended?
+          return true unless suspended?
           EventLog.record_event(self, EventLog::SUSPENDED_ACCOUNT_AUTHENTICATED_LOGIN)
         end
         false
       end
 
       def inactive_message
-        !suspended? ? super : :suspended
+        suspended? ? :suspended : super
       end
 
       # Suspends the user in the database.
