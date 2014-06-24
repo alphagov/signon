@@ -65,7 +65,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     assert_include EventLog.for(@user).map(&:event), EventLog::ACCOUNT_LOCKED
   end
 
-  test "record account unlocked" do
+  test "record account unlocked along with event initiator" do
     @user.lock_access!
 
     visit root_path
@@ -74,11 +74,11 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit admin_users_path(letter: first_letter_of_name)
     click_on 'Unlock'
 
-    # multiple events are registered with the same time, order changes.
-    assert_include EventLog.for(@user).map(&:event), EventLog::MANUAL_ACCOUNT_UNLOCK
+    visit admin_user_event_logs_path(@user)
+    assert page.has_content?(EventLog::MANUAL_ACCOUNT_UNLOCK + ' by ' + @admin.name)
   end
 
-  test "record user suspension" do
+  test "record user suspension along with event initiator" do
     visit root_path
     signin @admin
     first_letter_of_name = @user.name[0]
@@ -89,7 +89,8 @@ class EventLogTest < ActionDispatch::IntegrationTest
     fill_in 'Reason for suspension', with: 'Assaulting superior officer'
     click_on 'Save'
 
-    assert_equal EventLog::ACCOUNT_SUSPENDED, EventLog.for(@user).last.event
+    visit admin_user_event_logs_path(@user)
+    assert page.has_content?(EventLog::ACCOUNT_SUSPENDED + ' by ' + @admin.name)
   end
 
   test "record suspended user's attempt to login with correct credentials" do
@@ -101,20 +102,20 @@ class EventLogTest < ActionDispatch::IntegrationTest
     assert_equal EventLog.for(@user).last.event, EventLog::SUSPENDED_ACCOUNT_AUTHENTICATED_LOGIN
   end
 
-  test "record user unsuspension" do
-    user = create(:user, suspended_at: 5.days.ago,
-                         reason_for_suspension: 'Gross negligence')
+  test "record user unsuspension along with event initiator" do
+    @user.suspend('Gross negligence')
 
     visit root_path
     signin @admin
-    first_letter_of_name = user.name[0]
+    first_letter_of_name = @user.name[0]
     visit admin_users_path(letter: first_letter_of_name)
-    click_on "#{user.name} <#{user.email}>"
+    click_on "#{@user.name} <#{@user.email}>"
     click_on 'Unsuspend user'
     uncheck 'Suspended?'
     click_on 'Save'
 
-    assert_equal EventLog::ACCOUNT_UNSUSPENDED, EventLog.for(user).last.event
+    visit admin_user_event_logs_path(@user)
+    assert page.has_content?(EventLog::ACCOUNT_UNSUSPENDED + ' by ' + @admin.name)
   end
 
   test "record password expiration" do
