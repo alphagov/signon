@@ -44,5 +44,30 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
         assert_nil @permission.reload.last_synced_at
       end
     end
+
+    context "handling changes in data since job was scheduled" do
+      should "not attempt to update if the User doesn't exist" do
+        SSOPushClient.expects(:new).never
+
+        PermissionUpdater.new.perform(@user.uid + "foo", @application.id)
+      end
+
+      should "do nothing if the application doesn't exist" do
+        SSOPushClient.expects(:new).never
+
+        PermissionUpdater.new.perform(@user.uid, @application.id + 42)
+      end
+
+      should "not raise if the user has no permissions for the application" do
+        @permission.destroy
+
+        expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
+        http_request = stub_request(:put, users_url(@application)).with(body: expected_body)
+
+        PermissionUpdater.new.perform(@user.uid, @application.id)
+
+        assert_requested http_request
+      end
+    end
   end
 end
