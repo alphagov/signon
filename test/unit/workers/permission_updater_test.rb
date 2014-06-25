@@ -18,19 +18,16 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
 
   context "perform" do
     should "update the application with users information" do
-      user_hash = UserOAuthPresenter.new(@user, @application).as_hash
-
-      mock_client = mock('sso_push_client')
-      mock_client.expects(:update_user).with(@user.uid, user_hash).once
-      SSOPushClient.expects(:new).with(@application).returns(mock_client).once
+      expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
+      http_request = stub_request(:put, users_url(@application)).with(body: expected_body)
 
       PermissionUpdater.new.perform(@user.uid, @application.id)
+      assert_requested http_request
     end
 
     context "successful update" do
       should "record the last_synced_at timestamp on the permission" do
-        expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
-        stub_request(:put, users_url(@application)).with(body: expected_body)
+        stub_request(:put, users_url(@application))
 
         PermissionUpdater.new.perform(@user.uid, @application.id)
 
@@ -40,7 +37,6 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
 
     context "failed update" do
       should "not record the last_synced_at timestamp on the permission" do
-        expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
         stub_request(:put, users_url(@application)).to_timeout
 
         PermissionUpdater.new.perform(@user.uid, @application.id) rescue SSOPushError
