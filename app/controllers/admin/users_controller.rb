@@ -4,16 +4,13 @@ class Admin::UsersController < ApplicationController
   before_filter :authenticate_user!
   load_and_authorize_resource
 
-  helper_method :applications_and_permissions
+  helper_method :applications_and_permissions, :any_filter?
 
   respond_to :html
 
   def index
-    if params[:filter].present?
-      @users = @users.filter(params[:filter]).page(params[:page]).per(100)
-    else
-      @users, @sorting_params = @users.alpha_paginate(params[:letter], ALPHABETICAL_PAGINATE_CONFIG)
-    end
+    filter_users if any_filter?
+    paginate_users
   end
 
   def update
@@ -52,6 +49,25 @@ class Admin::UsersController < ApplicationController
     @user.confirmation_token = nil
     @user.save(validate: false)
     redirect_to edit_admin_user_path(@user)
+  end
+
+private
+
+  def filter_users
+    @users = @users.filter(params[:filter]) if params[:filter].present?
+    @users = @users.with_role(params[:role]) if params[:role].present?
+  end
+
+  def paginate_users
+    if any_filter?
+      @users = @users.page(params[:page]).per(100)
+    else
+      @users, @sorting_params = @users.alpha_paginate(params[:letter], ALPHABETICAL_PAGINATE_CONFIG)
+    end
+  end
+
+  def any_filter?
+    params[:filter].present? || params[:role].present?
   end
 
 end
