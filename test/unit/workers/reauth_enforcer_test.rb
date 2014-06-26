@@ -13,6 +13,12 @@ class ReauthEnforcerTest < ActiveSupport::TestCase
 
       ReauthEnforcer.new.perform(uid, app.id)
     end
+
+    should "do nothing if the application doesn't exist" do
+      SSOPushClient.any_instance.expects(:reauth_user).never
+
+      ReauthEnforcer.new.perform("a-uid", 123)
+    end
   end
 
 end

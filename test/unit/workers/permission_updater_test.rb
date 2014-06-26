@@ -18,19 +18,16 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
 
   context "perform" do
     should "update the application with users information" do
-      user_hash = UserOAuthPresenter.new(@user, @application).as_hash
-
-      mock_client = mock('sso_push_client')
-      mock_client.expects(:update_user).with(@user.uid, user_hash).once
-      SSOPushClient.expects(:new).with(@application).returns(mock_client).once
+      expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
+      http_request = stub_request(:put, users_url(@application)).with(body: expected_body)
 
       PermissionUpdater.new.perform(@user.uid, @application.id)
+      assert_requested http_request
     end
 
     context "successful update" do
       should "record the last_synced_at timestamp on the permission" do
-        expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
-        stub_request(:put, users_url(@application)).with(body: expected_body)
+        stub_request(:put, users_url(@application))
 
         PermissionUpdater.new.perform(@user.uid, @application.id)
 
@@ -40,12 +37,36 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
 
     context "failed update" do
       should "not record the last_synced_at timestamp on the permission" do
-        expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
         stub_request(:put, users_url(@application)).to_timeout
 
         PermissionUpdater.new.perform(@user.uid, @application.id) rescue SSOPushError
 
         assert_nil @permission.reload.last_synced_at
+      end
+    end
+
+    context "handling changes in data since job was scheduled" do
+      should "not attempt to update if the User doesn't exist" do
+        SSOPushClient.expects(:new).never
+
+        PermissionUpdater.new.perform(@user.uid + "foo", @application.id)
+      end
+
+      should "do nothing if the application doesn't exist" do
+        SSOPushClient.expects(:new).never
+
+        PermissionUpdater.new.perform(@user.uid, @application.id + 42)
+      end
+
+      should "not raise if the user has no permissions for the application" do
+        @permission.destroy
+
+        expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
+        http_request = stub_request(:put, users_url(@application)).with(body: expected_body)
+
+        PermissionUpdater.new.perform(@user.uid, @application.id)
+
+        assert_requested http_request
       end
     end
   end
