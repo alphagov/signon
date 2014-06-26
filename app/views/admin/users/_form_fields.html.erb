@@ -1,11 +1,11 @@
 <p>
   <%= f.label :name %>
-  <%= f.text_field :name, :class => 'span6', autofocus: true %>
+  <%= f.text_field :name, autofocus: true %>
 </p>
 
 <p>
   <%= f.label :email %>
-  <%= f.text_field :email, :class => 'span6' %>
+  <%= f.text_field :email %>
   <% if f.object.persisted? %>
     <% if f.object.invited_but_not_yet_accepted? %>
       <span class="help-inline">Changes will trigger a new signup email.</span>
@@ -18,7 +18,7 @@
 <% if f.object.unconfirmed_email.present? %>
   <p>
     <%= f.label :unconfirmed_email, "Pending email" %>
-    <%= f.text_field :unconfirmed_email, readonly: "readonly", disabled: "disabled", :class => "span6" %>
+    <%= f.text_field :unconfirmed_email, readonly: "readonly", disabled: "disabled" %>
 
     <span class="help-inline">
       <%= link_to "Resend email change", resend_email_change_admin_user_path(f.object), :method => :put, :class => "btn btn-primary" %>

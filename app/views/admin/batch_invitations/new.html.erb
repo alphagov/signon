@@ -32,11 +32,11 @@
   <%= form_for([:admin, @batch_invitation]) do |f| %>
     <h2>Upload a CSV</h2>
     <div class="row">
-      <div class="span5">
+      <div class="col-md-5">
         <%= f.label :user_names_and_emails, "Choose a CSV file of users with names and email addresses" %>
         <%= f.file_field(:user_names_and_emails, :accept => 'text/csv', required: true) %>
       </div>
-      <div class="span5 pull-right">
+      <div class="col-md-5 pull-right">
         <p>The format of the CSV should be as follows:</p>
         <pre>
 Name,Email

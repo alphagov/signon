@@ -11,17 +11,17 @@
 
   <p>
     <%= f.label :email, "Current email" %>
-    <%= f.text_field :email, disabled: "disabled", readonly: "readonly", class: "span6" %>
+    <%= f.text_field :email, disabled: "disabled", readonly: "readonly" %>
   </p>
   <p>
     <%= f.label :unconfirmed_email, "New email" %>
-    <%= f.text_field :unconfirmed_email, disabled: "disabled", readonly: "readonly", class: "span6" %>
+    <%= f.text_field :unconfirmed_email, disabled: "disabled", readonly: "readonly" %>
   </p>
-  <label> 
+  <label>
     <%= f.label :password, "Passphrase" %>
-    <%= f.password_field :password, class: "span6", required: "required" %>
+    <%= f.password_field :password, required: "required" %>
   </label>
-  
+
   <hr>
 
   <%= f.submit "Confirm email change", class: "btn btn-primary" %>
