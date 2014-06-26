@@ -1,5 +1,6 @@
+#encoding: utf-8
 require 'test_helper'
- 
+
 class DashboardTest < ActionDispatch::IntegrationTest
   should "notify the user if they've not been assigned any applications" do
     user = create(:user)
@@ -7,7 +8,7 @@ class DashboardTest < ActionDispatch::IntegrationTest
     signin(user)
 
     assert_response_contains("Your Applications")
-    assert_response_contains("You aren't yet assigned to any applications")
+    assert_response_contains("You haven’t been assigned to any applications yet")
   end
 
   should "show the user's assigned applications" do
