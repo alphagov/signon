@@ -16,4 +16,11 @@ module UsersHelper
   def minimum_password_length
     User.password_length.min
   end
+
+  def current_path_with_role_filter(role_name)
+    query_parameters = (request.query_parameters || {})
+    role_name.nil? ? query_parameters.delete(:role) : query_parameters.merge!(role: role_name)
+    request.path_info + '?' + query_parameters.map { |k,v| "#{k}=#{v}" }.join('&')
+  end
+
 end
