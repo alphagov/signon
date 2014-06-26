@@ -5,7 +5,7 @@ gem 'rails', '3.2.18'
 gem 'kaminari', '0.14.1'
 gem 'alphabetical_paginate', '2.1.0'
 gem 'mysql2'
-gem 'jquery-rails'
+gem 'govuk_admin_template', '1.0.3'
 
 gem 'airbrake', '3.1.15'
 gem 'plek', '1.7.0'
@@ -33,6 +33,10 @@ gem 'sidekiq', '2.17.2'
 gem 'sidekiq-statsd', '0.1.2'
 
 gem 'redis', '3.0.6'
+
+group :assets do
+  gem 'sass-rails', '3.2.6'
+end
 
 group :development do
   gem 'sqlite3'
