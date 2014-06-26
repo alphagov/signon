@@ -66,6 +66,21 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [signed_in_0_days_ago, signed_in_1_day_ago], User.last_signed_in_after(1.day.ago)
   end
 
+  context ".with_role" do
+    setup do
+      @admin = create(:admin_user)
+      @normal = create(:user)
+    end
+
+    should "return users with specified role" do
+      assert_include User.with_role(:admin), @admin
+    end
+
+    should "not return users with a role other than the specified role" do
+      assert_not_include User.with_role(:admin), @normal
+    end
+  end
+
   context "email validation" do
     should "require an email" do
       user = build(:user, email: nil)
