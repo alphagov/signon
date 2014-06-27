@@ -4,31 +4,23 @@
   <h1>User accounts</h1>
 </div>
 
+<div class="well remove-bottom-margin">
   <div class="row">
     <div class="col-md-7">
-      <div>
-        <%= form_tag "", method: "get", class: "pull-left form-inline" do %>
-          <label>
-            <strong>Filter by name or email:</strong>
-            <%= text_field_tag "filter", params[:filter], class: 'form-control' %>
-          </label>
-          <%= submit_tag "Search", class: "btn btn-primary" %>
-        <% end %>
-        <%= form_tag "", method: "get" do %>
-          <%= hidden_field_tag "filter" %>
-          <%= submit_tag "Clear", class: "btn btn-default" %>
-        <% end %>
-      </div>
+      <%= form_tag nil, method: "get", class: 'form-inline' do %>
+        <%= label_tag 'filter', 'Filter by name or email', class: 'add-right-margin' %><br />
+        <%= text_field_tag "filter", params[:filter], class: 'form-control input-md-5' %>
+        <%= submit_tag "Search", class: "add-left-margin btn btn-default" %>
+      <% end %>
     </div>
-    <div class="col-md-5">
-      <div class="pull-right">
-        <%= link_to "Create new user", new_user_invitation_path, class: "btn btn-success text-left" %>
-        <% if can? :create, BatchInvitation %>
-          <%= link_to "Upload a batch of users", new_admin_batch_invitation_path, class: "btn btn-default text-right" %>
-        <% end %>
-      </div>
+    <div class="col-md-5 text-right">
+      <%= link_to "Create user", new_user_invitation_path, class: "btn btn-success add-right-margin" %>
+      <% if can? :create, BatchInvitation %>
+        <%= link_to "Upload a batch of users", new_admin_batch_invitation_path, class: "btn btn-default" %>
+      <% end %>
     </div>
   </div>
+</div>
 
   <%= render partial: "pagination" %>
 

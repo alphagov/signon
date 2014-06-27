@@ -17,7 +17,6 @@ class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCas
       assert_select "td[class=name]", /permission1/
       assert_select "td[class=delegatable]", /Yes/
       assert_select "a[id='add']", true
-      assert_select "a[id='cancel']", true
     end
   end
 
