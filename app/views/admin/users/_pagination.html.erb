@@ -1,5 +1,5 @@
 <% if params[:filter].present? %>
-  <%= paginate(@users) %>
+  <%= paginate(@users, theme: 'twitter-bootstrap-3') %>
 <% else %>
   <h4>Users by initial letter:</h4>
   <%= alphabetical_paginate(@sorting_params) %>
