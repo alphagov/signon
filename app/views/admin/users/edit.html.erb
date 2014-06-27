@@ -27,7 +27,7 @@
 <%= form_for [:admin, @user], :html => {:class => 'well add-top-margin'} do |f| %>
 
   <% if @user.errors.count > 0 %>
-    <div class="alert alert-error">
+    <div class="alert alert-danger remove-bottom-margin">
       <ul>
         <% @user.errors.full_messages.each do |message| %>
         <li><%= message %></li>

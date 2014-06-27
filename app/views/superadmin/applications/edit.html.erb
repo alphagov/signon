@@ -5,7 +5,7 @@
 <%= form_for [:superadmin, @application], :html => {:class => 'well'} do |f| %>
 
   <% if @application.errors.count > 0 %>
-    <div class="alert alert-error">
+    <div class="alert alert-danger">
       <ul>
         <% @application.errors.full_messages.each do |message| %>
         <li><%= message %></li>

@@ -28,7 +28,7 @@
 
 <% content_for :content do %>
   <%- if notice %><div class="alert alert-success" role="alert"><%= notice %></div><% end -%>
-  <%- if alert %><div class="alert alert-error" role="alert"><%= alert %></div><% end %>
+  <%- if alert %><div class="alert alert-danger" role="alert"><%= alert %></div><% end %>
   <%= yield %>
 <% end %>
 
