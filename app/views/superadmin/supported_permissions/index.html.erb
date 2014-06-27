@@ -1,46 +1,52 @@
-<% content_for :title, "Single sign on application permissions" %>
+<% content_for :title, "Permissions for #{@application.name}" %>
 
-<h1>Single Sign On Application Permissions for <%= @application.name %></h1>
+<ol class="breadcrumb">
+  <li><%= link_to 'Applications', superadmin_applications_path %></li>
+  <li><%= link_to @application.name, edit_superadmin_application_path(@application) %></li>
+  <li class="active">Permissions</li>
+</ol>
 
-<div class="well">
-  <div class="row right">
-    <%= link_to "Create new permission", new_superadmin_application_supported_permission_path, id: "add", class: "btn btn-primary"%>
-    <%= link_to "Cancel", edit_superadmin_application_path(@application), id: "cancel", class: "btn btn-default"%>
-  </div>
-  <table class="table table-striped table-bordered add-top-margin">
-    <thead>
-      <tr>
-        <th>
-          Permission name
-        </th>
-        <th>
-          Created
-        </th>
-        <th>
-          Can be delegated
-        </th>
-        <th>
-          Actions
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @application.sorted_supported_permissions.each do |supported_permission| %>
-        <tr>
-          <td class="name">
-            <%= link_to supported_permission.name, edit_superadmin_application_supported_permission_path(@application, supported_permission) %>
-          </td>
-          <td>
-            <%= supported_permission.created_at.strftime('%d/%m/%Y') %>
-          </td>
-          <td class="delegatable">
-            <%= supported_permission.delegatable? ? 'Yes' : 'No' %>
-          </td>
-          <td>
-            <%= link_to 'Edit', edit_superadmin_application_supported_permission_path(@application, supported_permission) %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+<div class="page-title">
+  <h1>Permissions for “<%= @application.name %>”</h1>
 </div>
+
+<%= link_to new_superadmin_application_supported_permission_path, id: "add", class: "btn btn-success" do %>
+  <span class="glyphicon glyphicon-plus"></span> Add permission
+<% end %>
+
+<table class="table table-striped table-bordered add-top-margin">
+  <thead>
+    <tr class="table-header">
+      <th>
+        Permission name
+      </th>
+      <th>
+        Created
+      </th>
+      <th>
+        Can be delegated?
+      </th>
+      <th>
+        Actions
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @application.sorted_supported_permissions.each do |supported_permission| %>
+      <tr>
+        <td class="name">
+          <%= link_to supported_permission.name, edit_superadmin_application_supported_permission_path(@application, supported_permission) %>
+        </td>
+        <td>
+          <%= supported_permission.created_at.to_date.to_s(:govuk_date) %>
+        </td>
+        <td class="delegatable">
+          <%= supported_permission.delegatable? ? 'Yes' : 'No' %>
+        </td>
+        <td>
+          <%= link_to 'Edit', edit_superadmin_application_supported_permission_path(@application, supported_permission) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
