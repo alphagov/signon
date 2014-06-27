@@ -1,6 +1,8 @@
 <% content_for :title, "Edit your account" %>
 
-<h1>Edit your account</h1>
+<div class="page-title">
+  <h1>Edit your account</h1>
+</div>
 
 <%- unless current_user.errors.empty? -%>
   <div class="alert alert-danger">
@@ -12,39 +14,32 @@
   </div>
 <%- end -%>
 
-<div class="well">
-  <section>
-    <h2>Change your email address</h2>
-    <p>Changing your email address doesn't take effect until you follow the link in a confirmation email sent to the new address.</p>
-    <%= form_for current_user, url: "/user", method: :put do |f| %>
+<section class="well">
+  <h2 class="remove-top-margin remove-bottom-margin">Change your email address</h2>
+  <p class="text-muted bold">Changing your email address doesn’t take effect until you follow the link in a confirmation email sent to the new address.</p>
+  <%= form_for current_user, url: "/user", method: :put do |f| %>
+    <p class="form-group">
       <%= f.label(:email, "Email") %>
-      <%= f.text_field :email %>
-
-      <% if f.object.unconfirmed_email.present? %>
-        <p>
-          <%= f.label :unconfirmed_email, "You have a pending email change" %>
-          <%= f.text_field :unconfirmed_email, readonly: "readonly", disabled: "disabled" %>
-          <span class="help-inline">
-            <%= link_to "Resend email change", resend_email_change_user_path(f.object), :method => :put, :class => "btn btn-primary" %>
-            <%= link_to "Cancel email change", cancel_email_change_user_path(f.object), :method => :delete, :class => "btn btn-danger" %>
-          </span>
-        </p>
-      <% end %>
-
-      <br>
-
-      <%= f.submit "Change email", class: "btn btn-primary" %>
+      <%= f.text_field :email, class: 'form-control' %>
+    </p>
+    <% if f.object.unconfirmed_email.present? %>
+      <p>
+        <%= f.label :unconfirmed_email, "You have a pending email change" %>
+        <%= f.text_field :unconfirmed_email, readonly: "readonly", disabled: "disabled" %>
+        <span class="help-inline">
+          <%= link_to "Resend email change", resend_email_change_user_path(f.object), :method => :put, :class => "btn btn-primary" %>
+          <%= link_to "Cancel email change", cancel_email_change_user_path(f.object), :method => :delete, :class => "btn btn-danger" %>
+        </span>
+      </p>
     <% end %>
-  </section>
-</div>
-<div class="well">
-  <section>
-    <h2><%= t(".change_passphrase") %></h2>
+    <%= f.submit "Change email", class: "btn btn-primary" %>
+  <% end %>
+</section>
+<section class="well">
+  <h2 class="remove-top-margin"><%= t(".change_passphrase") %></h2>
+  <%= form_for current_user, :url => update_passphrase_user_path do |f| %>
+    <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: current_user, updating_password: true } %>
 
-    <%= form_for current_user, :url => update_passphrase_user_path do |f| %>
-      <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: current_user, updating_password: true } %>
-
-      <%= f.submit t(".change"), :class => 'btn btn-primary' %>
-    <% end %>
-  </section>
-</div>
+    <%= f.submit t(".change"), :class => 'btn btn-primary add-top-margin' %>
+  <% end %>
+</section>
