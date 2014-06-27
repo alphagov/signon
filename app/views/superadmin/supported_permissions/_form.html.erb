@@ -10,32 +10,20 @@
 
 <div class="well">
   <%= form_for [:superadmin, @application, @supported_permission] do |f| %>
-    <div class="row">
-      <div class="col-md-6">
-        <%= f.label :name, 'Permission name' %>
-      </div>
-      <div class="col-md-4">
-        <%= f.label :delegatable, t('supported_permissions.form.delegatable') %>
-      </div>
-    </div>
-    <hr class="grey">
-    <div class="row">
-      <div class="col-md-6">
+    <div class="form-group">
+      <%= f.label :name, 'Permission name' %>
         <% if f.object.name.try(:downcase) == 'signin' %>
           <%= f.object.name %>
         <% else %>
-          <%= f.text_field :name, placeholder: t('supported_permissions.form.placeholder.name') %>
+          <%= f.text_field :name, placeholder: t('supported_permissions.form.placeholder.name'), class: 'form-control input-md-4' %>
         <% end %>
-      </div>
-      <div class="col-md-4">
-        <%= f.check_box :delegatable %>
-      </div>
     </div>
-    <div class="row add-top-margin">
-      <div class="col-md-3">
-        <%= f.submit "Save", class: "btn btn-primary" %>
-        <%= link_to "Cancel", superadmin_application_supported_permissions_path(@application), class: "btn btn-default" %>
-      </div>
-    </div>
+    <hr />
+    <p class="form-group checkbox">
+      <%= f.label :delegatable, t('supported_permissions.form.delegatable') %>
+      <%= f.check_box :delegatable %>
+    </p>
+    <hr />
+    <%= f.submit "Save permission", class: "btn btn-success" %>
   <% end %>
 </div>

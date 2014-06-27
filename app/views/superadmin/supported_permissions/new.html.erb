@@ -1,5 +1,14 @@
 <% content_for :title, "Single sign on application permissions" %>
 
-<h1>Single Sign On Application Permissions for <%= @application.name %></h1>
+<ol class="breadcrumb">
+  <li><%= link_to 'Applications', superadmin_applications_path %></li>
+  <li><%= link_to @application.name, edit_superadmin_application_path(@application) %></li>
+  <li><%= link_to 'Permissions', superadmin_application_supported_permissions_path(@application) %></li>
+  <li class="active">Add permission</li>
+</ol>
+
+<div class="page-title">
+  <h1>Add permission</h1>
+</div>
 
 <%= render 'form' %>
