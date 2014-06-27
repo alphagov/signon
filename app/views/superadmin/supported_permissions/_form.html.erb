@@ -1,5 +1,5 @@
 <%- unless @supported_permission.errors.empty? -%>
-  <div class="alert alert-danger top-buffer">
+  <div class="alert alert-danger add-top-margin">
     <ul class="errors">
       <%- @supported_permission.errors.full_messages.each do |msg| -%>
       <li><%= msg %></li>
@@ -31,7 +31,7 @@
         <%= f.check_box :delegatable %>
       </div>
     </div>
-    <div class="row top-buffer">
+    <div class="row add-top-margin">
       <div class="col-md-3">
         <%= f.submit "Save", class: "btn btn-primary" %>
         <%= link_to "Cancel", superadmin_application_supported_permissions_path(@application), class: "btn btn-default" %>
