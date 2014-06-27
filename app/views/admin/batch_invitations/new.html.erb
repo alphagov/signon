@@ -48,7 +48,7 @@ Winston Churchill,winston@example.com
 
     <p>
       <%= f.label :organisation_id, "Organisation" %>
-      <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chzn-select" } %>
+      <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select" } %>
     </p>
 
     <h2>Permissions for the users</h2>
@@ -60,5 +60,5 @@ Winston Churchill,winston@example.com
 </div>
 
 <script type="text/javascript">
-  $(".chzn-select").chosen();
+  $(".chosen-select").chosen();
 </script>
