@@ -1,6 +1,6 @@
-<% content_for :title, "Edit user" %>
+<% content_for :title, "Edit \"#{@user.name}\"" %>
 
-<h1>Edit user &ldquo;<%= @user.name %>&rdquo;</h1>
+<h1>Edit &ldquo;<%= @user.name %>&rdquo;</h1>
 
 <p class="suspenders">
   User <strong><%= @user.suspended? ? "suspended" : "active" %></strong> &bull;

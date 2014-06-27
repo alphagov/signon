@@ -1,6 +1,6 @@
-<% content_for :title, "Suspend user" %>
+<% content_for :title, "Suspend \"#{@user.name}\"" %>
 
-<h1>Suspend user &ldquo;<%= @user.name %>&rdquo;</h1>
+<h1>Suspend &ldquo;<%= @user.name %>&rdquo;</h1>
 
 <%= form_tag admin_suspension_path(@user), method: "put", :class => 'well' do %>
   <p>
