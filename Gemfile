@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.18'
 
 gem 'kaminari', '0.14.1'
-gem 'alphabetical_paginate', '2.1.0'
+gem 'alphabetical_paginate', '2.2.2'
 gem 'mysql2'
 gem 'govuk_admin_template', '1.0.3'
 
