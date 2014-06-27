@@ -1,0 +1,40 @@
+/* ==========================================================================
+   Override Chosen styles to match Bootstrap
+   * Treat chosen-choices as if it's an input
+   * Tweak results box to work with no values
+   ========================================================================== */
+
+.chosen-select {
+  width: 300px;
+}
+
+.chosen-container-multi .chosen-choices {
+  border-radius: $input-border-radius;
+  color: $gray;
+  border-color: $input-border;
+  box-shadow: none;
+  background: $input-bg;
+}
+
+.chosen-container-multi.chosen-container-active .chosen-choices {
+  border-color: $input-border-focus;
+}
+
+.chosen-container-multi .chosen-choices input {
+  min-height: 26px;
+  font-size: $font-size-base;
+}
+
+.chosen-container-multi .chosen-drop {
+  border: none;
+}
+
+.chosen-container-multi .chosen-results {
+  border: 1px solid $input-border;
+  border-top-width: 0;
+  margin-top: -1px;
+}
+
+.chosen-container-multi .chosen-results:empty {
+  display: none;
+}
