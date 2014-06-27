@@ -1,7 +1,7 @@
 <h1>Edit user &ldquo;<%= @user.name %>&rdquo;</h1>
 
 <p class="suspenders">
-  User <strong><%= @user.suspended? ? "suspended" : "active" %></strong> &bull;
+  User <strong><%= @user.status %></strong> &bull;
   <%= link_to "Account access log", admin_user_event_logs_path(@user) %> &bull;
   <%= link_to "#{@user.suspended? ? "Uns" : "S"}uspend user", edit_admin_suspension_path(@user) %>
 </p>

@@ -110,6 +110,20 @@ class User < ActiveRecord::Base
     super
   end
 
+  def status
+    if suspended?
+      "suspended"
+    elsif invited_but_not_yet_accepted?
+      "invited"
+    elsif need_change_password?
+      "passphrase expired"
+    elsif access_locked?
+      "locked"
+    else
+      "active"
+    end
+  end
+
 private
 
   # Override devise_security_extension for updating expired passwords

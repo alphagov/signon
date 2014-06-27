@@ -208,6 +208,36 @@ class UserTest < ActiveSupport::TestCase
     assert_false user.persisted?
   end
 
+  context "User status" do
+    setup do
+      @user = create(:user)
+    end
+
+    should "return suspended" do
+      @user.suspend("because grumble")
+      assert_equal "suspended", @user.status
+    end
+
+    should "return invited" do
+      user = User.invite!(name: "Oberyn Martell", email: "redviper@dorne.com")
+      assert_equal "invited", user.status
+    end
+
+    should "return passphrase expired" do
+      user = create(:user, password_changed_at: 91.days.ago)
+      assert_equal "passphrase expired", user.status
+    end
+
+    should "return locked" do
+      @user.lock_access!
+      assert_equal "locked", @user.status
+    end
+
+    should "return active" do
+      assert_equal "active", @user.status
+    end
+  end
+
   context "authorised applications" do
     setup do
       @user = create(:user)
