@@ -79,5 +79,31 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       assert page.has_content?("Users by initial")
       assert page.has_content?("Aardvark <aardvark@example.com>")
     end
+
+    should "filter users by role" do
+      visit "/admin/users"
+
+      click_on "Admin"
+
+      assert_equal 1, page.all('table tbody tr').count
+      assert page.has_content?("Admin User <admin@example.com>")
+      User.with_role(:normal).each do |normal_user|
+        assert ! page.has_content?(normal_user.email)
+      end
+
+      click_on "Normal"
+
+      assert_equal User.with_role(:normal).count, page.all('table tbody tr').count
+      assert ! page.has_content?("Admin User <admin@example.com>")
+      User.with_role(:normal).each do |normal_user|
+        assert page.has_content?(normal_user.email)
+      end
+
+      click_on "All roles"
+
+      %w(Aardvark Abbot Abbey Admin).each do |user_name|
+        assert page.has_content?(user_name)
+      end
+    end
   end
 end
