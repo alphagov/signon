@@ -20,7 +20,7 @@
   <%= form_for current_user, url: "/user", method: :put do |f| %>
     <p class="form-group">
       <%= f.label(:email, "Email") %>
-      <%= f.text_field :email, class: 'form-control' %>
+      <%= f.text_field :email, class: 'form-control input-md-6' %>
     </p>
     <% if f.object.unconfirmed_email.present? %>
       <p>
