@@ -1,17 +1,21 @@
 <% content_for :title, "Request a passphrase reset" %>
 
-<h1>Request a passphrase reset</h1>
+<ol class="breadcrumb">
+  <li><%= render "links" %></li>
+  <li class="active">Request a passphrase reset</li>
+</ol>
+
+<div class="page-title">
+  <h1>Request a passphrase reset</h1>
+</div>
 
 <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post, :class => 'well' }) do |f| %>
 
   <%= devise_error_messages! %>
-
-  <%= f.label :email %>
-  <%= f.email_field :email, autofocus: true %>
-
-  <hr>
-
+  <div class="form-group">
+    <%= f.label :email %>
+    <%= f.email_field :email, autofocus: true, class: 'form-control input-md-5' %>
+  </div>
+  <hr />
   <%= f.submit t('.send_passphrase_reset'), :class => 'btn btn-primary' %>
 <% end %>
-
-<%= render "links" %>
