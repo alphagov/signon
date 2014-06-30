@@ -1,6 +1,8 @@
 <% content_for :title, "Set your passphrase" %>
 
-<h2>Set your passphrase</h2>
+<div class="page-title">
+  <h1>Set your passphrase</h1>
+</div>
 
 <%= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :put } do |f| %>
   <%= devise_error_messages! %>
@@ -8,5 +10,5 @@
 
   <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: resource } %>
 
-  <p><%= f.submit "Set my passphrase", class: "btn btn-primary" %></p>
+  <p><%= f.submit "Set my passphrase", class: "add-top-margin btn btn-primary" %></p>
 <% end %>
