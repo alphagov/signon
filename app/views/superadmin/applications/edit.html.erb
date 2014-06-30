@@ -1,3 +1,5 @@
+<% content_for :title, "Edit application" %>
+
 <h1>Edit application &ldquo;<%= @application.name %>&rdquo;</h1>
 
 <%= form_for [:superadmin, @application], :html => {:class => 'well'} do |f| %>
