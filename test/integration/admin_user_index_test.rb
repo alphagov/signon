@@ -63,7 +63,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     should "be able to filter users" do
       visit "/admin/users"
 
-      fill_in "Filter by name or email:", :with => "bb"
+      fill_in "Filter by name or email", :with => "bb"
       click_on "Search"
 
       assert page.has_content?("Abbey <abbey@example.com>")
@@ -74,9 +74,9 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       assert ! page.has_content?("Aardvark <aardvark@example.com>")
       assert ! page.has_content?("Ernie <ernie@example.com>")
 
-      click_on "Clear"
+      click_on "Administer users"
 
-      assert page.has_content?("Users by initial letter:")
+      assert page.has_content?("Users by initial")
       assert page.has_content?("Aardvark <aardvark@example.com>")
     end
   end

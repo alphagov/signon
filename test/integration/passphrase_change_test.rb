@@ -1,6 +1,7 @@
+#encoding: utf-8
 require 'test_helper'
 require 'helpers/passphrase_support'
- 
+
 class PassphraseChangeTest < ActionDispatch::IntegrationTest
   include PassPhraseSupport
 
@@ -68,24 +69,24 @@ class PassphraseChangeTest < ActionDispatch::IntegrationTest
 
     click_link "Change your email or passphrase"
     fill_in "Current passphrase", with: @original_password
-  
+
     refute_response_contains("The new passphrase")
 
     fill_in "New passphrase", with: "abcde"
-    assert_response_contains("The new passphrase")
-    assert_response_contains("must be at least 10 characters")
+    assert_response_contains("Your new passphrase")
+    assert_response_contains("Must be at least 10 characters")
 
     fill_in "New passphrase", with: "very weak password"
-    refute_response_contains("must be at least 10 characters")
-    assert_response_contains("must be more complex")
+    refute_response_contains("Must be at least 10 characters")
+    assert_response_contains("Must be more complex")
 
     fill_in "New passphrase", with: "janeuser11"
-    assert_response_contains("shouldn't include part or all of your email address")
-    assert_response_contains("must be more complex")
+    assert_response_contains("Shouldn’t include part or all of your email address")
+    assert_response_contains("Must be more complex")
 
     fill_in "New passphrase", with: "stronger password purple monkey dishwasher"
-    refute_response_contains("must be more complex")
-    refute_response_contains("The new passphrase")
+    refute_response_contains("Must be more complex")
+    refute_response_contains("Your new passphrase")
 
     fill_in "Confirm new passphrase", with: "stronger password"
     assert_response_contains("confirmation must match the password")

@@ -10,7 +10,7 @@ class SignOutTest < ActionDispatch::IntegrationTest
     signin(@user)
     ReauthEnforcer.expects(:perform_on).with(@user).once
 
-    within("div.container[role=main]") do
+    within("main") do
       click_link "Sign out"
     end
     assert_response_contains("Signed out successfully.")

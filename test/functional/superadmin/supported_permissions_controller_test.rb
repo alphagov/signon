@@ -17,7 +17,6 @@ class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCas
       assert_select "td[class=name]", /permission1/
       assert_select "td[class=delegatable]", /Yes/
       assert_select "a[id='add']", true
-      assert_select "a[id='cancel']", true
     end
   end
 
@@ -25,7 +24,8 @@ class Superadmin::SupportedPermissionsControllerTest < ActionController::TestCas
     should "render the form" do
       app = create(:application, name: "My first app", with_supported_permissions: ["permission1"])
       get :new, application_id: app.id
-      assert_select "h1", /My first app/
+      assert_select "h1", /Add permission/
+      assert_select ".breadcrumb li", /My first app/
       assert_select "input[name='supported_permission[name]']", true
     end
   end

@@ -1,5 +1,14 @@
 <% content_for :title, "Edit permission" %>
 
-<h1>Edit permission</h1>
+<ol class="breadcrumb">
+  <li><%= link_to 'Applications', superadmin_applications_path %></li>
+  <li><%= link_to @application.name, edit_superadmin_application_path(@application) %></li>
+  <li><%= link_to 'Permissions', superadmin_application_supported_permissions_path(@application) %></li>
+  <li class="active">Edit permission</li>
+</ol>
+
+<div class="page-title">
+  <h1>Edit permission “<%= @supported_permission.name %>”</h1>
+</div>
 
 <%= render 'form' %>

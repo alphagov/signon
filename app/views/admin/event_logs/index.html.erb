@@ -1,27 +1,38 @@
 <% content_for :title, "Account access log" %>
 
 <ol class="breadcrumb">
-  <li><%= link_to @user.name, admin_user_path(@user) %> <span class="divider">/</span> </li>
+  <li><%= link_to @user.name, admin_user_path(@user) %></li>
   <li class="active">Account access log</li>
 </ol>
 
-<div class="page-header">
+<div class="page-title">
   <h1>Account access log</h1>
 </div>
-<table class="table table-bordered table-striped">
-  <tr class="change-header-color">
-    <th style="width: 200px">Time</th>
-    <th>Event</th>
-  </tr>
-  <% @logs.each do |log| %>
-  <tr>
-    <td><%= I18n.l log.created_at, format: :govuk_date %></td>
-    <td>
-      <%= log.event %>
-      <% if log.initiator %>
-        by <strong><%= link_to log.initiator.name, admin_users_path(filter: log.initiator.email), title: log.initiator.email %></strong>
+
+<% if @logs.any? %>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr class="table-header">
+        <th style="width: 200px">Time</th>
+        <th>Event</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @logs.each do |log| %>
+        <tr>
+          <td><%= I18n.l log.created_at, format: :govuk_date %></td>
+          <td>
+            <%= log.event %>
+            <% if log.initiator %>
+              by <strong><%= link_to log.initiator.name, admin_users_path(filter: log.initiator.email), title: log.initiator.email %></strong>
+            <% end %>
+          </td>
+        </tr>
       <% end %>
-    </td>
-  </tr>
-  <% end %>
-</table>
+    </tbody>
+  </table>
+<% else %>
+  <div class="no-content no-content-bordered">
+    No activity logged
+  </div>
+<% end %>

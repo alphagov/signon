@@ -1,11 +1,11 @@
-<table class="table table-bordered table-striped table-condensed">
+<table class="table table-bordered table-striped">
   <thead>
-    <tr>
-      <th class="span1">Application</th>
-      <th class="span1">Has access?</th>
-      <th class="span1">Other Permissions</th>
+    <tr class="table-header">
+      <th>Application</th>
+      <th>Has access?</th>
+      <th>Other Permissions</th>
       <% if user_object.persisted? %>
-        <th class="span2">Last synced at</th>
+        <th>Last synced at</th>
       <% end %>
     </tr>
   </thead>
@@ -20,16 +20,16 @@
         <td>
           <!-- Emulate form.check_box helper http://api.rubyonrails.org/v3.1.3/classes/ActionView/Helpers/FormHelper.html#method-i-check_box -->
           <%= hidden_field_tag "user[permissions_attributes][#{index}][signin_permission]", "0" %>
-          <%= label_tag "user[permissions_attributes][#{index}][signin_permission]", "Has access to #{application.name}?", class: "visuallyhidden" %>
+          <%= label_tag "user[permissions_attributes][#{index}][signin_permission]", "Has access to #{application.name}?", class: "rm" %>
           <%= check_box_tag "user[permissions_attributes][#{index}][signin_permission]", "1", permission.permissions.include?("signin") %>
         </td>
         <td>
-          <%= label_tag "user[permissions_attributes][#{index}][permissions][]", "Permissions for #{application.name}", class: "visuallyhidden" %>
+          <%= label_tag "user[permissions_attributes][#{index}][permissions][]", "Permissions for #{application.name}", class: "rm" %>
           <%= select_tag "user[permissions_attributes][#{index}][permissions][]",
                           options_for_select(application.supported_permission_strings(current_user) - ["signin"],
                                               permission.permissions - ["signin"]),
                           multiple: true,
-                          class: "chzn-select",
+                          class: "chosen-select",
                           "data-placeholder" => "Start typing to search for permissions"
           %>
         </td>
@@ -37,12 +37,12 @@
           <td>
             <% if permission.last_synced_at %>
               <% if permission.sync_needed? %>
-                <span class="label label-important"><%= time_ago_in_words(permission.last_synced_at) %> ago</span>
+                <span class="label label-danger"><%= time_ago_in_words(permission.last_synced_at) %> ago</span>
               <% else %>
                 <span class="label label-success"><%= time_ago_in_words(permission.last_synced_at) %> ago</span>
               <% end %>
             <% else %>
-              <span class="label label-important">Never</span>
+              <span class="label label-danger">Never</span>
             <% end %>
           </td>
         <% end %>

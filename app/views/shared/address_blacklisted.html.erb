@@ -1,12 +1,16 @@
 <% content_for :title, "Email could not be sent" %>
 
-<h1>Your email could not be sent</h1>
+<div class="page-title">
+  <h1>Your email could not be sent</h1>
+</div>
 
 <div class="well">
-  <div class="alert alert-block">
-    <p>That email address has been blacklisted by our mail server. This probably means that the email address does not exist, or it has a problem such as the inbox being full.</p>
-    <p>This technical information might be useful:</p>
-    <p><code><%= @exception.message %></code></p>
+  <div class="alert alert-warning">
+    <p class="add-bottom-margin">That email address has been blacklisted by our mail server. This probably means that the email address does not exist, or it has a problem such as the inbox being full.</p>
+    <p class="add-bottom-margin">This technical information might be useful:</p>
+    <p>
+      <code><%= @exception.message %></code>
+    </p>
   </div>
 
   <p>You could navigate back and try again, or follow one of these links:</p>

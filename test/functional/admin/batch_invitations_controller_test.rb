@@ -27,7 +27,7 @@ class Admin::BatchInvitationsControllerTest < ActionController::TestCase
       should "show a table summarising them" do
         get :new
         assert_select "table.recent-batches tbody tr", count: 1
-        assert_select "table.recent-batches tbody td", "1 users by #{@bi.user.name} at #{@bi.created_at.strftime("%H:%M on %e %B %Y")}"
+        assert_select "table.recent-batches tbody td", "1 users by #{@bi.user.name} at #{@bi.created_at.to_s(:govuk_date)}"
         assert_select "table.recent-batches tbody td", "In progress. 0 of 1 users processed."
       end
     end

@@ -1,14 +1,19 @@
 <% content_for :title, "Sign in" %>
 
-<h1>Sign in</h1>
+<div class="page-title">
+  <h1>Sign in</h1>
+</div>
 
 <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'well', autocomplete: 'on' }) do |f| %>
+  <div class="form-group">
+    <%= f.label :email %>
+    <%= f.email_field :email, class: 'form-control input-md-6', autofocus: 'autofocus' %>
+  </div>
 
-  <%= f.label :email %>
-  <%= f.email_field :email, class: 'span6', autofocus: 'autofocus' %>
-
-  <%= f.label :password, "Passphrase" %>
-  <%= f.password_field :password, class: 'span6' %>
+  <div class="form-group">
+    <%= f.label :password, "Passphrase" %>
+    <%= f.password_field :password, class: 'form-control input-md-6' %>
+  </div>
 
   <% if devise_mapping.rememberable? -%>
     <label class="checkbox" for="remember_me">Remember me?
@@ -16,7 +21,7 @@
     </label>
   <% end -%>
 
-  <hr>
+  <hr />
 
   <%= f.submit "Sign in", class: 'btn btn-primary' %>
 <% end %>

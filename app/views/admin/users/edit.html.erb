@@ -9,25 +9,25 @@
 </p>
 
 <% if @user.access_locked? %>
-  <div class="alert">
+  <div class="alert alert-warning">
     <strong>Account has been locked after too many unsuccessful login attempts.</strong><br/>
     Locked accounts are automatically unlocked after 1 hour.
     <%= form_tag unlock_admin_user_path(@user), class: 'unlock-account-form' do %>
-      <%= submit_tag "Unlock account", :class => 'btn top-buffer' %>
+      <%= submit_tag "Unlock account", :class => 'btn btn-default add-top-margin' %>
     <% end %>
   </div>
 <% end %>
 
 <% if @user.suspended? and @user.reason_for_suspension.present? %>
-  <p class="alert">
+  <p class="alert alert-warning">
     <strong>User suspended:</strong> <em><%= @user.reason_for_suspension %></em>
   </p>
 <% end %>
 
-<%= form_for [:admin, @user], :html => {:class => 'well'} do |f| %>
-  
+<%= form_for [:admin, @user], :html => {:class => 'well add-top-margin'} do |f| %>
+
   <% if @user.errors.count > 0 %>
-    <div class="alert alert-error">
+    <div class="alert alert-danger remove-bottom-margin">
       <ul>
         <% @user.errors.full_messages.each do |message| %>
         <li><%= message %></li>

@@ -1,6 +1,13 @@
 <% content_for :title, "Change your passphrase" %>
 
-<h2>Change your passphrase</h2>
+<ol class="breadcrumb">
+  <li><%= render "links" %></li>
+  <li class="active">Change your passphrase</li>
+</ol>
+
+<div class="page-title">
+  <h1>Change your passphrase</h1>
+</div>
 
 <div class="well">
   <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
@@ -9,7 +16,6 @@
 
     <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: resource } %>
 
-    <div><%= f.submit "Change my passphrase", class: "btn btn-primary" %></div>
+    <div><%= f.submit "Change my passphrase", class: "add-top-margin btn btn-primary" %></div>
   <% end %>
 </div>
-<%= render "links" %>

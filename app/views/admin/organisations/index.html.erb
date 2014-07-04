@@ -1,26 +1,20 @@
 <% content_for :title, "Organisations" %>
-
-<h1>Organisations</h1>
-
-<div class="well">
-  <div class="row-fluid">
-    <table class="table table-striped table-bordered">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Abbreviation</th>
-          <th>Organisation Type</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @organisations.each do |organisation| %>
-          <tr>
-            <td><%= organisation.name %></td>
-            <td><%= organisation.abbreviation %></td>
-            <td><%= organisation.organisation_type %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
-</div>
+<h1 class="page-title">Organisations</h1>
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr class="table-header">
+      <th>Name</th>
+      <th>Abbreviation</th>
+      <th>Organisation Type</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @organisations.each do |organisation| %>
+      <tr>
+        <td><%= organisation.name %></td>
+        <td><%= organisation.abbreviation %></td>
+        <td><%= organisation.organisation_type %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

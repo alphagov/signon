@@ -1,7 +1,10 @@
 <% content_for :title, "Passphrase reset" %>
 
-<h1>Passphrase reset</h1>
+<div class="page-title">
+  <h1>Passphrase reset</h1>
+</div>
 
-<p>That passphrase reset didn't work. It may be that the link you were using has expired or was invalid.</p>
-
-<p><%= link_to 'Try again', new_user_password_path %></p>
+<div class="alert alert-warning">
+  <p>That passphrase reset didn’t work. It may be that the link you were using has expired or was invalid.</p>
+  <p class="add-top-margin"><%= link_to 'Try again', new_user_password_path, class: 'btn btn-default' %></p>
+</div>

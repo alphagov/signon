@@ -1,42 +1,42 @@
 <% content_for :title, "Upload a batch of users" %>
 
-<h1>Upload a batch of users</h1>
+<div class="page-title">
+  <h1>Upload a batch of users</h1>
+</div>
 
 <% if recent_batch_invitations.any? %>
-  <div class="well">
-    <h3>Recent batches</h3>
-    <table class="recent-batches table">
-      <thead>
+  <h3 class="add-bottom-margin">Recent batches</h3>
+  <table class="recent-batches table table-bordered">
+    <thead>
+      <tr class="table-header">
+        <th>Summary</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% recent_batch_invitations.each do |batch_invitation| %>
         <tr>
-          <th>Summary</th>
-          <th>Status</th>
+          <td>
+            <%= link_to(admin_batch_invitation_path(batch_invitation), alt: "View this batch") do %>
+              <%= batch_invitation.batch_invitation_users.count %> users by <%= batch_invitation.user.name %> at <%= batch_invitation.created_at.to_s(:govuk_date) %>
+            <% end %>
+          </td>
+          <td><%= status_message(batch_invitation) %></td>
         </tr>
-      </thead>
-      <tbody>
-        <% recent_batch_invitations.each do |batch_invitation| %>
-          <tr>
-            <td>
-              <%= link_to(admin_batch_invitation_path(batch_invitation), alt: "View this batch") do %>
-                <%= batch_invitation.batch_invitation_users.count %> users by <%= batch_invitation.user.name %> at <%= batch_invitation.created_at.strftime("%H:%M on %e %B %Y") %>
-              <% end %>
-            </td>
-            <td><%= status_message(batch_invitation) %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+      <% end %>
+    </tbody>
+  </table>
 <% end %>
 
 <div class="well">
   <%= form_for([:admin, @batch_invitation]) do |f| %>
     <h2>Upload a CSV</h2>
     <div class="row">
-      <div class="span5">
+      <div class="col-md-5">
         <%= f.label :user_names_and_emails, "Choose a CSV file of users with names and email addresses" %>
         <%= f.file_field(:user_names_and_emails, :accept => 'text/csv', required: true) %>
       </div>
-      <div class="span5 pull-right">
+      <div class="col-md-5 pull-right">
         <p>The format of the CSV should be as follows:</p>
         <pre>
 Name,Email
@@ -48,7 +48,7 @@ Winston Churchill,winston@example.com
 
     <p>
       <%= f.label :organisation_id, "Organisation" %>
-      <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chzn-select" } %>
+      <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select" } %>
     </p>
 
     <h2>Permissions for the users</h2>
@@ -60,5 +60,5 @@ Winston Churchill,winston@example.com
 </div>
 
 <script type="text/javascript">
-  $(".chzn-select").chosen();
+  $(".chosen-select").chosen();
 </script>
