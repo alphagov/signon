@@ -106,7 +106,7 @@ GEM
       null_logger
       plek
       rest-client (~> 1.6.3)
-    govuk_admin_template (1.0.3)
+    govuk_admin_template (1.0.4)
       bootstrap-sass (= 3.1.0)
       jquery-rails (= 3.0.4)
       rails (>= 3.2.0)
@@ -267,7 +267,7 @@ DEPENDENCIES
   doorkeeper (= 0.6.7)
   factory_girl_rails (= 4.3.0)
   gds-api-adapters (= 7.11.0)
-  govuk_admin_template (= 1.0.3)
+  govuk_admin_template (= 1.0.4)
   json (= 1.7.7)
   kaminari (= 0.16.1)
   logstasher (= 0.4.8)
