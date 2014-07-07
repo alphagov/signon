@@ -4,36 +4,48 @@
   <h1>User accounts</h1>
 </div>
 
-<div class="well remove-bottom-margin">
-  <div class="row">
-    <div class="col-md-7">
-      <%= form_tag nil, method: "get", class: 'form-inline' do %>
-        <%= label_tag 'filter', 'Filter by name or email', class: 'add-right-margin' %><br />
-        <%= text_field_tag "filter", params[:filter], class: 'form-control input-md-5' %>
-        <%= submit_tag "Search", class: "add-left-margin btn btn-default" %>
-      <% end %>
-    </div>
-    <div class="col-md-5 text-right">
-      <%= link_to "Create user", new_user_invitation_path, class: "btn btn-success add-right-margin" %>
-      <% if can? :create, BatchInvitation %>
-        <%= link_to "Upload a batch of users", new_admin_batch_invitation_path, class: "btn btn-default" %>
-      <% end %>
+<nav class="filters row">
+  <div class="col-md-8">
+    <div class="panel panel-default">
+      <header class="panel-heading">
+        <ul class="nav nav-pills">
+          <li class="nav-pill-text">
+            <strong>Filter by</strong>
+          </li>
+          <li class="if-no-js-hide filter-by-role add-margin-right">
+            <%= link_to '#', class: 'filter-option', data: { toggle: 'dropdown' }, role: 'button' do %>
+              Role
+              <span class="glyphicon glyphicon-chevron-down"></span>
+            <% end %>
+            <ul class='dropdown-menu' role='menu'>
+              <% User.roles.each do |role_name| %>
+                <li>
+                  <%= link_to role_name.humanize, current_path_with_role_filter(role_name) %>
+                </li>
+              <% end %>
+              <li>
+                <%= link_to "All roles", current_path_with_role_filter(nil) %>
+              </li>
+            </ul>
+          </li>
+          <li class="filter-by-name">
+            <%= form_tag nil, method: "get", class: 'add-left-margin form-inline' do %>
+              <%= label_tag 'filter', 'Name or email', class: 'add-right-margin' %>
+              <%= text_field_tag "filter", params[:filter], class: 'form-control filter-by-name-field' %>
+              <%= submit_tag "Search", class: "btn btn-default" %>
+            <% end %>
+          </li>
+        </ul>
+      </header>
     </div>
   </div>
-</div>
-
-  <div class="row-fluid">
-    <ul>
-      <% User.roles.each do |role_name| %>
-        <li>
-          <%= link_to role_name.humanize, current_path_with_role_filter(role_name) %>
-        </li>
-      <% end %>
-      <li>
-        <%= link_to "All roles", current_path_with_role_filter(nil) %>
-      </li>
-    </ul>
+  <div class="col-md-4 text-right">
+    <%= link_to "Create user", new_user_invitation_path, class: "btn btn-success add-right-margin" %>
+    <% if can? :create, BatchInvitation %>
+      <%= link_to "Upload a batch of users", new_admin_batch_invitation_path, class: "btn btn-default" %>
+    <% end %>
   </div>
+</nav>
 
   <%= render partial: "pagination" %>
 
