@@ -27,4 +27,14 @@ module UsersHelper
     "#{params[:role] if params[:role]} user accounts".strip.humanize.capitalize
   end
 
+  def user_role_list_items
+    list_items = User.roles.map do |role_name|
+      content_tag(:li,
+        link_to(role_name.humanize, current_path_with_role_filter(role_name)),
+        class: params[:role] == role_name ? 'active' : '')
+    end
+    list_items << content_tag(:li, link_to("All roles", current_path_with_role_filter(nil)))
+    raw list_items.join("\n")
+  end
+
 end

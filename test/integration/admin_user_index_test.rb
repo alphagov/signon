@@ -108,7 +108,9 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
     def select_role(role_name)
       click_on "filter-by-role-menu"
-      click_on role_name
+      within ".dropdown-menu" do
+        click_on role_name
+      end
     end
   end
 end
