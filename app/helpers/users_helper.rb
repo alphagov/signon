@@ -23,4 +23,8 @@ module UsersHelper
     request.path_info + '?' + query_parameters.map { |k,v| "#{k}=#{v}" }.join('&')
   end
 
+  def user_role_text
+    "#{params[:role] if params[:role]} user accounts".strip.humanize.capitalize
+  end
+
 end

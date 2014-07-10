@@ -1,7 +1,7 @@
-<% content_for :title, "User accounts" %>
+<% content_for :title, user_role_text %>
 
 <div class="page-title">
-  <h1>User accounts</h1>
+  <h1><%= user_role_text %></h1>
 </div>
 
 <nav class="filters row">
@@ -13,8 +13,8 @@
             <strong>Filter by</strong>
           </li>
           <li class="if-no-js-hide filter-by-role add-margin-right">
-            <%= link_to '#', class: 'filter-option', data: { toggle: 'dropdown' }, role: 'button' do %>
-              Role
+            <%= link_to '#', class: 'filter-option', data: { toggle: 'dropdown' }, role: 'button', id: 'filter-by-role-menu' do %>
+              <%= (params[:role] || 'Role').humanize.capitalize %>
               <span class="glyphicon glyphicon-chevron-down"></span>
             <% end %>
             <ul class='dropdown-menu' role='menu'>
