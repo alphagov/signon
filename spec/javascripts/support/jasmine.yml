@@ -11,6 +11,7 @@
 #   - dist/**/*.js
 #
 src_files:
+  - assets/govuk-admin-template.js
   - assets/application.js
 
 # stylesheets
@@ -121,4 +122,3 @@ boot_files:
 #
 # rack_options:
 #   server: 'thin'
-
