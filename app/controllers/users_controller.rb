@@ -1,6 +1,7 @@
 class UsersController < ApplicationController
   before_filter :authenticate_user!, :except => :show
   doorkeeper_for :show
+  before_filter :validate_token_matches_client_id, :only => :show
 
   # it's okay for current_user to modify own attributes
   skip_authorization_check
@@ -67,4 +68,14 @@ class UsersController < ApplicationController
     def application_making_request
       ::Doorkeeper::Application.find(doorkeeper_token.application_id)
     end
+
+  def validate_token_matches_client_id
+    # FIXME: Once gds-sso is updated everywhere, this should always validate
+    # the client_id param.  It should 401 if no client_id is given.
+    if params[:client_id].present?
+      if params[:client_id] != doorkeeper_token.application.uid
+        head :unauthorized
+      end
+    end
+  end
 end
