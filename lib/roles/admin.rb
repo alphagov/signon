@@ -10,5 +10,6 @@ module Roles
       'admin'
     end
 
+    def self.level; 1; end
   end
 end
