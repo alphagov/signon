@@ -7,13 +7,6 @@ GIT
       devise (>= 2.0.0)
       rails (>= 3.1.1)
 
-GIT
-  remote: https://github.com/fofr/alphabetical_paginate.git
-  revision: 35b41fbcfe00b1a7b3a6d94b94c9624e33fbe6ed
-  branch: bootstrap3-fix
-  specs:
-    alphabetical_paginate (2.2.2)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -49,6 +42,7 @@ GEM
     airbrake (3.1.15)
       builder
       multi_json
+    alphabetical_paginate (2.2.3)
     ancestry (2.0.0)
       activerecord (>= 3.0.0)
     arel (3.0.3)
@@ -251,7 +245,7 @@ PLATFORMS
 
 DEPENDENCIES
   airbrake (= 3.1.15)
-  alphabetical_paginate!
+  alphabetical_paginate (= 2.2.3)
   ancestry (= 2.0.0)
   bootstrap-kaminari-views (= 0.0.3)
   cancan (= 1.6.10)
