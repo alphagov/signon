@@ -30,7 +30,7 @@
 <% if can? :assign_role, User %>
   <p class="form-group">
     <%= f.label :role %><br />
-    <%= f.select :role, options_for_select(User.roles.map(&:humanize).zip(User.roles), f.object.role), {}, class: "chosen-select form-control" %>
+    <%= f.select :role, options_for_select(User.roles.map(&:humanize).zip(User.roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
     <span class="help-block">
       <strong>Admins</strong> can create and edit normal users.<br />
       <strong>Superadmins</strong> can create and edit all user types and edit applications.
@@ -40,13 +40,9 @@
 
 <p class="form-group">
   <%= f.label :organisation_id, "Organisation" %><br />
-  <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control" } %>
+  <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control", 'data-module' => 'chosen' } %>
 </p>
 
 <h2 class="add-vertical-margins">Permissions</h2>
 
 <%= render partial: "admin/shared/user_permissions", locals: { user_object: f.object }%>
-
-<script>
-  $(".chosen-select").chosen();
-</script>

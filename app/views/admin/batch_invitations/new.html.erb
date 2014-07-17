@@ -48,7 +48,7 @@ Winston Churchill,winston@example.com
 
     <p>
       <%= f.label :organisation_id, "Organisation" %>
-      <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select" } %>
+      <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select", 'data-module' => 'chosen' } %>
     </p>
 
     <h2>Permissions for the users</h2>
@@ -58,7 +58,3 @@ Winston Churchill,winston@example.com
     <%= f.submit "Create users and send emails", :class => 'btn btn-success' %>
   <% end %>
 </div>
-
-<script type="text/javascript">
-  $(".chosen-select").chosen();
-</script>

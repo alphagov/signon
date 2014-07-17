@@ -11,3 +11,4 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require chosen.jquery
+//= require_directory ./modules
