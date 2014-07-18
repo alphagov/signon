@@ -44,6 +44,10 @@ group :development do
   gem 'quiet_assets'
 end
 
+group :development, :test do
+  gem 'jasmine', '2.0.2'
+end
+
 gem 'logstasher', '0.4.8'
 
 group :test do

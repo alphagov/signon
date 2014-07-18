@@ -9,4 +9,4 @@ include VolatileLock::DSL
 
 Signonotron2::Application.load_tasks
 
-task :default => [:test, :check_for_bad_time_handling]
+task :default => [:test, :check_for_bad_time_handling, 'jasmine:ci']
