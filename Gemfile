@@ -35,6 +35,8 @@ gem 'sidekiq-statsd', '0.1.2'
 
 gem 'redis', '3.0.6'
 
+gem 'zeroclipboard-rails'
+
 group :assets do
   gem 'sass-rails', '3.2.6'
 end

@@ -14,6 +14,7 @@ module Abilities
             :resend_email_change, :cancel_email_change], User
 
       can [:read, :create, :update], ApiUser
+      can [:create, :revoke], Doorkeeper::AccessToken
       can [:read], EventLog
     end
   end

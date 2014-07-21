@@ -46,7 +46,16 @@ Signonotron2::Application.routes.draw do
       resources :supported_permissions, only: [:index, :new, :create, :edit, :update]
     end
 
-    resources :api_users, only: [:new, :create, :index, :edit, :update]
+    resources :api_users, only: [:new, :create, :index, :edit, :update] do
+      resources :authorisations, only: [:new, :create] do
+        member do
+          # revoke is a GET request so that we don't have to use
+          # `link_to 'Revoke' ... method: :delete`, which works
+          # only with javascript
+          get :revoke
+        end
+      end
+    end
   end
 
   # Gracefully handle GET on page (e.g. hit refresh) reached by a render to a POST

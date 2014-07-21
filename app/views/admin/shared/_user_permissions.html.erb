@@ -13,7 +13,8 @@
   </thead>
   <tbody>
     <% applications_and_permissions(user_object).each_with_index do |(application, permission), index|
-      attribute_name = user_object.api_user? ? 'api_user' : 'user' %>
+       attribute_name = user_object.api_user? ? 'api_user' : 'user'
+     %>
       <tr>
         <td>
           <%= application.name %>

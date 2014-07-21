@@ -12,7 +12,7 @@ module Abilities
             :perform_admin_tasks, :resend_email_change, :cancel_email_change], User, api_user: false
       can [:read], EventLog
 
-      cannot :manage, ApiUser
+      cannot :manage, [ApiUser, Doorkeeper::AccessToken]
     end
   end
 end
