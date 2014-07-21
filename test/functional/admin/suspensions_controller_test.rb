@@ -24,18 +24,19 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
     end
   end
 
-  setup do
-    user = create(:admin_user)
-    sign_in user
-  end
-
   context "PUT update" do
-    should "be able to suspend the user" do
+    setup do
+      user = create(:admin_user)
+      sign_in user
+    end
+
+    should "be able to suspend the user and redirect to user's edit page" do
       another_user = create(:user)
       put :update, id: another_user.id, user: { suspended: "1", reason_for_suspension: "Negligence" }
 
       another_user.reload
 
+      assert_redirected_to edit_admin_user_path(another_user)
       assert_equal true, another_user.suspended?
       assert_equal "Negligence", another_user.reason_for_suspension
     end
@@ -61,6 +62,22 @@ class Admin::SuspensionsControllerTest < ActionController::TestCase
 
       assert_equal false, another_user.suspended?
       assert_equal nil, another_user.reason_for_suspension
+    end
+  end
+
+  context "superadmin" do
+    should "suspend an api_user and redirect to api user's edit page" do
+      superadmin = create(:superadmin_user)
+      sign_in superadmin
+
+      api_user = create(:api_user)
+      put :update, id: api_user.id, user: { suspended: "1", reason_for_suspension: "Negligence" }
+
+      api_user.reload
+
+      assert_redirected_to edit_superadmin_api_user_path(api_user)
+      assert_equal true, api_user.suspended?
+      assert_equal "Negligence", api_user.reason_for_suspension
     end
   end
 end

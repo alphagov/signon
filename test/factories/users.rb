@@ -48,11 +48,6 @@ FactoryGirl.define do
     role "superadmin"
   end
 
-  factory :api_user, parent: :user do
-    sequence(:email) { |n| "api-#{n}@example.com" }
-    api_user true
-  end
-
   factory :organisation_admin, parent: :user_in_organisation do
     role "organisation_admin"
   end
@@ -63,5 +58,29 @@ FactoryGirl.define do
 
   factory :user_in_organisation, parent: :user do
     association :organisation, factory: :organisation
+  end
+
+  factory :api_user do
+    ignore do
+      with_permissions {}
+    end
+
+    sequence(:email) { |n| "api-#{n}@example.com" }
+    password "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
+    confirmed_at 1.day.ago
+    name { "API User" }
+
+    api_user true
+
+    after(:create) do |user, evaluator|
+      evaluator.with_permissions.each do |app_or_name, permission_names|
+        app = if app_or_name.is_a?(String)
+                Doorkeeper::Application.where(name: app_or_name).first!
+              else
+                app_or_name
+              end
+        create(:permission, application: app, user: user, permissions: permission_names)
+      end if evaluator.with_permissions
+    end
   end
 end

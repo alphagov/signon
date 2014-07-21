@@ -1,0 +1,20 @@
+<% if @api_user.errors.present? %>
+  <div class="alert alert-danger">
+    <h4><%= pluralize(@api_user.errors.count, "error") %> prohibited this API user from being saved:</h4>
+    <ul>
+      <% @api_user.errors.full_messages.each do |error| %>
+        <li><%= error %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<p class="form-group">
+  <%= f.label :name %>
+  <%= f.text_field :name, autofocus: true, class: 'form-control input-md-6 ' %>
+</p>
+
+<p class="form-group">
+  <%= f.label :email %>
+  <%= f.text_field :email, class: 'form-control input-md-6' %>
+</p>

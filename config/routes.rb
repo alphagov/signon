@@ -45,6 +45,8 @@ Signonotron2::Application.routes.draw do
     resources :applications, only: [:index, :edit, :update] do
       resources :supported_permissions, only: [:index, :new, :create, :edit, :update]
     end
+
+    resources :api_users, only: [:new, :create, :index, :edit, :update]
   end
 
   # Gracefully handle GET on page (e.g. hit refresh) reached by a render to a POST
