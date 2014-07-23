@@ -54,7 +54,6 @@ class Superadmin::ApiUsersControllerTest < ActionController::TestCase
         post :create, api_user: { name: "Content Store Application", email: "content.store at gov uk" }
 
         assert_template :new
-        assert_select "h4", "1 error prohibited this API user from being saved:"
         assert_select "div.alert ul li", "Email is invalid"
       end
     end
@@ -87,7 +86,6 @@ class Superadmin::ApiUsersControllerTest < ActionController::TestCase
         put :update, id: api_user.id, api_user: { name: "" }
 
         assert_template :edit
-        assert_select "h4", "1 error prohibited this API user from being saved:"
         assert_select "div.alert ul li", "Name can&#x27;t be blank"
       end
 

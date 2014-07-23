@@ -11,14 +11,16 @@ FactoryGirl.define do
     name { "A name is now required" }
 
     after(:create) do |user, evaluator|
-      evaluator.with_permissions.each do |app_or_name, permission_names|
-        app = if app_or_name.is_a?(String)
-                Doorkeeper::Application.where(name: app_or_name).first!
-              else
-                app_or_name
-              end
-        create(:permission, application: app, user: user, permissions: permission_names)
-      end if evaluator.with_permissions
+      if evaluator.with_permissions
+        evaluator.with_permissions.each do |app_or_name, permission_names|
+          app = if app_or_name.is_a?(String)
+                  Doorkeeper::Application.where(name: app_or_name).first!
+                else
+                  app_or_name
+                end
+          create(:permission, application: app, user: user, permissions: permission_names)
+        end
+      end
 
       evaluator.with_signin_permissions_for.each do |app_or_name|
         app = if app_or_name.is_a?(String)
@@ -73,14 +75,16 @@ FactoryGirl.define do
     api_user true
 
     after(:create) do |user, evaluator|
-      evaluator.with_permissions.each do |app_or_name, permission_names|
-        app = if app_or_name.is_a?(String)
-                Doorkeeper::Application.where(name: app_or_name).first!
-              else
-                app_or_name
-              end
-        create(:permission, application: app, user: user, permissions: permission_names)
-      end if evaluator.with_permissions
+      if evaluator.with_permissions
+        evaluator.with_permissions.each do |app_or_name, permission_names|
+          app = if app_or_name.is_a?(String)
+                  Doorkeeper::Application.where(name: app_or_name).first!
+                else
+                  app_or_name
+                end
+          create(:permission, application: app, user: user, permissions: permission_names)
+        end
+      end
     end
   end
 end

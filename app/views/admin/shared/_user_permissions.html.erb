@@ -1,4 +1,4 @@
-<table class="table table-bordered table-striped" style="background: #fff">
+<table class="table table-bordered table-striped table-on-white">
   <thead>
     <tr class="table-header">
       <th>Application</th>
@@ -21,10 +21,12 @@
           <%= hidden_field_tag "#{attribute_name}[permissions_attributes][#{index}][application_id]", application.id %>
           <%= hidden_field_tag "#{attribute_name}[permissions_attributes][#{index}][id]", permission.id %>
         </td>
-        <!--
-          Emulate form.check_box helper http://api.rubyonrails.org/v3.1.3/classes/ActionView/Helpers/FormHelper.html#method-i-check_box
-          API Users will always have a "signin" permission for apps for which they have access token. The hidden field ensures it is not lost.
-        -->
+        <%
+          # Emulate form.check_box helper:
+          # http://api.rubyonrails.org/v3.1.3/classes/ActionView/Helpers/FormHelper.html#method-i-check_box
+          # API Users will always have a "signin" permission for apps for which they have access token.
+          # The hidden field ensures it is not lost.
+        %>
         <%= hidden_field_tag "#{attribute_name}[permissions_attributes][#{index}][signin_permission]", user_object.api_user? ? "1" : "0" %>
         <% unless user_object.api_user? %>
           <td>
