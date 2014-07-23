@@ -1,4 +1,4 @@
-<% if params[:filter].present? %>
+<% if any_filter? %>
   <%= paginate(@users, theme: 'twitter-bootstrap-3') %>
 <% else %>
   <h3 class="remove-bottom-margin">Users by initial</h3>

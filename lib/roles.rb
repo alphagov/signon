@@ -33,7 +33,7 @@ module Roles
     end
 
     def roles
-      role_classes.map(&:role_name)
+      role_classes.sort_by(&:level).map(&:role_name)
     end
   end
 end

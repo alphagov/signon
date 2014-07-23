@@ -63,7 +63,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     should "be able to filter users" do
       visit "/admin/users"
 
-      fill_in "Filter by name or email", :with => "bb"
+      fill_in "Name or email", :with => "bb"
       click_on "Search"
 
       assert page.has_content?("Abbey <abbey@example.com>")
@@ -78,6 +78,39 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       assert page.has_content?("Users by initial")
       assert page.has_content?("Aardvark <aardvark@example.com>")
+    end
+
+    should "filter users by role" do
+      visit "/admin/users"
+
+      select_role("Admin")
+
+      assert_equal 1, page.all('table tbody tr').count
+      assert page.has_content?("Admin User <admin@example.com>")
+      User.with_role(:normal).each do |normal_user|
+        assert ! page.has_content?(normal_user.email)
+      end
+
+      select_role("Normal")
+
+      assert_equal User.with_role(:normal).count, page.all('table tbody tr').count
+      assert ! page.has_content?("Admin User <admin@example.com>")
+      User.with_role(:normal).each do |normal_user|
+        assert page.has_content?(normal_user.email)
+      end
+
+      select_role("All roles")
+
+      %w(Aardvark Abbot Abbey Admin).each do |user_name|
+        assert page.has_content?(user_name)
+      end
+    end
+
+    def select_role(role_name)
+      click_on "filter-by-role-menu"
+      within ".dropdown-menu" do
+        click_on role_name
+      end
     end
   end
 end

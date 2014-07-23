@@ -10,5 +10,6 @@ module Roles
       'organisation_admin'
     end
 
+    def self.level; 2; end
   end
 end

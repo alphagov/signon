@@ -9,5 +9,6 @@ module Roles
       'normal'
     end
 
+    def self.level; 3; end
   end
 end

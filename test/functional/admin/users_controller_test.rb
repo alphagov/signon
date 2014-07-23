@@ -3,7 +3,7 @@ require 'test_helper'
 class Admin::UsersControllerTest < ActionController::TestCase
 
   setup do
-    @user = create(:admin_user)
+    @user = create(:admin_user, email: "admin@gov.uk")
     sign_in @user
   end
 
@@ -35,12 +35,35 @@ class Admin::UsersControllerTest < ActionController::TestCase
     end
 
     context "filter" do
+      setup do
+        create(:user, email: "not_admin@gov.uk")
+      end
+
       should "filter results to users where their name or email contains the string" do
-        create(:user, email: "a@another.gov.uk")
-        create(:user, email: "a@dfid.gov.uk")
-        get :index, filter: "dfid"
-        assert_select "td.email", /a@dfid.gov.uk/
+        create(:user, email: "special@gov.uk")
+        create(:user, name: "Someone special", email: "someone@gov.uk")
+
+        get :index, filter: "special"
+
+        assert_select "tbody tr", count: 2
+        assert_select "td.email", /special@gov.uk/
+        assert_select "td.email", /someone@gov.uk/
+      end
+
+      should "scope list of users by role" do
+        get :index, role: "admin"
+
         assert_select "tbody tr", count: 1
+        assert_select "td.email", /admin@gov.uk/
+      end
+
+      should "scope filtered list of users by role" do
+        create(:admin_user, email: "xyz@gov.uk")
+
+        get :index, filter: "admin", role: "admin"
+
+        assert_select "tbody tr", count: 1
+        assert_select "td.email", /admin@gov.uk/
       end
     end
   end
