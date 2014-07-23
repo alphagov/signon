@@ -15,7 +15,7 @@
         <% if f.object.name.try(:downcase) == 'signin' %>
           <%= f.object.name %>
         <% else %>
-          <%= f.text_field :name, placeholder: t('supported_permissions.form.placeholder.name'), class: 'form-control input-md-4' %>
+          <%= f.text_field :name, placeholder: t('supported_permissions.form.placeholder.name'), class: 'form-control input-md-4', autofocus: 'autofocus' %>
         <% end %>
     </div>
     <hr />
