@@ -20,6 +20,7 @@ class Superadmin::ApiUsersController < ApplicationController
     @api_user.api_user = true
 
     if @api_user.save
+      EventLog.record_event(@api_user, EventLog::API_USER_CREATED, current_user)
       redirect_to [:edit, :superadmin, @api_user], notice: "Successfully created API user"
     else
       render :new

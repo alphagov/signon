@@ -38,7 +38,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       assert page.has_selector?("h1", "Edit API User #{ApiUser.last.name}")
     end
 
-    should "be able to authorise application access and manage permissions for an API user" do
+    should "be able to authorise application access and manage permissions for an API user which should get recorded in event log" do
       whitehall = create(:application, name: "Whitehall", with_supported_permissions: ["Managing Editor", "signin"])
 
       click_link @api_user.name
@@ -61,9 +61,13 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       click_button "Update API user"
 
       assert page.has_selector?("abbr[title='Permissions: signin']", "Whitehall")
+
+      click_link @api_user.name
+      click_link "Account access log"
+      assert page.has_text?("Access token generated for Whitehall by #{@superadmin.name}")
     end
 
-    should "be able to revoke application access for an API user" do
+    should "be able to revoke application access for an API user which should get recorded in event log" do
       click_link @api_user.name
 
       assert page.has_selector?("td:first-child", @application.name)
@@ -71,9 +75,12 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
 
       assert page.has_text?("Access for #{@application.name} was revoked")
       assert ! page.has_selector?("td:first-child", @application.name)
+
+      click_link "Account access log"
+      assert page.has_text?("Access token revoked for #{@application.name} by #{@superadmin.name}")
     end
 
-    should "be able to regenerate application access token for an API user" do
+    should "be able to regenerate application access token for an API user which should get recorded in event log" do
       click_link @api_user.name
 
       assert page.has_selector?("td:first-child", @application.name)
@@ -81,6 +88,9 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
 
       assert page.has_selector?("div.alert-danger", "Make sure to copy the access token for #{@application.name} now. You won't be able to see it again!")
       assert page.has_selector?("div.alert-info", "Access token for #{@application.name}: #{@api_user.authorisations.last.token}")
+
+      click_link "Account access log"
+      assert page.has_text?("Access token re-generated for #{@application.name} by #{@superadmin.name}")
     end
 
     should "be able to suspend and unsuspend API user" do

@@ -20,6 +20,7 @@ class Superadmin::AuthorisationsController < ApplicationController
       application_permission.permissions << "signin"
       application_permission.save!
 
+      EventLog.record_event(@api_user, EventLog::ACCESS_TOKEN_GENERATED, current_user, authorisation.application)
       flash[:authorisation] = { application_name: authorisation.application.name, token: authorisation.token }
     else
       flash[:error] = "There was an error while creating the access token"
@@ -33,9 +34,12 @@ class Superadmin::AuthorisationsController < ApplicationController
       if params[:regenerate]
         regenerated_authorisation = @api_user.authorisations.create!(expires_in: ApiUser::DEFAULT_TOKEN_LIFE,
                                                                       application_id: authorisation.application_id)
+
+        EventLog.record_event(@api_user, EventLog::ACCESS_TOKEN_REGENERATED, current_user, authorisation.application)
         flash[:authorisation] = { application_name: regenerated_authorisation.application.name,
                                   token: regenerated_authorisation.token }
       else
+        EventLog.record_event(@api_user, EventLog::ACCESS_TOKEN_REVOKED, current_user, authorisation.application)
         flash[:notice] = "Access for #{authorisation.application.name} was revoked"
       end
     else

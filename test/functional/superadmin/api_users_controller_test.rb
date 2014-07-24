@@ -50,6 +50,13 @@ class Superadmin::ApiUsersControllerTest < ActionController::TestCase
         end
       end
 
+      should "log API user created event in the api users event log" do
+        EventLog.stubs(:record_event) # to ignore logs being created, other than the one under test
+        EventLog.expects(:record_event).with(instance_of(ApiUser), EventLog::API_USER_CREATED, @superadmin)
+
+        post :create, api_user: { name: "Content Store Application", email: "content.store@gov.uk" }
+      end
+
       should "redisplay the form with errors if save fails" do
         post :create, api_user: { name: "Content Store Application", email: "content.store at gov uk" }
 
