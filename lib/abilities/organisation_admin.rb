@@ -11,6 +11,7 @@ module Abilities
             :perform_admin_tasks, :resend_email_change, :cancel_email_change],
               User, { organisation: { id: user.organisation.subtree.map(&:id) }, api_user: false }
 
+      cannot :manage, [ApiUser, Doorkeeper::AccessToken]
       cannot :delegate_all_permissions, ::Doorkeeper::Application
 
       can [:read], EventLog, id: user.organisation.subtree.map(&:id)

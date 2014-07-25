@@ -11,7 +11,10 @@ module Abilities
       can [:read, :create, :update], SupportedPermission
       can [:read, :create, :update, :assign_role, :unlock,
             :invite!, :perform_admin_tasks, :suspend, :unsuspend,
-            :resend_email_change, :cancel_email_change], User, api_user: false
+            :resend_email_change, :cancel_email_change], User
+
+      can [:read, :create, :update], ApiUser
+      can [:create, :revoke], Doorkeeper::AccessToken
       can [:read], EventLog
     end
   end

@@ -74,7 +74,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       assert ! page.has_content?("Aardvark <aardvark@example.com>")
       assert ! page.has_content?("Ernie <ernie@example.com>")
 
-      click_on "Administer users"
+      click_on "Users"
 
       assert page.has_content?("Users by initial")
       assert page.has_content?("Aardvark <aardvark@example.com>")

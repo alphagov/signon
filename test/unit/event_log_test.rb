@@ -32,6 +32,13 @@ class EventLogTest < ActiveSupport::TestCase
     assert_equal initiator, EventLog.last.initiator
   end
 
+  test "optionally records the application associated with the event" do
+    application = create(:application)
+    EventLog.record_event(create(:user), :event, nil, application)
+
+    assert_equal application, EventLog.last.application
+  end
+
   test "can use a helper to fetch all logs for a user" do
     user = create(:user)
     EventLog.record_event(user, EventLog::PASSPHRASE_RESET_REQUEST)

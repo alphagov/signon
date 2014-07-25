@@ -7,7 +7,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   attr_accessible :name, :description, :uid, :secret, :redirect_uri, :home_uri
   attr_accessible :supports_push_updates, role: :superadmin
 
-  default_scope order(:name)
+  default_scope order('oauth_applications.name')
   scope :support_push_updates, where(supports_push_updates: true)
   scope :can_signin, lambda { |user| joins(:permissions)
                                       .where(permissions: { user_id: user.id })

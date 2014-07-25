@@ -23,6 +23,9 @@
           <td><%= I18n.l log.created_at, format: :govuk_date %></td>
           <td>
             <%= log.event %>
+            <% if log.application %>
+              for <strong><%= log.application.name %></strong>
+            <% end %>
             <% if log.initiator %>
               by <strong><%= link_to log.initiator.name, admin_users_path(filter: log.initiator.email), title: log.initiator.email %></strong>
             <% end %>

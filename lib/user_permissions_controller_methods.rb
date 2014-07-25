@@ -1,16 +1,24 @@
 module UserPermissionsControllerMethods
   private
     def applications_and_permissions(user)
-      if can? :delegate_all_permissions, ::Doorkeeper::Application
-        applications = ::Doorkeeper::Application.all
+      if user.api_user?
+        authorised_application_ids = user.authorisations.where(revoked_at: nil).pluck(:application_id)
+        applications = ::Doorkeeper::Application.where(id: authorised_application_ids)
+      elsif can? :delegate_all_permissions, ::Doorkeeper::Application
+        applications = ::Doorkeeper::Application
       else
         applications = ::Doorkeeper::Application.can_signin(current_user).with_signin_delegatable
       end
-      zip_permissions(applications, user)
+      zip_permissions(applications.includes(:supported_permissions), user)
     end
 
     def zip_permissions(applications, user)
-      applications.map { |a| [a, Permission.where(application_id: a.id, user_id: user.id).first_or_initialize] }
+      permissions = Permission.where(:user_id => user.id).includes(:application)
+      applications.map do |application|
+        [application,
+          permissions.detect { |p| p.application_id == application.id } ||
+          Permission.new(application_id: application.id, user_id: user.id)]
+      end
     end
 
     # The UI presents the "signin" permission as a dedicated checkbox, even
