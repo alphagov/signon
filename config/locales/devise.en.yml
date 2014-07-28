@@ -17,12 +17,12 @@ en:
       already_authenticated: 'You are already signed in.'
       unauthenticated: 'You need to sign in or sign up before continuing.'
       unconfirmed: 'You have to confirm your account before continuing.'
-      locked: 'Your account is locked.'
+      locked: 'Your account is temporarily locked.'
       invalid: 'Invalid email or passphrase.'
       invalid_token: 'Invalid authentication token.'
       timeout: 'Your session expired, please sign in again to continue.'
       inactive: 'Your account was not activated yet.'
-      suspended: "Your account has been temporarily suspended."
+      suspended: "Your account has been suspended."
     sessions:
       signed_in: 'Signed in successfully.'
       signed_out: 'Signed out successfully.'
