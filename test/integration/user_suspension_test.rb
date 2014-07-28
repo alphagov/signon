@@ -10,7 +10,7 @@ class UserSuspensionTest < ActionDispatch::IntegrationTest
     visit new_user_session_path
     signin(@user)
 
-    assert_response_contains("account has been temporarily suspended")
+    assert_response_contains("account has been suspended")
   end
 
   should "show the suspension reason to admins" do
