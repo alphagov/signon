@@ -253,6 +253,38 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "API user status" do
+    setup do
+      @api_user = create(:api_user)
+    end
+
+    should "return suspended" do
+      @api_user.suspend("because grumble")
+      assert_equal "suspended", @api_user.status
+    end
+
+    should "return locked" do
+      @api_user.lock_access!
+      assert_equal "locked", @api_user.status
+    end
+
+    should "return active" do
+      assert_equal "active", @api_user.status
+    end
+
+    should "not return invited" do
+      api_user = User.invite!(name: "Oberyn Martell", email: "redviper@dorne.com")
+      api_user.update_column :api_user, true
+
+      assert_not_equal "invited", api_user.reload.status
+    end
+
+    should "not return passphrase expired" do
+      api_user = create(:api_user, password_changed_at: 91.days.ago)
+      assert_not_equal "passphrase expired", api_user.status
+    end
+  end
+
   context "authorised applications" do
     setup do
       @user = create(:user)

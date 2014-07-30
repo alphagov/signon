@@ -112,17 +112,14 @@ class User < ActiveRecord::Base
   end
 
   def status
-    if suspended?
-      "suspended"
-    elsif invited_but_not_yet_accepted?
-      "invited"
-    elsif need_change_password?
-      "passphrase expired"
-    elsif access_locked?
-      "locked"
-    else
-      "active"
+    return "suspended" if suspended?
+    unless api_user?
+      return "invited" if invited_but_not_yet_accepted?
+      return "passphrase expired" if need_change_password?
     end
+    return "locked" if access_locked?
+
+    "active"
   end
 
 private
