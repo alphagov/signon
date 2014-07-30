@@ -19,12 +19,12 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to view a list of API users alongwith their authorised applications" do
-      assert page.has_selector?("td.email", @api_user.name)
-      assert page.has_selector?("td.email", @api_user.email)
-      assert page.has_selector?("td.role", 'Normal')
+      assert page.has_selector?("td.email", text: @api_user.name)
+      assert page.has_selector?("td.email", text: @api_user.email)
+      assert page.has_selector?("td.role", text: 'Normal')
 
-      assert page.has_selector?("abbr", @application.name)
-      assert page.has_selector?("td:last-child", 'No') # suspended?
+      assert page.has_selector?("abbr", text: @application.name)
+      assert page.has_selector?("td:last-child", text: 'No') # suspended?
     end
 
     should "be able to create an API user" do
@@ -35,7 +35,6 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       click_button "Create API user"
 
       assert page.has_text?("Successfully created API user")
-      assert page.has_selector?("h1", "Edit API User #{ApiUser.last.name}")
     end
 
     should "be able to authorise application access and manage permissions for an API user which should get recorded in event log" do
@@ -47,13 +46,19 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       select "Whitehall", from: "Application"
       click_button "Create access token"
 
-      assert page.has_selector?("div.alert-danger", "Make sure to copy the access token for Whitehall now. You won't be able to see it again!")
-      assert page.has_selector?("div.alert-info", "Access token for Whitehall: #{@api_user.authorisations.last.token}")
+      token = @api_user.authorisations.last.token
+      assert page.has_selector?("div.alert-danger", text: "Make sure to copy the access token for Whitehall now. You won't be able to see it again!")
+      assert page.has_selector?("div.alert-info", text: "Access token for Whitehall: #{token}")
+
+      # shows truncated token
+      assert page.has_selector?("code", text: "#{token[0..7]}")
+      assert ! page.has_selector?("code", text: "#{token[9..-9]}")
+      assert page.has_selector?("code", text: "#{token[-8..-1]}")
 
       select "Managing Editor", from: "Permissions for Whitehall"
       click_button "Update API user"
 
-      assert page.has_selector?("abbr[title='Permissions: Managing Editor, signin']", "Whitehall")
+      assert page.has_selector?("abbr[title='Permissions: Managing Editor, signin']", text: "Whitehall")
 
       click_link @api_user.name
 
@@ -70,11 +75,11 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
     should "be able to revoke application access for an API user which should get recorded in event log" do
       click_link @api_user.name
 
-      assert page.has_selector?("td:first-child", @application.name)
+      assert page.has_selector?("td:first-child", text: @application.name)
       click_link "Revoke"
 
       assert page.has_text?("Access for #{@application.name} was revoked")
-      assert ! page.has_selector?("td:first-child", @application.name)
+      assert ! page.has_selector?("td:first-child", text: @application.name)
 
       click_link "Account access log"
       assert page.has_text?("Access token revoked for #{@application.name} by #{@superadmin.name}")
@@ -83,11 +88,11 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
     should "be able to regenerate application access token for an API user which should get recorded in event log" do
       click_link @api_user.name
 
-      assert page.has_selector?("td:first-child", @application.name)
+      assert page.has_selector?("td:first-child", text: @application.name)
       click_link "Re-generate"
 
-      assert page.has_selector?("div.alert-danger", "Make sure to copy the access token for #{@application.name} now. You won't be able to see it again!")
-      assert page.has_selector?("div.alert-info", "Access token for #{@application.name}: #{@api_user.authorisations.last.token}")
+      assert page.has_selector?("div.alert-danger", text: "Make sure to copy the access token for #{@application.name} now. You won't be able to see it again!")
+      assert page.has_selector?("div.alert-info", text: "Access token for #{@application.name}: #{@api_user.authorisations.last.token}")
 
       click_link "Account access log"
       assert page.has_text?("Access token re-generated for #{@application.name} by #{@superadmin.name}")
@@ -101,13 +106,13 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       fill_in "Reason for suspension", with: "Stole data"
       click_button "Save"
 
-      assert page.has_selector?("p.alert-warning", "User suspended: Stole data")
+      assert page.has_selector?("p.alert-warning", text: "User suspended: Stole data")
 
       click_link "Unsuspend user"
       uncheck "Suspended?"
       click_button "Save"
 
-      assert page.has_selector?(".alert-success", "#{@api_user} is now active.")
+      assert page.has_selector?(".alert-success", text: "#{@api_user.name} is now active.")
     end
   end
 end

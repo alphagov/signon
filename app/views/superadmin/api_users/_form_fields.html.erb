@@ -34,6 +34,7 @@
     <thead>
       <tr class="table-header">
         <th>Application</th>
+        <th>Token (hidden)</th>
         <th>Generated</th>
         <th>Expires</th>
         <th>Action</th>
@@ -43,6 +44,7 @@
       <% @api_user.authorisations.where(revoked_at: nil).each do |authorisation| %>
         <tr>
           <td><%= authorisation.application.name %></td>
+          <td><code><%= truncate_access_token(authorisation.token) %></code></td>
           <td>
             <%= Time.at(authorisation.created_at).to_date.to_s(:govuk_date) %>
           </td>
