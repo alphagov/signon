@@ -17,7 +17,7 @@ class Superadmin::AuthorisationsController < ApplicationController
 
     if authorisation.save
       application_permission = @api_user.permissions.where(application_id: authorisation.application_id).first_or_create
-      application_permission.permissions << "signin"
+      application_permission.permissions << "signin" unless application_permission.permissions.include?("signin")
       application_permission.save!
 
       EventLog.record_event(@api_user, EventLog::ACCESS_TOKEN_GENERATED, current_user, authorisation.application)

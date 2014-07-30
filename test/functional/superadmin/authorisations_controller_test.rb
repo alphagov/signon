@@ -59,6 +59,14 @@ class Superadmin::AuthorisationsControllerTest < ActionController::TestCase
 
         assert_include @api_user.permissions.find_by_application_id(@application.id).permissions, "signin"
       end
+
+      should "not add a 'signin' permission for the authorised application if it already exists" do
+        create(:permission, application_id: @application.id, permissions: ['signin'], user_id: @api_user.id)
+
+        post :create, api_user_id: @api_user.id, doorkeeper_access_token: { application_id: @application.id }
+
+        assert_equal 1, @api_user.permissions.find_by_application_id(@application.id).permissions.count
+      end
     end
   end
   # it is not possible to test non-restful routes GET /revoke here,
