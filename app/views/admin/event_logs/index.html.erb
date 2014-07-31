@@ -1,7 +1,7 @@
 <% content_for :title, "Account access log" %>
 
 <ol class="breadcrumb">
-  <li><%= link_to @user.name, admin_user_path(@user) %></li>
+  <li><%= link_to @user.name, edit_user_path_by_user_type(@user) %></li>
   <li class="active">Account access log</li>
 </ol>
 
