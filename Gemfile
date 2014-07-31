@@ -37,6 +37,9 @@ gem 'redis', '3.0.6'
 
 gem 'zeroclipboard-rails'
 
+# for sidekiq monitoring
+gem 'sinatra', '>= 1.3.0', :require => nil
+
 group :assets do
   gem 'sass-rails', '3.2.6'
 end

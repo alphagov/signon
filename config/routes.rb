@@ -65,5 +65,8 @@ Signonotron2::Application.routes.draw do
   # compatibility with Sign-on-o-tron 1
   post "oauth/access_token" => "doorkeeper/tokens#create"
 
+  require 'sidekiq/web'
+  mount Sidekiq::Web => '/sidekiq'
+
   root :to => 'root#index'
 end
