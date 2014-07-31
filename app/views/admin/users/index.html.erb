@@ -83,8 +83,7 @@
         <tr>
           <td class="email">
             <%= user.suspended? ? "<del>".html_safe : "" %>
-              <%= link_to "#{user.name} <#{user.email}>",
-                    user.api_user? ? edit_superadmin_api_user_path(user) : edit_admin_user_path(user) %>
+              <%= link_to "#{user.name} <#{user.email}>", edit_admin_user_path(user) %>
             <%= user.suspended? ? "</del>".html_safe : "" %>
           </td>
           <td class="role"><%= user.role.humanize %></td>

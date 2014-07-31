@@ -66,6 +66,18 @@ class Admin::UsersControllerTest < ActionController::TestCase
         assert_select "td.email", /admin@gov.uk/
       end
     end
+
+    context "as superadmin" do
+      should "not list api users" do
+        @user.update_column(:role, "superadmin")
+        create(:api_user, email: "api_user@email.com")
+
+        get :index
+
+        assert_select "td.email", count: 0, text: /api_user@email.com/
+      end
+    end
+
   end
 
   context "GET edit" do

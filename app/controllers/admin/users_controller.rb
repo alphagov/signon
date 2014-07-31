@@ -9,6 +9,7 @@ class Admin::UsersController < ApplicationController
   respond_to :html
 
   def index
+    @users = @users.web_users
     filter_users if any_filter?
     paginate_users
   end
