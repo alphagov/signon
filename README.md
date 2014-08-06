@@ -11,8 +11,7 @@ Details of our interpretation of OAuth are provided in
 
 ## Usage
 
-The application has Rake tasks to create new users, client applications and API
-clients.
+The application has Rake tasks to create new users and client applications.
 
 To create a new client application to which Sign-on-o-Tron will provide sign-on
 services:
@@ -43,21 +42,16 @@ You may also need to create an API client, so one application can identify
 itself to another. Say, for instance, you have an API that requires
 authentication and you need to configure a frontend to make requests of it.
 Assuming you have your application set up in Sign-on-o-tron under the name
-"Stuff API", you will need to run the following command:
+"Stuff API", follow these steps to create an access token for API clients
+to access your application:
 
-```sh
-rake api_clients:create["Stuff Frontend","stuff-contact-email@example.com","Stuff API","signin"]
-```
-
-(`signin` is the implicit default permission for all apps.)
-
-This command will give you an access token, which you can pass with requests to
-the API. If you are using [our API adapters][api-adapters], you can pass this in
-as the `bearer_token` argument. If not, you can set the HTTP header manually:
-
-    Authorization: Bearer abcdef1234…
-
-[api-adapters]: https://github.com/alphagov/gds-api-adapters
+* Login to Sign-on-o-tron with 'superadmin' role
+* Click 'API Users', followed by 'Create API User'
+* Fill-in a name and email for the API client
+* Once saved, click "Add application token", select "Stuff API" and press
+  "Create access token"
+* You should see an access token on the screen, which you must copy as it
+  is the only time it'll be displayed on screen.
 
 ## Getting this working in development.
 
