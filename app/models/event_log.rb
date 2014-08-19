@@ -2,6 +2,7 @@ class EventLog < ActiveRecord::Base
   ACCOUNT_LOCKED = "Account locked"
   ACCOUNT_SUSPENDED = "Account suspended"
   ACCOUNT_UNSUSPENDED = "Account unsuspended"
+  ACCOUNT_AUTOSUSPENDED = "Account auto-suspended"
   MANUAL_ACCOUNT_UNLOCK = "Manual account unlock"
   PASSPHRASE_EXPIRED = "Passphrase expired"
   PASSPHRASE_RESET_REQUEST = "Passphrase reset request"

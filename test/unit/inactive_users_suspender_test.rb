@@ -48,6 +48,15 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
     assert_equal 2, InactiveUsersSuspender.new.suspend
   end
 
+  test "records auto-suspension in event log" do
+    users = create_list(:user, 2, current_sign_in_at: 46.days.ago)
+    users.each { |user| EventLog.expects(:record_event)
+                                .with(responds_with(:email, user.email), EventLog::ACCOUNT_AUTOSUSPENDED)
+                                .once }
+
+    InactiveUsersSuspender.new.suspend
+  end
+
   test "sends suspension notification to users who got suspended" do
     users = create_list(:user, 2, current_sign_in_at: 46.days.ago)
 
