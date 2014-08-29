@@ -80,36 +80,38 @@
     </thead>
     <tbody>
       <% @users.each do |user| %>
-        <tr>
-          <td class="email">
-            <%= user.suspended? ? "<del>".html_safe : "" %>
-              <%= link_to "#{user.name} <#{user.email}>", edit_admin_user_path(user) %>
-            <%= user.suspended? ? "</del>".html_safe : "" %>
-          </td>
-          <td class="role"><%= user.role.humanize %></td>
-          <td><%= user.sign_in_count %></td>
-          <td class="last-sign-in">
-            <% if user.current_sign_in_at %>
-              <%= time_ago_in_words(user.current_sign_in_at) %> ago
-            <% else %>
-              never signed in
-            <% end %>
-          </td>
-          <td><%= time_ago_in_words(user.created_at) %> ago</td>
-          <td><%= user.suspended? ? "Yes" : "No" %></td>
-          <td>
-            <% if user.invited_but_not_accepted %>
-              <%= form_tag resend_user_invitation_path(user) do %>
-                <%= submit_tag "Resend signup email", :class => 'btn btn-sm btn-default' %>
+        <% if current_role_allows_managing_user?(current_user.role, user.role) %>
+          <tr>
+            <td class="email">
+              <%= user.suspended? ? "<del>".html_safe : "" %>
+                <%= link_to "#{user.name} <#{user.email}>", edit_admin_user_path(user) %>
+              <%= user.suspended? ? "</del>".html_safe : "" %>
+            </td>
+            <td class="role"><%= user.role.humanize %></td>
+            <td><%= user.sign_in_count %></td>
+            <td class="last-sign-in">
+              <% if user.current_sign_in_at %>
+                <%= time_ago_in_words(user.current_sign_in_at) %> ago
+              <% else %>
+                never signed in
               <% end %>
-            <% end %>
-            <% if user.access_locked? %>
-              <%= form_tag unlock_admin_user_path(user) do %>
-                <%= submit_tag "Unlock account", :class => 'btn btn-default' %>
+            </td>
+            <td><%= time_ago_in_words(user.created_at) %> ago</td>
+            <td><%= user.suspended? ? "Yes" : "No" %></td>
+            <td>
+              <% if user.invited_but_not_accepted %>
+                <%= form_tag resend_user_invitation_path(user) do %>
+                  <%= submit_tag "Resend signup email", :class => 'btn btn-sm btn-default' %>
+                <% end %>
               <% end %>
-            <% end %>
-          </td>
-        </tr>
+              <% if user.access_locked? %>
+                <%= form_tag unlock_admin_user_path(user) do %>
+                  <%= submit_tag "Unlock account", :class => 'btn btn-default' %>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
       <% end %>
     </tbody>
   </table>

@@ -7,9 +7,13 @@ module Abilities
 
       can :read, Organisation
       can [:read, :create], BatchInvitation
-      can :delegate_all_permissions, ::Doorkeeper::Application
+      cannot :delegate_all_permissions, ::Doorkeeper::Application
       can [:read, :create, :update, :unlock, :invite!, :suspend, :unsuspend,
-            :perform_admin_tasks, :resend_email_change, :cancel_email_change], User, api_user: false
+            :perform_admin_tasks, :resend_email_change, :cancel_email_change, :assign_role],
+          User,
+          { api_user: false,
+            role: %w(normal organisation_admin) }
+
       can [:read], EventLog
 
       cannot :manage, [ApiUser, Doorkeeper::AccessToken]
