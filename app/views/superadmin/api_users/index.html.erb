@@ -34,7 +34,7 @@
         <tr>
           <td class="email">
             <%= user.suspended? ? "<del>".html_safe : "" %>
-              <%= link_to "#{user.name}", edit_superadmin_api_user_path(user), class: 'bold' %>
+              <%= link_to "#{user.name}", edit_superadmin_api_user_path(user), class: 'bold js-open-on-submit' %>
             <%= user.suspended? ? "</del>".html_safe : "" %>
             <span class="text-muted"><br /><%= user.email %></span>
           </td>
