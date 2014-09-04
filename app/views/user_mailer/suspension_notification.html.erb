@@ -1,8 +1,8 @@
 <p>Hello <%= @user.name %>,
 
-<p>GOV.UK Signon accounts are suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.</p>
+<p><%= link_to 'GOV.UK', "https://www.gov.uk" %> Signon accounts are suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.</p>
 
-<p>Your <%= account_name %> has now been suspended and you won’t be able to access any GOV.UK applications.</p>
+<p>Your <%= account_name %> has now been suspended and you won’t be able to access any <%= link_to 'GOV.UK', "https://www.gov.uk" %> applications.</p>
 
 <p>You must ask for your account to be unsuspended.</p>
 
