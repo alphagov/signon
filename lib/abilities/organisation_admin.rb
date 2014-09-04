@@ -8,8 +8,12 @@ module Abilities
       can :read, Organisation, id: user.organisation.subtree.map(&:id)
       can [:read, :create], BatchInvitation, organisation: { id: user.organisation.subtree.map(&:id) }
       can [:read, :create, :update, :unlock, :invite!, :suspend, :unsuspend,
-            :perform_admin_tasks, :resend_email_change, :cancel_email_change],
-              User, { organisation: { id: user.organisation.subtree.map(&:id) }, api_user: false }
+           :perform_admin_tasks, :resend_email_change, :cancel_email_change],
+          User,
+          { organisation: { id: user.organisation.subtree.map(&:id) },
+            api_user: false,
+            role: %w(normal)
+          }
 
       cannot :manage, [ApiUser, Doorkeeper::AccessToken]
       cannot :delegate_all_permissions, ::Doorkeeper::Application

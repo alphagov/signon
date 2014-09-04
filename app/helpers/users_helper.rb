@@ -28,7 +28,7 @@ module UsersHelper
   end
 
   def user_role_list_items
-    list_items = User.roles.map do |role_name|
+    list_items = filtered_user_roles.map do |role_name|
       content_tag(:li,
         link_to(role_name.humanize, current_path_with_role_filter(role_name)),
         class: params[:role] == role_name ? 'active' : '')
@@ -39,5 +39,31 @@ module UsersHelper
 
   def edit_user_path_by_user_type(user)
     user.api_user? ? edit_superadmin_api_user_path(user) : edit_admin_user_path(user)
+  end
+
+  def filtered_user_roles
+    User.roles.select do |role_name|
+      current_role_allows_managing_user?(current_user.role, role_name)
+    end
+  end
+
+  def current_role_allows_managing_user?(current_role, other_role)
+    managing_rules = {
+      superadmin: Hash.new(true),
+      admin: {
+        organisation_admin: true,
+        normal: true,
+        superadmin: false,
+        admin: false
+      },
+      organisation_admin: {
+        normal: true,
+        superadmin: false,
+        admin: false
+      },
+      normal: Hash.new(false)
+    }
+
+    managing_rules[current_role.to_sym][other_role.to_sym]
   end
 end
