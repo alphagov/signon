@@ -20,10 +20,23 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_select "td.email", count: 0, text: /api_user@email.com/
     end
 
-    should "show user roles" do
-      create(:admin_user, email: "another_user@email.com")
+    should "not show other admin users" do
+      create(:admin_user, email: "admin@email.com")
+
       get :index
-      assert_select "td.role", "Admin"
+
+      assert_select "td.role", count: 0
+    end
+
+    should "show user roles" do
+      create(:user, email: "user@email.com")
+      create(:organisation_admin, email: "orgadmin@email.com")
+
+      get :index
+
+      assert_select "td.role", "Normal"
+      assert_select "td.role", "Organisation admin"
+      assert_select "td.role", count: 2
     end
 
     should "let you paginate by the first letter of the name" do
@@ -51,14 +64,14 @@ class Admin::UsersControllerTest < ActionController::TestCase
       end
 
       should "scope list of users by role" do
-        get :index, role: "admin"
+        get :index, role: "normal"
 
         assert_select "tbody tr", count: 1
         assert_select "td.email", /admin@gov.uk/
       end
 
       should "scope filtered list of users by role" do
-        create(:admin_user, email: "xyz@gov.uk")
+        create(:superadmin_user, email: "xyz@gov.uk")
 
         get :index, filter: "admin", role: "admin"
 

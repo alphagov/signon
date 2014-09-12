@@ -122,6 +122,10 @@ class User < ActiveRecord::Base
     "active"
   end
 
+  def manageable_roles
+    "Roles::#{role.camelize}".constantize.manageable_roles
+  end
+
 private
 
   # Override devise_security_extension for updating expired passwords
