@@ -7,7 +7,7 @@ module UserPermissionsControllerMethods
       elsif can? :delegate_all_permissions, ::Doorkeeper::Application
         applications = ::Doorkeeper::Application
       else
-        applications = ::Doorkeeper::Application.can_signin(current_user)
+        applications = ::Doorkeeper::Application.union_of(current_user, user)
       end
       zip_permissions(applications.includes(:supported_permissions), user)
     end
