@@ -1,5 +1,5 @@
 class NoisyBatchInvitation < ActionMailer::Base
-  default from: "GOV.UK Sign On <noreply-signon@digital.cabinet-office.gov.uk>"
+  default from: "GOV.UK Signon <noreply-signon@digital.cabinet-office.gov.uk>"
   default to: "signon-alerts@digital.cabinet-office.gov.uk"
 
   def make_noise(batch_invitation)
