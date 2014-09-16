@@ -1,7 +1,7 @@
 class UserMailer < ActionMailer::Base
   helper_method :suspension_time, :account_name
 
-  default from: "GOV.UK Sign On <noreply-signon@digital.cabinet-office.gov.uk>"
+  default from: "GOV.UK Signon <noreply-signon@digital.cabinet-office.gov.uk>"
 
   def suspension_reminder(user, days)
     @user, @days = user, days
