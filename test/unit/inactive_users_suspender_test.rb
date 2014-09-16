@@ -34,6 +34,19 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
     assert_false active_user.reload.suspended?
   end
 
+  test "doesn't suspend users who have recently been unsuspended" do
+    admin = create(:admin_user)
+    unsuspended_user = create(:user, current_sign_in_at: 46.days.ago)
+    Timecop.travel(2.days.ago) do
+      EventLog.record_event(unsuspended_user, EventLog::ACCOUNT_UNSUSPENDED, admin)
+    end
+
+    count = InactiveUsersSuspender.new.suspend
+
+    assert_false unsuspended_user.reload.suspended?
+    assert_equal 0, count
+  end
+
   test "doesn't modify users who are suspended" do
     suspended_user = create(:user, suspended_at: Date.today, reason_for_suspension: 'traitor')
 

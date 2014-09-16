@@ -304,6 +304,38 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "recently_unsuspended?" do
+    should "be false for a user who's never been suspended" do
+      assert_equal false, @user.recently_unsuspended?
+    end
+
+    context "for a user who has been suspended" do
+      setup do
+        @admin = create(:admin_user)
+        Timecop.travel(6.days.ago) { @user = create(:suspended_user) }
+      end
+
+      should "be true for a user who's been unsuspended in the last 3 days" do
+
+        Timecop.travel(2.days.ago) do
+          @user.unsuspend
+          EventLog.record_event(@user, EventLog::ACCOUNT_UNSUSPENDED, @admin)
+        end
+
+        assert_equal true, @user.recently_unsuspended?
+      end
+
+      should "be false for a user who's been unsuspended more than 3 days ago" do
+        Timecop.travel(4.days.ago) do
+          @user.unsuspend
+          EventLog.record_event(@user, EventLog::ACCOUNT_UNSUSPENDED, @admin)
+        end
+
+        assert_equal false, @user.recently_unsuspended?
+      end
+    end
+  end
+
   def assert_user_has_permissions(expected_permissions, application, user)
     permissions_for_my_app = user.permissions.reload.find_by_application_id(application.id)
     assert_equal expected_permissions, permissions_for_my_app.permissions

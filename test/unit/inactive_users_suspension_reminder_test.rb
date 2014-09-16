@@ -13,6 +13,20 @@ class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
       users_to_remind = User.last_signed_in_on((User::SUSPENSION_THRESHOLD_PERIOD - 2.days).ago)
       InactiveUsersSuspensionReminder.new(users_to_remind, 3).send_reminders
     end
+
+    should "not send reminders to recently unsuspended users" do
+      admin = create(:admin_user)
+      recently_unsuspended = create(:suspended_user, current_sign_in_at: (User::SUSPENSION_THRESHOLD_PERIOD - 2.days).ago)
+      Timecop.travel(2.days.ago) do
+        recently_unsuspended.unsuspend
+        EventLog.record_event(recently_unsuspended, EventLog::ACCOUNT_UNSUSPENDED, admin)
+      end
+
+      UserMailer.expects(:suspension_reminder).never
+
+      users_to_remind = User.last_signed_in_on((User::SUSPENSION_THRESHOLD_PERIOD - 2.days).ago)
+      InactiveUsersSuspensionReminder.new(users_to_remind, 3).send_reminders
+    end
   end
 
   context "failing to send emails with SES down" do
