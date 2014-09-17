@@ -26,7 +26,7 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "not include an instance name in the body" do
-      assert_body_includes "Your account will be suspended"
+      assert_body_includes "Signon account, for"
     end
   end
 
@@ -57,7 +57,7 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "include the instance name in the body" do
-      assert_body_includes "Your test account will be suspended"
+      assert_body_includes "Signon test account, for"
     end
   end
 end

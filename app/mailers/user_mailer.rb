@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  helper_method :suspension_time, :account_name
+  helper_method :suspension_time, :account_name, :instance_name
 
   default from: "GOV.UK Signon <noreply-signon@digital.cabinet-office.gov.uk>"
 
