@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   self.include_root_in_json = true
 
   SUSPENSION_THRESHOLD_PERIOD = 45.days
+  UNSUSPENSION_GRACE_PERIOD = 3.days
 
   devise :database_authenticatable, :recoverable, :trackable,
          :validatable, :timeoutable, :lockable,                # devise core model extensions
@@ -120,6 +121,11 @@ class User < ActiveRecord::Base
     return "locked" if access_locked?
 
     "active"
+  end
+
+  def recently_unsuspended?
+    record = EventLog.for(self).where(:event => EventLog::ACCOUNT_UNSUSPENDED).first
+    record.present? && record.created_at > UNSUSPENSION_GRACE_PERIOD.ago
   end
 
 private

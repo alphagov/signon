@@ -13,6 +13,8 @@ class InactiveUsersSuspensionReminder
 
   def send_reminders
     @users.each do |user|
+      next if user.recently_unsuspended?
+
       tries = 3
       begin
         Rails.logger.info "#{self.class}: Sending email to #{user.email}."
