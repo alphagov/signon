@@ -119,12 +119,12 @@ class EventLogTest < ActionDispatch::IntegrationTest
   end
 
   test "record password expiration" do
-    @user.password_changed_at = 100.days.ago; @user.save
+    @user.password_changed_at = 100.days.ago; @user.save!
 
     visit root_path
     signin @user
 
-    assert_equal EventLog::PASSPHRASE_EXPIRED, EventLog.for(@user).first.event
+    assert_include EventLog.for(@user).map(&:event), EventLog::PASSPHRASE_EXPIRED
   end
 
   test "users don't have permission to view account access log" do
