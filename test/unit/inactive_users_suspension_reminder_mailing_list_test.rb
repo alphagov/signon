@@ -34,5 +34,12 @@ class InactiveUsersSuspensionReminderMailingListTest < ActiveSupport::TestCase
       signed_in_48_days_ago = create(:user, current_sign_in_at: 48.days.ago)
       assert_include suspension_reminder_mailing_list[1], signed_in_48_days_ago
     end
+
+    should "exclude recently unsuspended users from the mailings" do
+      recently_unsuspended = create(:suspended_user, current_sign_in_at: 48.days.ago)
+      Timecop.travel(2.days.ago) { recently_unsuspended.unsuspend }
+
+      assert_not_include suspension_reminder_mailing_list[1], recently_unsuspended
+    end
   end
 end

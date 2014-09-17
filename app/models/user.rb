@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   self.include_root_in_json = true
 
   SUSPENSION_THRESHOLD_PERIOD = 45.days
+  UNSUSPENSION_GRACE_PERIOD = 3.days
 
   devise :database_authenticatable, :recoverable, :trackable,
          :validatable, :timeoutable, :lockable,                # devise core model extensions
@@ -43,6 +44,7 @@ class User < ActiveRecord::Base
   scope :last_signed_in_on, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) = date(?)', date) }
   scope :last_signed_in_before, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) < date(?)', date) }
   scope :last_signed_in_after, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) >= date(?)', date) }
+  scope :not_recently_unsuspended, lambda { where(['unsuspended_at IS NULL OR unsuspended_at < ?', UNSUSPENSION_GRACE_PERIOD.ago]) }
 
   def generate_uid
     self.uid = UUID.generate
