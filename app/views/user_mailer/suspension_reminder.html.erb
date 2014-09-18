@@ -1,11 +1,23 @@
-<p>Hello <%= @user.name %>,
+<p>Hello <%= @user.name %>,</p>
 
 <p><%= link_to 'GOV.UK', "https://www.gov.uk" %> Signon accounts are suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.</p>
 
-<p>Your <%= account_name %> will be suspended <%= suspension_time %> and you won’t be able to access any <%= link_to 'GOV.UK', "https://www.gov.uk" %> applications.</p>
+<p>Your <%= link_to 'GOV.UK', "https://www.gov.uk" %> Signon <%= account_name %>, for <%= @user.email %>, will be suspended <%= suspension_time %>. After suspension you won't be able to access any <%= link_to 'GOV.UK', "https://www.gov.uk" %> <%= account_name %> applications, eg Whitehall Publisher or Licensing.</p>
 
-<p><%= link_to 'Sign in', new_user_session_url(protocol: 'https') %> to your account to stop it being suspended.</p>
+<% if instance_name.present? %>
+<p><%= account_name.humanize %> suspensions do not suspend production accounts or remove access to GOV.UK production applications.</p>
+<% end %>
 
-<p>If you’ve forgotten your passphrase, you can ask for a new one on the sign in screen.</p>
+<p>If you don't need the account you can ignore these emails.</p>
+
+<p>To stop your account suspension you will need to <%= link_to 'sign in', new_user_session_url(protocol: 'https') %>.</p>
+
+<p>If you’ve forgotten your passphrase, you can request a new one from the <%= link_to 'sign in', new_user_session_url(protocol: 'https') %> screen.</p>
 
 <p>Read our blog post about <%= link_to 'suspending unused GOV.UK accounts', 'https://insidegovuk.blog.gov.uk/2014/08/21/suspending-unused-gov-uk-accounts' %>.</p>
+
+<p>All the best,</p>
+
+<p><%= link_to 'GOV.UK', "https://www.gov.uk" %> team</p>
+<p>Government Digital Service</p>
+
