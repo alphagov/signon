@@ -81,6 +81,27 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context ".not_recently_unsuspended" do
+
+    should "return users who have never been unsuspended" do
+      assert_include User.not_recently_unsuspended, @user
+    end
+
+    should "not return users who have been unsuspended less than 3 days ago" do
+      user2 = create(:suspended_user)
+      Timecop.travel(2.days.ago) { user2.unsuspend }
+
+      assert_not_include User.not_recently_unsuspended, user2
+    end
+
+    should "return users who have been unsuspended more than 3 days ago" do
+      user2 = create(:suspended_user)
+      Timecop.travel(4.days.ago) { user2.unsuspend }
+
+      assert_include User.not_recently_unsuspended, user2
+    end
+  end
+
   context "email validation" do
     should "require an email" do
       user = build(:user, email: nil)

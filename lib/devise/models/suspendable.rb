@@ -34,6 +34,7 @@ module Devise
       def unsuspend
         self.reason_for_suspension = nil
         self.suspended_at = nil
+        self.unsuspended_at = Time.zone.now
         save
       end
 

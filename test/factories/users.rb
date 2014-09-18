@@ -56,6 +56,7 @@ FactoryGirl.define do
 
   factory :suspended_user, parent: :user do
     suspended_at Time.zone.now
+    reason_for_suspension "Testing"
   end
 
   factory :user_in_organisation, parent: :user do
