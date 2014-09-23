@@ -5,7 +5,7 @@
 <p>Your <%= link_to 'GOV.UK', "https://www.gov.uk" %> Signon <%= account_name %>, for <%= @user.email %>, has now been suspended and you won't be able to access any <%= link_to 'GOV.UK', "https://www.gov.uk" %> <%= account_name %> applications, eg Whitehall Publisher or Licensing.</p>
 
 <% if instance_name.present? %>
-<p><%= account_name.humanize %> suspensions do not suspend production accounts or remove access to GOV.UK production applications.</p>
+<p><%= account_name.humanize %> suspensions do not suspend production accounts or remove access to <%= link_to 'GOV.UK', "https://www.gov.uk" %> production applications.</p>
 <% end %>
 
 <p>If you don't need the account you can ignore this email.</p>
