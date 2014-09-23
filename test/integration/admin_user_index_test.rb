@@ -42,7 +42,6 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
         "Aardvark <aardvark@example.com>",
         "Abbey <abbey@example.com>",
         "Abbot <mr_ab@example.com>",
-        "Admin User <admin@example.com>",
       ]
       actual = page.all('table tr td.email').map(&:text).map(&:strip)
       assert_equal expected, actual
@@ -83,13 +82,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     should "filter users by role" do
       visit "/admin/users"
 
-      select_role("Admin")
-
-      assert_equal 1, page.all('table tbody tr').count
-      assert page.has_content?("Admin User <admin@example.com>")
-      User.with_role(:normal).each do |normal_user|
-        assert ! page.has_content?(normal_user.email)
-      end
+      role_not_present("Admin")
 
       select_role("Normal")
 
@@ -110,6 +103,13 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       click_on "filter-by-role-menu"
       within ".dropdown-menu" do
         click_on role_name
+      end
+    end
+
+    def role_not_present(role_name)
+      click_on "filter-by-role-menu"
+      within ".dropdown-menu" do
+        page.has_no_content? role_name
       end
     end
   end

@@ -11,5 +11,9 @@ module Roles
     end
 
     def self.level; 2; end
+
+    def self.manageable_roles
+      %w{normal}
+    end
   end
 end

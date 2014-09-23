@@ -12,6 +12,11 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   scope :can_signin, lambda { |user| joins(:permissions)
                                       .where(permissions: { user_id: user.id })
                                       .where('permissions.permissions LIKE ?', '%signin%') }
+  scope :union_of, lambda { |user_1, user_2| joins(:permissions)
+    .where('permissions.permissions LIKE ?', '%signin%')
+    .where('permissions.user_id = ? OR permissions.user_id = ?', user_1.id, user_2.id)
+    .uniq
+  }
   scope :with_signin_delegatable, joins(:supported_permissions)
                                   .where(supported_permissions: { name: 'signin', delegatable: true })
 

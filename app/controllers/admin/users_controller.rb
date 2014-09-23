@@ -56,7 +56,12 @@ private
 
   def filter_users
     @users = @users.filter(params[:filter]) if params[:filter].present?
-    @users = @users.with_role(params[:role]) if params[:role].present?
+    @users = @users.with_role(params[:role]) if can_filter_role?
+  end
+
+  def can_filter_role?
+    params[:role].present? &&
+    current_user.manageable_roles.include?(params[:role])
   end
 
   def paginate_users

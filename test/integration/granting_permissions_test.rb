@@ -1,8 +1,8 @@
 require 'test_helper'
- 
+
 class GrantingPermissionsTest < ActionDispatch::IntegrationTest
   setup do
-    @admin = create(:user, role: "admin")
+    @admin = create(:superadmin_user)
     @user = create(:user)
 
     visit root_path
