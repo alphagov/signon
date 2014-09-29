@@ -83,13 +83,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     should "filter users by role" do
       visit "/admin/users"
 
-      select_role("Admin")
-
-      assert_equal 1, page.all('table tbody tr').count
-      assert page.has_content?("Admin User <admin@example.com>")
-      User.with_role(:normal).each do |normal_user|
-        assert ! page.has_content?(normal_user.email)
-      end
+      assert_role_not_present("Superadmin")
 
       select_role("Normal")
 
@@ -110,6 +104,13 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       click_on "filter-by-role-menu"
       within ".dropdown-menu" do
         click_on role_name
+      end
+    end
+
+    def assert_role_not_present(role_name)
+      click_on "filter-by-role-menu"
+      within ".dropdown-menu" do
+        assert page.has_no_content? role_name
       end
     end
   end

@@ -28,7 +28,7 @@ module UsersHelper
   end
 
   def user_role_list_items
-    list_items = User.roles.map do |role_name|
+    list_items = filtered_user_roles.map do |role_name|
       content_tag(:li,
         link_to(role_name.humanize, current_path_with_role_filter(role_name)),
         class: params[:role] == role_name ? 'active' : '')
@@ -39,5 +39,9 @@ module UsersHelper
 
   def edit_user_path_by_user_type(user)
     user.api_user? ? edit_superadmin_api_user_path(user) : edit_admin_user_path(user)
+  end
+
+  def filtered_user_roles
+    current_user.manageable_roles
   end
 end
