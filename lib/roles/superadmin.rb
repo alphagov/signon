@@ -12,5 +12,9 @@ module Roles
     end
 
     def self.level; 0; end
+
+    def self.manageable_roles
+      User.roles
+    end
   end
 end
