@@ -1,26 +1,26 @@
 <% content_for :title, "Confirm account email changes" %>
 
-<h1>Confirm a change to your account email</h1>
+<h1>Confirm account email changes</h1>
+
+<div class="alert alert-info">
+  For security, we need you to enter your passphrase before your account email can be changed.
+</div>
 
 <%= form_for resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :put, class: 'well'} do |f| %>
   <%= hidden_field_tag :confirmation_token, params[:confirmation_token] %>
 
-  <div class="alert alert-info">
-    For security, we need you to enter your passphrase before your account email can be changed.
-  </div>
-
   <p>
     <%= f.label :email, "Current email" %>
-    <%= f.text_field :email, disabled: "disabled", readonly: "readonly" %>
+    <%= f.text_field :email, disabled: "disabled", readonly: "readonly", class: 'form-control input-md-5' %>
   </p>
   <p>
     <%= f.label :unconfirmed_email, "New email" %>
-    <%= f.text_field :unconfirmed_email, disabled: "disabled", readonly: "readonly" %>
+    <%= f.text_field :unconfirmed_email, disabled: "disabled", readonly: "readonly", class: 'form-control input-md-5' %>
   </p>
-  <label>
+  <p>
     <%= f.label :password, "Passphrase" %>
-    <%= f.password_field :password, required: "required" %>
-  </label>
+    <%= f.password_field :password, required: "required", class: 'form-control input-md-5' %>
+  </p>
 
   <hr>
 

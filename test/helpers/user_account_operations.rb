@@ -18,7 +18,7 @@ module UserAccountOperations
 
     signout
     visit user_confirmation_path(confirmation_token: options[:confirmation_token])
-    assert_response_contains("Confirm a change to your account email")
+    assert_response_contains("Confirm account email changes")
     fill_in "Passphrase", with: options[:password]
     click_button "Confirm email change"
   end
