@@ -20,16 +20,33 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_select "td.email", count: 0, text: /api_user@email.com/
     end
 
-    should "show user roles" do
-      create(:admin_user, email: "another_user@email.com")
+    should "not show superadmin users" do
+      create(:superadmin_user, email: "superadmin@email.com")
+
       get :index
+
+      assert_select "tbody tr", count: 1
+      assert_select "td.email", /#{@user.email}/
+    end
+
+    should "show user roles" do
+      create(:user, email: "user@email.com")
+      create(:organisation_admin, email: "orgadmin@email.com")
+
+      get :index
+
+      assert_select "td.role", "Normal"
+      assert_select "td.role", "Organisation admin"
       assert_select "td.role", "Admin"
+      assert_select "td.role", count: 3
     end
 
     should "let you paginate by the first letter of the name" do
       create(:user, name: "alf", email: "a@email.com")
       create(:user, name: "zed", email: "z@email.com")
+
       get :index, letter: "Z"
+
       assert_select "td.email", /z@email.com/
       assert_select "tbody tr", count: 1
     end
@@ -51,14 +68,14 @@ class Admin::UsersControllerTest < ActionController::TestCase
       end
 
       should "scope list of users by role" do
-        get :index, role: "admin"
+        get :index, role: "normal"
 
         assert_select "tbody tr", count: 1
         assert_select "td.email", /admin@gov.uk/
       end
 
       should "scope filtered list of users by role" do
-        create(:admin_user, email: "xyz@gov.uk")
+        create(:organisation_admin, email: "xyz@gov.uk")
 
         get :index, filter: "admin", role: "admin"
 
@@ -106,6 +123,15 @@ class Admin::UsersControllerTest < ActionController::TestCase
         assert_select "option[value=#{org_with_user.id}][selected=selected]", text: org_with_user.name_with_abbreviation
         assert_select "option[value=#{other_organisation.id}]", text: other_organisation.name_with_abbreviation
       end
+    end
+
+    should "not be able to edit superadmins" do
+      superadmin = create(:superadmin_user)
+
+      get :edit, id: superadmin.id
+
+      assert_redirected_to root_path
+      assert_match(/You do not have permission to perform this action./, flash[:alert])
     end
 
     context "organisation admin" do
@@ -158,6 +184,15 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
       assert_redirected_to root_path
       assert_equal 'You do not have permission to perform this action.', flash[:alert]
+    end
+
+    should "not be able to update superadmins" do
+      superadmin = create(:superadmin_user)
+
+      put :edit, id: superadmin.id, user: { email: 'normal_user@example.com' }
+
+      assert_redirected_to root_path
+      assert_match(/You do not have permission to perform this action./, flash[:alert])
     end
 
     should "update the user's organisation" do
