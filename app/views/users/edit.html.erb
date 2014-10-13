@@ -18,20 +18,21 @@
   <h2 class="remove-top-margin remove-bottom-margin">Change your email address</h2>
   <p class="text-muted bold">Changing your email address doesn’t take effect until you follow the link in a confirmation email sent to the new address.</p>
   <%= form_for current_user, url: "/user", method: :put do |f| %>
+    <% if f.object.unconfirmed_email.present? %>
+      <p class="form-group">
+        <%= f.label :unconfirmed_email, "You have a pending email change" %>
+        <%= f.text_field :unconfirmed_email, readonly: "readonly", disabled: "disabled", class: 'form-control input-md-6' %>
+      </p>
+      <div class="add-bottom-margin">
+        <%= link_to "Resend email change", resend_email_change_user_path(f.object), :method => :put, :class => "btn btn-primary add-right-margin" %>
+        <%= link_to "Cancel email change", cancel_email_change_user_path(f.object), :method => :delete, :class => "btn btn-danger" %>
+      </div>
+      <hr />
+    <% end %>
     <p class="form-group">
       <%= f.label(:email, "Email") %>
       <%= f.text_field :email, class: 'form-control input-md-6' %>
     </p>
-    <% if f.object.unconfirmed_email.present? %>
-      <p>
-        <%= f.label :unconfirmed_email, "You have a pending email change" %>
-        <%= f.text_field :unconfirmed_email, readonly: "readonly", disabled: "disabled" %>
-        <span class="help-inline">
-          <%= link_to "Resend email change", resend_email_change_user_path(f.object), :method => :put, :class => "btn btn-primary" %>
-          <%= link_to "Cancel email change", cancel_email_change_user_path(f.object), :method => :delete, :class => "btn btn-danger" %>
-        </span>
-      </p>
-    <% end %>
     <%= f.submit "Change email", class: "btn btn-primary" %>
   <% end %>
 </section>
