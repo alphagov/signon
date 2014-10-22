@@ -17,12 +17,29 @@ class EventLogTest < ActionDispatch::IntegrationTest
     assert_equal EventLog::SUCCESSFUL_LOGIN, EventLog.for(@user).last.event
   end
 
-  test "record unsuccessful login" do
-    visit root_path
-    signin(email: @user.email, password: :incorrect)
+  context "recording unsuccessful login" do
+    should "record unsuccessful login for a valid email" do
+      visit root_path
+      signin(email: @user.email, password: :incorrect)
 
-    assert_equal 1, EventLog.for(@user).count
-    assert_equal EventLog::UNSUCCESSFUL_LOGIN, EventLog.for(@user).last.event
+      assert_equal 1, EventLog.for(@user).count
+      assert_equal EventLog::UNSUCCESSFUL_LOGIN, EventLog.for(@user).last.event
+    end
+
+    should "log nothing for an invalid email" do
+      visit root_path
+      signin(email: "nonexistent@example.com", password: "anything")
+
+      assert_equal 0, EventLog.count
+    end
+
+    should "not blow up if not given a string for the email" do
+      # Assert we don't blow up when looking up the attempted user
+      # when people have been messing with the posted params.
+      post "/users/sign_in", "user" => {"email" => {"foo" => "bar"}, :password => "anything"}
+
+      assert response.success?
+    end
   end
 
   test "record passphrase reset request" do
