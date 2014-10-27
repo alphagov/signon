@@ -11,16 +11,12 @@
     <li><%= link_to "Sign out", destroy_user_session_path %></li>
   </ul>
 
-  <% if can? :perform_admin_tasks, User %>
-    <h2>Admin tasks</h2>
-    <ul>
-      <li><%= link_to "View Organisations", admin_organisations_path %></li>
-      <li><%= link_to "Administer users", admin_users_path %></li>
-      <% if can? :read, Doorkeeper::Application %>
-        <li><%= link_to "Administer applications", superadmin_applications_path %></li>
-      <% end %>
-    </ul>
-  <% end %>
+  <h2>Admin tasks</h2>
+  <ul>
+    <li><%= link_to "View Organisations", admin_organisations_path %></li>
+    <li><%= link_to "Administer users", admin_users_path %></li>
+    <li><%= link_to "Administer applications", superadmin_applications_path %></li>
+  </ul>
   </div>
   <div class="col-md-8">
   <h2 class="remove-top-margin add-bottom-margin">Your Applications</h2>

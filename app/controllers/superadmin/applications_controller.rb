@@ -1,6 +1,5 @@
 class Superadmin::ApplicationsController < ApplicationController
   before_filter :authenticate_user!
-  load_and_authorize_resource class: "Doorkeeper::Application"
 
   respond_to :html
 

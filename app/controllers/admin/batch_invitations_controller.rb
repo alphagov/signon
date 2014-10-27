@@ -3,7 +3,6 @@ require 'csv'
 class Admin::BatchInvitationsController < ApplicationController
   include UserPermissionsControllerMethods
   before_filter :authenticate_user!
-  authorize_resource
 
   helper_method :applications_and_permissions
   helper_method :recent_batch_invitations

@@ -10,15 +10,9 @@
 <% if user_signed_in? && params[:controller] !~ %r{doorkeeper/} %>
   <% content_for :navbar_items do %>
     <%= nav_link 'Dashboard', root_path %>
-    <% if can? :index, User %>
-      <%= nav_link 'Users', admin_users_path %>
-    <% end %>
-    <% if can? :read, ApiUser %>
-      <%= nav_link 'API Users', superadmin_api_users_path %>
-    <% end %>
-    <% if can? :read, Doorkeeper::Application %>
-      <%= nav_link 'Applications', superadmin_applications_path %>
-    <% end %>
+    <%= nav_link 'Users', admin_users_path %>
+    <%= nav_link 'API Users', superadmin_api_users_path %>
+    <%= nav_link 'Applications', superadmin_applications_path %>
   <% end %>
 <% end %>
 

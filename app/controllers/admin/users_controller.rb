@@ -2,7 +2,6 @@ class Admin::UsersController < ApplicationController
   include UserPermissionsControllerMethods
 
   before_filter :authenticate_user!
-  load_and_authorize_resource
 
   helper_method :applications_and_permissions, :any_filter?
 
@@ -15,8 +14,6 @@ class Admin::UsersController < ApplicationController
   end
 
   def update
-    authorize! :read, Organisation.find(params[:user][:organisation_id]) if params[:user][:organisation_id].present?
-
     @user.skip_reconfirmation!
     if @user.update_attributes(translate_faux_signin_permission(params[:user]), as: current_user.role.to_sym)
       @user.permissions.reload

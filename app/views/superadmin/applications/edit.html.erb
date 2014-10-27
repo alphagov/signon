@@ -63,13 +63,11 @@
     </label>
   </p>
 
-  <% if can? :update, SupportedPermission %>
-    <hr />
-    <p class="add-top-margin">
-      <%= link_to "Edit supported permissions", superadmin_application_supported_permissions_path(@application) %>
-    </p>
-    <hr />
-  <% end %>
+  <hr />
+  <p class="add-top-margin">
+    <%= link_to "Edit supported permissions", superadmin_application_supported_permissions_path(@application) %>
+  </p>
+  <hr />
 
   <%= f.submit :class => 'btn btn-primary' %>
 <% end %>

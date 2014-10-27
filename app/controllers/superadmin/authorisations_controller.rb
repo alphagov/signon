@@ -3,7 +3,6 @@ class Superadmin::AuthorisationsController < ApplicationController
 
   before_filter :authenticate_user!
   before_filter :load_api_user
-  authorize_resource class: 'Doorkeeper::AccessToken'
 
   respond_to :html
 

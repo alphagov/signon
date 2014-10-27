@@ -2,8 +2,6 @@
 class Admin::InvitationsController < Devise::InvitationsController
   include UserPermissionsControllerMethods
   before_filter :authenticate_user!
-  before_filter :authorize_for_invite!, only: [:new, :create, :resend]
-
   helper_method :applications_and_permissions
 
   rescue_from Net::SMTPFatalError do |exception|
@@ -16,8 +14,6 @@ class Admin::InvitationsController < Devise::InvitationsController
   end
 
   def create
-    authorize! :read, Organisation.find(params[:user][:organisation_id]) if params[:user][:organisation_id].present?
-
     # Prevent an error when devise_invitable invites/updates an existing user,
     # and accepts_nested_attributes_for tries to create duplicate permissions.
     if self.resource = User.find_by_email(params[:user][:email])
@@ -45,10 +41,6 @@ class Admin::InvitationsController < Devise::InvitationsController
 
     def after_invite_path_for(resource)
       admin_users_path
-    end
-
-    def authorize_for_invite!
-      authorize! :invite!, User
     end
 
 end

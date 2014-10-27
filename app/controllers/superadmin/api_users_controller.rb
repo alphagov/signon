@@ -3,8 +3,6 @@ class Superadmin::ApiUsersController < ApplicationController
 
   before_filter :authenticate_user!
   before_filter :load_api_user, only: [:edit, :update]
-  authorize_resource
-
   helper_method :applications_and_permissions
 
   respond_to :html

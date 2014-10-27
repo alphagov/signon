@@ -3,9 +3,6 @@ class UsersController < ApplicationController
   doorkeeper_for :show
   before_filter :validate_token_matches_client_id, :only => :show
 
-  # it's okay for current_user to modify own attributes
-  skip_authorization_check
-
   def show
     relevant_permission.synced! if relevant_permission
     respond_to do |format|
