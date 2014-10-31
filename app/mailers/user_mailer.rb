@@ -1,5 +1,5 @@
 class UserMailer < ActionMailer::Base
-  helper_method :suspension_time, :account_name, :instance_name
+  helper_method :suspension_time, :account_name, :instance_name, :locked_time, :unlock_time
 
   default from: "GOV.UK Signon <noreply-signon@digital.cabinet-office.gov.uk>"
 
@@ -11,6 +11,11 @@ class UserMailer < ActionMailer::Base
   def suspension_notification(user)
     @user = user
     mail(to: @user.email, subject: suspension_notification_subject)
+  end
+  
+  def locked_account_explanation(user)
+    @user = user
+    mail(to: @user.email, subject: locked_account_explanation_subject)
   end
 
 private
@@ -28,6 +33,18 @@ private
 
   def suspension_notification_subject
     "Your #{app_name} account has been suspended"
+  end
+
+  def locked_account_explanation_subject
+    "Your #{app_name} account has been locked"
+  end
+
+  def locked_time
+    @user.locked_at.to_s(:govuk_date)
+  end
+
+  def unlock_time
+    (@user.locked_at + 1.hour).to_s(:govuk_date)
   end
 
   def app_name

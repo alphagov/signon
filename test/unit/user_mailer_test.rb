@@ -60,4 +60,21 @@ class UserMailerTest < ActionMailer::TestCase
       assert_body_includes "Signon test account, for"
     end
   end
+
+  context "emailing a user to explain why their account is locked" do
+    setup do
+      Rails.application.config.stubs(:instance_name).returns("test")
+      @the_time = Time.zone.now
+      stub_user = stub(name: "User", email: "user@example.com", locked_at: @the_time)
+      @email = UserMailer.locked_account_explanation(stub_user)
+    end
+
+    should "state when the account was locked" do
+      assert_body_includes "was locked at #{@the_time.to_s(:govuk_date)}"      
+    end
+
+    should "state when the account will be unlocked" do
+      assert_body_includes "Your account will be unlocked at #{(@the_time + 1.hour).to_s(:govuk_date)}"
+    end
+  end
 end
