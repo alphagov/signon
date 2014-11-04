@@ -1,0 +1,14 @@
+<p>Hello <%= @user.name %>,</p>
+
+<p>Your <%= link_to 'GOV.UK', "https://www.gov.uk" %> Signon <%= account_name %>, for <%= @user.email %>, was locked at <%= locked_time %> because the wrong sign on details were entered too many times.</p>
+
+<% if instance_name.present? %>
+<p><%= account_name.humanize %> locks do not lock production accounts.</p>
+<% end %>
+
+<p>Your account will be unlocked at <%= unlock_time %>. If you need your account unlocked sooner, please contact a managing <%= link_to 'GOV.UK', "https://www.gov.uk" %> editor in your organisation (or your parent organisation). They can either unlock your account themselves or use the support form to get help from the <%= link_to 'GOV.UK', "https://www.gov.uk" %> team.</p>
+
+<p>All the best,</p>
+
+<p><%= link_to 'GOV.UK', "https://www.gov.uk" %> team</p>
+<p>Government Digital Service</p>

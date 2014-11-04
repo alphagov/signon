@@ -111,6 +111,8 @@ class User < ActiveRecord::Base
   def lock_access!
     EventLog.record_event(User.find_by_email(self.email),EventLog::ACCOUNT_LOCKED)
     super
+
+    UserMailer.delay.locked_account_explanation(self)
   end
 
   def status
