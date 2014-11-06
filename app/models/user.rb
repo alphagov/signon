@@ -72,17 +72,20 @@ class User < ActiveRecord::Base
     permission_record.save!
   end
 
-  # override Devise::Recoverable behavior to handle emails blacklisted by AWS
-  # such that we conceal whether or not an account exists for that email.
-  # moved from: https://github.com/alphagov/signonotron2/commit/451b89d9
+  # override Devise::Recoverable behavior to:
+  # 1. notify suspended users that they can't reset their password, and
+  # 2. handle emails blacklisted by AWS such that we conceal whether
+  #    or not an account exists for that email. moved from:
+  #    https://github.com/alphagov/signonotron2/commit/451b89d9
   def self.send_reset_password_instructions(attributes={})
-    super
-  rescue Net::SMTPFatalError => exception
-    if exception.message =~ /Address blacklisted/i
-      User.find_by_email(attributes[:email])
+    user = User.find_by_email(attributes[:email])
+    if user.present? && user.suspended?
+      UserMailer.delay.notify_reset_password_disallowed_due_to_suspension(user)
     else
-      raise
+      super
     end
+  rescue Net::SMTPFatalError => exception
+    exception.message =~ /Address blacklisted/i ? user : raise
   end
 
   # Required for devise_invitable to set role and permissions

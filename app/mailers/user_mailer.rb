@@ -12,10 +12,15 @@ class UserMailer < ActionMailer::Base
     @user = user
     mail(to: @user.email, subject: suspension_notification_subject)
   end
-  
+
   def locked_account_explanation(user)
     @user = user
     mail(to: @user.email, subject: locked_account_explanation_subject)
+  end
+
+  def notify_reset_password_disallowed_due_to_suspension(user)
+    @user = user
+    mail(to: @user.email, subject: suspension_notification_subject)
   end
 
 private
