@@ -13,33 +13,9 @@ class PasswordsController < Devise::PasswordsController
     self.resource.__send__(:generate_reset_password_token!)
   end
 
-  # Copied from https://github.com/plataformatec/devise/blob/v2.1.2/app/controllers/devise/passwords_controller.rb#L12
-  # So that we can rescue from SES blacklist errors and behave normally 
-  # (i.e. not giving away whether or not an account exists for the email)
-  def create
-    begin
-      self.resource = resource_class.send_reset_password_instructions(resource_params)
-    rescue Net::SMTPFatalError => exception
-      if exception.message =~ /Address blacklisted/i
-        self.resource = user_from_params
-      else
-        raise
-      end
-    end
-
-    if successfully_sent?(resource)
-      respond_with({}, :location => after_sending_reset_password_instructions_path_for(resource_name))
-    else
-      respond_with(resource)
-    end
-  end
-
   private
-    def user_from_params
-      User.find_by_email(params[:user][:email]) if params[:user].present?
-    end
-
     def record_password_reset_request
+      user_from_params = User.find_by_email(params[:user][:email]) if params[:user].present?
       EventLog.record_event(user_from_params, EventLog::PASSPHRASE_RESET_REQUEST) if user_from_params
       Statsd.new(::STATSD_HOST).increment(
         "#{::STATSD_PREFIX}.users.password_reset_request"

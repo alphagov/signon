@@ -72,6 +72,19 @@ class User < ActiveRecord::Base
     permission_record.save!
   end
 
+  # override Devise::Recoverable behavior to handle emails blacklisted by AWS
+  # such that we conceal whether or not an account exists for that email.
+  # moved from: https://github.com/alphagov/signonotron2/commit/451b89d9
+  def self.send_reset_password_instructions(attributes={})
+    super
+  rescue Net::SMTPFatalError => exception
+    if exception.message =~ /Address blacklisted/i
+      User.find_by_email(attributes[:email])
+    else
+      raise
+    end
+  end
+
   # Required for devise_invitable to set role and permissions
   def self.inviter_role(inviter)
     inviter.nil? ? :default : inviter.role.to_sym
