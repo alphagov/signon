@@ -1,9 +1,9 @@
 require 'test_helper'
- 
+
 class UserLockingTest < ActionDispatch::IntegrationTest
   should "trigger if the user typed a wrong password too many times" do
     Sidekiq::Testing.inline!
-    
+
     user = create(:user)
     visit root_path
     8.times { signin(email: user.email, password: "wrong password") }
@@ -20,14 +20,12 @@ class UserLockingTest < ActionDispatch::IntegrationTest
   end
 
   should "enqueue the 'account locked' explanation email" do
-    sidekiq_job_count = Sidekiq::Extensions::DelayedMailer.jobs.size
     user = create(:user)
     visit root_path
-    8.times { signin(email: user.email, password: "wrong password") }
 
-    signin(user)
-
-    assert_equal sidekiq_job_count + 1, Sidekiq::Extensions::DelayedMailer.jobs.size
+    assert_difference('Sidekiq::Extensions::DelayedMailer.jobs.size', 1) do
+      8.times { signin(email: user.email, password: "wrong password") }
+    end
   end
 
   should "be reversible by admins" do
