@@ -70,12 +70,8 @@ class UsersController < ApplicationController
     end
 
   def validate_token_matches_client_id
-    # FIXME: Once gds-sso is updated everywhere, this should always validate
-    # the client_id param.  It should 401 if no client_id is given.
-    if params[:client_id].present?
-      if params[:client_id] != doorkeeper_token.application.uid
-        head :unauthorized
-      end
+    if params[:client_id] != doorkeeper_token.application.uid
+      head :unauthorized
     end
   end
 end
