@@ -77,4 +77,13 @@ class UserMailerTest < ActionMailer::TestCase
       assert_body_includes "Your account will be unlocked at #{(@the_time + 1.hour).to_s(:govuk_date)}"
     end
   end
+
+  context "emailing a user to notify that reset password is dis-allowed" do
+    should "mention that reset is disallowed because their account is suspended" do
+      stub_user = stub(name: 'User', email: 'user@example.com')
+      email = UserMailer.notify_reset_password_disallowed_due_to_suspension(stub_user)
+
+      assert_body_includes "You can't request a passphrase reset on a suspended account.", email
+    end
+  end
 end

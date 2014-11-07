@@ -325,6 +325,39 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context ".send_reset_password_instructions" do
+    should "notify a user that reset password is disallowed if their account is suspended and not send reset instructions" do
+      user = create(:suspended_user)
+
+      User.send_reset_password_instructions({ email: user.email })
+
+      delayed_mailer_jobs = Sidekiq::Extensions::DelayedMailer.jobs
+      assert_equal 1, delayed_mailer_jobs.size
+      assert_equal [UserMailer, :notify_reset_password_disallowed_due_to_suspension, [user]],
+        YAML.load(delayed_mailer_jobs.first['args'].first)
+    end
+
+    should "return the resource even if AWS has blacklisted the resource's email" do
+      User.any_instance.stubs(:send_reset_password_instructions).raises(Net::SMTPFatalError, "Address blacklisted")
+      user = create(:user)
+
+      user_returned = nil
+      assert_nothing_raised do
+        user_returned = User.send_reset_password_instructions({ email: user.email })
+      end
+      assert_equal user, user_returned
+    end
+
+    should "raise any other exception that occured" do
+      User.any_instance.stubs(:send_reset_password_instructions).raises(Net::SMTPFatalError, "Inbox is full")
+      user = create(:user)
+
+      assert_raise(Net::SMTPFatalError) do
+        User.send_reset_password_instructions({ email: user.email })
+      end
+    end
+  end
+
   def assert_user_has_permissions(expected_permissions, application, user)
     permissions_for_my_app = user.permissions.reload.find_by_application_id(application.id)
     assert_equal expected_permissions, permissions_for_my_app.permissions
