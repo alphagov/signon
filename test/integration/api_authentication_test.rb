@@ -22,15 +22,10 @@ class ApiAuthenticationTest < ActionDispatch::IntegrationTest
     assert parsed_response['user']['permissions'].is_a?(Array)
   end
 
-  should "grant access to the user details with a valid token, and no client_id specified" do
-    # To maintain backwards compatibilty.  A client_id will be made mandatory
-    # once all the clients have been upgraded to the new gds-sso
-
+  should "not grant access to the user details with a valid token, and no client_id specified" do
     access_user_endpoint(get_valid_token.token)
 
-    parsed_response = JSON.parse(response.body)
-    assert parsed_response.has_key?('user')
-    assert parsed_response['user']['permissions'].is_a?(Array)
+    assert_equal 401, response.status
   end
 
   should "not grant access without an access token" do
