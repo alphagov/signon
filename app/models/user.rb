@@ -81,6 +81,7 @@ class User < ActiveRecord::Base
     user = User.find_by_email(attributes[:email])
     if user.present? && user.suspended?
       UserMailer.delay.notify_reset_password_disallowed_due_to_suspension(user)
+      user
     else
       super
     end
