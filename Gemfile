@@ -11,7 +11,7 @@ gem 'govuk_admin_template', '1.1.6'
 gem 'airbrake', '3.1.15'
 gem 'plek', '1.7.0'
 gem 'json', '1.7.7'
-gem 'whenever', '0.7.3', require: false
+gem 'whenever', '~> 0.9.4', require: false
 
 gem 'uuid'
 
