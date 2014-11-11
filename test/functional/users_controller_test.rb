@@ -139,7 +139,9 @@ class UsersControllerTest < ActionController::TestCase
       assert_equal presenter.as_hash.to_json, response.body
     end
 
-    should "fetching json profile with a valid oauth token, but no client_id should fail" do
+    should "fetching json profile with a valid oauth token, but no client_id should succeed" do
+      # For now.  Once gds-sso is updated everywhere, this will 401.
+
       user = create(:user)
       permission = create(:permission, user_id: user.id, application_id: @application.id)
       token = create(:access_token, :application => @application, :resource_owner_id => user.id)
@@ -147,7 +149,9 @@ class UsersControllerTest < ActionController::TestCase
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
       get :show, {:format => :json}
 
-      assert_equal "401", response.code
+      assert_equal "200", response.code
+      presenter = UserOAuthPresenter.new(user, @application)
+      assert_equal presenter.as_hash.to_json, response.body
     end
 
     should "fetching json profile with an invalid oauth token should not succeed" do
