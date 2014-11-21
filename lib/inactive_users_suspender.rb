@@ -6,6 +6,9 @@ class InactiveUsersSuspender
       user.reason_for_suspension = reason
       user.save(validate: false)
 
+      PermissionUpdater.perform_on(user)
+      ReauthEnforcer.perform_on(user)
+
       EventLog.record_event(user, EventLog::ACCOUNT_AUTOSUSPENDED)
       UserMailer.suspension_notification(user).deliver
     end

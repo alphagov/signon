@@ -18,6 +18,7 @@ class Admin::SuspensionsController < ApplicationController
 
     if succeeded
       EventLog.record_event(@user, action, current_user)
+      PermissionUpdater.perform_on(@user)
       ReauthEnforcer.perform_on(@user)
 
       flash[:notice] = "#{@user.name} is now #{@user.suspended? ? 'suspended' : 'active'}."

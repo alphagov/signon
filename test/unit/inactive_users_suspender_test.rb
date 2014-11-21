@@ -81,4 +81,18 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
     InactiveUsersSuspender.new.suspend
   end
 
+  test "syncs permissions with downstream apps to inform them about suspension" do
+    inactive_user = create(:user, current_sign_in_at: 46.days.ago)
+    PermissionUpdater.expects(:perform_on).with(inactive_user)
+
+    InactiveUsersSuspender.new.suspend
+  end
+
+  test "enforces downstream apps to log-off the suspended user" do
+    inactive_user = create(:user, current_sign_in_at: 46.days.ago)
+    ReauthEnforcer.expects(:perform_on).with(inactive_user)
+
+    InactiveUsersSuspender.new.suspend
+  end
+
 end

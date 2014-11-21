@@ -61,4 +61,22 @@ namespace :users do
     user.unsuspend
     puts "User account unsuspended"
   end
+
+  desc "Push user permission information to applications passed as a comma-separated string in ENV variable 'APPLICATIONS'"
+  task :push_permissions => :environment do
+    raise "Requires ENV variable APPLICATIONS to be set to a string containing comma-separated application names" if ENV['APPLICATIONS'].blank?
+
+    application_names = ENV['APPLICATIONS'].split(',').map(&:strip).map(&:titleize)
+    applications = Doorkeeper::Application.where(name: application_names)
+    puts "About to push user permission information to #{applications.map(&:name).to_sentence}"
+
+    application_users = applications.inject({}) do |result, application|
+      result[application] = User.where(id: application.permissions.pluck(:user_id).uniq)
+      result
+    end
+    application_users.each do |application, users|
+      puts "Pushing permission information of #{users.count} users to #{application.name}"
+      users.each { |user| PermissionUpdater.perform_async(user.uid, application.id) }
+    end
+  end
 end
