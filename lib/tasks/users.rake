@@ -79,4 +79,14 @@ namespace :users do
       users.each { |user| PermissionUpdater.perform_async(user.uid, application.id) }
     end
   end
+
+  desc "Exports user permissions by application(s) in csv format"
+  task :export_permissions, [:export_dir, :apps] => :environment do |t, args|
+    UserPermissionsExporter.new(args[:export_dir], Logger.new(STDOUT)).export(args[:apps].split)
+  end
+
+  desc "Exports user roles in csv format"
+  task :export_roles, [:export_dir] => :environment do |t, args|
+    UserPermissionsExporter.new(args[:export_dir], Logger.new(STDOUT)).export_signon
+  end
 end
