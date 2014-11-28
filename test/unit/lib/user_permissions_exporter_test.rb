@@ -27,8 +27,8 @@ class UserPermissionsExporterTest < ActionView::TestCase
     csv_data = CSV.read(@tmpfile.path)
 
     assert_equal %w(Name Email Organisation Permissions),                                     csv_data[0]
-    assert_equal %w(Bill bill@bill.com Ministry\ of\ chips signin,cook),                      csv_data[1]
-    assert_equal %w(Anne anne@anne.com Ministry\ of\ ketchup signin,administer,add_vinegar),  csv_data[2]
+    assert_equal %w(Anne anne@anne.com Ministry\ of\ ketchup signin,administer,add_vinegar),  csv_data[1]
+    assert_equal %w(Bill bill@bill.com Ministry\ of\ chips signin,cook),                      csv_data[2]
     assert_equal %w(Mary mary@mary.com Ministry\ of\ brown\ sauce signin,do_some_stuff),      csv_data[3]
   end
 
@@ -51,8 +51,8 @@ class UserPermissionsExporterTest < ActionView::TestCase
     assert_equal %w(Application Name Email Organisation Permissions),                             csv_data[0]
     assert_equal %w(Bar Anne anne@anne.com Ministry\ of\ ketchup signin,administer),              csv_data[1]
     assert_equal %w(Bar Mary mary@mary.com Ministry\ of\ brown\ sauce signin,administer),         csv_data[2]
-    assert_equal %w(Foo Bill bill@bill.com Ministry\ of\ chips signin,cook),                      csv_data[3]
-    assert_equal %w(Foo Anne anne@anne.com Ministry\ of\ ketchup signin,administer,add_vinegar),  csv_data[4]
+    assert_equal %w(Foo Anne anne@anne.com Ministry\ of\ ketchup signin,administer,add_vinegar),  csv_data[3]
+    assert_equal %w(Foo Bill bill@bill.com Ministry\ of\ chips signin,cook),                      csv_data[4]
     assert_equal %w(Foo Mary mary@mary.com Ministry\ of\ brown\ sauce signin,do_some_stuff),      csv_data[5]
   end
 
@@ -62,8 +62,8 @@ class UserPermissionsExporterTest < ActionView::TestCase
     csv_data = CSV.read(@tmpfile.path)
 
     assert_equal ["Name", "Email", "Organisation", "Role", "Suspended at"], csv_data[0]
-    assert_equal ["Bill", "bill@bill.com", "Ministry of chips", "normal", "2000-01-01 00:00:00 +0000"], csv_data[1]
-    assert_equal ["Anne", "anne@anne.com", "Ministry of ketchup", "superadmin", ""], csv_data[2]
+    assert_equal ["Anne", "anne@anne.com", "Ministry of ketchup", "superadmin", ""], csv_data[1]
+    assert_equal ["Bill", "bill@bill.com", "Ministry of chips", "normal", "2000-01-01 00:00:00 +0000"], csv_data[2]
     assert_equal ["Mary", "mary@mary.com", "Ministry of brown sauce", "admin", ""], csv_data[3]
   end
 end

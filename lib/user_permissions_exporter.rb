@@ -11,7 +11,7 @@ class UserPermissionsExporter
   def export_signon
     CSV.open(signon_file_path, 'wb', headers: true) do |csv|
       csv << ["Name","Email","Organisation","Role","Suspended at"]
-      User.all.each do |user|
+      User.order(:name).each do |user|
         org_name = user.organisation ? user.organisation.name : ""
         suspended_at = user.suspended_at || ""
         csv << [user.name, user.email, org_name, user.role, suspended_at]
@@ -29,7 +29,7 @@ class UserPermissionsExporter
       csv << headers
 
       applications.each do |app|
-        permissions = Permission.includes(user: :organisation).where(application_id: app.id)
+        permissions = Permission.includes(user: :organisation).where(application_id: app.id).order("users.name")
         permissions.each do |permission|
           if permission.permissions.any?
             row = {}
