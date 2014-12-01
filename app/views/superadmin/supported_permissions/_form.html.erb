@@ -19,9 +19,10 @@
         <% end %>
     </div>
     <hr />
-    <p class="form-group checkbox">
-      <%= f.label :delegatable, t('supported_permissions.form.delegatable') %>
-      <%= f.check_box :delegatable %>
+    <p class="checkbox">
+      <label>
+        <%= f.check_box :delegatable %> <%= t('supported_permissions.form.delegatable') %>
+      </label>
     </p>
     <hr />
     <%= f.submit "Save permission", class: "btn btn-success" %>

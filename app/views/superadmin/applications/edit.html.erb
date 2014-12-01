@@ -57,9 +57,10 @@
     <span class="help-block">The app has a copy of this. Used in the signin redirect dance.</span>
   </p>
 
-  <p class="form-group checkbox">
-    <%= f.check_box :supports_push_updates %>
-    <%= f.label :supports_push_updates, 'Send push updates to this app', style: 'display: inline-block;' %>
+  <p class="checkbox">
+    <label>
+      <%= f.check_box :supports_push_updates %> Send push updates to this app
+    </label>
   </p>
 
   <% if can? :update, SupportedPermission %>
