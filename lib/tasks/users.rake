@@ -66,4 +66,14 @@ namespace :users do
   task :push_permissions => :environment do
     User.find_each { |user| PermissionUpdater.perform_on(user) }
   end
+
+  desc "Exports user permissions by application(s) in csv format"
+  task :export_permissions, [:export_dir, :apps] => :environment do |t, args|
+    UserPermissionsExporter.new(args[:export_dir], Logger.new(STDOUT)).export(args[:apps].split)
+  end
+
+  desc "Exports user roles in csv format"
+  task :export_roles, [:export_dir] => :environment do |t, args|
+    UserPermissionsExporter.new(args[:export_dir], Logger.new(STDOUT)).export_signon
+  end
 end
