@@ -68,12 +68,18 @@ namespace :users do
   end
 
   desc "Exports user permissions by application(s) in csv format"
-  task :export_permissions, [:export_dir, :apps] => :environment do |t, args|
-    UserPermissionsExporter.new(args[:export_dir], Logger.new(STDOUT)).export(args[:apps].split)
+  task :export_permissions => :environment do
+    raise "Requires ENV variable EXPORT_DIR to be set to a valid directory path" if ENV['EXPORT_DIR'].blank?
+    raise "Requires ENV variable APPLICATIONS to be set to a string containing comma-separated application names" if ENV['APPLICATIONS'].blank?
+
+    application_names = ENV['APPLICATIONS'].split(',').map(&:strip).map(&:titleize)
+    UserPermissionsExporter.new(ENV['EXPORT_DIR'], Logger.new(STDOUT)).export(application_names)
   end
 
   desc "Exports user roles in csv format"
-  task :export_roles, [:export_dir] => :environment do |t, args|
-    UserPermissionsExporter.new(args[:export_dir], Logger.new(STDOUT)).export_signon
+  task :export_roles => :environment do
+    raise "Requires ENV variable EXPORT_DIR to be set to a valid directory path" if ENV['EXPORT_DIR'].blank?
+
+    UserPermissionsExporter.new(ENV['EXPORT_DIR'], Logger.new(STDOUT)).export_signon
   end
 end
