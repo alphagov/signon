@@ -13,6 +13,13 @@ class PasswordsController < Devise::PasswordsController
     self.resource.__send__(:generate_reset_password_token!)
   end
 
+  # overrides http://git.io/sOhoaA to prevent expirable from
+  # intercepting reset password flow for a partially signed-in user
+  def require_no_authentication
+    sign_out(current_user) if params[:reset_password_token] && current_user && current_user.need_change_password?
+    super
+  end
+
   private
     def record_password_reset_request
       user_from_params = User.find_by_email(params[:user][:email]) if params[:user].present?

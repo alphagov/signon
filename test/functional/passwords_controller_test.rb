@@ -23,4 +23,25 @@ class PasswordsControllerTest < ActionController::TestCase
     assert_response :success
     assert_template 'devise/passwords/reset_error'
   end
+
+  test 'a partially signed-in user with an expired password trying to reset their password should get signed-out' do
+    @user.update_attribute(:password_changed_at, 3.months.ago)
+
+    # simulate a partially signed-in user. for example,
+    # user with an expired password being asked to change the password
+    sign_in @user
+    get :edit, reset_password_token: @user.reset_password_token
+
+    assert_nil request.env['warden'].user
+  end
+
+  test 'a partially signed-in user with an expired password trying to reset their password should not be redirected to after_sign_in_path' do
+    @user.update_attribute(:password_changed_at, 3.months.ago)
+    sign_in @user
+
+    get :edit, reset_password_token: @user.reset_password_token
+
+    assert_response :ok
+    assert_template 'devise/passwords/edit'
+  end
 end
