@@ -44,4 +44,16 @@ class PasswordsControllerTest < ActionController::TestCase
     assert_response :ok
     assert_template 'devise/passwords/edit'
   end
+
+  test 'a partially signed-in user with an expired password should be able to request password reset instructions' do
+    @user.update_attribute(:password_changed_at, 3.months.ago)
+
+    # simulate a partially signed-in user. for example,
+    # user with an expired password being asked to change the password
+    sign_in @user
+    get :new, forgot_expired_passphrase: 1
+
+    assert_nil request.env['warden'].user
+    assert_template 'devise/passwords/new'
+  end
 end
