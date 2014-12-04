@@ -37,4 +37,28 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
     assert !page.has_content?("Email not found"), page.body
     assert_response_contains(BLANKET_RESET_MESSAGE)
   end
+
+  should "work for a partially signed-in user with an expired passphrase" do
+    user = create(:user, password_changed_at: 3.months.ago)
+
+    trigger_reset_for(user.email)
+
+    visit root_path
+    signin(email: user.email, password: user.password)
+
+    # partially signed-in user should be able to reset passphrase using link in reset passphrase instructions
+    complete_password_reset(reset_password_token: user.reload.reset_password_token, new_password: "some v3ry s3cure passphrase")
+    assert_response_contains("Your passphrase was changed successfully")
+  end
+
+  should "be accessible from the change password screen by a partially signed-in user" do
+    user = create(:user, password_changed_at: 3.months.ago)
+
+    visit root_path
+    signin(email: user.email, password: user.password)
+
+    # partially signed-in user should be able to reset passphrase using link in reset passphrase instructions
+    click_link 'Forgot your passphrase?'
+    assert_response_contains("Request a passphrase reset")
+  end
 end

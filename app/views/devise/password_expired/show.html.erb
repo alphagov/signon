@@ -10,6 +10,9 @@
 
     <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: resource, updating_password: true } %>
 
+
     <div><%= f.submit "Change my passphrase", class: "add-top-margin btn btn-primary" %></div>
   <% end %>
 </div>
+
+<%= link_to t('devise.links.forgot_passphrase'), new_password_path(resource_name, forgot_expired_passphrase: 1) %><br />
