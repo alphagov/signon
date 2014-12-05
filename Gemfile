@@ -6,7 +6,7 @@ gem 'kaminari', '0.16.1'
 gem 'bootstrap-kaminari-views', '0.0.3'
 gem 'alphabetical_paginate', '2.2.3'
 gem 'mysql2'
-gem 'govuk_admin_template', '1.1.6'
+gem 'govuk_admin_template', '1.4.0'
 
 gem 'airbrake', '3.1.15'
 gem 'plek', '1.7.0'
@@ -47,7 +47,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'jasmine', '2.0.2'
+  gem 'jasmine', '2.1.0'
 end
 
 gem 'logstasher', '0.4.8'
