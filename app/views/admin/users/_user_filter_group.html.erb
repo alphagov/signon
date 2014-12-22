@@ -2,10 +2,16 @@
   filter_title = filter_type.to_s.humanize.capitalize
   filter_value = params[filter_type] ? params[filter_type].humanize.capitalize : nil
 %>
-
-<li class="add-margin-right <%= "filter-by-#{filter_type.to_s}-menu"%>">
+<li class="add-margin-right <%= "filter-by-#{filter_type.to_s}-menu"%> <% if params[filter_type] %>selected-and-available<% end %>">
+  <% if params[filter_type] %>
+    <%= link_to current_path_with_filter(filter_type, nil),
+          class: 'filter-option filter-selected',
+          title: 'Remove filter' do %>
+          <span class="glyphicon glyphicon-remove"></span><span class="rm">Remove</span>
+    <% end %>
+  <% end %>
   <%= link_to current_path_with_filter(filter_type, nil),
-        class: 'filter-option',
+        class: "filter-option #{params[filter_type] ? 'filter-selected' : ''}",
         data: { toggle: 'dropdown' },
         role: 'button' do %>
     <% if params[filter_type] %>
