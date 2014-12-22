@@ -18,6 +18,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       create(:user, :name => "Ed", :email => "ed@example.com")
       create(:user, :name => "Eddie", :email => "eddie_bb@example.com")
       create(:user, :name => "Ernie", :email => "ernie@example.com")
+      create(:suspended_user, :name => 'Suspended McFee', :email => 'suspenders@example.com')
     end
 
     teardown do
@@ -111,6 +112,28 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       click_on "filter-by-role-menu"
       within ".dropdown-menu" do
         assert page.has_no_content? role_name
+      end
+    end
+
+    should "filter users by status" do
+      visit "/admin/users"
+
+      select_status('Suspended')
+
+      assert_equal 1, page.all('table tbody tr').count
+      assert ! page.has_content?("Aardvark")
+      assert page.has_content?('Suspended McFee')
+
+      select_status('All statuses')
+
+      %w(Aardvark Abbot Abbey Admin Suspended).each do |user_name|
+        assert page.has_content?(user_name)
+      end
+    end
+
+    def select_status(status_name)
+      within ".filter-by-status-menu .dropdown-menu" do
+        click_on status_name
       end
     end
   end

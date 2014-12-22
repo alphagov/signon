@@ -8,6 +8,14 @@ class User < ActiveRecord::Base
   SUSPENSION_THRESHOLD_PERIOD = 45.days
   UNSUSPENSION_GRACE_PERIOD = 3.days
 
+  USER_STATUS_SUSPENDED = 'suspended'
+  USER_STATUS_INVITED = 'invited'
+  USER_STATUS_PASSPHRASE_EXPIRED = 'passphrase expired'
+  USER_STATUS_LOCKED = 'locked'
+  USER_STATUS_ACTIVE = 'active'
+  USER_STATUSES = [USER_STATUS_SUSPENDED, USER_STATUS_INVITED, USER_STATUS_PASSPHRASE_EXPIRED,
+                   USER_STATUS_LOCKED, USER_STATUS_ACTIVE]
+
   devise :database_authenticatable, :recoverable, :trackable,
          :validatable, :timeoutable, :lockable,                # devise core model extensions
          :invitable,    # in devise_invitable gem
@@ -133,14 +141,14 @@ class User < ActiveRecord::Base
   end
 
   def status
-    return "suspended" if suspended?
+    return USER_STATUS_SUSPENDED if suspended?
     unless api_user?
-      return "invited" if invited_but_not_yet_accepted?
-      return "passphrase expired" if need_change_password?
+      return USER_STATUS_INVITED if invited_but_not_yet_accepted?
+      return USER_STATUS_PASSPHRASE_EXPIRED if need_change_password?
     end
-    return "locked" if access_locked?
+    return USER_STATUS_LOCKED if access_locked?
 
-    "active"
+    USER_STATUS_ACTIVE
   end
 
   def manageable_roles

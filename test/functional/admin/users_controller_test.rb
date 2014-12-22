@@ -84,6 +84,25 @@ class Admin::UsersControllerTest < ActionController::TestCase
       end
     end
 
+    should "scope list of users by status" do
+      create(:suspended_user, email: "suspended_user@gov.uk")
+
+      get :index, status: 'suspended'
+
+      assert_select "tbody tr", count: 1
+      assert_select "td.email", /suspended_user@gov.uk/
+    end
+
+    should "scope list of users by status and role" do
+      create(:suspended_user, email: "suspended_user@gov.uk", role: 'admin')
+      create(:suspended_user, email: "normal_suspended_user@gov.uk")
+
+      get :index, status: 'suspended', role: 'admin'
+
+      assert_select "tbody tr", count: 1
+      assert_select "td.email", /suspended_user@gov.uk/
+    end
+
     context "as superadmin" do
       should "not list api users" do
         @user.update_column(:role, "superadmin")
