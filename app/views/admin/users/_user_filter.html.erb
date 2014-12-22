@@ -1,6 +1,13 @@
 <nav class="filters">
   <div class="panel panel-default">
     <header class="panel-heading">
+      <% if any_filter? %>
+        <%= link_to admin_users_path,
+          class: 'remove-filters inherit',
+          title: 'Remove all filters' do %>
+          <span class="glyphicon glyphicon-remove"></span>
+        <% end %>
+      <% end %>
       <ul class="nav nav-compact nav-pills">
         <li class="nav-pill-text">
           <strong>Filter by</strong>

@@ -34,4 +34,8 @@ module UserFilterHelper
   def filtered_user_roles
     current_user.manageable_roles
   end
+
+  def any_filter?
+    params[:filter].present? || params[:role].present? || params[:status].present?
+  end
 end
