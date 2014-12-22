@@ -74,7 +74,7 @@
         <th scope="col">Sign-in count</th>
         <th scope="col">Last sign-in</th>
         <th scope="col">Created</th>
-        <th scope="col">Suspended?</th>
+        <th scope="col">Status</th>
         <th scope="col">Actions</th>
       </tr>
     </thead>
@@ -96,7 +96,7 @@
             <% end %>
           </td>
           <td><%= time_ago_in_words(user.created_at) %> ago</td>
-          <td><%= user.suspended? ? "Yes" : "No" %></td>
+          <td><%= user.status.humanize %></td>
           <td>
             <% if user.invited_but_not_accepted %>
               <%= form_tag resend_user_invitation_path(user) do %>
