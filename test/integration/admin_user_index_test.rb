@@ -36,7 +36,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     should "see list of users paginated alphabetically" do
       visit "/admin/users"
 
-      assert page.has_content?("User accounts")
+      assert page.has_content?("Users")
 
       expected = [
         "Aardvark <aardvark@example.com>",

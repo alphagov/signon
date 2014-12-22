@@ -24,7 +24,7 @@ module UsersHelper
   end
 
   def user_role_text
-    "#{params[:role] if params[:role]} user accounts".strip.humanize.capitalize
+    "#{params[:role] if params[:role]} users".strip.humanize.capitalize
   end
 
   def user_role_list_items
