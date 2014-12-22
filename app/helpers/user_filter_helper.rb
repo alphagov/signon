@@ -1,14 +1,8 @@
 module UserFilterHelper
 
-  def current_path_with_role_filter(role_name)
+  def current_path_with_filter(filter_type, filter_value)
     query_parameters = (request.query_parameters.clone || {})
-    role_name.nil? ? query_parameters.delete(:role) : query_parameters.merge!(role: role_name)
-    request.path_info + '?' + query_parameters.map { |k,v| "#{k}=#{v}" }.join('&')
-  end
-
-  def current_path_with_status_filter(status_name)
-    query_parameters = (request.query_parameters.clone || {})
-    status_name.nil? ? query_parameters.delete(:status) : query_parameters.merge!(status: status_name)
+    filter_value.nil? ? query_parameters.delete(filter_type) : query_parameters.merge!(filter_type => filter_value)
     request.path_info + '?' + query_parameters.map { |k,v| "#{k}=#{v}" }.join('&')
   end
 
@@ -16,24 +10,25 @@ module UserFilterHelper
     "#{params[:role] if params[:role]} users".strip.humanize.capitalize
   end
 
-  def user_role_list_items
-    list_items = filtered_user_roles.map do |role_name|
-      content_tag(:li,
-      link_to(role_name.humanize, current_path_with_role_filter(role_name)),
-      class: params[:role] == role_name ? 'active' : '')
+  def user_filter_list_items(filter_type)
+    case filter_type
+    when :role
+      items = filtered_user_roles
+    when :status
+      items = User::USER_STATUSES
     end
-    list_items << content_tag(:li, link_to("All roles", current_path_with_role_filter(nil)))
-    raw list_items.join("\n")
-  end
 
-  def user_status_list_items
-    list_items = User::USER_STATUSES.map do |status_name|
+    list_items = items.map do |item_name|
       content_tag(:li,
-      link_to(status_name.humanize, current_path_with_status_filter(status_name)),
-      class: params[:status] == status_name ? 'active' : '')
+      link_to(item_name.humanize, current_path_with_filter(filter_type, item_name)),
+      class: params[filter_type] == item_name ? 'active' : '')
     end
-    list_items << content_tag(:li, link_to("All statuses", current_path_with_status_filter(nil)))
-    raw list_items.join("\n")
+
+    list_items << content_tag(:li,
+      link_to("All #{filter_type.to_s.pluralize}",
+      current_path_with_filter(filter_type, nil)))
+
+    list_items.join("\n").html_safe
   end
 
   def filtered_user_roles

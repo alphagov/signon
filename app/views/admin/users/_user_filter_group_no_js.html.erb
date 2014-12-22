@@ -1,0 +1,17 @@
+<% if params[filter_type] %>
+  <% filter_title = filter_type.to_s.humanize.capitalize %>
+  <div class="if-js-hide row">
+    <nav class="filters col-md-8">
+      <div class="panel panel-default">
+        <header class="panel-heading">
+          <ul class='nav nav-pills'>
+            <li class="nav-pill-text">
+              <strong><%= filter_title %></strong>
+            </li>
+            <%= user_filter_list_items(filter_type) %>
+          </ul>
+        </header>
+      </div>
+    </nav>
+  </div>
+<% end %>

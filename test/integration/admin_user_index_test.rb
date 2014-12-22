@@ -102,16 +102,20 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     end
 
     def select_role(role_name)
-      click_on "filter-by-role-menu"
-      within ".dropdown-menu" do
-        click_on role_name
+      within ".filter-by-role-menu" do
+        click_on "Role"
+        within ".dropdown-menu" do
+          click_on role_name
+        end
       end
     end
 
     def assert_role_not_present(role_name)
-      click_on "filter-by-role-menu"
-      within ".dropdown-menu" do
-        assert page.has_no_content? role_name
+      within ".filter-by-role-menu" do
+        click_on "Role"
+        within ".dropdown-menu" do
+          assert page.has_no_content? role_name
+        end
       end
     end
 
