@@ -57,6 +57,7 @@ private
   def filter_users
     @users = @users.filter(params[:filter]) if params[:filter].present?
     @users = @users.with_role(params[:role]) if can_filter_role?
+    @users = @users.select{|u| u.status == params[:status]} if params[:status].present?
   end
 
   def can_filter_role?
@@ -66,14 +67,18 @@ private
 
   def paginate_users
     if any_filter?
-      @users = @users.page(params[:page]).per(100)
+      unless @users.kind_of?(Array)
+        @users = @users.page(params[:page]).per(100)
+      else
+        @users = Kaminari.paginate_array(@users).page(params[:page]).per(100)
+      end
     else
       @users, @sorting_params = @users.alpha_paginate(params[:letter], ALPHABETICAL_PAGINATE_CONFIG)
     end
   end
 
   def any_filter?
-    params[:filter].present? || params[:role].present?
+    params[:filter].present? || params[:role].present? || params[:status].present?
   end
 
 end
