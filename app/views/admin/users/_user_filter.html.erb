@@ -1,0 +1,84 @@
+<nav class="filters">
+  <div class="panel panel-default">
+    <header class="panel-heading">
+      <ul class="nav nav-pills">
+        <li class="nav-pill-text">
+          <strong>Filter by</strong>
+        </li>
+        <li class="filter-by-role add-margin-right">
+          <%= link_to current_path_with_role_filter(params[:role] ? nil : 'admin'), class: 'filter-option', data: { toggle: 'dropdown' }, role: 'button', id: 'filter-by-role-menu' do %>
+          <% if params[:role] %>
+          <span class="if-js-hide glyphicon glyphicon-remove"></span>
+          <% end %>
+          <span class="if-no-js-hide"><%= (params[:role] || 'Role').humanize.capitalize %></span>
+          <span class="if-js-hide">Role</span>
+          <span class="if-no-js-hide glyphicon glyphicon-chevron-down"></span>
+          <% end %>
+          <ul class='dropdown-menu' role='menu'>
+            <%= user_role_list_items %>
+          </ul>
+        </li>
+        <li class="filter-by-status add-margin-right">
+          <%= link_to current_path_with_status_filter(params[:status] ? nil : 'active'), class: 'filter-option', data: { toggle: 'dropdown' }, role: 'button', id: 'filter-by-status-menu' do %>
+          <% if params[:status] %>
+          <span class="if-js-hide glyphicon glyphicon-remove"></span>
+          <% end %>
+          <span class="if-no-js-hide"><%= (params[:status] || 'Status').humanize.capitalize %></span>
+          <span class="if-js-hide">Status</span>
+          <span class="if-no-js-hide glyphicon glyphicon-chevron-down"></span>
+          <% end %>
+          <ul class='dropdown-menu' role='menu'>
+            <%= user_status_list_items %>
+          </ul>
+        </li>
+        <li class="filter-by-name">
+          <%= form_tag nil, method: "get", class: 'add-left-margin form-inline' do %>
+          <% if params[:role] %>
+          <%= hidden_field_tag :role, params[:role] %>
+          <% end %>
+          <% if params[:status] %>
+          <%= hidden_field_tag :status, params[:status] %>
+          <% end %>
+          <%= label_tag 'filter', 'Name or email', class: 'add-right-margin' %>
+          <%= text_field_tag "filter", params[:filter], class: 'form-control filter-by-name-field' %>
+          <%= submit_tag "Search", class: "btn btn-default" %>
+          <% end %>
+        </li>
+      </ul>
+    </header>
+  </div>
+</nav>
+
+<% if params[:role] %>
+<div class="if-js-hide row">
+  <nav class="filters col-md-8">
+    <div class="panel panel-default">
+      <header class="panel-heading">
+        <ul class='nav nav-pills'>
+          <li class="nav-pill-text">
+            <strong>Roles</strong>
+          </li>
+          <%= user_role_list_items %>
+        </ul>
+      </header>
+    </div>
+  </nav>
+</div>
+<% end %>
+
+<% if params[:status] %>
+<div class="if-js-hide row">
+  <nav class="filters col-md-8">
+    <div class="panel panel-default">
+      <header class="panel-heading">
+        <ul class='nav nav-pills'>
+          <li class="nav-pill-text">
+            <strong>Statuses</strong>
+          </li>
+          <%= user_status_list_items %>
+        </ul>
+      </header>
+    </div>
+  </nav>
+</div>
+<% end %>
