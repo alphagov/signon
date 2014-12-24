@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.18'
 
 gem 'kaminari', '0.16.1'
-gem 'bootstrap-kaminari-views', '0.0.3'
+gem 'bootstrap-kaminari-views', '0.0.5'
 gem 'alphabetical_paginate', '2.2.3'
 gem 'mysql2'
 gem 'govuk_admin_template', '1.4.0'

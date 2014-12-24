@@ -7,5 +7,6 @@ class Admin::EventLogsController < ApplicationController
   def index
     @user = User.find_by_id(params["user_id"])
     @logs = EventLog.for(@user)
+    @logs = @logs.page(params[:page]).per(100)
   end
 end
