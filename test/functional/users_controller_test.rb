@@ -83,6 +83,11 @@ class UsersControllerTest < ActionController::TestCase
         assert_equal "Confirm your email change", email.subject
         assert_equal "new@email.com", email.to[0]
       end
+
+      should "log an event" do
+        put :update, user: { email: "new@email.com" }
+        assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_INITIATIED, uid: @user.uid, initiator_id: @user.id).count
+      end
     end
   end
 

@@ -60,6 +60,11 @@ class ConfirmationsControllerTest < ActionController::TestCase
         assert_redirected_to "/"
         assert_equal @user.reload.email, "new@email.com"
       end
+
+      should "log an event upon confirmation" do
+        get :show, confirmation_token: @user.confirmation_token
+        assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_CONFIRMED, uid: @user.uid).count
+      end
     end
 
     context "signed in as somebody else" do
@@ -84,6 +89,13 @@ class ConfirmationsControllerTest < ActionController::TestCase
       assert_redirected_to "/"
       assert @controller.user_signed_in?
       assert_equal @user.reload.email, "new@email.com"
+    end
+
+    should "log an event upon confirmation" do
+      put :update,
+            confirmation_token: @user.confirmation_token,
+            user: { password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z" }
+      assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_CONFIRMED, uid: @user.uid).count
     end
 
     should "reject with an incorrect token" do
