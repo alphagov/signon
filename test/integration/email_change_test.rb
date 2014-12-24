@@ -10,23 +10,20 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
     end
 
     context "for an active user" do
-      should "trigger a confirmation email to the user" do
-        user = create(:user)
+      should "send a notification email and not confirmation email" do
+        Sidekiq::Testing.inline! do
+          user = create(:user)
 
-        visit new_user_session_path
-        signin(@admin)
-        admin_changes_email_address(user: user, new_email: "new@email.com")
+          visit new_user_session_path
+          signin(@admin)
+          admin_changes_email_address(user: user, new_email: "new@email.com")
 
-        assert_equal "new@email.com", last_email.to[0]
-        assert_equal 'Confirm your email change', last_email.subject
-
-        user.reload
-        confirm_email_change(confirmation_token: user.confirmation_token,
-                             password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z")
-        assert_response_contains("Your account was successfully confirmed. You are now signed in.")
+          assert_equal "new@email.com", last_email.to[0]
+          assert_equal 'Your email has been updated', last_email.subject
+        end
       end
 
-      should "show an error and not trigger a confirmation if the email is blank" do
+      should "show an error and not trigger a notification if the email is blank" do
         user = create(:user)
 
         visit new_user_session_path
@@ -39,20 +36,23 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
     end
 
     context "for a user who hasn't accepted their invite yet" do
-      should "resend a confirmation email" do
-        user = User.invite!(name: "Jim", email: "jim@web.com")
+      should "resend the invitation" do
+        Sidekiq::Testing.inline! do
+          user = User.invite!(name: "Jim", email: "jim@web.com")
 
-        visit new_user_session_path
-        signin(@admin)
-        admin_changes_email_address(user: user, new_email: "new@email.com")
+          visit new_user_session_path
+          signin(@admin)
+          admin_changes_email_address(user: user, new_email: "new@email.com")
 
-        assert_equal "new@email.com", last_email.to[0]
-        assert_equal 'Please confirm your account', last_email.subject
+          invitation_email = ActionMailer::Base.deliveries[-3]
+          assert_equal "new@email.com", invitation_email.to[0]
+          assert_equal 'Please confirm your account', invitation_email.subject
 
-        user.reload
-        accept_invitation(invitation_token: user.invitation_token,
-                          password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z")
-        assert_response_contains("Your passphrase was set successfully. You are now signed in.")
+          user.reload
+          accept_invitation(invitation_token: user.invitation_token,
+                            password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z")
+          assert_response_contains("Your passphrase was set successfully. You are now signed in.")
+        end
       end
     end
 
