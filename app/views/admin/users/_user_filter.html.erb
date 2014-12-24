@@ -1,0 +1,36 @@
+<nav class="filters">
+  <div class="panel panel-default">
+    <header class="panel-heading">
+      <% if any_filter? %>
+        <%= link_to admin_users_path,
+          class: 'remove-filters inherit',
+          title: 'Remove all filters' do %>
+          <span class="glyphicon glyphicon-remove"></span>
+        <% end %>
+      <% end %>
+      <ul class="nav nav-compact nav-pills">
+        <li class="nav-pill-text">
+          <strong>Filter by</strong>
+        </li>
+        <%= render partial: 'user_filter_group', locals: {filter_type: :role} %>
+        <%= render partial: 'user_filter_group', locals: {filter_type: :status} %>
+        <li class="filter-by-name">
+          <%= form_tag nil, method: "get", class: 'add-left-margin form-inline' do %>
+          <% if params[:role] %>
+          <%= hidden_field_tag :role, params[:role] %>
+          <% end %>
+          <% if params[:status] %>
+          <%= hidden_field_tag :status, params[:status] %>
+          <% end %>
+          <%= label_tag 'filter', 'Name or email', class: 'add-right-margin' %>
+          <%= text_field_tag "filter", params[:filter], class: 'form-control filter-by-name-field' %>
+          <%= submit_tag "Search", class: "btn btn-default" %>
+          <% end %>
+        </li>
+      </ul>
+    </header>
+  </div>
+</nav>
+
+<%= render partial: 'user_filter_group_no_js', locals: {filter_type: :role} %>
+<%= render partial: 'user_filter_group_no_js', locals: {filter_type: :status} %>

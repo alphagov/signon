@@ -1,45 +1,8 @@
 <% content_for :title, user_role_text %>
 
-<div class="page-title">
-  <h1><%= user_role_text %></h1>
-</div>
-
-<div class="row">
-  <nav class="filters col-md-8">
-    <div class="panel panel-default">
-      <header class="panel-heading">
-        <ul class="nav nav-pills">
-          <li class="nav-pill-text">
-            <strong>Filter by</strong>
-          </li>
-          <li class="filter-by-role add-margin-right">
-            <%= link_to current_path_with_role_filter(params[:role] ? nil : 'admin'), class: 'filter-option', data: { toggle: 'dropdown' }, role: 'button', id: 'filter-by-role-menu' do %>
-              <% if params[:role] %>
-                <span class="if-js-hide glyphicon glyphicon-remove"></span>
-              <% end %>
-              <span class="if-no-js-hide"><%= (params[:role] || 'Role').humanize.capitalize %></span>
-              <span class="if-js-hide">Role</span>
-              <span class="if-no-js-hide glyphicon glyphicon-chevron-down"></span>
-            <% end %>
-            <ul class='dropdown-menu' role='menu'>
-              <%= user_role_list_items %>
-            </ul>
-          </li>
-          <li class="filter-by-name">
-            <%= form_tag nil, method: "get", class: 'add-left-margin form-inline' do %>
-              <% if params[:role] %>
-                <%= hidden_field_tag :role, params[:role] %>
-              <% end %>
-              <%= label_tag 'filter', 'Name or email', class: 'add-right-margin' %>
-              <%= text_field_tag "filter", params[:filter], class: 'form-control filter-by-name-field' %>
-              <%= submit_tag "Search", class: "btn btn-default" %>
-            <% end %>
-          </li>
-        </ul>
-      </header>
-    </div>
-  </nav>
-  <div class="col-md-4 text-right">
+<div class="page-title clearfix remove-top-margin">
+  <h1 class="pull-left"><%= user_role_text %></h1>
+  <div class="pull-right add-top-margin">
     <%= link_to "Create user", new_user_invitation_path, class: "btn btn-success add-right-margin" %>
     <% if can? :create, BatchInvitation %>
       <%= link_to "Upload a batch of users", new_admin_batch_invitation_path, class: "btn btn-default" %>
@@ -47,71 +10,55 @@
   </div>
 </div>
 
-<% if params[:role] %>
-  <div class="if-js-hide row">
-    <nav class="filters col-md-8">
-      <div class="panel panel-default">
-        <header class="panel-heading">
-          <ul class='nav nav-pills'>
-            <li class="nav-pill-text">
-              <strong>Roles</strong>
-            </li>
-            <%= user_role_list_items %>
-          </ul>
-        </header>
-      </div>
-    </nav>
-  </div>
-<% end %>
+<%= render partial: "user_filter" %>
+<%= render partial: "pagination", locals: {position: 'top'} %>
 
-  <%= render partial: "pagination" %>
-
-  <table class="table table-striped table-bordered">
-    <thead>
-      <tr class="table-header">
-        <th scope="col">Name and email</th>
-        <th scope="col">Role</th>
-        <th scope="col">Sign-in count</th>
-        <th scope="col">Last sign-in</th>
-        <th scope="col">Created</th>
-        <th scope="col">Suspended?</th>
-        <th scope="col">Actions</th>
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr class="table-header">
+      <th scope="col">Name and email</th>
+      <th scope="col">Role</th>
+      <th scope="col">Sign-in count</th>
+      <th scope="col">Last sign-in</th>
+      <th scope="col">Created</th>
+      <th scope="col">Status</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td class="email">
+          <%= user.suspended? ? "<del>".html_safe : "" %>
+            <%= link_to "#{user.name} <#{user.email}>", edit_admin_user_path(user) %>
+          <%= user.suspended? ? "</del>".html_safe : "" %>
+        </td>
+        <td class="role"><%= user.role.humanize %></td>
+        <td><%= user.sign_in_count %></td>
+        <td class="last-sign-in">
+          <% if user.current_sign_in_at %>
+            <%= time_ago_in_words(user.current_sign_in_at) %> ago
+          <% else %>
+            never signed in
+          <% end %>
+        </td>
+        <td><%= time_ago_in_words(user.created_at) %> ago</td>
+        <td><%= user.status.humanize %></td>
+        <td>
+          <% if user.invited_but_not_accepted %>
+            <%= form_tag resend_user_invitation_path(user) do %>
+              <%= submit_tag "Resend signup email", :class => 'btn btn-sm btn-default' %>
+            <% end %>
+          <% end %>
+          <% if user.access_locked? %>
+            <%= form_tag unlock_admin_user_path(user) do %>
+              <%= submit_tag "Unlock account", :class => 'btn btn-default' %>
+            <% end %>
+          <% end %>
+        </td>
       </tr>
-    </thead>
-    <tbody>
-      <% @users.each do |user| %>
-        <tr>
-          <td class="email">
-            <%= user.suspended? ? "<del>".html_safe : "" %>
-              <%= link_to "#{user.name} <#{user.email}>", edit_admin_user_path(user) %>
-            <%= user.suspended? ? "</del>".html_safe : "" %>
-          </td>
-          <td class="role"><%= user.role.humanize %></td>
-          <td><%= user.sign_in_count %></td>
-          <td class="last-sign-in">
-            <% if user.current_sign_in_at %>
-              <%= time_ago_in_words(user.current_sign_in_at) %> ago
-            <% else %>
-              never signed in
-            <% end %>
-          </td>
-          <td><%= time_ago_in_words(user.created_at) %> ago</td>
-          <td><%= user.suspended? ? "Yes" : "No" %></td>
-          <td>
-            <% if user.invited_but_not_accepted %>
-              <%= form_tag resend_user_invitation_path(user) do %>
-                <%= submit_tag "Resend signup email", :class => 'btn btn-sm btn-default' %>
-              <% end %>
-            <% end %>
-            <% if user.access_locked? %>
-              <%= form_tag unlock_admin_user_path(user) do %>
-                <%= submit_tag "Unlock account", :class => 'btn btn-default' %>
-              <% end %>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+    <% end %>
+  </tbody>
+</table>
 
-  <%= render partial: "pagination" %>
+<%= render partial: "pagination" %>
