@@ -23,6 +23,7 @@ class Admin::UsersController < ApplicationController
       PermissionUpdater.perform_on(@user)
 
       if email_change = @user.previous_changes[:email]
+        EventLog.record_event(@user, EventLog::EMAIL_CHANGE_INITIATIED, current_user)
         @user.invite! if @user.invited_but_not_yet_accepted?
         email_change.each do |to_address|
           UserMailer.delay.email_changed_by_admin_notification(@user, email_change.first, to_address)
