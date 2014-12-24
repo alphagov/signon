@@ -20,7 +20,7 @@
     <tbody>
       <% @logs.each do |log| %>
         <tr>
-          <td><%= I18n.l log.created_at, format: :govuk_date %></td>
+          <td><%= log.created_at.to_s(:govuk_date_short) %></td>
           <td>
             <%= log.event %>
             <% if log.application %>
