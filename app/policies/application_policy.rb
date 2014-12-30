@@ -1,0 +1,2 @@
+class ApplicationPolicy < BasePolicy
+end
