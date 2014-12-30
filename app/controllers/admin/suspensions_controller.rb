@@ -1,8 +1,10 @@
 class Admin::SuspensionsController < ApplicationController
-  before_filter :authenticate_user!
+  before_filter :authenticate_user!, :load_user
   respond_to :html
 
   def update
+    authorize @user, :suspension?
+
     if params[:user][:suspended] == "1"
       succeeded = @user.suspend(params[:user][:reason_for_suspension])
       action = EventLog::ACCOUNT_SUSPENDED
@@ -23,6 +25,12 @@ class Admin::SuspensionsController < ApplicationController
       flash[:alert] = "Failed"
       render :edit
     end
+  end
+
+  private
+
+  def load_user
+    @user = User.find(params[:id])
   end
 
 end

@@ -2,7 +2,7 @@ class Superadmin::AuthorisationsController < ApplicationController
   include UserPermissionsControllerMethods
 
   before_filter :authenticate_user!
-  before_filter :load_api_user
+  before_filter :load_and_authorize_api_user
 
   respond_to :html
 
@@ -49,7 +49,8 @@ class Superadmin::AuthorisationsController < ApplicationController
 
 private
 
-  def load_api_user
+  def load_and_authorize_api_user
     @api_user = ApiUser.find(params[:api_user_id])
+    authorize @api_user
   end
 end

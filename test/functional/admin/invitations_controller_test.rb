@@ -78,7 +78,7 @@ class Admin::InvitationsControllerTest < ActionController::TestCase
 
         post :create, user: { name: "John Smith", email: "jsmith@digital.cabinet-office.gov.uk", organisation_id: outside_organisation.id }
 
-        assert_redirected_to root_path
+        assert_redirected_to admin_users_path
       end
 
       should "assign only organisations under them" do

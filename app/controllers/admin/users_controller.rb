@@ -7,12 +7,19 @@ class Admin::UsersController < ApplicationController
   respond_to :html
 
   def index
-    @users = @users.web_users.includes(:organisation)
+    authorize User
+
+    @users = policy_scope(User)
     filter_users if any_filter?
     paginate_users
   end
 
+  def edit
+    authorize @user
+  end
+
   def update
+    authorize @user
     @user.skip_reconfirmation!
     if @user.update_attributes(translate_faux_signin_permission(params[:user]), as: current_user.role.to_sym)
       @user.permissions.reload

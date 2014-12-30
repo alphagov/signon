@@ -8,10 +8,13 @@ class Superadmin::ApiUsersController < ApplicationController
   respond_to :html
 
   def new
+    authorize ApiUser
     @api_user = ApiUser.new
   end
 
   def create
+    authorize ApiUser
+
     password = SecureRandom.urlsafe_base64
     @api_user = ApiUser.new(params[:api_user].merge(password: password, password_confirmation: password))
     @api_user.skip_confirmation!
@@ -26,12 +29,14 @@ class Superadmin::ApiUsersController < ApplicationController
   end
 
   def index
+    authorize ApiUser
     @api_users = ApiUser.includes(permissions: :application)
   end
 
   def update
-    @api_user.skip_reconfirmation!
+    authorize @api_user
 
+    @api_user.skip_reconfirmation!
     if @api_user.update_attributes(translate_faux_signin_permission(params[:api_user]), as: current_user.role.to_sym)
       @api_user.permissions.reload
       PermissionUpdater.perform_on(@api_user)

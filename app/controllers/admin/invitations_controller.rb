@@ -13,6 +13,11 @@ class Admin::InvitationsController < Devise::InvitationsController
     end
   end
 
+  def new
+    authorize User
+    super
+  end
+
   def create
     # Prevent an error when devise_invitable invites/updates an existing user,
     # and accepts_nested_attributes_for tries to create duplicate permissions.

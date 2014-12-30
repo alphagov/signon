@@ -1,5 +1,6 @@
 class Superadmin::SupportedPermissionsController < ApplicationController
   before_filter :authenticate_user!
+  before_filter :load_application
   respond_to :html
 
   def new
@@ -31,6 +32,10 @@ class Superadmin::SupportedPermissionsController < ApplicationController
   end
 
 private
+
+  def load_application
+    @application = Doorkeeper::Application.find(params[:application_id])
+  end
 
   def supported_permission_parameters
     params[:supported_permission].slice(:name, :delegatable)
