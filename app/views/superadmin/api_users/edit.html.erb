@@ -4,7 +4,7 @@
 
 <p class="suspenders">
   User <strong><%= @api_user.status %></strong> &bull;
-  <%= link_to "Account access log", admin_user_event_logs_path(@api_user) %> &bull;
+  <%= link_to "Account access log", event_logs_admin_user_path(@api_user) %> &bull;
   <%= link_to "#{@api_user.suspended? ? "Uns" : "S"}uspend user", edit_admin_suspension_path(@api_user) %>
 </p>
 

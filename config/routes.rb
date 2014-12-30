@@ -21,16 +21,14 @@ Signonotron2::Application.routes.draw do
     end
   end
 
-
   namespace :admin do
     resources :users, except: [:show] do
       member do
         post :unlock
         put :resend_email_change
         delete :cancel_email_change
+        get :event_logs, path: 'event-logs'
       end
-
-      resources :event_logs, only: [:index], path: 'event-logs'
     end
 
     resources :batch_invitations, only: [:new, :create, :show]

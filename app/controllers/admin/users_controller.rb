@@ -2,9 +2,8 @@ class Admin::UsersController < ApplicationController
   include UserPermissionsControllerMethods
 
   before_filter :authenticate_user!
-
+  before_filter :load_user, except: :index
   helper_method :applications_and_permissions, :any_filter?
-
   respond_to :html
 
   def index
@@ -56,7 +55,16 @@ class Admin::UsersController < ApplicationController
     redirect_to edit_admin_user_path(@user)
   end
 
+  def event_logs
+    authorize @user
+    @logs = @user.event_logs.page(params[:page]).per(100) if @user
+  end
+
 private
+
+  def load_user
+    @user = User.find(params[:id])
+  end
 
   def filter_users
     @users = @users.filter(params[:filter]) if params[:filter].present?
