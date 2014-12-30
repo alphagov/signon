@@ -4,8 +4,10 @@ module UserPermissionsControllerMethods
       if user.api_user?
         authorised_application_ids = user.authorisations.where(revoked_at: nil).pluck(:application_id)
         applications = ::Doorkeeper::Application.where(id: authorised_application_ids)
-      else
+      elsif current_user.organisation_admin?
         applications = ::Doorkeeper::Application.can_signin(current_user).with_signin_delegatable
+      else
+        applications = ::Doorkeeper::Application
       end
       zip_permissions(applications.includes(:supported_permissions), user)
     end

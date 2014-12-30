@@ -14,11 +14,11 @@ module Roles
       end
     end
 
-  end
-
-  def role?(base_role)
-    # each role can do everything that the previous role can do
-    self.class.roles.index(base_role.to_s) <= self.class.roles.index(role)
+    base.roles.each do |role_name|
+      define_method("#{role_name}?") do
+        role == role_name
+      end
+    end
   end
 
   module ClassMethods
