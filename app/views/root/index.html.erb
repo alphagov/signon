@@ -7,15 +7,15 @@
   <div class="col-md-4">
   <h2 class="remove-top-margin">Your account</h2>
   <ul>
-    <li><%= link_to "Change your email or passphrase", edit_user_path %></li>
+    <li><%= link_to "Change your email or passphrase", edit_user_path(current_user) %></li>
     <li><%= link_to "Sign out", destroy_user_session_path %></li>
   </ul>
 
   <h2>Admin tasks</h2>
   <ul>
-    <li><%= link_to "View Organisations", admin_organisations_path %></li>
-    <li><%= link_to "Administer users", admin_users_path %></li>
-    <li><%= link_to "Administer applications", superadmin_applications_path %></li>
+    <li><%= link_to "View Organisations", organisations_path %></li>
+    <li><%= link_to "Administer users", users_path %></li>
+    <li><%= link_to "Administer applications", applications_path %></li>
   </ul>
   </div>
   <div class="col-md-8">

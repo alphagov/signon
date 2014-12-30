@@ -18,7 +18,7 @@ module UsersHelper
   end
 
   def edit_user_path_by_user_type(user)
-    user.api_user? ? edit_superadmin_api_user_path(user) : edit_admin_user_path(user)
+    user.api_user? ? edit_api_user_path(user) : edit_user_path(user)
   end
 
   def is_org_admin?

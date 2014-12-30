@@ -1,0 +1,9 @@
+<% content_for :title, "Create new API user" %>
+
+<h1>Create new API user</h1>
+
+<%= form_for @api_user, html: { class: 'well add-top-margin' } do |f| %>
+  <%= render partial: "form_fields", locals: { f: f } %>
+
+  <%= f.submit "Create API user", :class => 'btn btn-success add-top-margin' %>
+<% end %>

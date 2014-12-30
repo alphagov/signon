@@ -12,7 +12,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
   should "support granting signin permissions" do
     app = create(:application, name: "MyApp")
 
-    visit edit_admin_user_path(@user)
+    visit edit_user_path(@user)
     check "Has access to MyApp?"
     click_button "Update User"
 
@@ -23,7 +23,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
   should "support granting app-specific permissions" do
     app = create(:application, name: "MyApp", with_supported_permissions: ["write"])
 
-    visit edit_admin_user_path(@user)
+    visit edit_user_path(@user)
     select "write", from: "Permissions for MyApp"
     click_button "Update User"
 

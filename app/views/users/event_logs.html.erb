@@ -1,0 +1,47 @@
+<% content_for :title, "Account access log" %>
+
+<ol class="breadcrumb">
+  <li><%= link_to @user.name, edit_user_path_by_user_type(@user) %></li>
+  <li class="active">Account access log</li>
+</ol>
+
+<div class="page-title">
+  <h1>Account access log</h1>
+  <% if @logs.any? %><h2 class="text-muted remove-top-margin"><%= pluralize(number_with_delimiter(@logs.total_count), 'event') %></h2><% end %>
+</div>
+
+<% if @logs.any? %>
+  <%= paginate(@logs, theme: 'twitter-bootstrap-3', pagination_class: 'remove-top-margin') %>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr class="table-header">
+        <th style="width: 200px">Time</th>
+        <th>Event</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @logs.each do |log| %>
+        <tr>
+          <td><%= log.created_at.to_s(:govuk_date_short) %></td>
+          <td>
+            <%= log.event %>
+            <% if log.application %>
+              for <strong><%= log.application.name %></strong>
+            <% end %>
+            <% if log.initiator %>
+              by <strong><%= link_to log.initiator.name, users_path(filter: log.initiator.email), title: log.initiator.email %></strong>
+            <% end %>
+            <%= log.trailing_message %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate(@logs, theme: 'twitter-bootstrap-3', pagination_class: 'remove-top-margin') %>
+<% else %>
+  <div class="no-content no-content-bordered">
+    No activity logged
+  </div>
+<% end %>

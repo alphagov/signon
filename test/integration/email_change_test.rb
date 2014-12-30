@@ -78,7 +78,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
         visit new_user_session_path
         signin(@admin)
-        visit edit_admin_user_path(user)
+        visit edit_user_path(user)
         click_link "Cancel email change"
 
         user.reload

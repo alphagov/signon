@@ -88,10 +88,10 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit root_path
     signin @admin
     first_letter_of_name = @user.name[0]
-    visit admin_users_path(letter: first_letter_of_name)
+    visit users_path(letter: first_letter_of_name)
     click_on 'Unlock'
 
-    visit event_logs_admin_user_path(@user)
+    visit event_logs_user_path(@user)
     assert page.has_content?(EventLog::MANUAL_ACCOUNT_UNLOCK + ' by ' + @admin.name)
   end
 
@@ -99,14 +99,14 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit root_path
     signin @admin
     first_letter_of_name = @user.name[0]
-    visit admin_users_path(letter: first_letter_of_name)
+    visit users_path(letter: first_letter_of_name)
     click_on "#{@user.name}"
     click_on 'Suspend user'
     check 'Suspended?'
     fill_in 'Reason for suspension', with: 'Assaulting superior officer'
     click_on 'Save'
 
-    visit event_logs_admin_user_path(@user)
+    visit event_logs_user_path(@user)
     assert page.has_content?(EventLog::ACCOUNT_SUSPENDED + ' by ' + @admin.name)
   end
 
@@ -125,13 +125,13 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit root_path
     signin @admin
     first_letter_of_name = @user.name[0]
-    visit admin_users_path(letter: first_letter_of_name)
+    visit users_path(letter: first_letter_of_name)
     click_on "#{@user.name}"
     click_on 'Unsuspend user'
     uncheck 'Suspended?'
     click_on 'Save'
 
-    visit event_logs_admin_user_path(@user)
+    visit event_logs_user_path(@user)
     assert page.has_content?(EventLog::ACCOUNT_UNSUSPENDED + ' by ' + @admin.name)
   end
 
@@ -148,17 +148,15 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit root_path
     signin @user
 
-    visit admin_user_path(@user)
-    click_on 'Account access log'
-
-    assert page.has_content?("You do not have permission to perform this action")
+    visit edit_user_path(@user)
+    assert page.has_no_link? 'Account access log'
   end
 
   test "admins have permission to view account access log" do
     @user.lock_access!
     visit root_path
     signin @admin
-    visit admin_user_path(@user)
+    visit edit_user_path(@user)
     click_on 'Account access log'
 
     assert_account_access_log_page_content(@user)
@@ -170,7 +168,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
 
     visit root_path
     signin super_nintendo_chalmers
-    visit admin_user_path(@user)
+    visit edit_user_path(@user)
     click_on 'Account access log'
 
     assert_account_access_log_page_content(@user)
@@ -183,7 +181,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
 
     visit root_path
     signin admin
-    visit admin_user_path(user)
+    visit edit_user_path(user)
     click_on 'Account access log'
 
     assert_account_access_log_page_content(user)
@@ -194,7 +192,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
 
     visit root_path
     signin admin
-    visit event_logs_admin_user_path(@user)
+    visit event_logs_user_path(@user)
 
     assert page.has_content?("You do not have permission to perform this action")
   end
