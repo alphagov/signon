@@ -31,6 +31,10 @@ class UserPolicy < BasePolicy
     current_user.normal? ? false : edit?
   end
 
+  def assign_role?
+    current_user.superadmin?
+  end
+
   class Scope < Scope
     def resolve
       if current_user.superadmin?

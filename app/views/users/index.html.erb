@@ -4,7 +4,9 @@
   <h1 class="pull-left"><%= user_role_text %></h1>
   <div class="pull-right add-top-margin">
     <%= link_to "Create user", new_user_invitation_path, class: "btn btn-success add-right-margin" %>
-    <%= link_to "Upload a batch of users", new_batch_invitation_path, class: "btn btn-default" %>
+    <% if policy(BatchInvitation).new? %>
+      <%= link_to "Upload a batch of users", new_batch_invitation_path, class: "btn btn-default" %>
+    <% end %>
   </div>
 </div>
 

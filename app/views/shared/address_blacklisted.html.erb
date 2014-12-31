@@ -14,6 +14,8 @@
   </div>
 
   <p>You could navigate back and try again, or follow one of these links:</p>
-  <p><%= link_to "Administer users", users_path %></p>
+  <% if policy(User).index? %>
+    <p><%= link_to "Administer users", users_path %></p>
+  <% end %>
   <p><%= link_to "Home", root_path %></p>
 </div>

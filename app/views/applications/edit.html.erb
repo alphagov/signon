@@ -63,11 +63,13 @@
     </label>
   </p>
 
-  <hr />
-  <p class="add-top-margin">
-    <%= link_to "Edit supported permissions", application_supported_permissions_path(@application) %>
-  </p>
-  <hr />
+  <% if policy(Doorkeeper::Application).edit? %>
+    <hr />
+    <p class="add-top-margin">
+      <%= link_to "Edit supported permissions", application_supported_permissions_path(@application) %>
+    </p>
+    <hr />
+  <% end %>
 
   <%= f.submit :class => 'btn btn-primary' %>
 <% end %>

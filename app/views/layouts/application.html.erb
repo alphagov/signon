@@ -10,9 +10,18 @@
 <% if user_signed_in? && params[:controller] !~ %r{doorkeeper/} %>
   <% content_for :navbar_items do %>
     <%= nav_link 'Dashboard', root_path %>
-    <%= nav_link 'Users', users_path %>
-    <%= nav_link 'API Users', api_users_path %>
-    <%= nav_link 'Applications', applications_path %>
+    <% if policy(User).index? %>
+      <%= nav_link 'Users', users_path %>
+    <% end %>
+    <% if policy(ApiUser).index? %>
+      <%= nav_link 'API Users', api_users_path %>
+    <% end %>
+    <% if policy(Doorkeeper::Application).index? %>
+      <%= nav_link 'Applications', applications_path %>
+    <% end %>
+    <% if policy(Organisation).index? %>
+      <%= nav_link 'Organisations', organisations_path %>
+    <% end %>
   <% end %>
 <% end %>
 
