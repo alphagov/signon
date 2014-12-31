@@ -15,7 +15,8 @@ class UserPolicy < BasePolicy
     when 'admin'
       !record.superadmin?
     when 'organisation_admin'
-      record.normal? && current_user.organisation.subtree.pluck(:id).include?(record.organisation_id)
+      current_user.id == record.id ||
+        (record.normal? && current_user.organisation.subtree.pluck(:id).include?(record.organisation_id))
     when 'normal'
       current_user.id == record.id
     end
