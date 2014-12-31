@@ -2,10 +2,15 @@ class ApiUsersController < ApplicationController
   include UserPermissionsControllerMethods
 
   before_filter :authenticate_user!
-  before_filter :load_api_user, only: [:edit, :update]
+  before_filter :load_and_authorize_api_user, only: [:edit, :update]
   helper_method :applications_and_permissions
 
   respond_to :html
+
+  def index
+    authorize ApiUser
+    @api_users = ApiUser.includes(permissions: :application)
+  end
 
   def new
     authorize ApiUser
@@ -28,14 +33,7 @@ class ApiUsersController < ApplicationController
     end
   end
 
-  def index
-    authorize ApiUser
-    @api_users = ApiUser.includes(permissions: :application)
-  end
-
   def update
-    authorize @api_user
-
     @api_user.skip_reconfirmation!
     if @api_user.update_attributes(translate_faux_signin_permission(params[:api_user]), as: current_user.role.to_sym)
       @api_user.permissions.reload
@@ -49,7 +47,8 @@ class ApiUsersController < ApplicationController
 
 private
 
-  def load_api_user
+  def load_and_authorize_api_user
     @api_user = ApiUser.find(params[:id])
+    authorize @api_user
   end
 end

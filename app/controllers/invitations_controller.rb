@@ -1,7 +1,10 @@
 # https://raw.github.com/scambra/devise_invitable/master/app/controllers/devise/invitations_controller.rb
 class InvitationsController < Devise::InvitationsController
-  include UserPermissionsControllerMethods
   before_filter :authenticate_user!
+  before_filter :authorize_user, except: [:edit, :update]
+  after_filter :verify_authorized, except: [:edit, :update]
+
+  include UserPermissionsControllerMethods
   helper_method :applications_and_permissions
 
   rescue_from Net::SMTPFatalError do |exception|
@@ -14,7 +17,6 @@ class InvitationsController < Devise::InvitationsController
   end
 
   def new
-    authorize User
     super
   end
 
@@ -44,8 +46,12 @@ class InvitationsController < Devise::InvitationsController
 
   private
 
-    def after_invite_path_for(resource)
-      users_path
-    end
+  def authorize_user
+    authorize self
+  end
+
+  def after_invite_path_for(resource)
+    users_path
+  end
 
 end

@@ -1,10 +1,8 @@
 class SuspensionsController < ApplicationController
-  before_filter :authenticate_user!, :load_user
+  before_filter :authenticate_user!, :load_and_authorize_user
   respond_to :html
 
   def update
-    authorize @user, :suspension?
-
     if params[:user][:suspended] == "1"
       succeeded = @user.suspend(params[:user][:reason_for_suspension])
       action = EventLog::ACCOUNT_SUSPENDED
@@ -29,8 +27,9 @@ class SuspensionsController < ApplicationController
 
   private
 
-  def load_user
+  def load_and_authorize_user
     @user = User.find(params[:id])
+    authorize @user, :suspension?
   end
 
 end

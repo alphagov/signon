@@ -1,5 +1,9 @@
 class OrganisationPolicy < BasePolicy
 
+  def index?
+    current_user.superadmin? || current_user.admin? || current_user.organisation_admin?
+  end
+
   def can_assign?
     current_user.organisation.subtree.pluck(:id).include?(record.id)
   end

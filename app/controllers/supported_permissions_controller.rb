@@ -1,6 +1,6 @@
 class SupportedPermissionsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :load_application
+  before_filter :load_and_authorize_application
   respond_to :html
 
   def new
@@ -33,8 +33,9 @@ class SupportedPermissionsController < ApplicationController
 
 private
 
-  def load_application
+  def load_and_authorize_application
     @application = Doorkeeper::Application.find(params[:application_id])
+    authorize @application, :manage_supported_permissions?
   end
 
   def supported_permission_parameters

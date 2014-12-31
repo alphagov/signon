@@ -2,12 +2,13 @@ class UsersController < ApplicationController
   include UserPermissionsControllerMethods
 
   before_filter :authenticate_user!, :except => :show
-  before_filter :load_user, except: [:index, :show]
+  before_filter :load_and_authorize_user, except: [:index, :show]
   helper_method :applications_and_permissions, :any_filter?
   respond_to :html
 
   doorkeeper_for :show
   before_filter :validate_token_matches_client_id, :only => :show
+  skip_after_filter :verify_authorized, only: :show
 
   def show
     relevant_permission.synced! if relevant_permission
@@ -25,10 +26,6 @@ class UsersController < ApplicationController
     @users = policy_scope(User)
     filter_users if any_filter?
     paginate_users
-  end
-
-  def edit
-    authorize @user
   end
 
   def update
@@ -113,8 +110,9 @@ class UsersController < ApplicationController
 
   private
 
-  def load_user
+  def load_and_authorize_user
     @user = current_user.normal? ? current_user : User.find(params[:id])
+    authorize @user
   end
 
   def filter_users

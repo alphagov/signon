@@ -8,10 +8,13 @@ class BatchInvitationsController < ApplicationController
   helper_method :recent_batch_invitations
 
   def new
+    authorize BatchInvitation
     @batch_invitation = BatchInvitation.new
   end
 
   def create
+    authorize BatchInvitation
+
     @batch_invitation = BatchInvitation.new(user: current_user,
       organisation_id: params[:batch_invitation][:organisation_id],
       applications_and_permissions: translate_faux_signin_permission(params[:user])[:permissions_attributes])
@@ -49,6 +52,7 @@ class BatchInvitationsController < ApplicationController
   end
 
   def show
+    authorize BatchInvitation
     @batch_invitation = BatchInvitation.find(params[:id])
   end
 

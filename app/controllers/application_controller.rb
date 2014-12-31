@@ -2,6 +2,8 @@ class ApplicationController < ActionController::Base
   include Pundit
   protect_from_forgery
 
+  after_filter :verify_authorized, unless: :devise_controller?
+
   before_filter do
     headers['X-Frame-Options'] = 'SAMEORIGIN'
   end

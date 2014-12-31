@@ -4,6 +4,7 @@ class OrganisationsController < ApplicationController
   respond_to :html
 
   def index
-    @organisations = Organisation.order(:name)
+    authorize Organisation
+    @organisations = policy_scope(Organisation)
   end
 end

@@ -1,10 +1,11 @@
 class ApplicationsController < ApplicationController
   before_filter :authenticate_user!
-  before_filter :load_application, except: :index
+  before_filter :load_and_authorize_application, except: :index
 
   respond_to :html
 
   def index
+    authorize Doorkeeper::Application
     @applications = Doorkeeper::Application.all
   end
 
@@ -18,7 +19,8 @@ class ApplicationsController < ApplicationController
 
   private
 
-  def load_application
+  def load_and_authorize_application
     @application = Doorkeeper::Application.find(params[:id])
+    authorize @application
   end
 end
