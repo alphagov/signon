@@ -5,7 +5,10 @@ class OrganisationPolicy < BasePolicy
   end
 
   def can_assign?
-    current_user.organisation.subtree.pluck(:id).include?(record.id)
+    return true if current_user.superadmin? || current_user.admin?
+    return current_user.organisation.subtree.pluck(:id).include?(record.id) if current_user.organisation_admin?
+
+    return false
   end
 
   class Scope < Scope
