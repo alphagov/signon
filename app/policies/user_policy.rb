@@ -1,10 +1,8 @@
 class UserPolicy < BasePolicy
 
-  def new?
+  def index?
     current_user.superadmin? || current_user.admin? || current_user.organisation_admin?
   end
-  alias_method :create?, :new?
-  alias_method :index?, :new?
 
   def edit?
     return current_user.superadmin? if record.api_user?
@@ -24,9 +22,9 @@ class UserPolicy < BasePolicy
   alias_method :update?, :edit?
   alias_method :unlock?, :edit?
   alias_method :suspension?, :edit?
+  alias_method :update_passphrase?, :edit?
   alias_method :cancel_email_change?, :edit?
   alias_method :resend_email_change?, :edit?
-  alias_method :update_passphrase?, :edit?
 
   def event_logs?
     current_user.normal? ? false : edit?
