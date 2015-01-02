@@ -8,16 +8,15 @@ class BatchInvitationsController < ApplicationController
   helper_method :recent_batch_invitations
 
   def new
-    authorize BatchInvitation
     @batch_invitation = BatchInvitation.new
+    authorize :user, :new?
   end
 
   def create
-    authorize BatchInvitation
-
     @batch_invitation = BatchInvitation.new(user: current_user,
       organisation_id: params[:batch_invitation][:organisation_id],
       applications_and_permissions: translate_faux_signin_permission(params[:user])[:permissions_attributes])
+    authorize :user, :invite_in_batch?
 
     unless file_uploaded?
       flash[:alert] = "You must upload a file"
@@ -52,23 +51,24 @@ class BatchInvitationsController < ApplicationController
   end
 
   def show
-    authorize BatchInvitation
     @batch_invitation = BatchInvitation.find(params[:id])
+    authorize :user, :invite_in_batch?
   end
 
   private
-    def recent_batch_invitations
-      @_recent_batch_invitations ||= BatchInvitation.where("created_at > '#{3.days.ago}'").order("created_at desc")
-    end
 
-    def file_uploaded?
-      if params[:batch_invitation].nil? || params[:batch_invitation][:user_names_and_emails].nil?
-        false
-      elsif ! params[:batch_invitation][:user_names_and_emails].respond_to?(:read)
-        # IO objects should respond to `read`
-        false
-      else
-        true
-      end
+  def recent_batch_invitations
+    @_recent_batch_invitations ||= BatchInvitation.where("created_at > '#{3.days.ago}'").order("created_at desc")
+  end
+
+  def file_uploaded?
+    if params[:batch_invitation].nil? || params[:batch_invitation][:user_names_and_emails].nil?
+      false
+    elsif ! params[:batch_invitation][:user_names_and_emails].respond_to?(:read)
+      # IO objects should respond to `read`
+      false
+    else
+      true
     end
+  end
 end
