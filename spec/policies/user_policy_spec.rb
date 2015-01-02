@@ -3,25 +3,27 @@ require 'rails_helper'
 describe UserPolicy do
   subject { described_class }
 
-  permissions :index? do
-    it "is allowed for superadmins" do
-      expect(subject).to permit(build(:superadmin_user), User)
-    end
+  [:new?, :index?].each do |permission_name|
+    permissions permission_name do
+      it "is allowed for superadmins" do
+        expect(subject).to permit(build(:superadmin_user), User)
+      end
 
-    it "is allowed for admins" do
-      expect(subject).to permit(build(:admin_user), User)
-    end
+      it "is allowed for admins" do
+        expect(subject).to permit(build(:admin_user), User)
+      end
 
-    it "is allowed for organisation admins" do
-      expect(subject).to permit(build(:organisation_admin), User)
-    end
+      it "is allowed for organisation admins" do
+        expect(subject).to permit(build(:organisation_admin), User)
+      end
 
-    it "is forbidden for normal user" do
-      expect(subject).not_to permit(build(:user), User)
+      it "is forbidden for normal user" do
+        expect(subject).not_to permit(build(:user), User)
+      end
     end
   end
 
-  user_management_actions = [:edit?, :update?, :unlock?, :suspension?, :update_passphrase?,
+  user_management_actions = [:edit?, :create?, :update?, :unlock?, :suspension?, :update_passphrase?,
     :cancel_email_change?, :resend_email_change?, :event_logs?]
 
   user_management_actions.each do |permission_name|

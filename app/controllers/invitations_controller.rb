@@ -1,7 +1,6 @@
 # https://raw.github.com/scambra/devise_invitable/master/app/controllers/devise/invitations_controller.rb
 class InvitationsController < Devise::InvitationsController
   before_filter :authenticate_user!
-  before_filter :authorize_user, except: [:edit, :update]
   after_filter :verify_authorized, except: [:edit, :update]
 
   include UserPermissionsControllerMethods
@@ -17,6 +16,7 @@ class InvitationsController < Devise::InvitationsController
   end
 
   def new
+    authorize User
     super
   end
 
@@ -27,7 +27,13 @@ class InvitationsController < Devise::InvitationsController
       flash[:alert] = "User already invited. If you want to, you can click 'Resend signup email'."
       respond_with resource, :location => after_invite_path_for(resource)
     else
-      self.resource = resource_class.invite!(translate_faux_signin_permission(params[resource_name]), current_inviter)
+      # workaround for invitatable not providing a build_invitation which could be authorised before saving
+      resource_params = translate_faux_signin_permission(params[resource_name])
+      user = User.new(resource_params)
+      user.organisation_id = resource_params[:organisation_id]
+      authorize user
+
+      self.resource = resource_class.invite!(resource_params, current_inviter)
       if resource.errors.empty?
         set_flash_message :notice, :send_instructions, :email => self.resource.email
         respond_with resource, :location => after_invite_path_for(resource)
@@ -39,16 +45,14 @@ class InvitationsController < Devise::InvitationsController
 
   def resend
     user = User.find(params[:id])
+    authorize user
+
     user.invite!
     flash[:notice] = "Resent account signup email to #{user.email}"
     redirect_to users_path
   end
 
   private
-
-  def authorize_user
-    authorize self
-  end
 
   def after_invite_path_for(resource)
     users_path

@@ -1,8 +1,10 @@
 class UserPolicy < BasePolicy
 
-  def index?
+  def new?
+    # invitations#new
     current_user.superadmin? || current_user.admin? || current_user.organisation_admin?
   end
+  alias_method :index?, :new?
 
   def edit?
     return current_user.superadmin? if record.api_user?
@@ -14,11 +16,12 @@ class UserPolicy < BasePolicy
       !record.superadmin?
     when 'organisation_admin'
       current_user.id == record.id ||
-        (record.normal? && current_user.organisation.subtree.pluck(:id).include?(record.organisation_id))
+        (record.normal? && current_user.organisation.subtree.pluck(:id).include?(record.organisation_id.to_i))
     when 'normal'
       current_user.id == record.id
     end
   end
+  alias_method :create?, :edit? # invitations#create
   alias_method :update?, :edit?
   alias_method :unlock?, :edit?
   alias_method :suspension?, :edit?

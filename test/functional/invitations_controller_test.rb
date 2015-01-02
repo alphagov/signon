@@ -78,7 +78,8 @@ class InvitationsControllerTest < ActionController::TestCase
 
         post :create, user: { name: "John Smith", email: "jsmith@digital.cabinet-office.gov.uk", organisation_id: outside_organisation.id }
 
-        assert_redirected_to users_path
+        assert_redirected_to root_path
+        assert_equal "You do not have permission to perform this action.", flash[:alert]
       end
 
       should "assign only organisations under them" do
@@ -88,6 +89,8 @@ class InvitationsControllerTest < ActionController::TestCase
 
         post :create, user: { name: "John Smith", email: "jsmith@digital.cabinet-office.gov.uk", organisation_id: sub_organisation.id }
 
+        assert_redirected_to users_path
+        assert_equal "An invitation email has been sent to jsmith@digital.cabinet-office.gov.uk.", flash[:notice]
         assert_equal sub_organisation.id, User.last.organisation_id
       end
     end
