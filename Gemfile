@@ -53,6 +53,7 @@ end
 gem 'logstasher', '0.4.8'
 
 group :test do
+  gem 'rspec-rails', '~> 3.0.0'
   gem 'capybara', '2.2.1'
   gem 'poltergeist', '1.5.0'
   gem 'database_cleaner', '0.7.2'
