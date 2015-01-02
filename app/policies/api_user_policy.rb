@@ -3,25 +3,10 @@ class ApiUserPolicy < BasePolicy
   def new?
     current_user.superadmin?
   end
-
-  def create?
-    new?
-  end
-
-  def index?
-    current_user.superadmin?
-  end
-
-  def edit?
-    current_user.superadmin?
-  end
-
-  def update?
-    edit?
-  end
-
-  def revoke?
-    edit?
-  end
+  alias_method :create?, :new?
+  alias_method :index?, :new?
+  alias_method :edit?, :new?
+  alias_method :update?, :new?
+  alias_method :revoke?, :new?
 
 end
