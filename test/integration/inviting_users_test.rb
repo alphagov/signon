@@ -1,5 +1,5 @@
 require 'test_helper'
- 
+
 class InvitingUsersTest < ActionDispatch::IntegrationTest
   include EmailHelpers
 
@@ -57,6 +57,24 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
       assert_not_nil User.where(email: "fred_admin@example.com", role: "admin").first
       assert_equal "fred_admin@example.com", last_email.to[0]
+      assert_match 'Please confirm your account', last_email.subject
+    end
+  end
+
+  context "a normal user being invited by an admin" do
+    should "create and notify the user" do
+      admin = create(:admin_user)
+      visit root_path
+      signin(admin)
+
+      visit new_user_invitation_path
+      assert has_no_select?("Role")
+      fill_in "Name", with: "Fred Bloggs"
+      fill_in "Email", with: "normal_fred@example.com"
+      click_button "Create user and send email"
+
+      assert_not_nil User.where(email: "normal_fred@example.com", role: "normal").first
+      assert_equal "normal_fred@example.com", last_email.to[0]
       assert_match 'Please confirm your account', last_email.subject
     end
   end
