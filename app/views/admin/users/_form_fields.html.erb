@@ -30,7 +30,7 @@
 <% if can? :assign_role, User %>
   <p class="form-group">
     <%= f.label :role %><br />
-    <%= f.select :role, options_for_select(filtered_user_roles.map(&:humanize).zip(User.roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
+    <%= f.select :role, options_for_select(filtered_user_roles.map(&:humanize).zip(filtered_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
     <span class="help-block">
       <strong>Admins</strong> can create and edit normal users.<br />
       <strong>Superadmins</strong> can create and edit all user types and edit applications.
