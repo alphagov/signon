@@ -41,6 +41,14 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_select "td.role", count: 3
     end
 
+    should "show user organisation" do
+      user = create(:user_in_organisation)
+
+      get :index
+
+      assert_select "td.organisation", user.organisation.name
+    end
+
     should "let you paginate by the first letter of the name" do
       create(:user, name: "alf", email: "a@email.com")
       create(:user, name: "zed", email: "z@email.com")
