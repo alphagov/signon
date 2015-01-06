@@ -90,6 +90,15 @@ class Admin::UsersControllerTest < ActionController::TestCase
         assert_select "tbody tr", count: 1
         assert_select "td.email", /admin@gov.uk/
       end
+
+      should "scope filtered list of users by organisation" do
+        user = create(:organisation_admin, email: "orgmember@gov.uk")
+
+        get :index, organisation: user.organisation.id
+
+        assert_select "tbody tr", count: 1
+        assert_select "td.email", /orgmember@gov.uk/
+      end
     end
 
     should "scope list of users by status" do
@@ -109,6 +118,15 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
       assert_select "tbody tr", count: 1
       assert_select "td.email", /suspended_user@gov.uk/
+    end
+
+    should "scope list of users by organisation" do
+      user = create(:user_in_organisation, email: "orgmember@gov.uk")
+
+      get :index, organisation: user.organisation.id
+
+      assert_select "tbody tr", count: 1
+      assert_select "td.email", /orgmember@gov.uk/
     end
 
     context "as superadmin" do

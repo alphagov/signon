@@ -48,6 +48,7 @@ class User < ActiveRecord::Base
   scope :web_users, where(api_user: false)
   scope :not_suspended, where(suspended_at: nil)
   scope :with_role, lambda { |role_name| where(role: role_name) }
+  scope :with_organisation, lambda { |org_id| where(organisation_id: org_id) }
   scope :filter, lambda { |filter_param| where("users.email like ? OR users.name like ?", "%#{filter_param.strip}%", "%#{filter_param.strip}%") }
   scope :last_signed_in_on, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) = date(?)', date) }
   scope :last_signed_in_before, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) < date(?)', date) }

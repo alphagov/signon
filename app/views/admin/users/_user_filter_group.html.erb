@@ -1,6 +1,6 @@
 <%
   filter_title = filter_type.to_s.humanize.capitalize
-  filter_value = params[filter_type] ? params[filter_type].humanize.capitalize : nil
+  filter_value = filter_value(filter_type)
 %>
 <li class="add-margin-right <%= "filter-by-#{filter_type.to_s}-menu"%> <% if params[filter_type] %>selected-and-available<% end %>">
   <% if params[filter_type] %>

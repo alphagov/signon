@@ -14,6 +14,7 @@
         </li>
         <%= render partial: 'user_filter_group', locals: {filter_type: :role} %>
         <%= render partial: 'user_filter_group', locals: {filter_type: :status} %>
+        <%= render partial: 'user_filter_group', locals: {filter_type: :organisation} %>
         <li class="filter-by-name">
           <%= form_tag nil, method: "get", class: 'add-left-margin form-inline' do %>
           <% if params[:role] %>
