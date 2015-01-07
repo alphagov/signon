@@ -10,7 +10,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
     end
 
     should "come from noreply-signon@" do
-      assert_equal ["noreply-signon@digital.cabinet-office.gov.uk"], @email.from
+      assert_equal '"GOV.UK Signon" <noreply-signon@digital.cabinet-office.gov.uk>', @email[:from].to_s
     end
 
     should "send to noreply-signon@" do
@@ -30,6 +30,21 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
     should "link to the batch" do
       url = "/batch_invitations/#{@batch_invitation.id}"
       assert_match(/#{Regexp.escape(url)}/, @email.encoded)
+    end
+  end
+
+  context "make_noise when instance_name has been set" do
+    setup do
+      Rails.application.config.stubs(:instance_name).returns("Test Fools")
+
+      user = create(:user, name: "Bob Loblaw")
+      @batch_invitation = create(:batch_invitation, user: user)
+      create(:batch_invitation_user, batch_invitation: @batch_invitation)
+      @email = NoisyBatchInvitation.make_noise(@batch_invitation).deliver
+    end
+
+    should "from address should include the instance name" do
+      assert_equal '"GOV.UK Signon Test Fools" <noreply-signon-test-fools@digital.cabinet-office.gov.uk>', @email[:from].to_s
     end
   end
 end
