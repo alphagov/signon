@@ -28,6 +28,11 @@ class UserMailer < ActionMailer::Base
     mail(to: to_address, subject: 'Your email has been updated')
   end
 
+  def email_changed_notification(user)
+    @user = user
+    mail(to: @user.email, subject: 'Your email is being changed')
+  end
+
 private
   def suspension_time
     if @days == 1

@@ -23,6 +23,7 @@ class UsersController < ApplicationController
       render :edit
     elsif current_user.update_attributes(email: new_email)
       EventLog.record_email_change(current_user, current_email, new_email)
+      UserMailer.email_changed_notification(current_user).deliver
       redirect_to root_path, notice: "An email has been sent to #{new_email}. Follow the link in the email to update your address."
     else
       flash[:alert] = "Failed to change email."
