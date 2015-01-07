@@ -1,0 +1,12 @@
+<p>Hello <%= @user.name %>,</p>
+
+<p>A Signon administrator has changed your <%= link_to 'GOV.UK', 'https://www.gov.uk' %> Signon <%= account_name %> email from <%= @email_was %> to <%= @user.email %>.</p>
+
+<p>You will now need to <%= link_to 'sign in', new_user_session_url(protocol: 'https') %> using your new email <%= @user.email %>.</p>
+
+<p>If your email address shouldn't have changed you should contact a managing GOV.UK editor in your organisation or your parent organisation.</p>
+
+<p>All the best,</p>
+
+<p><%= link_to 'GOV.UK', 'https://www.gov.uk' %> team</p>
+<p>Government Digital Service</p>

@@ -273,26 +273,44 @@ class Admin::UsersControllerTest < ActionController::TestCase
     end
 
     context "changing an email" do
-      should "stage the change, and send a confirmation email" do
-        another_user = create(:user, email: "old@email.com")
-        put :update, id: another_user.id, user: { email: "new@email.com" }
+      should "not re-confirm email" do
+        normal_user = create(:user, email: "old@email.com")
+        put :update, id: normal_user.id, user: { email: "new@email.com" }
 
-        another_user.reload
-        assert_equal "new@email.com", another_user.reload.unconfirmed_email
-        assert_equal "old@email.com", another_user.reload.email
-        assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+        assert_nil normal_user.reload.unconfirmed_email
+        assert_equal "new@email.com", normal_user.email
+      end
+
+      should "log an event" do
+        normal_user = create(:user, email: "old@email.com")
+        put :update, id: normal_user.id, user: { email: "new@email.com" }
+
+        assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_INITIATIED, uid: normal_user.uid, initiator_id: @user.id).count
+      end
+
+      should "send email change notifications to old and new email address" do
+        Sidekiq::Testing.inline! do
+          normal_user = create(:user, email: "old@email.com")
+          put :update, id: normal_user.id, user: { email: "new@email.com" }
+
+          email_change_notifications = ActionMailer::Base.deliveries[-2..-1]
+          assert_equal ['Your email has been updated'], email_change_notifications.map(&:subject).uniq
+          assert_equal %w(old@email.com new@email.com), email_change_notifications.map {|mail| mail.to.first }
+        end
       end
 
       context "an invited-but-not-yet-accepted user" do
-        should "change the email, and send a new invitation email" do
-          another_user = User.invite!(name: "Ali", email: "old@email.com")
-          put :update, id: another_user.id, user: { email: "new@email.com" }
+        should "change the email, and send an invitation email" do
+          Sidekiq::Testing.inline! do
+            another_user = User.invite!(name: "Ali", email: "old@email.com")
+            put :update, id: another_user.id, user: { email: "new@email.com" }
 
-          another_user.reload
-          assert_equal "new@email.com", another_user.reload.email
-          signup_email = ActionMailer::Base.deliveries.last
-          assert_equal "Please confirm your account", signup_email.subject
-          assert_equal "new@email.com", signup_email.to[0]
+            another_user.reload
+            assert_equal "new@email.com", another_user.reload.email
+            invitation_email = ActionMailer::Base.deliveries[-3]
+            assert_equal "Please confirm your account", invitation_email.subject
+            assert_equal "new@email.com", invitation_email.to.first
+          end
         end
       end
     end

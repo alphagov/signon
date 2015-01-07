@@ -11,6 +11,8 @@ class EventLog < ActiveRecord::Base
   UNSUCCESSFUL_LOGIN = "Unsuccessful login"
   SUSPENDED_ACCOUNT_AUTHENTICATED_LOGIN = "Unsuccessful login attempt to a suspended account, with the correct username and password"
   UNSUCCESSFUL_PASSPHRASE_CHANGE = "Unsuccessful passphrase change"
+  EMAIL_CHANGE_INITIATIED = "Email change initiated"
+  EMAIL_CHANGE_CONFIRMED = "Email change confirmed"
 
   # API users
   API_USER_CREATED = "Account created"
@@ -23,7 +25,8 @@ class EventLog < ActiveRecord::Base
                                 MANUAL_ACCOUNT_UNLOCK,
                                 API_USER_CREATED,
                                 ACCESS_TOKEN_GENERATED,
-                                ACCESS_TOKEN_REVOKED]
+                                ACCESS_TOKEN_REVOKED,
+                                EMAIL_CHANGE_INITIATIED]
 
   EVENTS_REQUIRING_APPLICATION_ID = [ACCESS_TOKEN_REGENERATED, ACCESS_TOKEN_GENERATED, ACCESS_TOKEN_REVOKED]
 

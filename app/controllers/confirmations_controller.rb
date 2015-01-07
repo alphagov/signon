@@ -18,6 +18,7 @@ class ConfirmationsController < Devise::ConfirmationsController
       else
         self.resource = resource_class.confirm_by_token(params[:confirmation_token])
         if resource.errors.empty?
+          EventLog.record_event(resource, EventLog::EMAIL_CHANGE_CONFIRMED)
           set_flash_message(:notice, :confirmed) if is_navigational_format?
           sign_in(resource_name, resource)
           respond_with_navigational(resource){ redirect_to after_confirmation_path_for(resource_name, resource) }
@@ -38,6 +39,7 @@ class ConfirmationsController < Devise::ConfirmationsController
     if self.resource.valid_password?(params[:user][:password])
       self.resource = resource_class.confirm_by_token(params[:confirmation_token])
       if resource.errors.empty?
+        EventLog.record_event(resource, EventLog::EMAIL_CHANGE_CONFIRMED)
         set_flash_message(:notice, :confirmed) if is_navigational_format?
         sign_in(resource_name, resource)
         respond_with_navigational(resource){ redirect_to after_confirmation_path_for(resource_name, resource) }
