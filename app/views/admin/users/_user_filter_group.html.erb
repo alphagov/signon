@@ -10,7 +10,7 @@
           <span class="glyphicon glyphicon-remove"></span><span class="rm">Remove</span>
     <% end %>
   <% end %>
-  <%= link_to current_path_with_filter(filter_type, nil),
+  <%= link_to current_path_with_filter(filter_type, ''),
         class: "filter-option #{params[filter_type] ? 'filter-selected' : ''}",
         data: { toggle: 'dropdown' },
         role: 'button' do %>
