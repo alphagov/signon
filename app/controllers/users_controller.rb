@@ -17,12 +17,13 @@ class UsersController < ApplicationController
   end
 
   def update
-    if current_user.email == params[:user][:email].strip
+    current_email, new_email = current_user.email, params[:user][:email]
+    if current_email == new_email.strip
       flash[:alert] = "Nothing to update."
       render :edit
-    elsif current_user.update_attributes(email: params[:user][:email])
-      EventLog.record_event(current_user, EventLog::EMAIL_CHANGE_INITIATIED, initiator: current_user)
-      redirect_to root_path, notice: "An email has been sent to #{params[:user][:email]}. Follow the link in the email to update your address."
+    elsif current_user.update_attributes(email: new_email)
+      EventLog.record_email_change(current_user, current_email, new_email)
+      redirect_to root_path, notice: "An email has been sent to #{new_email}. Follow the link in the email to update your address."
     else
       flash[:alert] = "Failed to change email."
       render :edit

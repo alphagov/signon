@@ -25,6 +25,24 @@ class EventLogTest < ActiveSupport::TestCase
     assert EventLog.record_event(create(:user), :event).valid?
   end
 
+  context ".record_email_change" do
+    should "record email change events with a trailing message" do
+      user = create(:user, email: 'new@example.com')
+      event_log = EventLog.record_email_change(user, 'old@example.com', user.email)
+
+      assert_equal user.uid, event_log.uid
+      assert_equal user.id, event_log.initiator_id
+      assert_equal 'from old@example.com to new@example.com', event_log.trailing_message
+    end
+
+    should "record the initiator when initiator is other than the user" do
+      user, admin = create(:user, email: 'new@example.com'), create(:admin_user)
+      event_log = EventLog.record_email_change(user, 'old@example.com', user.email, admin)
+
+      assert_equal admin.id, event_log.initiator_id
+    end
+  end
+
   test "records the initiator of the event passed as an option" do
     initiator = create(:admin_user)
     EventLog.record_event(create(:user), :event, initiator: initiator)
