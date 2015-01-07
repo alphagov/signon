@@ -25,18 +25,25 @@ class EventLogTest < ActiveSupport::TestCase
     assert EventLog.record_event(create(:user), :event).valid?
   end
 
-  test "optionally records the initiator of the event" do
+  test "records the initiator of the event passed as an option" do
     initiator = create(:admin_user)
-    EventLog.record_event(create(:user), :event, initiator)
+    EventLog.record_event(create(:user), :event, initiator: initiator)
 
     assert_equal initiator, EventLog.last.initiator
   end
 
-  test "optionally records the application associated with the event" do
+  test "records the application associated with the event passed as an option" do
     application = create(:application)
-    EventLog.record_event(create(:user), :event, nil, application)
+    EventLog.record_event(create(:user), :event, application: application)
 
     assert_equal application, EventLog.last.application
+  end
+
+  test "skips invalid options passed" do
+    user = create(:user)
+    EventLog.record_event(user, :event, uid: build(:user).uid)
+
+    assert_equal user.uid, EventLog.last.uid
   end
 
   test "can use a helper to fetch all logs for a user" do

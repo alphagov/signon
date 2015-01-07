@@ -29,6 +29,7 @@ class EventLog < ActiveRecord::Base
                                 EMAIL_CHANGE_INITIATIED]
 
   EVENTS_REQUIRING_APPLICATION_ID = [ACCESS_TOKEN_REGENERATED, ACCESS_TOKEN_GENERATED, ACCESS_TOKEN_REVOKED]
+  VALID_OPTIONS = [:initiator, :application]
 
   validates :uid, presence: true
   validates :event, presence: true
@@ -38,11 +39,8 @@ class EventLog < ActiveRecord::Base
   belongs_to :initiator, class_name: "User"
   belongs_to :application, class_name: "Doorkeeper::Application"
 
-  def self.record_event(user, event, initiator = nil, application = nil)
-    attributes = { uid: user.uid, event: event }
-    attributes.merge!(initiator_id: initiator.id) if initiator
-    attributes.merge!(application_id: application.id) if application
-
+  def self.record_event(user, event, options={})
+    attributes = { uid: user.uid, event: event }.merge!(options.slice(*VALID_OPTIONS))
     EventLog.create(attributes)
   end
 

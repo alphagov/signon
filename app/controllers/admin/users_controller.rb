@@ -23,7 +23,7 @@ class Admin::UsersController < ApplicationController
       PermissionUpdater.perform_on(@user)
 
       if email_change = @user.previous_changes[:email]
-        EventLog.record_event(@user, EventLog::EMAIL_CHANGE_INITIATIED, current_user)
+        EventLog.record_event(@user, EventLog::EMAIL_CHANGE_INITIATIED, initiator: current_user)
         @user.invite! if @user.invited_but_not_yet_accepted?
         email_change.each do |to_address|
           UserMailer.delay.email_changed_by_admin_notification(@user, email_change.first, to_address)
@@ -37,7 +37,7 @@ class Admin::UsersController < ApplicationController
   end
 
   def unlock
-    EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK, current_user)
+    EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK, initiator: current_user)
     @user.unlock_access!
     flash[:notice] = "Unlocked #{@user.email}"
     redirect_to :back
