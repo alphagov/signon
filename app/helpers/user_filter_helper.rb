@@ -17,7 +17,7 @@ module UserFilterHelper
     when :status
       items = User::USER_STATUSES
     when :organisation
-      items = Organisation.order(:name).joins(:users).uniq.map {|org| [org.id, org.name]}
+      items = Organisation.order(:name).joins(:users).uniq.map {|org| [org.id, org.name_with_abbreviation]}
     end
 
     list_items = items.map do |item|
@@ -48,7 +48,8 @@ module UserFilterHelper
     value = params[filter_type]
     return nil if value.blank?
     if filter_type == :organisation
-      Organisation.find(value).name
+      org = Organisation.find(value)
+      org.abbreviation.presence || org.name
     else
       value.humanize.capitalize
     end
