@@ -14,7 +14,11 @@
         </li>
         <%= render partial: 'user_filter_group', locals: {filter_type: :role} %>
         <%= render partial: 'user_filter_group', locals: {filter_type: :status} %>
-        <%= render partial: 'user_filter_group', locals: {filter_type: :organisation} %>
+        <% if is_org_admin? %>
+          <li class="nav-pill-text text-muted"><%= current_user.organisation.name %></li>
+        <% else %>
+          <%= render partial: 'user_filter_group', locals: {filter_type: :organisation} %>
+        <% end %>
         <li class="filter-by-name">
           <%= form_tag nil, method: "get", class: 'add-left-margin form-inline' do %>
           <% if params[:role] %>
@@ -22,6 +26,9 @@
           <% end %>
           <% if params[:status] %>
           <%= hidden_field_tag :status, params[:status] %>
+          <% end %>
+          <% if params[:organisation] %>
+          <%= hidden_field_tag :organisation, params[:organisation] %>
           <% end %>
           <%= label_tag 'filter', 'Name or email', class: 'add-right-margin' %>
           <%= text_field_tag "filter", params[:filter], class: 'form-control filter-by-name-field' %>

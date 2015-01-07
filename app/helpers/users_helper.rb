@@ -6,7 +6,7 @@ module UsersHelper
   end
 
   def organisation_select_options
-    { include_blank: current_user.role == 'organisation_admin' ? false : 'None' }
+    { include_blank: is_org_admin? ? false : 'None' }
   end
 
   def user_email_tokens(user = current_user)
@@ -21,4 +21,7 @@ module UsersHelper
     user.api_user? ? edit_superadmin_api_user_path(user) : edit_admin_user_path(user)
   end
 
+  def is_org_admin?
+    current_user.role == 'organisation_admin'
+  end
 end
