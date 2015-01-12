@@ -285,7 +285,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
         normal_user = create(:user, email: "old@email.com")
         put :update, id: normal_user.id, user: { email: "new@email.com" }
 
-        assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_INITIATIED, uid: normal_user.uid, initiator_id: @user.id).count
+        assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_INITIATED, uid: normal_user.uid, initiator_id: @user.id).count
       end
 
       should "send email change notifications to old and new email address" do

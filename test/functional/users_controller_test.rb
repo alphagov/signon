@@ -86,7 +86,7 @@ class UsersControllerTest < ActionController::TestCase
 
       should "log an event" do
         put :update, user: { email: "new@email.com" }
-        assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_INITIATIED, uid: @user.uid, initiator_id: @user.id).count
+        assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_INITIATED, uid: @user.uid, initiator_id: @user.id).count
       end
     end
   end
