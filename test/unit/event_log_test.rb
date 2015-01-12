@@ -26,6 +26,20 @@ class EventLogTest < ActiveSupport::TestCase
   end
 
   context ".record_email_change" do
+    should "record event EMAIL_CHANGED when initiator is an admin" do
+      user = create(:user, email: 'new@example.com')
+      event_log = EventLog.record_email_change(user, 'old@example.com', user.email, create(:admin_user))
+
+      assert_equal EventLog::EMAIL_CHANGED, event_log.event
+    end
+
+    should "record event EMAIL_CHANGE_INITIATED when a user is changing their own email" do
+      user = create(:user, email: 'new@example.com')
+      event_log = EventLog.record_email_change(user, 'old@example.com', user.email)
+
+      assert_equal EventLog::EMAIL_CHANGE_INITIATED, event_log.event
+    end
+
     should "record email change events with a trailing message" do
       user = create(:user, email: 'new@example.com')
       event_log = EventLog.record_email_change(user, 'old@example.com', user.email)

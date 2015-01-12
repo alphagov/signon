@@ -11,7 +11,8 @@ class EventLog < ActiveRecord::Base
   UNSUCCESSFUL_LOGIN = "Unsuccessful login"
   SUSPENDED_ACCOUNT_AUTHENTICATED_LOGIN = "Unsuccessful login attempt to a suspended account, with the correct username and password"
   UNSUCCESSFUL_PASSPHRASE_CHANGE = "Unsuccessful passphrase change"
-  EMAIL_CHANGE_INITIATED = "Email changed"
+  EMAIL_CHANGED = "Email changed"
+  EMAIL_CHANGE_INITIATED = "Email change initiated"
   EMAIL_CHANGE_CONFIRMED = "Email change confirmed"
 
   # API users
@@ -26,7 +27,7 @@ class EventLog < ActiveRecord::Base
                                 API_USER_CREATED,
                                 ACCESS_TOKEN_GENERATED,
                                 ACCESS_TOKEN_REVOKED,
-                                EMAIL_CHANGE_INITIATED]
+                                EMAIL_CHANGED]
 
   EVENTS_REQUIRING_APPLICATION_ID = [ACCESS_TOKEN_REGENERATED, ACCESS_TOKEN_GENERATED, ACCESS_TOKEN_REVOKED]
   VALID_OPTIONS = [:initiator, :application, :trailing_message]
@@ -45,7 +46,8 @@ class EventLog < ActiveRecord::Base
   end
 
   def self.record_email_change(user, email_was, email_is, initiator=user)
-    record_event(user, EMAIL_CHANGE_INITIATED, initiator: initiator, trailing_message: "from #{email_was} to #{email_is}")
+    event = (user == initiator) ? EMAIL_CHANGE_INITIATED : EMAIL_CHANGED
+    record_event(user, event, initiator: initiator, trailing_message: "from #{email_was} to #{email_is}")
   end
 
   def self.for(user)
