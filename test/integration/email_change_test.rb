@@ -23,6 +23,19 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         end
       end
 
+      should "log the event in the user's event log" do
+        Sidekiq::Testing.inline! do
+          user = create(:user, email: 'old@email.com')
+
+          visit new_user_session_path
+          signin(@admin)
+          admin_changes_email_address(user: user, new_email: "new@email.com")
+
+          visit admin_user_event_logs_path(user)
+          assert_response_contains "Email changed by #{@admin.name} from old@email.com to new@email.com"
+        end
+      end
+
       should "show an error and not trigger a notification if the email is blank" do
         user = create(:user)
 
@@ -92,6 +105,23 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
       assert_equal "new@email.com", last_email.to[0]
       assert_equal 'Confirm your email change', last_email.subject
+    end
+
+    should "log email change events in the user's event log" do
+      visit new_user_session_path
+      signin(@user)
+
+      visit edit_user_path(@user)
+      fill_in "Email", with: "new@email.com"
+      click_button "Change email"
+
+      visit user_confirmation_path(confirmation_token: @user.reload.confirmation_token)
+
+      signout
+      signin(create(:admin_user))
+      visit admin_user_event_logs_path(@user)
+      assert_response_contains "Email change initiated by #{@user.name} from original@email.com to new@email.com"
+      assert_response_contains "Email change confirmed"
     end
 
     should "show an error and not send a confirmation if the email is blank" do

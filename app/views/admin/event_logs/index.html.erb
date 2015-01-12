@@ -32,6 +32,7 @@
             <% if log.initiator %>
               by <strong><%= link_to log.initiator.name, admin_users_path(filter: log.initiator.email), title: log.initiator.email %></strong>
             <% end %>
+            <%= log.trailing_message %>
           </td>
         </tr>
       <% end %>

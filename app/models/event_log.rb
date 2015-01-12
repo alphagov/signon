@@ -11,7 +11,8 @@ class EventLog < ActiveRecord::Base
   UNSUCCESSFUL_LOGIN = "Unsuccessful login"
   SUSPENDED_ACCOUNT_AUTHENTICATED_LOGIN = "Unsuccessful login attempt to a suspended account, with the correct username and password"
   UNSUCCESSFUL_PASSPHRASE_CHANGE = "Unsuccessful passphrase change"
-  EMAIL_CHANGE_INITIATIED = "Email change initiated"
+  EMAIL_CHANGED = "Email changed"
+  EMAIL_CHANGE_INITIATED = "Email change initiated"
   EMAIL_CHANGE_CONFIRMED = "Email change confirmed"
 
   # API users
@@ -26,9 +27,10 @@ class EventLog < ActiveRecord::Base
                                 API_USER_CREATED,
                                 ACCESS_TOKEN_GENERATED,
                                 ACCESS_TOKEN_REVOKED,
-                                EMAIL_CHANGE_INITIATIED]
+                                EMAIL_CHANGED]
 
   EVENTS_REQUIRING_APPLICATION_ID = [ACCESS_TOKEN_REGENERATED, ACCESS_TOKEN_GENERATED, ACCESS_TOKEN_REVOKED]
+  VALID_OPTIONS = [:initiator, :application, :trailing_message]
 
   validates :uid, presence: true
   validates :event, presence: true
@@ -38,12 +40,14 @@ class EventLog < ActiveRecord::Base
   belongs_to :initiator, class_name: "User"
   belongs_to :application, class_name: "Doorkeeper::Application"
 
-  def self.record_event(user, event, initiator = nil, application = nil)
-    attributes = { uid: user.uid, event: event }
-    attributes.merge!(initiator_id: initiator.id) if initiator
-    attributes.merge!(application_id: application.id) if application
-
+  def self.record_event(user, event, options={})
+    attributes = { uid: user.uid, event: event }.merge!(options.slice(*VALID_OPTIONS))
     EventLog.create(attributes)
+  end
+
+  def self.record_email_change(user, email_was, email_is, initiator=user)
+    event = (user == initiator) ? EMAIL_CHANGE_INITIATED : EMAIL_CHANGED
+    record_event(user, event, initiator: initiator, trailing_message: "from #{email_was} to #{email_is}")
   end
 
   def self.for(user)

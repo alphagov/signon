@@ -17,7 +17,7 @@ class Admin::SuspensionsController < ApplicationController
     end
 
     if succeeded
-      EventLog.record_event(@user, action, current_user)
+      EventLog.record_event(@user, action, initiator: current_user)
       PermissionUpdater.perform_on(@user)
       ReauthEnforcer.perform_on(@user)
 
