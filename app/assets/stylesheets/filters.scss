@@ -72,3 +72,13 @@ Nav pills
 .nav-compact .nav-pill-text:first-child {
   padding-left: 0;
 }
+
+/* ==========================================================================
+Organisation filter
+========================================================================== */
+
+.filter-by-organisation-menu {
+  abbr {
+    cursor: pointer;
+  }
+}

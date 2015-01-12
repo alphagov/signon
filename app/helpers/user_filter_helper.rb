@@ -49,7 +49,11 @@ module UserFilterHelper
     return nil if value.blank?
     if filter_type == :organisation
       org = Organisation.find(value)
-      org.abbreviation.presence || org.name
+      if org.abbreviation.presence
+        content_tag(:abbr, org.abbreviation, title: org.name)
+      else
+        org.name
+      end
     else
       value.humanize.capitalize
     end
