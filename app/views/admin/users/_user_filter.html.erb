@@ -21,15 +21,9 @@
         <% end %>
         <li class="filter-by-name">
           <%= form_tag nil, method: "get", class: 'add-left-margin form-inline' do %>
-          <% if params[:role] %>
-          <%= hidden_field_tag :role, params[:role] %>
-          <% end %>
-          <% if params[:status] %>
-          <%= hidden_field_tag :status, params[:status] %>
-          <% end %>
-          <% if params[:organisation] %>
-          <%= hidden_field_tag :organisation, params[:organisation] %>
-          <% end %>
+          <%= hidden_field_tag :role, params[:role] if params[:role] %>
+          <%= hidden_field_tag :status, params[:status] if params[:status] %>
+          <%= hidden_field_tag :organisation, params[:organisation] if params[:organisation] %>
           <%= label_tag 'filter', 'Name or email', class: 'add-right-margin' %>
           <%= text_field_tag "filter", params[:filter], class: 'form-control filter-by-name-field' %>
           <%= submit_tag "Search", class: "btn btn-default" %>
