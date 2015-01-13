@@ -2,6 +2,8 @@
 
 set -e
 
+git clean -fdx
+
 export USE_SIMPLECOV=true
 export RAILS_ENV=test
 bundle install --path "${HOME}/bundles/${JOB_NAME}" --deployment
