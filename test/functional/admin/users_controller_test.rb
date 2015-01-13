@@ -41,6 +41,14 @@ class Admin::UsersControllerTest < ActionController::TestCase
       assert_select "td.role", count: 3
     end
 
+    should "show user organisation" do
+      user = create(:user_in_organisation)
+
+      get :index
+
+      assert_select "td.organisation", user.organisation.name
+    end
+
     should "let you paginate by the first letter of the name" do
       create(:user, name: "alf", email: "a@email.com")
       create(:user, name: "zed", email: "z@email.com")
@@ -82,6 +90,15 @@ class Admin::UsersControllerTest < ActionController::TestCase
         assert_select "tbody tr", count: 1
         assert_select "td.email", /admin@gov.uk/
       end
+
+      should "scope filtered list of users by organisation" do
+        user = create(:organisation_admin, email: "orgmember@gov.uk")
+
+        get :index, organisation: user.organisation.id
+
+        assert_select "tbody tr", count: 1
+        assert_select "td.email", /orgmember@gov.uk/
+      end
     end
 
     should "scope list of users by status" do
@@ -101,6 +118,15 @@ class Admin::UsersControllerTest < ActionController::TestCase
 
       assert_select "tbody tr", count: 1
       assert_select "td.email", /suspended_user@gov.uk/
+    end
+
+    should "scope list of users by organisation" do
+      user = create(:user_in_organisation, email: "orgmember@gov.uk")
+
+      get :index, organisation: user.organisation.id
+
+      assert_select "tbody tr", count: 1
+      assert_select "td.email", /orgmember@gov.uk/
     end
 
     context "as superadmin" do

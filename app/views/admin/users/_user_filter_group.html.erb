@@ -1,8 +1,8 @@
 <%
   filter_title = filter_type.to_s.humanize.capitalize
-  filter_value = params[filter_type] ? params[filter_type].humanize.capitalize : nil
+  filter_value = filter_value(filter_type)
 %>
-<li class="add-margin-right <%= "filter-by-#{filter_type.to_s}-menu"%> <% if params[filter_type] %>selected-and-available<% end %>">
+<li class="add-margin-right <%= "filter-by-#{filter_type.to_s}-menu"%> <% if params[filter_type] %>selected-and-available<% end %>" <% if filter_type == :organisation %>data-module="organisation-filter"<% end %>>
   <% if params[filter_type] %>
     <%= link_to current_path_with_filter(filter_type, nil),
           class: 'filter-option filter-selected',
@@ -10,18 +10,23 @@
           <span class="glyphicon glyphicon-remove"></span><span class="rm">Remove</span>
     <% end %>
   <% end %>
-  <%= link_to current_path_with_filter(filter_type, nil),
+  <%= link_to current_path_with_filter(filter_type, ''),
         class: "filter-option #{params[filter_type] ? 'filter-selected' : ''}",
         data: { toggle: 'dropdown' },
         role: 'button' do %>
-    <% if params[filter_type] %>
-      <span class="if-js-hide glyphicon glyphicon-remove"></span>
-    <% end %>
     <span class="if-no-js-hide"><%= filter_value || filter_title %></span>
     <span class="if-js-hide"><%= filter_title %></span>
     <span class="if-no-js-hide glyphicon glyphicon-chevron-down"></span>
   <% end %>
-  <ul class="dropdown-menu" role="menu">
+  <ul class="dropdown-menu <% if filter_type == :organisation %>js-filter-list<% end %>" role="menu">
+    <% if filter_type == :organisation %>
+      <li class="list-filter">
+        <form>
+          <label for="organisation-list-filter" class="rm">Search organisations</label>
+          <input id="organisation-list-filter" type="text" class="list-filter-input form-control js-filter-list-input" placeholder="Search organisations">
+        </form>
+      </li>
+    <% end %>
     <%= user_filter_list_items(filter_type) %>
   </ul>
 </li>

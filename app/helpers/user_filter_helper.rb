@@ -16,12 +16,21 @@ module UserFilterHelper
       items = filtered_user_roles
     when :status
       items = User::USER_STATUSES
+    when :organisation
+      items = Organisation.order(:name).joins(:users).uniq.map {|org| [org.id, org.name_with_abbreviation]}
     end
 
-    list_items = items.map do |item_name|
+    list_items = items.map do |item|
+      if item.is_a? String
+        item_id = item
+        item_name = item.humanize
+      else
+        item_id = item[0].to_s
+        item_name = item[1]
+      end
       content_tag(:li,
-      link_to(item_name.humanize, current_path_with_filter(filter_type, item_name)),
-      class: params[filter_type] == item_name ? 'active' : '')
+      link_to(item_name, current_path_with_filter(filter_type, item_id)),
+      class: params[filter_type] == item_id ? 'active' : '')
     end
 
     list_items << content_tag(:li,
@@ -35,7 +44,22 @@ module UserFilterHelper
     current_user.manageable_roles
   end
 
+  def filter_value(filter_type)
+    value = params[filter_type]
+    return nil if value.blank?
+    if filter_type == :organisation
+      org = Organisation.find(value)
+      if org.abbreviation.presence
+        content_tag(:abbr, org.abbreviation, title: org.name)
+      else
+        org.name
+      end
+    else
+      value.humanize.capitalize
+    end
+  end
+
   def any_filter?
-    params[:filter].present? || params[:role].present? || params[:status].present?
+    params[:filter].present? || params[:role].present? || params[:status].present? || params[:organisation].present?
   end
 end

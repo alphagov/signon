@@ -72,3 +72,31 @@ Nav pills
 .nav-compact .nav-pill-text:first-child {
   padding-left: 0;
 }
+
+/* ==========================================================================
+Organisation filter
+========================================================================== */
+
+.filter-by-organisation-menu {
+  .dropdown-menu {
+    max-height: 300px;
+    overflow-y: scroll;
+  }
+
+  abbr {
+    cursor: pointer;
+  }
+}
+
+/* ==========================================================================
+List filter
+========================================================================== */
+
+.list-filter {
+  background: #eee;
+  padding: 10px $default-horizontal-margin;
+  margin-top: -5px;
+  margin-bottom: $default-vertical-margin/2;
+  border-radius: $border-radius-base $border-radius-base 0 0;
+  border-bottom: 1px solid $dropdown-border;
+}

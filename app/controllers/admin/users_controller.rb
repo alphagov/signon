@@ -9,7 +9,7 @@ class Admin::UsersController < ApplicationController
   respond_to :html
 
   def index
-    @users = @users.web_users
+    @users = @users.web_users.includes(:organisation)
     filter_users if any_filter?
     paginate_users
   end
@@ -64,6 +64,7 @@ private
   def filter_users
     @users = @users.filter(params[:filter]) if params[:filter].present?
     @users = @users.with_role(params[:role]) if can_filter_role?
+    @users = @users.with_organisation(params[:organisation]) if params[:organisation].present?
     @users = @users.select{|u| u.status == params[:status]} if params[:status].present?
   end
 
@@ -85,7 +86,7 @@ private
   end
 
   def any_filter?
-    params[:filter].present? || params[:role].present? || params[:status].present?
+    params[:filter].present? || params[:role].present? || params[:status].present? || params[:organisation].present?
   end
 
 end

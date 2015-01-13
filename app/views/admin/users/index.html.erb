@@ -18,6 +18,7 @@
     <tr class="table-header">
       <th scope="col">Name and email</th>
       <th scope="col">Role</th>
+      <th scope="col">Organisation</th>
       <th scope="col">Sign-in count</th>
       <th scope="col">Last sign-in</th>
       <th scope="col">Created</th>
@@ -30,10 +31,14 @@
       <tr>
         <td class="email">
           <%= user.suspended? ? "<del>".html_safe : "" %>
-            <%= link_to "#{user.name} <#{user.email}>", edit_admin_user_path(user) %>
+            <strong>
+              <%= link_to "#{user.name}", edit_admin_user_path(user) %>
+            </strong>
           <%= user.suspended? ? "</del>".html_safe : "" %>
+          <br><span class="text-muted"><%= user.email %></span>
         </td>
         <td class="role"><%= user.role.humanize %></td>
+        <td class="organisation"><%= user.organisation.try(:name) %></td>
         <td><%= user.sign_in_count %></td>
         <td class="last-sign-in">
           <% if user.current_sign_in_at %>
