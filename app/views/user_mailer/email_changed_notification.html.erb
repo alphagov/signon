@@ -1,0 +1,12 @@
+<p>Hello <%= @user.name %>,</p>
+
+<p>Your <%= link_to 'GOV.UK', 'https://www.gov.uk' %> Signon <%= account_name %> email address is being changed from <%= @user.email %> to <%= @user.unconfirmed_email %>.</p>
+
+<p>You should follow the instructions sent to your new email address: <%= @user.email %> to confirm this change.</p>
+
+<p>If your email address shouldn't have changed you should contact a managing GOV.UK editor in your organisation or your parent organisation.</p>
+
+<p>All the best,</p>
+
+<p><%= link_to 'GOV.UK', 'https://www.gov.uk' %> team</p>
+<p>Government Digital Service</p>

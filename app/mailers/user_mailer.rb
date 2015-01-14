@@ -25,7 +25,12 @@ class UserMailer < ActionMailer::Base
 
   def email_changed_by_admin_notification(user, email_was, to_address)
     @user, @email_was = user, email_was
-    mail(to: to_address, subject: 'Your email has been updated')
+    mail(to: to_address, subject: "Your #{app_name} email address has been updated")
+  end
+
+  def email_changed_notification(user)
+    @user = user
+    mail(to: @user.email, subject: "Your #{app_name} email address is being changed")
   end
 
 private

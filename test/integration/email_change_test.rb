@@ -19,7 +19,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
           admin_changes_email_address(user: user, new_email: "new@email.com")
 
           assert_equal "new@email.com", last_email.to[0]
-          assert_equal 'Your email has been updated', last_email.subject
+          assert_equal 'Your GOV.UK Signon email address has been updated', last_email.subject
         end
       end
 
@@ -95,7 +95,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       @user = create(:user, email: "original@email.com")
     end
 
-    should "trigger a confirmation email to the user" do
+    should "trigger a confirmation email to the user's new address and a notification to the user's old address" do
       visit new_user_session_path
       signin(@user)
 
@@ -103,8 +103,11 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       fill_in "Email", with: "new@email.com"
       click_button "Change email"
 
-      assert_equal "new@email.com", last_email.to[0]
-      assert_equal 'Confirm your email change', last_email.subject
+      confirmation_email, notification_email = *ActionMailer::Base.deliveries[-2..-1]
+      assert_equal "new@email.com", confirmation_email.to.first
+      assert_equal 'Confirm your email change', confirmation_email.subject
+      assert_equal "original@email.com", notification_email.to.first
+      assert_equal 'Your GOV.UK Signon email address is being changed', notification_email.subject
     end
 
     should "log email change events in the user's event log" do

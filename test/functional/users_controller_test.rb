@@ -72,16 +72,20 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     context "changing an email" do
-      should "stage the change, and send a confirmation email" do
+      should "stage the change, send a confirmation email to the new address and email change notification to the old address" do
         put :update, user: { email: "new@email.com" }
 
         @user.reload
         assert_equal "new@email.com", @user.unconfirmed_email
         assert_equal "old@email.com", @user.email
 
-        email = ActionMailer::Base.deliveries.last
-        assert_equal "Confirm your email change", email.subject
-        assert_equal "new@email.com", email.to[0]
+        confirmation_email = ActionMailer::Base.deliveries[-2]
+        assert_equal "Confirm your email change", confirmation_email.subject
+        assert_equal "new@email.com", confirmation_email.to.first
+
+        email_changed_notification = ActionMailer::Base.deliveries.last
+        assert_equal "Your GOV.UK Signon email address is being changed", email_changed_notification.subject
+        assert_equal "old@email.com", email_changed_notification.to.first
       end
 
       should "log an event" do
