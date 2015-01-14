@@ -4,7 +4,7 @@ require 'helpers/passphrase_support'
 class PassphraseResetTest < ActionDispatch::IntegrationTest
   include PassPhraseSupport
 
-  BLANKET_RESET_MESSAGE = "If your email exists on our database, you will receive a passphrase recovery link on your email"
+  BLANKET_RESET_MESSAGE = "If your email address is recognised, you’ll receive an email with instructions about how to reset your passphrase."
 
   should "reset a user's password and let them set a new one" do
     user = create(:user)
