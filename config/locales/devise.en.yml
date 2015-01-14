@@ -30,7 +30,7 @@ en:
       send_instructions: 'You will receive an email with instructions about how to reset your passphrase in a few minutes.'
       updated: 'Your passphrase was changed successfully.'
       updated_not_active: 'Your passphrase was changed successfully.'
-      send_paranoid_instructions: "If your email exists on our database, you will receive a passphrase recovery link on your email"
+      send_paranoid_instructions: "If your email address is recognised, you’ll receive an email with instructions about how to reset your passphrase."
       new:
         send_passphrase_reset: "Send me passphrase reset instructions"
     confirmations:
