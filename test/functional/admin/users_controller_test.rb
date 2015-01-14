@@ -320,7 +320,7 @@ class Admin::UsersControllerTest < ActionController::TestCase
           put :update, id: normal_user.id, user: { email: "new@email.com" }
 
           email_change_notifications = ActionMailer::Base.deliveries[-2..-1]
-          assert_equal ['Your email has been updated'], email_change_notifications.map(&:subject).uniq
+          assert_equal ['Your GOV.UK Signon email has been updated'], email_change_notifications.map(&:subject).uniq
           assert_equal %w(old@email.com new@email.com), email_change_notifications.map {|mail| mail.to.first }
         end
       end
