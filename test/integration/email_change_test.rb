@@ -19,7 +19,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
           admin_changes_email_address(user: user, new_email: "new@email.com")
 
           assert_equal "new@email.com", last_email.to[0]
-          assert_equal 'Your GOV.UK Signon email has been updated', last_email.subject
+          assert_equal 'Your GOV.UK Signon email address has been updated', last_email.subject
         end
       end
 
@@ -107,7 +107,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       assert_equal "new@email.com", confirmation_email.to.first
       assert_equal 'Confirm your email change', confirmation_email.subject
       assert_equal "original@email.com", notification_email.to.first
-      assert_equal 'Your GOV.UK Signon email is being changed', notification_email.subject
+      assert_equal 'Your GOV.UK Signon email address is being changed', notification_email.subject
     end
 
     should "log email change events in the user's event log" do

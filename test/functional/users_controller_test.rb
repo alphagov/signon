@@ -84,7 +84,7 @@ class UsersControllerTest < ActionController::TestCase
         assert_equal "new@email.com", confirmation_email.to.first
 
         email_changed_notification = ActionMailer::Base.deliveries.last
-        assert_equal "Your GOV.UK Signon email is being changed", email_changed_notification.subject
+        assert_equal "Your GOV.UK Signon email address is being changed", email_changed_notification.subject
         assert_equal "old@email.com", email_changed_notification.to.first
       end
 
