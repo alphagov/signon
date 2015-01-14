@@ -136,6 +136,18 @@ ActiveRecord::Schema.define(:version => 20150107063935) do
   add_index "supported_permissions", ["application_id", "name"], :name => "index_supported_permissions_on_application_id_and_name", :unique => true
   add_index "supported_permissions", ["application_id"], :name => "index_supported_permissions_on_application_id"
 
+  create_table "user_application_permissions", :force => true do |t|
+    t.integer  "user_id",                 :null => false
+    t.integer  "application_id",          :null => false
+    t.integer  "supported_permission_id", :null => false
+    t.datetime "last_synced_at"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+  end
+
+  add_index "user_application_permissions", ["user_id", "application_id"], :name => "index_user_application_permissions_on_user_id_and_application_id"
+  add_index "user_application_permissions", ["user_id"], :name => "index_user_application_permissions_on_user_id"
+
   create_table "users", :force => true do |t|
     t.string   "name",                                                       :null => false
     t.string   "email",                                :default => "",       :null => false
