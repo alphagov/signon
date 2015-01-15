@@ -145,7 +145,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     end
 
     should "filter users by organisation" do
-      visit "/admin/users"
+      visit "/users"
 
       select_organisation('Org 1')
       assert_equal 1, page.all('table tbody tr').count

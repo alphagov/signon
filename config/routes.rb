@@ -19,7 +19,7 @@ Signonotron2::Application.routes.draw do
       post :unlock
       put :resend_email_change
       delete :cancel_email_change
-      get :event_logs, path: 'event-logs'
+      get :event_logs
     end
   end
   resource :user, only: [:show]

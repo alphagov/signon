@@ -31,7 +31,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
           signin(@admin)
           admin_changes_email_address(user: user, new_email: "new@email.com")
 
-          visit admin_user_event_logs_path(user)
+          visit event_logs_user_path(user)
           assert_response_contains "Email changed by #{@admin.name} from old@email.com to new@email.com"
         end
       end
@@ -122,7 +122,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
       signout
       signin(create(:admin_user))
-      visit admin_user_event_logs_path(@user)
+      visit event_logs_user_path(@user)
       assert_response_contains "Email change initiated by #{@user.name} from original@email.com to new@email.com"
       assert_response_contains "Email change confirmed"
     end

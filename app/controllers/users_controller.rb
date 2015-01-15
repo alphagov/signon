@@ -23,7 +23,7 @@ class UsersController < ApplicationController
   def index
     authorize User
 
-    @users = policy_scope(User)
+    @users = policy_scope(User).includes(:organisation)
     filter_users if any_filter?
     paginate_users
   end
@@ -44,6 +44,9 @@ class UsersController < ApplicationController
       end
     else
       authorize @user
+      raise Pundit::NotAuthorizedError if current_user.organisation_admin? &&
+        ! current_user.organisation.subtree.map(&:id).include?(params[:user][:organisation_id].to_i)
+
       @user.skip_reconfirmation!
       if @user.update_attributes(translate_faux_signin_permission(params[:user]), as: current_user.role.to_sym)
         @user.permissions.reload
@@ -57,7 +60,7 @@ class UsersController < ApplicationController
           end
         end
 
-        redirect_to admin_users_path, notice: "Updated user #{@user.email} successfully"
+        redirect_to users_path, notice: "Updated user #{@user.email} successfully"
       else
         render :edit
       end
@@ -65,7 +68,7 @@ class UsersController < ApplicationController
   end
 
   def unlock
-    EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK, current_user)
+    EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK, initiator: current_user)
     @user.unlock_access!
     flash[:notice] = "Unlocked #{@user.email}"
     redirect_to :back
@@ -118,6 +121,7 @@ class UsersController < ApplicationController
   def filter_users
     @users = @users.filter(params[:filter]) if params[:filter].present?
     @users = @users.with_role(params[:role]) if can_filter_role?
+    @users = @users.with_organisation(params[:organisation]) if params[:organisation].present?
     @users = @users.select {|u| u.status == params[:status] } if params[:status].present?
   end
 
@@ -139,7 +143,7 @@ class UsersController < ApplicationController
   end
 
   def any_filter?
-    params[:filter].present? || params[:role].present? || params[:status].present?
+    params[:filter].present? || params[:role].present? || params[:status].present? || params[:organisation].present?
   end
 
   def relevant_permission
