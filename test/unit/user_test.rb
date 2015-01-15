@@ -366,8 +366,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def assert_user_has_permissions(expected_permissions, application, user)
-    permissions_for_my_app = user.permissions.reload.find_by_application_id(application.id)
-    assert_equal expected_permissions, permissions_for_my_app.permissions
+    permissions = user.permissions_for(application)
+    assert_equal expected_permissions, permissions
   end
 
 end
