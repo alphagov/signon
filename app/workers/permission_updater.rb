@@ -12,8 +12,7 @@ class PermissionUpdater
     api, presenter = SSOPushClient.new(application), UserOAuthPresenter.new(user, application)
     api.update_user(user.uid, presenter.as_hash)
 
-    app_permissions = user.permissions.detect { |perm| perm.application_id == application.id }
-    app_permissions.synced! if app_permissions
+    user.permissions_synced!(application)
   end
 
 end

@@ -68,6 +68,10 @@ class User < ActiveRecord::Base
     application_permissions.joins(:supported_permission).where(application_id: application.id).pluck(:name)
   end
 
+  def permissions_synced!(application)
+    application_permissions.where(application_id: application.id).update_all(last_synced_at: Time.zone.now)
+  end
+
   def authorised_applications
     authorisations.group_by(&:application).map(&:first)
   end

@@ -11,7 +11,7 @@ class UsersController < ApplicationController
   skip_after_filter :verify_authorized, only: :show
 
   def show
-    relevant_permission.synced! if relevant_permission
+    current_resource_owner.permissions_synced!(application_making_request)
     respond_to do |format|
       format.json do
         presenter = UserOAuthPresenter.new(current_resource_owner, application_making_request)
@@ -146,12 +146,7 @@ class UsersController < ApplicationController
     params[:filter].present? || params[:role].present? || params[:status].present? || params[:organisation].present?
   end
 
-  def relevant_permission
-    current_resource_owner
-        .permissions
-        .where(application_id: application_making_request.id)
-        .first
-  end
+  private
 
   def application_making_request
     ::Doorkeeper::Application.find(doorkeeper_token.application_id)

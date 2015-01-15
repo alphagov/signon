@@ -29,7 +29,7 @@ FactoryGirl.define do
               else
                 app_or_name
               end
-        create(:permission, application: app, user: user)
+        user.grant_application_permission(app, 'signin')
       end
     end
   end
