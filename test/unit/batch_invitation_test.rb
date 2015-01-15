@@ -70,7 +70,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
         app = create(:application)
         another_app = create(:application)
         create(:supported_permission, application_id: another_app.id, name: "foo")
-        @user.grant_permissions(another_app, ["signin", "foo"])
+        @user.grant_application_permissions(another_app, ["signin", "foo"])
 
         permissions_attributes = {
           0 => {

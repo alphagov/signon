@@ -15,7 +15,7 @@ namespace :users do
       if unsupported_permissions.any?
         raise UnsupportedPermissionError, "Cannot grant '#{unsupported_permissions.join("', '")}' permission(s), they are not supported by the '#{application.name}' application"
       end
-      user.grant_permission(application, 'signin')
+      user.grant_application_permission(application, 'signin')
     end
 
     invitation_url = "#{Plek.current.find("signon")}/users/invitation/accept?invitation_token=#{user.invitation_token}"

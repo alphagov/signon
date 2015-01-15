@@ -212,7 +212,7 @@ class UserTest < ActiveSupport::TestCase
           ])
     user = create(:user)
 
-    user.grant_permission(app, "Create publications")
+    user.grant_application_permission(app, "Create publications")
 
     assert_user_has_permissions ['Create publications'], app, user
   end
@@ -221,8 +221,8 @@ class UserTest < ActiveSupport::TestCase
     app = create(:application, name: "my_app")
     user = create(:user)
 
-    user.grant_permission(app, "signin")
-    user.grant_permission(app, "signin")
+    user.grant_application_permission(app, "signin")
+    user.grant_application_permission(app, "signin")
 
     assert_user_has_permissions ['signin'], app, user
   end

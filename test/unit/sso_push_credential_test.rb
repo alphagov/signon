@@ -42,7 +42,7 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
       end
 
       should "not create a new permission if both already exist" do
-        @user.grant_permissions(@application, ["user_update_permission", "signin"])
+        @user.grant_application_permissions(@application, ["user_update_permission", "signin"])
 
         assert_equal 1, @user.permissions.count
         SSOPushCredential.credentials(@application)
@@ -53,7 +53,7 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
       end
 
       should "update the existing permission if it does not include all the require permissions" do
-        @user.grant_permission(@application, "user_update_permission")
+        @user.grant_application_permission(@application, "user_update_permission")
 
         assert_equal 1, @user.permissions.count
         SSOPushCredential.credentials(@application)
