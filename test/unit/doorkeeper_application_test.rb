@@ -24,11 +24,8 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
 
     should "only show delegatable permissions to organisation admins" do
       user = create(:organisation_admin)
-      app = create(:application, supported_permissions: [
-        create(:delegatable_supported_permission, name: "write"),
-        create(:non_delegatable_supported_permission, name: "approve")
-      ])
-      create(:permission, user: user, application: app, permissions: ['write', 'approve'])
+      app = create(:application, with_delegatable_supported_permissions: ['write'], with_supported_permissions: ['approve'])
+      user.grant_application_permissions(app, ['write', 'approve'])
 
       assert_equal ["write"], app.supported_permission_strings(user)
     end
@@ -39,7 +36,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     should "return applications that the user can signin into" do
       user = create(:user)
       application = create(:application)
-      permission = create(:permission, permissions: ['signin'], user: user, application: application)
+      user.grant_application_permission(application, 'signin')
 
       assert_include Doorkeeper::Application.can_signin(user), application
     end
@@ -47,8 +44,6 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     should "not return applications that the user can't signin into" do
       user = create(:user)
       application = create(:application)
-      permission = create(:permission, permissions: ['signin'],
-                    user: create(:user), application: application)
 
       assert_empty Doorkeeper::Application.can_signin(user)
     end

@@ -19,10 +19,9 @@ class ::Doorkeeper::Application < ActiveRecord::Base
 
   def supported_permission_strings(user=nil)
     if user && user.role == 'organisation_admin'
-      supported_permissions.delegatable.map(&:name) &
-        user.permissions.find_by_application_id(id).permissions
+      supported_permissions.delegatable.pluck(:name) & user.permissions_for(self)
     else
-      supported_permissions.map(&:name)
+      supported_permissions.pluck(:name)
     end
   end
 
