@@ -8,7 +8,7 @@ class NumbersCsv
       Metrics.new.to_a.each { |line| csv << line }
     end
 
-    all_users = User.includes({permissions: :application}, :organisation).all
+    all_users = User.includes({application_permissions: :application}, :organisation).all
     segments = UserSegments.new(all_users)
 
     CSV.open("numbers.licensing.csv", "w") do |csv|

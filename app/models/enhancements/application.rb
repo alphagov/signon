@@ -9,9 +9,9 @@ class ::Doorkeeper::Application < ActiveRecord::Base
 
   default_scope order('oauth_applications.name')
   scope :support_push_updates, where(supports_push_updates: true)
-  scope :can_signin, lambda { |user| joins(:permissions)
-                                      .where(permissions: { user_id: user.id })
-                                      .where('permissions.permissions LIKE ?', '%signin%') }
+  scope :can_signin, lambda {|user| joins(:supported_permissions => :user_application_permissions)
+                                    .where('user_application_permissions.user_id' => user.id)
+                                    .where('supported_permissions.name' => 'signin') }
   scope :with_signin_delegatable, joins(:supported_permissions)
                                   .where(supported_permissions: { name: 'signin', delegatable: true })
 
