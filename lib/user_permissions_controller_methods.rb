@@ -1,6 +1,6 @@
 module UserPermissionsControllerMethods
   private
-    def applications_and_permissions(user)
+    def visible_applications(user)
       if user.api_user?
         authorised_application_ids = user.authorisations.where(revoked_at: nil).pluck(:application_id)
         applications = ::Doorkeeper::Application.where(id: authorised_application_ids)
@@ -9,7 +9,10 @@ module UserPermissionsControllerMethods
       else
         applications = ::Doorkeeper::Application.can_signin(current_user).with_signin_delegatable
       end
-      zip_permissions(applications.includes(:supported_permissions), user)
+    end
+
+    def applications_and_permissions(user)
+      zip_permissions(visible_applications(user).includes(:supported_permissions), user)
     end
 
     def zip_permissions(applications, user)

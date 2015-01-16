@@ -15,10 +15,7 @@ class AuthorisationsController < ApplicationController
     authorisation.application_id = params[:doorkeeper_access_token][:application_id]
 
     if authorisation.save
-      application_permission = @api_user.permissions.where(application_id: authorisation.application_id).first_or_create
-      application_permission.permissions << "signin" unless application_permission.permissions.include?("signin")
-      application_permission.save!
-
+      @api_user.grant_application_permission(authorisation.application, 'signin')
       EventLog.record_event(@api_user, EventLog::ACCESS_TOKEN_GENERATED, initiator: current_user, application: authorisation.application)
       flash[:authorisation] = { application_name: authorisation.application.name, token: authorisation.token }
     else

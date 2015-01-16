@@ -57,7 +57,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
       should "add a 'signin' permission for the authorised application" do
         post :create, api_user_id: @api_user.id, doorkeeper_access_token: { application_id: @application.id }
 
-        assert_include @api_user.permissions.find_by_application_id(@application.id).permissions, "signin"
+        assert_include @api_user.permissions_for(@application), "signin"
       end
 
       should "not add a 'signin' permission for the authorised application if it already exists" do
@@ -65,7 +65,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
 
         post :create, api_user_id: @api_user.id, doorkeeper_access_token: { application_id: @application.id }
 
-        assert_equal 1, @api_user.permissions.find_by_application_id(@application.id).permissions.count
+        assert_equal 1, @api_user.permissions_for(@application).count
       end
     end
   end

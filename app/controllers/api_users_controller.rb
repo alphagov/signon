@@ -3,7 +3,7 @@ class ApiUsersController < ApplicationController
 
   before_filter :authenticate_user!
   before_filter :load_and_authorize_api_user, only: [:edit, :update]
-  helper_method :applications_and_permissions
+  helper_method :applications_and_permissions, :visible_applications
 
   respond_to :html
 
@@ -36,7 +36,7 @@ class ApiUsersController < ApplicationController
   def update
     @api_user.skip_reconfirmation!
     if @api_user.update_attributes(translate_faux_signin_permission(params[:api_user]), as: current_user.role.to_sym)
-      @api_user.permissions.reload
+      @api_user.application_permissions.reload
       PermissionUpdater.perform_on(@api_user)
 
       redirect_to :api_users, notice: "Updated API user #{@api_user.email} successfully"
