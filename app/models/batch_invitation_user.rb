@@ -12,7 +12,7 @@ class BatchInvitationUser < ActiveRecord::Base
       name: self.name,
       email: self.email,
       organisation_id: batch_invitation.organisation_id,
-      permissions_attributes: applications_and_permissions
+      application_permissions_attributes: applications_and_permissions
     }
     if User.find_by_email(self.email)
       self.update_column(:outcome, "skipped")

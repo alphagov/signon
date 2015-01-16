@@ -6,14 +6,13 @@ class BatchInvitationTest < ActiveSupport::TestCase
 
     @app = create(:application)
 
-    permissions_attributes = {
+    application_permission_attributes = {
       0 => {
-        application_id: "#{@app.id}",
-        id: "",
-        permissions: ["signin"]
+        application_id: @app.id,
+        supported_permission_id: @app.signin_permission.id
       }
     }
-    @bi = create(:batch_invitation, applications_and_permissions: permissions_attributes)
+    @bi = create(:batch_invitation, applications_and_permissions: application_permission_attributes)
     @user_a = create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
     @user_b = create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
   end
@@ -32,10 +31,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
       user = User.find_by_email("a@m.com")
       assert_not_nil user
       assert_equal "A", user.name
-
-      permissions_for_app = user.permissions.where(application_id: @app.id).first
-      assert_not_nil permissions_for_app
-      assert_equal ["signin"], permissions_for_app.permissions
+      assert_equal ["signin"], user.permissions_for(@app)
     end
 
     should "trigger an invitation email" do
@@ -87,16 +83,10 @@ class BatchInvitationTest < ActiveSupport::TestCase
 
         @bi.applications_and_permissions = permissions_attributes
         @bi.save
-
         @bi.perform
 
-        @user.reload
-
-        app_permissions = @user.permissions.where(application_id: app.id).first
-        assert_nil app_permissions
-
-        another_app_permissions = @user.permissions.where(application_id: another_app.id).first
-        assert_equal ["signin", "foo"], another_app_permissions.permissions
+        assert_empty @user.permissions_for(app)
+        assert_equal ["signin", "foo"], @user.permissions_for(another_app)
       end
     end
 
