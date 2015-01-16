@@ -2,14 +2,33 @@ require 'test_helper'
 
 class UserApplicationPermissionTest < ActiveSupport::TestCase
 
-  test "uniqueness of user's application permissions" do
-    user, application = create(:user), create(:application)
-    supported_permission = application.signin_permission
+  context "validations" do
+    setup do
+      @user, @application = create(:user), create(:application)
+      @supported_permission = @application.signin_permission
+    end
 
-    application_permission_attributes = { application: application, supported_permission: supported_permission }
-    user.application_permissions.create!(application_permission_attributes)
+    should 'be invalid without user_id' do
+      assert UserApplicationPermission.new(user: nil,
+        application: @application, supported_permission: @supported_permission).invalid?
+    end
 
-    assert user.application_permissions.build(application_permission_attributes).invalid?
+    should 'be invalid without supported_permission_id' do
+      assert UserApplicationPermission.new(application: nil,
+        user: @user, supported_permission: @supported_permission).invalid?
+    end
+
+    should 'be invalid without application_id' do
+      assert UserApplicationPermission.new(supported_permission: nil,
+        user: @user, application: @application).invalid?
+    end
+
+    should "ensure unique user application permissions" do
+      application_permission_attributes = { application: @application, supported_permission: @supported_permission }
+      @user.application_permissions.create!(application_permission_attributes)
+
+      assert @user.application_permissions.build(application_permission_attributes).invalid?
+    end
   end
 
 end
