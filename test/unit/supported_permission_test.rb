@@ -11,10 +11,10 @@ class SupportedPermissionTest < ActiveSupport::TestCase
   end
 
   test "name of permissions other than signin be changed" do
-    @permission = create(:supported_permission, name: 'writer')
+    permission = create(:supported_permission, name: 'writer')
 
     assert_nothing_raised do
-      @permission.update_attributes!(name: 'write')
+      permission.update_attributes!(name: 'write')
     end
   end
 

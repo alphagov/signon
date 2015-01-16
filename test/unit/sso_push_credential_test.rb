@@ -3,7 +3,7 @@ require 'test_helper'
 class SSOPushCredentialTest < ActiveSupport::TestCase
 
   setup do
-    @application = create(:application)
+    @application = create(:application, with_supported_permissions: ['user_update_permission'])
 
     SSOPushCredential.user_email = nil
     SSOPushCredential.user = nil
@@ -31,36 +31,23 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
         assert_equal "foo", bearer_token
       end
 
-      should "create required permissions if they do not already exist" do
-        assert_equal 0, @user.permissions.count
+      should "create required application permissions if they do not already exist" do
+        assert_equal 0, @user.application_permissions.count
 
         SSOPushCredential.credentials(@application)
 
-        assert_equal 1, @user.permissions.count
-        assert_equal ["signin", "user_update_permission"], @user.permissions.first.permissions
-        assert_equal @application.id, @user.permissions.first.application_id
+        assert_equal 2, @user.application_permissions.count
+        assert_equal ["signin", "user_update_permission"], @user.permissions_for(@application)
       end
 
-      should "not create a new permission if both already exist" do
+      should "not create new application permissions if both already exist" do
         @user.grant_application_permissions(@application, ["user_update_permission", "signin"])
 
-        assert_equal 1, @user.permissions.count
+        assert_equal 2, @user.application_permissions.count
         SSOPushCredential.credentials(@application)
 
-        assert_equal 1, @user.permissions.count
-        assert_equal ["user_update_permission", "signin"], @user.permissions.first.permissions
-        assert_equal @application.id, @user.permissions.first.application_id
-      end
-
-      should "update the existing permission if it does not include all the require permissions" do
-        @user.grant_application_permission(@application, "user_update_permission")
-
-        assert_equal 1, @user.permissions.count
-        SSOPushCredential.credentials(@application)
-
-        assert_equal 1, @user.permissions.count
-        assert_equal ["user_update_permission", "signin"], @user.permissions.first.permissions
-        assert_equal @application.id, @user.permissions.first.application_id
+        assert_equal 2, @user.application_permissions.count
+        assert_equal ["user_update_permission", "signin"], @user.permissions_for(@application)
       end
     end
 
