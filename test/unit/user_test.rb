@@ -205,15 +205,13 @@ class UserTest < ActiveSupport::TestCase
     assert_equal old_encrypted_password, u.encrypted_password, "Changed passphrase"
   end
 
-  test "can grant permissions to user application and permission name" do
-    app = create(:application, name: "my_app", supported_permissions: [
-            create(:supported_permission, name: 'Create publications'),
-            create(:supported_permission, name: 'Delete publications')
-          ])
+  test "can grant permissions to users and return the created permission" do
+    app = create(:application, name: "my_app", with_supported_permissions: ['Create publications', 'Delete publications'])
     user = create(:user)
 
-    user.grant_application_permission(app, "Create publications")
+    permission = user.grant_application_permission(app, "Create publications")
 
+    assert_equal permission, user.application_permissions.first
     assert_user_has_permissions ['Create publications'], app, user
   end
 

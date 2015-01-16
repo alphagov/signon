@@ -78,11 +78,11 @@ class User < ActiveRecord::Base
   alias_method :applications_used, :authorised_applications
 
   def grant_application_permission(application, supported_permission_name)
-    grant_application_permissions(application, [supported_permission_name])
+    grant_application_permissions(application, [supported_permission_name]).first
   end
 
   def grant_application_permissions(application, supported_permission_names)
-    supported_permission_names.each do |supported_permission_name|
+    supported_permission_names.map do |supported_permission_name|
       supported_permission = SupportedPermission.find_by_application_id_and_name(application.id, supported_permission_name)
       application_permissions.where(application_id: application.id, supported_permission_id: supported_permission.id).first_or_create!
     end
