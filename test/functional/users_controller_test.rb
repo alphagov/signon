@@ -429,14 +429,6 @@ class UsersControllerTest < ActionController::TestCase
         assert_equal "Updated user #{another_user.email} successfully", flash[:notice]
       end
 
-      should "not update an api user" do
-        api_user = create(:api_user)
-        put :update, id: api_user.id, user: { api_user: false }
-
-        assert_redirected_to root_path
-        assert_equal 'You do not have permission to perform this action.', flash[:alert]
-      end
-
       should "not be able to update superadmins" do
         superadmin = create(:superadmin_user)
 
