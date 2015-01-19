@@ -11,7 +11,7 @@ class OrganisationPolicy < BasePolicy
     return false
   end
 
-  class Scope < Scope
+  class Scope < ::BasePolicy::Scope
     def resolve
       if current_user.organisation_admin?
         current_user.organisation.subtree

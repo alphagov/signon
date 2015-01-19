@@ -7,8 +7,6 @@ class UserPolicy < BasePolicy
   alias_method :index?, :new?
 
   def edit?
-    return current_user.superadmin? if record.api_user?
-
     case current_user.role
     when 'superadmin'
       true
@@ -42,7 +40,7 @@ class UserPolicy < BasePolicy
       (current_user.organisation_admin && belong_to_same_organisation_subtree?(current_user, record))
   end
 
-  class Scope < Scope
+  class Scope < ::BasePolicy::Scope
     def resolve
       if current_user.superadmin?
         scope.web_users
