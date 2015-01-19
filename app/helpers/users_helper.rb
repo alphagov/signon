@@ -24,4 +24,8 @@ module UsersHelper
   def is_org_admin?
     current_user.role == 'organisation_admin'
   end
+
+  def sync_needed?(permissions)
+    permissions.map(&:updated_at).max > permissions.map(&:last_synced_at).max
+  end
 end

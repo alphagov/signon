@@ -12,46 +12,50 @@
     </tr>
   </thead>
   <tbody>
-    <% applications_and_permissions(user_object).each_with_index do |(application, permission), index|
-       attribute_name = user_object.api_user? ? 'api_user' : 'user'
-     %>
+    <% applications_and_permissions(user_object).each do |(application, permissions)|
+       attribute_name = user_object.api_user? ? 'api_user' : 'user' %>
       <tr>
         <td>
           <%= application.name %>
-          <%= hidden_field_tag "#{attribute_name}[permissions_attributes][#{index}][application_id]", application.id %>
-          <%= hidden_field_tag "#{attribute_name}[permissions_attributes][#{index}][id]", permission.id %>
         </td>
-        <%
-          # Emulate form.check_box helper:
-          # http://api.rubyonrails.org/v3.1.3/classes/ActionView/Helpers/FormHelper.html#method-i-check_box
-          # API Users will always have a "signin" permission for apps for which they have access token.
-          # The hidden field ensures it is not lost.
-        %>
-        <%= hidden_field_tag "#{attribute_name}[permissions_attributes][#{index}][signin_permission]", user_object.api_user? ? "1" : "0" %>
-        <% unless user_object.api_user? %>
+        <% if user_object.api_user? %>
+          <%
+            # Emulate form.check_box helper:
+            # http://api.rubyonrails.org/v3.1.3/classes/ActionView/Helpers/FormHelper.html#method-i-check_box
+            # API Users will always have a "signin" permission for apps for which they have access token.
+            # The hidden field ensures it is not lost.
+          %>
+          <%= hidden_field_tag "#{attribute_name}[supported_permission_ids][]", application.signin_permission.id,
+                                id: "#{attribute_name}_supported_permission_signin_checkbox" %>
+        <% else %>
           <td>
-            <%= label_tag "user[permissions_attributes][#{index}][signin_permission]", "Has access to #{application.name}?", class: "rm" %>
-            <%= check_box_tag "user[permissions_attributes][#{index}][signin_permission]", "1", permission.permissions.include?("signin") %>
+            <%= label_tag "#{attribute_name}_#{application.name}_supported_permission_signin_checkbox", "Has access to #{application.name}?", class: "rm" %>
+            <%= check_box_tag "#{attribute_name}[supported_permission_ids][]", application.signin_permission.id,
+                              permissions.detect {|per| per.supported_permission_id == application.signin_permission.id },
+                              id: "#{attribute_name}_#{application.name}_supported_permission_signin_checkbox" %>
           </td>
         <% end %>
         <td>
-          <%= label_tag "#{attribute_name}[permissions_attributes][#{index}][permissions][]", "Permissions for #{application.name}", class: "rm" %>
-          <%= select_tag "#{attribute_name}[permissions_attributes][#{index}][permissions][]",
-                          options_for_select(application.supported_permission_strings(current_user) - ["signin"],
-                                              permission.permissions - ["signin"]),
+          <%= label_tag "#{attribute_name}_#{application.name}_supported_permission_ids", "Permissions for #{application.name}", class: "rm" %>
+          <% supported_permissions_options = application.supported_permissions.inject({}) {|h, per| h.merge(per.name => per.id) }
+             supported_permissions_options.delete('signin') %>
+          <%= select_tag "#{attribute_name}[supported_permission_ids][]",
+                          options_for_select(supported_permissions_options,
+                            user_object.permission_ids_for(application) - [application.signin_permission.id]),
                           multiple: true,
                           class: "chosen-select",
+                          id: "#{attribute_name}_#{application.name}_supported_permission_ids",
                           'data-module' => 'chosen',
-                          "data-placeholder" => "Start typing to search for permissions"
+                          'data-placeholder' => 'Start typing to search for permissions'
           %>
         </td>
         <% if user_object.persisted? %>
           <td>
-            <% if permission.last_synced_at %>
-              <% if permission.sync_needed? %>
-                <span class="label label-danger"><%= time_ago_in_words(permission.last_synced_at) %> ago</span>
+            <% if permissions.map(&:last_synced_at).compact.present? %>
+              <% if sync_needed?(permissions) %>
+                <span class="label label-danger"><%= time_ago_in_words(permissions.first.last_synced_at) %> ago</span>
               <% else %>
-                <span class="label label-success"><%= time_ago_in_words(permission.last_synced_at) %> ago</span>
+                <span class="label label-success"><%= time_ago_in_words(permissions.first.last_synced_at) %> ago</span>
               <% end %>
             <% else %>
               <span class="label label-danger">Never</span>

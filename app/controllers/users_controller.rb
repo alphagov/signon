@@ -48,8 +48,8 @@ class UsersController < ApplicationController
         ! current_user.organisation.subtree.map(&:id).include?(params[:user][:organisation_id].to_i)
 
       @user.skip_reconfirmation!
-      if @user.update_attributes(translate_faux_signin_permission(params[:user]), as: current_user.role.to_sym)
-        @user.permissions.reload
+      if @user.update_attributes(params[:user], as: current_user.role.to_sym)
+        @user.application_permissions.reload
         PermissionUpdater.perform_on(@user)
 
         if email_change = @user.previous_changes[:email]

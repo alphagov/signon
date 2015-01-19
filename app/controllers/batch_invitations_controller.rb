@@ -15,8 +15,7 @@ class BatchInvitationsController < ApplicationController
   def create
     @batch_invitation = BatchInvitation.new(user: current_user,
       organisation_id: params[:batch_invitation][:organisation_id],
-      applications_and_permissions: translate_faux_signin_permission(params[:user])[:permissions_attributes])
-    authorize :user, :invite_in_batch?
+      applications_and_permissions: params[:user][:permissions_attributes])
 
     unless file_uploaded?
       flash[:alert] = "You must upload a file"

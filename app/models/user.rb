@@ -36,6 +36,7 @@ class User < ActiveRecord::Base
 
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
   has_many :application_permissions, class_name: 'UserApplicationPermission', inverse_of: :user
+  has_many :supported_permissions, through: :application_permissions
   has_many :batch_invitations
   has_many :event_logs, primary_key: :uid, foreign_key: :uid, order: 'created_at DESC'
   belongs_to :organisation
@@ -43,8 +44,6 @@ class User < ActiveRecord::Base
   before_validation :fix_apostrophe_in_email
   before_create :generate_uid
   after_create :update_stats
-
-  accepts_nested_attributes_for :application_permissions, allow_destroy: true
 
   scope :web_users, where(api_user: false)
   scope :not_suspended, where(suspended_at: nil)
@@ -66,6 +65,10 @@ class User < ActiveRecord::Base
 
   def permissions_for(application)
     application_permissions.joins(:supported_permission).where(application_id: application.id).pluck(:name)
+  end
+
+  def permission_ids_for(application)
+    application_permissions.where(application_id: application.id).pluck(:supported_permission_id)
   end
 
   def permissions_synced!(application)

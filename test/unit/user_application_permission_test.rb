@@ -9,22 +9,15 @@ class UserApplicationPermissionTest < ActiveSupport::TestCase
     end
 
     should 'be invalid without user_id' do
-      assert UserApplicationPermission.new(user: nil,
-        application: @application, supported_permission: @supported_permission).invalid?
+      assert UserApplicationPermission.new(user: nil, supported_permission: @supported_permission).invalid?
     end
 
     should 'be invalid without supported_permission_id' do
-      assert UserApplicationPermission.new(application: nil,
-        user: @user, supported_permission: @supported_permission).invalid?
-    end
-
-    should 'be invalid without application_id' do
-      assert UserApplicationPermission.new(supported_permission: nil,
-        user: @user, application: @application).invalid?
+      assert UserApplicationPermission.new(supported_permission: nil, user: @user).invalid?
     end
 
     should "ensure unique user application permissions" do
-      application_permission_attributes = { application: @application, supported_permission: @supported_permission }
+      application_permission_attributes = { supported_permission: @supported_permission }
       @user.application_permissions.create!(application_permission_attributes)
 
       assert @user.application_permissions.build(application_permission_attributes).invalid?

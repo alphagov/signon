@@ -16,8 +16,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     check "Has access to MyApp?"
     click_button "Update User"
 
-    permission = Permission.where(application_id: app.id, user_id: @user.id).first
-    assert_equal ["signin"], permission.permissions
+    assert_include @user.permissions_for(app), 'signin'
   end
 
   should "support granting app-specific permissions" do
@@ -27,7 +26,6 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     select "write", from: "Permissions for MyApp"
     click_button "Update User"
 
-    permission = Permission.where(application_id: app.id, user_id: @user.id).first
-    assert_equal ["write"], permission.permissions
+    assert_include @user.permissions_for(app), 'write'
   end
 end

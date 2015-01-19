@@ -35,7 +35,7 @@ class ApiUsersController < ApplicationController
 
   def update
     @api_user.skip_reconfirmation!
-    if @api_user.update_attributes(translate_faux_signin_permission(params[:api_user]), as: current_user.role.to_sym)
+    if @api_user.update_attributes(params[:api_user], as: current_user.role.to_sym)
       @api_user.application_permissions.reload
       PermissionUpdater.perform_on(@api_user)
 
