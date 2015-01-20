@@ -12,7 +12,7 @@ class UserStatusTest < ActionDispatch::IntegrationTest
   test "User status appears on the edit user page" do
     visit root_path
     signin @admin
-    visit admin_user_path(@user)
+    visit user_path(@user)
 
     assert page.has_content?("User passphrase expired")
   end

@@ -3,10 +3,10 @@ Hello,
 This is to let you know that <%= @user.name %> <%= @user.email %> has uploaded a batch of <%= @batch_invitation.batch_invitation_users.count %> users that will be automatically created.
 
 If you are an admin (or a superadmin), you can review what's in the batch with this link:
-<%= admin_batch_invitation_url(@batch_invitation) %>
+<%= batch_invitation_url(@batch_invitation) %>
 
 View the user who created the batch here:
-<%= edit_admin_user_url(@user) %>
+<%= edit_user_url(@user) %>
 
 Kind regards,
 GOV.UK Signon

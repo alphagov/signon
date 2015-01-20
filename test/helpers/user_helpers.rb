@@ -13,7 +13,7 @@ module UserHelpers
   end
 
   def admin_changes_email_address(options)
-    visit edit_admin_user_path(options[:user])
+    visit edit_user_path(options[:user].id)
     fill_in "Email", with: options[:new_email]
     click_button "Update User"
   end

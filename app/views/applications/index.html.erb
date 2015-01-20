@@ -1,0 +1,28 @@
+<% content_for :title, "Single Signon applications" %>
+<div class="page-title">
+  <h1>Single Signon Applications</h1>
+</div>
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr class="table-header">
+      <th scope="col">Name</th>
+      <th scope="col">Redirect URI</th>
+      <th scope="col">Home URI</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @applications.each do |application| %>
+      <tr>
+        <td>
+          <%= link_to application.name, edit_application_path(application) %>
+          <br>
+          <%= application.description %>
+        </td>
+        <td><%= application.redirect_uri %></td>
+        <td><%= link_to application.home_uri, application.home_uri %></td>
+        <td><%= link_to "Edit", edit_application_path(application) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

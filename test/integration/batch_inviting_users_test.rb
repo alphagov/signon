@@ -10,7 +10,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
       visit root_path
       signin(user)
 
-      visit new_admin_batch_invitation_path
+      visit new_batch_invitation_path
       path = File.join(::Rails.root, "test", "fixtures", "users.csv")
       attach_file("Choose a CSV file of users with names and email addresses", path)
       click_button "Create users and send emails"

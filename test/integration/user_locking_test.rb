@@ -36,7 +36,7 @@ class UserLockingTest < ActionDispatch::IntegrationTest
     visit root_path
     signin(admin)
     first_letter_of_name = user.name[0]
-    visit admin_users_path(letter: first_letter_of_name)
+    visit users_path(letter: first_letter_of_name)
     click_button 'Unlock account'
 
     user.reload
@@ -50,7 +50,7 @@ class UserLockingTest < ActionDispatch::IntegrationTest
 
     visit root_path
     signin(admin)
-    visit edit_admin_user_path(user)
+    visit edit_user_path(user)
 
     click_button 'Unlock account'
 

@@ -5,7 +5,7 @@
 <%= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => {:method => :post, :class => 'well'} do |f| %>
   <%= devise_error_messages! %>
 
-  <%= render partial: "admin/users/form_fields", locals: { f: f } %>
+  <%= render partial: "users/form_fields", locals: { f: f } %>
 
   <%= f.submit "Create user and send email", :class => 'btn btn-success' %>
 <% end %>

@@ -8,7 +8,7 @@ class PasswordsControllerTest < ActionController::TestCase
   end
 
   test "a request with a bad reset token shows an error page" do
-    get :edit, reset_password_token: 'not_a_real_token'
+    get :edit, id: @user.id, reset_password_token: 'not_a_real_token'
     assert_response :success
     assert_template 'devise/passwords/reset_error'
   end
@@ -19,7 +19,7 @@ class PasswordsControllerTest < ActionController::TestCase
     # to do that for just this situation.
     @user.update_attribute(:reset_password_sent_at, 1.year.ago)
 
-    get :edit, reset_password_token: @user.reset_password_token
+    get :edit, id: @user.id, reset_password_token: @user.reset_password_token
     assert_response :success
     assert_template 'devise/passwords/reset_error'
   end
@@ -30,7 +30,7 @@ class PasswordsControllerTest < ActionController::TestCase
     # simulate a partially signed-in user. for example,
     # user with an expired password being asked to change the password
     sign_in @user
-    get :edit, reset_password_token: @user.reset_password_token
+    get :edit, id: @user.id, reset_password_token: @user.reset_password_token
 
     assert_nil request.env['warden'].user
   end
@@ -39,7 +39,7 @@ class PasswordsControllerTest < ActionController::TestCase
     @user.update_attribute(:password_changed_at, 3.months.ago)
     sign_in @user
 
-    get :edit, reset_password_token: @user.reset_password_token
+    get :edit, id: @user.id, reset_password_token: @user.reset_password_token
 
     assert_response :ok
     assert_template 'devise/passwords/edit'

@@ -1,0 +1,24 @@
+<% content_for :title, "Suspend [#{@user.name}]" %>
+
+<ol class="breadcrumb">
+  <li><%= link_to @user.name, user_path(@user) %></li>
+  <li class="active">Suspend</li>
+</ol>
+
+<h1 class="page-title">Suspend &ldquo;<%= @user.name %>&rdquo;</h1>
+
+<%= form_tag suspension_path(@user), method: "put", :class => 'well remove-top-padding' do %>
+  <div class="checkbox add-top-margin">
+    <label>
+      <%= check_box_tag "user[suspended]", "1", @user.suspended? %>
+      Suspended?
+    </label>
+  </div>
+  <div class="form-group">
+    <label for="user_reason_for_suspension">Reason for suspension</label>
+    <%= text_field_tag "user[reason_for_suspension]", @user.reason_for_suspension, class: 'form-control input-md-6' %>
+  </div>
+  <hr />
+  <%= submit_tag "Save", class: "btn btn-primary add-right-margin" %>
+  <%= link_to "Cancel", user_path(@user), class: "btn btn-default" %>
+<% end %>

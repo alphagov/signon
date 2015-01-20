@@ -1,14 +1,14 @@
 class ApplicationController < ActionController::Base
+  include Pundit
   protect_from_forgery
-  check_authorization unless: :devise_controller?
+
+  after_filter :verify_authorized, unless: :devise_controller?
 
   before_filter do
     headers['X-Frame-Options'] = 'SAMEORIGIN'
   end
 
-  rescue_from CanCan::AccessDenied do |exception|
-    redirect_to root_path, alert: "You do not have permission to perform this action."
-  end
+  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   def after_sign_out_path_for(resource_or_scope)
     new_user_session_path
@@ -18,8 +18,11 @@ class ApplicationController < ActionController::Base
     User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
   end
 
-  def current_ability
-    "Abilities::#{current_user.role.classify}".constantize.new(current_user) if current_user
+  private
+
+  def user_not_authorized(exception)
+    flash[:alert] = "You do not have permission to perform this action."
+    redirect_to root_path
   end
 
 end

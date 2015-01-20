@@ -1,0 +1,30 @@
+<%- unless @supported_permission.errors.empty? -%>
+  <div class="alert alert-danger add-top-margin">
+    <ul class="errors">
+      <%- @supported_permission.errors.full_messages.each do |msg| -%>
+      <li><%= msg %></li>
+      <%- end -%>
+    </ul>
+  </div>
+<%- end -%>
+
+<div class="well">
+  <%= form_for [@application, @supported_permission] do |f| %>
+    <div class="form-group">
+      <%= f.label :name, 'Permission name' %>
+        <% if f.object.name.try(:downcase) == 'signin' %>
+          <%= f.object.name %>
+        <% else %>
+          <%= f.text_field :name, placeholder: t('supported_permissions.form.placeholder.name'), class: 'form-control input-md-4', autofocus: 'autofocus' %>
+        <% end %>
+    </div>
+    <hr />
+    <p class="checkbox">
+      <label>
+        <%= f.check_box :delegatable %> <%= t('supported_permissions.form.delegatable') %>
+      </label>
+    </p>
+    <hr />
+    <%= f.submit "Save permission", class: "btn btn-success" %>
+  <% end %>
+</div>

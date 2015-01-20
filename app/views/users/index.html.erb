@@ -1,0 +1,69 @@
+<% content_for :title, user_role_text %>
+
+<div class="page-title clearfix remove-top-margin">
+  <h1 class="pull-left"><%= user_role_text %></h1>
+  <div class="pull-right add-top-margin">
+    <%= link_to "Create user", new_user_invitation_path, class: "btn btn-success add-right-margin" %>
+    <% if policy(User).new? %>
+      <%= link_to "Upload a batch of users", new_batch_invitation_path, class: "btn btn-default" %>
+    <% end %>
+  </div>
+</div>
+
+<%= render partial: "user_filter" %>
+<%= render partial: "pagination", locals: {position: 'top'} %>
+
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr class="table-header">
+      <th scope="col">Name and email</th>
+      <th scope="col">Role</th>
+      <th scope="col">Organisation</th>
+      <th scope="col">Sign-in count</th>
+      <th scope="col">Last sign-in</th>
+      <th scope="col">Created</th>
+      <th scope="col">Status</th>
+      <th scope="col">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td class="email">
+          <%= user.suspended? ? "<del>".html_safe : "" %>
+            <strong>
+              <%= link_to "#{user.name}", edit_user_path(user) %>
+            </strong>
+          <%= user.suspended? ? "</del>".html_safe : "" %>
+          <br><span class="text-muted"><%= user.email %></span>
+        </td>
+        <td class="role"><%= user.role.humanize %></td>
+        <td class="organisation"><%= user.organisation.try(:name) %></td>
+        <td><%= user.sign_in_count %></td>
+        <td class="last-sign-in">
+          <% if user.current_sign_in_at %>
+            <%= time_ago_in_words(user.current_sign_in_at) %> ago
+          <% else %>
+            never signed in
+          <% end %>
+        </td>
+        <td><%= time_ago_in_words(user.created_at) %> ago</td>
+        <td><%= user.status.humanize %></td>
+        <td>
+          <% if user.invited_but_not_accepted %>
+            <%= form_tag resend_user_invitation_path(user) do %>
+              <%= submit_tag "Resend signup email", :class => 'btn btn-sm btn-default' %>
+            <% end %>
+          <% end %>
+          <% if user.access_locked? %>
+            <%= form_tag unlock_user_path(user) do %>
+              <%= submit_tag "Unlock account", :class => 'btn btn-default' %>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= render partial: "pagination" %>

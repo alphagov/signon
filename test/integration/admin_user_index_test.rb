@@ -29,7 +29,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     end
 
     should "see when the user last logged in" do
-      visit "/admin/users"
+      visit "/users"
 
       assert page.has_content?("Last sign-in")
 
@@ -38,7 +38,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     end
 
     should "see list of users paginated alphabetically" do
-      visit "/admin/users"
+      visit "/users"
 
       assert page.has_content?("Users")
 
@@ -65,7 +65,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to filter users" do
-      visit "/admin/users"
+      visit "/users"
 
       fill_in "Name or email", :with => "bb"
       click_on "Search"
@@ -85,7 +85,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     end
 
     should "filter users by role" do
-      visit "/admin/users"
+      visit "/users"
 
       assert_role_not_present("Superadmin")
 
@@ -123,7 +123,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     end
 
     should "filter users by status" do
-      visit "/admin/users"
+      visit "/users"
 
       select_status('Suspended')
 
@@ -145,7 +145,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     end
 
     should "filter users by organisation" do
-      visit "/admin/users"
+      visit "/users"
 
       select_organisation('Org 1')
       assert_equal 1, page.all('table tbody tr').count

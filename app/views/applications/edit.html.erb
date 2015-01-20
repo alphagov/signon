@@ -1,0 +1,75 @@
+<% content_for :title, "Edit application" %>
+
+<ol class="breadcrumb">
+  <li><%= link_to 'Applications', applications_path %></li>
+  <li class="active"><%= @application.name %></li>
+</ol>
+
+<div class="page-title">
+  <h1>Edit application &ldquo;<%= @application.name %>&rdquo;</h1>
+</div>
+
+<%= form_for @application, :html => {:class => 'well'} do |f| %>
+
+  <% if @application.errors.count > 0 %>
+    <div class="alert alert-danger remove-bottom-margin">
+      <ul>
+        <% @application.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name, required: "required", class: 'form-control input-md-6' %>
+    <span class="help-block">Shown on the Signon homepage.</span>
+  </p>
+
+  <p class="form-group">
+    <%= f.label :description %>
+    <%= f.text_field :description, required: "required", class: 'form-control input-md-6' %>
+    <span class="help-block">Shown on the Signon homepage.</span>
+  </p>
+
+  <p class="form-group">
+    <%= f.label :home_uri, "Home URI" %>
+    <%= f.text_field :home_uri, required: "required", class: 'form-control input-md-6' %>
+    <span class="help-block">Used to link to the app on the Signon homepage.</span>
+  </p>
+
+  <p class="form-group">
+    <%= f.label :redirect_uri, "Redirect URI" %>
+    <%= f.text_field :redirect_uri, required: "required", class: 'form-control input-md-6' %>
+    <span class="help-block">The app should expect this URI. Used in the signin redirect dance.</span>
+  </p>
+
+  <p class="form-group">
+    <%= f.label :uid, "UID" %>
+    <%= f.text_field :uid, required: "required", class: 'form-control input-md-6' %>
+    <span class="help-block">The app has a copy of this. Used in the signin redirect dance.</span>
+  </p>
+
+  <p class="form-group">
+    <%= f.label :secret %>
+    <%= f.text_field :secret, required: "required", class: 'form-control input-md-6' %>
+    <span class="help-block">The app has a copy of this. Used in the signin redirect dance.</span>
+  </p>
+
+  <p class="checkbox">
+    <label>
+      <%= f.check_box :supports_push_updates %> Send push updates to this app
+    </label>
+  </p>
+
+  <% if policy(Doorkeeper::Application).edit? %>
+    <hr />
+    <p class="add-top-margin">
+      <%= link_to "Edit supported permissions", application_supported_permissions_path(@application) %>
+    </p>
+    <hr />
+  <% end %>
+
+  <%= f.submit :class => 'btn btn-primary' %>
+<% end %>

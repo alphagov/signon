@@ -9,6 +9,7 @@ FactoryGirl.define do
     password "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
     confirmed_at 1.day.ago
     name { "A name is now required" }
+    role "normal"
 
     after(:create) do |user, evaluator|
       if evaluator.with_permissions

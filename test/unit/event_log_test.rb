@@ -81,7 +81,7 @@ class EventLogTest < ActiveSupport::TestCase
   test "can use a helper to fetch all logs for a user" do
     user = create(:user)
     EventLog.record_event(user, EventLog::PASSPHRASE_RESET_REQUEST)
-    log = EventLog.for(user).first
+    log = user.event_logs.first
 
     assert_equal log.uid, user.uid
     assert_equal log.event, EventLog::PASSPHRASE_RESET_REQUEST

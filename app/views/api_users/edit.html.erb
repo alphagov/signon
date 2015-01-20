@@ -1,0 +1,23 @@
+<% content_for :title, "Edit [#{@api_user.name}]" %>
+
+<h1>Edit API User &ldquo;<%= @api_user.name %>&rdquo;</h1>
+
+<p class="suspenders">
+  User <strong><%= @api_user.status %></strong> &bull;
+  <%= link_to "Account access log", event_logs_user_path(@api_user) %> &bull;
+  <%= link_to "#{@api_user.suspended? ? "Uns" : "S"}uspend user", edit_suspension_path(@api_user) %>
+</p>
+
+<% if @api_user.suspended? and @api_user.reason_for_suspension.present? %>
+  <p class="alert alert-warning">
+    <strong>User suspended:</strong> <em><%= @api_user.reason_for_suspension %></em>
+  </p>
+<% end %>
+
+<%= form_for @api_user, :html => {:class => 'well add-top-margin'} do |f| %>
+  <%= render partial: "form_fields", locals: { f: f } %>
+
+  <hr>
+
+  <%= f.submit 'Update API user', :class => 'btn btn-primary' %>
+<% end %>

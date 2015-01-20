@@ -37,6 +37,7 @@ class User < ActiveRecord::Base
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
   has_many :permissions, inverse_of: :user
   has_many :batch_invitations
+  has_many :event_logs, primary_key: :uid, foreign_key: :uid, order: 'created_at DESC'
   belongs_to :organisation
 
   before_validation :fix_apostrophe_in_email

@@ -22,10 +22,10 @@ gem 'devise-encryptable', '0.1.1'
 gem 'devise_security_extension', '0.7.2', git: "https://github.com/alphagov/devise_security_extension.git", branch: "graceful_return_to_behaviour"
 gem 'devise_zxcvbn', '1.1.1'
 gem 'devise-async', '0.8.0'
+gem 'pundit', '0.3.0'
 
 gem 'doorkeeper', '0.6.7'
 gem 'ancestry', '2.0.0'
-gem 'cancan', '1.6.10'
 
 gem 'gds-api-adapters', '7.11.0'
 gem 'statsd-ruby', '1.1.0'
@@ -53,6 +53,7 @@ end
 gem 'logstasher', '0.4.8'
 
 group :test do
+  gem 'rspec-rails', '~> 3.1.0'
   gem 'capybara', '2.2.1'
   gem 'poltergeist', '1.5.0'
   gem 'database_cleaner', '0.7.2'

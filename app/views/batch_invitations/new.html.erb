@@ -1,0 +1,60 @@
+<% content_for :title, "Upload a batch of users" %>
+
+<div class="page-title">
+  <h1>Upload a batch of users</h1>
+</div>
+
+<% if recent_batch_invitations.any? %>
+  <h3 class="add-bottom-margin">Recent batches</h3>
+  <table class="recent-batches table table-bordered">
+    <thead>
+      <tr class="table-header">
+        <th>Summary</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% recent_batch_invitations.each do |batch_invitation| %>
+        <tr>
+          <td>
+            <%= link_to(batch_invitation_path(batch_invitation), alt: "View this batch") do %>
+              <%= batch_invitation.batch_invitation_users.count %> users by <%= batch_invitation.user.name %> at <%= batch_invitation.created_at.to_s(:govuk_date) %>
+            <% end %>
+          </td>
+          <td><%= status_message(batch_invitation) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<div class="well">
+  <%= form_for @batch_invitation do |f| %>
+    <h2>Upload a CSV</h2>
+    <div class="row">
+      <div class="col-md-5">
+        <%= f.label :user_names_and_emails, "Choose a CSV file of users with names and email addresses" %>
+        <%= f.file_field(:user_names_and_emails, :accept => 'text/csv', required: true) %>
+      </div>
+      <div class="col-md-5 pull-right">
+        <p>The format of the CSV should be as follows:</p>
+        <pre>
+Name,Email
+Jane Smith,jane@example.com
+Winston Churchill,winston@example.com
+        </pre>
+      </div>
+    </div>
+
+    <p>
+      <%= f.label :organisation_id, "Organisation" %>
+      <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select", 'data-module' => 'chosen' } %>
+    </p>
+
+    <h2>Permissions for the users</h2>
+
+    <%= render partial: "shared/user_permissions", locals: { user_object: User.new } %>
+
+    <%= f.submit "Create users and send emails", :class => 'btn btn-success' %>
+  <% end %>
+</div>

@@ -1,0 +1,48 @@
+<% content_for :title, "Creating a batch of users" %>
+
+<% if @batch_invitation.in_progress? %>
+  <% content_for(:content_for_head) do %>
+    <meta http-equiv="refresh" content="3">
+  <% end %>
+<% end %>
+
+<div class="page-title">
+  <h1>Creating a batch of users</h1>
+</div>
+
+<% if @batch_invitation.in_progress? %>
+  <div class="alert alert-info">
+    <%= status_message(@batch_invitation) %>
+  </div>
+<% elsif @batch_invitation.all_successful? %>
+  <div class="alert alert-success">
+    <%= status_message(@batch_invitation) %>
+  </div>
+<% else %>
+  <div class="alert alert-danger">
+    <%= status_message(@batch_invitation) %>
+  </div>
+<% end %>
+
+<table class="batch-invitation-users table table-bordered">
+  <thead>
+    <tr class="table-header">
+      <th>Name</th>
+      <th>Email</th>
+      <th>Outcome</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @batch_invitation.batch_invitation_users.each do |user| %>
+      <tr class="<%= user.outcome == "failed" ? "error" : "" %>">
+        <td><%= user.name %></td>
+        <td><%= user.email %></td>
+        <td><%= user.humanized_outcome %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="well">
+  <%= link_to "All users", users_path, class: "btn btn-primary" %>
+</div>

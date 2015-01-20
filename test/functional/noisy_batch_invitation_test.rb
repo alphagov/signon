@@ -28,7 +28,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
     end
 
     should "link to the batch" do
-      url = "/admin/batch_invitations/#{@batch_invitation.id}"
+      url = "/batch_invitations/#{@batch_invitation.id}"
       assert_match(/#{Regexp.escape(url)}/, @email.encoded)
     end
   end
