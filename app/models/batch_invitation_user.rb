@@ -7,12 +7,12 @@ class BatchInvitationUser < ActiveRecord::Base
   scope :unprocessed, where("outcome IS NULL")
   scope :failed, where(outcome: "failed")
 
-  def invite(inviting_user, applications_and_permissions)
+  def invite(inviting_user, supported_permission_ids)
     attributes = {
       name: self.name,
       email: self.email,
       organisation_id: batch_invitation.organisation_id,
-      application_permissions_attributes: applications_and_permissions
+      supported_permission_ids: supported_permission_ids
     }
     if User.find_by_email(self.email)
       self.update_column(:outcome, "skipped")

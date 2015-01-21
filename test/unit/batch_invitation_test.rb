@@ -5,21 +5,14 @@ class BatchInvitationTest < ActiveSupport::TestCase
     ActionMailer::Base.deliveries = []
 
     @app = create(:application)
-
-    application_permission_attributes = {
-      0 => {
-        application_id: @app.id,
-        supported_permission_id: @app.signin_permission.id
-      }
-    }
-    @bi = create(:batch_invitation, applications_and_permissions: application_permission_attributes)
+    @bi = create(:batch_invitation, supported_permission_ids: [@app.signin_permission.id])
     @user_a = create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
     @user_b = create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
   end
 
   should "can belong to an organisation" do
     organisation = create(:organisation)
-    bi = create(:batch_invitation, organisation: organisation, applications_and_permissions: {})
+    bi = create(:batch_invitation, organisation: organisation)
 
     assert_equal bi.organisation, organisation
   end

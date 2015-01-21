@@ -11,7 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150107063935) do
+ActiveRecord::Schema.define(:version => 20150121073933) do
+
+  create_table "batch_invitation_application_permissions", :force => true do |t|
+    t.integer  "batch_invitation_id",     :null => false
+    t.integer  "supported_permission_id", :null => false
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+  end
 
   create_table "batch_invitation_users", :force => true do |t|
     t.integer  "batch_invitation_id"

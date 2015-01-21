@@ -2,8 +2,8 @@ class BatchInvitation < ActiveRecord::Base
   belongs_to :user
   belongs_to :organisation
   has_many :batch_invitation_users
-
-  serialize :applications_and_permissions, Hash
+  has_many :batch_invitation_application_permissions
+  has_many :supported_permissions, through: :batch_invitation_application_permissions
 
   attr_accessor :user_names_and_emails
 
@@ -25,7 +25,7 @@ class BatchInvitation < ActiveRecord::Base
 
   def perform(options = {})
     self.batch_invitation_users.unprocessed.each do |bi_user|
-      bi_user.invite(self.user, self.applications_and_permissions)
+      bi_user.invite(user, supported_permission_ids)
     end
     self.outcome = "success"
     self.save!
