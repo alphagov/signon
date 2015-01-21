@@ -46,3 +46,23 @@
 <h2 class="add-vertical-margins">Permissions</h2>
 
 <%= render partial: "shared/user_permissions", locals: { user_object: f.object }%>
+
+<h2>Add a note (optional)</h2>
+<fieldset class="new-note">
+  <%= fields_for :note, Note.new do |note_form| %>
+    <p class="form-group">
+      <label for="note_type">Type</label><br />
+      <%= note_form.select :type, options_for_select(Note::TYPES.invert), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
+    </p>
+
+    <p class="form-group">
+      <label for="note_occurred_on">Occurred on</label><br />
+      <%= note_form.text_field :occurred_on, class: "form-control input-md-6", placeholder: "eg 2014-11-22" %>
+    </p>
+
+    <p class="form-group">
+      <label for="note_details">Details</label>
+      <%= note_form.text_field :details, class: "form-control input-md-6" %>
+    </p>
+  <% end %>
+</fieldset>
