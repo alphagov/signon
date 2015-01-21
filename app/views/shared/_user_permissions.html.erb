@@ -13,7 +13,9 @@
   </thead>
   <tbody>
     <% applications_and_permissions(user_object).each do |(application, permissions)|
-       attribute_name = user_object.api_user? ? 'api_user' : 'user' %>
+       attribute_name = user_object.api_user? ? 'api_user' : 'user'
+       supported_permission_field_name = "#{attribute_name}[supported_permission_ids][]"
+       supported_permission_field_prefix = "#{attribute_name}_application_#{application.id}_supported_permission" %>
       <tr>
         <td>
           <%= application.name %>
@@ -25,26 +27,24 @@
             # API Users will always have a "signin" permission for apps for which they have access token.
             # The hidden field ensures it is not lost.
           %>
-          <%= hidden_field_tag "#{attribute_name}[supported_permission_ids][]", application.signin_permission.id,
-                                id: "#{attribute_name}_supported_permission_signin_checkbox" %>
+          <%= hidden_field_tag supported_permission_field_name, application.signin_permission.id, id: "#{supported_permission_field_prefix}_signin" %>
         <% else %>
           <td>
-            <%= label_tag "#{attribute_name}_application_#{application.id}_supported_permission_signin", "Has access to #{application.name}?", class: "rm" %>
-            <%= check_box_tag "#{attribute_name}[supported_permission_ids][]", application.signin_permission.id,
-                              permissions.detect {|per| per.supported_permission_id == application.signin_permission.id },
-                              id: "#{attribute_name}_application_#{application.id}_supported_permission_signin" %>
+            <%= label_tag "#{supported_permission_field_prefix}_signin", "Has access to #{application.name}?", class: "rm" %>
+            <%= check_box_tag supported_permission_field_name, application.signin_permission.id, user_object.has_access_to?(application),
+                              id: "#{supported_permission_field_prefix}_signin" %>
           </td>
         <% end %>
         <td>
-          <%= label_tag "#{attribute_name}_application_#{application.id}_supported_permission_ids", "Permissions for #{application.name}", class: "rm" %>
+          <%= label_tag "#{supported_permission_field_prefix}_ids", "Permissions for #{application.name}", class: "rm" %>
           <% supported_permissions_options = application.supported_permissions.inject({}) {|h, per| h.merge(per.name => per.id) }
              supported_permissions_options.delete('signin') %>
-          <%= select_tag "#{attribute_name}[supported_permission_ids][]",
+          <%= select_tag supported_permission_field_name,
                           options_for_select(supported_permissions_options,
                             user_object.permission_ids_for(application) - [application.signin_permission.id]),
                           multiple: true,
                           class: "chosen-select",
-                          id: "#{attribute_name}_application_#{application.id}_supported_permission_ids",
+                          id: "#{supported_permission_field_prefix}_ids",
                           'data-module' => 'chosen',
                           'data-placeholder' => 'Start typing to search for permissions'
           %>
