@@ -22,7 +22,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
 
       invited_user = User.find_by_email("fred@example.com")
       assert_not_nil invited_user
-      assert_equal ['signin'], invited_user.permissions_for(application)
+      assert invited_user.has_access_to?(application)
       assert_equal "fred@example.com", last_email.to[0]
       assert_match 'Please confirm your account', last_email.subject
     end

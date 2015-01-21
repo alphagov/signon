@@ -71,6 +71,10 @@ class User < ActiveRecord::Base
     application_permissions.where(application_id: application.id).pluck(:supported_permission_id)
   end
 
+  def has_access_to?(application)
+    application_permissions.detect {|permission| permission.supported_permission_id == application.signin_permission.id }
+  end
+
   def permissions_synced!(application)
     application_permissions.where(application_id: application.id).update_all(last_synced_at: Time.zone.now)
   end

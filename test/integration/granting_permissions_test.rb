@@ -16,7 +16,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     check "Has access to MyApp?"
     click_button "Update User"
 
-    assert_include @user.permissions_for(app), 'signin'
+    assert @user.has_access_to?(app)
   end
 
   should "support granting app-specific permissions" do
