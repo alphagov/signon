@@ -35,11 +35,6 @@ class UserPolicy < BasePolicy
     current_user.superadmin?
   end
 
-  def invite_in_batch?
-    current_user.superadmin? || current_user.admin? ||
-      (current_user.organisation_admin && belong_to_same_organisation_subtree?(current_user, record))
-  end
-
   class Scope < ::BasePolicy::Scope
     def resolve
       if current_user.superadmin?
@@ -50,11 +45,5 @@ class UserPolicy < BasePolicy
         scope.web_users.where(role: %w(organisation_admin normal)).where(organisation_id: current_user.organisation_id)
       end
     end
-  end
-
-  private
-
-  def belong_to_same_organisation_subtree?(current_user, record)
-    current_user.organisation.subtree.pluck(:id).include?(record.organisation_id.to_i)
   end
 end
