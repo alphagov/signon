@@ -61,20 +61,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
         create(:supported_permission, application_id: another_app.id, name: "foo")
         @user.grant_application_permissions(another_app, ["signin", "foo"])
 
-        permissions_attributes = {
-          0 => {
-            application_id: "#{app.id}",
-            id: "",
-            permissions: []
-          },
-          1 => {
-            application_id: "#{another_app.id}",
-            id: "",
-            permissions: ["signin"]
-          }
-        }
-
-        @bi.applications_and_permissions = permissions_attributes
+        @bi.supported_permission_ids = [another_app.signin_permission.id]
         @bi.save
         @bi.perform
 

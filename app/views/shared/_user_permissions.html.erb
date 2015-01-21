@@ -29,14 +29,14 @@
                                 id: "#{attribute_name}_supported_permission_signin_checkbox" %>
         <% else %>
           <td>
-            <%= label_tag "#{attribute_name}_#{application.name}_supported_permission_signin_checkbox", "Has access to #{application.name}?", class: "rm" %>
+            <%= label_tag "#{attribute_name}_application_#{application.id}_supported_permission_signin", "Has access to #{application.name}?", class: "rm" %>
             <%= check_box_tag "#{attribute_name}[supported_permission_ids][]", application.signin_permission.id,
                               permissions.detect {|per| per.supported_permission_id == application.signin_permission.id },
-                              id: "#{attribute_name}_#{application.name}_supported_permission_signin_checkbox" %>
+                              id: "#{attribute_name}_application_#{application.id}_supported_permission_signin" %>
           </td>
         <% end %>
         <td>
-          <%= label_tag "#{attribute_name}_#{application.name}_supported_permission_ids", "Permissions for #{application.name}", class: "rm" %>
+          <%= label_tag "#{attribute_name}_application_#{application.id}_supported_permission_ids", "Permissions for #{application.name}", class: "rm" %>
           <% supported_permissions_options = application.supported_permissions.inject({}) {|h, per| h.merge(per.name => per.id) }
              supported_permissions_options.delete('signin') %>
           <%= select_tag "#{attribute_name}[supported_permission_ids][]",
@@ -44,7 +44,7 @@
                             user_object.permission_ids_for(application) - [application.signin_permission.id]),
                           multiple: true,
                           class: "chosen-select",
-                          id: "#{attribute_name}_#{application.name}_supported_permission_ids",
+                          id: "#{attribute_name}_application_#{application.id}_supported_permission_ids",
                           'data-module' => 'chosen',
                           'data-placeholder' => 'Start typing to search for permissions'
           %>
