@@ -84,6 +84,30 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
     end
   end
 
+  should "not be broken by virus-scanners that follow links in emails" do
+    # Some users have virus-scanning systems that follow links in emails to
+    # check for anything malicious.  This was breaking this flow because the
+    # token was being reset the first time the page was accessed (introduced in
+    # a044b79).
+
+    Sidekiq::Testing.inline! do
+      user = create(:user)
+      new_password = "some v3ry s3cure passphrase"
+
+      trigger_reset_for(user.email)
+
+      open_email(user.email)
+      assert current_email
+      assert_equal "Reset passphrase instructions", current_email.subject
+
+      # simulate something following the link in the email.
+      current_email.click_link("Change my passphrase")
+
+      complete_password_reset(current_email, new_password: new_password)
+      assert_response_contains("Your passphrase was changed successfully")
+    end
+  end
+
   should "be accessible from the change password screen by a partially signed-in user" do
     user = create(:user, password_changed_at: 3.months.ago)
 

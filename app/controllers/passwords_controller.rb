@@ -6,11 +6,6 @@ class PasswordsController < Devise::PasswordsController
     unless self.resource && self.resource.reset_password_period_valid?
       render 'devise/passwords/reset_error' and return
     end
-
-    # Unfortunately (and surprisingly) the model method to change the reset password
-    # token is protected. It seems better to break that protection than to reimplement
-    # the same feature ourselves.
-    self.resource.__send__(:generate_reset_password_token!)
   end
 
   # overrides http://git.io/sOhoaA to prevent expirable from
