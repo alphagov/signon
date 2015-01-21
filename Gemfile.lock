@@ -59,6 +59,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    capybara-email (2.3.0)
+      capybara (~> 2.2.0)
+      mail
     celluloid (0.15.2)
       timers (~> 1.1.0)
     chronic (0.10.2)
@@ -275,6 +278,7 @@ DEPENDENCIES
   ancestry (= 2.0.0)
   bootstrap-kaminari-views (= 0.0.5)
   capybara (= 2.2.1)
+  capybara-email (~> 2.3.0)
   ci_reporter (= 1.7.0)
   database_cleaner (= 0.7.2)
   devise (= 2.2.5)

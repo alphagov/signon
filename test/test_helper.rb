@@ -107,6 +107,6 @@ class ActionDispatch::IntegrationTest
     Capybara.use_default_driver
 
     ActionController::Base.allow_forgery_protection = @original_forgery_protection_value
-    ActionMailer::Base.deliveries.clear
+    clear_emails
   end
 end

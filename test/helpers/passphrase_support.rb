@@ -22,8 +22,8 @@ module PassPhraseSupport
     click_button "Send me passphrase reset instructions"
   end
 
-  def complete_password_reset(options)
-    visit edit_user_password_path(reset_password_token: options[:reset_password_token])
+  def complete_password_reset(email, options)
+    email.click_link("Change my passphrase")
     fill_in "New passphrase", with: options[:new_password]
     fill_in "Confirm new passphrase", with: options[:new_password]
     click_button "Change my passphrase"
