@@ -5,6 +5,8 @@ class BatchInvitation < ActiveRecord::Base
   has_many :batch_invitation_application_permissions
   has_many :supported_permissions, through: :batch_invitation_application_permissions
 
+  serialize :applications_and_permissions, Hash
+
   attr_accessor :user_names_and_emails
 
   validates :outcome, inclusion: { :in => [nil, "success", "fail"] }
