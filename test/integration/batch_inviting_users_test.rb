@@ -1,8 +1,7 @@
 require 'test_helper'
 require 'sidekiq/testing'
- 
+
 class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
-  include EmailHelpers
 
   should "create users whose details are specified in a CSV file" do
     Sidekiq::Testing.inline! do
