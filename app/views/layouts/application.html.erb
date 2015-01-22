@@ -27,7 +27,7 @@
 
 <% if user_signed_in? && params[:controller] !~ %r{doorkeeper/} %>
   <% content_for :navbar_right do %>
-    <%= link_to current_user.name, root_path %>
+    <%= link_to current_user.name, user_link_target %>
     &bull; <%= link_to 'Sign out', destroy_user_session_path %>
   <% end %>
 <% end %>
