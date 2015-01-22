@@ -10,5 +10,6 @@ class CreateJoinTableUserApplicationPermissions < ActiveRecord::Migration
 
     add_index :user_application_permissions, :user_id
     add_index :user_application_permissions, [:user_id, :application_id]
+    add_index :user_application_permissions, [:user_id, :application_id, :supported_permission_id], unique: true
   end
 end
