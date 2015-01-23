@@ -29,6 +29,9 @@
           <%= submit_tag "Search", class: "btn btn-default" %>
           <% end %>
         </li>
+        <li class="<% if any_filter? %>add-right-margin <% end %>pull-right">
+          <%= link_to "Export as CSV", params.merge(format: "csv"), class: "btn btn-default" %>
+        </li>
       </ul>
     </header>
   </div>

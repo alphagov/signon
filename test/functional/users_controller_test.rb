@@ -273,6 +273,37 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "td.role", count: 3
       end
 
+      should "show user organisation" do
+        user = create(:user_in_organisation)
+
+        get :index
+
+        assert_select "td.organisation", user.organisation.name
+      end
+
+      context "CSV export" do
+
+        should "respond to CSV format" do
+          get :index, format: :csv
+          assert_response :success
+          assert_equal @response.content_type, 'text/csv'
+        end
+
+        should "export filtered users" do
+          user = create(:user)
+          get :index, role: 'admin', format: :csv
+          lines = @response.body.lines
+          assert_equal(2, lines.length)
+        end
+
+        should "export all users when no filter selected" do
+          user = create(:user)
+          get :index, format: :csv
+          lines = @response.body.lines
+          assert_equal(3, lines.length)
+        end
+      end
+
       should "let you paginate by the first letter of the name" do
         create(:user, name: "alf", email: "a@email.com")
         create(:user, name: "zed", email: "z@email.com")
@@ -333,6 +364,15 @@ class UsersControllerTest < ActionController::TestCase
 
         assert_select "tbody tr", count: 1
         assert_select "td.email", /suspended_user@gov.uk/
+      end
+
+      should "scope list of users by organisation" do
+        user = create(:user_in_organisation, email: "orgmember@gov.uk")
+
+        get :index, organisation: user.organisation.id
+
+        assert_select "tbody tr", count: 1
+        assert_select "td.email", /orgmember@gov.uk/
       end
 
       context "as superadmin" do

@@ -1,3 +1,5 @@
+require 'csv'
+
 class UsersController < ApplicationController
   include UserPermissionsControllerMethods
 
@@ -25,7 +27,15 @@ class UsersController < ApplicationController
 
     @users = policy_scope(User).includes(:organisation)
     filter_users if any_filter?
-    paginate_users
+    respond_to do |format|
+      format.html do
+        paginate_users
+      end
+      format.csv do
+        headers['Content-Disposition'] = 'attachment; filename="signon_users.csv"' 
+        render text: export, content_type: 'text/csv'
+      end
+    end
   end
 
   def update
@@ -119,6 +129,7 @@ class UsersController < ApplicationController
   end
 
   def filter_users
+    @users = @users.includes(:permissions) if should_include_permissions?
     @users = @users.filter(params[:filter]) if params[:filter].present?
     @users = @users.with_role(params[:role]) if can_filter_role?
     @users = @users.with_organisation(params[:organisation]) if params[:organisation].present?
@@ -128,6 +139,10 @@ class UsersController < ApplicationController
   def can_filter_role?
     params[:role].present? &&
     current_user.manageable_roles.include?(params[:role])
+  end
+
+  def should_include_permissions?
+    params[:format] == 'csv'
   end
 
   def paginate_users
@@ -163,6 +178,16 @@ class UsersController < ApplicationController
     if params[:client_id].present?
       if params[:client_id] != doorkeeper_token.application.uid
         head :unauthorized
+      end
+    end
+  end
+
+  def export
+    applications = Doorkeeper::Application.includes(:supported_permissions)
+    CSV.generate do |csv|
+      csv << UserExportPresenter.header_row(applications)
+      @users.each do |user|
+        csv << UserExportPresenter.new(user, applications).row
       end
     end
   end
