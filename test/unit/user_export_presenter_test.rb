@@ -18,9 +18,9 @@ class UserExportPresenterTest < ActiveSupport::TestCase
     assert_equal(expected, header_row)
   end
 
-  should "include permissions for each application" do
+  should "include sorted permissions for each application" do
     create(:permission, user: @user, application: @apps[0], permissions: ["editor"])
-    create(:permission, user: @user, application: @apps[2], permissions: ["admin", "editor"])
+    create(:permission, user: @user, application: @apps[2], permissions: ["editor", "admin"])
 
     perms = UserExportPresenter.new(@user, @apps).app_permissions
 
