@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150107063935) do
+ActiveRecord::Schema.define(:version => 20150121111004) do
 
   create_table "batch_invitation_users", :force => true do |t|
     t.integer  "batch_invitation_id"
@@ -45,6 +45,13 @@ ActiveRecord::Schema.define(:version => 20150107063935) do
   end
 
   add_index "event_logs", ["uid", "created_at"], :name => "index_event_logs_on_uid_and_created_at"
+
+  create_table "notes", :force => true do |t|
+    t.integer "user_id"
+    t.string  "type"
+    t.string  "details"
+    t.date    "occurred_on"
+  end
 
   create_table "oauth_access_grants", :force => true do |t|
     t.integer  "resource_owner_id", :null => false

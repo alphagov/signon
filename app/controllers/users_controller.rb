@@ -70,6 +70,10 @@ class UsersController < ApplicationController
           end
         end
 
+        if params[:note] && (params[:note][:details].present? || params[:note][:occurred_on].present?)
+          @user.notes << Note.new(params[:note])
+        end
+
         redirect_to users_path, notice: "Updated user #{@user.email} successfully"
       else
         render :edit
