@@ -1,7 +1,9 @@
 class UserMailer < ActionMailer::Base
-  helper_method :suspension_time, :account_name, :instance_name, :locked_time, :unlock_time
+  include MailerHelper
 
-  default from: "GOV.UK Signon <noreply-signon@digital.cabinet-office.gov.uk>"
+  default from: lambda { email_from }
+
+  helper_method :suspension_time, :account_name, :instance_name, :locked_time, :unlock_time
 
   def suspension_reminder(user, days)
     @user, @days = user, days
@@ -62,23 +64,11 @@ private
     (@user.locked_at + 1.hour).to_s(:govuk_date)
   end
 
-  def app_name
-    if instance_name.present?
-      "GOV.UK Signon #{instance_name}"
-    else
-      "GOV.UK Signon"
-    end
-  end
-
   def account_name
     if instance_name.present?
       "#{instance_name} account"
     else
       "account"
     end
-  end
-
-  def instance_name
-    Rails.application.config.instance_name
   end
 end
