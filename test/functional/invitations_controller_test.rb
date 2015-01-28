@@ -95,4 +95,16 @@ class InvitationsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "POST resend" do
+    should "resend account signup email to user" do
+      admin, user = create(:admin_user), create(:user)
+      User.any_instance.expects(:invite!).once
+      sign_in admin
+
+      post :resend, id: user.id
+
+      assert_redirected_to users_path
+    end
+  end
 end

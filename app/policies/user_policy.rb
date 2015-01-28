@@ -26,6 +26,7 @@ class UserPolicy < BasePolicy
   alias_method :update_passphrase?, :edit?
   alias_method :cancel_email_change?, :edit?
   alias_method :resend_email_change?, :edit?
+  alias_method :resend?, :edit?
 
   def event_logs?
     current_user.normal? ? false : edit?
