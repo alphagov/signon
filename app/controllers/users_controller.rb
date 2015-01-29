@@ -146,8 +146,6 @@ class UsersController < ApplicationController
     params[:filter].present? || params[:role].present? || params[:status].present? || params[:organisation].present?
   end
 
-  private
-
   def application_making_request
     ::Doorkeeper::Application.find(doorkeeper_token.application_id)
   end
