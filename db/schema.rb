@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(:version => 20150121092250) do
     t.datetime "updated_at",              :null => false
   end
 
+  add_index "batch_invitation_application_permissions", ["batch_invitation_id", "supported_permission_id"], :name => "index_batch_invite_app_perms_on_batch_invite_and_supported_perm", :unique => true
+
   create_table "batch_invitation_users", :force => true do |t|
     t.integer  "batch_invitation_id"
     t.string   "name"
@@ -152,6 +154,7 @@ ActiveRecord::Schema.define(:version => 20150121092250) do
     t.datetime "updated_at",              :null => false
   end
 
+  add_index "user_application_permissions", ["user_id", "application_id", "supported_permission_id"], :name => "index_app_permissions_on_user_and_app_and_supported_permission", :unique => true
   add_index "user_application_permissions", ["user_id", "application_id"], :name => "index_user_application_permissions_on_user_id_and_application_id"
   add_index "user_application_permissions", ["user_id"], :name => "index_user_application_permissions_on_user_id"
 
