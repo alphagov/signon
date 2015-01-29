@@ -14,6 +14,7 @@ class EventLog < ActiveRecord::Base
   EMAIL_CHANGED = "Email changed"
   EMAIL_CHANGE_INITIATED = "Email change initiated"
   EMAIL_CHANGE_CONFIRMED = "Email change confirmed"
+  PERMISSION_CHANGED = "Permission changed"
 
   # API users
   API_USER_CREATED = "Account created"
@@ -27,7 +28,8 @@ class EventLog < ActiveRecord::Base
                                 API_USER_CREATED,
                                 ACCESS_TOKEN_GENERATED,
                                 ACCESS_TOKEN_REVOKED,
-                                EMAIL_CHANGED]
+                                EMAIL_CHANGED,
+                                PERMISSION_CHANGED]
 
   EVENTS_REQUIRING_APPLICATION_ID = [ACCESS_TOKEN_REGENERATED, ACCESS_TOKEN_GENERATED, ACCESS_TOKEN_REVOKED]
   VALID_OPTIONS = [:initiator, :application, :trailing_message]
@@ -39,6 +41,8 @@ class EventLog < ActiveRecord::Base
 
   belongs_to :initiator, class_name: "User"
   belongs_to :application, class_name: "Doorkeeper::Application"
+
+  serialize :data, Hash
 
   def self.record_event(user, event, options={})
     attributes = { uid: user.uid, event: event }.merge!(options.slice(*VALID_OPTIONS))

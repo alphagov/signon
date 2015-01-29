@@ -32,7 +32,7 @@ class UsersController < ApplicationController
         paginate_users
       end
       format.csv do
-        headers['Content-Disposition'] = 'attachment; filename="signon_users.csv"' 
+        headers['Content-Disposition'] = 'attachment; filename="signon_users.csv"'
         render text: export, content_type: 'text/csv'
       end
     end
@@ -42,10 +42,21 @@ class UsersController < ApplicationController
     raise Pundit::NotAuthorizedError if current_user.organisation_admin? &&
       ! current_user.organisation.subtree.map(&:id).include?(params[:user][:organisation_id].to_i)
 
+    perms_before = @user.application_permissions.to_a
+
     @user.skip_reconfirmation!
     if @user.update_attributes(params[:user], as: current_user.role.to_sym)
       @user.application_permissions.reload
       PermissionUpdater.perform_on(@user)
+
+      perms_after = @user.application_permissions.to_a
+
+      @user.event_logs << EventLog.new(
+        event: EventLog::PERMISSION_CHANGED,
+        data: PermissionDiffer.diff(perms_before, perms_after),
+        initiator_id: current_user.id,
+        trailing_message: params[:change_note]
+      )
 
       if email_change = @user.previous_changes[:email]
         EventLog.record_email_change(@user, email_change.first, email_change.last, current_user)

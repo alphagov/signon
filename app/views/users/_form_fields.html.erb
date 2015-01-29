@@ -44,3 +44,10 @@
 <h2 class="add-vertical-margins">Permissions</h2>
 
 <%= render partial: "shared/user_permissions", locals: { user_object: f.object }%>
+
+<fieldset class="new-note">
+  <p class="form-group">
+    <label for="change_note">Add a change note (optional)</label>
+    <%= text_field_tag :change_note, nil, class: "form-control input-md-6" %>
+  </p>
+</fieldset>
