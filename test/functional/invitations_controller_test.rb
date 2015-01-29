@@ -58,6 +58,15 @@ class InvitationsControllerTest < ActionController::TestCase
       assert_empty User.where(api_user: true)
     end
 
+    should "not error while inviting an existing user" do
+      user = create(:user)
+
+      post :create, user: { name: user.name, email: user.email }
+
+      assert_redirected_to users_path
+      assert_equal "User already invited. If you want to, you can click 'Resend signup email'.", flash[:alert]
+    end
+
     context "SES has blacklisted the address" do
       should "show the user a helpful message" do
         Devise::Mailer.any_instance.expects(:mail).with(anything)
