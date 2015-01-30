@@ -24,7 +24,7 @@ gem 'devise_zxcvbn', '1.1.1'
 gem 'devise-async', '0.8.0'
 gem 'pundit', '0.3.0'
 
-gem 'doorkeeper', '0.6.7'
+gem 'doorkeeper', '2.1.0'
 gem 'ancestry', '2.0.0'
 
 gem 'gds-api-adapters', '7.11.0'
