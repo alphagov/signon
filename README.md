@@ -134,14 +134,13 @@ end
 
 To require Doorkeeper authentication in a controller (i.e., you want an
 application that has been granted a token on behalf of a user to interact with
-the controller), add `doorkeeper_for :all` or `doorkeeper_for :action` to the
-controller.
+the controller), add `before_filter :doorkeeper_authorize!` to the controller.
 
 For example:
 
 ```ruby
 class AutomaticApiController
-  doorkeeper_for :swizzle
+  before_filter :doorkeeper_authorize!
 
   def swizzle
     @token_owning_user = User.find_by_id(doorkeeper_token.resource_owner_id)

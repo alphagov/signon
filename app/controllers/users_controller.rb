@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   helper_method :applications_and_permissions, :any_filter?
   respond_to :html
 
-  doorkeeper_for :show
+  before_filter :doorkeeper_authorize!, only: :show
   before_filter :validate_token_matches_client_id, :only => :show
   skip_after_filter :verify_authorized, only: :show
 
