@@ -12,4 +12,13 @@ module ApplicationHelper
       end
     end
   end
+
+  def user_link_target
+    # The page the current user's name in the header should link them to
+    if policy(current_user).edit?
+      edit_user_path(current_user)
+    else
+      root_path
+    end
+  end
 end
