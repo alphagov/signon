@@ -155,8 +155,6 @@ ActiveRecord::Schema.define(:version => 20150121092250) do
   end
 
   add_index "user_application_permissions", ["user_id", "application_id", "supported_permission_id"], :name => "index_app_permissions_on_user_and_app_and_supported_permission", :unique => true
-  add_index "user_application_permissions", ["user_id", "application_id"], :name => "index_user_application_permissions_on_user_id_and_application_id"
-  add_index "user_application_permissions", ["user_id"], :name => "index_user_application_permissions_on_user_id"
 
   create_table "users", :force => true do |t|
     t.string   "name",                                                       :null => false
