@@ -35,7 +35,8 @@ class User < ActiveRecord::Base
   validate :email_is_ascii_only
 
   has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
-  has_many :permissions, inverse_of: :user
+  has_many :application_permissions, class_name: 'UserApplicationPermission', inverse_of: :user
+  has_many :supported_permissions, through: :application_permissions
   has_many :batch_invitations
   has_many :event_logs, primary_key: :uid, foreign_key: :uid, order: 'created_at DESC'
   belongs_to :organisation
@@ -43,8 +44,6 @@ class User < ActiveRecord::Base
   before_validation :fix_apostrophe_in_email
   before_create :generate_uid
   after_create :update_stats
-
-  accepts_nested_attributes_for :permissions, :allow_destroy => true
 
   scope :web_users, where(api_user: false)
   scope :not_suspended, where(suspended_at: nil)
@@ -64,22 +63,36 @@ class User < ActiveRecord::Base
     !invitation_sent_at.nil? && invitation_accepted_at.nil?
   end
 
+  def permissions_for(application)
+    application_permissions.joins(:supported_permission).where(application_id: application.id).pluck(:name)
+  end
+
+  def permission_ids_for(application)
+    application_permissions.where(application_id: application.id).pluck(:supported_permission_id)
+  end
+
+  def has_access_to?(application)
+    application_permissions.detect {|permission| permission.supported_permission_id == application.signin_permission.id }
+  end
+
+  def permissions_synced!(application)
+    application_permissions.where(application_id: application.id).update_all(last_synced_at: Time.zone.now)
+  end
+
   def authorised_applications
     authorisations.group_by(&:application).map(&:first)
   end
   alias_method :applications_used, :authorised_applications
 
-  def grant_permission(application, permission)
-    grant_permissions(application, [permission])
+  def grant_application_permission(application, supported_permission_name)
+    grant_application_permissions(application, [supported_permission_name]).first
   end
 
-  def grant_permissions(application, permissions)
-    permission_record = self.permissions.find_by_application_id(application.id) || self.permissions.build(application_id: application.id)
-    new_permissions = Set.new(permission_record.permissions || [])
-    new_permissions += permissions
-
-    permission_record.permissions = new_permissions.to_a
-    permission_record.save!
+  def grant_application_permissions(application, supported_permission_names)
+    supported_permission_names.map do |supported_permission_name|
+      supported_permission = SupportedPermission.find_by_application_id_and_name(application.id, supported_permission_name)
+      application_permissions.where(application_id: application.id, supported_permission_id: supported_permission.id).first_or_create!
+    end
   end
 
   # override Devise::Recoverable behavior to:

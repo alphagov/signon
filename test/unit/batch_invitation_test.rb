@@ -5,22 +5,14 @@ class BatchInvitationTest < ActiveSupport::TestCase
     ActionMailer::Base.deliveries = []
 
     @app = create(:application)
-
-    permissions_attributes = {
-      0 => {
-        application_id: "#{@app.id}",
-        id: "",
-        permissions: ["signin"]
-      }
-    }
-    @bi = create(:batch_invitation, applications_and_permissions: permissions_attributes)
+    @bi = create(:batch_invitation, supported_permission_ids: [@app.signin_permission.id])
     @user_a = create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
     @user_b = create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
   end
 
   should "can belong to an organisation" do
     organisation = create(:organisation)
-    bi = create(:batch_invitation, organisation: organisation, applications_and_permissions: {})
+    bi = create(:batch_invitation, organisation: organisation)
 
     assert_equal bi.organisation, organisation
   end
@@ -32,10 +24,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
       user = User.find_by_email("a@m.com")
       assert_not_nil user
       assert_equal "A", user.name
-
-      permissions_for_app = user.permissions.where(application_id: @app.id).first
-      assert_not_nil permissions_for_app
-      assert_equal ["signin"], permissions_for_app.permissions
+      assert_equal ["signin"], user.permissions_for(@app)
     end
 
     should "trigger an invitation email" do
@@ -70,33 +59,14 @@ class BatchInvitationTest < ActiveSupport::TestCase
         app = create(:application)
         another_app = create(:application)
         create(:supported_permission, application_id: another_app.id, name: "foo")
-        @user.grant_permissions(another_app, ["signin", "foo"])
+        @user.grant_application_permissions(another_app, ["signin", "foo"])
 
-        permissions_attributes = {
-          0 => {
-            application_id: "#{app.id}",
-            id: "",
-            permissions: []
-          },
-          1 => {
-            application_id: "#{another_app.id}",
-            id: "",
-            permissions: ["signin"]
-          }
-        }
-
-        @bi.applications_and_permissions = permissions_attributes
+        @bi.supported_permission_ids = [another_app.signin_permission.id]
         @bi.save
-
         @bi.perform
 
-        @user.reload
-
-        app_permissions = @user.permissions.where(application_id: app.id).first
-        assert_nil app_permissions
-
-        another_app_permissions = @user.permissions.where(application_id: another_app.id).first
-        assert_equal ["signin", "foo"], another_app_permissions.permissions
+        assert_empty @user.permissions_for(app)
+        assert_same_elements ["signin", "foo"], @user.permissions_for(another_app)
       end
     end
 

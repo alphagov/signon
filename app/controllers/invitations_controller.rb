@@ -29,7 +29,7 @@ class InvitationsController < Devise::InvitationsController
       respond_with resource, :location => after_invite_path_for(resource)
     else
       # workaround for invitatable not providing a build_invitation which could be authorised before saving
-      resource_params = translate_faux_signin_permission(params[resource_name])
+      resource_params = params[resource_name]
       user = User.new(resource_params)
       user.organisation_id = resource_params[:organisation_id]
       authorize user

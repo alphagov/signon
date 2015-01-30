@@ -8,18 +8,15 @@ class UserOAuthPresenter < Struct.new(:user, :application)
         uid: user.uid,
         name: user.name,
         email: user.email,
-        permissions: permissions_strings,
+        permissions: permissions,
         organisation_slug: organisation_slug,
         disabled: user.suspended?,
       }
     }
   end
 
-  def permissions_strings
-    return [] if user.suspended?
-
-    permission = user.permissions.where(application_id: application.id).first
-    permission.nil? ? [] : permission.permissions
+  def permissions
+    user.suspended? ? [] : user.permissions_for(application)
   end
 
   def organisation_slug

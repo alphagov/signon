@@ -2,8 +2,8 @@ module Roles
   class Admin
 
     def self.accessible_attributes
-      [:uid, :name, :email, :password, :password_confirmation,
-      :permissions_attributes, :organisation_id, :unconfirmed_email, :confirmation_token]
+      [:uid, :name, :email, :password, :password_confirmation, :supported_permission_ids,
+      :application_permissions_attributes, :organisation_id, :unconfirmed_email, :confirmation_token]
     end
 
     def self.role_name

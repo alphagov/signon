@@ -15,7 +15,7 @@
   <h2 class="remove-top-margin add-bottom-margin">Your Applications</h2>
   <% if @applications_and_permissions.any? %>
     <div class="list-group remove-bottom-margin">
-      <% @applications_and_permissions.each do |application, permission| %>
+      <% @applications_and_permissions.each do |application, permissions| %>
         <div class="list-group-item">
           <h3 class="remove-top-margin add-label-margin">
             <%= link_to_if application.home_uri, application.name, application.home_uri %>
@@ -24,9 +24,9 @@
           <% if application.description.present? %>
             <%= application.description %>
           <% end %>
-          <% if permission.permissions.any? %>
+          <% if permissions.any? %>
             <% if application.description.present? %>&bull; <% end %>
-            Roles: <em><%= permission.permissions.map(&:humanize).to_sentence %></em>
+            Roles: <em><%= current_user.permissions_for(application).map(&:humanize).to_sentence %></em>
           <% end %>
           </div>
         </div>

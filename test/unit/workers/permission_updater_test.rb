@@ -12,8 +12,8 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
     SSOPushCredential.stubs(:user_email).returns(@sso_push_user.email)
 
     @user = create(:user)
-    @application = create(:application, redirect_uri: "http://app.com/callback")
-    @permission = create(:permission, application: @application, user: @user, permissions: ["ba"])
+    @application = create(:application, redirect_uri: "http://app.com/callback", with_supported_permissions: ['user_update_permission'])
+    @permission = @user.grant_application_permission(@application, 'signin')
   end
 
   context "perform" do

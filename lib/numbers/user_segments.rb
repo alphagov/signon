@@ -1,20 +1,11 @@
 class UserSegments
   module SegmentExtensions
     def licensing_user?
-      has_access_to_licensing? and applications_with_signon_permission.size == 1
+      application_permissions.count == 1 && has_access_to?(Doorkeeper::Application.find_by_name('Licensing'))
     end
 
     def active?
       suspended_at.nil?
-    end
-
-    private
-    def applications_with_signon_permission
-      permissions.select {|perm| perm.permissions.include?("signin") }
-    end
-
-    def has_access_to_licensing?
-      applications_with_signon_permission.map { |p| p.application.name }.include?("Licensing")
     end
   end
 

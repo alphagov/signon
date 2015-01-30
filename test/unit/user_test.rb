@@ -205,15 +205,13 @@ class UserTest < ActiveSupport::TestCase
     assert_equal old_encrypted_password, u.encrypted_password, "Changed passphrase"
   end
 
-  test "can grant permissions to user application and permission name" do
-    app = create(:application, name: "my_app", supported_permissions: [
-            create(:supported_permission, name: 'Create publications'),
-            create(:supported_permission, name: 'Delete publications')
-          ])
+  test "can grant permissions to users and return the created permission" do
+    app = create(:application, name: "my_app", with_supported_permissions: ['Create publications', 'Delete publications'])
     user = create(:user)
 
-    user.grant_permission(app, "Create publications")
+    permission = user.grant_application_permission(app, "Create publications")
 
+    assert_equal permission, user.application_permissions.first
     assert_user_has_permissions ['Create publications'], app, user
   end
 
@@ -221,8 +219,8 @@ class UserTest < ActiveSupport::TestCase
     app = create(:application, name: "my_app")
     user = create(:user)
 
-    user.grant_permission(app, "signin")
-    user.grant_permission(app, "signin")
+    user.grant_application_permission(app, "signin")
+    user.grant_application_permission(app, "signin")
 
     assert_user_has_permissions ['signin'], app, user
   end
@@ -366,8 +364,8 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def assert_user_has_permissions(expected_permissions, application, user)
-    permissions_for_my_app = user.permissions.reload.find_by_application_id(application.id)
-    assert_equal expected_permissions, permissions_for_my_app.permissions
+    permissions = user.permissions_for(application)
+    assert_equal expected_permissions, permissions
   end
 
 end

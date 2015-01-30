@@ -18,7 +18,7 @@ class Metrics
   end
 
   def active_accounts_count_by_application
-    enabled_applications_for_each_user = all_active.map {|u| u.permissions.select {|p| p.permissions.include?("signin") }.map {|p| p.application.name } }.flatten
+    enabled_applications_for_each_user = all_active.map {|u| Doorkeeper::Application.can_signin(u).pluck(:name) }.flatten
     count_values(enabled_applications_for_each_user.group_by(&:to_s))
   end
 
@@ -76,11 +76,11 @@ class Metrics
   end
 
   def all
-    @all ||= User.includes({permissions: :application}, :organisation).all
+    @all ||= User.includes({application_permissions: :application}, :organisation).all
   end
 
   def all_active
-    @all_active ||= User.active.includes({permissions: :application}, :organisation).to_a
+    @all_active ||= User.active.includes({application_permissions: :application}, :organisation).to_a
   end
 
   def metric_methods

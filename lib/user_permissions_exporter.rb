@@ -22,24 +22,22 @@ class UserPermissionsExporter
   end
 
   def export(apps)
-    @applications = Doorkeeper::Application.where('name in (?)', apps)
+    @applications, users = Doorkeeper::Application.where('name in (?)', apps), User.order(:name).all
 
     # iterate over applications
     CSV.open(file_path, 'wb', headers: true) do |csv|
       csv << headers
 
       applications.each do |app|
-        permissions = Permission.includes(user: :organisation).where(application_id: app.id).order("users.name")
-        permissions.each do |permission|
-          if permission.permissions.any?
+        users.each do |user|
+          permissions = user.permissions_for(app)
+          if permissions.present?
             row = {}
             row["Application"] = app.name if multiple_apps?
-            if permission.user
-              row["Name"] = permission.user.name
-              row["Email"] = permission.user.email
-              row["Organisation"] = permission.user.organisation.name if permission.user.organisation
-            end
-            row["Permissions"] = permission.permissions.join(",")
+            row["Name"] = user.name
+            row["Email"] = user.email
+            row["Organisation"] = user.organisation.name if user.organisation
+            row["Permissions"] = permissions.join(",")
             csv << row
           end
         end

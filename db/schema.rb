@@ -11,7 +11,16 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150107063935) do
+ActiveRecord::Schema.define(:version => 20150121092250) do
+
+  create_table "batch_invitation_application_permissions", :force => true do |t|
+    t.integer  "batch_invitation_id",     :null => false
+    t.integer  "supported_permission_id", :null => false
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+  end
+
+  add_index "batch_invitation_application_permissions", ["batch_invitation_id", "supported_permission_id"], :name => "index_batch_invite_app_perms_on_batch_invite_and_supported_perm", :unique => true
 
   create_table "batch_invitation_users", :force => true do |t|
     t.integer  "batch_invitation_id"
@@ -135,6 +144,17 @@ ActiveRecord::Schema.define(:version => 20150107063935) do
 
   add_index "supported_permissions", ["application_id", "name"], :name => "index_supported_permissions_on_application_id_and_name", :unique => true
   add_index "supported_permissions", ["application_id"], :name => "index_supported_permissions_on_application_id"
+
+  create_table "user_application_permissions", :force => true do |t|
+    t.integer  "user_id",                 :null => false
+    t.integer  "application_id",          :null => false
+    t.integer  "supported_permission_id", :null => false
+    t.datetime "last_synced_at"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
+  end
+
+  add_index "user_application_permissions", ["user_id", "application_id", "supported_permission_id"], :name => "index_app_permissions_on_user_and_app_and_supported_permission", :unique => true
 
   create_table "users", :force => true do |t|
     t.string   "name",                                                       :null => false

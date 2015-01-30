@@ -13,7 +13,7 @@ class UsersController < ApplicationController
   skip_after_filter :verify_authorized, only: :show
 
   def show
-    relevant_permission.synced! if relevant_permission
+    current_resource_owner.permissions_synced!(application_making_request)
     respond_to do |format|
       format.json do
         presenter = UserOAuthPresenter.new(current_resource_owner, application_making_request)
@@ -58,8 +58,8 @@ class UsersController < ApplicationController
         ! current_user.organisation.subtree.map(&:id).include?(params[:user][:organisation_id].to_i)
 
       @user.skip_reconfirmation!
-      if @user.update_attributes(translate_faux_signin_permission(params[:user]), as: current_user.role.to_sym)
-        @user.permissions.reload
+      if @user.update_attributes(params[:user], as: current_user.role.to_sym)
+        @user.application_permissions.reload
         PermissionUpdater.perform_on(@user)
 
         if email_change = @user.previous_changes[:email]
@@ -159,13 +159,6 @@ class UsersController < ApplicationController
 
   def any_filter?
     params[:filter].present? || params[:role].present? || params[:status].present? || params[:organisation].present?
-  end
-
-  def relevant_permission
-    current_resource_owner
-        .permissions
-        .where(application_id: application_making_request.id)
-        .first
   end
 
   def application_making_request

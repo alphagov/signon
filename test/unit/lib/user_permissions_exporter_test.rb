@@ -3,13 +3,13 @@ require 'test_helper'
 class UserPermissionsExporterTest < ActionView::TestCase
 
   def setup
-    @chips_org = FactoryGirl.create(:organisation, name: "Ministry of chips")
-    @ketchup_org = FactoryGirl.create(:organisation, name: "Ministry of ketchup")
-    @brown_sauce_org = FactoryGirl.create(:organisation, name: "Ministry of brown sauce")
-    @bill = FactoryGirl.create(:user, name: "Bill", email: "bill@bill.com", organisation: @chips_org,
+    @chips_org = create(:organisation, name: "Ministry of chips")
+    @ketchup_org = create(:organisation, name: "Ministry of ketchup")
+    @brown_sauce_org = create(:organisation, name: "Ministry of brown sauce")
+    @bill = create(:user, name: "Bill", email: "bill@bill.com", organisation: @chips_org,
                                suspended_at: Date.parse('2000-01-01'), reason_for_suspension: "Left Chips.org")
-    @anne = FactoryGirl.create(:user, name: "Anne", email: "anne@anne.com", role: "superadmin", organisation: @ketchup_org)
-    @mary = FactoryGirl.create(:user, name: "Mary", email: "mary@mary.com", role: "admin", organisation: @brown_sauce_org)
+    @anne = create(:user, name: "Anne", email: "anne@anne.com", role: "superadmin", organisation: @ketchup_org)
+    @mary = create(:user, name: "Mary", email: "mary@mary.com", role: "admin", organisation: @brown_sauce_org)
 
     @tmpfile = Tempfile.new(['user_permissions_exporter_test_example', 'csv'])
     UserPermissionsExporter.any_instance.stubs(:file_path).returns(@tmpfile.path)
@@ -17,10 +17,10 @@ class UserPermissionsExporterTest < ActionView::TestCase
   end
 
   def test_export_one_application
-    foo_app = FactoryGirl.create(:application, name: "Foo")
-    FactoryGirl.create(:permission, permissions: ["signin", "cook"], application: foo_app, user: @bill)
-    FactoryGirl.create(:permission, permissions: ["signin", "administer", "add_vinegar"], application: foo_app, user: @anne)
-    FactoryGirl.create(:permission, permissions: ["signin", "do_some_stuff"], application: foo_app, user: @mary)
+    foo_app = create(:application, name: "Foo", with_supported_permissions: ['administer', 'add_vinegar', 'do_some_stuff', 'cook'])
+    @bill.grant_application_permissions(foo_app, ["signin", "cook"])
+    @anne.grant_application_permissions(foo_app, ["signin", "administer", "add_vinegar"])
+    @mary.grant_application_permissions(foo_app, ["signin", "do_some_stuff"])
 
     UserPermissionsExporter.new(@tmpfile.path).export(["Foo"])
 
@@ -33,16 +33,16 @@ class UserPermissionsExporterTest < ActionView::TestCase
   end
 
   def test_export_multiple_applications
-    foo_app = FactoryGirl.create(:application, name: "Foo")
-    bar_app = FactoryGirl.create(:application, name: "Bar")
-    baz_app = FactoryGirl.create(:application, name: "Baz")
+    foo_app = create(:application, name: "Foo", with_supported_permissions: ['administer', 'add_vinegar', 'do_some_stuff', 'cook'])
+    bar_app = create(:application, name: "Bar", with_supported_permissions: ['administer'])
+    baz_app = create(:application, name: "Baz")
 
-    FactoryGirl.create(:permission, permissions: ["signin", "cook"], application: foo_app, user: @bill)
-    FactoryGirl.create(:permission, permissions: [], application: baz_app, user: @bill)
-    FactoryGirl.create(:permission, permissions: ["signin", "administer", "add_vinegar"], application: foo_app, user: @anne)
-    FactoryGirl.create(:permission, permissions: ["signin", "administer"], application: bar_app, user: @anne)
-    FactoryGirl.create(:permission, permissions: ["signin", "do_some_stuff"], application: foo_app, user: @mary)
-    FactoryGirl.create(:permission, permissions: ["signin", "administer"], application: bar_app, user: @mary)
+    @bill.grant_application_permissions(foo_app, ["signin", "cook"])
+    @bill.grant_application_permissions(baz_app, [])
+    @anne.grant_application_permissions(foo_app, ["signin", "administer", "add_vinegar"])
+    @anne.grant_application_permissions(bar_app, ["signin", "administer"])
+    @mary.grant_application_permissions(foo_app, ["signin", "do_some_stuff"])
+    @mary.grant_application_permissions(bar_app, ["signin", "administer"])
 
     UserPermissionsExporter.new(@tmpfile.path).export(["Foo","Bar","Baz"])
 

@@ -39,9 +39,9 @@
             <span class="text-muted"><br /><%= user.email %></span>
           </td>
           <td>
-            <% applications_and_permissions(user).each do |application, permission| %>
-              <% unless permission.permissions.empty? %>
-                <abbr title="Permissions: <%= permission.permissions.join(', ') %>" data-toggle="tooltip" data-placement="right"><%= application.name %></abbr><br />
+            <% visible_applications(user).each do |application| %>
+              <% if permissions_for_application = user.permissions_for(application) %>
+                <abbr title="Permissions: <%= permissions_for_application.to_sentence %>" data-toggle="tooltip" data-placement="right"><%= application.name %></abbr><br />
               <% end %>
             <% end %>
           </td>

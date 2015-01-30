@@ -4,6 +4,7 @@ require 'numbers/user_segments'
 
 class NumbersCsvTest < ActiveSupport::TestCase
   def setup
+    @licensing = create(:application, name: "Licensing", with_supported_permissions: ["another perm"])
     create(:admin_user, email: 'admin_user@admin.example.com', name: "Winston")
     create_list(:user, 3)
   end
@@ -48,7 +49,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
 
   test "csv contains counts by application access" do
     app = create(:application, name: "WhiteCloud")
-    User.first.grant_permission(app, "signin")
+    User.first.grant_application_permission(app, "signin")
 
     NumbersCsv.generate
 
@@ -106,16 +107,15 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   test "licensing segmenting" do
-    licensing = create(:application, name: "Licensing")
     another_app = create(:application, name: "Another app")
 
     users = create_list(:user, 4)
-    users[0].grant_permission(licensing, "signin")
+    users[0].grant_application_permission(@licensing, "signin")
 
-    users[1].grant_permission(licensing, "signin")
-    users[1].grant_permission(another_app, "signin")
+    users[1].grant_application_permission(@licensing, "signin")
+    users[1].grant_application_permission(another_app, "signin")
 
-    users[2].grant_permission(licensing, "another perm")
+    users[2].grant_application_permission(@licensing, "another perm")
 
     users.each { |u| u.extend(UserSegments::SegmentExtensions) }
 

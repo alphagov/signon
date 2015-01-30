@@ -1,5 +1,6 @@
 class SupportedPermission < ActiveRecord::Base
   belongs_to :application, class_name: 'Doorkeeper::Application'
+  has_many :user_application_permissions, dependent: :destroy, inverse_of: :supported_permission
 
   validates_presence_of :name
   validate :signin_permission_name_not_changed

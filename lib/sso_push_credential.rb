@@ -11,7 +11,7 @@ class SSOPushCredential
   class UserNotProvided < StandardError; end
 
   def self.credentials(application)
-    user.grant_permissions(application, PERMISSIONS)
+    user.grant_application_permissions(application, PERMISSIONS)
 
     user.authorisations.
           create_with(expires_in: 10.years).
