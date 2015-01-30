@@ -11,19 +11,17 @@ class UserOAuthPresenterTest < ActiveSupport::TestCase
     user.grant_application_permissions(@application, ['signin', 'managing_editor'])
     user.organisation = justice_league
 
-    expected = {
-      user: {
-        email:  user.email,
-        name: user.name,
-        uid: user.uid,
-        permissions: ["signin", "managing_editor"],
-        organisation_slug: "justice-league",
-        disabled: false,
-      }
+    expected_user_attributes = {
+      email:  user.email,
+      name: user.name,
+      uid: user.uid,
+      organisation_slug: "justice-league",
+      disabled: false,
     }
 
-    presenter = UserOAuthPresenter.new(user, @application)
-    assert_equal(expected, presenter.as_hash)
+    user_representation = UserOAuthPresenter.new(user, @application).as_hash[:user]
+    assert_same_elements ["signin", "managing_editor"], user_representation.delete(:permissions)
+    assert_equal expected_user_attributes, user_representation
   end
 
   should "handle the user having no permissions for the application" do

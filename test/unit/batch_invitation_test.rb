@@ -66,7 +66,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
         @bi.perform
 
         assert_empty @user.permissions_for(app)
-        assert_equal ["signin", "foo"], @user.permissions_for(another_app)
+        assert_same_elements ["signin", "foo"], @user.permissions_for(another_app)
       end
     end
 

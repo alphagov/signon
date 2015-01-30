@@ -37,7 +37,7 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
         SSOPushCredential.credentials(@application)
 
         assert_equal 2, @user.application_permissions.count
-        assert_equal ["signin", "user_update_permission"], @user.permissions_for(@application)
+        assert_same_elements ["signin", "user_update_permission"], @user.permissions_for(@application)
       end
 
       should "not create new application permissions if both already exist" do
@@ -47,7 +47,7 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
         SSOPushCredential.credentials(@application)
 
         assert_equal 2, @user.application_permissions.count
-        assert_equal ["user_update_permission", "signin"], @user.permissions_for(@application)
+        assert_same_elements ["user_update_permission", "signin"], @user.permissions_for(@application)
       end
     end
 
