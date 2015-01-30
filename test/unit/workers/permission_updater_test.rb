@@ -4,7 +4,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
 
   def users_url(application)
     url = URI.parse(application.redirect_uri)
-    "http://#{url.host}/auth/gds/api/users/#{CGI.escape(@user.uid)}"
+    "https://#{url.host}/auth/gds/api/users/#{CGI.escape(@user.uid)}"
   end
 
   setup do
@@ -12,7 +12,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
     SSOPushCredential.stubs(:user_email).returns(@sso_push_user.email)
 
     @user = create(:user)
-    @application = create(:application, redirect_uri: "http://app.com/callback", with_supported_permissions: ['user_update_permission'])
+    @application = create(:application, redirect_uri: "https://app.com/callback", with_supported_permissions: ['user_update_permission'])
     @permission = @user.grant_application_permission(@application, 'signin')
   end
 
