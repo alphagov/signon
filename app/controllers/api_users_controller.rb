@@ -9,7 +9,7 @@ class ApiUsersController < ApplicationController
 
   def index
     authorize ApiUser
-    @api_users = ApiUser.includes(permissions: :application)
+    @api_users = ApiUser.includes(application_permissions: :application)
   end
 
   def new

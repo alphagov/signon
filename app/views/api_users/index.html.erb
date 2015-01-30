@@ -30,7 +30,7 @@
       </tr>
     </thead>
     <tbody>
-      <% ApiUser.all.each do |user| %>
+      <% @api_users.each do |user| %>
         <tr>
           <td class="email">
             <%= user.suspended? ? "<del>".html_safe : "" %>
