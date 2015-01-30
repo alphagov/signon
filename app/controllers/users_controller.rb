@@ -129,7 +129,6 @@ class UsersController < ApplicationController
   end
 
   def filter_users
-    @users = @users.includes(:permissions) if should_include_permissions?
     @users = @users.filter(params[:filter]) if params[:filter].present?
     @users = @users.with_role(params[:role]) if can_filter_role?
     @users = @users.with_organisation(params[:organisation]) if params[:organisation].present?

@@ -5,6 +5,9 @@ class UserExportPresenterTest < ActiveSupport::TestCase
     Timecop.freeze(2015, 1, 15, 9, 0)
     @apps = 5.times.map {|i| create(:application, name: "App #{i}") }
     @user = create(:user, name: "Test User", email: "test@dept.gov.uk")
+    create(:supported_permission, application: @apps[0], name: "editor")
+    create(:supported_permission, application: @apps[2], name: "editor")
+    create(:supported_permission, application: @apps[2], name: "admin")
   end
 
 
@@ -19,8 +22,8 @@ class UserExportPresenterTest < ActiveSupport::TestCase
   end
 
   should "include sorted permissions for each application" do
-    create(:permission, user: @user, application: @apps[0], permissions: ["editor"])
-    create(:permission, user: @user, application: @apps[2], permissions: ["editor", "admin"])
+    @user.grant_application_permissions(@apps[0], ["editor"])
+    @user.grant_application_permissions(@apps[2], ["editor", "admin"])
 
     perms = UserExportPresenter.new(@user, @apps).app_permissions
 
