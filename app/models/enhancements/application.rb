@@ -1,8 +1,9 @@
-require "doorkeeper/models/application"
+require "doorkeeper/orm/active_record/application"
 
 class ::Doorkeeper::Application < ActiveRecord::Base
   has_many :permissions, :dependent => :destroy
   has_many :supported_permissions, :dependent => :destroy
+
 
   attr_accessible :name, :description, :uid, :secret, :redirect_uri, :home_uri
   attr_accessible :supports_push_updates, role: :superadmin
