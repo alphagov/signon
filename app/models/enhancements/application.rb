@@ -18,6 +18,8 @@ class ::Doorkeeper::Application < ActiveRecord::Base
 
   after_create :create_signin_supported_permission
 
+  def self.policy_class; ApplicationPolicy; end
+
   def supported_permission_strings(user=nil)
     if user && user.role == 'organisation_admin'
       supported_permissions.delegatable.pluck(:name) & user.permissions_for(self)
