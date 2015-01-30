@@ -17,7 +17,7 @@
       <%= nav_link 'API Users', api_users_path %>
     <% end %>
     <% if policy(Doorkeeper::Application).index? %>
-      <%= nav_link 'Applications', applications_path %>
+      <%= nav_link 'Applications', doorkeeper_applications_path %>
     <% end %>
     <% if policy(Organisation).index? %>
       <%= nav_link 'Organisations', organisations_path %>

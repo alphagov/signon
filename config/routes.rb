@@ -28,7 +28,7 @@ Signonotron2::Application.routes.draw do
   resources :organisations, only: [:index]
   resources :suspensions, only: [:edit, :update]
 
-  resources :applications, only: [:index, :edit, :update] do
+  resources :doorkeeper_applications, only: [:index, :edit, :update] do
     resources :supported_permissions, only: [:index, :new, :create, :edit, :update]
   end
 
