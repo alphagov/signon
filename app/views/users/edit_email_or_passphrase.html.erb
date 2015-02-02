@@ -4,20 +4,12 @@
   <h1>Edit your account</h1>
 </div>
 
-<%- unless current_user.errors.empty? -%>
-  <div class="alert alert-danger">
-    <ul class="errors">
-      <%- current_user.errors.full_messages.each do |msg| -%>
-      <li><%= msg %></li>
-      <%- end -%>
-    </ul>
-  </div>
-<%- end -%>
+<%= render partial: "form_errors" %>
 
 <section class="well">
   <h2 class="remove-top-margin remove-bottom-margin">Change your email address</h2>
   <p class="text-muted bold">Changing your email address doesn’t take effect until you follow the link in a confirmation email sent to the new address.</p>
-  <%= form_for current_user do |f| %>
+  <%= form_for current_user, :url => update_email_user_path do |f| %>
     <% if f.object.unconfirmed_email.present? %>
       <p class="form-group">
         <%= f.label :unconfirmed_email, "You have a pending email change" %>

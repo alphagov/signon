@@ -99,7 +99,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin(@user)
 
-      visit edit_user_path(@user)
+      click_link "Change your email or passphrase"
       fill_in "Email", with: "new@email.com"
       click_button "Change email"
 
@@ -114,7 +114,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin(@user)
 
-      visit edit_user_path(@user)
+      click_link "Change your email or passphrase"
       fill_in "Email", with: "new@email.com"
       click_button "Change email"
 
@@ -131,7 +131,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin(@user)
 
-      visit edit_user_path(@user)
+      click_link "Change your email or passphrase"
       fill_in "Email", with: ""
       click_button "Change email"
 

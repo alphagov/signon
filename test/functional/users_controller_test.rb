@@ -63,7 +63,7 @@ class UsersControllerTest < ActionController::TestCase
     end
   end
 
-  context "PUT update" do
+  context "PUT update_email" do
     setup do
       @user = create(:user, email: "old@email.com")
       sign_in @user
@@ -71,7 +71,7 @@ class UsersControllerTest < ActionController::TestCase
 
     context "changing an email" do
       should "stage the change, send a confirmation email to the new address and email change notification to the old address" do
-        put :update, id: @user.id, user: { email: "new@email.com" }
+        put :update_email, id: @user.id, user: { email: "new@email.com" }
 
         @user.reload
         assert_equal "new@email.com", @user.unconfirmed_email
@@ -87,7 +87,7 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "log an event" do
-        put :update, id: @user.id, user: { email: "new@email.com" }
+        put :update_email, id: @user.id, user: { email: "new@email.com" }
         assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_INITIATED, uid: @user.uid, initiator_id: @user.id).count
       end
     end

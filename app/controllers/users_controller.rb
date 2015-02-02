@@ -39,41 +39,25 @@ class UsersController < ApplicationController
   end
 
   def update
-    current_email, new_email = current_user.email, params[:user][:email]
-    if current_user.normal?
-      if current_email == new_email.strip
-        flash[:alert] = "Nothing to update."
-        render :edit
-      elsif current_user.update_attributes(email: new_email)
-        EventLog.record_email_change(current_user, current_email, new_email)
-        UserMailer.email_changed_notification(current_user).deliver
-        redirect_to root_path, notice: "An email has been sent to #{new_email}. Follow the link in the email to update your address."
-      else
-        flash[:alert] = "Failed to change email."
-        render :edit
-      end
-    else
-      authorize @user
-      raise Pundit::NotAuthorizedError if current_user.organisation_admin? &&
-        ! current_user.organisation.subtree.map(&:id).include?(params[:user][:organisation_id].to_i)
+    raise Pundit::NotAuthorizedError if current_user.organisation_admin? &&
+      ! current_user.organisation.subtree.map(&:id).include?(params[:user][:organisation_id].to_i)
 
-      @user.skip_reconfirmation!
-      if @user.update_attributes(params[:user], as: current_user.role.to_sym)
-        @user.application_permissions.reload
-        PermissionUpdater.perform_on(@user)
+    @user.skip_reconfirmation!
+    if @user.update_attributes(params[:user], as: current_user.role.to_sym)
+      @user.application_permissions.reload
+      PermissionUpdater.perform_on(@user)
 
-        if email_change = @user.previous_changes[:email]
-          EventLog.record_email_change(@user, email_change.first, email_change.last, current_user)
-          @user.invite! if @user.invited_but_not_yet_accepted?
-          email_change.each do |to_address|
-            UserMailer.delay.email_changed_by_admin_notification(@user, email_change.first, to_address)
-          end
+      if email_change = @user.previous_changes[:email]
+        EventLog.record_email_change(@user, email_change.first, email_change.last, current_user)
+        @user.invite! if @user.invited_but_not_yet_accepted?
+        email_change.each do |to_address|
+          UserMailer.delay.email_changed_by_admin_notification(@user, email_change.first, to_address)
         end
-
-        redirect_to users_path, notice: "Updated user #{@user.email} successfully"
-      else
-        render :edit
       end
+
+      redirect_to users_path, notice: "Updated user #{@user.email} successfully"
+    else
+      render :edit
     end
   end
 
@@ -108,6 +92,21 @@ class UsersController < ApplicationController
     @logs = @user.event_logs.page(params[:page]).per(100) if @user
   end
 
+  def update_email
+    current_email, new_email = @user.email, params[:user][:email]
+    if current_email == new_email.strip
+      flash[:alert] = "Nothing to update."
+      render :edit_email_or_passphrase
+    elsif @user.update_attributes(email: new_email)
+      EventLog.record_email_change(@user, current_email, new_email)
+      UserMailer.email_changed_notification(@user).deliver
+      redirect_to root_path, notice: "An email has been sent to #{new_email}. Follow the link in the email to update your address."
+    else
+      flash[:alert] = "Failed to change email."
+      render :edit_email_or_passphrase
+    end
+  end
+
   def update_passphrase
     params[:user] ||= {}
     password_params = params[:user].symbolize_keys.keep_if { |k, v| [:current_password, :password, :password_confirmation].include?(k) }
@@ -117,7 +116,7 @@ class UsersController < ApplicationController
       redirect_to root_path
     else
       EventLog.record_event(@user, EventLog::UNSUCCESSFUL_PASSPHRASE_CHANGE)
-      render :edit
+      render :edit_email_or_passphrase
     end
   end
 

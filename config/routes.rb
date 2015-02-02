@@ -15,6 +15,8 @@ Signonotron2::Application.routes.draw do
 
   resources :users, except: [:show] do
     member do
+      get :edit_email_or_passphrase
+      put :update_email
       put :update_passphrase
       post :unlock
       put :resend_email_change
