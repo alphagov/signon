@@ -84,7 +84,7 @@ class UsersController < ApplicationController
     @user.unconfirmed_email = nil
     @user.confirmation_token = nil
     @user.save(validate: false)
-    redirect_to edit_user_path(@user)
+    redirect_to :back
   end
 
   def event_logs
