@@ -18,6 +18,7 @@
       <tr class="table-header">
         <th style="width: 200px">Time</th>
         <th>Event</th>
+        <th>More information</th>
       </tr>
     </thead>
     <tbody>
@@ -32,7 +33,10 @@
             <% if log.initiator %>
               by <strong><%= link_to log.initiator.name, users_path(filter: log.initiator.email), title: log.initiator.email %></strong>
             <% end %>
-            <%= log.trailing_message %>
+            <p><%= log.trailing_message %></p>
+          </td>
+          <td class="event-data">
+            <%= render_event_data(log.data) %>
           </td>
         </tr>
       <% end %>

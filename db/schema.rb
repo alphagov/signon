@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150121092250) do
+ActiveRecord::Schema.define(:version => 20150130111603) do
 
   create_table "batch_invitation_application_permissions", :force => true do |t|
     t.integer  "batch_invitation_id",     :null => false
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(:version => 20150121092250) do
     t.integer  "initiator_id"
     t.integer  "application_id"
     t.string   "trailing_message"
+    t.text     "data"
   end
 
   add_index "event_logs", ["uid", "created_at"], :name => "index_event_logs_on_uid_and_created_at"

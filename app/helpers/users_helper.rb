@@ -30,4 +30,17 @@ module UsersHelper
     max_last_synced_at = permissions.map(&:last_synced_at).compact.max
     max_updated_at.present? && max_last_synced_at.present? ? max_updated_at > max_last_synced_at : false
   end
+
+  def render_event_data(data)
+    return if data.nil? || data.empty?
+
+    content_tag(:ul) do
+      data.each do |header, contents|
+        concat content_tag(:li) {
+          concat content_tag(:span, header.to_s.humanize)
+          concat render_event_data(contents)
+        }
+      end
+    end
+  end
 end
