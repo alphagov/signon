@@ -26,6 +26,8 @@ module UsersHelper
   end
 
   def sync_needed?(permissions)
-    permissions.map(&:updated_at).max > permissions.map(&:last_synced_at).max
+    max_updated_at = permissions.map(&:updated_at).compact.max
+    max_last_synced_at = permissions.map(&:last_synced_at).compact.max
+    max_updated_at.present? && max_last_synced_at.present? ? max_updated_at > max_last_synced_at : false
   end
 end
