@@ -5,10 +5,14 @@ class PermissionDiffer
 
     app_names = (old_perms.keys + new_perms.keys).uniq
 
-    {
-      added: diff_perms_hashes(app_names, new_perms, old_perms),
-      removed: diff_perms_hashes(app_names, old_perms, new_perms)
-    }
+    added = diff_perms_hashes(app_names, new_perms, old_perms)
+    removed = diff_perms_hashes(app_names, old_perms, new_perms)
+
+    permissions_diff = {}
+    permissions_diff[:added] = added unless added.empty?
+    permissions_diff[:removed] = removed unless removed.empty?
+
+    return permissions_diff
   end
 
 private

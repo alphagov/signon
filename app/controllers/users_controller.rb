@@ -51,12 +51,16 @@ class UsersController < ApplicationController
 
       perms_after = @user.application_permissions.to_a
 
-      @user.event_logs << EventLog.new(
-        event: EventLog::PERMISSION_CHANGED,
-        data: PermissionDiffer.diff(perms_before, perms_after),
-        initiator_id: current_user.id,
-        trailing_message: params[:change_note]
-      )
+      permission_diff = PermissionDiffer.diff(perms_before, perms_after)
+
+      unless permission_diff.empty?
+        @user.event_logs << EventLog.new(
+          event: EventLog::PERMISSION_CHANGED,
+          data: permission_diff,
+          initiator_id: current_user.id,
+          trailing_message: params[:change_note]
+        )
+      end
 
       if email_change = @user.previous_changes[:email]
         EventLog.record_email_change(@user, email_change.first, email_change.last, current_user)

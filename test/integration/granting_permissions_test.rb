@@ -29,22 +29,32 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     assert_include @user.permissions_for(app), 'write'
   end
 
-  should "log changed permissions" do
+  should "log changed permissions if permissions changed" do
     app = create(:application, name: "MyApp", with_supported_permissions: ["write"])
+
+    starting_log_count = @user.event_logs.count
 
     visit edit_user_path(@user)
     select "write", from: "Permissions for MyApp"
 
     click_button "Update User"
 
+    assert_equal (starting_log_count + 1), @user.event_logs.count
+
     last_log = @user.event_logs.last
 
     assert_equal({
       added: {
         "MyApp" => ["write"]
-      },
-      removed: {}
+      }
     }, last_log.data)
+
+    visit edit_user_path(@user)
+    click_button "Update User"
+
+    @user.reload
+
+    assert_equal (starting_log_count + 1), @user.event_logs.count
   end
 
   should "allow the admin to provide a change note" do
