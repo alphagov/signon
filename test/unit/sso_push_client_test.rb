@@ -3,12 +3,12 @@ require 'test_helper'
 class SSOPushClientTest < ActiveSupport::TestCase
   def reauth_url(application)
     url = URI.parse(application.redirect_uri)
-    "http://#{url.host}/auth/gds/api/users/#{CGI.escape(@user.uid)}/reauth"
+    "https://#{url.host}/auth/gds/api/users/#{CGI.escape(@user.uid)}/reauth"
   end
 
   def users_url(application)
     url = URI.parse(application.redirect_uri)
-    "http://#{url.host}/auth/gds/api/users/#{CGI.escape(@user.uid)}"
+    "https://#{url.host}/auth/gds/api/users/#{CGI.escape(@user.uid)}"
   end
 
   context "update_user" do
@@ -17,7 +17,7 @@ class SSOPushClientTest < ActiveSupport::TestCase
       SSOPushCredential.stubs(:user_email).returns(@sso_push_user.email)
 
       @user = create(:user)
-      @application = create(:application, redirect_uri: "http://app.com/callback", with_supported_permissions: ['user_update_permission'])
+      @application = create(:application, redirect_uri: "https://app.com/callback", with_supported_permissions: ['user_update_permission'])
       @user_hash = UserOAuthPresenter.new(@user, @application).as_hash
     end
 
@@ -43,7 +43,7 @@ class SSOPushClientTest < ActiveSupport::TestCase
       SSOPushCredential.stubs(:user_email).returns(@sso_push_user.email)
 
       @user = create(:user)
-      @application = create(:application, redirect_uri: "http://app.com/callback", with_supported_permissions: ['user_update_permission'])
+      @application = create(:application, redirect_uri: "https://app.com/callback", with_supported_permissions: ['user_update_permission'])
     end
 
     should "send an empty POST to the app" do

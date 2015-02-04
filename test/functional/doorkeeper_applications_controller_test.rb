@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ApplicationsControllerTest < ActionController::TestCase
+class DoorkeeperApplicationsControllerTest < ActionController::TestCase
 
   setup do
     @user = create(:user, role: "superadmin")
@@ -19,24 +19,24 @@ class ApplicationsControllerTest < ActionController::TestCase
     should "render the form" do
       app = create(:application, name: "My first app")
       get :edit, id: app.id
-      assert_select "input[name='application[name]'][value='My first app']"
+      assert_select "input[name='doorkeeper_application[name]'][value='My first app']"
     end
   end
 
   context "PUT update" do
     should "update the application" do
       app = create(:application, name: "My first app")
-      put :update, id: app.id, application: { name: "A better name" }
+      put :update, id: app.id, doorkeeper_application: { name: "A better name" }
 
       assert_equal "A better name", app.reload.name
-      assert_redirected_to applications_path
+      assert_redirected_to doorkeeper_applications_path
       assert_match(/updated/, flash[:notice])
     end
 
     should "redisplay the form if save fails" do
       app = create(:application, name: "My first app")
-      put :update, id: app.id, application: { name: "" }
-      assert_select "form#edit_application_#{app.id}"
+      put :update, id: app.id, doorkeeper_application: { name: "" }
+      assert_select "form#edit_doorkeeper_application_#{app.id}"
     end
   end
 end

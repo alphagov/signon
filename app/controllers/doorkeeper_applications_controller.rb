@@ -1,4 +1,4 @@
-class ApplicationsController < ApplicationController
+class DoorkeeperApplicationsController < ApplicationController
   before_filter :authenticate_user!
   before_filter :load_and_authorize_application, except: :index
 
@@ -10,8 +10,8 @@ class ApplicationsController < ApplicationController
   end
 
   def update
-    if @application.update_attributes(params[:application])
-      redirect_to applications_path, notice: "Successfully updated #{@application.name}"
+    if @application.update_attributes(params[:doorkeeper_application])
+      redirect_to doorkeeper_applications_path, notice: "Successfully updated #{@application.name}"
     else
       respond_with @application
     end
