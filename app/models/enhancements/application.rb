@@ -32,8 +32,8 @@ class ::Doorkeeper::Application < ActiveRecord::Base
     supported_permissions.where(name: 'signin').first
   end
 
-  def sorted_supported_permissions
-    ([signin_permission] + (supported_permissions.order(:name) - [signin_permission])).compact
+  def sorted_supported_permissions_grantable_from_ui
+    ([signin_permission] + (supported_permissions.grantable_from_ui.order(:name) - [signin_permission])).compact
   end
 
   def url_without_path
