@@ -148,7 +148,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit root_path
     signin @user
 
-    visit edit_user_path(@user)
+    click_link "Change your email or passphrase"
     assert page.has_no_link? 'Account access log'
   end
 

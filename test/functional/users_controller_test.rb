@@ -63,7 +63,7 @@ class UsersControllerTest < ActionController::TestCase
     end
   end
 
-  context "PUT update" do
+  context "PUT update_email" do
     setup do
       @user = create(:user, email: "old@email.com")
       sign_in @user
@@ -71,7 +71,7 @@ class UsersControllerTest < ActionController::TestCase
 
     context "changing an email" do
       should "stage the change, send a confirmation email to the new address and email change notification to the old address" do
-        put :update, id: @user.id, user: { email: "new@email.com" }
+        put :update_email, id: @user.id, user: { email: "new@email.com" }
 
         @user.reload
         assert_equal "new@email.com", @user.unconfirmed_email
@@ -87,7 +87,7 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "log an event" do
-        put :update, id: @user.id, user: { email: "new@email.com" }
+        put :update_email, id: @user.id, user: { email: "new@email.com" }
         assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_INITIATED, uid: @user.uid, initiator_id: @user.id).count
       end
     end
@@ -119,6 +119,7 @@ class UsersControllerTest < ActionController::TestCase
     setup do
       @user = create(:user_with_pending_email_change)
       sign_in @user
+      request.env["HTTP_REFERER"] = edit_email_or_passphrase_user_path(@user)
     end
 
     should "clear the unconfirmed_email and the confirmation_token" do
@@ -127,6 +128,11 @@ class UsersControllerTest < ActionController::TestCase
       @user.reload
       assert_equal nil, @user.unconfirmed_email
       assert_equal nil, @user.confirmation_token
+    end
+
+    should "redirect to the user edit email or passphrase page" do
+      delete :cancel_email_change, id: @user.id
+      assert_redirected_to edit_email_or_passphrase_user_path(@user)
     end
   end
 
@@ -606,13 +612,22 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     context "DELETE cancel_email_change" do
-      should "clear the unconfirmed_email and the confirmation_token" do
-        another_user = create(:user_with_pending_email_change)
-        delete :cancel_email_change, id: another_user.id
+      setup do
+        @another_user = create(:user_with_pending_email_change)
+        request.env["HTTP_REFERER"] = edit_user_path(@another_user)
+      end
 
-        another_user.reload
-        assert_nil another_user.unconfirmed_email
-        assert_nil another_user.confirmation_token
+      should "clear the unconfirmed_email and the confirmation_token" do
+        delete :cancel_email_change, id: @another_user.id
+
+        @another_user.reload
+        assert_nil @another_user.unconfirmed_email
+        assert_nil @another_user.confirmation_token
+      end
+
+      should "redirect to the edit user admin page" do
+        delete :cancel_email_change, id: @another_user.id
+        assert_redirected_to edit_user_path(@another_user)
       end
     end
 
@@ -620,6 +635,6 @@ class UsersControllerTest < ActionController::TestCase
       @user.update_column(:role, 'normal')
       get :index
       assert_redirected_to root_path
-    end    
+    end
   end
 end

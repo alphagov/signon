@@ -7,7 +7,7 @@
   <div class="col-md-4">
   <h2 class="remove-top-margin">Your account</h2>
   <ul>
-    <li><%= link_to "Change your email or passphrase", edit_user_path(current_user) %></li>
+    <li><%= link_to "Change your email or passphrase", edit_email_or_passphrase_user_path(current_user) %></li>
     <li><%= link_to "Sign out", destroy_user_session_path %></li>
   </ul>
   </div>

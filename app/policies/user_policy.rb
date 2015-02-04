@@ -23,6 +23,8 @@ class UserPolicy < BasePolicy
   alias_method :update?, :edit?
   alias_method :unlock?, :edit?
   alias_method :suspension?, :edit?
+  alias_method :edit_email_or_passphrase?, :edit?
+  alias_method :update_email?, :edit?
   alias_method :update_passphrase?, :edit?
   alias_method :cancel_email_change?, :edit?
   alias_method :resend_email_change?, :edit?
