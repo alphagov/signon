@@ -10,6 +10,7 @@ FactoryGirl.define do
     redirect_uri "https://app.com/callback"
     home_uri "https://app.com/"
     description "Important information about this app"
+    supports_push_updates false
 
     after(:create) do |app, evaluator|
       evaluator.with_supported_permissions.each do |permission_name|

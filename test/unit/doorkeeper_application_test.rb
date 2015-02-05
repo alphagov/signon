@@ -6,6 +6,20 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     assert_not_nil create(:application).signin_permission
   end
 
+  context "user_update_permission" do
+    should "be created after save if application supports push updates" do
+      application = create(:application, supports_push_updates: false)
+      application.update_attributes(supports_push_updates: true)
+
+      application.reload
+      assert_include application.supported_permission_strings, 'user_update_permission'
+    end
+
+    should "not be created after save if application doesn't support push updates" do
+      assert_not_include create(:application, supports_push_updates: false).supported_permission_strings, 'user_update_permission'
+    end
+  end
+
   context "supported_permission_strings" do
 
     should "return a list of string permissions" do
