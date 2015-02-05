@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :application, :class => Doorkeeper::Application do
     ignore do
       with_supported_permissions []
+      with_supported_permissions_not_grantable_from_ui []
       with_delegatable_supported_permissions []
     end
 
@@ -9,6 +10,7 @@ FactoryGirl.define do
     redirect_uri "https://app.com/callback"
     home_uri "https://app.com/"
     description "Important information about this app"
+    supports_push_updates false
 
     after(:create) do |app, evaluator|
       evaluator.with_supported_permissions.each do |permission_name|
@@ -19,9 +21,13 @@ FactoryGirl.define do
         create(:supported_permission, application_id: app.id, name: permission_name)
       end
 
+      evaluator.with_supported_permissions_not_grantable_from_ui.each do |permission_name|
+        next if permission_name == 'signin'
+        create(:supported_permission, application_id: app.id, name: permission_name, grantable_from_ui: false)
+      end
+
       evaluator.with_delegatable_supported_permissions.each do |permission_name|
         next if permission_name == 'signin'
-
         create(:delegatable_supported_permission, application_id: app.id, name: permission_name)
       end
     end

@@ -17,6 +17,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
                                   .where(supported_permissions: { name: 'signin', delegatable: true })
 
   after_create :create_signin_supported_permission
+  after_save :create_user_update_supported_permission
 
   def self.policy_class; ApplicationPolicy; end
 
@@ -32,8 +33,8 @@ class ::Doorkeeper::Application < ActiveRecord::Base
     supported_permissions.where(name: 'signin').first
   end
 
-  def sorted_supported_permissions
-    ([signin_permission] + (supported_permissions.order(:name) - [signin_permission])).compact
+  def sorted_supported_permissions_grantable_from_ui
+    ([signin_permission] + (supported_permissions.grantable_from_ui.order(:name) - [signin_permission])).compact
   end
 
   def url_without_path
@@ -45,5 +46,9 @@ private
 
   def create_signin_supported_permission
     supported_permissions.create!(name: 'signin', delegatable: true)
+  end
+
+  def create_user_update_supported_permission
+    supported_permissions.where(name: 'user_update_permission', grantable_from_ui: true).first_or_create! if supports_push_updates?
   end
 end

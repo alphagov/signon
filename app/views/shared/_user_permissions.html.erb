@@ -37,7 +37,8 @@
         <% end %>
         <td>
           <%= label_tag "#{supported_permission_field_prefix}_ids", "Permissions for #{application.name}", class: "rm" %>
-          <% supported_permissions_options = application.supported_permissions.inject({}) {|h, per| h.merge(per.name => per.id) }
+          <% supported_permissions_options = application.supported_permissions.grantable_from_ui
+                                               .inject({}) {|h, per| h.merge(per.name => per.id) }
              supported_permissions_options.delete('signin') %>
           <%= select_tag supported_permission_field_name,
                           options_for_select(supported_permissions_options,

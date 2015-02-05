@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150121092250) do
+ActiveRecord::Schema.define(:version => 20150204132812) do
 
   create_table "batch_invitation_application_permissions", :force => true do |t|
     t.integer  "batch_invitation_id",     :null => false
@@ -139,7 +139,8 @@ ActiveRecord::Schema.define(:version => 20150121092250) do
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "delegatable",    :default => false
+    t.boolean  "delegatable",       :default => false
+    t.boolean  "grantable_from_ui", :default => true,  :null => false
   end
 
   add_index "supported_permissions", ["application_id", "name"], :name => "index_supported_permissions_on_application_id_and_name", :unique => true

@@ -32,7 +32,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @application.sorted_supported_permissions.each do |supported_permission| %>
+    <% @application.sorted_supported_permissions_grantable_from_ui.each do |supported_permission| %>
       <tr>
         <td class="name">
           <%= link_to supported_permission.name, edit_doorkeeper_application_supported_permission_path(@application, supported_permission) %>

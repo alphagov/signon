@@ -28,4 +28,11 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
 
     assert_include @user.permissions_for(app), 'write'
   end
+
+  should "not be able to assign fields that are not grantable_from_ui" do
+    create(:application, name: "MyApp", with_supported_permissions_not_grantable_from_ui: ['user_update_permission'])
+
+    visit edit_user_path(@user)
+    assert page.has_no_select?('Permissions for MyApp', :options => ['user_update_permission'])
+  end
 end
