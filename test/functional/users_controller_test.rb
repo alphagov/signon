@@ -143,7 +143,7 @@ class UsersControllerTest < ActionController::TestCase
 
     should "fetching json profile with a valid oauth token should succeed" do
       user = create(:user)
-      permission = create(:permission, user_id: user.id, application_id: @application.id)
+      user.grant_application_permission(@application, 'signin')
       token = create(:access_token, :application => @application, :resource_owner_id => user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
@@ -158,7 +158,7 @@ class UsersControllerTest < ActionController::TestCase
       # For now.  Once gds-sso is updated everywhere, this will 401.
 
       user = create(:user)
-      permission = create(:permission, user_id: user.id, application_id: @application.id)
+      user.grant_application_permission(@application, 'signin')
       token = create(:access_token, :application => @application, :resource_owner_id => user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
