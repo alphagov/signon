@@ -121,19 +121,6 @@ ActiveRecord::Schema.define(:version => 20150212133251) do
   add_index "organisations", ["ancestry"], :name => "index_organisations_on_ancestry"
   add_index "organisations", ["slug"], :name => "index_organisations_on_slug", :unique => true
 
-  create_table "permissions", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "application_id"
-    t.text     "permissions"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "last_synced_at"
-  end
-
-  add_index "permissions", ["application_id", "user_id"], :name => "unique_permission_constraint", :unique => true
-  add_index "permissions", ["application_id"], :name => "index_permissions_on_application_id"
-  add_index "permissions", ["user_id"], :name => "index_permissions_on_user_id"
-
   create_table "supported_permissions", :force => true do |t|
     t.integer  "application_id"
     t.string   "name"
