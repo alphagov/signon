@@ -49,6 +49,6 @@ private
   end
 
   def create_user_update_supported_permission
-    supported_permissions.where(name: 'user_update_permission', grantable_from_ui: true).first_or_create! if supports_push_updates?
+    supported_permissions.where(name: 'user_update_permission', grantable_from_ui: false).first_or_create! if supports_push_updates?
   end
 end
