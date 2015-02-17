@@ -52,12 +52,11 @@
         </td>
         <% if user_object.persisted? %>
           <td>
-            <% if permissions.map(&:last_synced_at).compact.present? %>
-              <% if sync_needed?(permissions) %>
-                <span class="label label-danger"><%= time_ago_in_words(permissions.first.last_synced_at) %> ago</span>
-              <% else %>
-                <span class="label label-success"><%= time_ago_in_words(permissions.first.last_synced_at) %> ago</span>
-              <% end %>
+            <% synced_permissions = permissions.select { |p| p.last_synced_at.present? } %>
+            <% if synced_permissions.any? %>
+              <span class="label <%= sync_needed?(synced_permissions) ? "label-danger" : "label-success" %>">
+                <%= time_ago_in_words(synced_permissions.map(&:last_synced_at).max) %> ago
+              </span>
             <% else %>
               <span class="label label-danger">Never</span>
             <% end %>
