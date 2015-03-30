@@ -3,7 +3,7 @@ module Roles
 
     def self.accessible_attributes
       [:uid, :name, :email, :password, :password_confirmation, :supported_permission_ids,
-        :application_permissions_attributes, :organisation_id, :unconfirmed_email, :confirmation_token,
+        :organisation_id, :unconfirmed_email, :confirmation_token,
         :role]
     end
 
