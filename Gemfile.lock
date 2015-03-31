@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/alphagov/devise_security_extension.git
-  revision: 4d14ed4c9ae8f23da0e9d5de2b6b69d9b53cd73d
-  branch: graceful_return_to_behaviour
+  revision: 264d020ccf8de99661cb0fa0970d0c5e5051626d
+  branch: restrict-password-params
   specs:
     devise_security_extension (0.7.2)
       devise (>= 2.0.0)
