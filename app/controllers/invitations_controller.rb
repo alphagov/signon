@@ -59,10 +59,16 @@ class InvitationsController < Devise::InvitationsController
   end
 
   def resource_params
-    UserParameterSanitiser.new(
+    sanitised_params = UserParameterSanitiser.new(
       user_params: unsanitised_user_params,
       current_user_role: current_user_role,
     ).sanitise
+
+    if params[:action] == "update"
+      sanitised_params.merge(invitation_token: invitation_token)
+    else
+      sanitised_params
+    end
   end
 
   # TODO: once we've upgraded Devise and DeviseInvitable, `resource_params`
@@ -90,5 +96,9 @@ class InvitationsController < Devise::InvitationsController
   # only permit those two params for the `edit` and `update` actions.
   def current_user_role
     current_user.try(:role).try(:to_sym) || :normal
+  end
+
+  def invitation_token
+    unsanitised_user_params.fetch(:invitation_token, {})
   end
 end
