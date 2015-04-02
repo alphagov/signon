@@ -108,8 +108,6 @@ class UsersController < ApplicationController
   end
 
   def update_passphrase
-    params[:user] ||= {}
-    password_params = params[:user].symbolize_keys.keep_if { |k, v| [:current_password, :password, :password_confirmation].include?(k) }
     if @user.update_with_password(password_params)
       flash[:notice] = t(:updated, :scope => 'devise.passwords')
       sign_in(@user, :bypass => true)
@@ -188,5 +186,13 @@ class UsersController < ApplicationController
       user_params: params.require(:user),
       current_user_role: current_user.role.to_sym,
     ).sanitise
+  end
+
+  def password_params
+    params.require(:user).permit(
+      :current_password,
+      :password,
+      :password_confirmation,
+    )
   end
 end
