@@ -39,7 +39,7 @@ private
   end
 
   def supported_permission_parameters
-    params[:supported_permission].slice(:name, :delegatable)
+    params.require(:supported_permission).permit(:name, :delegatable)
   end
 
 end
