@@ -1,5 +1,5 @@
 require 'test_helper'
- 
+
 class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
   setup do
     @app = create(:application, name: "MyApp")
@@ -13,7 +13,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     end
 
     assert_response_contains("You need to sign in")
-    
+
     begin
       signin(@user)
     rescue ActionController::RoutingError, SocketError

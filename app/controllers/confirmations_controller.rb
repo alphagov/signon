@@ -1,4 +1,4 @@
-# Copied from 
+# Copied from
 # https://github.com/plataformatec/devise/blob/v2.1.2/app/controllers/devise/confirmations_controller.rb#L19
 class ConfirmationsController < Devise::ConfirmationsController
 

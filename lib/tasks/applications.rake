@@ -1,7 +1,7 @@
 namespace :applications do
 
   desc "Creates an application(OAuth client)"
-  task :create => :environment do 
+  task :create => :environment do
     # Create client app
     a = Doorkeeper::Application.create!(
       name: ENV['name'],
@@ -16,7 +16,7 @@ namespace :applications do
     end
     # Done
     puts "Application '#{a.name}' created."
-    puts 
+    puts
     puts "config.oauth_id     = '#{a.uid}'"
     puts "config.oauth_secret = '#{a.secret}'"
   end

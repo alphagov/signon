@@ -19,7 +19,7 @@ class InactiveUsersSuspensionReminder
         UserMailer.suspension_reminder(user, @days_to_suspension).deliver
         Rails.logger.info "#{self.class}: Successfully sent email to #{user.email}."
       rescue *ERRORS_TO_RETRY_ON => e
-        Rails.logger.debug "#{self.class}: #{e.class} - #{e.message} while sending email to #{user.email} during attempt (#{(tries..3).count}/3)."        
+        Rails.logger.debug "#{self.class}: #{e.class} - #{e.message} while sending email to #{user.email} during attempt (#{(tries..3).count}/3)."
         sleep(3) and retry if (tries -= 1) > 0
 
         Rails.logger.warn "#{self.class}: Failed to send suspension reminder email to #{user.email}."

@@ -1,6 +1,6 @@
 require 'test_helper'
 require 'helpers/passphrase_support'
- 
+
 class PassphraseExpiryTest < ActionDispatch::IntegrationTest
   include PassPhraseSupport
 
@@ -49,6 +49,6 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
 
       visit new_user_session_path
       assert_response_contains(PROMPT_TO_CHANGE_PASSWORD)
-    end    
+    end
   end
 end

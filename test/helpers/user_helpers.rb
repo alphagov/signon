@@ -1,4 +1,4 @@
-module UserHelpers  
+module UserHelpers
   def signin(user_or_options)
     email = user_or_options.is_a?(Hash) ? user_or_options[:email] : user_or_options.email
     password = user_or_options.is_a?(Hash) ? user_or_options[:password] : user_or_options.password

@@ -174,13 +174,13 @@ addition, all related applications will be operating solely over HTTPS.
 
 Access and Refresh Tokens, Client IDs and Client Secrets are all generated
 by Doorkeeper using the ruby [SecureRandom module](http://rubydoc.info/stdlib/securerandom/1.9.2/SecureRandom).
-The module is used to generate a random hex string with a random length of 32. 
+The module is used to generate a random hex string with a random length of 32.
 
 The relevant SecureRandom code can be found at:
 [https://github.com/ruby/ruby/blob/trunk/lib/securerandom.rb#L59](https://github.com/ruby/ruby/blob/trunk/lib/securerandom.rb#L59)
 
 Where OpenSSL is available it is used by the SecureRandom module, seeded with
-the current time and the current process’ pid: 
+the current time and the current process’ pid:
 
     @pid = 0 if !defined?(@pid)
     pid = $$

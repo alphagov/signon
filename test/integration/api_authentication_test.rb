@@ -1,6 +1,6 @@
 require 'test_helper'
 require 'helpers/token_auth_support'
- 
+
 class ApiAuthenticationTest < ActionDispatch::IntegrationTest
   include TokenAuthSupport
 

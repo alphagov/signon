@@ -131,7 +131,7 @@ class CreatePermissionsForLicensing < ActiveRecord::Migration
       SupportedPermission.create!(application: licensify, name: "Western-Health-and-Social-Care-Trust")
       SupportedPermission.create!(application: licensify, name: "Roads-Service")
       SupportedPermission.create!(application: licensify, name: "Office-of-the-Registrar-of-Independent-Schools")
-      SupportedPermission.create!(application: licensify, name: "Department-for-Culture-Arts-and-Leisure-Northern-Ireland")  
+      SupportedPermission.create!(application: licensify, name: "Department-for-Culture-Arts-and-Leisure-Northern-Ireland")
     end
   end
 

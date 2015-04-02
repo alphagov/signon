@@ -1,5 +1,5 @@
 require 'test_helper'
- 
+
 class UserSuspensionTest < ActionDispatch::IntegrationTest
   setup do
     @user = create(:user)
