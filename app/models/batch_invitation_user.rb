@@ -1,4 +1,6 @@
 class BatchInvitationUser < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection
+
   belongs_to :batch_invitation
 
   validates :outcome, inclusion: { :in => [nil, "success", "failed", "skipped"] }

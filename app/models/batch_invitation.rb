@@ -1,4 +1,6 @@
 class BatchInvitation < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection
+
   belongs_to :user
   belongs_to :organisation
   has_many :batch_invitation_users
