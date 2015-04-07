@@ -13,24 +13,6 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "needs to be confirmed within 14 days, please request a new one", @user.errors[:email][0]
   end
 
-  # Attribute protection
-
-  test "the role has to be specifically assigned" do
-    u = User.new(name: 'Bad User', role: "admin")
-    assert_not_equal "admin", u.role
-
-    u.role = "admin"
-    assert_equal "admin", u.role
-  end
-
-  test "api_user cannot be mass-assigned" do
-    u = User.new(name: 'Bad User', api_user: true)
-    assert_false u.api_user
-
-    u.api_user = true
-    assert_true u.api_user
-  end
-
   # Scopes
 
   test "web_users includes non api users" do

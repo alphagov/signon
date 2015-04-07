@@ -1,7 +1,7 @@
 # coding: utf-8
 
 class User < ActiveRecord::Base
-  include Roles # adds validations and accessible attributes
+  include Roles
 
   self.include_root_in_json = true
 

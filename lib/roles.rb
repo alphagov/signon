@@ -7,11 +7,6 @@ module Roles
 
     base.instance_eval do
       validates :role, inclusion: { in: roles }
-
-      attr_accessible *Roles::Normal.accessible_attributes
-      admin_role_classes.each do |role_class|
-        attr_accessible *role_class.accessible_attributes, as: role_class.to_s.demodulize.underscore.to_sym
-      end
     end
 
     base.roles.each do |role_name|
