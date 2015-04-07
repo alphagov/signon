@@ -5,6 +5,10 @@ module Roles
       [:uid, :name, :email, :password, :password_confirmation]
     end
 
+    def self.permitted_user_params
+      [:uid, :name, :email, :password, :password_confirmation]
+    end
+
     def self.role_name
       'normal'
     end
