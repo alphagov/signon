@@ -3,6 +3,10 @@
 class User < ActiveRecord::Base
   include Roles
 
+  # Don't allow whitelisting/etc attributes in the model, User-updating
+  # controller actions now use strong params
+  include ActiveModel::ForbiddenAttributesProtection
+
   self.include_root_in_json = true
 
   SUSPENSION_THRESHOLD_PERIOD = 45.days

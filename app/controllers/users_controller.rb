@@ -43,7 +43,7 @@ class UsersController < ApplicationController
       ! current_user.organisation.subtree.map(&:id).include?(params[:user][:organisation_id].to_i)
 
     @user.skip_reconfirmation!
-    if @user.update_attributes(params[:user], as: current_user.role.to_sym)
+    if @user.update_attributes(user_params)
       @user.application_permissions.reload
       PermissionUpdater.perform_on(@user)
 
@@ -181,5 +181,12 @@ class UsersController < ApplicationController
         csv << UserExportPresenter.new(user, applications).row
       end
     end
+  end
+
+  def user_params
+    UserParameterSanitiser.new(
+      user_params: params.require(:user),
+      current_user_role: current_user.role.to_sym,
+    ).sanitise
   end
 end

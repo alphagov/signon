@@ -21,7 +21,7 @@ class ApiUsersController < ApplicationController
     authorize ApiUser
 
     password = SecureRandom.urlsafe_base64
-    @api_user = ApiUser.new(params[:api_user].merge(password: password, password_confirmation: password))
+    @api_user = ApiUser.new(api_user_params.merge(password: password, password_confirmation: password))
     @api_user.skip_confirmation!
     @api_user.api_user = true
 
@@ -35,7 +35,7 @@ class ApiUsersController < ApplicationController
 
   def update
     @api_user.skip_reconfirmation!
-    if @api_user.update_attributes(params[:api_user], as: current_user.role.to_sym)
+    if @api_user.update_attributes(api_user_params)
       @api_user.application_permissions.reload
       PermissionUpdater.perform_on(@api_user)
 
@@ -50,5 +50,12 @@ private
   def load_and_authorize_api_user
     @api_user = ApiUser.find(params[:id])
     authorize @api_user
+  end
+
+  def api_user_params
+    UserParameterSanitiser.new(
+      user_params: params.require(:api_user),
+      current_user_role: current_user.role.to_sym,
+    ).sanitise
   end
 end
