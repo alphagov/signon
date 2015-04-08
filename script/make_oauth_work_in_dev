@@ -38,7 +38,7 @@ def application_repo_name(application)
 end
 
 def config_path_for_app(application)
-  if application.name =~ /Content API/i 
+  if application.name =~ /Content API/i
     "../#{application_repo_name(application)}/config/gds_sso_config.rb"
   else
     "../#{application_repo_name(application)}/config/initializers/gds-sso.rb"

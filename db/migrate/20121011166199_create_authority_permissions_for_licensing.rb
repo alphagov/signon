@@ -586,7 +586,7 @@ create_permission("york")
     end
 
     def create_permission(permission)
-       app = licence_application()   
+       app = licence_application()
 
        if(!app.nil?)
           app.supported_permissions.find_or_create_by_name(permission)

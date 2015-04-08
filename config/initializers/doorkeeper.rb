@@ -13,7 +13,7 @@ Doorkeeper.configure do
   # adding oauth authorized applications you need to declare the
   # block below
   admin_authenticator do |routes|
-    # Prevent all access to admin web interface, only allow application management 
+    # Prevent all access to admin web interface, only allow application management
     # from command line
     render :text => "Access denied", :status => 403
   end

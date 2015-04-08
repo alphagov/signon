@@ -1,7 +1,7 @@
 class Metrics
   def initialize(all_users = nil, active_users = nil)
     @all = all_users
-    @all_active = active_users    
+    @all_active = active_users
   end
 
   def accounts_count
@@ -36,7 +36,7 @@ class Metrics
     [0...7, 7...15, 15...30, 30...45, 45...60, 60...90, 90...180, 180...10000000].inject([]) do |result, range|
       count_days_since_last_sign_in = all_active.select {|u| u.current_sign_in_at && range.last.days.ago <= u.current_sign_in_at && u.current_sign_in_at < range.first.days.ago }.size
       result << ["#{range.first} - #{range.last}", count_days_since_last_sign_in]
-      result 
+      result
     end + [["never signed in", all_active.select {|u| u.current_sign_in_at.nil? }.size]]
   end
 
@@ -48,7 +48,7 @@ class Metrics
       else
         result << ["#{range_or_value} time(s)", all_active.select {|u| u.sign_in_count == range_or_value}.size]
       end
-      result 
+      result
     end
   end
 
