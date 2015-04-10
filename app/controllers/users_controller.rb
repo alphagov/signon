@@ -43,7 +43,7 @@ class UsersController < ApplicationController
       ! current_user.organisation.subtree.map(&:id).include?(params[:user][:organisation_id].to_i)
 
     @user.skip_reconfirmation!
-    if @user.update_attributes(params[:user], as: current_user.role.to_sym)
+    if @user.update_attributes(user_params)
       @user.application_permissions.reload
       PermissionUpdater.perform_on(@user)
 
@@ -108,8 +108,6 @@ class UsersController < ApplicationController
   end
 
   def update_passphrase
-    params[:user] ||= {}
-    password_params = params[:user].symbolize_keys.keep_if { |k, v| [:current_password, :password, :password_confirmation].include?(k) }
     if @user.update_with_password(password_params)
       flash[:notice] = t(:updated, :scope => 'devise.passwords')
       sign_in(@user, :bypass => true)
@@ -181,5 +179,20 @@ class UsersController < ApplicationController
         csv << UserExportPresenter.new(user, applications).row
       end
     end
+  end
+
+  def user_params
+    UserParameterSanitiser.new(
+      user_params: params.require(:user),
+      current_user_role: current_user.role.to_sym,
+    ).sanitise
+  end
+
+  def password_params
+    params.require(:user).permit(
+      :current_password,
+      :password,
+      :password_confirmation,
+    )
   end
 end

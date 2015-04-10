@@ -1,4 +1,6 @@
 class Permission < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection
+
   belongs_to :user
   belongs_to :application, class_name: 'Doorkeeper::Application'
   serialize :permissions, Array

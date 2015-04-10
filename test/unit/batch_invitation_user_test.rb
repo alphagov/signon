@@ -10,12 +10,15 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
 
     should "store invitation attributes against a user" do
       user = create(:batch_invitation_user, batch_invitation: @batch_invitation)
-      invitation_attributes = {
+
+      # the attributes that're passed to User#invite! should be a permitted
+      # params object
+      invitation_attributes = ActionController::Parameters.new({
         name: user.name,
         email: user.email,
         organisation_id: @batch_invitation.organisation_id,
         supported_permission_ids: [1, 2, 3]
-      }
+      })
       User.expects(:invite!).with(invitation_attributes, @inviting_user)
 
       user.invite(@inviting_user, [1, 2, 3])

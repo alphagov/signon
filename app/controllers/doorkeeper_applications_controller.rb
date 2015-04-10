@@ -10,7 +10,7 @@ class DoorkeeperApplicationsController < ApplicationController
   end
 
   def update
-    if @application.update_attributes(params[:doorkeeper_application])
+    if @application.update_attributes(doorkeeper_application_params)
       redirect_to doorkeeper_applications_path, notice: "Successfully updated #{@application.name}"
     else
       respond_with @application
@@ -22,5 +22,19 @@ class DoorkeeperApplicationsController < ApplicationController
   def load_and_authorize_application
     @application = Doorkeeper::Application.find(params[:id])
     authorize @application
+  end
+
+  def doorkeeper_application_params
+    # Since our Pundit policies ensure that only a superadmin can access this
+    # controller, we can whitelist all attributes the edit form can modify
+    params.require(:doorkeeper_application).permit(
+      :name,
+      :description,
+      :uid,
+      :secret,
+      :redirect_uri,
+      :home_uri,
+      :supports_push_updates,
+    )
   end
 end

@@ -29,7 +29,6 @@ class InvitationsController < Devise::InvitationsController
       respond_with resource, :location => after_invite_path_for(resource)
     else
       # workaround for invitatable not providing a build_invitation which could be authorised before saving
-      resource_params = params[resource_name]
       user = User.new(resource_params)
       user.organisation_id = resource_params[:organisation_id]
       authorize user
@@ -59,4 +58,47 @@ class InvitationsController < Devise::InvitationsController
     users_path
   end
 
+  def resource_params
+    sanitised_params = UserParameterSanitiser.new(
+      user_params: unsanitised_user_params,
+      current_user_role: current_user_role,
+    ).sanitise
+
+    if params[:action] == "update"
+      sanitised_params.merge(invitation_token: invitation_token)
+    else
+      sanitised_params
+    end
+  end
+
+  # TODO: once we've upgraded Devise and DeviseInvitable, `resource_params`
+  # hopefully won't be being called for actions like `#new` anymore and we
+  # can change the following `params.fetch(:user)` to
+  # `params.require(:user)`. See
+  # https://github.com/scambra/devise_invitable/blob/v1.1.5/app/controllers/devise/invitations_controller.rb#L10
+  # and
+  # https://github.com/plataformatec/devise/blob/v2.2/app/controllers/devise_controller.rb#L99
+  # for details :)
+  def unsanitised_user_params
+    params.fetch(:user, {})
+  end
+
+  # NOTE: `current_user` doesn't exist for `#edit` and `#update` actions as
+  # implemented in our current (out-of-date) versions of Devise
+  # (https://github.com/plataformatec/devise/blob/v2.2/app/controllers/devise_controller.rb#L117)
+  # and DeviseInvitable
+  # (https://github.com/scambra/devise_invitable/blob/v1.1.5/app/controllers/devise/invitations_controller.rb#L5)
+  #
+  # With the old attr_accessible approach, this would fall back to the
+  # default whitelist (i.e. equivalent to the `:normal` role) and this
+  # this preserves that behaviour. In fact, a user accepting an invitation
+  # only needs to modify `password` and `password_confirmation` so we could
+  # only permit those two params for the `edit` and `update` actions.
+  def current_user_role
+    current_user.try(:role).try(:to_sym) || :normal
+  end
+
+  def invitation_token
+    unsanitised_user_params.fetch(:invitation_token, {})
+  end
 end

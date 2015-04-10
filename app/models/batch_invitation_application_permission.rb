@@ -1,4 +1,6 @@
 class BatchInvitationApplicationPermission < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection
+
   belongs_to :batch_invitation
   belongs_to :supported_permission
 

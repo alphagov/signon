@@ -1,12 +1,26 @@
 require "doorkeeper/orm/active_record/application"
 
 class ::Doorkeeper::Application < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection
+
   has_many :permissions, :dependent => :destroy
   has_many :supported_permissions, :dependent => :destroy
 
-
-  attr_accessible :name, :description, :uid, :secret, :redirect_uri, :home_uri
-  attr_accessible :supports_push_updates, role: :superadmin
+  # TODO: Remove this accessible attributes list once Signonotron has upgraded
+  # to Rails 4. Doorkeeper itself uses `attr_accessible` only if we're using
+  # Rails < 4 (see https://github.com/doorkeeper-gem/doorkeeper/blob/master/lib/doorkeeper/models/application_mixin.rb#L18-L20)
+  # Unfortunately, in doing that, we're prevented from updating any attributes
+  # Doorkeeper hasn't explicitly whitelisted, and so need to continue using
+  # attr_accessible here ourselves.
+  attr_accessible(
+    :name,
+    :description,
+    :uid,
+    :secret,
+    :redirect_uri,
+    :home_uri,
+    :supports_push_updates,
+  )
 
   default_scope order('oauth_applications.name')
   scope :support_push_updates, where(supports_push_updates: true)

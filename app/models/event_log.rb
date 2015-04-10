@@ -1,4 +1,6 @@
 class EventLog < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection
+
   ACCOUNT_LOCKED = "Account locked"
   ACCOUNT_SUSPENDED = "Account suspended"
   ACCOUNT_UNSUSPENDED = "Account unsuspended"

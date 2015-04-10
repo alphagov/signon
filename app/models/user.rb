@@ -1,7 +1,11 @@
 # coding: utf-8
 
 class User < ActiveRecord::Base
-  include Roles # adds validations and accessible attributes
+  include Roles
+
+  # Don't allow whitelisting/etc attributes in the model, User-updating
+  # controller actions now use strong params
+  include ActiveModel::ForbiddenAttributesProtection
 
   self.include_root_in_json = true
 

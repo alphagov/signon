@@ -1,6 +1,8 @@
 # encoding = utf-8
 
 class Organisation < ActiveRecord::Base
+  include ActiveModel::ForbiddenAttributesProtection
+
   has_ancestry
 
   has_many :users

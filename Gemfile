@@ -15,11 +15,13 @@ gem 'whenever', '~> 0.9.4', require: false
 
 gem 'uuid'
 
+gem 'strong_parameters'
+
 # Gems used to provide Authentication and Authorization services.
 gem 'devise', '2.2.5'
 gem 'devise_invitable', '1.1.5'
 gem 'devise-encryptable', '0.1.1'
-gem 'devise_security_extension', '0.7.2', git: "https://github.com/alphagov/devise_security_extension.git", branch: "graceful_return_to_behaviour"
+gem 'devise_security_extension', '0.7.2', git: "https://github.com/alphagov/devise_security_extension.git", branch: "restrict-password-params"
 gem 'devise_zxcvbn', '1.1.1'
 gem 'devise-async', '0.8.0'
 gem 'pundit', '0.3.0'
