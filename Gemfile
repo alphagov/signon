@@ -45,6 +45,8 @@ end
 
 group :development do
   gem 'quiet_assets'
+  # SQLite is needed only for signon to be run as part of gds-sso's test suite
+  gem 'sqlite3'
 end
 
 group :development, :test do
