@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150212133251) do
+ActiveRecord::Schema.define(:version => 20150420145301) do
 
   create_table "batch_invitation_application_permissions", :force => true do |t|
     t.integer  "batch_invitation_id",     :null => false
@@ -116,9 +116,11 @@ ActiveRecord::Schema.define(:version => 20150212133251) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
     t.string   "ancestry"
+    t.string   "content_id"
   end
 
   add_index "organisations", ["ancestry"], :name => "index_organisations_on_ancestry"
+  add_index "organisations", ["content_id"], :name => "index_organisations_on_content_id", :unique => true
   add_index "organisations", ["slug"], :name => "index_organisations_on_slug", :unique => true
 
   create_table "supported_permissions", :force => true do |t|

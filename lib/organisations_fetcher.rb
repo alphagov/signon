@@ -11,6 +11,8 @@ class OrganisationsFetcher
       update_or_create_organisation(organisation_data)
       organisation_relationships[organisation_data.details.slug] = child_organisation_slugs(organisation_data)
     end
+    # Now that any new organisations have been created and any slug changes
+    # have been applied, we can safely tie together organisations
     update_ancestry(organisation_relationships)
   rescue ActiveRecord::RecordInvalid => invalid
     raise "Couldn't save organisation #{invalid.record.slug} because: #{invalid.record.errors.full_messages.join(',')}"
@@ -24,8 +26,9 @@ private
   end
 
   def update_or_create_organisation(organisation_data)
-    organisation = Organisation.find_or_initialize_by_slug(organisation_data.details.slug)
+    organisation = Organisation.find_or_initialize_by_content_id(organisation_data.details.content_id)
     update_data = {
+      slug: organisation_data.details.slug,
       name: organisation_data.title,
       organisation_type: organisation_data.format,
       abbreviation: organisation_data.details.abbreviation,
@@ -39,12 +42,13 @@ private
 
   def update_ancestry(organisation_relationships)
     organisation_relationships.each do |organisation_slug, child_organisation_slugs|
+      parent = Organisation.find_by_slug(organisation_slug)
       Organisation.where(slug: child_organisation_slugs).map do |child_organisation|
         # TODO this ignores that organisations can have multiple parents. I think organisations will
         # end up with the parent that appears last in the API response(s).
         #
         # Transition app implements this correctly.
-        child_organisation.update_attributes!(parent: Organisation.find_by_slug(organisation_slug))
+        child_organisation.update_attributes!(parent: parent)
       end
     end
   end
