@@ -16,19 +16,42 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
 
   test "it updates an existing organisation when its data changes" do
     slug = 'ministry-of-fun'
-    create(
+    organisation = create(
       :organisation,
       name: 'Ministry Of Misery',
       slug: slug,
     )
     assert_equal(1, Organisation.count)
 
-    organisations_api_has_organisations([slug])
+    bodies = [
+      organisation_details_for_slug(slug, organisation.content_id)
+    ]
+    organisations_api_has_organisations_with_bodies(bodies)
 
     OrganisationsFetcher.new.call
 
     assert_equal(1, Organisation.count)
     assert_equal('Ministry Of Fun', Organisation.find_by_slug(slug).name)
+  end
+
+  test "it updates an existing organisation when its slug changes" do
+    slug = 'ministry-of-fun'
+    organisation = create(
+      :organisation,
+      name: 'Ministry Of Misery',
+      slug: "old-slug",
+    )
+    assert_equal(1, Organisation.count)
+
+    bodies = [
+      organisation_details_for_slug("new-slug", organisation.content_id)
+    ]
+    organisations_api_has_organisations_with_bodies(bodies)
+
+    OrganisationsFetcher.new.call
+
+    assert_equal(1, Organisation.count)
+    assert_equal("new-slug", Organisation.first.slug)
   end
 
   test "it updates the child organisation with information about it's parent" do
@@ -37,7 +60,10 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
     child_slug = 'ministry-of-fun-child-1' # hard-coded in gds_api_adapters
     movies = create(:organisation, name: 'Ministry of Movies', slug: child_slug)
 
-    organisations_api_has_organisations([slug])
+    bodies = [
+      organisation_details_for_slug(slug, fun.content_id)
+    ]
+    organisations_api_has_organisations_with_bodies(bodies)
 
     OrganisationsFetcher.new.call
 
