@@ -41,12 +41,13 @@ private
 
   def update_ancestry(organisation_relationships)
     organisation_relationships.each do |organisation_slug, child_organisation_slugs|
+      parent = Organisation.find_by_slug(organisation_slug)
       Organisation.where(slug: child_organisation_slugs).map do |child_organisation|
         # TODO this ignores that organisations can have multiple parents. I think organisations will
         # end up with the parent that appears last in the API response(s).
         #
         # Transition app implements this correctly.
-        child_organisation.update_attributes!(parent: Organisation.find_by_slug(organisation_slug))
+        child_organisation.update_attributes!(parent: parent)
       end
     end
   end
