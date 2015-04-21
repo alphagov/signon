@@ -10,6 +10,7 @@ class UserOAuthPresenter < Struct.new(:user, :application)
         email: user.email,
         permissions: permissions,
         organisation_slug: organisation_slug,
+        organisation_content_id: organisation_content_id,
         disabled: user.suspended?,
       }
     }
@@ -22,5 +23,10 @@ class UserOAuthPresenter < Struct.new(:user, :application)
   def organisation_slug
     organisation = user.organisation
     organisation.nil? ? nil : organisation.slug
+  end
+
+  def organisation_content_id
+    organisation = user.organisation
+    organisation.nil? ? nil : organisation.content_id
   end
 end
