@@ -8,6 +8,7 @@ class Organisation < ActiveRecord::Base
   has_many :users
 
   validates :slug, presence: true, uniqueness: true
+  validates :content_id, presence: true
   validates :name, presence: true
   validates :organisation_type, presence: true
 
