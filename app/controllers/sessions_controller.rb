@@ -1,7 +1,7 @@
 class SessionsController < Devise::SessionsController
 
   # FIXME: remove this once we're at Devise 3.2.0 or higher. Please.
-  if Devise::VERSION == "2.2.5"
+  if Devise::VERSION == "2.2.8"
     # Devise::SessionsController defines three filters, all using
     # `prepend_before_filter`. The one we want (that skips Devise's timeout
     # logic) is the last one defined, so it should be the first one in the
@@ -11,7 +11,7 @@ class SessionsController < Devise::SessionsController
     }
 
     # Do a bunch of checks to make sure this is the callback that skips the
-    # timeout. In Devise 2.2.5, it's the only one defined as an anonymous Proc,
+    # timeout. In Devise 2.2.8, it's the only one defined as an anonymous Proc,
     # and it's the only one without an :only or :except condition (which
     # translate to :if and :unless respectively once they hit activesupport).
     callback_checks = [
@@ -30,7 +30,7 @@ class SessionsController < Devise::SessionsController
     timeout_callback_name = timeout_callback.filter
     skip_before_filter timeout_callback_name, except: [:create, :destroy]
   else
-    raise "This hack only applies to Devise 2.2.5: aborting"
+    raise "This hack only applies to Devise 2.2.8: aborting"
   end
 
   def destroy
