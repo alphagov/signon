@@ -39,6 +39,8 @@ gem 'redis', '3.0.6'
 
 gem 'zeroclipboard-rails'
 
+gem 'rake', '10.4.1'
+
 group :assets do
   gem 'sass-rails', '3.2.6'
 end
