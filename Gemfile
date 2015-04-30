@@ -18,7 +18,7 @@ gem 'uuid'
 gem 'strong_parameters'
 
 # Gems used to provide Authentication and Authorization services.
-gem 'devise', '2.2.5'
+gem 'devise', '2.2.8'
 gem 'devise_invitable', '1.1.5'
 gem 'devise-encryptable', '0.1.1'
 gem 'devise_security_extension', '0.7.2', git: "https://github.com/alphagov/devise_security_extension.git", branch: "restrict-password-params"
@@ -38,6 +38,8 @@ gem 'sidekiq-statsd', '0.1.2'
 gem 'redis', '3.0.6'
 
 gem 'zeroclipboard-rails'
+
+gem 'rake', '10.4.1'
 
 group :assets do
   gem 'sass-rails', '3.2.6'
