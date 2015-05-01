@@ -35,5 +35,12 @@ class OrganisationTest < ActiveSupport::TestCase
       organisation = build(:organisation, name: 'An Organisation', abbreviation: 'An Organisation')
       assert_equal organisation.name, organisation.name_with_abbreviation
     end
+
+    context "when the organisation is closed" do
+      should "append (closed)" do
+        organisation = build(:organisation, name: 'An Organisation', closed: true)
+        assert_equal "An Organisation (closed)", organisation.name_with_abbreviation
+      end
+    end
   end
 end

@@ -20,6 +20,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
       :organisation,
       name: 'Ministry Of Misery',
       slug: slug,
+      closed: true,
     )
     assert_equal(1, Organisation.count)
 
@@ -31,7 +32,9 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
     OrganisationsFetcher.new.call
 
     assert_equal(1, Organisation.count)
-    assert_equal('Ministry Of Fun', Organisation.find_by_slug(slug).name)
+    organisation.reload
+    assert_equal('Ministry Of Fun', organisation.name)
+    assert_equal(false, organisation.closed)
   end
 
   test "it updates an existing organisation when its slug changes" do

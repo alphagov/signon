@@ -14,9 +14,15 @@ class Organisation < ActiveRecord::Base
 
   def name_with_abbreviation
     if abbreviation.present? && abbreviation != name
-      "#{name} – #{abbreviation}"
+      return_value = "#{name} – #{abbreviation}"
     else
-      name
+      return_value = name
     end
+
+    if closed?
+      return_value += " (closed)"
+    end
+
+    return_value
   end
 end
