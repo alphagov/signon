@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150421140645) do
+ActiveRecord::Schema.define(:version => 20150501101146) do
 
   create_table "batch_invitation_application_permissions", :force => true do |t|
     t.integer  "batch_invitation_id",     :null => false
@@ -109,14 +109,15 @@ ActiveRecord::Schema.define(:version => 20150421140645) do
   add_index "old_passwords", ["password_archivable_type", "password_archivable_id"], :name => "index_password_archivable"
 
   create_table "organisations", :force => true do |t|
-    t.string   "slug",              :null => false
-    t.string   "name",              :null => false
-    t.string   "organisation_type", :null => false
+    t.string   "slug",                                 :null => false
+    t.string   "name",                                 :null => false
+    t.string   "organisation_type",                    :null => false
     t.string   "abbreviation"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.string   "ancestry"
-    t.string   "content_id",        :null => false
+    t.string   "content_id",                           :null => false
+    t.boolean  "closed",            :default => false
   end
 
   add_index "organisations", ["ancestry"], :name => "index_organisations_on_ancestry"
