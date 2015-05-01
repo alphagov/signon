@@ -45,7 +45,7 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
 
   should "work for a partially signed-in user with an expired passphrase" do
     Sidekiq::Testing.inline! do
-      user = create(:user, password_changed_at: 3.months.ago)
+      user = create(:user, password_changed_at: 91.days.ago)
 
       trigger_reset_for(user.email)
 
@@ -109,7 +109,7 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
   end
 
   should "be accessible from the change password screen by a partially signed-in user" do
-    user = create(:user, password_changed_at: 3.months.ago)
+    user = create(:user, password_changed_at: 91.days.ago)
 
     visit root_path
     signin(email: user.email, password: user.password)

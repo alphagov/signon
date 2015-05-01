@@ -25,7 +25,7 @@ class PasswordsControllerTest < ActionController::TestCase
   end
 
   test 'a partially signed-in user with an expired password trying to reset their password should get signed-out' do
-    @user.update_attribute(:password_changed_at, 3.months.ago)
+    @user.update_attribute(:password_changed_at, 91.days.ago)
 
     # simulate a partially signed-in user. for example,
     # user with an expired password being asked to change the password
@@ -36,7 +36,7 @@ class PasswordsControllerTest < ActionController::TestCase
   end
 
   test 'a partially signed-in user with an expired password trying to reset their password should not be redirected to after_sign_in_path' do
-    @user.update_attribute(:password_changed_at, 3.months.ago)
+    @user.update_attribute(:password_changed_at, 91.days.ago)
     sign_in @user
 
     get :edit, id: @user.id, reset_password_token: @user.reset_password_token
@@ -46,7 +46,7 @@ class PasswordsControllerTest < ActionController::TestCase
   end
 
   test 'a partially signed-in user with an expired password should be able to request password reset instructions' do
-    @user.update_attribute(:password_changed_at, 3.months.ago)
+    @user.update_attribute(:password_changed_at, 91.days.ago)
 
     # simulate a partially signed-in user. for example,
     # user with an expired password being asked to change the password
