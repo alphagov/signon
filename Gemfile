@@ -19,7 +19,7 @@ gem 'strong_parameters'
 
 # Gems used to provide Authentication and Authorization services.
 gem 'devise', '3.1.0'
-gem 'devise_invitable', '1.1.5'
+gem 'devise_invitable', '1.3.0'
 gem 'devise-encryptable', '0.1.1'
 gem 'devise_security_extension', '0.7.2', git: "https://github.com/alphagov/devise_security_extension.git", branch: "restrict-password-params"
 gem 'devise_zxcvbn', '1.1.1'
