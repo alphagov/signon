@@ -4,7 +4,7 @@ class PasswordsControllerTest < ActionController::TestCase
   setup do
     request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user)
-    @user.__send__(:generate_reset_password_token!)
+    @user.__send__(:send_reset_password_instructions)
   end
 
   test "a request with a bad reset token shows an error page" do

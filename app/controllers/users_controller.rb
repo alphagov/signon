@@ -69,7 +69,7 @@ class UsersController < ApplicationController
   end
 
   def resend_email_change
-    @user.resend_confirmation_token
+    @user.resend_confirmation_instructions
     if @user.errors.empty?
       notice = @user.normal? ?
         "An email has been sent to #{@user.unconfirmed_email}. Follow the link in the email to update your address." :
