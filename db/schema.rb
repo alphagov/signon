@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150501101146) do
+ActiveRecord::Schema.define(:version => 20150507135123) do
 
   create_table "batch_invitation_application_permissions", :force => true do |t|
     t.integer  "batch_invitation_id",     :null => false
@@ -181,6 +181,7 @@ ActiveRecord::Schema.define(:version => 20150501101146) do
     t.integer  "organisation_id"
     t.boolean  "api_user",                             :default => false,    :null => false
     t.datetime "unsuspended_at"
+    t.datetime "invitation_created_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
