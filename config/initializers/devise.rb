@@ -309,4 +309,5 @@ Devise.setup do |config|
 
   config.secret_key = '9c46442808d803d907849ad47dc929851e1603686b8be5913347884cfe4d6f108ca3edeb8749c22430f215c1c90a0d1b456c103c5e30317027459087f24c7240'
   config.allow_insecure_token_lookup = true
+  config.allow_insecure_sign_in_after_confirmation = true
 end
