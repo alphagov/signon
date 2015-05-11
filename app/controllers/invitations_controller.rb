@@ -107,4 +107,8 @@ class InvitationsController < Devise::InvitationsController
   def invitation_token
     unsanitised_user_params.fetch(:invitation_token, {})
   end
+
+  def update_resource_params
+    resource_params
+  end
 end
