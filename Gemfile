@@ -39,7 +39,7 @@ gem 'zeroclipboard-rails'
 
 gem 'rake', '10.4.1'
 
-gem 'sass-rails', '4.0.0'
+gem 'sass-rails', '4.0.3'
 
 group :development do
   gem 'quiet_assets', '1.0.2'
