@@ -6,13 +6,15 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   has_many :permissions, :dependent => :destroy
   has_many :supported_permissions, :dependent => :destroy
 
-  default_scope order('oauth_applications.name')
-  scope :support_push_updates, where(supports_push_updates: true)
+  default_scope { order('oauth_applications.name') }
+  scope :support_push_updates, -> { where(supports_push_updates: true) }
   scope :can_signin, lambda {|user| joins(:supported_permissions => :user_application_permissions)
                                     .where('user_application_permissions.user_id' => user.id)
                                     .where('supported_permissions.name' => 'signin') }
-  scope :with_signin_delegatable, joins(:supported_permissions)
-                                  .where(supported_permissions: { name: 'signin', delegatable: true })
+  scope :with_signin_delegatable, -> {
+    joins(:supported_permissions)
+      .where(supported_permissions: { name: 'signin', delegatable: true })
+  }
 
   after_create :create_signin_supported_permission
   after_save :create_user_update_supported_permission

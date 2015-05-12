@@ -42,15 +42,15 @@ class User < ActiveRecord::Base
   has_many :application_permissions, class_name: 'UserApplicationPermission', inverse_of: :user
   has_many :supported_permissions, through: :application_permissions
   has_many :batch_invitations
-  has_many :event_logs, primary_key: :uid, foreign_key: :uid, order: 'created_at DESC'
+  has_many :event_logs, -> { where primary_key: :uid, foreign_key: :uid, order: 'created_at DESC' }
   belongs_to :organisation
 
   before_validation :fix_apostrophe_in_email
   before_create :generate_uid
   after_create :update_stats
 
-  scope :web_users, where(api_user: false)
-  scope :not_suspended, where(suspended_at: nil)
+  scope :web_users, -> { where(api_user: false) }
+  scope :not_suspended, -> { where(suspended_at: nil) }
   scope :with_role, lambda { |role_name| where(role: role_name) }
   scope :with_organisation, lambda { |org_id| where(organisation_id: org_id) }
   scope :filter, lambda { |filter_param| where("users.email like ? OR users.name like ?", "%#{filter_param.strip}%", "%#{filter_param.strip}%") }
