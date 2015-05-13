@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150501101146) do
+ActiveRecord::Schema.define(:version => 20150507160746) do
 
   create_table "batch_invitation_application_permissions", :force => true do |t|
     t.integer  "batch_invitation_id",     :null => false
@@ -148,23 +148,23 @@ ActiveRecord::Schema.define(:version => 20150501101146) do
   add_index "user_application_permissions", ["user_id", "application_id", "supported_permission_id"], :name => "index_app_permissions_on_user_and_app_and_supported_permission", :unique => true
 
   create_table "users", :force => true do |t|
-    t.string   "name",                                                       :null => false
-    t.string   "email",                                :default => "",       :null => false
-    t.string   "encrypted_password",                   :default => ""
+    t.string   "name",                                         :null => false
+    t.string   "email",                  :default => "",       :null => false
+    t.string   "encrypted_password",     :default => ""
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
-    t.integer  "sign_in_count",                        :default => 0
+    t.integer  "sign_in_count",          :default => 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "uid",                                                        :null => false
-    t.integer  "failed_attempts",                      :default => 0
+    t.string   "uid",                                          :null => false
+    t.integer  "failed_attempts",        :default => 0
     t.datetime "locked_at"
     t.datetime "suspended_at"
-    t.string   "invitation_token",       :limit => 60
+    t.string   "invitation_token"
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
     t.integer  "invitation_limit"
@@ -176,11 +176,12 @@ ActiveRecord::Schema.define(:version => 20150501101146) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
-    t.string   "role",                                 :default => "normal"
+    t.string   "role",                   :default => "normal"
     t.datetime "password_changed_at"
     t.integer  "organisation_id"
-    t.boolean  "api_user",                             :default => false,    :null => false
+    t.boolean  "api_user",               :default => false,    :null => false
     t.datetime "unsuspended_at"
+    t.datetime "invitation_created_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

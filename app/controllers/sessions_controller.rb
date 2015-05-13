@@ -1,7 +1,7 @@
 class SessionsController < Devise::SessionsController
 
   # FIXME: remove this once we're at Devise 3.2.0 or higher. Please.
-  if Devise::VERSION == "3.0.4"
+  if Devise::VERSION == "3.1.0"
     # Devise::SessionsController defines three filters, all using
     # `prepend_before_filter`. The one we want (that skips Devise's timeout
     # logic) is the last one defined, so it should be the first one in the

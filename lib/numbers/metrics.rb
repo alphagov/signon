@@ -80,7 +80,7 @@ class Metrics
   end
 
   def all_active
-    @all_active ||= User.active.includes({application_permissions: :application}, :organisation).to_a
+    @all_active ||= User.not_suspended.includes({application_permissions: :application}, :organisation).to_a
   end
 
   def metric_methods

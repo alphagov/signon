@@ -2,7 +2,7 @@ Hello <%= @resource.name %>,
 
 Someone has invited you to GOV.UK Signon, you can accept it copying-and-pasting the link below into your browser's URL bar:
 
-<%= accept_invitation_url(@resource, :invitation_token => @resource.invitation_token) %>
+<%= accept_invitation_url(@resource, :invitation_token => @token) %>
 
 If you don't want to accept the invitation, please ignore this email.
 
