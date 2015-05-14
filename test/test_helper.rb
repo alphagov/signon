@@ -46,7 +46,7 @@ class ActiveSupport::TestCase
   # Add more helper methods to be used by all tests here...
 
   def db_cleaner_start
-    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.start
   end
 
