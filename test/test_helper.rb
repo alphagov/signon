@@ -6,7 +6,7 @@ ENV["RAILS_ENV"] = "test"
 require File.expand_path('../../config/environment', __FILE__)
 
 require 'rails/test_help'
-require 'shoulda'
+require 'shoulda/context'
 require "test/unit"
 require "mocha/setup"
 require 'webmock/test_unit'
