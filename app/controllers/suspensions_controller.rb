@@ -28,7 +28,7 @@ class SuspensionsController < ApplicationController
   private
 
   def load_and_authorize_user
-    @user = User.find(params[:id])
+    @user = User.where(id: params[:id]).first
     authorize @user, :suspension?
   end
 

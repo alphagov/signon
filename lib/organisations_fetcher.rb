@@ -26,7 +26,7 @@ private
   end
 
   def update_or_create_organisation(organisation_data)
-    organisation = Organisation.find_or_initialize_by_content_id(organisation_data.details.content_id)
+    organisation = Organisation.find_or_initialize_by(content_id: organisation_data.details.content_id)
     update_data = {
       slug: organisation_data.details.slug,
       name: organisation_data.title,

@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_resource_owner
-    User.find(doorkeeper_token.resource_owner_id) if doorkeeper_token
+    User.where(id: doorkeeper_token.resource_owner_id).first if doorkeeper_token
   end
 
   private

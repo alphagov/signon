@@ -48,7 +48,8 @@ module UserFilterHelper
     value = params[filter_type]
     return nil if value.blank?
     if filter_type == :organisation
-      org = Organisation.find(value)
+      org = Organisation.where(name: value).first
+      return nil unless org
       if org.abbreviation.presence
         content_tag(:abbr, org.abbreviation, title: org.name)
       else

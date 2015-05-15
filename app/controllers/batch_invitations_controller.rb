@@ -50,7 +50,7 @@ class BatchInvitationsController < ApplicationController
   end
 
   def show
-    @batch_invitation = BatchInvitation.find(params[:id])
+    @batch_invitation = BatchInvitation.where(id: params[:id]).first
     authorize @batch_invitation
   end
 

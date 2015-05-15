@@ -8,7 +8,7 @@ class SupportedPermissionsController < ApplicationController
   end
 
   def edit
-    @supported_permission = SupportedPermission.find(params[:id])
+    @supported_permission = supported_permission
   end
 
   def create
@@ -22,7 +22,7 @@ class SupportedPermissionsController < ApplicationController
   end
 
   def update
-    @supported_permission = SupportedPermission.find(params[:id])
+    @supported_permission = supported_permission
     if @supported_permission.update_attributes(supported_permission_parameters)
       redirect_to doorkeeper_application_supported_permissions_path,
         notice: "Successfully updated permission #{@supported_permission.name}"
@@ -34,12 +34,16 @@ class SupportedPermissionsController < ApplicationController
 private
 
   def load_and_authorize_application
-    @application = Doorkeeper::Application.find(params[:doorkeeper_application_id])
+    @application = Doorkeeper::Application.where(id: params[:doorkeeper_application_id]).first
     authorize @application, :manage_supported_permissions?
   end
 
   def supported_permission_parameters
     params.require(:supported_permission).permit(:name, :delegatable)
+  end
+
+  def supported_permission
+    Supported_Permission.where(id: params[:id]).first
   end
 
 end

@@ -31,8 +31,6 @@ class User < ActiveRecord::Base
          :password_expirable,
          :password_archivable
 
-  attr_readonly :uid
-
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
   validate :organisation_admin_belongs_to_organisation
@@ -72,7 +70,7 @@ class User < ActiveRecord::Base
   end
 
   def permission_ids_for(application)
-    application_permissions.where(application_id: application.id).pluck(:supported_permission_id)
+    application_permissions.where(id: application.id).pluck(:supported_permission_id)
   end
 
   def has_access_to?(application)
@@ -80,7 +78,7 @@ class User < ActiveRecord::Base
   end
 
   def permissions_synced!(application)
-    application_permissions.where(application_id: application.id).update_all(last_synced_at: Time.zone.now)
+    application_permissions.where(id: application.id).update_all(last_synced_at: Time.zone.now)
   end
 
   def authorised_applications
@@ -95,7 +93,7 @@ class User < ActiveRecord::Base
   def grant_application_permissions(application, supported_permission_names)
     supported_permission_names.map do |supported_permission_name|
       supported_permission = SupportedPermission.find_by_application_id_and_name(application.id, supported_permission_name)
-      application_permissions.where(application_id: application.id, supported_permission_id: supported_permission.id).first_or_create!
+      application_permissions.where(id: application.id, supported_permission_id: supported_permission.id).first_or_create!
     end
   end
 
