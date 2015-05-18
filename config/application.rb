@@ -53,5 +53,7 @@ module Signonotron2
     config.to_prepare do
       Doorkeeper::ApplicationController.layout "application"
     end
+
+    config.autoload_paths << Rails.root.join('lib')
   end
 end
