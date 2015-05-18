@@ -1,7 +1,7 @@
 class UserMailer < ActionMailer::Base
   include MailerHelper
 
-  default from: lambda { email_from }
+  default from: email_from()
 
   helper_method :suspension_time, :account_name, :instance_name, :locked_time, :unlock_time
 
