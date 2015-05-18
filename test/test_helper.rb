@@ -47,7 +47,6 @@ class ActiveSupport::TestCase
 
   def db_cleaner_start
     DatabaseCleaner.strategy = :truncation
-    DatabaseCleaner.start
   end
 
   setup do
@@ -94,7 +93,8 @@ class ActionDispatch::IntegrationTest
   # Override the default strategy as tests with the JS driver require
   # tests not to be wrapped in a transaction
   def db_cleaner_start
-    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.start
   end
 
   setup do
