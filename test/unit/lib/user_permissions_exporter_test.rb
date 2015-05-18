@@ -63,7 +63,7 @@ class UserPermissionsExporterTest < ActionView::TestCase
 
     assert_equal ["Name", "Email", "Organisation", "Role", "Suspended at"], csv_data[0]
     assert_equal ["Anne", "anne@anne.com", "Ministry of ketchup", "superadmin", ""], csv_data[1]
-    assert_equal ["Bill", "bill@bill.com", "Ministry of chips", "normal", "2000-01-01 00:00:00 +0000"], csv_data[2]
+    assert_equal ["Bill", "bill@bill.com", "Ministry of chips", "normal", "2000-01-01 00:00:00 UTC"], csv_data[2]
     assert_equal ["Mary", "mary@mary.com", "Ministry of brown sauce", "admin", ""], csv_data[3]
   end
 end
