@@ -3,7 +3,7 @@ require 'test_helper'
 class BatchInvitationsControllerTest < ActionController::TestCase
 
   def users_csv(filename = "users.csv")
-    Rack::Test::UploadedFile.new("#{Rails.root}/test/functional/fixtures/#{filename}")
+    Rack::Test::UploadedFile.new("#{Rails.root}/test/controllers/fixtures/#{filename}")
   end
 
   setup do
