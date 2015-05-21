@@ -80,7 +80,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
     OrganisationsFetcher.new.call
 
     organisation = Organisation.find_by_slug(slug)
-    assert_present(organisation.abbreviation)
+    assert organisation.abbreviation.present?
   end
 
   test "it raises an error when it receives invalid data" do
