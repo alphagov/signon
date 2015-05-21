@@ -2,16 +2,16 @@ require 'test_helper'
 
 class InactiveUsersSuspensionReminderMailingListTest < ActiveSupport::TestCase
 
+  def suspension_reminder_mailing_list
+    InactiveUsersSuspensionReminderMailingList.new(User::SUSPENSION_THRESHOLD_PERIOD).generate
+  end
+
   context "generating suspension mailing list" do
     setup do
       @in_1  = create(:user, current_sign_in_at: User::SUSPENSION_THRESHOLD_PERIOD.ago)
       @in_3  = create(:user, current_sign_in_at: (User::SUSPENSION_THRESHOLD_PERIOD - 2.days).ago)
       @in_7  = create(:user, current_sign_in_at: (User::SUSPENSION_THRESHOLD_PERIOD - 6.days).ago)
       @in_14 = create(:user, current_sign_in_at: (User::SUSPENSION_THRESHOLD_PERIOD - 13.days).ago)
-    end
-
-    def suspension_reminder_mailing_list
-      InactiveUsersSuspensionReminderMailingList.new(User::SUSPENSION_THRESHOLD_PERIOD).generate
     end
 
     should "select users whose accounts will get suspended in 1 day" do
