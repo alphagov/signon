@@ -72,7 +72,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
       assert_redirected_to(:controller => "supported_permissions", :action => :index)
       assert_equal "Successfully updated permission permission1", flash[:notice]
-      assert_false perm.reload.delegatable
+      refute perm.reload.delegatable
      end
   end
 

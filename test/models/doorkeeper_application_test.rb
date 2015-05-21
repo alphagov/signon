@@ -9,7 +9,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
   context "user_update_permission" do
     should "not be grantable from ui" do
       user_update_permission = create(:application, supports_push_updates: true).supported_permissions.detect {|perm| perm.name == 'user_update_permission' }
-      assert_false user_update_permission.grantable_from_ui?
+      refute user_update_permission.grantable_from_ui?
     end
 
     should "be created after save if application supports push updates" do
@@ -17,11 +17,11 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       application.update_attributes(supports_push_updates: true)
 
       application.reload
-      assert_include application.supported_permission_strings, 'user_update_permission'
+      assert_includes application.supported_permission_strings, 'user_update_permission'
     end
 
     should "not be created after save if application doesn't support push updates" do
-      assert_not_include create(:application, supports_push_updates: false).supported_permission_strings, 'user_update_permission'
+      assert_not_includes create(:application, supports_push_updates: false).supported_permission_strings, 'user_update_permission'
     end
   end
 
@@ -57,7 +57,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       application = create(:application)
       user.grant_application_permission(application, 'signin')
 
-      assert_include Doorkeeper::Application.can_signin(user), application
+      assert_includes Doorkeeper::Application.can_signin(user), application
     end
 
     should "not return applications that the user can't signin into" do
@@ -70,7 +70,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     should "return applications that support delegation of signin permission" do
       application = create(:application, with_delegatable_supported_permissions: ['signin'])
 
-      assert_include Doorkeeper::Application.with_signin_delegatable, application
+      assert_includes Doorkeeper::Application.with_signin_delegatable, application
     end
 
     should "not return applications that don't support delegation of signin permission" do

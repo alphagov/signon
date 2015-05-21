@@ -37,7 +37,7 @@ class UserOAuthPresenterTest < ActiveSupport::TestCase
     suspended_user.grant_application_permissions(@application, ['signin', 'managing_editor'])
 
     presenter = UserOAuthPresenter.new(suspended_user, @application)
-    assert_true presenter.as_hash[:user][:disabled]
+    assert presenter.as_hash[:user][:disabled]
   end
 
   should "exclude permissions if user is suspended" do

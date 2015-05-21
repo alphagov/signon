@@ -3,7 +3,7 @@ require 'test_helper'
 class UserMailerTest < ActionMailer::TestCase
   def assert_body_includes(search_string, email=@email)
     email.body.parts.each do |part|
-      assert_include part.body, search_string
+      assert_includes part.body, search_string
     end
   end
 
@@ -14,7 +14,7 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "include the number of days remaining in the subject" do
-      assert_include @email.subject, "in 3 days"
+      assert_includes @email.subject, "in 3 days"
     end
 
     should "include the number of days remaining in the body" do
@@ -22,7 +22,7 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "not include an instance name in the subject" do
-      assert_include @email.subject, "Your GOV.UK Signon account"
+      assert_includes @email.subject, "Your GOV.UK Signon account"
     end
 
     should "not include an instance name in the body" do
@@ -37,7 +37,7 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "say 'tomorrow' in the subject" do
-      assert_include @email.subject, "tomorrow"
+      assert_includes @email.subject, "tomorrow"
     end
 
     should "say 'tomorrow' in the body" do
@@ -53,7 +53,7 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "include the instance name in the subject" do
-      assert_include @email.subject, "Your GOV.UK Signon test account"
+      assert_includes @email.subject, "Your GOV.UK Signon test account"
     end
 
     should "include the instance name in the body" do
