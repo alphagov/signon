@@ -5,7 +5,10 @@ class BatchInvitationTest < ActiveSupport::TestCase
     ActionMailer::Base.deliveries = []
 
     @app = create(:application)
-    @bi = create(:batch_invitation, supported_permission_ids: [@app.signin_permission.id])
+    @bi = create(:batch_invitation)
+
+    create(:batch_invitation_application_permission, batch_invitation: @bi, supported_permission: @app.signin_permission)
+
     @user_a = create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
     @user_b = create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
   end
