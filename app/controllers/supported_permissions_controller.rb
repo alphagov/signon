@@ -43,7 +43,7 @@ private
   end
 
   def supported_permission
-    Supported_Permission.where(id: params[:id]).first
+    SupportedPermission.where(id: params[:id]).first
   end
 
 end
