@@ -10,7 +10,7 @@ class SuspensionsControllerTest < ActionController::TestCase
 
       put :update, id: user.id, user: { suspended: "0" }
 
-      assert_true user.reload.suspended?
+      assert user.reload.suspended?
     end
 
     should "be able to control suspension of a user within their organisation" do
@@ -20,7 +20,7 @@ class SuspensionsControllerTest < ActionController::TestCase
 
       put :update, id: user.id, user: { suspended: "0" }
 
-      assert_false user.reload.suspended?
+      refute user.reload.suspended?
     end
   end
 
