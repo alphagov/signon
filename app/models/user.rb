@@ -40,7 +40,6 @@ class User < ActiveRecord::Base
   has_many :application_permissions, class_name: 'UserApplicationPermission', inverse_of: :user
   has_many :supported_permissions, through: :application_permissions
   has_many :batch_invitations
-  has_many :event_logs, -> { where primary_key: :uid, foreign_key: :uid, order: 'created_at DESC' }
   belongs_to :organisation
 
   before_validation :fix_apostrophe_in_email
@@ -56,6 +55,10 @@ class User < ActiveRecord::Base
   scope :last_signed_in_before, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) < date(?)', date) }
   scope :last_signed_in_after, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) >= date(?)', date) }
   scope :not_recently_unsuspended, lambda { where(['unsuspended_at IS NULL OR unsuspended_at < ?', UNSUSPENSION_GRACE_PERIOD.ago]) }
+
+  def event_logs
+    EventLog.where(uid: uid).order(created_at: :desc)
+  end
 
   def generate_uid
     self.uid = UUID.generate
