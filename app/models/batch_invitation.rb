@@ -4,7 +4,7 @@ class BatchInvitation < ActiveRecord::Base
   belongs_to :user
   belongs_to :organisation
   has_many :batch_invitation_users
-  has_many :batch_invitation_application_permissions
+  has_many :batch_invitation_application_permissions, inverse_of: :batch_invitation
   has_many :supported_permissions, through: :batch_invitation_application_permissions
 
   serialize :applications_and_permissions, Hash
