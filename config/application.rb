@@ -42,6 +42,8 @@ module Signonotron2
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
+    # Note: filter_parameters are treated as regexes, so :password also matches
+    # current_password, password_confirmation and password-strength-score
     config.filter_parameters += [:password]
 
     # Use SQL instead of Active Record's schema dumper when creating the database.
