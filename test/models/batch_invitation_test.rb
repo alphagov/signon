@@ -77,7 +77,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
       should "mark it as failed and pass the error on for the worker to record the error details" do
         BatchInvitationUser.any_instance.expects(:invite).raises("ArbitraryError")
 
-        assert_raises "ArbitraryError" do
+        assert_raises RuntimeError, "ArbitraryError" do
           @bi.perform
         end
         assert_equal "fail", @bi.outcome
