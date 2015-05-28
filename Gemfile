@@ -60,12 +60,13 @@ group :test do
   gem 'poltergeist', '1.5.0'
   gem 'database_cleaner', '1.4.1'
   gem 'factory_girl_rails', '4.3.0'
-  gem 'mocha', '0.13.3', require: false
+  gem 'mocha', '1.1.0', require: false
   gem 'webmock', '1.17.3'
-  gem 'test-unit', '2.5.2', require: false
+  gem 'minitest', '4.7.5'
   gem 'simplecov', '0.6.4'
   gem 'simplecov-rcov', '0.2.3'
   gem 'ci_reporter', '1.7.0'
   gem 'timecop', '0.7.1'
   gem 'shoulda-context', '1.2.1', require: false
+  gem 'pry-byebug'
 end
