@@ -43,7 +43,7 @@ class PassphraseChangeTest < ActionDispatch::IntegrationTest
                       new: "some ev3n mor3 s3cure passphrase",
                       new_confirmation: "ev3n mor3 s3cure")
 
-      assert_response_contains("doesn't match confirmation")
+      assert_response_contains("confirmation doesn't match")
       assert_password_unchanged
     end
 
