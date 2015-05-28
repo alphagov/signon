@@ -6,7 +6,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
   context "by an admin" do
     setup do
-      @admin = create(:user, role: "admin")
+      @admin = create(:admin_user)
     end
 
     context "for an active user" do
@@ -80,9 +80,8 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         signin(@admin)
         visit edit_user_path(user)
         click_link "Cancel email change"
-
-        user.reload
         signout
+
         visit user_confirmation_path(confirmation_token: user.confirmation_token)
         assert_response_contains("Couldn't confirm email change. Please contact support to request a new confirmation email.")
         assert_equal original_email, user.email
@@ -146,13 +145,16 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin(@user)
 
-      @user.update_column(:unconfirmed_email, "new@email.com")
+      click_link "Change your email or passphrase"
+      fill_in "Email", with: "new@email.com"
+      click_button "Change email"
+
+      @user.reload
 
       visit edit_user_path(@user)
       click_link "Cancel email change"
-
-      @user.reload
       signout
+
       visit user_confirmation_path(confirmation_token: @user.confirmation_token)
       assert_response_contains("Couldn't confirm email change. Please contact support to request a new confirmation email.")
       assert_equal "original@email.com", @user.email
