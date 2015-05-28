@@ -41,7 +41,7 @@ class BatchInvitation < ActiveRecord::Base
   class Worker
     include Sidekiq::Worker
     def perform(id, options = {})
-      BatchInvitation.where(id: id).perform(options)
+      BatchInvitation.where(id: id).first.perform(options)
     end
   end
 end
