@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'helpers/passphrase_support'
 
-class EventLogTest < ActionDispatch::IntegrationTest
+class EventLogIntegrationTest < ActionDispatch::IntegrationTest
   include PassPhraseSupport
 
   setup do
