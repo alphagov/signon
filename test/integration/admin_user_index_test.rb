@@ -1,4 +1,4 @@
-require_relative "../test_helper"
+require "test_helper"
 
 class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
@@ -104,24 +104,6 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       end
     end
 
-    def select_role(role_name)
-      within ".filter-by-role-menu" do
-        click_on "Role"
-        within ".dropdown-menu" do
-          click_on role_name
-        end
-      end
-    end
-
-    def assert_role_not_present(role_name)
-      within ".filter-by-role-menu" do
-        click_on "Role"
-        within ".dropdown-menu" do
-          assert page.has_no_content? role_name
-        end
-      end
-    end
-
     should "filter users by status" do
       visit "/users"
 
@@ -135,12 +117,6 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       %w(Aardvark Abbot Abbey Admin Suspended).each do |user_name|
         assert page.has_content?(user_name)
-      end
-    end
-
-    def select_status(status_name)
-      within ".filter-by-status-menu .dropdown-menu" do
-        click_on status_name
       end
     end
 
@@ -158,10 +134,34 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
         assert page.has_content?(user_name)
       end
     end
+  end
 
-    def select_organisation(organisation_name)
-      within ".filter-by-organisation-menu .dropdown-menu" do
-        click_on organisation_name
+  def select_organisation(organisation_name)
+    within ".filter-by-organisation-menu .dropdown-menu" do
+      click_on organisation_name
+    end
+  end
+
+  def select_status(status_name)
+    within ".filter-by-status-menu .dropdown-menu" do
+      click_on status_name
+    end
+  end
+
+  def assert_role_not_present(role_name)
+    within ".filter-by-role-menu" do
+      click_on "Role"
+      within ".dropdown-menu" do
+        assert page.has_no_content? role_name
+      end
+    end
+  end
+
+  def select_role(role_name)
+    within ".filter-by-role-menu" do
+      click_on "Role"
+      within ".dropdown-menu" do
+        click_on role_name
       end
     end
   end
