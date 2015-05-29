@@ -315,12 +315,11 @@ class UserTest < ActiveSupport::TestCase
       should "notify them that reset password is disallowed and not send reset instructions" do
         user = create(:suspended_user)
 
-        User.send_reset_password_instructions({ email: user.email })
+        delay_mock = mock('delay')
+        delay_mock.expects(:notify_reset_password_disallowed_due_to_suspension).returns(:foo)
+        UserMailer.expects(:delay).returns(delay_mock)
 
-        delayed_mailer_jobs = Sidekiq::Extensions::DelayedMailer.jobs
-        assert_equal 1, delayed_mailer_jobs.size
-        assert_equal [UserMailer, :notify_reset_password_disallowed_due_to_suspension, [user]],
-          YAML.load(delayed_mailer_jobs.first['args'].first)
+        User.send_reset_password_instructions({ email: user.email })
       end
     end
 
