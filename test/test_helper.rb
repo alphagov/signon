@@ -88,7 +88,8 @@ require 'helpers/email_helpers'
 
   setup do
     # Enable CSRF protection in integration tests
-    @original_forgery_protection_value, ActionController::Base.allow_forgery_protection = true, ActionController::Base.allow_forgery_protection
+    @original_forgery_protection_value = ActionController::Base.allow_forgery_protection
+    ActionController::Base.allow_forgery_protection = true
   end
 
   teardown do
