@@ -308,6 +308,4 @@ Devise.setup do |config|
   # config.expire_after = 90.days
 
   config.secret_key = ENV['DEVISE_SECRET_KEY']
-  config.allow_insecure_token_lookup = true
-  config.allow_insecure_sign_in_after_confirmation = true
 end
