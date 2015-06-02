@@ -78,7 +78,7 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
 
       signout
 
-      current_email.click_link("Change my passphrase")
+      complete_password_reset(current_email, new_password: new_password)
 
       assert_response_contains("That passphrase reset didn’t work.")
     end
