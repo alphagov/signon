@@ -6,30 +6,22 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     @user = create(:user)
   end
 
-  should "confirm the authorisation for a signed-out user" do
-    begin
-      visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
-    rescue ActionController::RoutingError, SocketError
-    end
-
+  should "not confirm the authorisation for a signed-out user" do
+    visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     assert_response_contains("You need to sign in")
+    signin(@user)
 
-    begin
-      signin(@user)
-    rescue ActionController::RoutingError, SocketError
-    end
-    assert_kind_of Doorkeeper::AccessGrant, Doorkeeper::AccessGrant.find_by_resource_owner_id(@user.id)
+    refute Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
   end
 
   should "confirm the authorisation for a signed-in user" do
     visit "/"
     signin(@user)
-
     begin
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
-    rescue ActionController::RoutingError, SocketError
+    rescue ActionController::RoutingError
     end
 
-    assert_kind_of Doorkeeper::AccessGrant, Doorkeeper::AccessGrant.find_by_resource_owner_id(@user.id)
+    assert_kind_of Doorkeeper::AccessGrant, Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
   end
 end
