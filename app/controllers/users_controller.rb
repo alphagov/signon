@@ -121,7 +121,7 @@ class UsersController < ApplicationController
   private
 
   def load_and_authorize_user
-    @user = current_user.normal? ? current_user : User.where(id: params[:id]).first
+    @user = current_user.normal? ? current_user : User.find(params[:id])
     authorize @user
   end
 
@@ -158,7 +158,7 @@ class UsersController < ApplicationController
   end
 
   def application_making_request
-    ::Doorkeeper::Application.where(id: doorkeeper_token.application_id).first
+    ::Doorkeeper::Application.find(doorkeeper_token.application_id)
   end
 
   def validate_token_matches_client_id

@@ -44,7 +44,7 @@ class InvitationsController < Devise::InvitationsController
   end
 
   def resend
-    user = User.where(id: params[:id]).first
+    user = User.find(params[:id])
     authorize user
 
     user.invite!

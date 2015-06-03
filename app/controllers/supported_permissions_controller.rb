@@ -34,7 +34,7 @@ class SupportedPermissionsController < ApplicationController
 private
 
   def load_and_authorize_application
-    @application = Doorkeeper::Application.where(id: params[:doorkeeper_application_id]).first
+    @application = Doorkeeper::Application.find(params[:doorkeeper_application_id])
     authorize @application, :manage_supported_permissions?
   end
 
@@ -43,7 +43,7 @@ private
   end
 
   def supported_permission
-    SupportedPermission.where(id: params[:id]).first
+    SupportedPermission.find(params[:id])
   end
 
 end

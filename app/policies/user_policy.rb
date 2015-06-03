@@ -7,7 +7,6 @@ class UserPolicy < BasePolicy
   alias_method :index?, :new?
 
   def edit?
-    return unless current_user
     case current_user.role
     when 'superadmin'
       true

@@ -20,7 +20,7 @@ class DoorkeeperApplicationsController < ApplicationController
   private
 
   def load_and_authorize_application
-    @application = Doorkeeper::Application.where(id: params[:id]).first
+    @application = Doorkeeper::Application.find(params[:id])
     authorize @application
   end
 

@@ -48,7 +48,7 @@ class ApiUsersController < ApplicationController
 private
 
   def load_and_authorize_api_user
-    @api_user = ApiUser.where(id: params[:id]).first
+    @api_user = ApiUser.find(params[:id])
     authorize @api_user
   end
 

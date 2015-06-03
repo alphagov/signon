@@ -25,7 +25,7 @@ class AuthorisationsController < ApplicationController
   end
 
   def revoke
-    authorisation = @api_user.authorisations.where(id: params[:id]).first
+    authorisation = @api_user.authorisations.find(params[:id])
     if authorisation.revoke
       if params[:regenerate]
         regenerated_authorisation = @api_user.authorisations.create!(expires_in: ApiUser::DEFAULT_TOKEN_LIFE,
@@ -47,7 +47,7 @@ class AuthorisationsController < ApplicationController
 private
 
   def load_and_authorize_api_user
-    @api_user = ApiUser.where(id: params[:api_user_id]).first
+    @api_user = ApiUser.find(params[:api_user_id])
     authorize @api_user
   end
 end
