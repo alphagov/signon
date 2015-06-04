@@ -36,6 +36,7 @@ class ConfirmationsController < Devise::ConfirmationsController
 
   def update
     self.resource = confirmation_user
+
     if self.resource.valid_password?(params[:user][:password])
       self.resource = resource_class.confirm_by_token(params[:confirmation_token])
       if resource.errors.empty?
@@ -54,7 +55,8 @@ class ConfirmationsController < Devise::ConfirmationsController
 
   private
     def confirmation_user
-      @confirmation_user ||= resource_class.find_or_initialize_by(confirmation_token: params[:confirmation_token])
+      token = Devise.token_generator.digest(User, :confirmation_token, params[:confirmation_token])
+      @confirmation_user ||= resource_class.find_or_initialize_by(confirmation_token: token)
     end
 
     def handle_new_token_needed

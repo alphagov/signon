@@ -37,7 +37,7 @@ FactoryGirl.define do
   factory :user_with_pending_email_change, parent: :user do
     email "old@email.com"
     unconfirmed_email "new@email.com"
-    sequence(:confirmation_token) { |n| "#{n}a1s2d3"}
+    confirmation_token Devise.token_generator.generate(User, :confirmation_token)
     confirmation_sent_at Time.zone.now
   end
 
