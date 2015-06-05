@@ -25,12 +25,12 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
     end
 
     should "remember where the user was trying to get to before the password reset" do
-      visit "/users/#{@user.id}/edit?arbitrary=1"
+      visit "/users/#{@user.id}/edit"
 
       signin(@user)
       reset_expired_passphrase(@user.password, @new_password, @new_password)
 
-      assert_current_url "/users/#{@user.id}/edit?arbitrary=1"
+      assert_current_url "/users/#{@user.id}/edit"
     end
 
     should "continue prompting for a new password if the reset didn't work" do
