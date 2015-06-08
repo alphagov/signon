@@ -50,22 +50,19 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
     context "for a user who hasn't accepted their invite yet" do
       should "resend the invitation" do
-        Sidekiq::Testing.inline! do
-          user = User.invite!(name: "Jim", email: "jim@web.com")
+        user = User.invite!(name: "Jim", email: "jim@web.com")
 
-          visit new_user_session_path
-          signin(@admin)
-          admin_changes_email_address(user: user, new_email: "new@email.com")
+        open_email("jim@web.com")
+        assert_equal 'Please confirm your account', current_email.subject
 
-          invitation_email = ActionMailer::Base.deliveries[-3]
-          assert_equal "new@email.com", invitation_email.to[0]
-          assert_equal 'Please confirm your account', invitation_email.subject
+        visit new_user_session_path
+        signin(@admin)
+        admin_changes_email_address(user: user, new_email: "new@email.com")
 
-          user.reload
-          accept_invitation(invitation_token: user.invitation_token,
-                            password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z")
-          assert_response_contains("Your passphrase was set successfully. You are now signed in.")
-        end
+        open_email("new@email.com")
+        assert_equal 'Please confirm your account', current_email.subject
+        assert current_email.body.include?("Accept invitation")
+        assert user.accept_invitation!
       end
     end
 
@@ -74,6 +71,8 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         use_javascript_driver
 
         user = create(:user_with_pending_email_change)
+
+        confirmation_token = token_sent_to(user)
         original_email = user.email
 
         visit new_user_session_path
@@ -82,9 +81,9 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         click_link "Cancel email change"
         signout
 
-        visit user_confirmation_path(confirmation_token: user.confirmation_token)
+        visit user_confirmation_path(confirmation_token: confirmation_token)
         assert_response_contains("Couldn't confirm email change. Please contact support to request a new confirmation email.")
-        assert_equal original_email, user.email
+        assert_equal original_email, user.reload.email
       end
     end
   end
@@ -117,7 +116,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       fill_in "Email", with: "new@email.com"
       click_button "Change email"
 
-      visit user_confirmation_path(confirmation_token: @user.reload.confirmation_token)
+      first_email_sent_to("new@email.com").click_link("Confirm my account")
 
       signout
       signin(create(:admin_user))
@@ -149,15 +148,15 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       fill_in "Email", with: "new@email.com"
       click_button "Change email"
 
-      @user.reload
+      confirmation_token = token_sent_to(@user)
 
       visit edit_user_path(@user)
       click_link "Cancel email change"
       signout
 
-      visit user_confirmation_path(confirmation_token: @user.confirmation_token)
+      visit user_confirmation_path(confirmation_token: confirmation_token)
       assert_response_contains("Couldn't confirm email change. Please contact support to request a new confirmation email.")
-      assert_equal "original@email.com", @user.email
+      assert_equal "original@email.com", @user.reload.email
     end
   end
 end

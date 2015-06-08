@@ -21,7 +21,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
     should "send the user an invitation token" do
       user = User.invite!(name: "Jim", email: "jim@web.com")
-      visit accept_user_invitation_path(invitation_token: user.invitation_token)
+      visit accept_user_invitation_path(invitation_token: user.raw_invitation_token)
 
       fill_in "New passphrase", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
       fill_in "Confirm new passphrase", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"

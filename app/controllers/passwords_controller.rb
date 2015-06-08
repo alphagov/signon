@@ -1,15 +1,6 @@
 class PasswordsController < Devise::PasswordsController
   before_filter :record_password_reset_request, only: :create
 
-  def edit
-    token = Devise.token_generator.digest(self, :reset_password_token, params[:reset_password_token])
-    self.resource = resource_class.where(reset_password_token: token).first
-
-    unless self.resource && self.resource.reset_password_period_valid?
-      render 'devise/passwords/reset_error' and return
-    end
-  end
-
   # overrides http://git.io/sOhoaA to prevent expirable from
   # intercepting reset password flow for a partially signed-in user
   def require_no_authentication
@@ -18,6 +9,14 @@ class PasswordsController < Devise::PasswordsController
       sign_out(current_user)
     end
     super
+  end
+
+  def update
+    super do |resource|
+      unless resource.valid?
+        render 'devise/passwords/reset_error' and return
+      end
+    end
   end
 
   private

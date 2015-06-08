@@ -29,8 +29,11 @@ WebMock.disable_net_connect!(:allow_localhost => true)
 require 'sidekiq/testing'
 Sidekiq::Testing.fake!
 
+require 'helpers/confirmation_token_helper'
+
 class ActionController::TestCase
   include Devise::TestHelpers
+  include ConfirmationTokenHelper
 end
 
 require 'capybara/rails'
@@ -70,6 +73,7 @@ ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
    include Capybara::DSL
    include UserHelpers
    include EmailHelpers
+   include ConfirmationTokenHelper
 
    def assert_response_contains(content)
      assert page.has_content?(content), "Expected to find '#{content}' in:\n#{page.text}"

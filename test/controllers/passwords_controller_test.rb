@@ -5,10 +5,15 @@ class PasswordsControllerTest < ActionController::TestCase
     request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user)
     @token_received_in_email = @user.__send__(:send_reset_password_instructions)
+    @new_password = "some v3ry s3cure passphrase"
   end
 
   test "a request with a bad reset token shows an error page" do
-    get :edit, id: @user.id, reset_password_token: 'not_a_real_token'
+    post :update,
+      password: @new_password,
+      password_confirmation: @new_password,
+      reset_password_token: 'not_a_real_token'
+
     assert_response :success
     assert_template 'devise/passwords/reset_error'
   end
@@ -19,7 +24,11 @@ class PasswordsControllerTest < ActionController::TestCase
     # to do that for just this situation.
     @user.update_attribute(:reset_password_sent_at, 1.year.ago)
 
-    get :edit, id: @user.id, reset_password_token: @token_received_in_email
+    post :update,
+      password: @new_password,
+      password_confirmation: @new_password,
+      reset_password_token: @token_received_in_email
+
     assert_response :success
     assert_template 'devise/passwords/reset_error'
   end
@@ -30,7 +39,10 @@ class PasswordsControllerTest < ActionController::TestCase
     # simulate a partially signed-in user. for example,
     # user with an expired password being asked to change the password
     sign_in @user
-    get :edit, id: @user.id, reset_password_token: @token_received_in_email
+    post :update,
+      password: @new_password,
+      password_confirmation: @new_password,
+      reset_password_token: @token_received_in_email
 
     assert_nil request.env['warden'].user
   end

@@ -5,6 +5,7 @@ class ConfirmationsControllerTest < ActionController::TestCase
   setup do
     request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user_with_pending_email_change)
+    @confirmation_token = token_sent_to(@user)
   end
 
   context "GET new" do
@@ -32,15 +33,15 @@ class ConfirmationsControllerTest < ActionController::TestCase
       end
 
       should "not sign you in" do
-        get :show, confirmation_token: @user.confirmation_token
+        get :show, confirmation_token: @confirmation_token
         assert_template "devise/confirmations/show"
         assert_equal false, @controller.user_signed_in?
       end
 
       should "render a form" do
-        get :show, confirmation_token: @user.confirmation_token
+        get :show, confirmation_token: @confirmation_token
         assert_select "input#user_password"
-        assert_select "input[type=hidden][name=confirmation_token][value=#{@user.confirmation_token}]"
+        assert_select "input[type=hidden][name=confirmation_token][value=#{@confirmation_token}]"
       end
     end
 
@@ -56,13 +57,13 @@ class ConfirmationsControllerTest < ActionController::TestCase
       end
 
       should "accept the confirmation and redirect to root" do
-        get :show, confirmation_token: @user.confirmation_token
+        get :show, confirmation_token: @confirmation_token
         assert_redirected_to "/"
         assert_equal @user.reload.email, "new@email.com"
       end
 
       should "log an event upon confirmation" do
-        get :show, confirmation_token: @user.confirmation_token
+        get :show, confirmation_token: @confirmation_token
         assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_CONFIRMED, uid: @user.uid).count
       end
     end
@@ -73,7 +74,7 @@ class ConfirmationsControllerTest < ActionController::TestCase
       end
 
       should "reject the attempt" do
-        get :show, confirmation_token: @user.confirmation_token
+        get :show, confirmation_token: @confirmation_token
         assert_redirected_to "/"
         assert_match(/It appears you followed a link meant for another user./, flash[:alert])
         assert_equal "old@email.com", @user.reload.email
@@ -84,7 +85,7 @@ class ConfirmationsControllerTest < ActionController::TestCase
   context "PUT update" do
     should "authenticate with the correct token and password, and confirm the email change" do
       put :update,
-            confirmation_token: @user.confirmation_token,
+            confirmation_token: @confirmation_token,
             user: { password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z" }
       assert_redirected_to "/"
       assert @controller.user_signed_in?
@@ -93,7 +94,7 @@ class ConfirmationsControllerTest < ActionController::TestCase
 
     should "log an event upon confirmation" do
       put :update,
-            confirmation_token: @user.confirmation_token,
+            confirmation_token: @confirmation_token,
             user: { password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z" }
       assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_CONFIRMED, uid: @user.uid).count
     end
@@ -108,7 +109,7 @@ class ConfirmationsControllerTest < ActionController::TestCase
 
     should "reject with an incorrect passphrase" do
       put :update,
-            confirmation_token: @user.confirmation_token,
+            confirmation_token: @confirmation_token,
             user: { password: "not the real password" }
       assert_equal false, @controller.user_signed_in?
       assert_equal @user.reload.email, "old@email.com"
@@ -116,7 +117,7 @@ class ConfirmationsControllerTest < ActionController::TestCase
 
     should "redisplay the form on failure" do
       put :update,
-            confirmation_token: @user.confirmation_token,
+            confirmation_token: @confirmation_token,
             user: { password: "not the real password" }
       assert_template "devise/confirmations/show"
     end
