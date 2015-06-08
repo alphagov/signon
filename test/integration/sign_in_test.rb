@@ -17,6 +17,20 @@ class SignInTest < ActionDispatch::IntegrationTest
     assert_response_contains("Invalid email or passphrase")
   end
 
+  should "display the same rejection for failed logins, empty passwords, and missing accounts" do
+    visit root_path
+    signin(email: "does-not-exist@example.com", password: "some made up p@ssw0rd")
+    assert_response_contains("Invalid email or passphrase")
+
+    visit root_path
+    signin(email: "email@example.com", password: "some incorrect passphrase with various $ymb0l$")
+    assert_response_contains("Invalid email or passphrase")
+
+    visit root_path
+    signin(email: "email@example.com", password: "")
+    assert_response_contains("Invalid email or passphrase")
+  end
+
   should "succeed if the Client-IP header is set" do
     page.driver.browser.header("Client-IP", "127.0.0.1")
 
