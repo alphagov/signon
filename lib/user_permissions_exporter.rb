@@ -22,7 +22,7 @@ class UserPermissionsExporter
   end
 
   def export(apps)
-    @applications, users = Doorkeeper::Application.where('name in (?)', apps), User.order(:name).all
+    @applications, users = Doorkeeper::Application.where('name in (?)', apps), User.order(:name).to_a
 
     # iterate over applications
     CSV.open(file_path, 'wb', headers: true) do |csv|

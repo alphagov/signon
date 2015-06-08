@@ -5,7 +5,10 @@ class BatchInvitationTest < ActiveSupport::TestCase
     ActionMailer::Base.deliveries = []
 
     @app = create(:application)
-    @bi = create(:batch_invitation, supported_permission_ids: [@app.signin_permission.id])
+    @bi = create(:batch_invitation, supported_permissions: [@app.signin_permission])
+
+#    create(:batch_invitation_application_permission, batch_invitation: @bi, supported_permission: @app.signin_permission)
+
     @user_a = create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
     @user_b = create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
   end
@@ -74,7 +77,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
       should "mark it as failed and pass the error on for the worker to record the error details" do
         BatchInvitationUser.any_instance.expects(:invite).raises("ArbitraryError")
 
-        assert_raises "ArbitraryError" do
+        assert_raises RuntimeError, "ArbitraryError" do
           @bi.perform
         end
         assert_equal "fail", @bi.outcome

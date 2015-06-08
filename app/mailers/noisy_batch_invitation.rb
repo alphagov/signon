@@ -1,7 +1,7 @@
 class NoisyBatchInvitation < ActionMailer::Base
   include MailerHelper
 
-  default from: lambda { email_from }
+  default from: Proc.new { email_from }
   default to: "signon-alerts@digital.cabinet-office.gov.uk"
 
   def make_noise(batch_invitation)

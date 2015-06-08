@@ -5,9 +5,9 @@ class BatchInvitationUser < ActiveRecord::Base
 
   validates :outcome, inclusion: { :in => [nil, "success", "failed", "skipped"] }
 
-  scope :processed, where("outcome IS NOT NULL")
-  scope :unprocessed, where("outcome IS NULL")
-  scope :failed, where(outcome: "failed")
+  scope :processed, -> { where.not(outcome: nil) }
+  scope :unprocessed, -> { where(outcome: nil) }
+  scope :failed, -> { where(outcome: "failed") }
 
   def invite(inviting_user, supported_permission_ids)
     sanitised_attributes = sanitise_attributes_for_inviting_user_role(

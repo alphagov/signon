@@ -7,7 +7,7 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
 
     InactiveUsersSuspender.new.suspend
 
-    assert_true inactive_user.reload.suspended?
+    assert inactive_user.reload.suspended?
   end
 
   test "suspension reason contains suspension threshold date" do
@@ -23,7 +23,7 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
 
     InactiveUsersSuspender.new.suspend
 
-    assert_false active_user.reload.suspended?
+    refute active_user.reload.suspended?
   end
 
   test "doesn't suspend users who have logged-in since suspension threshold days ago" do
@@ -31,7 +31,7 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
 
     InactiveUsersSuspender.new.suspend
 
-    assert_false active_user.reload.suspended?
+    refute active_user.reload.suspended?
   end
 
   test "doesn't suspend users who have recently been unsuspended" do
@@ -43,7 +43,7 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
 
     InactiveUsersSuspender.new.suspend
 
-    assert_false unsuspended_user.reload.suspended?
+    refute unsuspended_user.reload.suspended?
   end
 
   test "doesn't modify users who are suspended" do
@@ -51,7 +51,7 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
 
     InactiveUsersSuspender.new.suspend
 
-    assert_true suspended_user.reload.suspended?
+    assert suspended_user.reload.suspended?
   end
 
   test "returns the count of users who got suspended" do

@@ -60,7 +60,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
       put :update, doorkeeper_application_id: app.id, id: perm.id, supported_permission: { name: "", delegatable: false }
 
       assert_select "ul[class='errors'] li", ERB::Util.html_escape("Name can't be blank")
-      assert_true perm.reload.delegatable
+      assert perm.reload.delegatable
      end
 
     should "edit permission" do
@@ -72,7 +72,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
       assert_redirected_to(:controller => "supported_permissions", :action => :index)
       assert_equal "Successfully updated permission permission1", flash[:notice]
-      assert_false perm.reload.delegatable
+      refute perm.reload.delegatable
      end
   end
 

@@ -16,11 +16,11 @@ class UserTest < ActiveSupport::TestCase
   # Scopes
 
   test "web_users includes non api users" do
-    assert_include User.web_users, @user
+    assert_includes User.web_users, @user
   end
 
   test "web_users excludes api users" do
-    assert_not_include User.web_users, create(:api_user)
+    assert_not_includes User.web_users, create(:api_user)
   end
 
   test "fetches web users who signed_in X days ago" do
@@ -55,32 +55,32 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "return users with specified role" do
-      assert_include User.with_role(:admin), @admin
+      assert_includes User.with_role(:admin), @admin
     end
 
     should "not return users with a role other than the specified role" do
-      assert_not_include User.with_role(:admin), @normal
+      assert_not_includes User.with_role(:admin), @normal
     end
   end
 
   context ".not_recently_unsuspended" do
 
     should "return users who have never been unsuspended" do
-      assert_include User.not_recently_unsuspended, @user
+      assert_includes User.not_recently_unsuspended, @user
     end
 
     should "not return users who have been unsuspended less than 3 days ago" do
       user2 = create(:suspended_user)
       Timecop.travel(2.days.ago) { user2.unsuspend }
 
-      assert_not_include User.not_recently_unsuspended, user2
+      assert_not_includes User.not_recently_unsuspended, user2
     end
 
     should "return users who have been unsuspended more than 3 days ago" do
       user2 = create(:suspended_user)
       Timecop.travel(4.days.ago) { user2.unsuspend }
 
-      assert_include User.not_recently_unsuspended, user2
+      assert_includes User.not_recently_unsuspended, user2
     end
   end
 
@@ -88,7 +88,7 @@ class UserTest < ActiveSupport::TestCase
     should "require an email" do
       user = build(:user, email: nil)
 
-      assert_false user.valid?
+      refute user.valid?
       assert_equal ["can't be blank"], user.errors[:email]
     end
 
@@ -115,7 +115,7 @@ class UserTest < ActiveSupport::TestCase
       ].each do |email|
         user.email = email
 
-        assert_false user.valid?, "Expected user to be invalid with email: '#{email}'"
+        refute user.valid?, "Expected user to be invalid with email: '#{email}'"
         assert_equal ["is invalid"], user.errors[:email]
       end
     end
@@ -130,7 +130,7 @@ class UserTest < ActiveSupport::TestCase
     should "emails can't contain non-ASCII characters" do
       user = build(:user, email: "mariõs.castle@wii.com") # unicode tilde character
 
-      assert_false user.valid?
+      refute user.valid?
       assert_equal ["can't contain non-ASCII characters"], user.errors[:email]
     end
   end
@@ -139,7 +139,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "it requires a password to be at least 10 characters long" do
     u = build(:user, :password => "dNG.c0w5!")
-    assert !u.valid?
+    refute u.valid?
     assert_not_empty u.errors[:password]
   end
 
@@ -155,21 +155,21 @@ class UserTest < ActiveSupport::TestCase
     assert u.valid?
 
     u = build(:user, email: "sherlock.holmes@bakerstreet.com", password: "sherlock holmes baker street")
-    assert !u.valid?
+    refute u.valid?
     assert_not_empty u.errors[:password]
   end
 
   test "it requires a reason for suspension to suspend a user" do
     u = create(:user)
     u.suspended_at = 1.minute.ago
-    assert ! u.valid?
+    refute u.valid?
     assert_not_empty u.errors[:reason_for_suspension]
   end
 
   test "organisation admin must belong to an organisation" do
     user = build(:user, role: 'organisation_admin', organisation_id: nil)
 
-    assert_false user.valid?
+    refute user.valid?
     assert_equal "can't be 'None' for an Organisation admin", user.errors[:organisation_id].first
   end
 
@@ -181,7 +181,7 @@ class UserTest < ActiveSupport::TestCase
     u.update_column :encrypted_password, old_encrypted_password
     u.reload
 
-    assert ! u.valid_password?("something else")
+    refute u.valid_password?("something else")
     u.reload
 
     assert_equal old_encrypted_password, u.encrypted_password, "Changed passphrase"
@@ -221,7 +221,7 @@ class UserTest < ActiveSupport::TestCase
     user = User.invite!(name: nil, email: "j@1.com")
 
     assert_not_empty user.errors
-    assert_false user.persisted?
+    refute user.persisted?
   end
 
   context "User status" do
@@ -296,12 +296,12 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "include applications the user is authorised for" do
-      assert_include @user.authorised_applications, @app
+      assert_includes @user.authorised_applications, @app
     end
 
     should "not include applications the user is not authorised for" do
       unused_app = create(:application)
-      assert_not_include @user.authorised_applications, unused_app
+      assert_not_includes @user.authorised_applications, unused_app
     end
   end
 
@@ -315,12 +315,11 @@ class UserTest < ActiveSupport::TestCase
       should "notify them that reset password is disallowed and not send reset instructions" do
         user = create(:suspended_user)
 
-        User.send_reset_password_instructions({ email: user.email })
+        delay_mock = mock('delay')
+        delay_mock.expects(:notify_reset_password_disallowed_due_to_suspension).returns(:foo)
+        UserMailer.expects(:delay).returns(delay_mock)
 
-        delayed_mailer_jobs = Sidekiq::Extensions::DelayedMailer.jobs
-        assert_equal 1, delayed_mailer_jobs.size
-        assert_equal [UserMailer, :notify_reset_password_disallowed_due_to_suspension, [user]],
-          YAML.load(delayed_mailer_jobs.first['args'].first)
+        User.send_reset_password_instructions({ email: user.email })
       end
     end
 

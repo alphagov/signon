@@ -1,4 +1,4 @@
-require_relative "../test_helper"
+require "test_helper"
 
 class SuperAdminApplicationEditTest < ActionDispatch::IntegrationTest
 
@@ -56,12 +56,12 @@ class SuperAdminApplicationEditTest < ActionDispatch::IntegrationTest
       # trigger a push update for reauth
       remote_logout(@user)
     end
+  end
 
-    def remote_logout(user)
-      # simulate reauth
-      Sidekiq::Testing.inline! do
-        ReauthEnforcer.perform_on(user)
-      end
+  def remote_logout(user)
+    # simulate reauth
+    Sidekiq::Testing.inline! do
+      ReauthEnforcer.perform_on(user)
     end
   end
 end

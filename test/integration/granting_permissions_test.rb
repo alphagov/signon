@@ -26,7 +26,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     select "write", from: "Permissions for MyApp"
     click_button "Update User"
 
-    assert_include @user.permissions_for(app), 'write'
+    assert_includes @user.permissions_for(app), 'write'
   end
 
   should "not be able to assign fields that are not grantable_from_ui" do

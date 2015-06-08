@@ -54,7 +54,7 @@ class ConfirmationsController < Devise::ConfirmationsController
 
   private
     def confirmation_user
-      @confirmation_user ||= resource_class.find_or_initialize_with_error_by(:confirmation_token, params[:confirmation_token])
+      @confirmation_user ||= resource_class.find_or_initialize_by(confirmation_token: params[:confirmation_token])
     end
 
     def handle_new_token_needed

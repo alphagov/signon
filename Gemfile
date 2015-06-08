@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.18'
+gem 'rails', '4.0.13'
 
 gem 'kaminari', '0.16.1'
 gem 'bootstrap-kaminari-views', '0.0.5'
@@ -15,13 +15,11 @@ gem 'whenever', '~> 0.9.4', require: false
 
 gem 'uuid'
 
-gem 'strong_parameters'
-
 # Gems used to provide Authentication and Authorization services.
 gem 'devise', '3.1.0'
 gem 'devise_invitable', '1.3.0'
 gem 'devise-encryptable', '0.1.1'
-gem 'devise_security_extension', '0.7.2', git: "https://github.com/alphagov/devise_security_extension.git", branch: "restrict-password-params"
+gem 'devise_security_extension', '0.8.2', git: "https://github.com/alphagov/devise_security_extension.git", branch: "upstream-with-our-stuff"
 gem 'devise_zxcvbn', '1.1.1'
 gem 'devise-async', '0.8.0'
 gem 'pundit', '0.3.0'
@@ -41,12 +39,10 @@ gem 'zeroclipboard-rails'
 
 gem 'rake', '10.4.1'
 
-group :assets do
-  gem 'sass-rails', '3.2.6'
-end
+gem 'sass-rails', '4.0.3'
 
 group :development do
-  gem 'quiet_assets'
+  gem 'quiet_assets', '1.0.2'
   # SQLite is needed only for signon to be run as part of gds-sso's test suite
   gem 'sqlite3'
 end
@@ -62,14 +58,15 @@ group :test do
   gem 'capybara', '2.2.1'
   gem 'capybara-email', '~> 2.3.0'
   gem 'poltergeist', '1.5.0'
-  gem 'database_cleaner', '0.7.2'
+  gem 'database_cleaner', '1.4.1'
   gem 'factory_girl_rails', '4.3.0'
-  gem 'mocha', '0.13.3', require: false
-  gem 'shoulda', '3.0.1'
+  gem 'mocha', '1.1.0', require: false
   gem 'webmock', '1.17.3'
-  gem 'test-unit', '2.5.2', require: false
+  gem 'minitest', '4.7.5'
   gem 'simplecov', '0.6.4'
   gem 'simplecov-rcov', '0.2.3'
   gem 'ci_reporter', '1.7.0'
   gem 'timecop', '0.7.1'
+  gem 'shoulda-context', '1.2.1', require: false
+  gem 'pry-byebug'
 end

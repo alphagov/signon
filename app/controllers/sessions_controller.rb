@@ -18,7 +18,6 @@ class SessionsController < Devise::SessionsController
       timeout_callback.present?,
       timeout_callback.kind == :before,
       timeout_callback.raw_filter.is_a?(Proc),
-      timeout_callback.per_key == {:if=>[], :unless=>[]},
     ]
     unless callback_checks.all?
       raise "Something is wrong with the timeout callback: aborting"

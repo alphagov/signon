@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'helpers/passphrase_support'
 
-class EventLogTest < ActionDispatch::IntegrationTest
+class EventLogIntegrationTest < ActionDispatch::IntegrationTest
   include PassPhraseSupport
 
   setup do
@@ -60,7 +60,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
                     new_confirmation: new_password)
 
     # multiple events are registered with the same time, order changes.
-    assert_include @user.event_logs.map(&:event), EventLog::SUCCESSFUL_PASSPHRASE_CHANGE
+    assert_includes @user.event_logs.map(&:event), EventLog::SUCCESSFUL_PASSPHRASE_CHANGE
   end
 
   test "record unsuccessful passphrase change" do
@@ -71,7 +71,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
                     new_confirmation: @user.password)
 
     # multiple events are registered with the same time, order changes.
-    assert_include @user.event_logs.map(&:event), EventLog::UNSUCCESSFUL_PASSPHRASE_CHANGE
+    assert_includes @user.event_logs.map(&:event), EventLog::UNSUCCESSFUL_PASSPHRASE_CHANGE
   end
 
   test "record account locked if password entered too many times" do
@@ -79,7 +79,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     7.times { signin(email: @user.email, password: :incorrect) }
 
     # multiple events are registered with the same time, order changes.
-    assert_include @user.event_logs.map(&:event), EventLog::ACCOUNT_LOCKED
+    assert_includes @user.event_logs.map(&:event), EventLog::ACCOUNT_LOCKED
   end
 
   test "record account unlocked along with event initiator" do
@@ -141,7 +141,7 @@ class EventLogTest < ActionDispatch::IntegrationTest
     visit root_path
     signin @user
 
-    assert_include @user.event_logs.map(&:event), EventLog::PASSPHRASE_EXPIRED
+    assert_includes @user.event_logs.map(&:event), EventLog::PASSPHRASE_EXPIRED
   end
 
   test "users don't have permission to view account access log" do

@@ -76,7 +76,7 @@ class Metrics
   end
 
   def all
-    @all ||= User.includes({application_permissions: :application}, :organisation).all
+    @all ||= User.includes({application_permissions: :application}, :organisation).to_a
   end
 
   def all_active

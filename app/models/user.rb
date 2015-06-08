@@ -31,8 +31,6 @@ class User < ActiveRecord::Base
          :password_expirable,
          :password_archivable
 
-  attr_readonly :uid
-
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
   validate :organisation_admin_belongs_to_organisation
@@ -42,15 +40,14 @@ class User < ActiveRecord::Base
   has_many :application_permissions, class_name: 'UserApplicationPermission', inverse_of: :user
   has_many :supported_permissions, through: :application_permissions
   has_many :batch_invitations
-  has_many :event_logs, primary_key: :uid, foreign_key: :uid, order: 'created_at DESC'
   belongs_to :organisation
 
   before_validation :fix_apostrophe_in_email
   before_create :generate_uid
   after_create :update_stats
 
-  scope :web_users, where(api_user: false)
-  scope :not_suspended, where(suspended_at: nil)
+  scope :web_users, -> { where(api_user: false) }
+  scope :not_suspended, -> { where(suspended_at: nil) }
   scope :with_role, lambda { |role_name| where(role: role_name) }
   scope :with_organisation, lambda { |org_id| where(organisation_id: org_id) }
   scope :filter, lambda { |filter_param| where("users.email like ? OR users.name like ?", "%#{filter_param.strip}%", "%#{filter_param.strip}%") }
@@ -58,6 +55,10 @@ class User < ActiveRecord::Base
   scope :last_signed_in_before, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) < date(?)', date) }
   scope :last_signed_in_after, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) >= date(?)', date) }
   scope :not_recently_unsuspended, lambda { where(['unsuspended_at IS NULL OR unsuspended_at < ?', UNSUSPENSION_GRACE_PERIOD.ago]) }
+
+  def event_logs
+    EventLog.where(uid: uid).order(created_at: :desc)
+  end
 
   def generate_uid
     self.uid = UUID.generate
@@ -72,7 +73,7 @@ class User < ActiveRecord::Base
   end
 
   def permission_ids_for(application)
-    application_permissions.where(application_id: application.id).pluck(:supported_permission_id)
+    application_permissions.where(id: application.id).pluck(:supported_permission_id)
   end
 
   def has_access_to?(application)
@@ -80,7 +81,7 @@ class User < ActiveRecord::Base
   end
 
   def permissions_synced!(application)
-    application_permissions.where(application_id: application.id).update_all(last_synced_at: Time.zone.now)
+    application_permissions.where(id: application.id).update_all(last_synced_at: Time.zone.now)
   end
 
   def authorised_applications
@@ -95,7 +96,7 @@ class User < ActiveRecord::Base
   def grant_application_permissions(application, supported_permission_names)
     supported_permission_names.map do |supported_permission_name|
       supported_permission = SupportedPermission.find_by_application_id_and_name(application.id, supported_permission_name)
-      application_permissions.where(application_id: application.id, supported_permission_id: supported_permission.id).first_or_create!
+      application_permissions.where(supported_permission_id: supported_permission.id).first_or_create!
     end
   end
 

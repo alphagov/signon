@@ -16,20 +16,20 @@ class VolatileLockTest < ActiveSupport::TestCase
 
   test "starts by deleting possibly stale locks created by the same host" do
     redis.set('foo', Socket.gethostname)
-    assert_true volatile_lock('foo').obtained?
+    assert volatile_lock('foo').obtained?
   end
 
   test "ensures only one lock is obtained per key across hosts" do
     Socket.stubs(:gethostname).returns('pluto')
-    assert_true volatile_lock('foo').obtained?
+    assert volatile_lock('foo').obtained?
 
     Socket.stubs(:gethostname).returns('mars')
-    assert_false volatile_lock('foo').obtained?
+    refute volatile_lock('foo').obtained?
   end
 
   test "allows multiple locks to be obtained if keys differ" do
-    assert_true volatile_lock('foo').obtained?
-    assert_true volatile_lock('bar').obtained?
+    assert volatile_lock('foo').obtained?
+    assert volatile_lock('bar').obtained?
   end
 
   test "allows expiration_time to be changed" do
