@@ -5,10 +5,7 @@ class ConfirmationsControllerTest < ActionController::TestCase
   setup do
     request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user_with_pending_email_change)
-    raw, enc = @user.confirmation_token
-    @user.confirmation_token = enc
-    @user.save
-    @confirmation_token = raw
+    @confirmation_token = token_sent_to(@user)
   end
 
   context "GET new" do

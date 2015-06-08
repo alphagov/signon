@@ -4,13 +4,6 @@ require 'helpers/user_account_operations'
 class EmailChangeTest < ActionDispatch::IntegrationTest
   include UserAccountOperations
 
-  def token_sent_to(user)
-    raw, enc = user.confirmation_token
-    user.confirmation_token = enc
-    user.save(validate: false)
-    raw
-  end
-
   context "by an admin" do
     setup do
       @admin = create(:admin_user)
