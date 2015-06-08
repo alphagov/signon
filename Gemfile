@@ -10,7 +10,7 @@ gem 'govuk_admin_template', '1.4.2'
 
 gem 'airbrake', '3.1.15'
 gem 'plek', '1.7.0'
-gem 'json', '1.7.7'
+gem 'json', '1.8.0'
 gem 'whenever', '~> 0.9.4', require: false
 
 gem 'uuid'
@@ -40,6 +40,8 @@ gem 'zeroclipboard-rails'
 gem 'rake', '10.4.1'
 
 gem 'sass-rails', '4.0.3'
+
+gem 'uglifier', '2.7.1'
 
 group :development do
   gem 'quiet_assets', '1.0.2'
