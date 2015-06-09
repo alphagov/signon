@@ -73,7 +73,7 @@ class User < ActiveRecord::Base
   end
 
   def permission_ids_for(application)
-    application_permissions.where(id: application.id).pluck(:supported_permission_id)
+    application_permissions.where(application_id: application.id).pluck(:supported_permission_id)
   end
 
   def has_access_to?(application)
