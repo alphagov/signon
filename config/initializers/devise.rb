@@ -307,7 +307,11 @@ Devise.setup do |config|
   # Time period for account expiry from last_activity_at
   # config.expire_after = 90.days
 
-  config.secret_key = ENV['DEVISE_SECRET_KEY']
+  config.secret_key = if Rails.env.production?
+                        ENV.fetch('DEVISE_SECRET_KEY')
+                      else
+                        'fake-secret-key'
+                      end
   config.allow_insecure_token_lookup = true
   config.allow_insecure_sign_in_after_confirmation = true
 end
