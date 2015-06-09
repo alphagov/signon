@@ -13,7 +13,8 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
 
     @user = create(:user)
     @application = create(:application, redirect_uri: "https://app.com/callback", with_supported_permissions: ['user_update_permission'])
-    @permission = @user.grant_application_permission(@application, 'signin')
+    @signin_permission = @user.grant_application_permission(@application, 'signin')
+    @other_permission = @user.grant_application_permission(@application, 'user_update_permission')
   end
 
   context "perform" do
@@ -26,22 +27,24 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
     end
 
     context "successful update" do
-      should "record the last_synced_at timestamp on the permission" do
+      should "record the last_synced_at timestamp on the permissions" do
         stub_request(:put, users_url(@application))
 
         PermissionUpdater.new.perform(@user.uid, @application.id)
 
-        assert_not_nil @permission.reload.last_synced_at
+        assert_not_nil @signin_permission.reload.last_synced_at
+        assert_not_nil @other_permission.reload.last_synced_at
       end
     end
 
     context "failed update" do
-      should "not record the last_synced_at timestamp on the permission" do
+      should "not record the last_synced_at timestamp on the permissions" do
         stub_request(:put, users_url(@application)).to_timeout
 
         PermissionUpdater.new.perform(@user.uid, @application.id) rescue SSOPushError
 
-        assert_nil @permission.reload.last_synced_at
+        assert_nil @signin_permission.reload.last_synced_at
+        assert_nil @other_permission.reload.last_synced_at
       end
     end
 
@@ -59,7 +62,8 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
       end
 
       should "not raise if the user has no permissions for the application" do
-        @permission.destroy
+        @signin_permission.destroy
+        @other_permission.destroy
 
         expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
         http_request = stub_request(:put, users_url(@application)).with(body: expected_body)

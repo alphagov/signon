@@ -20,13 +20,17 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
   end
 
   should "support granting app-specific permissions" do
-    app = create(:application, name: "MyApp", with_supported_permissions: ["write"])
+    app = create(:application, name: "MyApp",
+                 with_supported_permissions: ["pre-existing", "adding", "never"])
+    @user.grant_application_permission(app, "pre-existing")
 
     visit edit_user_path(@user)
-    select "write", from: "Permissions for MyApp"
+    select "adding", from: "Permissions for MyApp"
     click_button "Update User"
 
-    assert_includes @user.permissions_for(app), 'write'
+    assert_includes @user.permissions_for(app), "pre-existing"
+    assert_includes @user.permissions_for(app), "adding"
+    assert_not_includes @user.permissions_for(app), "never"
   end
 
   should "not be able to assign fields that are not grantable_from_ui" do
