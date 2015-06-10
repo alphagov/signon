@@ -307,5 +307,9 @@ Devise.setup do |config|
   # Time period for account expiry from last_activity_at
   # config.expire_after = 90.days
 
-  config.secret_key = ENV['DEVISE_SECRET_KEY']
+  config.secret_key = if Rails.env.production?
+                        ENV['DEVISE_SECRET_KEY']
+                      else
+                        'fake-secret-key'
+                      end
 end
