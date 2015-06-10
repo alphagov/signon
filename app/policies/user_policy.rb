@@ -16,19 +16,34 @@ class UserPolicy < BasePolicy
       current_user.id == record.id ||
         (record.normal? && belong_to_same_organisation_subtree?(current_user, record))
     when 'normal'
-      current_user.id == record.id
+      false
     end
   end
   alias_method :create?, :edit? # invitations#create
   alias_method :update?, :edit?
   alias_method :unlock?, :edit?
   alias_method :suspension?, :edit?
-  alias_method :edit_email_or_passphrase?, :edit?
-  alias_method :update_email?, :edit?
-  alias_method :update_passphrase?, :edit?
-  alias_method :cancel_email_change?, :edit?
-  alias_method :resend_email_change?, :edit?
   alias_method :resend?, :edit?
+
+  def edit_email_or_passphrase?
+    current_user.id == record.id
+  end
+
+  def update_email?
+    current_user.id == record.id
+  end
+
+  def update_passphrase?
+    current_user.id == record.id
+  end
+
+  def cancel_email_change?
+    (current_user.id == record.id) || edit?
+  end
+
+  def resend_email_change?
+    (current_user.id == record.id) || edit?
+  end
 
   def event_logs?
     current_user.normal? ? false : edit?
