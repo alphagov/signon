@@ -16,7 +16,7 @@ gem 'whenever', '~> 0.9.4', require: false
 gem 'uuid'
 
 # Gems used to provide Authentication and Authorization services.
-gem 'devise', '3.2.1'
+gem 'devise', '3.2.2'
 gem 'devise_invitable', '1.4.0'
 gem 'devise-encryptable', '0.1.1'
 gem 'devise_security_extension', '0.8.2', git: "https://github.com/alphagov/devise_security_extension.git", branch: "upstream-with-our-stuff"
