@@ -9,6 +9,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
   should "not confirm the authorisation until the user signs in" do
     visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     assert_response_contains("You need to sign in")
+    refute Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
 
     ignoring_spurious_error do
       signin(@user)
