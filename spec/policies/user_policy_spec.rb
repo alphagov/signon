@@ -23,7 +23,7 @@ describe UserPolicy do
     end
   end
 
-  user_management_actions = [:edit?, :create?, :update?, :unlock?, :suspension?, :update_passphrase?,
+  user_management_actions = [:edit?, :create?, :update?, :unlock?, :suspension?,
     :cancel_email_change?, :resend_email_change?, :event_logs?]
 
   user_management_actions.each do |permission_name|
@@ -64,11 +64,22 @@ describe UserPolicy do
     end
   end
 
-  (user_management_actions - [:event_logs?]).each do |permission_name|
+  self_management_actions = [:edit_email_or_passphrase?, :update_email?, :update_passphrase?, :cancel_email_change?, :resend_email_change?]
+  self_management_actions.each do |permission_name|
     permissions permission_name do
       it "is allowed for normal users accessing their own record" do
         normal_user = create(:user)
         expect(subject).to permit(normal_user, normal_user)
+      end
+    end
+  end
+
+  # Users shouldn't be able to do admin-only things to themselves
+  (user_management_actions - self_management_actions).each do |permission_name|
+    permissions permission_name do
+      it "is not allowed for normal users accessing their own record" do
+        normal_user = create(:user)
+        expect(subject).not_to permit(normal_user, normal_user)
       end
     end
   end

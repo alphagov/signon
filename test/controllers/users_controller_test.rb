@@ -48,7 +48,7 @@ class UsersControllerTest < ActionController::TestCase
     end
   end
 
-  context "GET edit" do
+  context "GET edit_email_or_passphrase" do
     context "changing an email" do
       setup do
         @user = create(:user_with_pending_email_change)
@@ -56,7 +56,7 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "show the unconfirmed_email" do
-        get :edit, id: @user.id
+        get :edit_email_or_passphrase, id: @user.id
 
         assert_select "input#user_unconfirmed_email[value=#{@user.unconfirmed_email}]"
       end

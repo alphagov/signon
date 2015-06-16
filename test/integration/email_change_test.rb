@@ -150,7 +150,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
       confirmation_token = token_sent_to(@user)
 
-      visit edit_user_path(@user)
+      click_link "Change your email or passphrase"
       click_link "Cancel email change"
       signout
 

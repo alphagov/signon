@@ -18,7 +18,7 @@ module ApplicationHelper
     if policy(current_user).edit?
       edit_user_path(current_user)
     else
-      root_path
+      edit_email_or_passphrase_user_path(current_user)
     end
   end
 end
