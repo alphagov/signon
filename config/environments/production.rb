@@ -75,6 +75,10 @@ Signonotron2::Application.configure do
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false
 
+  config.logstasher.enabled = true
+  config.logstasher.logger = Logger.new("#{Rails.root}/log/#{Rails.env}.json.log")
+  config.logstasher.suppress_app_log = true
+
   config.action_mailer.default_url_options = {
     :host => URI.parse(Plek.current.find('signon')).host,
     :protocol => 'https'
