@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.18'
+gem 'rails', '3.2.22'
 
 gem 'kaminari', '0.16.1'
 gem 'bootstrap-kaminari-views', '0.0.5'
