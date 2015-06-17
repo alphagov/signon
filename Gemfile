@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.0.13'
+gem 'rails', '4.1.11'
 
 gem 'kaminari', '0.16.1'
 gem 'bootstrap-kaminari-views', '0.0.5'
 gem 'alphabetical_paginate', '2.2.3'
-gem 'mysql2'
+gem 'mysql2', '0.3.18'
 gem 'govuk_admin_template', '2.3.1'
 
 gem 'airbrake', '3.1.15'
@@ -62,7 +62,7 @@ group :test do
   gem 'factory_girl_rails', '4.3.0'
   gem 'mocha', '1.1.0', require: false
   gem 'webmock', '1.17.3'
-  gem 'minitest', '4.7.5'
+  gem 'minitest', '5.1.0'
   gem 'simplecov', '0.6.4'
   gem 'simplecov-rcov', '0.2.3'
   gem 'ci_reporter', '1.7.0'
