@@ -42,7 +42,7 @@ class SignInTest < ActionDispatch::IntegrationTest
   should "not accept the login with an invalid CSRF token" do
     visit root_path
 
-    find('#new_user input[name=authenticity_token]').set('not_the_authenticity_token')
+    find('#new_user input[name=authenticity_token]', visible: false).set('not_the_authenticity_token')
 
     fill_in "Email", with: @user.email
     fill_in "Passphrase", with: @user.password
