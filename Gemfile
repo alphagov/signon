@@ -39,7 +39,7 @@ gem 'zeroclipboard-rails'
 
 gem 'rake', '10.4.1'
 
-gem 'sass-rails', '4.0.3'
+gem 'sass-rails', '5.0.3'
 
 gem 'uglifier', '2.7.1'
 
