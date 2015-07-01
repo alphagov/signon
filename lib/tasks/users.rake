@@ -82,4 +82,21 @@ namespace :users do
 
     UserPermissionsExporter.new(ENV['EXPORT_DIR'], Logger.new(STDOUT)).export_signon
   end
+
+  desc "Grant access to Content Preview for all active users who don't have it"
+  task :grant_content_preview_access => :environment do
+    if content_preview = Doorkeeper::Application.find_by(name: "Content Preview")
+      User.not_suspended.find_each do |user|
+        next if user.authorised_applications.include?(content_preview)
+
+        user.grant_application_permission(content_preview, "signin")
+
+        if content_preview.supports_push_updates?
+          PermissionUpdater.perform_async(user.uid, content_preview.id)
+        end
+      end
+    else
+      raise "Could not find an application called 'Content Preview'"
+    end
+  end
 end
