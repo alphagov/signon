@@ -86,8 +86,8 @@ namespace :users do
   desc "Grant access to Content Preview for all active users who don't have it"
   task :grant_content_preview_access => :environment do
     if content_preview = Doorkeeper::Application.find_by(name: "Content Preview")
-      User.not_suspended.find_each do |user|
         next if user.authorised_applications.include?(content_preview)
+      User.web_users.not_suspended.find_each do |user|
         puts "Checking user ##{user.id}: #{user.name}"
 
         puts "-- Adding signin permission for #{content_preview.name}"
