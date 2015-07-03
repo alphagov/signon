@@ -27,7 +27,7 @@ gem 'pundit', '0.3.0'
 gem 'doorkeeper', '2.2.1'
 gem 'ancestry', '2.0.0'
 
-gem 'gds-api-adapters', '18.4.0'
+gem 'gds-api-adapters', '20.1.1'
 gem 'statsd-ruby', '1.1.0'
 gem 'unicorn', '4.3.1'
 gem 'sidekiq', '2.17.2'
