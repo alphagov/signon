@@ -10,7 +10,7 @@ gem 'govuk_admin_template', '2.3.1'
 
 gem 'airbrake', '3.1.15'
 gem 'plek', '1.7.0'
-gem 'json', '1.8.0'
+gem 'json', '1.8.2'
 gem 'whenever', '~> 0.9.4', require: false
 
 gem 'uuid'
@@ -19,7 +19,7 @@ gem 'uuid'
 gem 'devise', '3.2.2'
 gem 'devise_invitable', '1.4.0'
 gem 'devise-encryptable', '0.1.1'
-gem 'devise_security_extension', '0.8.2', git: "https://github.com/alphagov/devise_security_extension.git", branch: "upstream-with-our-stuff"
+gem 'devise_security_extension', '0.9.2'
 gem 'devise_zxcvbn', '1.1.1'
 gem 'devise-async', '0.9.0'
 gem 'pundit', '0.3.0'
@@ -29,7 +29,7 @@ gem 'ancestry', '2.0.0'
 
 gem 'gds-api-adapters', '20.1.1'
 gem 'statsd-ruby', '1.1.0'
-gem 'unicorn', '4.3.1'
+gem 'unicorn', "~> 4.8"
 gem 'sidekiq', '2.17.2'
 gem 'sidekiq-statsd', '0.1.2'
 
