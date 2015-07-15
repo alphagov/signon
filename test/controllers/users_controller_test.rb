@@ -397,13 +397,13 @@ class UsersControllerTest < ActionController::TestCase
     context "GET edit" do
       should "show the form" do
         not_an_admin = create(:user)
-        get :edit, id: @user.id, id: not_an_admin.id
+        get :edit, id: not_an_admin.id
         assert_select "input[name='user[email]'][value='#{not_an_admin.email}']"
       end
 
       should "show the pending email if applicable" do
         another_user = create(:user_with_pending_email_change)
-        get :edit, id: @user.id, id: another_user.id
+        get :edit, id: another_user.id
         assert_select "input[name='user[unconfirmed_email]'][value='#{another_user.unconfirmed_email}']"
       end
 
@@ -412,7 +412,7 @@ class UsersControllerTest < ActionController::TestCase
         org_with_user = user_in_org.organisation
         other_organisation = create(:organisation, abbreviation: 'ABBR')
 
-        get :edit, id: @user.id, id: user_in_org.id
+        get :edit, id: user_in_org.id
 
         assert_select "select[name='user[organisation_id]']" do
           assert_select "option", count: 3  # including 'None'
@@ -425,7 +425,7 @@ class UsersControllerTest < ActionController::TestCase
       should "not be able to edit superadmins" do
         superadmin = create(:superadmin_user)
 
-        get :edit, id: @user.id, id: superadmin.id
+        get :edit, id: superadmin.id
 
         assert_redirected_to root_path
         assert_match(/You do not have permission to perform this action./, flash[:alert])
@@ -440,7 +440,7 @@ class UsersControllerTest < ActionController::TestCase
           user = create(:user_in_organisation, organisation: admin.organisation)
           assert_not_nil user.organisation
 
-          get :edit, id: @user.id, id: user.id
+          get :edit, id: user.id
 
           assert_select ".container" do
             assert_select "option", count: 0, text: outside_organisation.name_with_abbreviation
@@ -455,7 +455,7 @@ class UsersControllerTest < ActionController::TestCase
           user = create(:user_in_organisation, organisation: sub_organisation)
           assert_not_nil user.organisation
 
-          get :edit, id: @user.id, id: user.id
+          get :edit, id: user.id
 
           assert_select ".container" do
             assert_select "option", count: 1, text: sub_organisation.name_with_abbreviation
