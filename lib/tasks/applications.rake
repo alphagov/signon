@@ -20,4 +20,19 @@ namespace :applications do
     puts "config.oauth_id     = '#{a.uid}'"
     puts "config.oauth_secret = '#{a.secret}'"
   end
+
+  desc 'Updates domain name for applications'
+  task :migrate_domain => :environment do
+    raise "Requires OLD_DOMAIN + NEW_DOMAIN specified in environment" unless ENV['OLD_DOMAIN'] && ENV['NEW_DOMAIN']
+    Doorkeeper::Application.find_each do |application|
+      [:redirect_uri, :home_uri].each do |field|
+        new_domain = application[field].gsub(ENV['OLD_DOMAIN'], ENV['NEW_DOMAIN'])
+        if application[field] != new_domain
+          puts "Migrating #{application.name} - #{field} to new domain: #{new_domain}"
+          application[field] = new_domain
+        end
+      end
+      application.save!
+    end
+  end
 end
