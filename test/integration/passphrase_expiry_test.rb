@@ -6,12 +6,25 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
 
   PROMPT_TO_CHANGE_PASSWORD = "Your passphrase has expired. Please choose a new passphrase"
 
-  setup do
-    @user = create(:user, password_changed_at: 91.days.ago)
-    @new_password = "some 3v3n more s3cure passphrase"
+  context "logging in with a brand new user" do
+    setup do
+      @user = create(:user)
+    end
+
+    should "not ask the user to change their password" do
+      visit new_user_session_path
+
+      signin(@user)
+      refute_response_contains(PROMPT_TO_CHANGE_PASSWORD)
+    end
   end
 
-  context "(which triggers 90 days after the previous password change)" do
+  context "logging in with a user with an expired password" do
+    setup do
+      @user = create(:user, password_changed_at: 91.days.ago)
+      @new_password = "some 3v3n more s3cure passphrase"
+    end
+
     should "force the user to change their password" do
       visit new_user_session_path
 
@@ -33,11 +46,21 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
       assert_current_url "/users/#{@user.id}/edit_email_or_passphrase?arbitrary=1"
     end
 
-    should "continue prompting for a new password if the reset didn't work" do
+    should "continue prompting for a new password if an incorrect password was provided" do
       visit new_user_session_path
       signin(@user)
 
       reset_expired_passphrase("nonsense", @new_password, @new_password)
+
+      visit new_user_session_path
+      assert_response_contains(PROMPT_TO_CHANGE_PASSWORD)
+    end
+
+    should "continue prompting for a new password if the password was not confirmed" do
+      visit new_user_session_path
+      signin(@user)
+
+      reset_expired_passphrase(@user.password, @new_password, "rubbish")
 
       visit new_user_session_path
       assert_response_contains(PROMPT_TO_CHANGE_PASSWORD)
