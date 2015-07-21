@@ -99,11 +99,20 @@ class PassphraseChangeTest < ActionDispatch::IntegrationTest
       assert_response_contains("Your passphrase was changed successfully")
     end
 
-    should "not accept a recently used password as the new password" do
+    should "not accept the last used password as the new password" do
       change_password_to(@original_password)
 
       assert_response_contains "Passphrase was used previously. Please choose a different one."
     end
+
+    should "not accept a recently-used password as the new password" do
+      change_password_to("a 5tr0ng p4ssphrase")
+      assert_response_contains("Your passphrase was changed successfully")
+
+      change_password_to(@original_password)
+      assert_response_contains "Passphrase was used previously. Please choose a different one."
+    end
+
   end
 
   context "admin user" do
