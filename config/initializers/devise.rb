@@ -261,9 +261,9 @@ Devise.setup do |config|
   end
 
   Warden::Manager.after_authentication do |user, auth, opts|
-    if user.need_change_password?
-      EventLog.record_event(user, EventLog::PASSPHRASE_EXPIRED)
-    end
+    # if user.need_change_password?
+    #   EventLog.record_event(user, EventLog::PASSPHRASE_EXPIRED)
+    # end
   end
 
   Warden::Manager.before_failure do |env, opts|
@@ -274,16 +274,16 @@ Devise.setup do |config|
   # Configure security extension for devise
 
   # Should the password expire (e.g 3.months)
-  config.expire_password_after = 90.days
+  # config.expire_password_after = 90.days
 
   # Need 1 char of A-Z, a-z and 0-9
   # config.password_regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/
 
   # How many passwords to keep in archive
-  config.password_archiving_count = 2
+  # config.password_archiving_count = 2
 
   # Deny old password (true, false, count)
-  config.deny_old_passwords = true
+  # config.deny_old_passwords = true
 
   # enable email validation for :secure_validatable. (true, false, validation_options)
   # dependency: need an email validator like rails_email_validator
