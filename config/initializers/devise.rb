@@ -251,6 +251,8 @@ Devise.setup do |config|
   # ==> Custom Modules for Devise
   require 'devise/models/suspendable'
   require 'devise/models/password_archivable'
+  require 'devise/models/password_expirable'
+  require 'devise/routes'
 
   # ==> Password strength test
   # default devise_zxcvbn minimum password score
@@ -262,9 +264,9 @@ Devise.setup do |config|
   end
 
   Warden::Manager.after_authentication do |user, auth, opts|
-    # if user.need_change_password?
-    #   EventLog.record_event(user, EventLog::PASSPHRASE_EXPIRED)
-    # end
+    if user.need_change_password?
+      EventLog.record_event(user, EventLog::PASSPHRASE_EXPIRED)
+    end
   end
 
   Warden::Manager.before_failure do |env, opts|
@@ -274,8 +276,8 @@ Devise.setup do |config|
   # ==> Security Extension
   # Configure security extension for devise
 
-  # Should the password expire (e.g 3.months)
-  # config.expire_password_after = 90.days
+  # How often should the password expire (e.g 3.months)
+  config.expire_password_after = 90.days
 
   # Need 1 char of A-Z, a-z and 0-9
   # config.password_regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/
