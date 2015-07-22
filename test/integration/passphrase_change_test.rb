@@ -112,7 +112,6 @@ class PassphraseChangeTest < ActionDispatch::IntegrationTest
       change_password_to(@original_password)
       assert_response_contains "Passphrase was used previously. Please choose a different one."
     end
-
   end
 
   context "admin user" do

@@ -248,8 +248,9 @@ Devise.setup do |config|
   #   manager.default_strategies(:scope => :user).unshift :some_external_strategy
   # end
 
-  # ==> Custom Validators for Devise
+  # ==> Custom Modules for Devise
   require 'devise/models/suspendable'
+  require 'devise/models/password_archivable'
 
   # ==> Password strength test
   # default devise_zxcvbn minimum password score
@@ -280,10 +281,10 @@ Devise.setup do |config|
   # config.password_regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/
 
   # How many passwords to keep in archive
-  # config.password_archiving_count = 2
+  config.password_archiving_count = 2
 
   # Deny old password (true, false, count)
-  # config.deny_old_passwords = true
+  config.deny_old_passwords = true
 
   # enable email validation for :secure_validatable. (true, false, validation_options)
   # dependency: need an email validator like rails_email_validator
