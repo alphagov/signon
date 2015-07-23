@@ -28,8 +28,8 @@ class User < ActiveRecord::Base
          :zxcvbnable,
          :encryptable,
          :confirmable,
-         :password_expirable,
-         :password_archivable
+         :password_archivable, # in signonotron2/lib/devise/models/password_archivable.rb
+         :password_expirable   # in signonotron2/lib/devise/models/password_expirable.rb
 
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }

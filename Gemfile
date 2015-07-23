@@ -19,7 +19,6 @@ gem 'uuid'
 gem 'devise', '3.2.2'
 gem 'devise_invitable', '1.4.0'
 gem 'devise-encryptable', '0.1.1'
-gem 'devise_security_extension', '0.8.2', git: "https://github.com/alphagov/devise_security_extension.git", branch: "upstream-with-our-stuff"
 gem 'devise_zxcvbn', '1.1.1'
 gem 'devise-async', '0.9.0'
 gem 'pundit', '0.3.0'
@@ -49,6 +48,7 @@ end
 
 group :development, :test do
   gem 'jasmine', '2.1.0'
+  gem 'govuk-lint', '~> 0.2.0'
 end
 
 gem 'logstasher', '0.4.8'

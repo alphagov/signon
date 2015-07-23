@@ -224,6 +224,29 @@ class UserTest < ActiveSupport::TestCase
     refute user.persisted?
   end
 
+  test "doesn't allow previously used password" do
+    password = @user.password
+
+    @user.password = "some v3ry s3cure passphrase"
+    @user.password_confirmation = "some v3ry s3cure passphrase"
+    @user.save!
+
+    @user.password = password
+    @user.password_confirmation = password
+
+    refute @user.valid?
+  end
+
+  test "doesn't allow user to change to same password" do
+    password = @user.password
+
+    @user = User.find(@user.id)
+
+    @user.password = password
+    @user.password_confirmation = password
+    refute @user.valid?
+  end
+
   context "User status" do
     setup do
       @user = create(:user)

@@ -248,8 +248,11 @@ Devise.setup do |config|
   #   manager.default_strategies(:scope => :user).unshift :some_external_strategy
   # end
 
-  # ==> Custom Validators for Devise
+  # ==> Custom Modules for Devise
   require 'devise/models/suspendable'
+  require 'devise/models/password_archivable'
+  require 'devise/models/password_expirable'
+  require 'devise/routes'
 
   # ==> Password strength test
   # default devise_zxcvbn minimum password score
@@ -273,7 +276,7 @@ Devise.setup do |config|
   # ==> Security Extension
   # Configure security extension for devise
 
-  # Should the password expire (e.g 3.months)
+  # How often should the password expire (e.g 3.months)
   config.expire_password_after = 90.days
 
   # Need 1 char of A-Z, a-z and 0-9
