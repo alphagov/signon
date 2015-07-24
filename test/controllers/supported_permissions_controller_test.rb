@@ -36,7 +36,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
       post :create, doorkeeper_application_id: app.id, supported_permission: { name: "" }
 
-      assert_select "ul[class='errors'] li", ERB::Util.html_escape("Name can't be blank")
+      assert_select "ul[class='errors'] li", "Name can't be blank"
       assert_equal app.reload.supported_permissions, [app.signin_permission]
      end
 
@@ -59,7 +59,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
       put :update, doorkeeper_application_id: app.id, id: perm.id, supported_permission: { name: "", delegatable: false }
 
-      assert_select "ul[class='errors'] li", ERB::Util.html_escape("Name can't be blank")
+      assert_select "ul[class='errors'] li", "Name can't be blank"
       assert perm.reload.delegatable
      end
 
