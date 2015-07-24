@@ -9,7 +9,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "email change tokens should expire" do
     @user = create(:user_with_pending_email_change, confirmation_sent_at: 15.days.ago)
-    @user.confirm!
+    @user.confirm
     assert_equal "needs to be confirmed within 14 days, please request a new one", @user.errors[:email][0]
   end
 
