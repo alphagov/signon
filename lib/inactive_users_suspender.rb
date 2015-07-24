@@ -10,7 +10,7 @@ class InactiveUsersSuspender
       ReauthEnforcer.perform_on(user)
 
       EventLog.record_event(user, EventLog::ACCOUNT_AUTOSUSPENDED)
-      UserMailer.suspension_notification(user).deliver
+      UserMailer.suspension_notification(user).deliver_now
     end
 
     inactive_users.count

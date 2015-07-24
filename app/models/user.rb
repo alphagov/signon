@@ -108,7 +108,7 @@ class User < ActiveRecord::Base
   def self.send_reset_password_instructions(attributes={})
     user = User.find_by_email(attributes[:email])
     if user.present? && user.suspended?
-      UserMailer.delay.notify_reset_password_disallowed_due_to_suspension(user)
+      UserMailer.notify_reset_password_disallowed_due_to_suspension(user).deliver_later
       user
     else
       super
@@ -157,7 +157,7 @@ class User < ActiveRecord::Base
     EventLog.record_event(User.find_by_email(self.email),EventLog::ACCOUNT_LOCKED)
     super
 
-    UserMailer.delay.locked_account_explanation(self)
+    UserMailer.locked_account_explanation(self).deliver_later
   end
 
   def status
