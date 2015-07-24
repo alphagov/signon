@@ -146,7 +146,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
 
     should "include a meta refresh" do
       get :show, id: @bi.id
-      assert_select "head meta[http-equiv=refresh][content=3]"
+      assert_select 'head meta[http-equiv=refresh][content="3"]'
     end
 
     should "show the state of the processing" do

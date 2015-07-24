@@ -58,7 +58,7 @@ class UsersControllerTest < ActionController::TestCase
       should "show the unconfirmed_email" do
         get :edit_email_or_passphrase, id: @user.id
 
-        assert_select "input#user_unconfirmed_email[value=#{@user.unconfirmed_email}]"
+        assert_select "input#user_unconfirmed_email[value=?]", @user.unconfirmed_email
       end
     end
   end
@@ -417,8 +417,8 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "select[name='user[organisation_id]']" do
           assert_select "option", count: 3  # including 'None'
           assert_select "option[selected=selected]", count: 1
-          assert_select "option[value=#{org_with_user.id}][selected=selected]", text: org_with_user.name_with_abbreviation
-          assert_select "option[value=#{other_organisation.id}]", text: other_organisation.name_with_abbreviation
+          assert_select %{option[value="#{org_with_user.id}"][selected=selected]}, text: org_with_user.name_with_abbreviation
+          assert_select %{option[value="#{other_organisation.id}"]}, text: other_organisation.name_with_abbreviation
         end
       end
 
