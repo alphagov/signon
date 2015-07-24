@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.11'
+gem 'rails', '4.2.3'
 
 gem 'kaminari', '0.16.1'
 gem 'bootstrap-kaminari-views', '0.0.5'
@@ -16,7 +16,7 @@ gem 'whenever', '~> 0.9.4', require: false
 gem 'uuid'
 
 # Gems used to provide Authentication and Authorization services.
-gem 'devise', '3.2.2'
+gem 'devise', '3.5.1'
 gem 'devise_invitable', '1.4.0'
 gem 'devise-encryptable', '0.1.1'
 gem 'devise_zxcvbn', '1.1.1'
