@@ -112,8 +112,6 @@ class User < ActiveRecord::Base
     else
       super
     end
-  rescue Net::SMTPFatalError => exception
-    exception.message =~ /Address blacklisted/i ? user : raise
   end
 
   # Required for devise_invitable to set role and permissions

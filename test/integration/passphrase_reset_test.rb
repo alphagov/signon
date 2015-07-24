@@ -33,16 +33,6 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
     assert_response_contains(BLANKET_RESET_MESSAGE)
   end
 
-  should "not give away whether an email is on the SES blacklist" do
-    user = create(:user)
-    given_email_is_on_ses_blacklist
-
-    trigger_reset_for(user.email)
-
-    assert !page.has_content?("Email not found"), page.body
-    assert_response_contains(BLANKET_RESET_MESSAGE)
-  end
-
   should "work for a partially signed-in user with an expired passphrase" do
     Sidekiq::Testing.inline! do
       user = create(:user, password_changed_at: 91.days.ago)

@@ -6,15 +6,6 @@ class InvitationsController < Devise::InvitationsController
   include UserPermissionsControllerMethods
   helper_method :applications_and_permissions
 
-  rescue_from Net::SMTPFatalError do |exception|
-    if exception.message =~ /Address blacklisted/i
-      @exception = exception
-      render "shared/address_blacklisted", status: 500
-    else
-      raise
-    end
-  end
-
   def new
     authorize User
     super

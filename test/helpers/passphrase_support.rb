@@ -28,9 +28,4 @@ module PassPhraseSupport
     fill_in "Confirm new passphrase", with: options[:new_password]
     click_button "Change my passphrase"
   end
-
-  def given_email_is_on_ses_blacklist
-    Devise::Mailer.any_instance.expects(:mail).with(anything)
-    .raises(Net::SMTPFatalError, OpenStruct.new(error: { 'Code' => "MessageRejected", 'Message' => "Address blacklisted." }))
-  end
 end

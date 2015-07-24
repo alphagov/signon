@@ -346,17 +346,6 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    should "return the resource even if AWS has blacklisted the resource's email" do
-      User.any_instance.stubs(:send_reset_password_instructions).raises(Net::SMTPFatalError, "Address blacklisted")
-      user = create(:user)
-
-      user_returned = nil
-      assert_nothing_raised do
-        user_returned = User.send_reset_password_instructions({ email: user.email })
-      end
-      assert_equal user, user_returned
-    end
-
     should "raise any other exception that occured" do
       User.any_instance.stubs(:send_reset_password_instructions).raises(Net::SMTPFatalError, "Inbox is full")
       user = create(:user)

@@ -67,18 +67,6 @@ class InvitationsControllerTest < ActionController::TestCase
       assert_equal "User already invited. If you want to, you can click 'Resend signup email'.", flash[:alert]
     end
 
-    context "SES has blacklisted the address" do
-      should "show the user a helpful message" do
-        Devise::Mailer.any_instance.expects(:mail).with(anything)
-            .raises(Net::SMTPFatalError, OpenStruct.new(error: { 'Code' => "MessageRejected", 'Message' => "Address blacklisted." }))
-
-        post :create, user: { name: "John Smith", email: "jsmith@restrictivemailserver.com" }
-
-        assert_response 500
-        assert_template "shared/address_blacklisted"
-      end
-    end
-
     context "organisation admin" do
       should "not assign organisations not under them" do
         admin = create(:organisation_admin)
