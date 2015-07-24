@@ -10,7 +10,7 @@ gem 'govuk_admin_template', '2.3.1'
 
 gem 'airbrake', '3.1.15'
 gem 'plek', '1.7.0'
-gem 'json', '1.8.0'
+gem 'json', '1.8.3'
 gem 'whenever', '~> 0.9.4', require: false
 
 gem 'uuid'
@@ -28,7 +28,7 @@ gem 'ancestry', '2.0.0'
 
 gem 'gds-api-adapters', '20.1.1'
 gem 'statsd-ruby', '1.1.0'
-gem 'unicorn', '4.3.1'
+gem 'unicorn', '4.9.0'
 gem 'sidekiq', '2.17.2'
 gem 'sidekiq-statsd', '0.1.2'
 
