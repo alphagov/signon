@@ -20,7 +20,6 @@ gem 'devise', '3.5.1'
 gem 'devise_invitable', '1.5.2'
 gem 'devise-encryptable', '0.2.0'
 gem 'devise_zxcvbn', '1.1.1'
-gem 'devise-async', '0.9.0'
 gem 'pundit', '0.3.0'
 
 gem 'doorkeeper', '2.2.1'
