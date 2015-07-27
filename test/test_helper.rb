@@ -27,9 +27,6 @@ end
 
 WebMock.disable_net_connect!(:allow_localhost => true)
 
-require 'sidekiq/testing'
-Sidekiq::Testing.fake!
-
 require 'helpers/confirmation_token_helper'
 
 class ActionController::TestCase

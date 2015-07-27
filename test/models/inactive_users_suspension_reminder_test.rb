@@ -7,7 +7,7 @@ class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
       suspends_in_3_days = create(:user, current_sign_in_at: (User::SUSPENSION_THRESHOLD_PERIOD - 2.days).ago)
 
       mailer = mock()
-      mailer.expects(:deliver).returns(true)
+      mailer.expects(:deliver_now).returns(true)
       UserMailer.expects(:suspension_reminder).with(suspends_in_3_days, 3).returns(mailer)
 
       users_to_remind = User.last_signed_in_on((User::SUSPENSION_THRESHOLD_PERIOD - 2.days).ago)
@@ -21,7 +21,7 @@ class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
       @users_to_remind = User.last_signed_in_on(User::SUSPENSION_THRESHOLD_PERIOD.ago)
 
       @mailer = mock()
-      @mailer.expects(:deliver).raises(Errno::ETIMEDOUT).times(3)
+      @mailer.expects(:deliver_now).raises(Errno::ETIMEDOUT).times(3)
     end
 
     should "retry twice if there are errors connecting to SES" do

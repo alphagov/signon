@@ -1,9 +1,10 @@
 require 'test_helper'
 
 class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
+  include ActiveJob::TestHelper
 
   should "create users whose details are specified in a CSV file" do
-    Sidekiq::Testing.inline! do
+    perform_enqueued_jobs do
       application = create(:application)
       user = create(:user, role: "admin")
       visit root_path

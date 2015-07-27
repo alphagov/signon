@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class BatchInvitationTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
+
   setup do
     ActionMailer::Base.deliveries = []
 
@@ -29,12 +31,14 @@ class BatchInvitationTest < ActiveSupport::TestCase
     end
 
     should "trigger an invitation email" do
-      @bi.perform
+      perform_enqueued_jobs do
+        @bi.perform
 
-      email = ActionMailer::Base.deliveries.last
-      assert_not_nil email
-      assert_equal "Please confirm your account", email.subject
-      assert_equal ["b@m.com"], email.to
+        email = ActionMailer::Base.deliveries.last
+        assert_not_nil email
+        assert_equal "Please confirm your account", email.subject
+        assert_equal ["b@m.com"], email.to
+      end
     end
 
     should "record the outcome against the BatchInvitation" do
@@ -53,7 +57,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
       end
 
       should "only send the invitation to the new user" do
-        assert_equal 1, ActionMailer::Base.deliveries.size
+        assert_enqueued_jobs 1
       end
 
       should "skip that user entirely, including not altering permissions" do
@@ -100,7 +104,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
         @user_a.update_column(:outcome, "success")
 
         @bi.perform
-        assert_equal 1, ActionMailer::Base.deliveries.size
+        assert_enqueued_jobs 1
 
         # Assert user_a status hasn't been set to skipped.
         @user_a.reload

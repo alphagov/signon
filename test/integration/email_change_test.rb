@@ -3,6 +3,7 @@ require 'helpers/user_account_operations'
 
 class EmailChangeTest < ActionDispatch::IntegrationTest
   include UserAccountOperations
+  include ActiveJob::TestHelper
 
   context "by an admin" do
     setup do
@@ -11,7 +12,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
     context "for an active user" do
       should "send a notification email and not confirmation email" do
-        Sidekiq::Testing.inline! do
+        perform_enqueued_jobs do
           user = create(:user)
 
           visit new_user_session_path
@@ -24,7 +25,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       end
 
       should "log the event in the user's event log" do
-        Sidekiq::Testing.inline! do
+        perform_enqueued_jobs do
           user = create(:user, email: 'old@email.com')
 
           visit new_user_session_path
@@ -50,19 +51,21 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
     context "for a user who hasn't accepted their invite yet" do
       should "resend the invitation" do
-        user = User.invite!(name: "Jim", email: "jim@web.com")
+        perform_enqueued_jobs do
+          user = User.invite!(name: "Jim", email: "jim@web.com")
 
-        open_email("jim@web.com")
-        assert_equal 'Please confirm your account', current_email.subject
+          open_email("jim@web.com")
+          assert_equal 'Please confirm your account', current_email.subject
 
-        visit new_user_session_path
-        signin(@admin)
-        admin_changes_email_address(user: user, new_email: "new@email.com")
+          visit new_user_session_path
+          signin(@admin)
+          admin_changes_email_address(user: user, new_email: "new@email.com")
 
-        open_email("new@email.com")
-        assert_equal 'Please confirm your account', current_email.subject
-        assert current_email.body.include?("Accept invitation")
-        assert user.accept_invitation!
+          open_email("new@email.com")
+          assert_equal 'Please confirm your account', current_email.subject
+          assert current_email.body.include?("Accept invitation")
+          assert user.accept_invitation!
+        end
       end
     end
 
@@ -94,35 +97,39 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
     end
 
     should "trigger a confirmation email to the user's new address and a notification to the user's old address" do
-      visit new_user_session_path
-      signin(@user)
+      perform_enqueued_jobs do
+        visit new_user_session_path
+        signin(@user)
 
-      click_link "Change your email or passphrase"
-      fill_in "Email", with: "new@email.com"
-      click_button "Change email"
+        click_link "Change your email or passphrase"
+        fill_in "Email", with: "new@email.com"
+        click_button "Change email"
 
-      confirmation_email, notification_email = *ActionMailer::Base.deliveries[-2..-1]
-      assert_equal "new@email.com", confirmation_email.to.first
-      assert_equal 'Confirm your email change', confirmation_email.subject
-      assert_equal "original@email.com", notification_email.to.first
-      assert_equal 'Your GOV.UK Signon email address is being changed', notification_email.subject
+        confirmation_email, notification_email = *ActionMailer::Base.deliveries[-2..-1]
+        assert_equal "new@email.com", confirmation_email.to.first
+        assert_equal 'Confirm your email change', confirmation_email.subject
+        assert_equal "original@email.com", notification_email.to.first
+        assert_equal 'Your GOV.UK Signon email address is being changed', notification_email.subject
+      end
     end
 
     should "log email change events in the user's event log" do
-      visit new_user_session_path
-      signin(@user)
+      perform_enqueued_jobs do
+        visit new_user_session_path
+        signin(@user)
 
-      click_link "Change your email or passphrase"
-      fill_in "Email", with: "new@email.com"
-      click_button "Change email"
+        click_link "Change your email or passphrase"
+        fill_in "Email", with: "new@email.com"
+        click_button "Change email"
 
-      first_email_sent_to("new@email.com").click_link("Confirm my account")
+        first_email_sent_to("new@email.com").click_link("Confirm my account")
 
-      signout
-      signin(create(:admin_user))
-      visit event_logs_user_path(@user)
-      assert_response_contains "Email change initiated by #{@user.name} from original@email.com to new@email.com"
-      assert_response_contains "Email change confirmed"
+        signout
+        signin(create(:admin_user))
+        visit event_logs_user_path(@user)
+        assert_response_contains "Email change initiated by #{@user.name} from original@email.com to new@email.com"
+        assert_response_contains "Email change confirmed"
+      end
     end
 
     should "show an error and not send a confirmation if the email is blank" do

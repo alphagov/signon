@@ -3,11 +3,12 @@ require 'helpers/passphrase_support'
 
 class PassphraseResetTest < ActionDispatch::IntegrationTest
   include PassPhraseSupport
+  include ActiveJob::TestHelper
 
   BLANKET_RESET_MESSAGE = "If your email address is recognised, you’ll receive an email with instructions about how to reset your passphrase."
 
   should "email password reset instructions and allow the user to set a new one" do
-    Sidekiq::Testing.inline! do
+    perform_enqueued_jobs do
       user = create(:user)
       new_password = "some v3ry s3cure passphrase"
 
@@ -34,7 +35,7 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
   end
 
   should "work for a partially signed-in user with an expired passphrase" do
-    Sidekiq::Testing.inline! do
+    perform_enqueued_jobs do
       user = create(:user, password_changed_at: 91.days.ago)
 
       trigger_reset_for(user.email)
@@ -53,7 +54,7 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
   end
 
   should "not allow a reset link to be used more than once" do
-    Sidekiq::Testing.inline! do
+    perform_enqueued_jobs do
       user = create(:user)
       new_password = "some v3ry s3cure passphrase"
 
@@ -80,7 +81,7 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
     # token was being reset the first time the page was accessed (introduced in
     # a044b79).
 
-    Sidekiq::Testing.inline! do
+    perform_enqueued_jobs do
       user = create(:user)
       new_password = "some v3ry s3cure passphrase"
 

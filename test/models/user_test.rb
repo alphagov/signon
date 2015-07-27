@@ -2,6 +2,7 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
 
   def setup
     @user = create(:user)
@@ -338,11 +339,9 @@ class UserTest < ActiveSupport::TestCase
       should "notify them that reset password is disallowed and not send reset instructions" do
         user = create(:suspended_user)
 
-        delay_mock = mock('delay')
-        delay_mock.expects(:notify_reset_password_disallowed_due_to_suspension).returns(:foo)
-        UserMailer.expects(:delay).returns(delay_mock)
-
-        User.send_reset_password_instructions({ email: user.email })
+        assert_enqueued_jobs 1 do
+          User.send_reset_password_instructions({ email: user.email })
+        end
       end
     end
 

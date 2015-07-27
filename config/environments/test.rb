@@ -40,4 +40,6 @@ Signonotron2::Application.configure do
 
   # Hopefully we can switch this to random later
   config.active_support.test_order = :sorted
+
+  config.active_job.queue_adapter = :test
 end

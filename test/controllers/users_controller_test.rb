@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class UsersControllerTest < ActionController::TestCase
+  include ActiveJob::TestHelper
+
   def change_user_password(user_factory, new_password)
     original_password = "I am a very original password. Refrigerator weevil."
     user = create(user_factory, password: original_password)
@@ -559,7 +561,7 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "send email change notifications to old and new email address" do
-          Sidekiq::Testing.inline! do
+          perform_enqueued_jobs do
             normal_user = create(:user, email: "old@email.com")
             put :update, id: normal_user.id, user: { email: "new@email.com" }
 
@@ -571,7 +573,7 @@ class UsersControllerTest < ActionController::TestCase
 
         context "an invited-but-not-yet-accepted user" do
           should "change the email, and send an invitation email" do
-            Sidekiq::Testing.inline! do
+            perform_enqueued_jobs do
               another_user = User.invite!(name: "Ali", email: "old@email.com")
               put :update, id: another_user.id, user: { email: "new@email.com" }
 

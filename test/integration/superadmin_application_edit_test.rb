@@ -1,6 +1,7 @@
 require "test_helper"
 
 class SuperAdminApplicationEditTest < ActionDispatch::IntegrationTest
+  include ActiveJob::TestHelper
 
   context "logged in as an superadmin" do
     setup do
@@ -60,7 +61,7 @@ class SuperAdminApplicationEditTest < ActionDispatch::IntegrationTest
 
   def remote_logout(user)
     # simulate reauth
-    Sidekiq::Testing.inline! do
+    perform_enqueued_jobs do
       ReauthEnforcer.perform_on(user)
     end
   end
