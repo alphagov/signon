@@ -1,17 +1,12 @@
 require 'test_helper'
-require 'push_user_updates_worker'
 
-class PushUserUpdatesWorkerTest < ActiveSupport::TestCase
+class PushUserUpdatesJobTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
 
-  class TestWorker
-    include PushUserUpdatesWorker
+  class TestJob < PushUserUpdatesJob
   end
 
   context "perform_on" do
-    setup do
-      TestWorker.jobs.clear
-    end
-
     should "perform_async updates on user's used applications" do
       user = create(:user)
       foo_app, bar_app = *create_list(:application, 2, supports_push_updates: true)
@@ -19,10 +14,9 @@ class PushUserUpdatesWorkerTest < ActiveSupport::TestCase
       # authenticate access
       ::Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: foo_app.id, token: "1234")
 
-      TestWorker.perform_on(user)
-
-      assert_equal 1, TestWorker.jobs.size
-      assert_equal [user.uid, foo_app.id], TestWorker.jobs[0]['args']
+      assert_enqueued_with(job: TestJob, args: [user.uid, foo_app.id]) do
+        TestJob.perform_on(user)
+      end
     end
 
     should "perform_async updates for applications that support push updates" do
@@ -34,11 +28,9 @@ class PushUserUpdatesWorkerTest < ActiveSupport::TestCase
       ::Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: yopusha.id, token: "1234")
       ::Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: nopusha.id, token: "5678")
 
-      TestWorker.perform_on(user)
-
-      assert_equal 1, TestWorker.jobs.size
-      assert_equal [user.uid, yopusha.id], TestWorker.jobs[0]['args']
+      assert_enqueued_with(job: TestJob, args: [user.uid, yopusha.id]) do
+        TestJob.perform_on(user)
+      end
     end
   end
-
 end

@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class BatchInvitationsControllerTest < ActionController::TestCase
+  include ActiveJob::TestHelper
 
   def users_csv(filename = "users.csv")
     Rack::Test::UploadedFile.new("#{Rails.root}/test/controllers/fixtures/#{filename}")
@@ -63,17 +64,21 @@ class BatchInvitationsControllerTest < ActionController::TestCase
     end
 
     should "queue a job to do the processing" do
-      jobs = BatchInvitation::Worker.jobs.size
-      post :create, batch_invitation: { user_names_and_emails: users_csv }, user: { supported_permission_ids: [] }
-      assert_equal jobs + 1, BatchInvitation::Worker.jobs.size
+      assert_enqueued_jobs 2 do
+        post :create, batch_invitation: { user_names_and_emails: users_csv }, user: { supported_permission_ids: [] }
+      end
     end
 
     should "send an email to signon-alerts" do
-      post :create, batch_invitation: { user_names_and_emails: users_csv }, user: { supported_permission_ids: [] }
+      perform_enqueued_jobs do
+        post :create, batch_invitation: { user_names_and_emails: users_csv }, user: { supported_permission_ids: [] }
 
-      email = ActionMailer::Base.deliveries.last
-      assert_not_nil email
-      assert_equal ["signon-alerts@digital.cabinet-office.gov.uk"], email.to
+        email = ActionMailer::Base.deliveries.detect do |m|
+          m.to == ["signon-alerts@digital.cabinet-office.gov.uk"]
+        end
+        assert_not_nil email
+        assert_equal "[SIGNON] #{@user.name} created a batch of 2 users", email.subject
+      end
     end
 
     should "redirect to the batch invitation page and show a flash message" do

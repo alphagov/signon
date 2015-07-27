@@ -30,6 +30,7 @@ gem 'statsd-ruby', '1.1.0'
 gem 'unicorn', '4.9.0'
 gem 'sidekiq', '2.17.2'
 gem 'sidekiq-statsd', '0.1.2'
+gem 'activejob-retry'
 
 gem 'redis', '3.0.6'
 

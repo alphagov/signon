@@ -23,8 +23,8 @@ class BatchInvitation < ActiveRecord::Base
   end
 
   def enqueue
-    NoisyBatchInvitation.make_noise(self).deliver_now
-    Worker.perform_async(self.id)
+    NoisyBatchInvitation.make_noise(self).deliver_later
+    BatchInvitationJob.perform_later(self.id)
   end
 
   def perform(options = {})
@@ -36,12 +36,5 @@ class BatchInvitation < ActiveRecord::Base
   rescue StandardError => e
     self.update_column(:outcome, "fail")
     raise
-  end
-
-  class Worker
-    include Sidekiq::Worker
-    def perform(id, options = {})
-      BatchInvitation.find(id).perform(options)
-    end
   end
 end
