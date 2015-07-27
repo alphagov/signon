@@ -6,7 +6,12 @@ Doorkeeper.configure do
     # If you want to use named routes from your app you need
     # to call them on routes object eg.
     # routes.new_user_session_path
-    current_user || warden.authenticate!(:scope => :user)
+    user = current_user || warden.authenticate!(:scope => :user)
+    if user.need_change_password?
+      redirect_to user_password_expired_path
+    else
+      user
+    end
   end
 
   # If you want to restrict the access to the web interface for
