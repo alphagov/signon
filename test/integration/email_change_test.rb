@@ -52,6 +52,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
     context "for a user who hasn't accepted their invite yet" do
       should "resend the invitation" do
         perform_enqueued_jobs do
+          ActionMailer::Base.deliveries.clear
           user = User.invite!(name: "Jim", email: "jim@web.com")
 
           open_email("jim@web.com")
@@ -61,9 +62,9 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
           signin(@admin)
           admin_changes_email_address(user: user, new_email: "new@email.com")
 
-          open_email("new@email.com")
-          assert_equal 'Please confirm your account', current_email.subject
-          assert current_email.body.include?("Accept invitation")
+          email = emails_sent_to("new@email.com").detect { |mail| mail.subject == 'Please confirm your account' }
+          assert email
+          assert email.body.include?("Accept invitation")
           assert user.accept_invitation!
         end
       end
