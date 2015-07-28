@@ -38,8 +38,7 @@ Signonotron2::Application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  # Hopefully we can switch this to random later
-  config.active_support.test_order = :sorted
+  config.active_support.test_order = :random
 
   config.active_job.queue_adapter = :test
 end
