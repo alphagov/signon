@@ -48,7 +48,7 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
   end
 
   test "doesn't modify users who are suspended" do
-    suspended_user = create(:user, suspended_at: Date.today, reason_for_suspension: 'traitor')
+    suspended_user = create(:user, suspended_at: Time.zone.today, reason_for_suspension: 'traitor')
 
     InactiveUsersSuspender.new.suspend
 
