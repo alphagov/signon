@@ -80,8 +80,8 @@ Signonotron2::Application.configure do
   config.logstasher.suppress_app_log = true
 
   config.action_mailer.default_url_options = {
-    :host => URI.parse(Plek.current.find('signon')).host,
-    :protocol => 'https'
+    host: URI.parse(Plek.current.find('signon')).host,
+    protocol: 'https'
   }
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
