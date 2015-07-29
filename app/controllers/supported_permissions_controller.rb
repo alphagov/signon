@@ -45,5 +45,4 @@ private
   def supported_permission
     SupportedPermission.find(params[:id])
   end
-
 end

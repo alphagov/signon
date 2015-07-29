@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
   validate :organisation_admin_belongs_to_organisation
   validate :email_is_ascii_only
 
-  has_many :authorisations, :class_name => 'Doorkeeper::AccessToken', :foreign_key => :resource_owner_id
+  has_many :authorisations, class_name: 'Doorkeeper::AccessToken', foreign_key: :resource_owner_id
   has_many :application_permissions, class_name: 'UserApplicationPermission', inverse_of: :user
   has_many :supported_permissions, through: :application_permissions
   has_many :batch_invitations
@@ -104,7 +104,7 @@ class User < ActiveRecord::Base
   # 2. handle emails blacklisted by AWS such that we conceal whether
   #    or not an account exists for that email. moved from:
   #    https://github.com/alphagov/signonotron2/commit/451b89d9
-  def self.send_reset_password_instructions(attributes={})
+  def self.send_reset_password_instructions(attributes = {})
     user = User.find_by_email(attributes[:email])
     if user.present? && user.suspended?
       UserMailer.notify_reset_password_disallowed_due_to_suspension(user).deliver_later
@@ -151,7 +151,7 @@ class User < ActiveRecord::Base
 
   # Override Devise::Model::Lockable#lock_access! to add event logging
   def lock_access!
-    EventLog.record_event(User.find_by_email(self.email),EventLog::ACCOUNT_LOCKED)
+    EventLog.record_event(User.find_by_email(self.email), EventLog::ACCOUNT_LOCKED)
     super
 
     UserMailer.locked_account_explanation(self).deliver_later
@@ -193,11 +193,10 @@ private
   end
 
   def email_is_ascii_only
-    errors.add(:email, "can't contain non-ASCII characters") unless email.blank? or email.ascii_only?
+    errors.add(:email, "can't contain non-ASCII characters") unless email.blank? || email.ascii_only?
   end
 
   def fix_apostrophe_in_email
-    self.email.tr!(%q(’), %q(')) if email.present? and email_changed?
+    self.email.tr!('’', "'") if email.present? && email_changed?
   end
-
 end

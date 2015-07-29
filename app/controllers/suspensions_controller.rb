@@ -31,5 +31,4 @@ class SuspensionsController < ApplicationController
     @user = User.find(params[:id])
     authorize @user, :suspension?
   end
-
 end

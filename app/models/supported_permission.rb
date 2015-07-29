@@ -20,5 +20,4 @@ private
       errors.add(:name, "of permission #{name_change.first} can't be changed")
     end
   end
-
 end

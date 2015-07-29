@@ -19,9 +19,7 @@ class Organisation < ActiveRecord::Base
       return_value = name
     end
 
-    if closed?
-      return_value += " (closed)"
-    end
+    return_value += " (closed)" if closed?
 
     return_value
   end

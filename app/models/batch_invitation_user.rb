@@ -3,7 +3,7 @@ class BatchInvitationUser < ActiveRecord::Base
 
   belongs_to :batch_invitation
 
-  validates :outcome, inclusion: { :in => [nil, "success", "failed", "skipped"] }
+  validates :outcome, inclusion: { in: [nil, "success", "failed", "skipped"] }
 
   scope :processed, -> { where.not(outcome: nil) }
   scope :unprocessed, -> { where(outcome: nil) }
