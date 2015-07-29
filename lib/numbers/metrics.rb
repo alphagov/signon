@@ -33,11 +33,12 @@ class Metrics
   end
 
   def accounts_count_by_days_since_last_sign_in
-    [0...7, 7...15, 15...30, 30...45, 45...60, 60...90, 90...180, 180...10000000].inject([]) do |result, range|
+    ranges = [0...7, 7...15, 15...30, 30...45, 45...60, 60...90, 90...180, 180...10000000].inject([]) do |result, range|
       count_days_since_last_sign_in = all_active.count {|u| u.current_sign_in_at && range.last.days.ago <= u.current_sign_in_at && u.current_sign_in_at < range.first.days.ago }
       result << ["#{range.first} - #{range.last}", count_days_since_last_sign_in]
       result
-    end + [["never signed in", all_active.count {|u| u.current_sign_in_at.nil? }]]
+    end
+    ranges + [["never signed in", all_active.count {|u| u.current_sign_in_at.nil? }]]
   end
 
   def accounts_count_how_often_user_has_signed_in
