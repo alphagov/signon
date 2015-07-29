@@ -63,9 +63,11 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
 
   test "records auto-suspension in event log" do
     users = create_list(:user, 2, current_sign_in_at: 46.days.ago)
-    users.each { |user| EventLog.expects(:record_event)
-                                .with(responds_with(:email, user.email), EventLog::ACCOUNT_AUTOSUSPENDED)
-                                .once }
+    users.each { |user|
+      EventLog.expects(:record_event)
+        .with(responds_with(:email, user.email), EventLog::ACCOUNT_AUTOSUSPENDED)
+        .once
+    }
 
     InactiveUsersSuspender.new.suspend
   end
@@ -73,11 +75,13 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
   test "sends suspension notification to users who got suspended" do
     users = create_list(:user, 2, current_sign_in_at: 46.days.ago)
 
-    mailer = mock()
+    mailer = mock
     mailer.expects(:deliver_now).returns(true).twice
-    users.each { |user| UserMailer.expects(:suspension_notification)
-                                  .with(responds_with(:email, user.email))
-                                  .returns(mailer).once }
+    users.each { |user|
+      UserMailer.expects(:suspension_notification)
+        .with(responds_with(:email, user.email))
+        .returns(mailer).once
+    }
 
     InactiveUsersSuspender.new.suspend
   end
@@ -95,5 +99,4 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
 
     InactiveUsersSuspender.new.suspend
   end
-
 end

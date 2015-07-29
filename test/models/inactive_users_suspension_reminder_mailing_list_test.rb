@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class InactiveUsersSuspensionReminderMailingListTest < ActiveSupport::TestCase
-
   def suspension_reminder_mailing_list
     InactiveUsersSuspensionReminderMailingList.new(User::SUSPENSION_THRESHOLD_PERIOD).generate
   end

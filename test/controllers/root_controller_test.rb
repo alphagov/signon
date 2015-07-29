@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class RootControllerTest < ActionController::TestCase
-
   def setup
     create(:application, name: 'Support')
   end

@@ -3,7 +3,7 @@ require_relative "../test_helper"
 class UserLinkTest < ActionDispatch::IntegrationTest
   context "logged in as an admin" do
     setup do
-      @admin = create(:admin_user, :name => "Adam Adminson", :email => "admin@example.com")
+      @admin = create(:admin_user, name: "Adam Adminson", email: "admin@example.com")
       visit new_user_session_path
       signin(@admin)
     end

@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class SuspensionsControllerTest < ActionController::TestCase
-
   context "organisation admin" do
     should "be unable to control suspension of a user outside their organisation" do
       user = create(:suspended_user, reason_for_suspension: "Negligence")

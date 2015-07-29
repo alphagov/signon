@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class SupportedPermissionsControllerTest < ActionController::TestCase
-
   setup do
     @user = create(:user, role: "superadmin")
     sign_in @user
@@ -38,17 +37,17 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
       assert_select "ul[class='errors'] li", "Name can't be blank"
       assert_equal app.reload.supported_permissions, [app.signin_permission]
-     end
+    end
 
     should "create a new permission" do
       app = create(:application, name: "My first app")
 
       post :create, doorkeeper_application_id: app.id, supported_permission: { name: "permission1" }
 
-      assert_redirected_to(:controller => "supported_permissions", :action => :index)
+      assert_redirected_to(controller: "supported_permissions", action: :index)
       assert_equal "Successfully added permission permission1 to My first app", flash[:notice]
       assert_equal app.reload.supported_permissions.first.name, "permission1"
-     end
+    end
   end
 
   context "PUT update" do
@@ -61,7 +60,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
       assert_select "ul[class='errors'] li", "Name can't be blank"
       assert perm.reload.delegatable
-     end
+    end
 
     should "edit permission" do
       app = create(:application, name: "My first app")
@@ -70,10 +69,9 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
       put :update, doorkeeper_application_id: app.id, id: perm.id, supported_permission: { delegatable: false }
 
-      assert_redirected_to(:controller => "supported_permissions", :action => :index)
+      assert_redirected_to(controller: "supported_permissions", action: :index)
       assert_equal "Successfully updated permission permission1", flash[:notice]
       refute perm.reload.delegatable
-     end
+    end
   end
-
 end

@@ -1,10 +1,10 @@
 require 'test_helper'
 
 class UserApplicationPermissionTest < ActiveSupport::TestCase
-
   context "validations" do
     setup do
-      @user, @application = create(:user), create(:application)
+      @user = create(:user)
+      @application = create(:application)
       @supported_permission = @application.signin_permission
     end
 
@@ -23,5 +23,4 @@ class UserApplicationPermissionTest < ActiveSupport::TestCase
       assert @user.application_permissions.build(application_permission_attributes).invalid?
     end
   end
-
 end

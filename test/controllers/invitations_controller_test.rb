@@ -37,7 +37,7 @@ class InvitationsControllerTest < ActionController::TestCase
       should "can give permissions to only applications where signin is delegatable and they have access to" do
         delegatable_app = create(:application, with_delegatable_supported_permissions: ["signin"])
         non_delegatable_app = create(:application, with_supported_permissions: ['signin'])
-        admin = create(:organisation_admin, with_signin_permissions_for: [ delegatable_app, non_delegatable_app ] )
+        admin = create(:organisation_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
 
         sign_in admin
 
@@ -95,7 +95,8 @@ class InvitationsControllerTest < ActionController::TestCase
 
   context "POST resend" do
     should "resend account signup email to user" do
-      admin, user = create(:admin_user), create(:user)
+      admin = create(:admin_user)
+      user = create(:user)
       User.any_instance.expects(:invite!).once
       sign_in admin
 

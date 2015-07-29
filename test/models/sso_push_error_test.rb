@@ -2,7 +2,6 @@ require 'test_helper'
 require 'gds_api/base'
 
 class SSOPushErrorTest < ActiveSupport::TestCase
-
   def setup
     @sso_push_user = create(:user, name: "SSO Push User")
     SSOPushCredential.stubs(:user_email).returns(@sso_push_user.email)
@@ -25,7 +24,7 @@ class SSOPushErrorTest < ActiveSupport::TestCase
 
   context "rescuing other GdsApi errors" do
     should "add application name and error message to exception message" do
-      ex = GdsApi::TimedOutException.new()
+      ex = GdsApi::TimedOutException.new
       SSOPushClient.any_instance.stubs(:post_json!).raises(ex)
 
       exception = assert_raise(SSOPushError) do
@@ -37,7 +36,7 @@ class SSOPushErrorTest < ActiveSupport::TestCase
 
   context "rescuing StandardError" do
     should "add application name and message to exception message" do
-      ex = StandardError.new()
+      ex = StandardError.new
       SSOPushClient.any_instance.stubs(:post_json!).raises(ex)
 
       exception = assert_raise(SSOPushError) do
@@ -46,5 +45,4 @@ class SSOPushErrorTest < ActiveSupport::TestCase
       assert_equal "Error pushing to #{@application.name}. StandardError", exception.message
     end
   end
-
 end

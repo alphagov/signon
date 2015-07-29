@@ -65,7 +65,6 @@ class UserTest < ActiveSupport::TestCase
   end
 
   context ".not_recently_unsuspended" do
-
     should "return users who have never been unsuspended" do
       assert_includes User.not_recently_unsuspended, @user
     end
@@ -139,13 +138,13 @@ class UserTest < ActiveSupport::TestCase
   # Password Validation
 
   test "it requires a password to be at least 10 characters long" do
-    u = build(:user, :password => "dNG.c0w5!")
+    u = build(:user, password: "dNG.c0w5!")
     refute u.valid?
     assert_not_empty u.errors[:password]
   end
 
   test "it allows very long passwords with spaces" do
-    u = build(:user, :password => ("4 l0nG sT!,ng " * 10)[0..127])
+    u = build(:user, password: ("4 l0nG sT!,ng " * 10)[0..127])
     u.valid?
     assert u.valid?
     assert_empty u.errors[:password]
@@ -176,7 +175,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "it doesn't migrate password unless correct one given" do
     password = ("4 l0nG sT!,ng " * 10)[0..127]
-    old_encrypted_password = ::BCrypt::Password.create("#{password}", :cost => 10).to_s
+    old_encrypted_password = ::BCrypt::Password.create("#{password}", cost: 10).to_s
 
     u = create(:user)
     u.update_column :encrypted_password, old_encrypted_password
@@ -359,5 +358,4 @@ class UserTest < ActiveSupport::TestCase
     permissions = user.permissions_for(application)
     assert_equal expected_permissions, permissions
   end
-
 end

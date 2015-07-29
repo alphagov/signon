@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class BatchInvitationUserTest < ActiveSupport::TestCase
-
   context "invite" do
     setup do
       @inviting_user = create(:admin_user)

@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class UserMailerTest < ActionMailer::TestCase
-  def assert_body_includes(search_string, email=@email)
+  def assert_body_includes(search_string, email = @email)
     email.body.parts.each do |part|
       assert_includes part.body, search_string
     end

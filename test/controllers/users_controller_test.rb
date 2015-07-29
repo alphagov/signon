@@ -15,7 +15,7 @@ class UsersControllerTest < ActionController::TestCase
       password_confirmation: new_password
     }
 
-    return user, original_password_hash
+    [user, original_password_hash]
   end
 
   context "PUT update_passphrase" do
@@ -153,10 +153,10 @@ class UsersControllerTest < ActionController::TestCase
     should "fetching json profile with a valid oauth token should succeed" do
       user = create(:user)
       user.grant_application_permission(@application, 'signin')
-      token = create(:access_token, :application => @application, :resource_owner_id => user.id)
+      token = create(:access_token, application: @application, resource_owner_id: user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
-      get :show, {:client_id => @application.uid, :format => :json}
+      get :show, {client_id: @application.uid, format: :json}
 
       assert_equal "200", response.code
       presenter = UserOAuthPresenter.new(user, @application)
@@ -168,10 +168,10 @@ class UsersControllerTest < ActionController::TestCase
 
       user = create(:user)
       user.grant_application_permission(@application, 'signin')
-      token = create(:access_token, :application => @application, :resource_owner_id => user.id)
+      token = create(:access_token, application: @application, resource_owner_id: user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
-      get :show, {:format => :json}
+      get :show, {format: :json}
 
       assert_equal "200", response.code
       presenter = UserOAuthPresenter.new(user, @application)
@@ -180,10 +180,10 @@ class UsersControllerTest < ActionController::TestCase
 
     should "fetching json profile with an invalid oauth token should not succeed" do
       user = create(:user)
-      token = create(:access_token, :application => @application, :resource_owner_id => user.id)
+      token = create(:access_token, application: @application, resource_owner_id: user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token.sub(/[0-9]/, 'x')}"
-      get :show, {:client_id => @application.uid, :format => :json}
+      get :show, {client_id: @application.uid, format: :json}
 
       assert_equal "401", response.code
     end
@@ -191,37 +191,37 @@ class UsersControllerTest < ActionController::TestCase
     should "fetching json profile with a token for another app should not succeed" do
       other_application = create(:application)
       user = create(:user)
-      token = create(:access_token, :application => other_application, :resource_owner_id => user.id)
+      token = create(:access_token, application: other_application, resource_owner_id: user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token.sub(/[0-9]/, 'x')}"
-      get :show, {:client_id => @application.uid, :format => :json}
+      get :show, {client_id: @application.uid, format: :json}
 
       assert_equal "401", response.code
     end
 
     should "fetching json profile without any bearer header should not succeed" do
-      get :show, {:client_id => @application.uid, :format => :json}
+      get :show, {client_id: @application.uid, format: :json}
       assert_equal "401", response.code
     end
 
     should "fetching json profile should include permissions" do
-      user = create(:user, with_signin_permissions_for: [ @application ])
-      token = create(:access_token, :application => @application, :resource_owner_id => user.id)
+      user = create(:user, with_signin_permissions_for: [@application])
+      token = create(:access_token, application: @application, resource_owner_id: user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
-      get :show, {:client_id => @application.uid, :format => :json}
+      get :show, {client_id: @application.uid, format: :json}
       json = JSON.parse(response.body)
       assert_equal(["signin"], json['user']['permissions'])
     end
 
     should "fetching json profile should include only permissions for the relevant app" do
       other_application = create(:application)
-      user = create(:user, with_signin_permissions_for: [ @application, other_application ])
+      user = create(:user, with_signin_permissions_for: [@application, other_application])
 
-      token = create(:access_token, :application => @application, :resource_owner_id => user.id)
+      token = create(:access_token, application: @application, resource_owner_id: user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
-      get :show, {:client_id => @application.uid, :format => :json}
+      get :show, {client_id: @application.uid, format: :json}
       json = JSON.parse(response.body)
       assert_equal(["signin"], json['user']['permissions'])
     end
@@ -229,20 +229,20 @@ class UsersControllerTest < ActionController::TestCase
     should "fetching json profile should update last_synced_at for the relevant app" do
       user = create(:user)
       user.grant_application_permission(@application, 'signin')
-      token = create(:access_token, :application => @application, :resource_owner_id => user.id)
+      token = create(:access_token, application: @application, resource_owner_id: user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
-      get :show, {:client_id => @application.uid, :format => :json}
+      get :show, {client_id: @application.uid, format: :json}
 
       assert_not_nil user.application_permissions.first.last_synced_at
     end
 
     should "fetching json profile should succeed even if no permission for relevant app" do
       user = create(:user)
-      token = create(:access_token, :application => @application, :resource_owner_id => user.id)
+      token = create(:access_token, application: @application, resource_owner_id: user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
-      get :show, {:client_id => @application.uid, :format => :json}
+      get :show, {client_id: @application.uid, format: :json}
 
       assert_response :ok
     end
@@ -297,7 +297,6 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       context "CSV export" do
-
         should "respond to CSV format" do
           get :index, format: :csv
           assert_response :success
@@ -400,7 +399,6 @@ class UsersControllerTest < ActionController::TestCase
           assert_select "td.email", count: 0, text: /api_user@email.com/
         end
       end
-
     end
 
     context "GET edit" do

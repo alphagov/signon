@@ -61,5 +61,4 @@ class SSOPushClientTest < ActiveSupport::TestCase
       assert_requested request
     end
   end
-
 end

@@ -34,5 +34,4 @@ class OrganisationMappings::ZendeskToSignonTest < ActiveSupport::TestCase
     apply_mappings
     assert_equal co, co_user.reload.organisation
   end
-
 end
