@@ -2,6 +2,7 @@
 require 'test_helper'
 
 class UserTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
 
   def setup
     @user = create(:user)
@@ -9,7 +10,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "email change tokens should expire" do
     @user = create(:user_with_pending_email_change, confirmation_sent_at: 15.days.ago)
-    @user.confirm!
+    @user.confirm
     assert_equal "needs to be confirmed within 14 days, please request a new one", @user.errors[:email][0]
   end
 
@@ -338,23 +339,10 @@ class UserTest < ActiveSupport::TestCase
       should "notify them that reset password is disallowed and not send reset instructions" do
         user = create(:suspended_user)
 
-        delay_mock = mock('delay')
-        delay_mock.expects(:notify_reset_password_disallowed_due_to_suspension).returns(:foo)
-        UserMailer.expects(:delay).returns(delay_mock)
-
-        User.send_reset_password_instructions({ email: user.email })
+        assert_enqueued_jobs 1 do
+          User.send_reset_password_instructions({ email: user.email })
+        end
       end
-    end
-
-    should "return the resource even if AWS has blacklisted the resource's email" do
-      User.any_instance.stubs(:send_reset_password_instructions).raises(Net::SMTPFatalError, "Address blacklisted")
-      user = create(:user)
-
-      user_returned = nil
-      assert_nothing_raised do
-        user_returned = User.send_reset_password_instructions({ email: user.email })
-      end
-      assert_equal user, user_returned
     end
 
     should "raise any other exception that occured" do

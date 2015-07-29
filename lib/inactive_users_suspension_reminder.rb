@@ -16,7 +16,7 @@ class InactiveUsersSuspensionReminder
       tries = 3
       begin
         Rails.logger.info "#{self.class}: Sending email to #{user.email}."
-        UserMailer.suspension_reminder(user, @days_to_suspension).deliver
+        UserMailer.suspension_reminder(user, @days_to_suspension).deliver_now
         Rails.logger.info "#{self.class}: Successfully sent email to #{user.email}."
       rescue *ERRORS_TO_RETRY_ON => e
         Rails.logger.debug "#{self.class}: #{e.class} - #{e.message} while sending email to #{user.email} during attempt (#{(tries..3).count}/3)."

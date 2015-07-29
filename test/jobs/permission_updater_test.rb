@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class PermissionUpdaterTest < ActiveSupport::TestCase
-
   def users_url(application)
     url = URI.parse(application.redirect_uri)
     "https://#{url.host}/auth/gds/api/users/#{CGI.escape(@user.uid)}"

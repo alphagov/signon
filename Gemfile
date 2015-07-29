@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.11'
+gem 'rails', '4.2.3'
 
 gem 'kaminari', '0.16.1'
 gem 'bootstrap-kaminari-views', '0.0.5'
@@ -16,11 +16,10 @@ gem 'whenever', '~> 0.9.4', require: false
 gem 'uuid'
 
 # Gems used to provide Authentication and Authorization services.
-gem 'devise', '3.2.2'
-gem 'devise_invitable', '1.4.0'
-gem 'devise-encryptable', '0.1.1'
+gem 'devise', '3.5.1'
+gem 'devise_invitable', '1.5.2'
+gem 'devise-encryptable', '0.2.0'
 gem 'devise_zxcvbn', '1.1.1'
-gem 'devise-async', '0.9.0'
 gem 'pundit', '0.3.0'
 
 gem 'doorkeeper', '2.2.1'
@@ -31,6 +30,7 @@ gem 'statsd-ruby', '1.1.0'
 gem 'unicorn', '4.9.0'
 gem 'sidekiq', '2.17.2'
 gem 'sidekiq-statsd', '0.1.2'
+gem 'activejob-retry'
 
 gem 'redis', '3.0.6'
 

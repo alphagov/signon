@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class ReauthEnforcerTest < ActiveSupport::TestCase
-
   context "perform" do
     should "request an app for reauthorising a user" do
       app = create(:application)
@@ -20,5 +19,4 @@ class ReauthEnforcerTest < ActiveSupport::TestCase
       ReauthEnforcer.new.perform("a-uid", 123)
     end
   end
-
 end

@@ -6,7 +6,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
       user = create(:user, name: "Bob Loblaw")
       @batch_invitation = create(:batch_invitation, user: user)
       create(:batch_invitation_user, batch_invitation: @batch_invitation)
-      @email = NoisyBatchInvitation.make_noise(@batch_invitation).deliver
+      @email = NoisyBatchInvitation.make_noise(@batch_invitation).deliver_now
     end
 
     should "come from noreply-signon@" do
@@ -40,7 +40,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
       user = create(:user, name: "Bob Loblaw")
       @batch_invitation = create(:batch_invitation, user: user)
       create(:batch_invitation_user, batch_invitation: @batch_invitation)
-      @email = NoisyBatchInvitation.make_noise(@batch_invitation).deliver
+      @email = NoisyBatchInvitation.make_noise(@batch_invitation).deliver_now
     end
 
     should "from address should include the instance name" do

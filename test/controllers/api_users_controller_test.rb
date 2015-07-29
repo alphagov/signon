@@ -93,7 +93,7 @@ class ApiUsersControllerTest < ActionController::TestCase
         put :update, id: api_user.id, api_user: { name: "" }
 
         assert_template :edit
-        assert_select "div.alert ul li", "Name can&#39;t be blank"
+        assert_select "div.alert ul li", "Name can't be blank"
       end
 
       should "push permission changes out to apps" do

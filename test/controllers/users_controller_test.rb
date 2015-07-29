@@ -1,6 +1,8 @@
 require 'test_helper'
 
 class UsersControllerTest < ActionController::TestCase
+  include ActiveJob::TestHelper
+
   def change_user_password(user_factory, new_password)
     original_password = "I am a very original password. Refrigerator weevil."
     user = create(user_factory, password: original_password)
@@ -58,7 +60,7 @@ class UsersControllerTest < ActionController::TestCase
       should "show the unconfirmed_email" do
         get :edit_email_or_passphrase, id: @user.id
 
-        assert_select "input#user_unconfirmed_email[value=#{@user.unconfirmed_email}]"
+        assert_select "input#user_unconfirmed_email[value=?]", @user.unconfirmed_email
       end
     end
   end
@@ -71,19 +73,22 @@ class UsersControllerTest < ActionController::TestCase
 
     context "changing an email" do
       should "stage the change, send a confirmation email to the new address and email change notification to the old address" do
-        put :update_email, id: @user.id, user: { email: "new@email.com" }
+        perform_enqueued_jobs do
+          put :update_email, id: @user.id, user: { email: "new@email.com" }
 
-        @user.reload
-        assert_equal "new@email.com", @user.unconfirmed_email
-        assert_equal "old@email.com", @user.email
+          @user.reload
 
-        confirmation_email = ActionMailer::Base.deliveries[-2]
-        assert_equal "Confirm your email change", confirmation_email.subject
-        assert_equal "new@email.com", confirmation_email.to.first
+          assert_equal "new@email.com", @user.unconfirmed_email
+          assert_equal "old@email.com", @user.email
 
-        email_changed_notification = ActionMailer::Base.deliveries.last
-        assert_equal "Your GOV.UK Signon email address is being changed", email_changed_notification.subject
-        assert_equal "old@email.com", email_changed_notification.to.first
+          confirmation_email = ActionMailer::Base.deliveries[-2]
+          assert_equal "Confirm your email change", confirmation_email.subject
+          assert_equal "new@email.com", confirmation_email.to.first
+
+          email_changed_notification = ActionMailer::Base.deliveries.last
+          assert_equal "Your GOV.UK Signon email address is being changed", email_changed_notification.subject
+          assert_equal "old@email.com", email_changed_notification.to.first
+        end
       end
 
       should "log an event" do
@@ -95,23 +100,27 @@ class UsersControllerTest < ActionController::TestCase
 
   context "PUT resend_email_change" do
     should "send an email change confirmation email" do
-      @user = create(:user_with_pending_email_change)
-      sign_in @user
+      perform_enqueued_jobs do
+        @user = create(:user_with_pending_email_change)
+        sign_in @user
 
-      put :resend_email_change, id: @user.id
+        put :resend_email_change, id: @user.id
 
-      assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+        assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+      end
     end
 
     should "use a new token if it's expired" do
-      @user = create(:user_with_pending_email_change,
-                      confirmation_token: "old token",
-                      confirmation_sent_at: 15.days.ago)
-      sign_in @user
+      perform_enqueued_jobs do
+        @user = create(:user_with_pending_email_change,
+                        confirmation_token: "old token",
+                        confirmation_sent_at: 15.days.ago)
+        sign_in @user
 
-      put :resend_email_change, id: @user.id
+        put :resend_email_change, id: @user.id
 
-      assert_not_equal "old token", @user.reload.confirmation_token
+        assert_not_equal "old token", @user.reload.confirmation_token
+      end
     end
   end
 
@@ -417,8 +426,8 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "select[name='user[organisation_id]']" do
           assert_select "option", count: 3  # including 'None'
           assert_select "option[selected=selected]", count: 1
-          assert_select "option[value=#{org_with_user.id}][selected=selected]", text: org_with_user.name_with_abbreviation
-          assert_select "option[value=#{other_organisation.id}]", text: other_organisation.name_with_abbreviation
+          assert_select %{option[value="#{org_with_user.id}"][selected=selected]}, text: org_with_user.name_with_abbreviation
+          assert_select %{option[value="#{other_organisation.id}"]}, text: other_organisation.name_with_abbreviation
         end
       end
 
@@ -559,7 +568,7 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "send email change notifications to old and new email address" do
-          Sidekiq::Testing.inline! do
+          perform_enqueued_jobs do
             normal_user = create(:user, email: "old@email.com")
             put :update, id: normal_user.id, user: { email: "new@email.com" }
 
@@ -571,7 +580,7 @@ class UsersControllerTest < ActionController::TestCase
 
         context "an invited-but-not-yet-accepted user" do
           should "change the email, and send an invitation email" do
-            Sidekiq::Testing.inline! do
+            perform_enqueued_jobs do
               another_user = User.invite!(name: "Ali", email: "old@email.com")
               put :update, id: another_user.id, user: { email: "new@email.com" }
 
@@ -595,10 +604,12 @@ class UsersControllerTest < ActionController::TestCase
 
     context "PUT resend_email_change" do
       should "send an email change confirmation email" do
-        another_user = create(:user_with_pending_email_change)
-        put :resend_email_change, id: another_user.id
+        perform_enqueued_jobs do
+          another_user = create(:user_with_pending_email_change)
+          put :resend_email_change, id: another_user.id
 
-        assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+          assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+        end
       end
 
       should "use a new token if it's expired" do

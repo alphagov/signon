@@ -51,19 +51,5 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
         assert_equal "failed", user.reload.outcome
       end
     end
-
-    context "email couldn't be sent" do
-      setup do
-        Devise::Mailer.any_instance.stubs(:mail).with(anything)
-            .raises("SMTP server says no")
-      end
-
-      should "record the outcome against the user" do
-        user = create(:batch_invitation_user, batch_invitation: @batch_invitation)
-        user.invite(@inviting_user, [])
-
-        assert_equal "failed", user.reload.outcome
-      end
-    end
   end
 end

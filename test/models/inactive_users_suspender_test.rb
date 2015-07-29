@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class InactiveUsersSuspenderTest < ActiveSupport::TestCase
+  include ActiveJob::TestHelper
 
   test "suspends users who have not logged-in for more than suspension threshold days" do
     inactive_user = create(:user, current_sign_in_at: 46.days.ago)
@@ -73,7 +74,7 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
     users = create_list(:user, 2, current_sign_in_at: 46.days.ago)
 
     mailer = mock()
-    mailer.expects(:deliver).returns(true).twice
+    mailer.expects(:deliver_now).returns(true).twice
     users.each { |user| UserMailer.expects(:suspension_notification)
                                   .with(responds_with(:email, user.email))
                                   .returns(mailer).once }
