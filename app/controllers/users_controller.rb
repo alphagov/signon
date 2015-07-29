@@ -71,9 +71,11 @@ class UsersController < ApplicationController
   def resend_email_change
     @user.resend_confirmation_instructions
     if @user.errors.empty?
-      notice = @user.normal? ?
-        "An email has been sent to #{@user.unconfirmed_email}. Follow the link in the email to update your address." :
-        "Successfully resent email change email to #{@user.unconfirmed_email}"
+      notice = if @user.normal?
+                 "An email has been sent to #{@user.unconfirmed_email}. Follow the link in the email to update your address."
+               else
+                 "Successfully resent email change email to #{@user.unconfirmed_email}"
+               end
       redirect_to root_path, notice: notice
     else
       redirect_to edit_user_path(@user), alert: "Failed to send email change email"
@@ -144,10 +146,10 @@ class UsersController < ApplicationController
 
   def paginate_users
     if any_filter?
-      unless @users.is_a?(Array)
-        @users = @users.page(params[:page]).per(100)
-      else
+      if @users.is_a?(Array)
         @users = Kaminari.paginate_array(@users).page(params[:page]).per(100)
+      else
+        @users = @users.page(params[:page]).per(100)
       end
     else
       @users, @sorting_params = @users.alpha_paginate(params[:letter], ALPHABETICAL_PAGINATE_CONFIG)
