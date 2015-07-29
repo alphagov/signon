@@ -1,6 +1,7 @@
 class SSOPushError < StandardError
   def initialize(application, details = {})
-    @application, @details = application, details
+    @application = application
+    @details = details
   end
 
   def message

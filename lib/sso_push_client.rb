@@ -22,8 +22,7 @@ class SSOPushClient < GdsApi::Base
   end
 
   private
-    def base_url
-      "#{@endpoint}/auth/gds/api"
-    end
-
+  def base_url
+    "#{@endpoint}/auth/gds/api"
+  end
 end

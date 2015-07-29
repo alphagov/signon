@@ -1,5 +1,4 @@
 module UserPermissionsControllerMethods
-
   private
 
   def visible_applications(user)

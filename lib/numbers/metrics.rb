@@ -10,7 +10,7 @@ class Metrics
 
   def accounts_count_by_state
     [[:active, all_active.size],
-      [:suspended, all.select {|u| not u.suspended_at.nil? }.size]]
+     [:suspended, all.count {|u| not u.suspended_at.nil? }]]
   end
 
   def active_accounts_count_by_role
@@ -27,26 +27,26 @@ class Metrics
   end
 
   def active_admin_user_names
-    ["admin", "superadmin"].collect do |role|
+    %w(admin superadmin).collect do |role|
       [role, all_active.select {|u| u.role == role }.map {|u| "#{u.name} <#{u.email}>" }.sort.join(", ")]
     end
   end
 
   def accounts_count_by_days_since_last_sign_in
     [0...7, 7...15, 15...30, 30...45, 45...60, 60...90, 90...180, 180...10000000].inject([]) do |result, range|
-      count_days_since_last_sign_in = all_active.select {|u| u.current_sign_in_at && range.last.days.ago <= u.current_sign_in_at && u.current_sign_in_at < range.first.days.ago }.size
+      count_days_since_last_sign_in = all_active.count {|u| u.current_sign_in_at && range.last.days.ago <= u.current_sign_in_at && u.current_sign_in_at < range.first.days.ago }
       result << ["#{range.first} - #{range.last}", count_days_since_last_sign_in]
       result
-    end + [["never signed in", all_active.select {|u| u.current_sign_in_at.nil? }.size]]
+    end + [["never signed in", all_active.count {|u| u.current_sign_in_at.nil? }]]
   end
 
   def accounts_count_how_often_user_has_signed_in
     [0, 1, 2...5, 5...10, 10...25, 25...50, 50...100, 100...200, 200...10000000].inject([]) do |result, range_or_value|
       if range_or_value.is_a?(Range)
         range = range_or_value
-        result << ["#{range.first} - #{range.last}", all_active.select {|u| range.include?(u.sign_in_count) }.size ]
+        result << ["#{range.first} - #{range.last}", all_active.count {|u| range.include?(u.sign_in_count) }]
       else
-        result << ["#{range_or_value} time(s)", all_active.select {|u| u.sign_in_count == range_or_value}.size]
+        result << ["#{range_or_value} time(s)", all_active.count {|u| u.sign_in_count == range_or_value}]
       end
       result
     end
@@ -57,9 +57,9 @@ class Metrics
   end
 
   def to_a
-    metric_methods.map do |metric|
+    metric_methods.flat_map do |metric|
       send(metric).map {|result| [metric.to_s.humanize, result].flatten }
-    end.flatten(1)
+    end
   end
 
   private
