@@ -5,7 +5,8 @@ class InactiveUsersSuspensionReminder
                         Net::SMTPServerBusy,
                         Errno::ETIMEDOUT,
                         Errno::EHOSTUNREACH,
-                        Errno::ECONNREFUSED]
+                        Errno::ECONNREFUSED,
+                        EOFError]
 
   def initialize(users, days_to_suspension)
     @users, @days_to_suspension = users, days_to_suspension
@@ -25,8 +26,12 @@ class InactiveUsersSuspensionReminder
         Rails.logger.warn "#{self.class}: Failed to send suspension reminder email to #{user.email}."
         notify_airbrake(e, user)
       rescue => e
-        Rails.logger.warn "#{self.class}: #{e.response.error.message} while sending email to #{user.email}."
         notify_airbrake(e, user)
+        begin
+          Rails.logger.warn "#{self.class}: #{e.response.error.message} while sending email to #{user.email}."
+        rescue NoMethodError
+          Rails.logger.warn "#{self.class}: #{e.message} while sending email to #{user.email}."
+        end
       end
     end
   end
