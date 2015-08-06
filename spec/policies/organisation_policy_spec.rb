@@ -30,5 +30,4 @@ describe OrganisationPolicy do
       expect(subject).not_to permit(organisation_admin, build(:organisation))
     end
   end
-
 end

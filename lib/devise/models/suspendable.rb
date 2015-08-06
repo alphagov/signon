@@ -1,6 +1,5 @@
 module Devise
   module Models
-
     module Suspendable
       extend ActiveSupport::Concern
 

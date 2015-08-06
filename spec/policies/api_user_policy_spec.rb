@@ -14,5 +14,4 @@ describe ApiUserPolicy do
       end
     end
   end
-
 end

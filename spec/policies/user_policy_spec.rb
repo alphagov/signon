@@ -23,8 +23,16 @@ describe UserPolicy do
     end
   end
 
-  user_management_actions = [:edit?, :create?, :update?, :unlock?, :suspension?,
-    :cancel_email_change?, :resend_email_change?, :event_logs?]
+  user_management_actions = %i(
+    edit?
+    create?
+    update?
+    unlock?
+    suspension?
+    cancel_email_change?
+    resend_email_change?
+    event_logs?
+  )
 
   user_management_actions.each do |permission_name|
     permissions permission_name do
@@ -93,5 +101,4 @@ describe UserPolicy do
       expect(subject).not_to permit(create(:user), User)
     end
   end
-
 end

@@ -50,7 +50,8 @@ class EventLogTest < ActiveSupport::TestCase
     end
 
     should "record the initiator when initiator is other than the user" do
-      user, admin = create(:user, email: 'new@example.com'), create(:admin_user)
+      user = create(:user, email: 'new@example.com')
+      admin = create(:admin_user)
       event_log = EventLog.record_email_change(user, 'old@example.com', user.email, admin)
 
       assert_equal admin.id, event_log.initiator_id

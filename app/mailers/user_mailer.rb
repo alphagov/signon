@@ -6,7 +6,8 @@ class UserMailer < ActionMailer::Base
   helper_method :suspension_time, :account_name, :instance_name, :locked_time, :unlock_time
 
   def suspension_reminder(user, days)
-    @user, @days = user, days
+    @user = user
+    @days = days
     mail(to: @user.email, subject: suspension_reminder_subject)
   end
 
@@ -26,7 +27,8 @@ class UserMailer < ActionMailer::Base
   end
 
   def email_changed_by_admin_notification(user, email_was, to_address)
-    @user, @email_was = user, email_was
+    @user = user
+    @email_was = email_was
     mail(to: to_address, subject: "Your #{app_name} email address has been updated")
   end
 

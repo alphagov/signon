@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class SSOPushCredentialTest < ActiveSupport::TestCase
-
   setup do
     @application = create(:application, with_supported_permissions: ['user_update_permission'])
 
@@ -22,7 +21,7 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
 
     context "given an already authorised application" do
       setup do
-        authorisation = @user.authorisations.create!(:application_id => @application.id)
+        authorisation = @user.authorisations.create!(application_id: @application.id)
         authorisation.update_attribute(:token, "foo")
       end
 
@@ -37,17 +36,17 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
         SSOPushCredential.credentials(@application)
 
         assert_equal 2, @user.application_permissions.count
-        assert_same_elements ["signin", "user_update_permission"], @user.permissions_for(@application)
+        assert_same_elements %w(signin user_update_permission), @user.permissions_for(@application)
       end
 
       should "not create new application permissions if both already exist" do
-        @user.grant_application_permissions(@application, ["user_update_permission", "signin"])
+        @user.grant_application_permissions(@application, %w(user_update_permission signin))
 
         assert_equal 2, @user.application_permissions.count
         SSOPushCredential.credentials(@application)
 
         assert_equal 2, @user.application_permissions.count
-        assert_same_elements ["user_update_permission", "signin"], @user.permissions_for(@application)
+        assert_same_elements %w(user_update_permission signin), @user.permissions_for(@application)
       end
     end
 
@@ -92,5 +91,4 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
       end
     end
   end
-
 end

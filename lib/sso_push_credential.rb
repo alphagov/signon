@@ -1,26 +1,23 @@
 class SSOPushCredential
-
-  PERMISSIONS = [
-    "signin",
-    "user_update_permission"
-  ]
-
-  cattr_accessor :user_email, :user
+  PERMISSIONS = %w(signin user_update_permission)
 
   class UserNotFound < StandardError; end
   class UserNotProvided < StandardError; end
 
-  def self.credentials(application)
-    user.grant_application_permissions(application, PERMISSIONS)
+  class << self
+    attr_accessor :user_email, :user
 
-    user.authorisations.
-          create_with(expires_in: 10.years).
-          find_or_create_by(application_id: application.id).token
+    def credentials(application)
+      user.grant_application_permissions(application, PERMISSIONS)
+
+      user.authorisations.
+        create_with(expires_in: 10.years).
+        find_or_create_by(application_id: application.id).token
+    end
+
+    def user
+      raise UserNotProvided unless user_email.present?
+      @user ||= User.find_by_email(user_email) || raise(UserNotFound)
+    end
   end
-
-  def self.user
-    raise UserNotProvided unless user_email.present?
-    @@user ||= User.find_by_email(user_email) || raise(UserNotFound)
-  end
-
 end

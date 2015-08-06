@@ -1,5 +1,4 @@
 class ApiUserPolicy < BasePolicy
-
   def new?
     current_user.superadmin?
   end
@@ -8,5 +7,4 @@ class ApiUserPolicy < BasePolicy
   alias_method :edit?, :new?
   alias_method :update?, :new?
   alias_method :revoke?, :new?
-
 end

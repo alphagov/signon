@@ -11,6 +11,6 @@ module TokenAuthSupport
   end
 
   def get_revoked_token
-    get_valid_token.tap { |token| token.revoke }
+    get_valid_token.tap(&:revoke)
   end
 end

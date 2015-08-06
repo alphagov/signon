@@ -11,7 +11,7 @@ class BatchInvitation < ActiveRecord::Base
 
   attr_accessor :user_names_and_emails
 
-  validates :outcome, inclusion: { :in => [nil, "success", "fail"] }
+  validates :outcome, inclusion: { in: [nil, "success", "fail"] }
   validates :user_id, presence: true
 
   def in_progress?

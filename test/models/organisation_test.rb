@@ -3,7 +3,6 @@
 require 'test_helper'
 
 class OrganisationTest < ActiveSupport::TestCase
-
   def setup
     @organisation = create(:organisation)
   end

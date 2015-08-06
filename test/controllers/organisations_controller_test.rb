@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class OrganisationsControllerTest < ActionController::TestCase
-
   setup do
     @user = create(:admin_user)
     sign_in @user

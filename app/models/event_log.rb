@@ -42,12 +42,12 @@ class EventLog < ActiveRecord::Base
   belongs_to :initiator, class_name: "User"
   belongs_to :application, class_name: "Doorkeeper::Application"
 
-  def self.record_event(user, event, options={})
+  def self.record_event(user, event, options = {})
     attributes = { uid: user.uid, event: event }.merge!(options.slice(*VALID_OPTIONS))
     EventLog.create(attributes)
   end
 
-  def self.record_email_change(user, email_was, email_is, initiator=user)
+  def self.record_email_change(user, email_was, email_is, initiator = user)
     event = (user == initiator) ? EMAIL_CHANGE_INITIATED : EMAIL_CHANGED
     record_event(user, event, initiator: initiator, trailing_message: "from #{email_was} to #{email_is}")
   end

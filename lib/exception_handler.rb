@@ -2,7 +2,6 @@ require 'sso_push_error'
 
 module Signonotron2
   module ExceptionHandler
-
     def with_exception_handling
       yield
     rescue URI::InvalidURIError

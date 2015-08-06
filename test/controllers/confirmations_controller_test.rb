@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class ConfirmationsControllerTest < ActionController::TestCase
-
   setup do
     request.env["devise.mapping"] = Devise.mappings[:user]
     @user = create(:user_with_pending_email_change)

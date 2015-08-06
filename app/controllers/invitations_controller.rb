@@ -17,7 +17,7 @@ class InvitationsController < Devise::InvitationsController
     if self.resource = User.find_by_email(params[:user][:email])
       authorize resource
       flash[:alert] = "User already invited. If you want to, you can click 'Resend signup email'."
-      respond_with resource, :location => after_invite_path_for(resource)
+      respond_with resource, location: after_invite_path_for(resource)
     else
       # workaround for invitatable not providing a build_invitation which could be authorised before saving
       user = User.new(resource_params)
@@ -26,8 +26,8 @@ class InvitationsController < Devise::InvitationsController
 
       self.resource = resource_class.invite!(resource_params, current_inviter)
       if resource.errors.empty?
-        set_flash_message :notice, :send_instructions, :email => self.resource.email
-        respond_with resource, :location => after_invite_path_for(resource)
+        set_flash_message :notice, :send_instructions, email: self.resource.email
+        respond_with resource, location: after_invite_path_for(resource)
       else
         respond_with_navigational(resource) { render :new }
       end

@@ -25,7 +25,7 @@ class ActiveSupport::TestCase
   end
 end
 
-WebMock.disable_net_connect!(:allow_localhost => true)
+WebMock.disable_net_connect!(allow_localhost: true)
 
 require 'helpers/confirmation_token_helper'
 
@@ -46,7 +46,7 @@ Capybara.register_driver :rack_test do |app|
   # It's better to not respect these attributes in this driver, because it then behaves like
   # a normal browser with javascript disabled.
   Capybara::RackTest::Driver.new(app)
- end
+end
 
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
@@ -56,7 +56,6 @@ require 'helpers/email_helpers'
 
 class ActiveRecord::Base
   mattr_accessor :shared_connection
-  @@shared_connection = nil
 
   def self.connection
     @@shared_connection || retrieve_connection
@@ -67,35 +66,35 @@ end
 # Capybara because it starts the web server in a thread.
 ActiveRecord::Base.shared_connection = ActiveRecord::Base.connection
 
- class ActionDispatch::IntegrationTest
-   include Capybara::DSL
-   include UserHelpers
-   include EmailHelpers
-   include ConfirmationTokenHelper
+class ActionDispatch::IntegrationTest
+  include Capybara::DSL
+  include UserHelpers
+  include EmailHelpers
+  include ConfirmationTokenHelper
 
-   def assert_response_contains(content)
-     assert page.has_content?(content), "Expected to find '#{content}' in:\n#{page.text}"
-   end
+  def assert_response_contains(content)
+    assert page.has_content?(content), "Expected to find '#{content}' in:\n#{page.text}"
+  end
 
-   def refute_response_contains(content)
-     assert page.has_no_content?(content), "Expected not to find '#{content}' in:\n#{page.text}"
-   end
+  def refute_response_contains(content)
+    assert page.has_no_content?(content), "Expected not to find '#{content}' in:\n#{page.text}"
+  end
 
-   def assert_current_url(path_with_query, options = {})
-     expected = URI.parse(path_with_query)
-     current = URI.parse(current_url)
-     assert_equal expected.path, current.path
-     unless options[:ignore_query]
-       assert_equal Rack::Utils.parse_query(expected.query), Rack::Utils.parse_query(current.query)
-     end
-   end
+  def assert_current_url(path_with_query, options = {})
+    expected = URI.parse(path_with_query)
+    current = URI.parse(current_url)
+    assert_equal expected.path, current.path
+    unless options[:ignore_query]
+      assert_equal Rack::Utils.parse_query(expected.query), Rack::Utils.parse_query(current.query)
+    end
+  end
 
-   def use_javascript_driver
-     Capybara.current_driver = Capybara.javascript_driver
-   end
+  def use_javascript_driver
+    Capybara.current_driver = Capybara.javascript_driver
+  end
 
-  # Override the default strategy as tests with the JS driver require
-  # tests not to be wrapped in a transaction
+ # Override the default strategy as tests with the JS driver require
+ # tests not to be wrapped in a transaction
   def db_cleaner_start
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.start

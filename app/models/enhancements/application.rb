@@ -3,13 +3,15 @@ require "doorkeeper/orm/active_record/application"
 class ::Doorkeeper::Application < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
-  has_many :supported_permissions, :dependent => :destroy
+  has_many :supported_permissions, dependent: :destroy
 
   default_scope { order('oauth_applications.name') }
   scope :support_push_updates, -> { where(supports_push_updates: true) }
-  scope :can_signin, lambda {|user| joins(:supported_permissions => :user_application_permissions)
-                                    .where('user_application_permissions.user_id' => user.id)
-                                    .where('supported_permissions.name' => 'signin') }
+  scope :can_signin, lambda {|user|
+    joins(supported_permissions: :user_application_permissions)
+      .where('user_application_permissions.user_id' => user.id)
+      .where('supported_permissions.name' => 'signin')
+  }
   scope :with_signin_delegatable, -> {
     joins(:supported_permissions)
       .where(supported_permissions: { name: 'signin', delegatable: true })
@@ -20,7 +22,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
 
   def self.policy_class; ApplicationPolicy; end
 
-  def supported_permission_strings(user=nil)
+  def supported_permission_strings(user = nil)
     if user && user.role == 'organisation_admin'
       supported_permissions.delegatable.pluck(:name) & user.permissions_for(self)
     else
@@ -29,7 +31,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   end
 
   def signin_permission
-    supported_permissions.where(name: 'signin').first
+    supported_permissions.find_by(name: 'signin')
   end
 
   def sorted_supported_permissions_grantable_from_ui

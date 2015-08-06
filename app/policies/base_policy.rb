@@ -29,4 +29,3 @@ class BasePolicy
     end
   end
 end
-

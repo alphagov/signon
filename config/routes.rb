@@ -1,11 +1,11 @@
 Signonotron2::Application.routes.draw do
   use_doorkeeper
 
-  devise_for :users, :controllers => {
-    :invitations => 'invitations',
-    :sessions => 'sessions',
-    :passwords => 'passwords',
-    :confirmations => 'confirmations'
+  devise_for :users, controllers: {
+    invitations: 'invitations',
+    sessions: 'sessions',
+    passwords: 'passwords',
+    confirmations: 'confirmations'
   }
 
   devise_scope :user do
@@ -52,5 +52,5 @@ Signonotron2::Application.routes.draw do
   # compatibility with Sign-on-o-tron 1
   post "oauth/access_token" => "doorkeeper/tokens#create"
 
-  root :to => 'root#index'
+  root to: 'root#index'
 end

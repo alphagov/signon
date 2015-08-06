@@ -1,7 +1,7 @@
 # Generates a hash suitable for exposing to an application integrating with
 # signon for SSO over OAuth. Also used when pushing user updates, which isn't
 # part of OAuth.
-class UserOAuthPresenter < Struct.new(:user, :application)
+UserOAuthPresenter = Struct.new(:user, :application) do
   def as_hash
     {
       user: {

@@ -1,5 +1,4 @@
 class OrganisationPolicy < BasePolicy
-
   def index?
     current_user.superadmin? || current_user.admin? || current_user.organisation_admin?
   end
@@ -8,7 +7,7 @@ class OrganisationPolicy < BasePolicy
     return true if current_user.superadmin? || current_user.admin?
     return current_user.organisation.subtree.pluck(:id).include?(record.id) if current_user.organisation_admin?
 
-    return false
+    false
   end
 
   class Scope < ::BasePolicy::Scope

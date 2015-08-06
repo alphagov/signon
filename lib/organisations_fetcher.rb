@@ -4,7 +4,6 @@ require 'gds_api/organisations'
 # its organisations up-to-date in order to provide accurate information on user
 # membership of organisations.
 class OrganisationsFetcher
-
   def call
     organisation_relationships = {}
     organisations.each do |organisation_data|
@@ -53,5 +52,4 @@ private
       end
     end
   end
-
 end

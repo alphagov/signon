@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class SupportedPermissionTest < ActiveSupport::TestCase
-
   test "name of signin permission cannot be changed" do
     application = create(:application)
 
@@ -28,5 +27,4 @@ class SupportedPermissionTest < ActiveSupport::TestCase
 
     assert_empty user.reload.application_permissions
   end
-
 end

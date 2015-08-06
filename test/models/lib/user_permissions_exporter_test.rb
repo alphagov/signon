@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class UserPermissionsExporterTest < ActionView::TestCase
-
   def setup
     @chips_org = create(:organisation, name: "Ministry of chips")
     @ketchup_org = create(:organisation, name: "Ministry of ketchup")
@@ -11,16 +10,16 @@ class UserPermissionsExporterTest < ActionView::TestCase
     @anne = create(:user, name: "Anne", email: "anne@anne.com", role: "superadmin", organisation: @ketchup_org)
     @mary = create(:user, name: "Mary", email: "mary@mary.com", role: "admin", organisation: @brown_sauce_org)
 
-    @tmpfile = Tempfile.new(['user_permissions_exporter_test_example', 'csv'])
+    @tmpfile = Tempfile.new(%w(user_permissions_exporter_test_example csv))
     UserPermissionsExporter.any_instance.stubs(:file_path).returns(@tmpfile.path)
     UserPermissionsExporter.any_instance.stubs(:signon_file_path).returns(@tmpfile.path)
   end
 
   def test_export_one_application
-    foo_app = create(:application, name: "Foo", with_supported_permissions: ['administer', 'add_vinegar', 'do_some_stuff', 'cook'])
-    @bill.grant_application_permissions(foo_app, ["signin", "cook"])
-    @anne.grant_application_permissions(foo_app, ["signin", "administer", "add_vinegar"])
-    @mary.grant_application_permissions(foo_app, ["signin", "do_some_stuff"])
+    foo_app = create(:application, name: "Foo", with_supported_permissions: %w(administer add_vinegar do_some_stuff cook))
+    @bill.grant_application_permissions(foo_app, %w(signin cook))
+    @anne.grant_application_permissions(foo_app, %w(signin administer add_vinegar))
+    @mary.grant_application_permissions(foo_app, %w(signin do_some_stuff))
 
     UserPermissionsExporter.new(@tmpfile.path).export(["Foo"])
 
@@ -33,18 +32,18 @@ class UserPermissionsExporterTest < ActionView::TestCase
   end
 
   def test_export_multiple_applications
-    foo_app = create(:application, name: "Foo", with_supported_permissions: ['administer', 'add_vinegar', 'do_some_stuff', 'cook'])
+    foo_app = create(:application, name: "Foo", with_supported_permissions: %w(administer add_vinegar do_some_stuff cook))
     bar_app = create(:application, name: "Bar", with_supported_permissions: ['administer'])
     baz_app = create(:application, name: "Baz")
 
-    @bill.grant_application_permissions(foo_app, ["signin", "cook"])
+    @bill.grant_application_permissions(foo_app, %w(signin cook))
     @bill.grant_application_permissions(baz_app, [])
-    @anne.grant_application_permissions(foo_app, ["signin", "administer", "add_vinegar"])
-    @anne.grant_application_permissions(bar_app, ["signin", "administer"])
-    @mary.grant_application_permissions(foo_app, ["signin", "do_some_stuff"])
-    @mary.grant_application_permissions(bar_app, ["signin", "administer"])
+    @anne.grant_application_permissions(foo_app, %w(signin administer add_vinegar))
+    @anne.grant_application_permissions(bar_app, %w(signin administer))
+    @mary.grant_application_permissions(foo_app, %w(signin do_some_stuff))
+    @mary.grant_application_permissions(bar_app, %w(signin administer))
 
-    UserPermissionsExporter.new(@tmpfile.path).export(["Foo","Bar","Baz"])
+    UserPermissionsExporter.new(@tmpfile.path).export(%w(Foo Bar Baz))
 
     csv_data = CSV.read(@tmpfile.path)
 

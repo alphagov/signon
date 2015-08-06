@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class VolatileLockTest < ActiveSupport::TestCase
-
   def teardown
     redis.del('foo', 'bar')
   end
@@ -56,5 +55,4 @@ class VolatileLockTest < ActiveSupport::TestCase
       volatile_lock('foo').obtained? rescue VolatileLock::FailedToSetExpiration
     end
   end
-
 end

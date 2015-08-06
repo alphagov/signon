@@ -1,5 +1,4 @@
 class InactiveUsersSuspensionReminderMailingList
-
   DAYS_TO_SUSPENSION = [14, 7, 3, 1]
 
   def initialize(suspension_threshold_period)
@@ -16,5 +15,4 @@ class InactiveUsersSuspensionReminderMailingList
     suspension_reminder_mailing_list[1] += User.not_recently_unsuspended.last_signed_in_before(suspension_threshold_exceeded.ago).to_a
     suspension_reminder_mailing_list
   end
-
 end

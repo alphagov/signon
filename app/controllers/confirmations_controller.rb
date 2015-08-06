@@ -1,7 +1,6 @@
 # Copied from
 # https://github.com/plataformatec/devise/blob/v2.1.2/app/controllers/devise/confirmations_controller.rb#L19
 class ConfirmationsController < Devise::ConfirmationsController
-
   def new
     handle_new_token_needed
   end
@@ -21,15 +20,15 @@ class ConfirmationsController < Devise::ConfirmationsController
           EventLog.record_event(resource, EventLog::EMAIL_CHANGE_CONFIRMED)
           set_flash_message(:notice, :confirmed) if is_navigational_format?
           sign_in(resource_name, resource)
-          respond_with_navigational(resource){ redirect_to after_confirmation_path_for(resource_name, resource) }
+          respond_with_navigational(resource) { redirect_to after_confirmation_path_for(resource_name, resource) }
         else
-          respond_with_navigational(resource.errors, :status => :unprocessable_entity){ handle_new_token_needed }
+          respond_with_navigational(resource.errors, status: :unprocessable_entity) { handle_new_token_needed }
         end
       end
     else
       self.resource = confirmation_user
       if !self.resource.persisted?
-        respond_with_navigational(resource.errors, :status => :unprocessable_entity){ handle_new_token_needed }
+        respond_with_navigational(resource.errors, status: :unprocessable_entity) { handle_new_token_needed }
       end
     end
   end
@@ -43,9 +42,9 @@ class ConfirmationsController < Devise::ConfirmationsController
         EventLog.record_event(resource, EventLog::EMAIL_CHANGE_CONFIRMED)
         set_flash_message(:notice, :confirmed) if is_navigational_format?
         sign_in(resource_name, resource)
-        respond_with_navigational(resource){ redirect_to after_confirmation_path_for(resource_name, resource) }
+        respond_with_navigational(resource) { redirect_to after_confirmation_path_for(resource_name, resource) }
       else
-        respond_with_navigational(resource.errors, :status => :unprocessable_entity){ handle_new_token_needed }
+        respond_with_navigational(resource.errors, status: :unprocessable_entity) { handle_new_token_needed }
       end
     else
       self.resource.errors[:password] << "was incorrect"
@@ -54,13 +53,13 @@ class ConfirmationsController < Devise::ConfirmationsController
   end
 
   private
-    def confirmation_user
-      token = Devise.token_generator.digest(User, :confirmation_token, params[:confirmation_token])
-      @confirmation_user ||= resource_class.find_or_initialize_by(confirmation_token: token)
-    end
+  def confirmation_user
+    token = Devise.token_generator.digest(User, :confirmation_token, params[:confirmation_token])
+    @confirmation_user ||= resource_class.find_or_initialize_by(confirmation_token: token)
+  end
 
-    def handle_new_token_needed
-      path = user_signed_in? ? root_path : new_user_session_path
-      redirect_to path, alert: "Couldn't confirm email change. Please contact support to request a new confirmation email."
-    end
+  def handle_new_token_needed
+    path = user_signed_in? ? root_path : new_user_session_path
+    redirect_to path, alert: "Couldn't confirm email change. Please contact support to request a new confirmation email."
+  end
 end

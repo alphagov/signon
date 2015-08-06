@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class AuthorisationsControllerTest < ActionController::TestCase
-
   setup do
     @api_user = create(:api_user)
   end

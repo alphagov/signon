@@ -10,7 +10,7 @@ module UsersHelper
   end
 
   def user_email_tokens(user = current_user)
-    [ user.email ] + DeviseZxcvbn::EmailTokeniser.split(user.email)
+    [user.email] + DeviseZxcvbn::EmailTokeniser.split(user.email)
   end
 
   def minimum_password_length

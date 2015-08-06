@@ -91,5 +91,4 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
       OrganisationsFetcher.new.call
     end
   end
-
 end

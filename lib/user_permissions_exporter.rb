@@ -3,14 +3,14 @@ require 'csv'
 class UserPermissionsExporter
   attr_reader :applications, :export_dir, :logger
 
-  def initialize(export_dir, logger=Rails.logger)
+  def initialize(export_dir, logger = Rails.logger)
     @export_dir = export_dir
     @logger = logger
   end
 
   def export_signon
     CSV.open(signon_file_path, 'wb', headers: true) do |csv|
-      csv << ["Name","Email","Organisation","Role","Suspended at"]
+      csv << ["Name", "Email", "Organisation", "Role", "Suspended at"]
       User.order(:name).each do |user|
         org_name = user.organisation ? user.organisation.name : ""
         suspended_at = user.suspended_at || ""
@@ -22,7 +22,8 @@ class UserPermissionsExporter
   end
 
   def export(apps)
-    @applications, users = Doorkeeper::Application.where('name in (?)', apps), User.order(:name).to_a
+    @applications = Doorkeeper::Application.where('name in (?)', apps)
+    users = User.order(:name).to_a
 
     # iterate over applications
     CSV.open(file_path, 'wb', headers: true) do |csv|
@@ -63,12 +64,12 @@ private
   end
 
   def headers
-    headings = ["Name", "Email", "Organisation", "Permissions"]
+    headings = %w(Name Email Organisation Permissions)
     headings.unshift "Application" if multiple_apps?
     headings
   end
 
   def file_name
-    "#{Time.zone.now.to_s(:number)}-#{@applications.map{|a| a.name.parameterize}.join('-')}.csv"
+    "#{Time.zone.now.to_s(:number)}-#{@applications.map {|a| a.name.parameterize}.join('-')}.csv"
   end
 end

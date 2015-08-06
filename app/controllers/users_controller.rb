@@ -3,13 +3,13 @@ require 'csv'
 class UsersController < ApplicationController
   include UserPermissionsControllerMethods
 
-  before_filter :authenticate_user!, :except => :show
+  before_filter :authenticate_user!, except: :show
   before_filter :load_and_authorize_user, except: [:index, :show]
   helper_method :applications_and_permissions, :any_filter?
   respond_to :html
 
   before_filter :doorkeeper_authorize!, only: :show
-  before_filter :validate_token_matches_client_id, :only => :show
+  before_filter :validate_token_matches_client_id, only: :show
   skip_after_filter :verify_authorized, only: :show
 
   def show
@@ -40,7 +40,7 @@ class UsersController < ApplicationController
 
   def update
     raise Pundit::NotAuthorizedError if current_user.organisation_admin? &&
-      ! current_user.organisation.subtree.map(&:id).include?(params[:user][:organisation_id].to_i)
+        ! current_user.organisation.subtree.map(&:id).include?(params[:user][:organisation_id].to_i)
 
     @user.skip_reconfirmation!
     if @user.update_attributes(user_params)
@@ -71,9 +71,11 @@ class UsersController < ApplicationController
   def resend_email_change
     @user.resend_confirmation_instructions
     if @user.errors.empty?
-      notice = @user.normal? ?
-        "An email has been sent to #{@user.unconfirmed_email}. Follow the link in the email to update your address." :
-        "Successfully resent email change email to #{@user.unconfirmed_email}"
+      notice = if @user.normal?
+                 "An email has been sent to #{@user.unconfirmed_email}. Follow the link in the email to update your address."
+               else
+                 "Successfully resent email change email to #{@user.unconfirmed_email}"
+               end
       redirect_to root_path, notice: notice
     else
       redirect_to edit_user_path(@user), alert: "Failed to send email change email"
@@ -93,7 +95,8 @@ class UsersController < ApplicationController
   end
 
   def update_email
-    current_email, new_email = @user.email, params[:user][:email]
+    current_email = @user.email
+    new_email = params[:user][:email]
     if current_email == new_email.strip
       flash[:alert] = "Nothing to update."
       render :edit_email_or_passphrase
@@ -109,8 +112,8 @@ class UsersController < ApplicationController
 
   def update_passphrase
     if @user.update_with_password(password_params)
-      flash[:notice] = t(:updated, :scope => 'devise.passwords')
-      sign_in(@user, :bypass => true)
+      flash[:notice] = t(:updated, scope: 'devise.passwords')
+      sign_in(@user, bypass: true)
       redirect_to root_path
     else
       EventLog.record_event(@user, EventLog::UNSUCCESSFUL_PASSPHRASE_CHANGE)
@@ -134,7 +137,7 @@ class UsersController < ApplicationController
 
   def can_filter_role?
     params[:role].present? &&
-    current_user.manageable_roles.include?(params[:role])
+      current_user.manageable_roles.include?(params[:role])
   end
 
   def should_include_permissions?
@@ -143,10 +146,10 @@ class UsersController < ApplicationController
 
   def paginate_users
     if any_filter?
-      unless @users.kind_of?(Array)
-        @users = @users.page(params[:page]).per(100)
-      else
+      if @users.is_a?(Array)
         @users = Kaminari.paginate_array(@users).page(params[:page]).per(100)
+      else
+        @users = @users.page(params[:page]).per(100)
       end
     else
       @users, @sorting_params = @users.alpha_paginate(params[:letter], ALPHABETICAL_PAGINATE_CONFIG)

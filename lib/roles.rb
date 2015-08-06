@@ -1,7 +1,6 @@
 Dir[File.dirname(__FILE__) + "/roles/*.rb"].each { |file| require file }
 
 module Roles
-
   def self.included(base)
     base.extend ClassMethods
 

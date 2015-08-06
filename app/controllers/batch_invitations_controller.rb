@@ -34,7 +34,7 @@ class BatchInvitationsController < ApplicationController
       flash[:alert] = "CSV had no rows."
       render :new
       return
-    elsif ["Name", "Email"].any? { |required_header| csv.headers.exclude?(required_header) }
+    elsif %w(Name Email).any? { |required_header| csv.headers.exclude?(required_header) }
       flash[:alert] = "CSV must have headers including 'Name' and 'Email'"
       render :new
       return

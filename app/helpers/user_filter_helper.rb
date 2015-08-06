@@ -1,9 +1,8 @@
 module UserFilterHelper
-
   def current_path_with_filter(filter_type, filter_value)
     query_parameters = (request.query_parameters.clone || {})
     filter_value.nil? ? query_parameters.delete(filter_type) : query_parameters.merge!(filter_type => filter_value)
-    request.path_info + '?' + query_parameters.map { |k,v| "#{k}=#{v}" }.join('&')
+    request.path_info + '?' + query_parameters.map { |k, v| "#{k}=#{v}" }.join('&')
   end
 
   def user_role_text

@@ -1,7 +1,6 @@
 require_relative "../test_helper"
 
 class ManageApiUsersTest < ActionDispatch::IntegrationTest
-
   context "as Superadmin" do
     setup do
       @application = create(:application, with_supported_permissions: ["write"])
