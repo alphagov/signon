@@ -51,6 +51,22 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     assert_equal EventLog::PASSPHRASE_RESET_REQUEST, @user.event_logs.first.event
   end
 
+  test "record passphrase reset page requested" do
+    token_received_in_email = @user.send_reset_password_instructions
+    visit edit_user_password_path(reset_password_token: token_received_in_email)
+
+    assert_equal EventLog::PASSPHRASE_RESET_LOADED, @user.event_logs.first.event
+  end
+
+  test "record passphrase reset failed" do
+    token_received_in_email = @user.send_reset_password_instructions
+    visit edit_user_password_path(reset_password_token: token_received_in_email)
+
+    click_on "Change my passphrase"
+
+    assert_equal EventLog::PASSPHRASE_RESET_FAILURE, @user.event_logs.first.event
+  end
+
   test "record successful passphrase change" do
     new_password = "correct horse battery daffodil"
     visit root_path
