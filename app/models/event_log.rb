@@ -8,6 +8,8 @@ class EventLog < ActiveRecord::Base
   MANUAL_ACCOUNT_UNLOCK = "Manual account unlock"
   PASSPHRASE_EXPIRED = "Passphrase expired"
   PASSPHRASE_RESET_REQUEST = "Passphrase reset request"
+  PASSPHRASE_RESET_LOADED = "Passphrase reset page loaded"
+  PASSPHRASE_RESET_FAILURE = "Passphrase reset attempt failure"
   SUCCESSFUL_PASSPHRASE_CHANGE = "Successful passphrase change"
   SUCCESSFUL_LOGIN = "Successful login"
   UNSUCCESSFUL_LOGIN = "Unsuccessful login"
