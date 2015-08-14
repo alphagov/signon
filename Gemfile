@@ -44,6 +44,8 @@ gem 'uglifier', '2.7.1'
 
 group :development do
   gem 'quiet_assets', '1.0.2'
+  gem 'better_errors', '2.1.1'
+  gem 'binding_of_caller', '0.7.2'
 end
 
 group :development, :test do
