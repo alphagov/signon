@@ -9,13 +9,15 @@
     <div class="panel-body">
       <div class="form-group">
         <%= f.label :email %>
-        <%= f.email_field :email, class: 'form-control input-lg', autofocus: 'autofocus' %>
+        <%= f.email_field :email, class: 'form-control input-lg', tabindex: 1, autofocus: 'autofocus' %>
       </div>
 
       <div class="form-group">
         <%= f.label :password, "Passphrase" %>
-        <%= f.password_field :password, class: 'form-control input-lg' %>
+        <%= f.password_field :password, tabindex: 2, class: 'form-control input-lg' %>
       </div>
+
+      <%= render "links" %>
 
       <% if devise_mapping.rememberable? %>
         <label class="checkbox" for="remember_me">Remember me?
@@ -24,9 +26,7 @@
       <% end %>
     </div>
     <div class="panel-footer">
-      <%= f.submit "Sign in", class: 'btn btn-success btn-lg btn-block' %>
+      <%= f.submit "Sign in", tabindex: 3, class: 'btn btn-success btn-lg btn-block' %>
     </div>
   <% end %>
 </div>
-
-<%= render "links" %>
