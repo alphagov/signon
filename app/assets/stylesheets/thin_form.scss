@@ -1,0 +1,8 @@
+.thin-form {
+  max-width: 590px; // 6 column widths
+  margin: 0 auto ($default-vertical-margin * 4);
+
+  h1 {
+    text-align: center;
+  }
+}

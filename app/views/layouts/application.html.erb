@@ -33,9 +33,11 @@
 <% end %>
 
 <% content_for :content do %>
+  <% if content_for?(:thin_form) %><div class="thin-form"><% end %>
   <%- if notice %><div class="alert alert-success" role="alert"><%= notice %></div><% end -%>
   <%- if alert %><div class="alert alert-danger" role="alert"><%= alert %></div><% end %>
   <%= yield %>
+  <% if content_for?(:thin_form) %></div><% end %>
 <% end %>
 
 <% content_for :footer_version, CURRENT_RELEASE_SHA %>
