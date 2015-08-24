@@ -1,10 +1,10 @@
 <% content_for :title, "Sign in" %>
 
-<div class="page-title text-center">
-  <h1>Sign in</h1>
-</div>
+<div class="thin-form">
+  <div class="page-title">
+    <h1>Sign in</h1>
+  </div>
 
-<div class="sign-in-form">
   <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'panel panel-default', autocomplete: 'on' }) do |f| %>
     <div class="panel-body">
       <div class="form-group">
