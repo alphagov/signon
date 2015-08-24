@@ -5,6 +5,12 @@
     <h1>Sign in</h1>
   </div>
 
+  <!--[if lte IE 7]>
+    <div class="alert alert-warning add-bottom-margin">
+      <h4>Your browser is not supported</h4>
+      <p>Pages might not work as expected. You should <a href="https://www.gov.uk/help/browsers" class="link-inherit">upgrade your browser</a> – you might need to ask your IT administrator to do this for you.</p>
+    </div>
+  <![endif]-->
   <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'panel panel-default', autocomplete: 'on' }) do |f| %>
     <div class="panel-body">
       <div class="form-group">
