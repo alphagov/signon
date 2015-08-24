@@ -1,21 +1,25 @@
 <% content_for :title, "Request a passphrase reset" %>
 
-<ol class="breadcrumb">
-  <li><%= render "links" %></li>
-  <li class="active">Request a passphrase reset</li>
-</ol>
+<div class="thin-form">
+  <ol class="breadcrumb">
+    <li><%= render "links" %></li>
+    <li class="active">Request a passphrase reset</li>
+  </ol>
 
-<div class="page-title">
-  <h1>Request a passphrase reset</h1>
-</div>
-
-<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post, :class => 'well' }) do |f| %>
-
-  <%= devise_error_messages! %>
-  <div class="form-group">
-    <%= f.label :email %>
-    <%= f.email_field :email, autofocus: true, class: 'form-control input-md-5' %>
+  <div class="page-title">
+    <h1>Request a passphrase reset</h1>
   </div>
-  <hr />
-  <%= f.submit t('.send_passphrase_reset'), :class => 'btn btn-primary' %>
-<% end %>
+
+  <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post, :class => 'panel panel-default' }) do |f| %>
+    <div class="panel-body">
+      <%= devise_error_messages! %>
+      <div class="form-group">
+        <%= f.label :email %>
+        <%= f.email_field :email, autofocus: true, class: 'form-control input-lg' %>
+      </div>
+    </div>
+    <div class="panel-footer">
+      <%= f.submit t('.send_passphrase_reset'), :class => 'btn btn-success btn-lg btn-block' %>
+    </div>
+  <% end %>
+</div>
