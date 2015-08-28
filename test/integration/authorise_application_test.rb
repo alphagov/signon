@@ -33,9 +33,34 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     refute Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
   end
 
+  should "not confirm the authorisation if the user has not passed 2-step verification" do
+    @user.update_attribute(:otp_secret_key, ROTP::Base32.random_base32)
+
+    visit "/"
+    signin(@user)
+    ignoring_spurious_error do
+      visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
+    end
+    assert_response_contains("Enter your personal code")
+    refute Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
+  end
+
   should "confirm the authorisation for a signed-in user" do
     visit "/"
     signin(@user)
+    ignoring_spurious_error do
+      visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
+    end
+
+    assert_redirected_to_application @app
+    assert_kind_of Doorkeeper::AccessGrant, Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
+  end
+
+  should "confirm the authorisation for a fully authenticated 2SV user" do
+    @user.update_attribute(:otp_secret_key, ROTP::Base32.random_base32)
+
+    visit "/"
+    signin_with_2sv(@user)
     ignoring_spurious_error do
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     end

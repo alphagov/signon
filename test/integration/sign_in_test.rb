@@ -63,4 +63,62 @@ class SignInTest < ActionDispatch::IntegrationTest
     signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
     assert_response_contains("Signed in successfully.")
   end
+
+  context "with a 2SV secret key" do
+    setup do
+      @user.update_attribute(:otp_secret_key, ROTP::Base32.random_base32)
+    end
+
+    should "prompt for a verification code" do
+      visit root_path
+      signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      assert_response_contains "Enter your personal code"
+      assert_selector "input[name=code]"
+    end
+
+    should "prevent access to signon until fully authenticated" do
+      visit root_path
+      signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      visit root_path
+      assert_response_contains "Enter your personal code"
+      assert_selector "input[name=code]"
+    end
+
+    should "allow access with a correctly-generated code" do
+      visit root_path
+      signin_with_2sv(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      assert_response_contains "Welcome to GOV.UK"
+    end
+
+    should "prevent access with a blank code" do
+      visit root_path
+      signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      Timecop.freeze do
+        fill_in :code, with: ""
+        click_button "Submit"
+      end
+
+      assert_response_contains "Enter your personal code"
+    end
+
+    should "prevent access with an old code" do
+      old_code = Timecop.freeze(2.minutes.ago) { ROTP::TOTP.new(@user.otp_secret_key).now }
+
+      visit root_path
+      signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      fill_in :code, with: old_code
+      click_button "Submit"
+
+      assert_response_contains "Enter your personal code"
+    end
+
+    should "prevent access with a garbage code" do
+      visit root_path
+      signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      fill_in :code, with: "abcdef"
+      click_button "Submit"
+
+      assert_response_contains "Enter your personal code"
+    end
+  end
 end
