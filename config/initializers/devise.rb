@@ -320,4 +320,5 @@ Devise.setup do |config|
   config.max_login_attempts = 3
   config.allowed_otp_drift_seconds = 30
   config.otp_length = 6
+  config.remember_otp_session_for_seconds = 30.days
 end
