@@ -48,7 +48,7 @@
         <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
           <div class="panel-body">
             <p class="lead">In your app, add a new account and scan the QR code.</p>
-            <div class="no-content add-bottom-margin"><%= image_tag("qr.png", width: 180) %></div>
+            <div class="no-content add-bottom-margin"><%= image_tag(qr_code_data_uri, width: 180) %></div>
             <p>Can’t use a QR code? Enter the code manually: <%= @otp_secret_key%></p>
 
             <a class="collapsed btn btn-success" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">

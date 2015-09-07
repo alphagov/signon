@@ -18,4 +18,15 @@ class Devise::TwoStepVerificationController < Devise::TwoFactorAuthenticationCon
       render :new
     end
   end
+
+  private
+  def qr_code_data_uri
+    qr_code = RQRCode::QRCode.new(totp_secret_key_uri, level: :m)
+    qr_code.as_png(size: 180, fill: ChunkyPNG::Color::TRANSPARENT).to_data_url
+  end
+  helper_method :qr_code_data_uri
+
+  def totp_secret_key_uri
+    "otpauth://totp/GOV.UK%20Signon:#{current_user.email}?secret=#{@otp_secret_key.upcase}&issuer=GOV.UK%20Signon"
+  end
 end
