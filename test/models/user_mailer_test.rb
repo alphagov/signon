@@ -21,12 +21,12 @@ class UserMailerTest < ActionMailer::TestCase
       assert_body_includes "in 3 days"
     end
 
-    should "not include an instance name in the subject" do
-      assert_includes @email.subject, "Your GOV.UK Signon account"
+    should "include an instance name in the subject" do
+      assert_includes @email.subject, "Your GOV.UK Signon development account"
     end
 
-    should "not include an instance name in the body" do
-      assert_body_includes "Signon account, for"
+    should "include an instance name in the body" do
+      assert_body_includes "Signon development account, for"
     end
   end
 
