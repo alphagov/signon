@@ -8,6 +8,20 @@ module UserHelpers
     click_button "Sign in"
   end
 
+  def signin_with_2sv(user_or_options)
+    signin(user_or_options)
+    if user_or_options.is_a? Hash
+      user = User.find_by(email: user_or_options[:email])
+    else
+      user = user_or_options
+    end
+
+    Timecop.freeze do
+      fill_in :code, with: ROTP::TOTP.new(user.otp_secret_key).now
+      click_button "Submit"
+    end
+  end
+
   def signout
     visit destroy_user_session_path
   end

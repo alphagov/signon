@@ -193,6 +193,9 @@ Devise.setup do |config|
   # change their passwords.
   config.reset_password_within = 6.hours
 
+  # Don't automatically sign a user in once they've reset their password
+  config.sign_in_after_reset_password = false
+
   # ==> Configuration for :encryptable
   # Allow you to use another encryption algorithm besides bcrypt (default). You can use
   # :sha1, :sha512 or encryptors from others authentication tools as :clearance_sha1,
@@ -315,4 +318,10 @@ Devise.setup do |config|
                       else
                         'fake-secret-key'
                       end
+
+  # Configuration for two_factor_authentication
+  config.max_login_attempts = 3
+  config.allowed_otp_drift_seconds = 30
+  config.otp_length = 6
+  config.remember_otp_session_for_seconds = 30.days
 end

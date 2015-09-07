@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150507160746) do
+ActiveRecord::Schema.define(version: 20150811150231) do
 
   create_table "batch_invitation_application_permissions", force: :cascade do |t|
     t.integer  "batch_invitation_id",     limit: 4, null: false
@@ -148,46 +148,49 @@ ActiveRecord::Schema.define(version: 20150507160746) do
   add_index "user_application_permissions", ["user_id", "application_id", "supported_permission_id"], name: "index_app_permissions_on_user_and_app_and_supported_permission", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "name",                   limit: 255,                    null: false
-    t.string   "email",                  limit: 255, default: "",       null: false
-    t.string   "encrypted_password",     limit: 255, default: ""
-    t.string   "reset_password_token",   limit: 255
+    t.string   "name",                         limit: 255,                    null: false
+    t.string   "email",                        limit: 255, default: "",       null: false
+    t.string   "encrypted_password",           limit: 255, default: ""
+    t.string   "reset_password_token",         limit: 255
     t.datetime "reset_password_sent_at"
-    t.integer  "sign_in_count",          limit: 4,   default: 0
+    t.integer  "sign_in_count",                limit: 4,   default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip",     limit: 255
-    t.string   "last_sign_in_ip",        limit: 255
+    t.string   "current_sign_in_ip",           limit: 255
+    t.string   "last_sign_in_ip",              limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "uid",                    limit: 255,                    null: false
-    t.integer  "failed_attempts",        limit: 4,   default: 0
+    t.string   "uid",                          limit: 255,                    null: false
+    t.integer  "failed_attempts",              limit: 4,   default: 0
     t.datetime "locked_at"
     t.datetime "suspended_at"
-    t.string   "invitation_token",       limit: 255
+    t.string   "invitation_token",             limit: 255
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
-    t.integer  "invitation_limit",       limit: 4
-    t.integer  "invited_by_id",          limit: 4
-    t.string   "invited_by_type",        limit: 255
-    t.string   "reason_for_suspension",  limit: 255
-    t.string   "password_salt",          limit: 255
-    t.string   "confirmation_token",     limit: 255
+    t.integer  "invitation_limit",             limit: 4
+    t.integer  "invited_by_id",                limit: 4
+    t.string   "invited_by_type",              limit: 255
+    t.string   "reason_for_suspension",        limit: 255
+    t.string   "password_salt",                limit: 255
+    t.string   "confirmation_token",           limit: 255
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.string   "unconfirmed_email",      limit: 255
-    t.string   "role",                   limit: 255, default: "normal"
+    t.string   "unconfirmed_email",            limit: 255
+    t.string   "role",                         limit: 255, default: "normal"
     t.datetime "password_changed_at"
-    t.integer  "organisation_id",        limit: 4
-    t.boolean  "api_user",                           default: false,    null: false
+    t.integer  "organisation_id",              limit: 4
+    t.boolean  "api_user",                                 default: false,    null: false
     t.datetime "unsuspended_at"
     t.datetime "invitation_created_at"
+    t.string   "otp_secret_key",               limit: 255
+    t.integer  "second_factor_attempts_count", limit: 4,   default: 0
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", using: :btree
   add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
   add_index "users", ["organisation_id"], name: "index_users_on_organisation_id", using: :btree
+  add_index "users", ["otp_secret_key"], name: "index_users_on_otp_secret_key", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
 end

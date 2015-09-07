@@ -21,6 +21,8 @@ gem 'devise_invitable', '1.5.2'
 gem 'devise-encryptable', '0.2.0'
 gem 'devise_zxcvbn', '1.1.1'
 gem 'pundit', '0.3.0'
+gem 'two_factor_authentication', github: "alphagov/two_factor_authentication", branch: "rememberable-tfa"
+gem 'rqrcode'
 
 gem 'doorkeeper', '2.2.1'
 gem 'ancestry', '2.0.0'
