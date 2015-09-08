@@ -22,7 +22,22 @@ class TwoStepVerificationControllerTest < ActionController::TestCase
     end
 
     should "include the environment titleised" do
-      assert_match %r{Development%20GOV.UK}, @controller.otp_secret_key_uri
+      assert_match %r{issuer=Development%20GOV.UK%20Signon}, @controller.otp_secret_key_uri
+    end
+
+    context "in production" do
+      setup do
+        @old_instance_name = Rails.application.config.instance_name
+        Rails.application.config.instance_name = nil
+      end
+
+      teardown do
+        Rails.application.config.instance_name = @old_instance_name
+      end
+
+      should "not include the environment name" do
+        assert_match %r{issuer=GOV.UK%20Signon}, @controller.otp_secret_key_uri
+      end
     end
 
     should "include the user's email" do

@@ -23,7 +23,10 @@ class Devise::TwoStepVerificationController < Devise::TwoFactorAuthenticationCon
   end
 
   def otp_secret_key_uri
-    issuer = "#{Rails.application.config.instance_name.titleize}%20GOV.UK%20Signon"
+    issuer = "GOV.UK%20Signon"
+    if Rails.application.config.instance_name
+      issuer = "#{Rails.application.config.instance_name.titleize}%20#{issuer}"
+    end
     "otpauth://totp/#{issuer}:#{current_user.email}?secret=#{@otp_secret_key.upcase}&issuer=#{issuer}"
   end
 
