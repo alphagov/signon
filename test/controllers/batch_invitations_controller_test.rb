@@ -77,7 +77,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
           m.to == ["signon-alerts@digital.cabinet-office.gov.uk"]
         end
         assert_not_nil email
-        assert_equal "[SIGNON] #{@user.name} created a batch of 2 users", email.subject
+        assert_equal "[SIGNON] #{@user.name} created a batch of 2 users in development", email.subject
       end
     end
 

@@ -12,7 +12,7 @@ class UserLockingTest < ActionDispatch::IntegrationTest
       signin(user)
 
       assert_equal user.email, last_email.to[0]
-      assert_equal "Your GOV.UK Signon account has been locked", last_email.subject
+      assert_equal "Your GOV.UK Signon development account has been locked", last_email.subject
 
       assert_response_contains("Invalid email or passphrase.")
 

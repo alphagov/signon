@@ -1,4 +1,7 @@
 class Devise::TwoStepVerificationController < Devise::TwoFactorAuthenticationController
+  attr_reader :otp_secret_key
+  private :otp_secret_key
+
   def new
     if current_user.otp_secret_key.present?
       redirect_to root_path, alert: "Two Step Verification is already set up"
@@ -19,14 +22,18 @@ class Devise::TwoStepVerificationController < Devise::TwoFactorAuthenticationCon
     end
   end
 
+  def otp_secret_key_uri
+    issuer = "GOV.UK%20Signon"
+    if Rails.application.config.instance_name
+      issuer = "#{Rails.application.config.instance_name.titleize}%20#{issuer}"
+    end
+    "otpauth://totp/#{issuer}:#{current_user.email}?secret=#{@otp_secret_key.upcase}&issuer=#{issuer}"
+  end
+
   private
   def qr_code_data_uri
-    qr_code = RQRCode::QRCode.new(totp_secret_key_uri, level: :m)
+    qr_code = RQRCode::QRCode.new(otp_secret_key_uri, level: :m)
     qr_code.as_png(size: 180, fill: ChunkyPNG::Color::TRANSPARENT).to_data_url
   end
   helper_method :qr_code_data_uri
-
-  def totp_secret_key_uri
-    "otpauth://totp/GOV.UK%20Signon:#{current_user.email}?secret=#{@otp_secret_key.upcase}&issuer=GOV.UK%20Signon"
-  end
 end
