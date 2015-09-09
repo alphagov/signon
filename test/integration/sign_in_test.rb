@@ -72,7 +72,7 @@ class SignInTest < ActionDispatch::IntegrationTest
     should "prompt for a verification code" do
       visit root_path
       signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
-      assert_response_contains "Enter your personal code"
+      assert_response_contains "get your code"
       assert_selector "input[name=code]"
     end
 
@@ -80,7 +80,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       visit root_path
       signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
       visit root_path
-      assert_response_contains "Enter your personal code"
+      assert_response_contains "get your code"
       assert_selector "input[name=code]"
     end
 
@@ -95,10 +95,10 @@ class SignInTest < ActionDispatch::IntegrationTest
       signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
       Timecop.freeze do
         fill_in :code, with: ""
-        click_button "Submit"
+        click_button "Sign in"
       end
 
-      assert_response_contains "Enter your personal code"
+      assert_response_contains "get your code"
     end
 
     should "prevent access with an old code" do
@@ -107,18 +107,18 @@ class SignInTest < ActionDispatch::IntegrationTest
       visit root_path
       signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
       fill_in :code, with: old_code
-      click_button "Submit"
+      click_button "Sign in"
 
-      assert_response_contains "Enter your personal code"
+      assert_response_contains "get your code"
     end
 
     should "prevent access with a garbage code" do
       visit root_path
       signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
       fill_in :code, with: "abcdef"
-      click_button "Submit"
+      click_button "Sign in"
 
-      assert_response_contains "Enter your personal code"
+      assert_response_contains "get your code"
     end
   end
 end

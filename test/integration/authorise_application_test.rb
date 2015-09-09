@@ -41,7 +41,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     ignoring_spurious_error do
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     end
-    assert_response_contains("Enter your personal code")
+    assert_response_contains("get your code")
     refute Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
   end
 

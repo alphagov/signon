@@ -18,7 +18,7 @@ module UserHelpers
 
     Timecop.freeze do
       fill_in :code, with: ROTP::TOTP.new(user.otp_secret_key).now
-      click_button "Submit"
+      click_button "Sign in"
     end
   end
 
