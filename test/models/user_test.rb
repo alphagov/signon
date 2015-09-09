@@ -207,6 +207,16 @@ class UserTest < ActiveSupport::TestCase
     assert_user_has_permissions ['signin'], app, user
   end
 
+  test "returns multiple permissions in name order" do
+    app = create(:application, name: "my_app", with_supported_permissions: ["edit"])
+    user = create(:user)
+
+    user.grant_application_permission(app, "signin")
+    user.grant_application_permission(app, "edit")
+
+    assert_user_has_permissions %w(edit signin), app, user
+  end
+
   test "inviting a user sets confirmed_at" do
     if user = User.find_by_email("j@1.com")
       user.delete

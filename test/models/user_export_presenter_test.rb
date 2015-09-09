@@ -25,7 +25,7 @@ class UserExportPresenterTest < ActiveSupport::TestCase
     @user.grant_application_permissions(@apps[0], ["editor"])
     @user.grant_application_permissions(@apps[2], %w(editor admin))
 
-    perms = UserExportPresenter.new(@apps).app_permissions(@user)
+    perms = UserExportPresenter.new(@apps).app_permissions_for(@user)
 
     expected = ["editor", nil, "admin, editor", nil, nil]
     assert_equal(expected, perms)

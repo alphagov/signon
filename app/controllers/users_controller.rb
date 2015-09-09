@@ -175,11 +175,11 @@ class UsersController < ApplicationController
   end
 
   def export
-    applications = Doorkeeper::Application.includes(:supported_permissions)
+    applications = Doorkeeper::Application.all
     CSV.generate do |csv|
       csv << UserExportPresenter.header_row(applications)
       presenter = UserExportPresenter.new(applications)
-      @users.each do |user|
+      @users.includes(:organisation).find_each do |user|
         csv << presenter.row(user)
       end
     end
