@@ -1,8 +1,7 @@
 class UserExportPresenter
-  attr_accessor :user, :applications
+  attr_accessor :applications
 
-  def initialize(user, applications)
-    @user = user
+  def initialize(applications)
     @applications = applications
   end
 
@@ -19,7 +18,7 @@ class UserExportPresenter
     ].concat applications.map &:name
   end
 
-  def row
+  def row(user)
     [
       user.name,
       user.email,
@@ -29,10 +28,10 @@ class UserExportPresenter
       user.current_sign_in_at.try(:to_formatted_s, :db),
       user.created_at.try(:to_formatted_s, :db),
       user.status.humanize,
-    ].concat(app_permissions)
+    ].concat(app_permissions(user))
   end
 
-  def app_permissions
+  def app_permissions(user)
     applications.map do |application|
       perms = user.permissions_for(application)
       perms.sort.join(', ') if perms.any?
