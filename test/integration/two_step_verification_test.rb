@@ -13,7 +13,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "redirect to homepage" do
-        assert_response_contains "Two Step Verification is already set up"
+        assert_response_contains "2-step verification is already set up"
         assert_response_contains "Welcome to GOV.UK"
       end
     end
@@ -39,7 +39,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         end
 
         should "reject the code" do
-          assert_response_contains "Invalid Two Step Verification code. Perhaps you entered it incorrectly?"
+          assert_response_contains "Invalid 2-step verification code. Perhaps you entered it incorrectly?"
         end
 
         should "show the same secret" do
@@ -56,7 +56,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         end
 
         should "accept the code" do
-          assert_response_contains "Two Step Verification set up"
+          assert_response_contains "2-step verification set up"
         end
 
         should "persist the confirmed secret" do
