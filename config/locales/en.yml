@@ -32,3 +32,8 @@ en:
       taken_in_past: "was used previously. Please choose a different one."
       equal_to_current_password: "must be different than the current password."
       password_format: "must contain big, small letters and digits"
+
+  devise:
+    two_factor_authentication:
+      success: "Signed in successfully."
+      attempt_failed: "Sorry, that code didn’t work."

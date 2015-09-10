@@ -1,0 +1,8 @@
+<% bootstrap_flash_message_keys.each do |k| %>
+  <div class="alert alert-<%= bootstrap_flash_class(k) %>"
+    data-module="auto-track-event"
+    data-track-action="alert-<%= bootstrap_flash_class(k) %>"
+    data-track-label="<%= strip_tags(flash[k]) %>">
+      <%= flash[k] %>
+  </div>
+<% end %>

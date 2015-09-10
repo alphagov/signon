@@ -320,7 +320,8 @@ Devise.setup do |config|
                       end
 
   # Configuration for two_factor_authentication
-  config.max_login_attempts = 3
+  #FIXME: Reduce attempt limit when accounts are unlocked after an hour
+  config.max_login_attempts = 10
   config.allowed_otp_drift_seconds = 30
   config.otp_length = 6
   config.remember_otp_session_for_seconds = 30.days

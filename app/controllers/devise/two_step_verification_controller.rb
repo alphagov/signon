@@ -4,7 +4,7 @@ class Devise::TwoStepVerificationController < Devise::TwoFactorAuthenticationCon
 
   def new
     if current_user.otp_secret_key.present?
-      redirect_to root_path, alert: "Two Step Verification is already set up"
+      redirect_to root_path, alert: "2-step verification is already set up"
     else
       @otp_secret_key = ROTP::Base32.random_base32
     end
@@ -15,9 +15,9 @@ class Devise::TwoStepVerificationController < Devise::TwoFactorAuthenticationCon
     totp = ROTP::TOTP.new(@otp_secret_key)
     if totp.verify(params[:code])
       current_user.update_attribute(:otp_secret_key, @otp_secret_key)
-      redirect_to "/", notice: "Two Step Verification set up"
+      redirect_to "/", notice: "2-step verification set up"
     else
-      flash.now[:alert] = "Invalid Two Step Verification code. Perhaps you entered it incorrectly?"
+      flash.now[:alert] = "Invalid 2-step verification code. Perhaps you entered it incorrectly?"
       render :new
     end
   end

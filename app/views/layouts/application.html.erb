@@ -8,24 +8,24 @@
 <% end %>
 
 <% if user_signed_in? && params[:controller] !~ %r{doorkeeper/} %>
-  <% content_for :navbar_items do %>
-    <%= nav_link 'Dashboard', root_path %>
-    <% if policy(User).index? %>
-      <%= nav_link 'Users', users_path %>
-    <% end %>
-    <% if policy(ApiUser).index? %>
-      <%= nav_link 'API Users', api_users_path %>
-    <% end %>
-    <% if policy(Doorkeeper::Application).index? %>
-      <%= nav_link 'Applications', doorkeeper_applications_path %>
-    <% end %>
-    <% if policy(Organisation).index? %>
-      <%= nav_link 'Organisations', organisations_path %>
+  <% unless content_for :suppress_navbar_items %>
+    <% content_for :navbar_items do %>
+      <%= nav_link 'Dashboard', root_path %>
+      <% if policy(User).index? %>
+        <%= nav_link 'Users', users_path %>
+      <% end %>
+      <% if policy(ApiUser).index? %>
+        <%= nav_link 'API Users', api_users_path %>
+      <% end %>
+      <% if policy(Doorkeeper::Application).index? %>
+        <%= nav_link 'Applications', doorkeeper_applications_path %>
+      <% end %>
+      <% if policy(Organisation).index? %>
+        <%= nav_link 'Organisations', organisations_path %>
+      <% end %>
     <% end %>
   <% end %>
-<% end %>
 
-<% if user_signed_in? && params[:controller] !~ %r{doorkeeper/} %>
   <% content_for :navbar_right do %>
     <%= link_to current_user.name, user_link_target %>
     &bull; <%= link_to 'Sign out', destroy_user_session_path %>
@@ -34,8 +34,7 @@
 
 <% content_for :content do %>
   <% if content_for?(:thin_form) %><div class="thin-form"><% end %>
-  <%- if notice %><div class="alert alert-success" role="alert"><%= notice %></div><% end -%>
-  <%- if alert %><div class="alert alert-danger" role="alert"><%= alert %></div><% end %>
+  <%= render partial: 'shared/bootstrap_flash_messages' %>
   <%= yield %>
   <% if content_for?(:thin_form) %></div><% end %>
 <% end %>
