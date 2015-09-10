@@ -34,24 +34,7 @@
 
 <% content_for :content do %>
   <% if content_for?(:thin_form) %><div class="thin-form"><% end %>
-  <% [:success, :info, :warning, :danger, :error, :notice, :alert].select { |k| flash[k].present? }.each do |k| %>
-    <%
-      case k
-      when :notice
-        alert_class = "success"
-      when :error, :alert
-        alert_class = "danger"
-      else
-        alert_class = k
-      end
-    %>
-    <div class="alert alert-<%= alert_class %>"
-      data-module="auto-track-event"
-      data-track-action="alert-<%= alert_class %>"
-      data-track-label="<%= strip_tags(flash[k]) %>">
-        <%= flash[k] %>
-    </div>
-  <% end %>
+  <%= render partial: 'shared/bootstrap_flash_messages' %>
   <%= yield %>
   <% if content_for?(:thin_form) %></div><% end %>
 <% end %>
