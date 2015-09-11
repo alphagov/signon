@@ -17,8 +17,8 @@ class Devise::TwoStepVerificationController < Devise::TwoFactorAuthenticationCon
       current_user.update_attribute(:otp_secret_key, @otp_secret_key)
       redirect_to "/", notice: "2-step verification set up"
     else
-      flash.now[:alert] = "Invalid 2-step verification code. Perhaps you entered it incorrectly?"
-      render :new
+      flash.now[:invalid_code] = "Sorry that code didn’t work. Please try again."
+      render :new, status: 422
     end
   end
 

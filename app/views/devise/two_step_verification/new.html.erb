@@ -1,4 +1,5 @@
 <% content_for :title, "Set up 2-step verification" %>
+<% invalid_code_entered = flash[:invalid_code] %>
 
 <h1>Set up 2-step verification</h1>
 <div class="row">
@@ -14,7 +15,7 @@
             </a>
           </h4>
         </div>
-        <div id="step-one" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="step-one-heading">
+        <div id="step-one" class="panel-collapse collapse <% unless invalid_code_entered %>in<% end %>" role="tabpanel" aria-labelledby="step-one-heading">
           <div class="panel-body">
             <p class="lead">Install one of the following apps from the app store on your phone.</p>
             <ul class="list-group">
@@ -68,12 +69,16 @@
             </a>
           </h4>
         </div>
-        <div id="step-three" class="panel-collapse collapse" role="tabpanel" aria-labelledby="step-three-heading">
+        <div id="step-three" class="panel-collapse collapse <% if invalid_code_entered %>in<% end %>" role="tabpanel" aria-labelledby="step-three-heading">
           <div class="panel-body">
-            <div class="remove-bottom-margin">
-              <%= form_tag two_factor_authentication_path %>
+              <% if invalid_code_entered %>
+                <div class="alert alert-danger">
+                  <%= invalid_code_entered %>
+                </div>
+              <% end %>
+              <%= form_tag two_factor_authentication_path do %>
                 <%= hidden_field_tag :otp_secret_key, @otp_secret_key%>
-                <div class="form-group">
+                <div class="form-group <% if invalid_code_entered %>has-error text-danger<% end %>">
                   <%= label_tag :code, 'Code from your phone' %>
                   <%= text_field_tag :code, nil,
                     class: 'form-control input-md-4 input-lg',
@@ -82,8 +87,7 @@
                 </div>
                 <button name="submit" id="submit_code" class="btn btn-lg btn-success">Finish set up</button>
                 <a href="/" class="btn btn-lg btn-default add-left-margin">Cancel</a>
-              </form>
-            </div>
+              <% end %>
           </div>
         </div>
       </div>

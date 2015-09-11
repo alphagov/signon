@@ -39,7 +39,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         end
 
         should "reject the code" do
-          assert_response_contains "Invalid 2-step verification code. Perhaps you entered it incorrectly?"
+          assert_response_contains "Sorry that code didn’t work. Please try again."
         end
 
         should "show the same secret" do
