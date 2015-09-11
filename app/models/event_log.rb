@@ -22,6 +22,7 @@ class EventLog < ActiveRecord::Base
   TWO_STEP_ENABLE_FAILED = "2-step verification setup failed"
   TWO_STEP_VERIFIED = "2-step verification successful"
   TWO_STEP_VERIFICATION_FAILED = "2-step verification failed"
+  TWO_STEP_LOCKED = "2-step verification failed too many times"
 
   # API users
   API_USER_CREATED = "Account created"

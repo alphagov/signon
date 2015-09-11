@@ -124,5 +124,14 @@ class SignInTest < ActionDispatch::IntegrationTest
       assert_response_contains "get your code"
       assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_VERIFICATION_FAILED, uid: @user.uid).count
     end
+
+    should "prevent access if max attempts reached" do
+      @user.update_attribute(:second_factor_attempts_count, Devise.max_login_attempts)
+      visit root_path
+      signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+
+      assert_response_contains "entered too many times"
+      assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_LOCKED, uid: @user.uid).count
+    end
   end
 end
