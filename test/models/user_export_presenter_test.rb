@@ -12,7 +12,7 @@ class UserExportPresenterTest < ActiveSupport::TestCase
 
 
   should "output header row including application names" do
-    header_row = UserExportPresenter.header_row(@apps)
+    header_row = UserExportPresenter.new(@apps).header_row
 
     expected = [
       'Name', 'Email', 'Role', 'Organisation', 'Sign-in count', 'Last sign-in',
@@ -25,14 +25,14 @@ class UserExportPresenterTest < ActiveSupport::TestCase
     @user.grant_application_permissions(@apps[0], ["editor"])
     @user.grant_application_permissions(@apps[2], %w(editor admin))
 
-    perms = UserExportPresenter.new(@user, @apps).app_permissions
+    perms = UserExportPresenter.new(@apps).app_permissions_for(@user)
 
     expected = ["editor", nil, "admin, editor", nil, nil]
     assert_equal(expected, perms)
   end
 
   should "output user details" do
-    row = UserExportPresenter.new(@user, []).row
+    row = UserExportPresenter.new([]).row(@user)
     expected = [
       'Test User', 'test@dept.gov.uk', 'Normal', nil, 0, nil, '2015-01-15 09:00:00', 'Active'
     ]

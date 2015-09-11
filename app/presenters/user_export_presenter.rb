@@ -1,12 +1,20 @@
 class UserExportPresenter
-  attr_accessor :user, :applications
+  attr_reader :applications, :app_permissions
 
-  def initialize(user, applications)
-    @user = user
+  def initialize(applications)
     @applications = applications
+
+    permission_names = Hash[SupportedPermission.pluck(:id, :name)]
+
+    @app_permissions = {}
+    UserApplicationPermission.find_each do |permission|
+      @app_permissions[permission.user_id] ||= {}
+      @app_permissions[permission.user_id][permission.application_id] ||= []
+      @app_permissions[permission.user_id][permission.application_id] << permission_names[permission.supported_permission_id]
+    end
   end
 
-  def self.header_row(applications)
+  def header_row
     [
       'Name',
       'Email',
@@ -19,7 +27,7 @@ class UserExportPresenter
     ].concat applications.map &:name
   end
 
-  def row
+  def row(user)
     [
       user.name,
       user.email,
@@ -29,13 +37,13 @@ class UserExportPresenter
       user.current_sign_in_at.try(:to_formatted_s, :db),
       user.created_at.try(:to_formatted_s, :db),
       user.status.humanize,
-    ].concat(app_permissions)
+    ].concat(app_permissions_for(user))
   end
 
-  def app_permissions
+  def app_permissions_for(user)
     applications.map do |application|
-      perms = user.permissions_for(application)
-      perms.sort.join(', ') if perms.any?
+      perms = app_permissions[user.id][application.id] if app_permissions[user.id]
+      perms.sort.join(', ') if perms
     end
   end
 end

@@ -207,6 +207,16 @@ class UserTest < ActiveSupport::TestCase
     assert_user_has_permissions ['signin'], app, user
   end
 
+  test "returns multiple permissions in name order" do
+    app = create(:application, name: "my_app", with_supported_permissions: ["edit"])
+    user = create(:user)
+
+    user.grant_application_permission(app, "signin")
+    user.grant_application_permission(app, "edit")
+
+    assert_user_has_permissions %w(edit signin), app, user
+  end
+
   test "inviting a user sets confirmed_at" do
     if user = User.find_by_email("j@1.com")
       user.delete
@@ -249,31 +259,62 @@ class UserTest < ActiveSupport::TestCase
 
   context "User status" do
     setup do
-      @user = create(:user)
+      @locked = create(:user)
+      @locked.lock_access!
+      @suspended = create(:user)
+      @suspended.suspend("because grumble")
+      @invited = User.invite!(name: "Oberyn Martell", email: "redviper@dorne.com")
+      @expired = create(:user, password_changed_at: 91.days.ago)
     end
 
-    should "return suspended" do
-      @user.suspend("because grumble")
-      assert_equal "suspended", @user.status
+    context "filtering" do
+      should "be able to filter by all statuses" do
+        User::USER_STATUSES.each do |status|
+          assert_not_empty User.with_status(status)
+        end
+      end
+
+      should "filter suspended" do
+        assert_equal [@suspended], User.with_status(User::USER_STATUS_SUSPENDED).all
+      end
+
+      should "filter invited" do
+        assert_equal [@invited], User.with_status(User::USER_STATUS_INVITED).all
+      end
+
+      should "filter passphrase expired" do
+        assert_equal [@expired], User.with_status(User::USER_STATUS_PASSPHRASE_EXPIRED).all
+      end
+
+      should "filter locked" do
+        assert_equal [@locked], User.with_status(User::USER_STATUS_LOCKED).all
+      end
+
+      should "filter active" do
+        assert_equal [@user], User.with_status(User::USER_STATUS_ACTIVE).all
+      end
     end
 
-    should "return invited" do
-      user = User.invite!(name: "Oberyn Martell", email: "redviper@dorne.com")
-      assert_equal "invited", user.status
-    end
+    context "detecting" do
+      should "detect suspended" do
+        assert_equal "suspended", @suspended.status
+      end
 
-    should "return passphrase expired" do
-      user = create(:user, password_changed_at: 91.days.ago)
-      assert_equal "passphrase expired", user.status
-    end
+      should "detect invited" do
+        assert_equal "invited", @invited.status
+      end
 
-    should "return locked" do
-      @user.lock_access!
-      assert_equal "locked", @user.status
-    end
+      should "detect passphrase expired" do
+        assert_equal "passphrase expired", @expired.status
+      end
 
-    should "return active" do
-      assert_equal "active", @user.status
+      should "detect locked" do
+        assert_equal "locked", @locked.status
+      end
+
+      should "detect active" do
+        assert_equal "active", @user.status
+      end
     end
   end
 

@@ -132,7 +132,7 @@ class UsersController < ApplicationController
     @users = @users.filter(params[:filter]) if params[:filter].present?
     @users = @users.with_role(params[:role]) if can_filter_role?
     @users = @users.with_organisation(params[:organisation]) if params[:organisation].present?
-    @users = @users.select {|u| u.status == params[:status] } if params[:status].present?
+    @users = @users.with_status(params[:status]) if params[:status].present?
   end
 
   def can_filter_role?
@@ -175,11 +175,12 @@ class UsersController < ApplicationController
   end
 
   def export
-    applications = Doorkeeper::Application.includes(:supported_permissions)
+    applications = Doorkeeper::Application.all
     CSV.generate do |csv|
-      csv << UserExportPresenter.header_row(applications)
-      @users.each do |user|
-        csv << UserExportPresenter.new(user, applications).row
+      presenter = UserExportPresenter.new(applications)
+      csv << presenter.header_row
+      @users.includes(:organisation).find_each do |user|
+        csv << presenter.row(user)
       end
     end
   end
