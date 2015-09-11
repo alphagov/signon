@@ -1,0 +1,12 @@
+.panel-part {
+  box-shadow: none;
+
+  .panel-heading {
+    border-radius: 0;
+    background-color: darken($gray-lighter, 5%);
+  }
+
+  .panel-body {
+    background-color: $gray-lighter;
+  }
+}

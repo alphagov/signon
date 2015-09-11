@@ -1,90 +1,96 @@
 <% content_for :title, "Set up 2-step verification" %>
+<% invalid_code_entered = flash[:invalid_code] %>
 
 <h1>Set up 2-step verification</h1>
-<div style="max-width: 700px">
-    <p class="lead">2-step verification adds another layer of security to your account. You’ll need to use an app on your phone to generate a code to enter when you sign in.</p>
+<div class="row">
+  <div class="col-md-8">
+    <p class="lead">Make your signon account more secure by setting up 2-step verification. You’ll need to install an app on your phone which will generate a security code to enter when you sign in.</p>
 
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-      <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="headingOne">
+    <div class="panel-group" id="setup-steps" role="tablist" aria-multiselectable="true">
+      <div class="panel panel-part">
+        <div class="panel-heading" role="tab" id="step-one-heading">
           <h4 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-              1. Get a verification app
+            <a role="button" data-toggle="collapse" data-parent="#setup-steps" href="#step-one" aria-expanded="true" aria-controls="step-one">
+              Install a verification app on your phone
             </a>
           </h4>
         </div>
-        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+        <div id="step-one" class="panel-collapse collapse <% unless invalid_code_entered %>in<% end %>" role="tabpanel" aria-labelledby="step-one-heading">
           <div class="panel-body">
-            <p class="lead">Download one of the following apps from the app store on your phone.</p>
+            <p class="lead">Install one of the following apps from the app store on your phone.</p>
             <ul class="list-group">
               <li class="list-group-item">
                 <h4 class="list-group-item-heading">Google Authenticator</h4>
-                Available on iPhone, iPad, Android and Blackberry
+                For iPhone, iPad, Android and Blackberry
               </li>
               <li class="list-group-item">
                 <h4 class="list-group-item-heading">Duo Mobile</h4>
-                Available on iPhone, iPad and Android
+                For iPhone, iPad and Android
               </li>
               <li class="list-group-item">
-                <h4 class="list-group-item-heading">Windows Phone Authenticator</h4>
-                Available on Windows Phone
+                <h4 class="list-group-item-heading">Windows Authenticator</h4>
+                For Windows phone
               </li>
             </ul>
-
-            <a class="collapsed btn btn-success" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            <a class="collapsed btn btn-lg btn-success" role="button" data-toggle="collapse" data-parent="#setup-steps" href="#step-two" aria-expanded="false" aria-controls="step-two">
               Next
             </a>
           </div>
         </div>
       </div>
-      <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="headingTwo">
+      <div class="panel panel-part">
+        <div class="panel-heading" role="tab" id="step-two-heading">
           <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-              2. Scan the QR code from the app on your phone
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#setup-steps" href="#step-two" aria-expanded="false" aria-controls="step-two">
+              Scan the barcode using your app
             </a>
           </h4>
         </div>
-        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+        <div id="step-two" class="panel-collapse collapse" role="tabpanel" aria-labelledby="step-two-heading">
           <div class="panel-body">
-            <p class="lead">In your app, add a new account and scan the QR code.</p>
-            <div class="no-content add-bottom-margin"><%= image_tag(qr_code_data_uri, width: 180) %></div>
-            <p>Can’t use a QR code? Enter the code manually: <%= @otp_secret_key%></p>
-
-            <a class="collapsed btn btn-success" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            <p class="lead">In your app add a new account and scan the barcode:</p>
+            <ul class="list-group">
+              <li class="list-group-item">
+                <%= image_tag(qr_code_data_uri, width: 180) %>
+              </li>
+            </ul>
+            <p class="add-bottom-margin">Can’t use a barcode? Enter the code manually: <%= @otp_secret_key%></p>
+            <a class="collapsed btn btn-lg btn-success" role="button" data-toggle="collapse" data-parent="#setup-steps" href="#step-three" aria-expanded="false" aria-controls="step-three">
               Next
             </a>
           </div>
         </div>
       </div>
-      <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="headingThree">
+      <div class="panel panel-part">
+        <div class="panel-heading" role="tab" id="step-three-heading">
           <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-              3. Enter your verification code
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#setup-steps" href="#step-three" aria-expanded="false" aria-controls="step-three">
+              Enter the code from your phone
             </a>
           </h4>
         </div>
-        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+        <div id="step-three" class="panel-collapse collapse <% if invalid_code_entered %>in<% end %>" role="tabpanel" aria-labelledby="step-three-heading">
           <div class="panel-body">
-            <p class="lead">The verification app on your phone will now generate a code for your Sign on account. This is the code to use when you sign in.</p>
-            <div class="remove-bottom-margin add-top-margin">
-              <%= form_tag two_factor_authentication_path %>
-                <%= hidden_field_tag :otp_secret_key, @otp_secret_key%>
-                <div class="form-group">
-                  <label>
-                    Verification code<br />
-                    <span class="text-muted normal">Enter the code generated by your app</span>
-                  </label>
-                  <input type="text" class="form-control input-md-4 input-lg" placeholder="Enter 6 digit code" name="code"/>
+              <% if invalid_code_entered %>
+                <div class="alert alert-danger">
+                  <%= invalid_code_entered %>
                 </div>
-                <hr />
-                <button name="submit" id="submit_code" class="btn btn-lg btn-success">Turn on 2-step verification</button>
+              <% end %>
+              <%= form_tag two_factor_authentication_path do %>
+                <%= hidden_field_tag :otp_secret_key, @otp_secret_key%>
+                <div class="form-group <% if invalid_code_entered %>has-error text-danger<% end %>">
+                  <%= label_tag :code, 'Code from your phone' %>
+                  <%= text_field_tag :code, nil,
+                    class: 'form-control input-md-4 input-lg',
+                    placeholder: 'Enter 6-digit code',
+                    autocomplete: 'off' %>
+                </div>
+                <button name="submit" id="submit_code" class="btn btn-lg btn-success">Finish set up</button>
                 <a href="/" class="btn btn-lg btn-default add-left-margin">Cancel</a>
-              </form>
-            </div>
+              <% end %>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </div>
