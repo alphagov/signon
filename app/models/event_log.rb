@@ -18,6 +18,9 @@ class EventLog < ActiveRecord::Base
   EMAIL_CHANGED = "Email changed"
   EMAIL_CHANGE_INITIATED = "Email change initiated"
   EMAIL_CHANGE_CONFIRMED = "Email change confirmed"
+  TWO_STEP_ENABLED = "2-step verification enabled"
+  TWO_STEP_ENABLE_FAILED = "2-step verification setup failed"
+
 
   # API users
   API_USER_CREATED = "Account created"
