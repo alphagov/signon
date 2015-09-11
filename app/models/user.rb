@@ -214,6 +214,16 @@ class User < ActiveRecord::Base
     # necessarily want all users to have otp_secret_keys
   end
 
+  def authenticate_otp(code)
+    result = super(code)
+    if result
+      EventLog.record_event(self, EventLog::TWO_STEP_VERIFIED)
+    else
+      EventLog.record_event(self, EventLog::TWO_STEP_VERIFICATION_FAILED)
+    end
+    result
+  end
+
 private
 
   # Override devise_security_extension for updating expired passwords
