@@ -57,5 +57,9 @@ Signonotron2::Application.routes.draw do
   # compatibility with Sign-on-o-tron 1
   post "oauth/access_token" => "doorkeeper/tokens#create"
 
+  # Prototyping
+  get '/phone-unavailable' => 'prototype#phone_unavailable'
+  get '/recover-account'   => 'prototype#recover_account'
+
   root to: 'root#index'
 end
