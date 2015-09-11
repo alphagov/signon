@@ -5,16 +5,16 @@
   <div class="col-md-8">
     <p class="lead">Make your signon account more secure by setting up 2-step verification. You’ll need to install an app on your phone which will generate a security code to enter when you sign in.</p>
 
-    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+    <div class="panel-group" role="tablist" aria-multiselectable="true">
       <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="headingOne">
+        <div class="panel-heading" role="tab" id="step-one-heading">
           <h4 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <a role="button" data-toggle="collapse" data-parent="#accordion" href="#step-one" aria-expanded="true" aria-controls="step-one">
               Install a verification app on your phone
             </a>
           </h4>
         </div>
-        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+        <div id="step-one" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="step-one-heading">
           <div class="panel-body">
             <p class="lead">Install one of the following apps from the app store on your phone.</p>
             <ul class="list-group">
@@ -31,41 +31,41 @@
                 For Windows phone
               </li>
             </ul>
-            <a class="collapsed btn btn-success" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            <a class="collapsed btn btn-success" role="button" data-toggle="collapse" data-parent="#accordion" href="#step-two" aria-expanded="false" aria-controls="step-two">
               Next
             </a>
           </div>
         </div>
       </div>
       <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="headingTwo">
+        <div class="panel-heading" role="tab" id="step-two-heading">
           <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#step-two" aria-expanded="false" aria-controls="step-two">
               Scan the barcode using your app
             </a>
           </h4>
         </div>
-        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+        <div id="step-two" class="panel-collapse collapse" role="tabpanel" aria-labelledby="step-two-heading">
           <div class="panel-body">
             <p class="lead">In your app add a new account and scan the barcode:</p>
             <div class="no-content add-bottom-margin"><%= image_tag(qr_code_data_uri, width: 180) %></div>
             <p>Can’t use a barcode? Enter the code manually: <%= @otp_secret_key%></p>
 
-            <a class="collapsed btn btn-success" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            <a class="collapsed btn btn-success" role="button" data-toggle="collapse" data-parent="#accordion" href="#step-three" aria-expanded="false" aria-controls="step-three">
               Next
             </a>
           </div>
         </div>
       </div>
       <div class="panel panel-default">
-        <div class="panel-heading" role="tab" id="headingThree">
+        <div class="panel-heading" role="tab" id="step-three-heading">
           <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#step-three" aria-expanded="false" aria-controls="step-three">
               Enter the code from your phone
             </a>
           </h4>
         </div>
-        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+        <div id="step-three" class="panel-collapse collapse" role="tabpanel" aria-labelledby="step-three-heading">
           <div class="panel-body">
             <div class="remove-bottom-margin">
               <%= form_tag two_factor_authentication_path %>
