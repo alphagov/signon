@@ -177,8 +177,8 @@ class UsersController < ApplicationController
   def export
     applications = Doorkeeper::Application.all
     CSV.generate do |csv|
-      csv << UserExportPresenter.header_row(applications)
       presenter = UserExportPresenter.new(applications)
+      csv << presenter.header_row
       @users.includes(:organisation).find_each do |user|
         csv << presenter.row(user)
       end

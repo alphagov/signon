@@ -14,7 +14,7 @@ class UserExportPresenter
     end
   end
 
-  def self.header_row(applications)
+  def header_row
     [
       'Name',
       'Email',

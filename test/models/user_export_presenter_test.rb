@@ -12,7 +12,7 @@ class UserExportPresenterTest < ActiveSupport::TestCase
 
 
   should "output header row including application names" do
-    header_row = UserExportPresenter.header_row(@apps)
+    header_row = UserExportPresenter.new(@apps).header_row
 
     expected = [
       'Name', 'Email', 'Role', 'Organisation', 'Sign-in count', 'Last sign-in',
