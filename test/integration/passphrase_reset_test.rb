@@ -109,20 +109,4 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
     click_link 'Forgot your passphrase?'
     assert_response_contains("Request a passphrase reset")
   end
-
-  should "ask for 2SV if the user has a secret key set" do
-    perform_enqueued_jobs do
-      secret = ROTP::Base32.random_base32
-      user = create(:user, otp_secret_key: secret)
-
-      new_password = "some v3ry s3cure passphrase"
-
-      trigger_reset_for(user.email)
-      open_email(user.email)
-      complete_password_reset(current_email, new_password: new_password)
-
-      visit new_user_session_path
-      signin_with_2sv(email: user.email, password: new_password)
-    end
-  end
 end
