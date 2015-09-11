@@ -132,7 +132,7 @@ class UsersController < ApplicationController
     @users = @users.filter(params[:filter]) if params[:filter].present?
     @users = @users.with_role(params[:role]) if can_filter_role?
     @users = @users.with_organisation(params[:organisation]) if params[:organisation].present?
-    @users = @users.select {|u| u.status == params[:status] } if params[:status].present?
+    @users = @users.with_status(params[:status]) if params[:status].present?
   end
 
   def can_filter_role?

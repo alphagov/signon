@@ -58,6 +58,27 @@ class User < ActiveRecord::Base
   scope :last_signed_in_after, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) >= date(?)', date) }
   scope :not_recently_unsuspended, lambda { where(['unsuspended_at IS NULL OR unsuspended_at < ?', UNSUSPENSION_GRACE_PERIOD.ago]) }
 
+  scope :with_status, lambda { |status|
+    case status
+    when USER_STATUS_SUSPENDED
+      where.not(suspended_at: nil)
+    when USER_STATUS_INVITED
+      where.not(invitation_sent_at: nil).where(invitation_accepted_at: nil)
+    when USER_STATUS_PASSPHRASE_EXPIRED
+      with_need_change_password
+    when USER_STATUS_LOCKED
+      where.not(locked_at: nil)
+    when USER_STATUS_ACTIVE
+      where(suspended_at: nil, locked_at: nil).
+        where(arel_table[:invitation_sent_at].eq(nil).
+          or(arel_table[:invitation_accepted_at].not_eq(nil))).
+        without_need_change_password
+    else
+      raise NotImplementedError.new("Filtering by status '#{status}' not implemented.")
+    end
+  }
+
+
   def event_logs
     EventLog.where(uid: uid).order(created_at: :desc)
   end
