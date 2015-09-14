@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   USER_STATUSES = [USER_STATUS_SUSPENDED, USER_STATUS_INVITED, USER_STATUS_PASSPHRASE_EXPIRED,
                    USER_STATUS_LOCKED, USER_STATUS_ACTIVE]
 
-  devise :two_factor_authenticatable, :database_authenticatable,
+  devise :database_authenticatable,
          :recoverable, :trackable,
          :validatable, :timeoutable, :lockable,                # devise core model extensions
          :invitable,    # in devise_invitable gem
@@ -34,8 +34,6 @@ class User < ActiveRecord::Base
          :confirmable,
          :password_archivable, # in signonotron2/lib/devise/models/password_archivable.rb
          :password_expirable   # in signonotron2/lib/devise/models/password_expirable.rb
-
-  has_one_time_password
 
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
@@ -206,27 +204,25 @@ class User < ActiveRecord::Base
     devise_mailer.send(notification, self, *args).deliver_later
   end
 
-  def send_two_factor_authentication_code
-    # Would be used if we enable sending a code via SMS
-  end
-
   def need_two_step_verification?
     otp_secret_key.present?
   end
 
-  def populate_otp_column
-    # Do nothing, this is only called on create and we don't
-    # necessarily want all users to have otp_secret_keys
-  end
-
   def authenticate_otp(code)
-    result = super(code)
+    totp = ROTP::TOTP.new(otp_secret_key)
+    result = totp.verify_with_drift(code, MAX_2SV_DRIFT_SECONDS)
+
     if result
       EventLog.record_event(self, EventLog::TWO_STEP_VERIFIED)
     else
       EventLog.record_event(self, EventLog::TWO_STEP_VERIFICATION_FAILED)
     end
+
     result
+  end
+
+  def max_login_attempts?
+    second_factor_attempts_count.to_i >= MAX_2SV_LOGIN_ATTEMPTS.to_i
   end
 
 private
