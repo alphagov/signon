@@ -9,11 +9,11 @@ class Devise::TwoStepVerificationController < DeviseController
   end
 
   def update
-    render :show and return if params[:code].nil?
+    render(:show) && return if params[:code].nil?
 
     if current_user.authenticate_otp(params[:code])
       warden.session(:user)['need_two_step_verification'] = false
-      sign_in :user, current_user, :bypass => true
+      sign_in :user, current_user, bypass: true
       set_flash_message :notice, :success
       redirect_to stored_location_for(:user) || :root
       current_user.update_attribute(:second_factor_attempts_count, 0)
@@ -68,12 +68,11 @@ class Devise::TwoStepVerificationController < DeviseController
   helper_method :qr_code_data_uri
 
   def prepare_and_validate
-    redirect_to :root and return if current_user.nil?
+    redirect_to(:root) && return if current_user.nil?
     @limit = User::MAX_2SV_LOGIN_ATTEMPTS
     if current_user.max_login_attempts?
       sign_out(current_user)
-      render :max_login_attempts_reached and return
+      render(:max_login_attempts_reached) && return
     end
   end
-
 end
