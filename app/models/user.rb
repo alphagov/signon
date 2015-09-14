@@ -210,7 +210,7 @@ class User < ActiveRecord::Base
     # Would be used if we enable sending a code via SMS
   end
 
-  def need_two_factor_authentication?(request)
+  def need_two_step_verification?
     otp_secret_key.present?
   end
 

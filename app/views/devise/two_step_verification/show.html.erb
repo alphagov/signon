@@ -6,7 +6,7 @@
   <h1>Sign in</h1>
 </div>
 
-<%= form_tag([resource_name, :two_factor_authentication], :method => :put) do %>
+<%= form_tag(:two_step_verification, :method => :put) do %>
   <div class="panel panel-default">
     <div class="panel-heading">
       <h3 class="panel-title">2-step verification</h3>
