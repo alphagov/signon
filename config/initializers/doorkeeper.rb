@@ -9,6 +9,8 @@ Doorkeeper.configure do
     user = current_user || warden.authenticate!(scope: :user)
     if user.need_change_password?
       redirect_to user_password_expired_path
+    elsif user.need_two_step_verification? && warden.session(:user)['need_two_step_verification']
+      redirect_to two_step_verification_path
     else
       user
     end
