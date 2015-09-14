@@ -47,6 +47,7 @@ class User < ActiveRecord::Base
   before_validation :fix_apostrophe_in_email
   before_create :generate_uid
   after_create :update_stats
+  after_update :log_2sv_locked, if: :max_login_attempts?
 
   scope :web_users, -> { where(api_user: false) }
   scope :not_suspended, -> { where(suspended_at: nil) }
@@ -214,6 +215,16 @@ class User < ActiveRecord::Base
     # necessarily want all users to have otp_secret_keys
   end
 
+  def authenticate_otp(code)
+    result = super(code)
+    if result
+      EventLog.record_event(self, EventLog::TWO_STEP_VERIFIED)
+    else
+      EventLog.record_event(self, EventLog::TWO_STEP_VERIFICATION_FAILED)
+    end
+    result
+  end
+
 private
 
   # Override devise_security_extension for updating expired passwords
@@ -235,5 +246,9 @@ private
 
   def fix_apostrophe_in_email
     self.email.tr!('’', "'") if email.present? && email_changed?
+  end
+
+  def log_2sv_locked
+    EventLog.record_event(self, EventLog::TWO_STEP_LOCKED) if second_factor_attempts_count_changed?
   end
 end

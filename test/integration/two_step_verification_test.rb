@@ -45,6 +45,10 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         should "show the same secret" do
           assert_response_contains "Enter the code manually: #{@secret}"
         end
+
+        should "log the failure in the event log" do
+          assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_ENABLE_FAILED, uid: @user.uid).count
+        end
       end
 
       context "with the correct code entered" do
@@ -61,6 +65,10 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
         should "persist the confirmed secret" do
           assert_equal @secret, @user.reload.otp_secret_key
+        end
+
+        should "log the set up in the event log" do
+          assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_ENABLED, uid: @user.uid).count
         end
       end
     end

@@ -15,8 +15,10 @@ class Devise::TwoStepVerificationController < Devise::TwoFactorAuthenticationCon
     totp = ROTP::TOTP.new(@otp_secret_key)
     if totp.verify(params[:code])
       current_user.update_attribute(:otp_secret_key, @otp_secret_key)
+      EventLog.record_event(current_user, EventLog::TWO_STEP_ENABLED)
       redirect_to "/", notice: "2-step verification set up"
     else
+      EventLog.record_event(current_user, EventLog::TWO_STEP_ENABLE_FAILED)
       flash.now[:invalid_code] = "Sorry that code didn’t work. Please try again."
       render :new, status: 422
     end
