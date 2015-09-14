@@ -126,7 +126,7 @@ class SignInTest < ActionDispatch::IntegrationTest
     end
 
     should "prevent access if max attempts reached" do
-      @user.update_attribute(:second_factor_attempts_count, Devise.max_login_attempts)
+      @user.update_attribute(:second_factor_attempts_count, User::MAX_2SV_LOGIN_ATTEMPTS)
       visit root_path
       signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
 
