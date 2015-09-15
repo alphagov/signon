@@ -76,7 +76,7 @@
                   <%= invalid_code_entered %>
                 </div>
               <% end %>
-              <%= form_tag two_factor_authentication_path do %>
+              <%= form_tag two_step_verification_path do %>
                 <%= hidden_field_tag :otp_secret_key, @otp_secret_key%>
                 <div class="form-group <% if invalid_code_entered %>has-error text-danger<% end %>">
                   <%= label_tag :code, 'Code from your phone' %>

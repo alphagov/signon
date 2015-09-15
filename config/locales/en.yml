@@ -34,6 +34,6 @@ en:
       password_format: "must contain big, small letters and digits"
 
   devise:
-    two_factor_authentication:
+    two_step_verification:
       success: "Signed in successfully."
       attempt_failed: "Sorry, that code didn’t work."

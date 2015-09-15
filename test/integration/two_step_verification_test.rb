@@ -9,7 +9,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         @user = create(:user, email: "jane.user@example.com", otp_secret_key: ROTP::Base32.random_base32)
         visit new_user_session_path
         signin_with_2sv(@user)
-        visit new_two_factor_authentication_path
+        visit new_two_step_verification_path
       end
 
       should "redirect to homepage" do
@@ -25,7 +25,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         signin(@user)
         @secret = ROTP::Base32.random_base32
         ROTP::Base32.stubs(random_base32: @secret)
-        visit new_two_factor_authentication_path
+        visit new_two_step_verification_path
       end
 
       should "show the TOTP secret" do
