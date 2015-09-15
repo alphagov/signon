@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
   before_validation :fix_apostrophe_in_email
   before_create :generate_uid
   after_create :update_stats
-  after_update :log_2sv_locked, if: :max_login_attempts?
+  after_update :log_2sv_locked, if: :max_2sv_login_attempts?
 
   scope :web_users, -> { where(api_user: false) }
   scope :not_suspended, -> { where(suspended_at: nil) }
@@ -221,7 +221,7 @@ class User < ActiveRecord::Base
     result
   end
 
-  def max_login_attempts?
+  def max_2sv_login_attempts?
     second_factor_attempts_count.to_i >= MAX_2SV_LOGIN_ATTEMPTS.to_i
   end
 

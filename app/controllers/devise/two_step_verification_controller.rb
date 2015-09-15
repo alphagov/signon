@@ -21,9 +21,9 @@ class Devise::TwoStepVerificationController < DeviseController
       current_user.second_factor_attempts_count += 1
       current_user.save
       flash.now[:error] = find_message(:attempt_failed)
-      if current_user.max_login_attempts?
+      if current_user.max_2sv_login_attempts?
         sign_out(current_user)
-        render :max_login_attempts_reached
+        render :max_2sv_login_attempts_reached
       else
         render :show
       end
@@ -70,9 +70,9 @@ class Devise::TwoStepVerificationController < DeviseController
   def prepare_and_validate
     redirect_to(:root) && return if current_user.nil?
     @limit = User::MAX_2SV_LOGIN_ATTEMPTS
-    if current_user.max_login_attempts?
+    if current_user.max_2sv_login_attempts?
       sign_out(current_user)
-      render(:max_login_attempts_reached) && return
+      render(:max_2sv_login_attempts_reached) && return
     end
   end
 end
