@@ -76,6 +76,27 @@ class SignInTest < ActionDispatch::IntegrationTest
       assert_selector "input[name=code]"
     end
 
+    should "not prompt for a verification code twice per browser in 30 days" do
+      visit root_path
+      signin_with_2sv(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      assert_response_contains "Welcome to GOV.UK"
+
+      signout
+      visit root_path
+
+      signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      assert_response_contains "Welcome to GOV.UK"
+
+      signout
+      visit root_path
+
+      Timecop.travel(30.days.from_now + 1) do
+        visit root_path
+        signin_with_2sv(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+        assert_response_contains "Welcome to GOV.UK"
+      end
+    end
+
     should "prevent access to signon until fully authenticated" do
       visit root_path
       signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")

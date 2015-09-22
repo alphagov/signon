@@ -12,6 +12,13 @@ class Devise::TwoStepVerificationController < DeviseController
     render(:show) && return if params[:code].nil?
 
     if current_user.authenticate_otp(params[:code])
+      expires_seconds = User::REMEMBER_2SV_SESSION_FOR
+      if expires_seconds && expires_seconds > 0
+        cookies.signed['remember_2sv_session'] = {
+          value: {user_id: current_user.id, expires: expires_seconds.from_now},
+          expires: expires_seconds.from_now
+        }
+      end
       warden.session(:user)['need_two_step_verification'] = false
       sign_in :user, current_user, bypass: true
       set_flash_message :notice, :success
