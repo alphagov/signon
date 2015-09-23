@@ -172,5 +172,22 @@ class SignInTest < ActionDispatch::IntegrationTest
         assert_selector "input[name=code]"
       end
     end
+
+    should "not permit another user's cookie to be used to bypass 2SV" do
+      attacker = create(:user, email: "attacker@example.com", password: "c0mpl£x $ymb0l$")
+      attacker.update_attribute(:otp_secret_key, ROTP::Base32.random_base32)
+
+      visit root_path
+      signin_with_2sv(email: "attacker@example.com", password: "c0mpl£x $ymb0l$")
+      remember_2sv_session = Capybara.current_session.driver.request.cookies["remember_2sv_session"]
+      signout
+
+      visit root_path
+      signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      Capybara.current_session.driver.request.cookies["remember_2sv_session"] = remember_2sv_session
+      visit root_path
+      assert_response_contains "get your code"
+      assert_selector "input[name=code]"
+    end
   end
 end
