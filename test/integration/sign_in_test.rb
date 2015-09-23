@@ -76,6 +76,27 @@ class SignInTest < ActionDispatch::IntegrationTest
       assert_selector "input[name=code]"
     end
 
+    should "not prompt for a verification code twice per browser in 30 days" do
+      visit root_path
+      signin_with_2sv(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      assert_response_contains "Welcome to GOV.UK"
+
+      signout
+      visit root_path
+
+      signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      assert_response_contains "Welcome to GOV.UK"
+
+      signout
+      visit root_path
+
+      Timecop.travel(30.days.from_now + 1) do
+        visit root_path
+        signin_with_2sv(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+        assert_response_contains "Welcome to GOV.UK"
+      end
+    end
+
     should "prevent access to signon until fully authenticated" do
       visit root_path
       signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
@@ -132,6 +153,41 @@ class SignInTest < ActionDispatch::IntegrationTest
 
       assert_response_contains "entered too many times"
       assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_LOCKED, uid: @user.uid).count
+    end
+
+    should "not permit an expired cookie to be used to bypass 2SV" do
+      visit root_path
+      signin_with_2sv(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      remember_2sv_session = Capybara.current_session.driver.request.cookies["remember_2sv_session"]
+
+      Timecop.travel(30.days.from_now + 1) do
+        # Force Capybara's driver to clear the expired cookie from the session, then manually set
+        # the same value but with a future expiry
+        visit root_path
+        Capybara.current_session.driver.request.cookies["remember_2sv_session"] = remember_2sv_session
+
+        visit root_path
+        signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+        assert_response_contains "get your code"
+        assert_selector "input[name=code]"
+      end
+    end
+
+    should "not permit another user's cookie to be used to bypass 2SV" do
+      attacker = create(:user, email: "attacker@example.com", password: "c0mpl£x $ymb0l$")
+      attacker.update_attribute(:otp_secret_key, ROTP::Base32.random_base32)
+
+      visit root_path
+      signin_with_2sv(email: "attacker@example.com", password: "c0mpl£x $ymb0l$")
+      remember_2sv_session = Capybara.current_session.driver.request.cookies["remember_2sv_session"]
+      signout
+
+      visit root_path
+      signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      Capybara.current_session.driver.request.cookies["remember_2sv_session"] = remember_2sv_session
+      visit root_path
+      assert_response_contains "get your code"
+      assert_selector "input[name=code]"
     end
   end
 end
