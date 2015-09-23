@@ -15,7 +15,7 @@ class Devise::TwoStepVerificationController < DeviseController
       expires_seconds = User::REMEMBER_2SV_SESSION_FOR
       if expires_seconds && expires_seconds > 0
         cookies.signed['remember_2sv_session'] = {
-          value: {user_id: current_user.id, expires: expires_seconds.from_now},
+          value: {user_id: current_user.id, valid_until: expires_seconds.from_now},
           expires: expires_seconds.from_now
         }
       end
