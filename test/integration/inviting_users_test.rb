@@ -4,6 +4,18 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
   include EmailHelpers
   include ActiveJob::TestHelper
 
+  context "for non-superadmins" do
+    should "not display the 2SV flagging checkbox" do
+      admin = create(:admin_user)
+      visit root_path
+      signin(admin)
+
+      visit new_user_invitation_path
+
+      assert has_no_field?("Requires 2SV")
+    end
+  end
+
   context "for an end-user by an admin" do
     should "create and notify the user" do
       perform_enqueued_jobs do
