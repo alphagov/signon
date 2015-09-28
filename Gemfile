@@ -2,10 +2,10 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.2.4'
 
-gem 'kaminari', '0.16.1'
+gem 'kaminari', '~> 0.16.3'
 gem 'bootstrap-kaminari-views', '0.0.5'
 gem 'alphabetical_paginate', '2.2.3'
-gem 'mysql2', '0.3.18'
+gem 'mysql2', '~> 0.3.20'
 gem 'govuk_admin_template', '2.6.0'
 
 gem 'airbrake', '3.1.15'
@@ -34,13 +34,13 @@ gem 'sidekiq', '2.17.2'
 gem 'sidekiq-statsd', '0.1.2'
 gem 'activejob-retry'
 
-gem 'redis', '3.0.6'
+gem 'redis', '~> 3.2.1'
 
 gem 'zeroclipboard-rails'
 
 gem 'rake', '10.4.1'
 
-gem 'sass-rails', '5.0.3'
+gem 'sass-rails', '~> 5.0.3'
 
 gem 'uglifier', '2.7.1'
 
@@ -58,15 +58,15 @@ end
 gem 'logstasher', '0.4.8'
 
 group :test do
-  gem 'rspec-rails', '~> 3.1.0'
-  gem 'capybara', '2.2.1'
-  gem 'capybara-email', '~> 2.3.0'
-  gem 'poltergeist', '1.5.0'
-  gem 'database_cleaner', '1.4.1'
-  gem 'factory_girl_rails', '4.3.0'
+  gem 'rspec-rails', '~> 3.3.3'
+  gem 'capybara', '~> 2.5.0'
+  gem 'capybara-email', '~> 2.4.0'
+  gem 'poltergeist', '1.6.0'
+  gem 'database_cleaner', '1.5.0'
+  gem 'factory_girl_rails', '~> 4.5.0'
   gem 'mocha', '1.1.0', require: false
   gem 'webmock', '1.17.3'
-  gem 'minitest', '5.1.0'
+  gem 'minitest', '~> 5.8.0'
   gem 'ci_reporter', '1.7.0'
   gem 'timecop', '0.7.1'
   gem 'shoulda-context', '1.2.1', require: false

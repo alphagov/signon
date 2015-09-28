@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :user do
-    ignore do
+    transient do
       with_permissions {}
       with_signin_permissions_for []
     end
@@ -65,7 +65,7 @@ FactoryGirl.define do
   end
 
   factory :api_user do
-    ignore do
+    transient do
       with_permissions {}
     end
 
