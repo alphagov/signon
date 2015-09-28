@@ -8,6 +8,10 @@ class UserTest < ActiveSupport::TestCase
     @user = create(:user)
   end
 
+  test "`requires_2sv` defaults to false" do
+    refute build(:user).requires_2sv?
+  end
+
   test "email change tokens should expire" do
     @user = create(:user_with_pending_email_change, confirmation_sent_at: 15.days.ago)
     @user.confirm
