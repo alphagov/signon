@@ -57,9 +57,14 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
         fill_in "Name", with: "Fred Bloggs"
         select "Admin", from: "Role"
         fill_in "Email", with: "fred_admin@example.com"
+        check "Requires 2SV"
         click_button "Create user and send email"
 
-        assert_not_nil User.where(email: "fred_admin@example.com", role: "admin").first
+        assert_not_nil User.find_by(
+          email: "fred_admin@example.com",
+          role: "admin",
+          requires_2sv: true
+        )
         assert_equal "fred_admin@example.com", last_email.to[0]
         assert_match 'Please confirm your account', last_email.subject
       end

@@ -41,6 +41,10 @@
   <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control", 'data-module' => 'chosen' } %>
 </p>
 
+<p class="form-group">
+  <%= f.check_box :requires_2sv %> <%= f.label :requires_2sv, "Requires 2SV" %>
+</p>
+
 <h2 class="add-vertical-margins">Permissions</h2>
 
 <%= render partial: "shared/user_permissions", locals: { user_object: f.object }%>
