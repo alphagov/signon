@@ -67,8 +67,6 @@ group :test do
   gem 'mocha', '1.1.0', require: false
   gem 'webmock', '1.17.3'
   gem 'minitest', '5.1.0'
-  gem 'simplecov', '0.6.4'
-  gem 'simplecov-rcov', '0.2.3'
   gem 'ci_reporter', '1.7.0'
   gem 'timecop', '0.7.1'
   gem 'shoulda-context', '1.2.1', require: false
