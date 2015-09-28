@@ -11,6 +11,7 @@ module Roles
         :unconfirmed_email,
         :confirmation_token,
         :role,
+        :requires_2sv,
         { supported_permission_ids: [] },
       ]
     end
