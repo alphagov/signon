@@ -41,9 +41,11 @@
   <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control", 'data-module' => 'chosen' } %>
 </p>
 
-<p class="form-group">
-  <%= f.check_box :requires_2sv %> <%= f.label :requires_2sv, "Requires 2SV" %>
-</p>
+<% if policy(User).flag_2sv? %>
+  <p class="form-group">
+    <%= f.check_box :requires_2sv %> <%= f.label :requires_2sv, "Requires 2SV" %>
+  </p>
+<% end %>
 
 <h2 class="add-vertical-margins">Permissions</h2>
 
