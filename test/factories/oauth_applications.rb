@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :application, class: Doorkeeper::Application do
-    ignore do
+    transient do
       with_supported_permissions []
       with_supported_permissions_not_grantable_from_ui []
       with_delegatable_supported_permissions []

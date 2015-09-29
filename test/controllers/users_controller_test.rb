@@ -422,7 +422,7 @@ class UsersControllerTest < ActionController::TestCase
         get :edit, id: user_in_org.id
 
         assert_select "select[name='user[organisation_id]']" do
-          assert_select "option", count: 3  # including 'None'
+          assert_select "option", count: 3
           assert_select "option[selected=selected]", count: 1
           assert_select %{option[value="#{org_with_user.id}"][selected=selected]}, text: org_with_user.name_with_abbreviation
           assert_select %{option[value="#{other_organisation.id}"]}, text: other_organisation.name_with_abbreviation
