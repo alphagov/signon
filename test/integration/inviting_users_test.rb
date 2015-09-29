@@ -12,7 +12,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
       visit new_user_invitation_path
 
-      assert has_no_field?("Requires 2SV")
+      assert has_no_field?("Require 2-step verification")
     end
   end
 
@@ -69,7 +69,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
         fill_in "Name", with: "Fred Bloggs"
         select "Admin", from: "Role"
         fill_in "Email", with: "fred_admin@example.com"
-        check "Requires 2SV"
+        check "Require 2-step verification"
         click_button "Create user and send email"
 
         assert_not_nil User.find_by(
