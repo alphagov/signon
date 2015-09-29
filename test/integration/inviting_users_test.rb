@@ -75,7 +75,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
         assert_not_nil User.find_by(
           email: "fred_admin@example.com",
           role: "admin",
-          requires_2sv: true
+          require_2sv: true
         )
         assert_equal "fred_admin@example.com", last_email.to[0]
         assert_match 'Please confirm your account', last_email.subject
