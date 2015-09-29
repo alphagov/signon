@@ -5,7 +5,7 @@ gem 'rails', '4.2.4'
 gem 'kaminari', '~> 0.16.3'
 gem 'bootstrap-kaminari-views', '0.0.5'
 gem 'alphabetical_paginate', '2.2.3'
-gem 'mysql2', '~> 0.3.20'
+gem 'mysql2', '0.3.20'
 gem 'govuk_admin_template', '2.6.0'
 
 gem 'airbrake', '3.1.15'
@@ -34,7 +34,7 @@ gem 'sidekiq', '~> 3.5.0'
 gem 'sidekiq-statsd', '0.1.4'
 gem 'activejob-retry'
 
-gem 'redis', '~> 3.2.1'
+gem 'redis', '3.2.1'
 
 gem 'zeroclipboard-rails'
 
