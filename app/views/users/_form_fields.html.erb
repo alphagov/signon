@@ -36,16 +36,18 @@
   </p>
 <% end %>
 
+<% if policy(User).flag_2sv? %>
+  <p class="checkbox">
+    <%= f.label :requires_2sv do %>
+      <%= f.check_box :requires_2sv %> Require 2-step verification
+    <% end %>
+  </p>
+<% end %>
+
 <p class="form-group">
   <%= f.label :organisation_id, "Organisation" %><br />
   <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control", 'data-module' => 'chosen' } %>
 </p>
-
-<% if policy(User).flag_2sv? %>
-  <p class="form-group">
-    <%= f.check_box :requires_2sv %> <%= f.label :requires_2sv, "Require 2-step verification" %>
-  </p>
-<% end %>
 
 <h2 class="add-vertical-margins">Permissions</h2>
 
