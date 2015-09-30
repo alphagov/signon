@@ -49,7 +49,6 @@ class User < ActiveRecord::Base
   before_validation :fix_apostrophe_in_email
   before_create :generate_uid
   after_create :update_stats
-  after_update :log_2sv_locked, if: :max_2sv_login_attempts?
 
   scope :web_users, -> { where(api_user: false) }
   scope :not_suspended, -> { where(suspended_at: nil) }
@@ -213,9 +212,12 @@ class User < ActiveRecord::Base
     result = totp.verify_with_drift(code, MAX_2SV_DRIFT_SECONDS)
 
     if result
+      update_attribute(:second_factor_attempts_count, 0)
       EventLog.record_event(self, EventLog::TWO_STEP_VERIFIED)
     else
+      increment!(:second_factor_attempts_count)
       EventLog.record_event(self, EventLog::TWO_STEP_VERIFICATION_FAILED)
+      EventLog.record_event(self, EventLog::TWO_STEP_LOCKED) if max_2sv_login_attempts?
     end
 
     result
@@ -246,9 +248,5 @@ private
 
   def fix_apostrophe_in_email
     self.email.tr!('’', "'") if email.present? && email_changed?
-  end
-
-  def log_2sv_locked
-    EventLog.record_event(self, EventLog::TWO_STEP_LOCKED) if second_factor_attempts_count_changed?
   end
 end
