@@ -9,12 +9,12 @@ class TwoStepVerificationPromptTest < ActionDispatch::IntegrationTest
     end
 
     should 'prompt the user to complete verification' do
-      assert page.has_text?('Setup 2-step verification?')
+      assert page.has_text?('Start set up')
     end
 
     context 'they choose to defer setup' do
       should 'reset the 2SV flag' do
-        click_button 'Continue and setup later'
+        click_button 'Not now'
 
         assert page.has_text?('not be required to setup 2-step')
       end
@@ -22,7 +22,7 @@ class TwoStepVerificationPromptTest < ActionDispatch::IntegrationTest
 
     context 'they choose to setup 2-step verification' do
       should 'direct them to setup' do
-        click_link 'Setup now'
+        click_link 'Start set up'
 
         assert page.has_text?('Set up 2-step verification')
       end
