@@ -1,9 +1,12 @@
 class Devise::TwoStepVerificationController < DeviseController
-  before_filter :prepare_and_validate
+  before_filter :prepare_and_validate, except: :prompt
   skip_before_filter :handle_two_step_verification
 
   attr_reader :otp_secret_key
   private :otp_secret_key
+
+  def prompt
+  end
 
   def show
   end
