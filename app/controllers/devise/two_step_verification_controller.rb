@@ -1,11 +1,16 @@
 class Devise::TwoStepVerificationController < DeviseController
-  before_filter :prepare_and_validate, except: :prompt
+  before_filter :prepare_and_validate, except: [:prompt, :defer]
   skip_before_filter :handle_two_step_verification
 
   attr_reader :otp_secret_key
   private :otp_secret_key
 
   def prompt
+  end
+
+  def defer
+    current_user.defer_two_step_verification
+    redirect_to root_path, notice: 'You will not be required to setup 2-step verification.'
   end
 
   def show

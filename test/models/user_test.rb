@@ -12,6 +12,21 @@ class UserTest < ActiveSupport::TestCase
     refute build(:user).require_2sv?
   end
 
+  context '#defer_two_step_verification' do
+    setup do
+      @user = create(:two_step_flagged_user)
+      @user.defer_two_step_verification
+    end
+
+    should 'reset the `require_2sv` flag' do
+      refute @user.require_2sv?
+    end
+
+    should 'record an event' do
+      EventLog.find_by!(event: EventLog::TWO_STEP_PROMPT_DEFERRED, uid: @user.uid)
+    end
+  end
+
   test "email change tokens should expire" do
     @user = create(:user_with_pending_email_change, confirmation_sent_at: 15.days.ago)
     @user.confirm

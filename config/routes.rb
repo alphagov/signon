@@ -16,6 +16,7 @@ Signonotron2::Application.routes.draw do
       controller: "devise/two_step_verification" do
         member do
           get :prompt
+          post :defer
         end
     end
   end

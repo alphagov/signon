@@ -80,6 +80,11 @@ class User < ActiveRecord::Base
     end
   }
 
+  def defer_two_step_verification
+    self.update_attribute(:require_2sv, false)
+    EventLog.record_event(self, EventLog::TWO_STEP_PROMPT_DEFERRED)
+  end
+
   def event_logs
     EventLog.where(uid: uid).order(created_at: :desc)
   end
