@@ -80,7 +80,6 @@ class User < ActiveRecord::Base
     end
   }
 
-
   def event_logs
     EventLog.where(uid: uid).order(created_at: :desc)
   end
@@ -176,8 +175,10 @@ class User < ActiveRecord::Base
   end
 
   # Override Devise::Model::Lockable#lock_access! to add event logging
-  def lock_access!
-    EventLog.record_event(User.find_by_email(self.email), EventLog::ACCOUNT_LOCKED)
+  def lock_access! opts = {}
+    event = locked_reason == :two_step ? EventLog::TWO_STEP_LOCKED : EventLog::ACCOUNT_LOCKED
+    EventLog.record_event(self, event)
+
     super
   end
 
@@ -215,10 +216,18 @@ class User < ActiveRecord::Base
     else
       increment!(:second_factor_attempts_count)
       EventLog.record_event(self, EventLog::TWO_STEP_VERIFICATION_FAILED)
-      EventLog.record_event(self, EventLog::TWO_STEP_LOCKED) if max_2sv_login_attempts?
+      lock_access! if max_2sv_login_attempts?
     end
 
     result
+  end
+
+  def locked_reason
+    if max_2sv_login_attempts?
+      :two_step
+    else
+      :passphrase
+    end
   end
 
   def max_2sv_login_attempts?
