@@ -193,6 +193,14 @@ class SignInTest < ActionDispatch::IntegrationTest
       assert_response_contains "get your code"
       assert_selector "input[name=code]"
     end
+
+    should "allow the user to cancel 2SV by signing out" do
+      visit root_path
+      signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      click_link "Sign out"
+
+      assert_text "Signed out successfully."
+    end
   end
 
   should "not display a link to resend unlock instructions" do
