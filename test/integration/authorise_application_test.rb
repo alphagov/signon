@@ -6,6 +6,18 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     @user = create(:user)
   end
 
+  should "not confirm the authorisation if the user is flagged for 2SV" do
+    @user.update_attribute(:require_2sv, true)
+    visit "/"
+    signin(@user)
+
+    ignoring_spurious_error do
+      visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
+    end
+
+    assert_response_contains("Setup 2-step verification")
+  end
+
   should "not confirm the authorisation until the user signs in" do
     visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     assert_response_contains("You need to sign in")
