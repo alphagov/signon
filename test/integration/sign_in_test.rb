@@ -194,4 +194,9 @@ class SignInTest < ActionDispatch::IntegrationTest
       assert_selector "input[name=code]"
     end
   end
+
+  should "not display a link to resend unlock instructions" do
+    visit root_path
+    refute_selector "a", text: "Didn't receive unlock instructions?"
+  end
 end
