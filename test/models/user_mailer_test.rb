@@ -65,8 +65,8 @@ class UserMailerTest < ActionMailer::TestCase
     setup do
       Rails.application.config.stubs(:instance_name).returns("test")
       @the_time = Time.zone.now
-      stub_user = stub(name: "User", email: "user@example.com", locked_at: @the_time)
-      @email = UserMailer.locked_account_explanation(stub_user)
+      user = User.new(name: "User", email: "user@example.com", locked_at: @the_time)
+      @email = UserMailer.unlock_instructions(user, "afaketoken")
     end
 
     should "state when the account was locked" do
