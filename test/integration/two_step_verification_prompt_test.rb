@@ -19,5 +19,13 @@ class TwoStepVerificationPromptTest < ActionDispatch::IntegrationTest
         assert page.has_text?('not be required to setup 2-step')
       end
     end
+
+    context 'they choose to setup 2-step verification' do
+      should 'direct them to setup' do
+        click_link 'Setup now'
+
+        assert page.has_text?('Set up 2-step verification')
+      end
+    end
   end
 end
