@@ -27,6 +27,7 @@ class EventLog < ActiveRecord::Base
   TWO_STEP_LOCKED = "2-step verification failed too many times, account locked for #{LOCKED_DURATION}"
   TWO_STEP_CHANGED = "2-step verification phone changed"
   TWO_STEP_CHANGE_FAILED = "2-step verification phone change failed"
+  TWO_STEP_PROMPT_DEFERRED = "2-step prompt deferred"
 
   # API users
   API_USER_CREATED = "Account created"

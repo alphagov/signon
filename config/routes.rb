@@ -18,6 +18,7 @@ Signonotron2::Application.routes.draw do
 
         member do
           get :prompt
+          post :defer
         end
     end
   end
