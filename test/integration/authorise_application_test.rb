@@ -15,7 +15,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     end
 
-    assert_response_contains("Setup 2-step verification")
+    assert_response_contains("Make your account more secure")
   end
 
   should "not confirm the authorisation until the user signs in" do
