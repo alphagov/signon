@@ -83,6 +83,10 @@ class User < ActiveRecord::Base
     end
   }
 
+  def require_2sv?
+    otp_secret_key.present? ? false : super
+  end
+
   def defer_two_step_verification
     self.update_attribute(:require_2sv, false)
     EventLog.record_event(self, EventLog::TWO_STEP_PROMPT_DEFERRED)
