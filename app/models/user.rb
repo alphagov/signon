@@ -234,6 +234,11 @@ class User < ActiveRecord::Base
     second_factor_attempts_count.to_i >= MAX_2SV_LOGIN_ATTEMPTS.to_i
   end
 
+  def unlock_access! *args
+    super
+    update_attribute(:second_factor_attempts_count, 0)
+  end
+
 private
 
   # Override devise_security_extension for updating expired passwords
