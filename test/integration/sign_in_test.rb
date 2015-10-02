@@ -150,11 +150,14 @@ class SignInTest < ActionDispatch::IntegrationTest
       visit root_path
       signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
 
-      User::MAX_2SV_LOGIN_ATTEMPTS.times do
-        fill_in :code, with: "abcdef"
-        click_button "Sign in"
-      end
+      Timecop.freeze do
+        User::MAX_2SV_LOGIN_ATTEMPTS.times do
+          fill_in :code, with: "abcdef"
+          click_button "Sign in"
+        end
 
+        assert_response_contains 1.hour.from_now.to_s(:govuk_time)
+      end
       assert_response_contains "entered too many times"
       assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_LOCKED, uid: @user.uid).count
     end
