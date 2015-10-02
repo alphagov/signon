@@ -21,6 +21,14 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context '#require_2sv?' do
+    context 'when the user has already enrolled' do
+      should 'always be false' do
+        refute build(:two_step_flagged_user, otp_secret_key: 'welp').require_2sv?
+      end
+    end
+  end
+
   context '#defer_two_step_verification' do
     setup do
       @user = create(:two_step_flagged_user)
