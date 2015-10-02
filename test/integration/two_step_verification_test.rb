@@ -20,7 +20,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
     context "without an existing 2SV setup" do
       setup do
-        @user = create(:user, email: "jane.user@example.com")
+        @user = create(:user, email: "jane.user@example.com", require_2sv: true)
         visit new_user_session_path
         signin(@user)
         @secret = ROTP::Base32.random_base32
@@ -69,6 +69,10 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
         should "log the set up in the event log" do
           assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_ENABLED, uid: @user.uid).count
+        end
+
+        should "reset the `require_2sv` flag" do
+          refute @user.reload.require_2sv?
         end
       end
     end
