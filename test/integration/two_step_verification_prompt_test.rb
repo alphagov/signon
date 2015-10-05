@@ -4,7 +4,7 @@ class TwoStepVerificationPromptTest < ActionDispatch::IntegrationTest
   context 'when the user has been flagged for 2-step verification' do
     setup do
       @user = create(:two_step_flagged_user)
-      visit root_path
+      visit users_path
       signin(@user)
     end
 
@@ -13,10 +13,10 @@ class TwoStepVerificationPromptTest < ActionDispatch::IntegrationTest
     end
 
     context 'they choose to defer setup' do
-      should 'reset the 2SV flag' do
+      should 'redirect them to where they were headed originally' do
         click_button 'Not now'
 
-        assert page.has_text?('not be required to setup 2-step')
+        assert_equal users_path, page.current_path
       end
     end
 

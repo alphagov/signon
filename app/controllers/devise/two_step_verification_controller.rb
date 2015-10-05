@@ -10,7 +10,7 @@ class Devise::TwoStepVerificationController < DeviseController
 
   def defer
     current_user.defer_two_step_verification
-    redirect_to root_path, notice: 'You will not be required to setup 2-step verification.'
+    redirect_to stored_location_for(:user) || :root
   end
 
   def show
