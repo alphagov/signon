@@ -2,7 +2,7 @@
   <div class="alert alert-<%= bootstrap_flash_class(k) %>"
     data-module="auto-track-event"
     data-track-action="alert-<%= bootstrap_flash_class(k) %>"
-    data-track-label="<%= strip_tags(flash[k]) %>">
+    data-track-label="<%= flash_text_without_email_addresses(flash[k]) %>">
       <%= flash[k] %>
   </div>
 <% end %>
