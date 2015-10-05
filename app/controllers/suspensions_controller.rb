@@ -16,7 +16,7 @@ class SuspensionsController < ApplicationController
       PermissionUpdater.perform_on(@user)
       ReauthEnforcer.perform_on(@user)
 
-      flash[:notice] = "#{@user.name} is now #{@user.suspended? ? 'suspended' : 'active'}."
+      flash[:notice] = "#{@user.email} is now #{@user.suspended? ? 'suspended' : 'active'}."
 
       redirect_to @user.api_user? ? edit_api_user_path(@user) : edit_user_path(@user)
     else
