@@ -6,16 +6,30 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     @user = create(:user)
   end
 
-  should "not confirm the authorisation if the user is flagged for 2SV" do
-    @user.update_attribute(:require_2sv, true)
-    visit "/"
-    signin(@user)
+  context "when the user is flagged for 2SV" do
+    setup do
+      @user.update_attribute(:require_2sv, true)
+      visit "/"
+      signin(@user)
 
-    ignoring_spurious_error do
-      visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
+      ignoring_spurious_error do
+        visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
+      end
     end
 
-    assert_response_contains("Make your account more secure")
+    should "not confirm the authorisation" do
+      assert_response_contains("Make your account more secure")
+    end
+
+    context "when the user defers 2SV" do
+      should "redirect them to the originally authorised app" do
+        ignoring_spurious_error do
+          click_button "Not now"
+        end
+
+        assert_redirected_to_application @app
+      end
+    end
   end
 
   should "not confirm the authorisation until the user signs in" do
