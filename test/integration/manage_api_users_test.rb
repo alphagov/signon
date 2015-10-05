@@ -111,7 +111,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       uncheck "Suspended?"
       click_button "Save"
 
-      assert page.has_selector?(".alert-success", text: "#{@api_user.name} is now active.")
+      assert page.has_selector?(".alert-success", text: "#{@api_user.email} is now active.")
     end
   end
 end
