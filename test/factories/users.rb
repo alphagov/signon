@@ -34,7 +34,7 @@ FactoryGirl.define do
     end
   end
 
-  factory :two_step_flagged_user, parent: :user do
+  factory :two_step_flagged_user, parent: :superadmin_user do
     require_2sv true
   end
 

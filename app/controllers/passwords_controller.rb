@@ -22,6 +22,11 @@ class PasswordsController < Devise::PasswordsController
     end
   end
 
+  protected
+  def after_resetting_password_path_for(resource)
+    signed_in_root_path(resource)
+  end
+
 private
   def record_password_reset_request
     user_from_params = User.find_by_email(params[:user][:email]) if params[:user].present?
