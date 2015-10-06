@@ -30,7 +30,8 @@ class Devise::TwoStepVerificationController < DeviseController
       warden.session(:user)['need_two_step_verification'] = false
       sign_in :user, current_user, bypass: true
       set_flash_message :notice, :success
-      redirect_to stored_location_for(:user) || :root
+      redirect_to_prior_flow
+      current_user.update_attribute(:second_factor_attempts_count, 0)
     else
       flash.now[:error] = find_message(:attempt_failed)
       if current_user.max_2sv_login_attempts?
@@ -59,7 +60,7 @@ class Devise::TwoStepVerificationController < DeviseController
         require_2sv: false
       )
       EventLog.record_event(current_user, EventLog::TWO_STEP_ENABLED)
-      redirect_to "/", notice: "2-step verification set up"
+      redirect_to_prior_flow(notice: "2-step verification set up")
     else
       EventLog.record_event(current_user, EventLog::TWO_STEP_ENABLE_FAILED)
       flash.now[:invalid_code] = "Sorry that code didn’t work. Please try again."
@@ -89,5 +90,9 @@ class Devise::TwoStepVerificationController < DeviseController
       sign_out(current_user)
       render(:max_2sv_login_attempts_reached) && return
     end
+  end
+
+  def redirect_to_prior_flow(args = {})
+    redirect_to stored_location_for(:user) || :root, args
   end
 end
