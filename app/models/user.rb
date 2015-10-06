@@ -35,9 +35,6 @@ class User < ActiveRecord::Base
          :password_archivable, # in signonotron2/lib/devise/models/password_archivable.rb
          :password_expirable   # in signonotron2/lib/devise/models/password_expirable.rb
 
-  validates :require_2sv,
-    inclusion: { in: [false], message: 'This user is already enrolled in 2SV' },
-    if: ->(u) { u.otp_secret_key.present? }
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
   validate :organisation_admin_belongs_to_organisation
