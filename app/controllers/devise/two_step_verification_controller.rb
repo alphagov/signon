@@ -55,10 +55,7 @@ class Devise::TwoStepVerificationController < DeviseController
     @otp_secret_key = params[:otp_secret_key]
     totp = ROTP::TOTP.new(@otp_secret_key)
     if totp.verify(params[:code])
-      current_user.update_attributes(
-        otp_secret_key: @otp_secret_key,
-        require_2sv: false
-      )
+      current_user.update_attribute(:otp_secret_key, @otp_secret_key)
       EventLog.record_event(current_user, EventLog::TWO_STEP_ENABLED)
       redirect_to_prior_flow(notice: "2-step verification set up")
     else

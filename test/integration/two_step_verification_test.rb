@@ -71,10 +71,6 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
           assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_ENABLED, uid: @user.uid).count
         end
 
-        should "reset the `require_2sv` flag" do
-          refute @user.reload.require_2sv?
-        end
-
         should "direct them back to where they were originally headed" do
           assert_equal users_path, current_path
         end
