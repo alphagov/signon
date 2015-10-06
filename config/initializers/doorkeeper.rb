@@ -11,7 +11,7 @@ Doorkeeper.configure do
       redirect_to user_password_expired_path
     elsif user.need_two_step_verification? && warden.session(:user)['need_two_step_verification']
       redirect_to new_two_step_verification_session_path
-    elsif user.require_2sv?
+    elsif user.prompt_for_2sv?
       store_location_for(:user, request.fullpath)
       redirect_to prompt_two_step_verification_path
     else

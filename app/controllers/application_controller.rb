@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
   def after_sign_in_path_for(resource)
-    if resource.require_2sv?
+    if resource.prompt_for_2sv?
       prompt_two_step_verification_path
     else
       super
