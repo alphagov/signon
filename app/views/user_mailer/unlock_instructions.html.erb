@@ -1,6 +1,6 @@
-<p>Hello <%= @user.name %>,</p>
+<p>Hello <%= @resource.name %>,</p>
 
-<p>Your <%= link_to 'GOV.UK', "https://www.gov.uk" %> Signon <%= account_name %>, for <%= @user.email %>, was locked at <%= locked_time %> because the wrong sign on details were entered too many times.</p>
+<p>Your <%= link_to 'GOV.UK', "https://www.gov.uk" %> Signon <%= account_name %>, for <%= @resource.email %>, was locked at <%= locked_time %> because the wrong sign on details were entered too many times.</p>
 
 <% if instance_name.present? %>
 <p><%= account_name.humanize %> locks do not lock production accounts.</p>

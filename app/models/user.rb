@@ -49,7 +49,6 @@ class User < ActiveRecord::Base
   before_validation :fix_apostrophe_in_email
   before_create :generate_uid
   after_create :update_stats
-  after_update :log_2sv_locked, if: :max_2sv_login_attempts?
 
   scope :web_users, -> { where(api_user: false) }
   scope :not_suspended, -> { where(suspended_at: nil) }
@@ -80,7 +79,6 @@ class User < ActiveRecord::Base
       raise NotImplementedError.new("Filtering by status '#{status}' not implemented.")
     end
   }
-
 
   def event_logs
     EventLog.where(uid: uid).order(created_at: :desc)
@@ -177,11 +175,11 @@ class User < ActiveRecord::Base
   end
 
   # Override Devise::Model::Lockable#lock_access! to add event logging
-  def lock_access!
-    EventLog.record_event(User.find_by_email(self.email), EventLog::ACCOUNT_LOCKED)
-    super
+  def lock_access! opts = {}
+    event = locked_reason == :two_step ? EventLog::TWO_STEP_LOCKED : EventLog::ACCOUNT_LOCKED
+    EventLog.record_event(self, event)
 
-    UserMailer.locked_account_explanation(self).deliver_later
+    super
   end
 
   def status
@@ -213,16 +211,32 @@ class User < ActiveRecord::Base
     result = totp.verify_with_drift(code, MAX_2SV_DRIFT_SECONDS)
 
     if result
+      update_attribute(:second_factor_attempts_count, 0)
       EventLog.record_event(self, EventLog::TWO_STEP_VERIFIED)
     else
+      increment!(:second_factor_attempts_count)
       EventLog.record_event(self, EventLog::TWO_STEP_VERIFICATION_FAILED)
+      lock_access! if max_2sv_login_attempts?
     end
 
     result
   end
 
+  def locked_reason
+    if max_2sv_login_attempts?
+      :two_step
+    else
+      :passphrase
+    end
+  end
+
   def max_2sv_login_attempts?
     second_factor_attempts_count.to_i >= MAX_2SV_LOGIN_ATTEMPTS.to_i
+  end
+
+  def unlock_access! *args
+    super
+    update_attribute(:second_factor_attempts_count, 0)
   end
 
 private
@@ -246,9 +260,5 @@ private
 
   def fix_apostrophe_in_email
     self.email.tr!('’', "'") if email.present? && email_changed?
-  end
-
-  def log_2sv_locked
-    EventLog.record_event(self, EventLog::TWO_STEP_LOCKED) if second_factor_attempts_count_changed?
   end
 end

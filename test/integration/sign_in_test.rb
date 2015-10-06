@@ -147,10 +147,17 @@ class SignInTest < ActionDispatch::IntegrationTest
     end
 
     should "prevent access if max attempts reached" do
-      @user.update_attribute(:second_factor_attempts_count, User::MAX_2SV_LOGIN_ATTEMPTS)
       visit root_path
       signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
 
+      Timecop.freeze do
+        User::MAX_2SV_LOGIN_ATTEMPTS.times do
+          fill_in :code, with: "abcdef"
+          click_button "Sign in"
+        end
+
+        assert_response_contains 1.hour.from_now.to_s(:govuk_time)
+      end
       assert_response_contains "entered too many times"
       assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_LOCKED, uid: @user.uid).count
     end
@@ -189,5 +196,18 @@ class SignInTest < ActionDispatch::IntegrationTest
       assert_response_contains "get your code"
       assert_selector "input[name=code]"
     end
+
+    should "allow the user to cancel 2SV by signing out" do
+      visit root_path
+      signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      click_link "Sign out"
+
+      assert_text "Signed out successfully."
+    end
+  end
+
+  should "not display a link to resend unlock instructions" do
+    visit root_path
+    refute_selector "a", text: "Didn't receive unlock instructions?"
   end
 end

@@ -23,10 +23,7 @@ class Devise::TwoStepVerificationController < DeviseController
       sign_in :user, current_user, bypass: true
       set_flash_message :notice, :success
       redirect_to stored_location_for(:user) || :root
-      current_user.update_attribute(:second_factor_attempts_count, 0)
     else
-      current_user.second_factor_attempts_count += 1
-      current_user.save
       flash.now[:error] = find_message(:attempt_failed)
       if current_user.max_2sv_login_attempts?
         sign_out(current_user)

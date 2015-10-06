@@ -214,9 +214,9 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   def assert_account_access_log_page_content(user)
-    assert page.has_content?('Time')
-    assert page.has_content?('Event')
-    assert page.has_content?('Account locked')
-    assert page.has_link?("#{user.name}")
+    assert_text 'Time'
+    assert_text 'Event'
+    assert_text 'account locked'
+    assert_selector "a", text: user.name
   end
 end

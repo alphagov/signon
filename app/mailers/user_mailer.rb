@@ -1,5 +1,6 @@
-class UserMailer < ActionMailer::Base
+class UserMailer < Devise::Mailer
   include MailerHelper
+  append_view_path Rails.root.join("app/views/devise/mailer")
 
   default from: Proc.new { email_from }
 
@@ -14,11 +15,6 @@ class UserMailer < ActionMailer::Base
   def suspension_notification(user)
     @user = user
     mail(to: @user.email, subject: suspension_notification_subject)
-  end
-
-  def locked_account_explanation(user)
-    @user = user
-    mail(to: @user.email, subject: locked_account_explanation_subject)
   end
 
   def notify_reset_password_disallowed_due_to_suspension(user)
@@ -54,10 +50,6 @@ private
     "Your #{app_name} account has been suspended"
   end
 
-  def locked_account_explanation_subject
-    "Your #{app_name} account has been locked"
-  end
-
   def locked_time
     @user.locked_at.to_s(:govuk_date)
   end
@@ -72,5 +64,10 @@ private
     else
       "account"
     end
+  end
+
+  def subject_for(key)
+    I18n.t(:"#{devise_mapping.name}_subject", scope: [:devise, :mailer, key],
+      default: [:subject, key.to_s.humanize], app_name: app_name)
   end
 end

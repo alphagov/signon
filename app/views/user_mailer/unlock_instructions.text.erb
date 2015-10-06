@@ -1,6 +1,6 @@
-Hello <%= @user.name %>,
+Hello <%= @resource.name %>,
 
-Your GOV.UK Signon <%= account_name %>, for <%= @user.email %>, was locked at <%= locked_time %> because the wrong sign on details were entered too many times.
+Your GOV.UK Signon <%= account_name %>, for <%= @resource.email %>, was locked at <%= locked_time %> because the wrong sign on details were entered too many times.
 
 <% if instance_name.present? %>
   <%= account_name.humanize %> locks do not lock production accounts.
