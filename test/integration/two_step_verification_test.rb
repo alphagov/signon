@@ -78,6 +78,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         assert_response_contains "2-step verification set up"
         assert_equal @new_secret, @user.reload.otp_secret_key
         assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_ENABLED, uid: @user.uid).count
+        assert_equal users_path, current_path
       end
     end
   end
