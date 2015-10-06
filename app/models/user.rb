@@ -88,8 +88,13 @@ class User < ActiveRecord::Base
   end
 
   def defer_two_step_verification
-    self.update_attribute(:require_2sv, false)
-    EventLog.record_event(self, EventLog::TWO_STEP_PROMPT_DEFERRED)
+    transaction do
+      self.require_2sv = false
+      self.deferred_2sv_at = Time.zone.now
+      self.save!
+
+      EventLog.record_event(self, EventLog::TWO_STEP_PROMPT_DEFERRED)
+    end
   end
 
   def event_logs
