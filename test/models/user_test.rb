@@ -27,6 +27,18 @@ class UserTest < ActiveSupport::TestCase
         refute build(:two_step_flagged_user, otp_secret_key: 'welp').require_2sv?
       end
     end
+
+    context 'when the user deferred within the last 24hrs' do
+      should 'be false' do
+        refute build(:two_step_flagged_user, deferred_2sv_at: 3.hours.ago).require_2sv?
+      end
+    end
+
+    context 'when the user deferred more than 24hrs ago' do
+      should 'be true' do
+        assert build(:two_step_flagged_user, deferred_2sv_at: 25.hours.ago).require_2sv?
+      end
+    end
   end
 
   context '#defer_two_step_verification' do
@@ -36,7 +48,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'reset the `require_2sv` flag' do
-      refute @user.require_2sv?
+      refute @user.require_2sv
     end
 
     should 'touch the `deferred_2sv_at` timestamp' do
