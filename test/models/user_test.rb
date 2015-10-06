@@ -9,25 +9,25 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "`require_2sv` defaults to false" do
-    refute build(:user).require_2sv?
+    refute build(:user).require_2sv
   end
 
-  context '#require_2sv?' do
+  context '#prompt_for_2sv?' do
     context 'when the user has already enrolled' do
       should 'always be false' do
-        refute build(:two_step_flagged_user, otp_secret_key: 'welp').require_2sv?
+        refute build(:two_step_flagged_user, otp_secret_key: 'welp').prompt_for_2sv?
       end
     end
 
     context 'when the user deferred within the last 24hrs' do
       should 'be false' do
-        refute build(:two_step_flagged_user, deferred_2sv_at: 3.hours.ago).require_2sv?
+        refute build(:two_step_flagged_user, deferred_2sv_at: 3.hours.ago).prompt_for_2sv?
       end
     end
 
     context 'when the user deferred more than 24hrs ago' do
       should 'be true' do
-        assert build(:two_step_flagged_user, deferred_2sv_at: 25.hours.ago).require_2sv?
+        assert build(:two_step_flagged_user, deferred_2sv_at: 25.hours.ago).prompt_for_2sv?
       end
     end
   end

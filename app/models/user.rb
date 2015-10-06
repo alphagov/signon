@@ -80,13 +80,13 @@ class User < ActiveRecord::Base
     end
   }
 
-  def require_2sv?
+  def prompt_for_2sv?
     return false if otp_secret_key.present?
 
     if deferred_2sv_at?
       deferred_2sv_at < 24.hours.ago
     else
-      super
+      read_attribute(:require_2sv)
     end
   end
 
