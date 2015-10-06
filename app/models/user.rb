@@ -84,7 +84,13 @@ class User < ActiveRecord::Base
   }
 
   def require_2sv?
-    otp_secret_key.present? ? false : super
+    return false if otp_secret_key.present?
+
+    if deferred_2sv_at?
+      deferred_2sv_at < 24.hours.ago
+    else
+      super
+    end
   end
 
   def defer_two_step_verification
