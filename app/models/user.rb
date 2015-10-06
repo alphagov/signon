@@ -92,9 +92,7 @@ class User < ActiveRecord::Base
 
   def defer_two_step_verification
     transaction do
-      self.require_2sv = false
-      self.deferred_2sv_at = Time.zone.now
-      self.save!
+      touch(:deferred_2sv_at)
 
       EventLog.record_event(self, EventLog::TWO_STEP_PROMPT_DEFERRED)
     end

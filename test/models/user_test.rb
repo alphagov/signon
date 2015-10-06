@@ -38,10 +38,6 @@ class UserTest < ActiveSupport::TestCase
       @user.defer_two_step_verification
     end
 
-    should 'reset the `require_2sv` flag' do
-      refute @user.require_2sv
-    end
-
     should 'touch the `deferred_2sv_at` timestamp' do
       assert @user.deferred_2sv_at?
     end
