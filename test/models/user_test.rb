@@ -12,15 +12,6 @@ class UserTest < ActiveSupport::TestCase
     refute build(:user).require_2sv?
   end
 
-  context '#require_2sv validation' do
-    should 'not be permitted when the user has already setup 2SV' do
-      user = build(:user, otp_secret_key: 'something')
-      user.require_2sv = true
-
-      assert user.invalid?
-    end
-  end
-
   context '#require_2sv?' do
     context 'when the user has already enrolled' do
       should 'always be false' do
