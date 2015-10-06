@@ -1,7 +1,9 @@
 class EventLog < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
-  ACCOUNT_LOCKED = "Account locked"
+  LOCKED_DURATION = "#{Devise.unlock_in / 1.hour} #{'hour'.pluralize(Devise.unlock_in / 1.hour)}"
+
+  ACCOUNT_LOCKED = "Passphrase verification failed too many times, account locked for #{LOCKED_DURATION}"
   ACCOUNT_SUSPENDED = "Account suspended"
   ACCOUNT_UNSUSPENDED = "Account unsuspended"
   ACCOUNT_AUTOSUSPENDED = "Account auto-suspended"
@@ -22,7 +24,7 @@ class EventLog < ActiveRecord::Base
   TWO_STEP_ENABLE_FAILED = "2-step verification setup failed"
   TWO_STEP_VERIFIED = "2-step verification successful"
   TWO_STEP_VERIFICATION_FAILED = "2-step verification failed"
-  TWO_STEP_LOCKED = "2-step verification failed too many times"
+  TWO_STEP_LOCKED = "2-step verification failed too many times, account locked for #{LOCKED_DURATION}"
 
   # API users
   API_USER_CREATED = "Account created"

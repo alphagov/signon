@@ -216,7 +216,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
   def assert_account_access_log_page_content(user)
     assert_text 'Time'
     assert_text 'Event'
-    assert_text 'Account locked'
+    assert_text 'account locked'
     assert_selector "a", text: user.name
   end
 end
