@@ -39,6 +39,10 @@ class UserTest < ActiveSupport::TestCase
       refute @user.require_2sv?
     end
 
+    should 'touch the `deferred_2sv_at` timestamp' do
+      assert @user.deferred_2sv_at?
+    end
+
     should 'record an event' do
       EventLog.find_by!(event: EventLog::TWO_STEP_PROMPT_DEFERRED, uid: @user.uid)
     end
