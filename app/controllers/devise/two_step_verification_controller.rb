@@ -13,36 +13,6 @@ class Devise::TwoStepVerificationController < DeviseController
     redirect_to stored_location_for(:user) || :root
   end
 
-  def show
-  end
-
-  def update
-    render(:show) && return if params[:code].nil?
-
-    if current_user.authenticate_otp(params[:code])
-      expires_seconds = User::REMEMBER_2SV_SESSION_FOR
-      if expires_seconds && expires_seconds > 0
-        cookies.signed['remember_2sv_session'] = {
-          value: {user_id: current_user.id, valid_until: expires_seconds.from_now},
-          expires: expires_seconds.from_now
-        }
-      end
-      warden.session(:user)['need_two_step_verification'] = false
-      sign_in :user, current_user, bypass: true
-      set_flash_message :notice, :success
-      redirect_to_prior_flow
-      current_user.update_attribute(:second_factor_attempts_count, 0)
-    else
-      flash.now[:error] = find_message(:attempt_failed)
-      if current_user.max_2sv_login_attempts?
-        sign_out(current_user)
-        render :max_2sv_login_attempts_reached
-      else
-        render :show
-      end
-    end
-  end
-
   def new
     if current_user.otp_secret_key.present?
       redirect_to root_path, alert: "2-step verification is already set up"
@@ -87,9 +57,5 @@ class Devise::TwoStepVerificationController < DeviseController
       sign_out(current_user)
       render(:max_2sv_login_attempts_reached) && return
     end
-  end
-
-  def redirect_to_prior_flow(args = {})
-    redirect_to stored_location_for(:user) || :root, args
   end
 end

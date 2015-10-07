@@ -109,6 +109,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       visit root_path
       signin_with_2sv(email: "email@example.com", password: "some passphrase with various $ymb0l$")
       assert_response_contains "Welcome to GOV.UK"
+      assert_response_contains "Signed in successfully"
       assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_VERIFIED, uid: @user.uid).count
     end
 
