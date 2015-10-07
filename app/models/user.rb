@@ -80,6 +80,24 @@ class User < ActiveRecord::Base
     end
   }
 
+  def prompt_for_2sv?
+    return false if otp_secret_key.present?
+
+    if deferred_2sv_at?
+      deferred_2sv_at < 24.hours.ago
+    else
+      read_attribute(:require_2sv)
+    end
+  end
+
+  def defer_two_step_verification
+    transaction do
+      touch(:deferred_2sv_at)
+
+      EventLog.record_event(self, EventLog::TWO_STEP_PROMPT_DEFERRED)
+    end
+  end
+
   def event_logs
     EventLog.where(uid: uid).order(created_at: :desc)
   end

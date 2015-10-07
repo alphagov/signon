@@ -13,7 +13,12 @@ Signonotron2::Application.routes.draw do
     put "/users/confirmation" => "confirmations#update"
     resource :two_step_verification, only: [:new, :create, :show, :update],
       path: "/users/two_step_verification",
-      controller: "devise/two_step_verification"
+      controller: "devise/two_step_verification" do
+      member do
+        get :prompt
+        put :defer
+      end
+    end
   end
 
   resources :users, except: [:show] do

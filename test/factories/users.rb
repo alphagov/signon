@@ -34,6 +34,10 @@ FactoryGirl.define do
     end
   end
 
+  factory :two_step_flagged_user, parent: :superadmin_user do
+    require_2sv true
+  end
+
   factory :user_with_pending_email_change, parent: :user do
     email "old@email.com"
     unconfirmed_email "new@email.com"
