@@ -38,4 +38,8 @@ class ApplicationController < ActionController::Base
     flash[:alert] = "You do not have permission to perform this action."
     redirect_to root_path
   end
+
+  def redirect_to_prior_flow(args = {})
+    redirect_to stored_location_for(:user) || :root, args
+  end
 end
