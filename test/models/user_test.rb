@@ -43,7 +43,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'record an event' do
-      EventLog.find_by!(event: EventLog::TWO_STEP_PROMPT_DEFERRED, uid: @user.uid)
+      assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_PROMPT_DEFERRED, uid: @user.uid).count
     end
   end
 
