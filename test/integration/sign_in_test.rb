@@ -64,6 +64,18 @@ class SignInTest < ActionDispatch::IntegrationTest
     assert_response_contains("Signed in successfully.")
   end
 
+  # Rack::Test (the Capybara driver in use here) ignores the host when making requests
+  # but does appear to maintain separate cookie jars per host. This test therefore can
+  # only verify that the host is preserved and not that the path is also preserved. If
+  # http://foo.com/bar was the referer, the eventual redirect would still be
+  # http://foo.com/users/sign_in as the user is not authorised for that host.
+  should "preserve the host of the referer when redirecting on success" do
+    Capybara.current_session.driver.header "Referer", "http://service.dev.gov.uk/"
+    visit new_user_session_path
+    signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+    assert_equal "service.dev.gov.uk", URI.parse(page.current_url).host
+  end
+
   context "with a 2SV secret key" do
     setup do
       @user.update_attribute(:otp_secret_key, ROTP::Base32.random_base32)
