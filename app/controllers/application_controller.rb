@@ -42,4 +42,14 @@ class ApplicationController < ActionController::Base
   def redirect_to_prior_flow(args = {})
     redirect_to stored_location_for(:user) || :root, args
   end
+
+  def store_full_location_for(resource_or_scope, location)
+    session_key = stored_location_key_for(resource_or_scope)
+    uri = parse_uri(location)
+    if uri && uri.host =~ %r{\.#{Plek.new.parent_domain}$}
+      session[session_key] = uri.to_s
+    else
+      session[session_key] = root_path
+    end
+  end
 end

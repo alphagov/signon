@@ -7,7 +7,7 @@ class SessionsController < Devise::SessionsController
   end
 
   def new
-    store_location_for(:user, request.referer) if request.get?
+    store_full_location_for(:user, request.referer) if request.get?
     super
   end
 
