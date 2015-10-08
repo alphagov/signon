@@ -14,11 +14,6 @@ Signonotron2::Application.routes.draw do
     resource :two_step_verification, only: [:new, :create],
       path: "/users/two_step_verification",
       controller: "devise/two_step_verification" do
-      member do
-        get :prompt
-        put :defer
-      end
-
       resource :session, only: [:new, :create], controller: "devise/two_step_verification_session"
     end
   end

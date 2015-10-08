@@ -1,17 +1,9 @@
 class Devise::TwoStepVerificationController < DeviseController
-  before_filter :prepare_and_validate, except: [:prompt, :defer]
+  before_filter :prepare_and_validate
   skip_before_filter :handle_two_step_verification
 
   attr_reader :otp_secret_key
   private :otp_secret_key
-
-  def prompt
-  end
-
-  def defer
-    current_user.defer_two_step_verification
-    redirect_to stored_location_for(:user) || :root
-  end
 
   def new
     if current_user.otp_secret_key.present?
@@ -27,7 +19,7 @@ class Devise::TwoStepVerificationController < DeviseController
     if totp.verify(params[:code])
       current_user.update_attribute(:otp_secret_key, @otp_secret_key)
       EventLog.record_event(current_user, EventLog::TWO_STEP_ENABLED)
-      redirect_to_prior_flow(notice: "2-step verification set up")
+      redirect_to "/", notice: "2-step verification set up"
     else
       EventLog.record_event(current_user, EventLog::TWO_STEP_ENABLE_FAILED)
       flash.now[:invalid_code] = "Sorry that code didn’t work. Please try again."

@@ -6,11 +6,6 @@ class SessionsController < Devise::SessionsController
     super
   end
 
-  def new
-    store_location_for(:user, request.referer) if request.get?
-    super
-  end
-
   def create
     log_event
     super

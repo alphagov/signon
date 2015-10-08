@@ -52,10 +52,6 @@ class UserPolicy < BasePolicy
     current_user.superadmin?
   end
 
-  def flag_2sv?
-    current_user.superadmin?
-  end
-
   class Scope < ::BasePolicy::Scope
     def resolve
       if current_user.superadmin?

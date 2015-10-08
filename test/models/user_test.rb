@@ -8,45 +8,6 @@ class UserTest < ActiveSupport::TestCase
     @user = create(:user)
   end
 
-  test "`require_2sv` defaults to false" do
-    refute build(:user).require_2sv
-  end
-
-  context '#prompt_for_2sv?' do
-    context 'when the user has already enrolled' do
-      should 'always be false' do
-        refute build(:two_step_flagged_user, otp_secret_key: 'welp').prompt_for_2sv?
-      end
-    end
-
-    context 'when the user deferred within the last 24hrs' do
-      should 'be false' do
-        refute build(:two_step_flagged_user, deferred_2sv_at: 3.hours.ago).prompt_for_2sv?
-      end
-    end
-
-    context 'when the user deferred more than 24hrs ago' do
-      should 'be true' do
-        assert build(:two_step_flagged_user, deferred_2sv_at: 25.hours.ago).prompt_for_2sv?
-      end
-    end
-  end
-
-  context '#defer_two_step_verification' do
-    setup do
-      @user = create(:two_step_flagged_user)
-      @user.defer_two_step_verification
-    end
-
-    should 'touch the `deferred_2sv_at` timestamp' do
-      assert @user.deferred_2sv_at?
-    end
-
-    should 'record an event' do
-      assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_PROMPT_DEFERRED, uid: @user.uid).count
-    end
-  end
-
   test "email change tokens should expire" do
     @user = create(:user_with_pending_email_change, confirmation_sent_at: 15.days.ago)
     @user.confirm

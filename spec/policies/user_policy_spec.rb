@@ -101,14 +101,4 @@ describe UserPolicy do
       expect(subject).not_to permit(create(:user), User)
     end
   end
-
-  permissions :flag_2sv? do
-    it "is only allowed for superadmins" do
-      expect(subject).to permit(build(:superadmin_user), User)
-
-      expect(subject).not_to permit(create(:admin_user), User)
-      expect(subject).not_to permit(create(:organisation_admin), User)
-      expect(subject).not_to permit(create(:user), User)
-    end
-  end
 end
