@@ -14,13 +14,14 @@
     <div class="panel-body">
       <div class="form-group">
         <%= label_tag :code, 'Verification code' %>
-        <p class="text-muted">Use the verification app on your phone to get your code.<br />You won’t need to do this again for 30 days.</p>
+        <p class="text-muted" id="code-hint">Use the verification app on your phone to get your code.<br />You won’t need to do this again for 30 days.</p>
         <%= text_field_tag :code, nil,
           class: 'form-control input-md-4 input-lg',
           placeholder: 'Enter 6-digit code',
           tabindex: 1,
           autofocus: 'autofocus',
-          autocomplete: 'off' %>
+          autocomplete: 'off',
+          'aria-describedby': 'code-hint' %>
       </div>
     </div>
     <div class="panel-footer">
