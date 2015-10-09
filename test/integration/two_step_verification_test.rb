@@ -17,8 +17,9 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         visit two_step_verification_path
       end
 
-      should "show the TOTP secret" do
+      should "show the TOTP secret and a warning" do
         assert_response_contains "Enter the code manually: #{@secret}"
+        assert_response_contains "Setting up a new phone will replace your existing one. You will only be able to sign in with your new phone."
       end
 
       should "reject an invalid code, reuse the secret and log the rejection" do
