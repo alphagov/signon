@@ -11,7 +11,7 @@ Signonotron2::Application.routes.draw do
   devise_scope :user do
     post "/users/invitation/resend/:id" => "invitations#resend", :as => "resend_user_invitation"
     put "/users/confirmation" => "confirmations#update"
-    resource :two_step_verification, only: [:new, :create],
+    resource :two_step_verification, only: [:show, :update],
       path: "/users/two_step_verification",
       controller: "devise/two_step_verification" do
       resource :session, only: [:new, :create], controller: "devise/two_step_verification_session"

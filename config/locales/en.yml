@@ -34,6 +34,11 @@ en:
       password_format: "must contain big, small letters and digits"
 
   devise:
+    two_step_verification:
+      messages:
+        success:
+          change: "2-step verification phone changed successfully"
+          setup: "2-step verification set up"
     two_step_verification_session:
       success: "Signed in successfully."
       attempt_failed: "Sorry, that code didn’t work."
