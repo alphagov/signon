@@ -5,9 +5,12 @@
 <div class="well">
 <div class="row">
   <div class="col-md-4">
-  <h2 class="remove-top-margin">Your account</h2>
+  <h2 class="remove-top-margin add-bottom-margin">Your account</h2>
   <ul>
     <li><%= link_to "Change your email or passphrase", edit_email_or_passphrase_user_path(current_user) %></li>
+    <% if current_user.has_2sv? %>
+      <li><%= link_to "Change your 2-step verification phone", two_step_verification_path %></li>
+    <% end %>
     <li><%= link_to "Sign out", destroy_user_session_path %></li>
   </ul>
   </div>
