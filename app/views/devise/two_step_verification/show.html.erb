@@ -1,9 +1,15 @@
-<% content_for :title, "Set up 2-step verification" %>
+<% title = current_user.has_2sv? ? "Use a new phone" : "Set up 2-step verification" %>
+<% content_for :title, title %>
 <% invalid_code_entered = flash[:invalid_code] %>
 
-<h1>Set up 2-step verification</h1>
+<h1><%= title %></h1>
 <div class="row">
   <div class="col-md-8">
+    <% if current_user.has_2sv? %>
+      <div class="alert alert-warning">
+        <p>Setting up a new phone will replace your existing one. You will only be able to sign in with your new phone.</p>
+      </div>
+    <% end %>
     <p class="lead">Make your signon account more secure by setting up 2-step verification. You’ll need to install an app on your phone which will generate a security code to enter when you sign in.</p>
 
     <div class="panel-group" id="setup-steps" role="tablist" aria-multiselectable="true">
@@ -76,7 +82,7 @@
                   <%= invalid_code_entered %>
                 </div>
               <% end %>
-              <%= form_tag two_step_verification_path do %>
+              <%= form_tag two_step_verification_path, method: :put do %>
                 <%= hidden_field_tag :otp_secret_key, @otp_secret_key%>
                 <div class="form-group <% if invalid_code_entered %>has-error text-danger<% end %>">
                   <%= label_tag :code, 'Code from your phone' %>
@@ -85,7 +91,13 @@
                     placeholder: 'Enter 6-digit code',
                     autocomplete: 'off' %>
                 </div>
-                <button name="submit" id="submit_code" class="btn btn-lg btn-success">Finish set up</button>
+                <button name="submit" id="submit_code" class="btn btn-lg btn-success">
+                  <% if current_user.has_2sv? %>
+                    Finish replacing your phone
+                  <% else %>
+                    Finish set up
+                  <% end %>
+                </button>
                 <a href="/" class="btn btn-lg btn-default add-left-margin">Cancel</a>
               <% end %>
           </div>

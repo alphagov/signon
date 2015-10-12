@@ -203,7 +203,7 @@ class User < ActiveRecord::Base
   end
 
   def need_two_step_verification?
-    otp_secret_key.present?
+    has_2sv?
   end
 
   def authenticate_otp(code)
@@ -237,6 +237,10 @@ class User < ActiveRecord::Base
   def unlock_access! *args
     super
     update_attribute(:second_factor_attempts_count, 0)
+  end
+
+  def has_2sv?
+    otp_secret_key.present?
   end
 
 private

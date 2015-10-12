@@ -5,25 +5,19 @@ class Devise::TwoStepVerificationController < DeviseController
   attr_reader :otp_secret_key
   private :otp_secret_key
 
-  def new
-    if current_user.otp_secret_key.present?
-      redirect_to root_path, alert: "2-step verification is already set up"
-    else
-      @otp_secret_key = ROTP::Base32.random_base32
-    end
+  def show
+    generate_secret
   end
 
-  def create
-    @otp_secret_key = params[:otp_secret_key]
-    totp = ROTP::TOTP.new(@otp_secret_key)
-    if totp.verify(params[:code])
-      current_user.update_attribute(:otp_secret_key, @otp_secret_key)
-      EventLog.record_event(current_user, EventLog::TWO_STEP_ENABLED)
-      redirect_to "/", notice: "2-step verification set up"
+  def update
+    mode = current_user.has_2sv? ? :change : :setup
+    if verify_code_and_update
+      EventLog.record_event(current_user, success_event_for(mode))
+      redirect_to :root, notice: I18n.t("devise.two_step_verification.messages.success.#{mode}")
     else
-      EventLog.record_event(current_user, EventLog::TWO_STEP_ENABLE_FAILED)
+      EventLog.record_event(current_user, failure_event_for(mode))
       flash.now[:invalid_code] = "Sorry that code didn’t work. Please try again."
-      render :new, status: 422
+      render :show, status: :unprocessable_entity
     end
   end
 
@@ -49,5 +43,28 @@ class Devise::TwoStepVerificationController < DeviseController
       sign_out(current_user)
       render(:max_2sv_login_attempts_reached) && return
     end
+  end
+
+  def generate_secret
+    @otp_secret_key = ROTP::Base32.random_base32
+  end
+
+  def verify_code_and_update
+    @otp_secret_key = params[:otp_secret_key]
+    totp = ROTP::TOTP.new(@otp_secret_key)
+    if totp.verify(params[:code])
+      current_user.update_attribute(:otp_secret_key, @otp_secret_key)
+      true
+    else
+      false
+    end
+  end
+
+  def failure_event_for(mode)
+    mode == :setup ? EventLog::TWO_STEP_ENABLE_FAILED : EventLog::TWO_STEP_CHANGE_FAILED
+  end
+
+  def success_event_for(mode)
+    mode == :setup ? EventLog::TWO_STEP_ENABLED : EventLog::TWO_STEP_CHANGED
   end
 end

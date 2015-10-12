@@ -14,7 +14,7 @@ class TwoStepVerificationControllerTest < ActionController::TestCase
       @secret = ROTP::Base32.random_base32
       ROTP::Base32.stubs(random_base32: @secret)
 
-      get :new
+      get :show
     end
 
     should "include the secret key uppercased" do
