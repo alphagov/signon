@@ -86,7 +86,7 @@ class User < ActiveRecord::Base
     if deferred_2sv_at?
       deferred_2sv_at < 24.hours.ago
     else
-      read_attribute(:require_2sv)
+      require_2sv?
     end
   end
 
