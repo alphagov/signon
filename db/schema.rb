@@ -184,8 +184,8 @@ ActiveRecord::Schema.define(version: 20151006091244) do
     t.datetime "invitation_created_at"
     t.string   "otp_secret_key",               limit: 255
     t.integer  "second_factor_attempts_count", limit: 4,   default: 0
-    t.string   "unlock_token",                 limit: 255
     t.boolean  "require_2sv",                              default: false,    null: false
+    t.string   "unlock_token",                 limit: 255
     t.datetime "deferred_2sv_at"
   end
 
@@ -195,6 +195,6 @@ ActiveRecord::Schema.define(version: 20151006091244) do
   add_index "users", ["organisation_id"], name: "index_users_on_organisation_id", using: :btree
   add_index "users", ["otp_secret_key"], name: "index_users_on_otp_secret_key", unique: true, using: :btree
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", using: :btree
+  add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
 end

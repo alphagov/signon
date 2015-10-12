@@ -33,7 +33,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "accept a valid code, persist the secret and log the event" do
-        enter_code
+        enter_2sv_code(@new_secret)
 
         assert_response_contains "2-step verification phone changed successfully"
         assert_equal @new_secret, @user.reload.otp_secret_key
@@ -41,7 +41,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "require the code again on next login" do
-        enter_code
+        enter_2sv_code(@new_secret)
 
         within("main") do
           click_link "Sign out"
@@ -73,20 +73,12 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "accept a valid code, persist the secret and log the event" do
-        enter_code
+        enter_2sv_code(@new_secret)
 
         assert_response_contains "2-step verification set up"
         assert_equal @new_secret, @user.reload.otp_secret_key
         assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_ENABLED, uid: @user.uid).count
-        assert_equal users_path, current_path
       end
-    end
-  end
-
-  def enter_code
-    Timecop.freeze do
-      fill_in "code", with: ROTP::TOTP.new(@new_secret).now
-      click_button "submit_code"
     end
   end
 end
