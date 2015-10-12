@@ -20,6 +20,14 @@ class TwoStepVerificationPromptTest < ActionDispatch::IntegrationTest
       end
     end
 
+    context 'when they try to access something else' do
+      should 'ensure the prompt is still displayed' do
+        visit users_path
+
+        assert page.has_text?('Start set up')
+      end
+    end
+
     context 'they choose to setup 2-step verification' do
       should 'direct them to setup' do
         secret = ROTP::Base32.random_base32

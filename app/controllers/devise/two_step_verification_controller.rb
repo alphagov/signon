@@ -10,7 +10,7 @@ class Devise::TwoStepVerificationController < DeviseController
 
   def defer
     current_user.defer_two_step_verification
-    redirect_to stored_location_for(:user) || :root
+    redirect_to_prior_flow
   end
 
   def show

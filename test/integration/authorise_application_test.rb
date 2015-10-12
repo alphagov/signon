@@ -9,12 +9,10 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
   context "when the user is flagged for 2SV" do
     setup do
       @user.update_attribute(:require_2sv, true)
-      visit "/"
-      signin(@user)
-
       ignoring_spurious_error do
         visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
       end
+      signin(@user)
     end
 
     should "not confirm the authorisation" do
