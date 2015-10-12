@@ -21,7 +21,7 @@ class Devise::TwoStepVerificationController < DeviseController
     mode = current_user.has_2sv? ? :change : :setup
     if verify_code_and_update
       EventLog.record_event(current_user, success_event_for(mode))
-      redirect_to :root, notice: I18n.t("devise.two_step_verification.messages.success.#{mode}")
+      redirect_to_prior_flow notice: I18n.t("devise.two_step_verification.messages.success.#{mode}")
     else
       EventLog.record_event(current_user, failure_event_for(mode))
       flash.now[:invalid_code] = "Sorry that code didn’t work. Please try again."

@@ -53,7 +53,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
     context "for a user without an existing 2SV setup" do
       setup do
-        @user = create(:user, email: "jane.user@example.com")
+        @user = create(:admin_user, email: "jane.user@example.com")
         visit users_path
         signin(@user)
         visit two_step_verification_path
