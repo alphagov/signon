@@ -121,6 +121,10 @@ class UsersController < ApplicationController
     end
   end
 
+  def disable_two_step_verification
+    render text: 'WIP'
+  end
+
   private
 
   def load_and_authorize_user

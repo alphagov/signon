@@ -6,6 +6,14 @@
   User <strong><%= @user.status %></strong> &bull;
   <%= link_to "Account access log", event_logs_user_path(@user) %> &bull;
   <%= link_to "#{@user.suspended? ? "Uns" : "S"}uspend user", edit_suspension_path(@user) %>
+  <% if policy(User).disable_2sv? %>
+    &bull;
+    <%= link_to 'Disable 2-step verification',
+      disable_two_step_verification_user_path(@user),
+      data: { confirm: 'Are you sure?' },
+      method: :patch
+    %>
+  <% end %>
 </p>
 
 <% if @user.access_locked? %>

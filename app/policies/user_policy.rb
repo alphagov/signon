@@ -56,6 +56,11 @@ class UserPolicy < BasePolicy
     current_user.superadmin?
   end
 
+  def disable_2sv?
+    current_user.superadmin?
+  end
+  alias_method :disable_two_step_verification?, :disable_2sv?
+
   class Scope < ::BasePolicy::Scope
     def resolve
       if current_user.superadmin?
