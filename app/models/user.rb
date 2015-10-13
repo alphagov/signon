@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
 
   SUSPENSION_THRESHOLD_PERIOD = 45.days
   UNSUSPENSION_GRACE_PERIOD = 3.days
+  TWO_FACTOR_PROMPT_THRESHOLD_PERIOD = 24.hours
 
   MAX_2SV_LOGIN_ATTEMPTS = 10
   MAX_2SV_DRIFT_SECONDS = 30
@@ -85,7 +86,7 @@ class User < ActiveRecord::Base
 
     if deferred_2sv_at?
       last_prompted_ago = Time.zone.now - deferred_2sv_at
-      last_prompted_ago > 24.hours
+      last_prompted_ago > TWO_FACTOR_PROMPT_THRESHOLD_PERIOD
     else
       require_2sv?
     end
