@@ -84,7 +84,8 @@ class User < ActiveRecord::Base
     return false if otp_secret_key.present?
 
     if deferred_2sv_at?
-      deferred_2sv_at < 24.hours.ago
+      last_prompted_ago = Time.zone.now - deferred_2sv_at
+      last_prompted_ago > 24.hours
     else
       require_2sv?
     end
