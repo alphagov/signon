@@ -81,7 +81,7 @@ class User < ActiveRecord::Base
   }
 
   def prompt_for_2sv?
-    return false if otp_secret_key.present?
+    return false if has_2sv?
 
     if deferred_2sv_at?
       last_prompted_ago = Time.zone.now - deferred_2sv_at
