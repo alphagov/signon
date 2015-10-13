@@ -31,4 +31,11 @@ module UserHelpers
     fill_in "Email", with: options[:new_email]
     click_button "Update User"
   end
+
+  def enter_2sv_code(secret)
+    Timecop.freeze do
+      fill_in "code", with: ROTP::TOTP.new(secret).now
+      click_button "submit_code"
+    end
+  end
 end

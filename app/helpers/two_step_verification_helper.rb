@@ -2,8 +2,12 @@ module TwoStepVerificationHelper
   private
 
   def handle_two_step_verification
-    if signed_in?(:user) && warden.session(:user)['need_two_step_verification']
-      handle_failed_second_step
+    if signed_in?(:user)
+      if warden.session(:user)['need_two_step_verification']
+        handle_failed_second_step
+      elsif current_user.prompt_for_2sv?
+        redirect_to prompt_two_step_verification_path
+      end
     end
   end
 

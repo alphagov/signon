@@ -8,6 +8,7 @@ class SessionsController < Devise::SessionsController
 
   def create
     log_event
+    store_location_for('2sv', session[stored_location_key_for(:user)])
     super
   end
 
