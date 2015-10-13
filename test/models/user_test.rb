@@ -12,6 +12,21 @@ class UserTest < ActiveSupport::TestCase
     refute build(:user).require_2sv
   end
 
+  context '#disable_2sv!' do
+    setup do
+      @two_step_user = create(:user, otp_secret_key: 'sekret')
+      @two_step_user.disable_2sv!
+    end
+
+    should 'remove the 2SV secret key' do
+      refute @two_step_user.reload.has_2sv?
+    end
+
+    should 'record the event' do
+      assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_DISABLED, uid: @two_step_user.uid).count
+    end
+  end
+
   context '#prompt_for_2sv?' do
     context 'when the user has already enrolled' do
       should 'always be false' do

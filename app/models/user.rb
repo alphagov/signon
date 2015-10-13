@@ -262,6 +262,14 @@ class User < ActiveRecord::Base
     otp_secret_key.present?
   end
 
+  def disable_2sv!
+    transaction do
+      update_attribute(:otp_secret_key, nil)
+
+      EventLog.record_event(self, EventLog::TWO_STEP_DISABLED)
+    end
+  end
+
 private
 
   # Override devise_security_extension for updating expired passwords
