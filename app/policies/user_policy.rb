@@ -56,10 +56,10 @@ class UserPolicy < BasePolicy
     current_user.superadmin?
   end
 
-  def disable_2sv?
+  def reset_2sv?
     current_user.superadmin?
   end
-  alias_method :disable_two_step_verification?, :disable_2sv?
+  alias_method :reset_two_step_verification?, :reset_2sv?
 
   class Scope < ::BasePolicy::Scope
     def resolve

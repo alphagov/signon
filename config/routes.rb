@@ -32,7 +32,7 @@ Signonotron2::Application.routes.draw do
       put :resend_email_change
       delete :cancel_email_change
       get :event_logs
-      patch :disable_two_step_verification
+      patch :reset_two_step_verification
     end
   end
   resource :user, only: [:show]

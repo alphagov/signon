@@ -112,7 +112,7 @@ describe UserPolicy do
     end
   end
 
-  permissions :disable_2sv? do
+  permissions :reset_2sv? do
     it "is only allowed for superadmins" do
       expect(subject).to permit(build(:superadmin_user), User)
 

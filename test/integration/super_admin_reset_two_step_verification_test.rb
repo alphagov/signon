@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class SuperAdminDisableTwoStepVerificationTest < ActionDispatch::IntegrationTest
+class SuperAdminResetTwoStepVerificationTest < ActionDispatch::IntegrationTest
   setup do
     @user = create(:user, otp_secret_key: 'sekret')
   end
@@ -14,7 +14,7 @@ class SuperAdminDisableTwoStepVerificationTest < ActionDispatch::IntegrationTest
     end
 
     should 'not display the link' do
-      assert page.has_no_link? 'Disable 2-step verification'
+      assert page.has_no_link? 'Reset 2-step verification'
     end
   end
 
@@ -27,12 +27,12 @@ class SuperAdminDisableTwoStepVerificationTest < ActionDispatch::IntegrationTest
       signin(@super_admin)
     end
 
-    should 'disable 2-step verification for the chosen user' do
+    should 'reset 2-step verification for the chosen user' do
       assert_response_contains('2-step verification enabled')
 
       click_link 'Reset 2-step verification'
 
-      assert_response_contains('2-step verification is now disabled')
+      assert_response_contains('2-step verification is now reset')
     end
   end
 end

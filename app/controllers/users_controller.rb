@@ -121,10 +121,10 @@ class UsersController < ApplicationController
     end
   end
 
-  def disable_two_step_verification
-    @user.disable_2sv!(current_user)
+  def reset_two_step_verification
+    @user.reset_2sv!(current_user)
 
-    redirect_to :root, notice: '2-step verification is now disabled'
+    redirect_to :root, notice: '2-step verification is now reset'
   end
 
   private

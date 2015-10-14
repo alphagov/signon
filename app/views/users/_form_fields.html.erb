@@ -45,7 +45,7 @@
         <ul>
           <li>
             <%= link_to 'Reset 2-step verification',
-              disable_two_step_verification_user_path(@user),
+              reset_two_step_verification_user_path(@user),
               data: { confirm: 'Are you sure?' },
               method: :patch
               %><br/>

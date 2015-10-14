@@ -12,11 +12,11 @@ class UserTest < ActiveSupport::TestCase
     refute build(:user).require_2sv
   end
 
-  context '#disable_2sv!' do
+  context '#reset_2sv!' do
     setup do
       @super_admin   = create(:superadmin_user)
       @two_step_user = create(:user, otp_secret_key: 'sekret')
-      @two_step_user.disable_2sv!(@super_admin)
+      @two_step_user.reset_2sv!(@super_admin)
     end
 
     should 'persist the required attributes' do
@@ -28,7 +28,7 @@ class UserTest < ActiveSupport::TestCase
 
     should 'record the event' do
       assert_equal 1, EventLog.where(
-        event: EventLog::TWO_STEP_DISABLED,
+        event: EventLog::TWO_STEP_RESET,
         uid: @two_step_user.uid,
         initiator: @super_admin
       ).count
