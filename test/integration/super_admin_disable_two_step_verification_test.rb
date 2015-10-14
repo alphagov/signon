@@ -28,7 +28,9 @@ class SuperAdminDisableTwoStepVerificationTest < ActionDispatch::IntegrationTest
     end
 
     should 'disable 2-step verification for the chosen user' do
-      click_link 'Disable 2-step verification'
+      assert_response_contains('2-step verification enabled')
+
+      click_link 'Reset 2-step verification'
 
       assert_response_contains('2-step verification is now disabled')
     end

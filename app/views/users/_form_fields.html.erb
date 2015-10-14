@@ -40,12 +40,27 @@
   <dl>
     <dt>Account security</dt>
     <dd>
-      <p>2-step verification not set up</p>
-      <p class="checkbox">
-        <%= f.label :require_2sv do %>
-          <%= f.check_box :require_2sv %> Ask user to set up 2-step verification
-        <% end %>
-      </p>
+      <% if f.object.has_2sv? %>
+        <p>2-step verification enabled</p>
+        <ul>
+          <li>
+            <%= link_to 'Reset 2-step verification',
+              disable_two_step_verification_user_path(@user),
+              data: { confirm: 'Are you sure?' },
+              method: :patch
+              %><br/>
+            Allows user to sign in without their device.<br/>
+            User will be prompted to set up 2-step verification again.
+          </li>
+        </ul>
+      <% else %>
+        <p>2-step verification not set up</p>
+        <p class="checkbox">
+          <%= f.label :require_2sv do %>
+            <%= f.check_box :require_2sv %> Ask user to set up 2-step verification
+          <% end %>
+        </p>
+      <% end %>
     </dd>
   </dl>
 <% end %>
