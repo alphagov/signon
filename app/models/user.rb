@@ -263,11 +263,15 @@ class User < ActiveRecord::Base
     otp_secret_key.present?
   end
 
-  def disable_2sv!
+  def disable_2sv!(initiating_superadmin)
     transaction do
       update_attribute(:otp_secret_key, nil)
 
-      EventLog.record_event(self, EventLog::TWO_STEP_DISABLED)
+      EventLog.record_event(
+        self,
+        EventLog::TWO_STEP_DISABLED,
+        initiator: initiating_superadmin
+      )
     end
   end
 

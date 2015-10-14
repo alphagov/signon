@@ -14,8 +14,9 @@ class UserTest < ActiveSupport::TestCase
 
   context '#disable_2sv!' do
     setup do
+      @super_admin   = create(:superadmin_user)
       @two_step_user = create(:user, otp_secret_key: 'sekret')
-      @two_step_user.disable_2sv!
+      @two_step_user.disable_2sv!(@super_admin)
     end
 
     should 'remove the 2SV secret key' do
@@ -23,7 +24,11 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'record the event' do
-      assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_DISABLED, uid: @two_step_user.uid).count
+      assert_equal 1, EventLog.where(
+        event: EventLog::TWO_STEP_DISABLED,
+        uid: @two_step_user.uid,
+        initiator: @super_admin
+      ).count
     end
   end
 
