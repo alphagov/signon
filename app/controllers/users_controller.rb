@@ -121,6 +121,12 @@ class UsersController < ApplicationController
     end
   end
 
+  def reset_two_step_verification
+    @user.reset_2sv!(current_user)
+
+    redirect_to :root, notice: '2-step verification is now reset'
+  end
+
   private
 
   def load_and_authorize_user

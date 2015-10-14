@@ -11,6 +11,7 @@ class User < ActiveRecord::Base
 
   SUSPENSION_THRESHOLD_PERIOD = 45.days
   UNSUSPENSION_GRACE_PERIOD = 3.days
+  TWO_STEP_PROMPT_THRESHOLD_PERIOD = 24.hours
 
   MAX_2SV_LOGIN_ATTEMPTS = 10
   MAX_2SV_DRIFT_SECONDS = 30
@@ -81,11 +82,11 @@ class User < ActiveRecord::Base
   }
 
   def prompt_for_2sv?
-    return false if otp_secret_key.present?
+    return false if has_2sv?
 
     if deferred_2sv_at?
       last_prompted_ago = Time.zone.now - deferred_2sv_at
-      last_prompted_ago > 24.hours
+      last_prompted_ago > TWO_STEP_PROMPT_THRESHOLD_PERIOD
     else
       require_2sv?
     end
@@ -260,6 +261,20 @@ class User < ActiveRecord::Base
 
   def has_2sv?
     otp_secret_key.present?
+  end
+
+  def reset_2sv!(initiating_superadmin)
+    transaction do
+      self.otp_secret_key = nil
+      self.require_2sv = true
+      save!
+
+      EventLog.record_event(
+        self,
+        EventLog::TWO_STEP_RESET,
+        initiator: initiating_superadmin
+      )
+    end
   end
 
 private
