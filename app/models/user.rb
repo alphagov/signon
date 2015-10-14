@@ -265,7 +265,9 @@ class User < ActiveRecord::Base
 
   def disable_2sv!(initiating_superadmin)
     transaction do
-      update_attribute(:otp_secret_key, nil)
+      self.otp_secret_key = nil
+      self.require_2sv = true
+      save!
 
       EventLog.record_event(
         self,

@@ -19,8 +19,11 @@ class UserTest < ActiveSupport::TestCase
       @two_step_user.disable_2sv!(@super_admin)
     end
 
-    should 'remove the 2SV secret key' do
-      refute @two_step_user.reload.has_2sv?
+    should 'persist the required attributes' do
+      @two_step_user.reload
+
+      refute @two_step_user.has_2sv?
+      assert @two_step_user.prompt_for_2sv?
     end
 
     should 'record the event' do
