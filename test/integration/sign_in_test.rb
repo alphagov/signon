@@ -198,6 +198,35 @@ class SignInTest < ActionDispatch::IntegrationTest
       assert_selector "input[name=code]"
     end
 
+    should "not remember a user's 2SV session if they've changed 2SV secret" do
+      visit root_path
+      signin_with_2sv(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      assert_response_contains "Welcome to GOV.UK"
+
+      signout
+      visit root_path
+
+      @user.update_attribute(:otp_secret_key, ROTP::Base32.random_base32)
+      signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+
+      assert_response_contains "get your code"
+      assert_selector "input[name=code]"
+    end
+
+    should "not prevent login if 2SV is disabled for user with a remembered session" do
+      visit root_path
+      signin_with_2sv(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      assert_response_contains "Welcome to GOV.UK"
+
+      signout
+      visit root_path
+
+      @user.update_attribute(:otp_secret_key, nil)
+      signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+
+      assert_response_contains "Signed in successfully"
+    end
+
     should "allow the user to cancel 2SV by signing out" do
       visit root_path
       signin(email: "email@example.com", password: "some passphrase with various $ymb0l$")
