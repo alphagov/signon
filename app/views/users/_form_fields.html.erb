@@ -37,11 +37,17 @@
 <% end %>
 
 <% if policy(User).flag_2sv? %>
-  <p class="checkbox">
-    <%= f.label :require_2sv do %>
-      <%= f.check_box :require_2sv %> Require 2-step verification
-    <% end %>
-  </p>
+  <dl>
+    <dt>Account security</dt>
+    <dd>
+      <p>2-step verification not set up</p>
+      <p class="checkbox">
+        <%= f.label :require_2sv do %>
+          <%= f.check_box :require_2sv %> Ask user to set up 2-step verification
+        <% end %>
+      </p>
+    </dd>
+  </dl>
 <% end %>
 
 <p class="form-group">

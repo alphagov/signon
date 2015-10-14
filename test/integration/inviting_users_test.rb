@@ -69,7 +69,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
         fill_in "Name", with: "Fred Bloggs"
         select "Admin", from: "Role"
         fill_in "Email", with: "fred_admin@example.com"
-        check "Require 2-step verification"
+        check "Ask user to set up 2-step verification"
         click_button "Create user and send email"
 
         assert_not_nil User.find_by(
