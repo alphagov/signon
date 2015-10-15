@@ -1,4 +1,4 @@
-# Sign-on-o-Tron II
+# Signon
 
 This is a centralised OAuth 2-based single sign-on provider for GDS services.
 
@@ -13,8 +13,7 @@ Details of our interpretation of OAuth are provided in
 
 The application has Rake tasks to create new users and client applications.
 
-To create a new client application to which Sign-on-o-Tron will provide sign-on
-services:
+To create a new client application to which Signon will provide sign-on services:
 
 ```sh
 rake applications:create name=ClientName description="What does this app do" \
@@ -41,11 +40,11 @@ applications=Comma,Seperated,ListOf,Application,Names* \
 You may also need to create an API client, so one application can identify
 itself to another. Say, for instance, you have an API that requires
 authentication and you need to configure a frontend to make requests of it.
-Assuming you have your application set up in Sign-on-o-tron under the name
+Assuming you have your application set up in Signon under the name
 "Stuff API", follow these steps to create an access token for API clients
 to access your application:
 
-* Login to Sign-on-o-tron with 'superadmin' role
+* Login to Signon with 'superadmin' role
 * Click 'API Users', followed by 'Create API User'
 * Fill-in a name and email for the API client
 * Once saved, click "Add application token", select "Stuff API" and press
@@ -60,7 +59,7 @@ More detail is contained in the
 if you just want to get this working, follow the steps below:
 
 * If you haven't already set real tokens in your app's `ENV`, you'll first need
-  to run the following command to make sure your signonotron2 database has got
+  to run the following command to make sure your database has got
   OAuth config that matches what the apps use in development mode:
 
   ```
