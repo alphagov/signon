@@ -1,4 +1,5 @@
 class Devise::TwoStepVerificationSessionController < DeviseController
+  before_filter { |c| c.authenticate_user! force: true }
   skip_before_action :handle_two_step_verification
 
   def new

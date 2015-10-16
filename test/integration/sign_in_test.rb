@@ -240,4 +240,10 @@ class SignInTest < ActionDispatch::IntegrationTest
     visit root_path
     refute_selector "a", text: "Didn't receive unlock instructions?"
   end
+
+  should "not be able to access the 2SV login page before logging in" do
+    signout
+    visit new_two_step_verification_session_path
+    assert_response_contains("You need to sign in before continuing.")
+  end
 end
