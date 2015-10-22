@@ -12,6 +12,38 @@ class UserTest < ActiveSupport::TestCase
     refute build(:user).require_2sv
   end
 
+  context '#send_two_step_flag_notification?' do
+    context 'when not flagged' do
+      should 'return false' do
+        refute @user.send_two_step_flag_notification?
+      end
+
+      context 'when flagging' do
+        should 'maintain after persisting' do
+          @user.update_attribute(:require_2sv, true)
+
+          assert @user.send_two_step_flag_notification?
+        end
+      end
+    end
+
+    context 'when already flagged' do
+      should 'return false' do
+        @user.toggle(:require_2sv)
+
+        refute @user.reload.send_two_step_flag_notification?
+      end
+    end
+
+    context 'when the user is flagged' do
+      should 'return true' do
+        @user.require_2sv = true
+
+        assert @user.send_two_step_flag_notification?
+      end
+    end
+  end
+
   context '#reset_2sv!' do
     setup do
       @super_admin   = create(:superadmin_user)

@@ -45,6 +45,7 @@ class UsersController < ApplicationController
     @user.skip_reconfirmation!
     if @user.update_attributes(user_params)
       send_two_step_flag_notification(@user)
+
       @user.application_permissions.reload
       PermissionUpdater.perform_on(@user)
 
@@ -193,7 +194,9 @@ class UsersController < ApplicationController
   end
 
   def send_two_step_flag_notification(user)
-    UserMailer.two_step_flagged(user).deliver_later
+    if user.send_two_step_flag_notification?
+      UserMailer.two_step_flagged(user).deliver_later
+    end
   end
 
   def user_params
