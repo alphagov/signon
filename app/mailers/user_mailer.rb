@@ -6,6 +6,11 @@ class UserMailer < Devise::Mailer
 
   helper_method :suspension_time, :account_name, :instance_name, :locked_time, :unlock_time
 
+  def two_step_flagged(user)
+    @user = user
+    mail(to: @user.email, subject: "Set up 2-step verification")
+  end
+
   def suspension_reminder(user, days)
     @user = user
     @days = days

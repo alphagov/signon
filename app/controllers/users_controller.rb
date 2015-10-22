@@ -44,6 +44,7 @@ class UsersController < ApplicationController
 
     @user.skip_reconfirmation!
     if @user.update_attributes(user_params)
+      send_two_step_flag_notification(@user)
       @user.application_permissions.reload
       PermissionUpdater.perform_on(@user)
 
@@ -189,6 +190,10 @@ class UsersController < ApplicationController
         csv << presenter.row(user)
       end
     end
+  end
+
+  def send_two_step_flag_notification(user)
+    UserMailer.two_step_flagged(user).deliver_later
   end
 
   def user_params
