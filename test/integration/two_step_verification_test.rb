@@ -3,6 +3,8 @@ require 'test_helper'
 require 'helpers/passphrase_support'
 
 class TwoStepVerificationTest < ActionDispatch::IntegrationTest
+  include ActiveJob::TestHelper
+
   context "setting a 2SV code" do
     setup do
       @new_secret = ROTP::Base32.random_base32
@@ -33,11 +35,15 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "accept a valid code, persist the secret and log the event" do
-        enter_2sv_code(@new_secret)
+        perform_enqueued_jobs do
+          enter_2sv_code(@new_secret)
 
-        assert_response_contains "2-step verification phone changed successfully"
-        assert_equal @new_secret, @user.reload.otp_secret_key
-        assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_CHANGED, uid: @user.uid).count
+          assert_response_contains "2-step verification phone changed successfully"
+          assert_equal @new_secret, @user.reload.otp_secret_key
+          assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_CHANGED, uid: @user.uid).count
+
+          refute last_email
+        end
       end
 
       should "require the code again on next login" do
@@ -72,12 +78,18 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_ENABLE_FAILED, uid: @user.uid).count
       end
 
-      should "accept a valid code, persist the secret and log the event" do
-        enter_2sv_code(@new_secret)
+      should "accept a valid code, persist the secret, log an event and notify by email" do
+        SUCCESS = "2-step verification set up"
+        perform_enqueued_jobs do
+          enter_2sv_code(@new_secret)
 
-        assert_response_contains "2-step verification set up"
-        assert_equal @new_secret, @user.reload.otp_secret_key
-        assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_ENABLED, uid: @user.uid).count
+          assert_response_contains SUCCESS
+          assert_equal @new_secret, @user.reload.otp_secret_key
+          assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_ENABLED, uid: @user.uid).count
+
+          assert last_email
+          assert SUCCESS, last_email.subject
+        end
       end
     end
   end
