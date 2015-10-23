@@ -13,7 +13,7 @@ module PassPhraseSupport
     fill_in "Current passphrase",       with: from
     fill_in "New passphrase",           with: to
     fill_in "Confirm new passphrase",   with: confirmation
-    click_button "Change my passphrase"
+    click_button "Change passphrase"
   end
 
   def trigger_reset_for(email)
@@ -26,6 +26,6 @@ module PassPhraseSupport
     email.click_link("Change my passphrase")
     fill_in "New passphrase", with: options[:new_password]
     fill_in "Confirm new passphrase", with: options[:new_password]
-    click_button "Change my passphrase"
+    click_button "Change passphrase"
   end
 end

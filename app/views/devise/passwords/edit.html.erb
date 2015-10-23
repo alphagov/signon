@@ -11,11 +11,9 @@
 
 <div class="well">
   <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
-    <%= devise_error_messages! %>
     <%= f.hidden_field :reset_password_token %>
 
+    <%= render partial: "devise/passwords/change_password_errors" %>
     <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: resource } %>
-
-    <div><%= f.submit "Change my passphrase", class: "add-top-margin btn btn-primary" %></div>
   <% end %>
 </div>

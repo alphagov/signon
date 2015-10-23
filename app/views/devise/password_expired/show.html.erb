@@ -6,12 +6,8 @@
 
 <div class="well">
   <%= form_for(resource, :as => resource_name, :url => [resource_name, :password_expired], :html => { :method => :put }) do |f| %>
-    <%= devise_error_messages! %>
-
+    <%= render partial: "devise/passwords/change_password_errors" %>
     <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: resource, updating_password: true } %>
-
-
-    <div><%= f.submit "Change my passphrase", class: "add-top-margin btn btn-primary" %></div>
   <% end %>
 </div>
 
