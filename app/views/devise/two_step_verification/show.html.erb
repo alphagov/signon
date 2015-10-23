@@ -78,7 +78,7 @@
         <div id="step-three" class="panel-collapse collapse <% if invalid_code_entered %>in<% end %>" role="tabpanel" aria-labelledby="step-three-heading">
           <div class="panel-body">
               <% if invalid_code_entered %>
-                <div class="alert alert-danger">
+                <div class="alert alert-danger" <%= analytics_attributes_alert_danger(invalid_code_entered) %>>
                   <%= invalid_code_entered %>
                 </div>
               <% end %>

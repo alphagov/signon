@@ -2,7 +2,9 @@
   <div class="alert alert-danger">
     <ul>
       <% @user.errors.full_messages.each do |message| %>
-      <li><%= message %></li>
+      <li <%= analytics_attributes_alert_danger(message) %>>
+        <%= message %>
+      </li>
       <% end %>
     </ul>
   </div>
