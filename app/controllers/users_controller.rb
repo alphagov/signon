@@ -125,6 +125,7 @@ class UsersController < ApplicationController
 
   def reset_two_step_verification
     @user.reset_2sv!(current_user)
+    UserMailer.two_step_reset(@user).deliver_later
 
     redirect_to :root, notice: '2-step verification is now reset'
   end
