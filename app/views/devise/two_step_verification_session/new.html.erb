@@ -23,6 +23,15 @@
           autocomplete: 'off',
           'aria-describedby': 'code-hint' %>
       </div>
+      <div data-module="toggle">
+        <%= link_to "Can’t get your verification code?", "#", class: "js-toggle" %>
+        <div class="js-toggle-target if-js-hide">
+          <h4>Request 2-step verification reset</h4>
+          <p>If you can’t get your verification code, you’ll need to reset 2-step verification on your Signon account by raising a support ticket with GOV.UK.</p>
+          <p>If you can’t do this yourself, you’ll need to contact a managing GOV.UK editor in your organisation (or your parent organisation). They should raise a <%= link_to "support ticket", "https://www.gov.uk/support/internal/" %> on your behalf.</p>
+          <p>GOV.UK is only able to respond to requests to reset 2-step verification 9am to 5pm, Monday to Friday.</p>
+        </div>
+      </div>
     </div>
     <div class="panel-footer">
       <%= submit_tag "Sign in", tabindex: 2, class: 'btn btn-success btn-lg btn-block' %>
