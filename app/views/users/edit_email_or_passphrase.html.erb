@@ -32,7 +32,5 @@
   <h2 class="remove-top-margin"><%= t(".change_passphrase") %></h2>
   <%= form_for current_user, :url => update_passphrase_user_path do |f| %>
     <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: current_user, updating_password: true } %>
-
-    <%= f.submit t("users.edit.change"), :class => 'btn btn-primary add-top-margin' %>
   <% end %>
 </section>

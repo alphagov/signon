@@ -62,7 +62,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     token_received_in_email = @user.send_reset_password_instructions
     visit edit_user_password_path(reset_password_token: token_received_in_email)
 
-    click_on "Change my passphrase"
+    click_on "Change passphrase"
 
     assert_equal EventLog::PASSPHRASE_RESET_FAILURE, @user.event_logs.first.event
   end

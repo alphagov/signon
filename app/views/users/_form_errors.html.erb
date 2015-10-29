@@ -2,7 +2,7 @@
   <div class="alert alert-danger">
     <ul>
       <% @user.errors.full_messages.each do |message| %>
-      <li><%= message %></li>
+        <%= content_tag :li, message, data: track_analytics_data(:danger, message) %>
       <% end %>
     </ul>
   </div>
