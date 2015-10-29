@@ -43,6 +43,7 @@ private
   end
 
   def record_password_reset_failure(user)
-    EventLog.record_event(user, EventLog::PASSPHRASE_RESET_FAILURE)
+    message = "(errors: #{user.errors.full_messages.join(', ')})".truncate(255)
+    EventLog.record_event(user, EventLog::PASSPHRASE_RESET_FAILURE, trailing_message: message)
   end
 end

@@ -63,8 +63,11 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     visit edit_user_password_path(reset_password_token: token_received_in_email)
 
     click_on "Change passphrase"
+    event_log = @user.event_logs.first
 
-    assert_equal EventLog::PASSPHRASE_RESET_FAILURE, @user.event_logs.first.event
+    assert_equal EventLog::PASSPHRASE_RESET_FAILURE, event_log.event
+    assert_match "Passphrase can't be blank", event_log.trailing_message
+    assert_match "Passphrase not strong enough", event_log.trailing_message
   end
 
   test "record successful passphrase change" do
