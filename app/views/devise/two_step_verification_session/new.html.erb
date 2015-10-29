@@ -23,8 +23,8 @@
           autocomplete: 'off',
           'aria-describedby': 'code-hint' %>
       </div>
-      <div data-module="toggle" class="if-no-js-hide">
-        <%= link_to "Can’t get your verification code?", "#", class: "js-toggle js-toggle-target" %>
+      <div data-module="toggle">
+        <%= link_to "Can’t get your verification code?", "#", class: "js-toggle js-toggle-target if-no-js-hide" %>
         <div class="js-toggle-target if-js-hide">
           <h4>Contact GOV.UK</h4>
           <p>If you can’t get your verification code, you’ll need to ask <%= link_to "GOV.UK", "https://www.gov.uk/" %> to reset 2-step verification on your Signon account.</p>
