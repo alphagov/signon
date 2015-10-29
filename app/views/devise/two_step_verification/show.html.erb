@@ -78,9 +78,10 @@
         <div id="step-three" class="panel-collapse collapse <% if invalid_code_entered %>in<% end %>" role="tabpanel" aria-labelledby="step-three-heading">
           <div class="panel-body">
               <% if invalid_code_entered %>
-                <div class="alert alert-danger" <%= analytics_attributes_alert_danger(invalid_code_entered) %>>
-                  <%= invalid_code_entered %>
-                </div>
+                <%= content_tag :div,
+                  invalid_code_entered,
+                  class: 'alert alert-danger',
+                  data: track_analytics_data(:danger, invalid_code_entered) %>
               <% end %>
               <%= form_tag two_step_verification_path, method: :put do %>
                 <%= hidden_field_tag :otp_secret_key, @otp_secret_key%>
