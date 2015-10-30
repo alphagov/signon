@@ -23,7 +23,7 @@ class UserMailer < Devise::Mailer
 
   def two_step_flagged(user)
     @user = user
-    mail(to: @user.email, subject: "Set up 2-step verification")
+    mail(to: @user.email, subject: "Make your Signon account more secure")
   end
 
   def suspension_reminder(user, days)

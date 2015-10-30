@@ -21,7 +21,7 @@ class SuperAdminFlaggingTwoStepVerificationTest < ActionDispatch::IntegrationTes
           click_button 'Update User'
 
           assert last_email
-          assert_equal 'Set up 2-step verification', last_email.subject
+          assert_equal 'Make your Signon account more secure', last_email.subject
         end
       end
     end
