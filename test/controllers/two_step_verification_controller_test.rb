@@ -9,11 +9,17 @@ class TwoStepVerificationControllerTest < ActionController::TestCase
     sign_in @user
   end
 
-  context 'when an unauthenticated user attempts deferral' do
+  context 'when unauthenticated' do
     setup { sign_out @user }
 
-    should 'redirect them to login' do
+    should 'redirect to login upon attempted deferral' do
       put :defer
+
+      assert_redirected_to new_user_session_path
+    end
+
+    should 'redirect to login upon attempted prompt' do
+      get :prompt
 
       assert_redirected_to new_user_session_path
     end
