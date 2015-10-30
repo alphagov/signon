@@ -9,6 +9,16 @@ class TwoStepVerificationControllerTest < ActionController::TestCase
     sign_in @user
   end
 
+  context 'when an unauthenticated user attempts deferral' do
+    setup { sign_out @user }
+
+    should 'redirect them to login' do
+      put :defer
+
+      assert_redirected_to new_user_session_path
+    end
+  end
+
   context "otp_secret_key_uri" do
     setup do
       @secret = ROTP::Base32.random_base32

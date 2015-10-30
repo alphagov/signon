@@ -1,4 +1,5 @@
 class Devise::TwoStepVerificationController < DeviseController
+  before_filter -> { authenticate_user!(force: true) }, only: [:defer, :prompt]
   before_filter :prepare_and_validate, except: [:prompt, :defer]
   skip_before_filter :handle_two_step_verification
 
