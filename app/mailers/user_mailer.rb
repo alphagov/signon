@@ -13,7 +13,7 @@ class UserMailer < Devise::Mailer
 
   def two_step_changed(user)
     @user = user
-    mail(to: @user.email, subject: "2-step verification phone changed successfully")
+    mail(to: @user.email, subject: "Your 2-step verification phone has been changed")
   end
 
   def two_step_enabled(user)

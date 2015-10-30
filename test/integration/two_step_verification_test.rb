@@ -35,16 +35,15 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "accept a valid code, persist the secret and log the event" do
-        MESSAGE = "2-step verification phone changed successfully"
         perform_enqueued_jobs do
           enter_2sv_code(@new_secret)
 
-          assert_response_contains MESSAGE
+          assert_response_contains "2-step verification phone changed successfully"
           assert_equal @new_secret, @user.reload.otp_secret_key
           assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_CHANGED, uid: @user.uid).count
 
           assert last_email
-          assert MESSAGE, last_email.subject
+          assert "Your 2-step verification phone has been changed", last_email.subject
         end
       end
 
