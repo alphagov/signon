@@ -7,7 +7,7 @@
 </div>
 
 <%= form_tag(two_step_verification_session_path, :method => :post) do %>
-  <div class="panel panel-default">
+  <div class="panel panel-default" data-module="track-click">
     <div class="panel-heading">
       <h3 class="panel-title">2-step verification</h3>
     </div>
@@ -24,7 +24,7 @@
           'aria-describedby': 'code-hint' %>
       </div>
       <div data-module="toggle">
-        <%= link_to "Can’t get your verification code?", "#", class: "js-toggle js-toggle-target if-no-js-hide" %>
+        <%= link_to "Can’t get your verification code?", "#", class: "js-toggle js-toggle-target if-no-js-hide js-track" %>
         <div class="js-toggle-target if-js-hide">
           <h4>Contact GOV.UK</h4>
           <p>If you can’t get your verification code, you’ll need to ask <%= link_to "GOV.UK", "https://www.gov.uk/" %> to reset 2-step verification on your Signon account.</p>
@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="panel-footer">
-      <%= submit_tag "Sign in", tabindex: 2, class: 'btn btn-success btn-lg btn-block' %>
+      <%= submit_tag "Sign in", tabindex: 2, class: 'btn btn-success btn-lg btn-block js-track' %>
     </div>
   </div>
 <% end %>
