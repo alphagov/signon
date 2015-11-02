@@ -21,8 +21,8 @@ class PasswordsController < Devise::PasswordsController
       end
     end
   end
+protected
 
-  protected
   def after_resetting_password_path_for(resource)
     signed_in_root_path(resource)
   end
@@ -37,13 +37,16 @@ private
   end
 
   def record_reset_page_loaded
-    token = Devise.token_generator.digest(self, :reset_password_token, params[:reset_password_token])
-    user_from_params = User.find_by(reset_password_token: token)
     EventLog.record_event(user_from_params, EventLog::PASSPHRASE_RESET_LOADED) if user_from_params
   end
 
   def record_password_reset_failure(user)
     message = "(errors: #{user.errors.full_messages.join(', ')})".truncate(255)
     EventLog.record_event(user, EventLog::PASSPHRASE_RESET_FAILURE, trailing_message: message)
+  end
+
+  def user_from_params
+    token = Devise.token_generator.digest(self, :reset_password_token, params[:reset_password_token])
+    User.find_by(reset_password_token: token)
   end
 end
