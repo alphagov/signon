@@ -31,17 +31,15 @@ class SuperAdminResetTwoStepVerificationTest < ActionDispatch::IntegrationTest
     end
 
     should 'reset 2-step verification and notify the chosen user by email' do
-      MESSAGE = '2-step verification is now reset'
-
       perform_enqueued_jobs do
         assert_response_contains '2-step verification enabled'
 
         click_link 'Reset 2-step verification'
 
-        assert_response_contains MESSAGE
+        assert_response_contains '2-step verification is now reset'
 
         assert last_email
-        assert_equal MESSAGE, last_email.subject
+        assert_equal '2-step verification has been reset', last_email.subject
       end
     end
   end

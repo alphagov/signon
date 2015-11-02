@@ -8,7 +8,7 @@ class UserMailer < Devise::Mailer
 
   def two_step_reset(user)
     @user = user
-    mail(to: @user.email, subject: "2-step verification is now reset")
+    mail(to: @user.email, subject: "2-step verification has been reset")
   end
 
   def two_step_changed(user)
