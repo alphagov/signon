@@ -8,8 +8,53 @@ class UserTest < ActiveSupport::TestCase
     @user = create(:user)
   end
 
-  test "`require_2sv` defaults to false" do
-    refute build(:user).require_2sv
+  context "#require_2sv" do
+    should "default to false for normal users" do
+      refute create(:user).require_2sv?
+    end
+
+    should "default to true for admins and superadmins" do
+      assert create(:admin_user).require_2sv?
+      assert create(:superadmin_user).require_2sv?
+    end
+
+    should "default to false for admins and superadmins in preview" do
+      GovukAdminTemplate.stubs(environment_label: "Preview")
+
+      refute create(:admin_user).require_2sv?
+      refute create(:superadmin_user).require_2sv?
+    end
+
+    should "default to true when a user is promoted to admin" do
+      user = create(:user)
+      user.update_attribute(:role, "admin")
+      assert user.require_2sv?
+    end
+
+    should "default to true when a user is promoted to superadmin" do
+      user = create(:user)
+      user.update_attribute(:role, "superadmin")
+      assert user.require_2sv?
+    end
+
+    should "default to true when an admin is promoted to superadmin" do
+      user = create(:admin_user)
+      user.update_attribute(:role, "superadmin")
+      assert user.require_2sv?
+    end
+
+    should "remain true when an admin is demoted" do
+      user = create(:admin_user)
+      user.update_attribute(:role, "normal")
+      assert user.require_2sv?
+    end
+
+    should "not change if other changes are made to an admin" do
+      user = create(:admin_user)
+      user.update_attribute(:require_2sv, false)
+      user.update_attribute(:name, "Foo Bar")
+      refute user.require_2sv?
+    end
   end
 
   context '#send_two_step_flag_notification?' do
