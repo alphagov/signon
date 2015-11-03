@@ -8,7 +8,6 @@ class PasswordsController < Devise::PasswordsController
     user = user_from_params
     unless user && user.reset_password_period_valid?
       render 'devise/passwords/reset_error'
-      return
     end
   end
 
@@ -31,15 +30,14 @@ class PasswordsController < Devise::PasswordsController
   end
 
 protected
-
   def after_resetting_password_path_for(resource)
     signed_in_root_path(resource)
   end
 
 private
   def record_password_reset_request
-    user_from_params = User.find_by_email(params[:user][:email]) if params[:user].present?
-    EventLog.record_event(user_from_params, EventLog::PASSPHRASE_RESET_REQUEST) if user_from_params
+    user = User.find_by_email(params[:user][:email]) if params[:user].present?
+    EventLog.record_event(user, EventLog::PASSPHRASE_RESET_REQUEST) if user
     Statsd.new(::STATSD_HOST).increment(
       "#{::STATSD_PREFIX}.users.password_reset_request"
     )
