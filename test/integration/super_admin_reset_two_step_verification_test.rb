@@ -36,7 +36,7 @@ class SuperAdminResetTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
         click_link 'Reset 2-step verification'
 
-        assert_response_contains '2-step verification is now reset'
+        assert_response_contains "Reset 2-step verification for #{@user.email}"
 
         assert last_email
         assert_equal '2-step verification has been reset', last_email.subject
