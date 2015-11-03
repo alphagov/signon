@@ -279,7 +279,7 @@ class User < ActiveRecord::Base
   end
 
   def send_two_step_flag_notification?
-    require_2sv? && require_2sv_changed? || two_step_flag_changed?
+    require_2sv? && two_step_flag_changed?
   end
 
 private

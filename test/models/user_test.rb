@@ -34,14 +34,6 @@ class UserTest < ActiveSupport::TestCase
         refute @user.reload.send_two_step_flag_notification?
       end
     end
-
-    context 'when the user is flagged' do
-      should 'return true' do
-        @user.require_2sv = true
-
-        assert @user.send_two_step_flag_notification?
-      end
-    end
   end
 
   context '#reset_2sv!' do
