@@ -69,7 +69,7 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
 
       signout
 
-      complete_password_reset(current_email, new_password: new_password)
+      current_email.click_link("Change my passphrase")
 
       assert_response_contains("That passphrase reset didn’t work.")
     end
@@ -108,5 +108,21 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
     # partially signed-in user should be able to reset passphrase using link in reset passphrase instructions
     click_link 'Forgot your passphrase?'
     assert_response_contains("Request a passphrase reset")
+  end
+
+  should "show error messages when password reset doesn't work" do
+    perform_enqueued_jobs do
+      user = create(:user)
+      trigger_reset_for(user.email)
+
+      open_email(user.email)
+
+      current_email.click_link("Change my passphrase")
+      fill_in "New passphrase", with: "A Password"
+      fill_in "Confirm new passphrase", with: "Not That Password"
+      click_button "Change passphrase"
+
+      assert_response_contains("Passphrase confirmation doesn't match")
+    end
   end
 end

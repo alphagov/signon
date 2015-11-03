@@ -2,6 +2,16 @@ class PasswordsController < Devise::PasswordsController
   before_filter :record_password_reset_request, only: :create
   before_filter :record_reset_page_loaded, only: :edit
 
+  def edit
+    super
+
+    user = user_from_params
+    unless user && user.reset_password_period_valid?
+      render 'devise/passwords/reset_error'
+      return
+    end
+  end
+
   # overrides http://git.io/sOhoaA to prevent expirable from
   # intercepting reset password flow for a partially signed-in user
   def require_no_authentication
@@ -16,11 +26,10 @@ class PasswordsController < Devise::PasswordsController
     super do |resource|
       unless resource.valid?
         record_password_reset_failure(resource) if resource.persisted?
-        render 'devise/passwords/reset_error'
-        return
       end
     end
   end
+
 protected
 
   def after_resetting_password_path_for(resource)
