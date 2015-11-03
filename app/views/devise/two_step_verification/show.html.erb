@@ -76,7 +76,7 @@
           </h4>
         </div>
         <div id="step-three" class="panel-collapse collapse <% if invalid_code_entered %>in<% end %>" role="tabpanel" aria-labelledby="step-three-heading">
-          <div class="panel-body">
+          <div class="panel-body" data-module="track-click">
               <% if invalid_code_entered %>
                 <%= content_tag :div,
                   invalid_code_entered,
@@ -92,14 +92,14 @@
                     placeholder: 'Enter 6-digit code',
                     autocomplete: 'off' %>
                 </div>
-                <button name="submit" id="submit_code" class="btn btn-lg btn-success">
+                <button name="submit" id="submit_code" class="btn btn-lg btn-success js-track">
                   <% if current_user.has_2sv? %>
                     Finish replacing your phone
                   <% else %>
                     Finish set up
                   <% end %>
                 </button>
-                <a href="/" class="btn btn-lg btn-default add-left-margin">Cancel</a>
+                <a href="/" class="btn btn-lg btn-default add-left-margin js-track">Cancel</a>
               <% end %>
           </div>
         </div>

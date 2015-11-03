@@ -127,7 +127,7 @@ class UsersController < ApplicationController
     @user.reset_2sv!(current_user)
     UserMailer.two_step_reset(@user).deliver_later
 
-    redirect_to :root, notice: '2-step verification is now reset'
+    redirect_to :root, notice: "Reset 2-step verification for #{@user.email}"
   end
 
   private

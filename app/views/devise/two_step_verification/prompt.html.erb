@@ -12,9 +12,9 @@
     <p class="lead">Make your signon account more secure by setting up 2-step verification. You’ll need to install an app on your phone which will generate a security code to enter when you sign in.</p>
     <p class="lead remove-bottom-margin">Set up takes about 5 minutes.</p>
   </div>
-  <div class="panel-footer">
-    <%= link_to 'Start set up', two_step_verification_path, class: 'btn btn-success btn-lg' %>
-    <%= submit_tag 'Not now', class: 'btn btn-default btn-lg pull-right' %>
+  <div class="panel-footer" data-module="track-click">
+    <%= link_to 'Start set up', two_step_verification_path, class: 'btn btn-success btn-lg js-track', "data-track-label" => "setup" %>
+    <%= submit_tag 'Not now', class: 'btn btn-default btn-lg pull-right js-track', "data-track-label" => "defer" %>
   </div>
 </div>
 <% end %>
