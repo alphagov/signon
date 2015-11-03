@@ -53,7 +53,7 @@ end
 
 group :development, :test do
   gem 'jasmine', '2.1.0'
-  gem 'govuk-lint', '~> 0.3.0'
+  gem 'govuk-lint', '~> 0.4'
 end
 
 gem 'logstasher', '0.4.8'

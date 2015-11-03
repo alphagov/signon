@@ -22,6 +22,7 @@ class Devise::TwoStepVerificationController < DeviseController
     mode = current_user.has_2sv? ? :change : :setup
     if verify_code_and_update
       EventLog.record_event(current_user, success_event_for(mode))
+      send_notification(current_user, mode)
       redirect_to_prior_flow notice: I18n.t("devise.two_step_verification.messages.success.#{mode}")
     else
       EventLog.record_event(current_user, failure_event_for(mode))
@@ -39,6 +40,15 @@ class Devise::TwoStepVerificationController < DeviseController
   end
 
   private
+
+  def send_notification(user, mode)
+    if mode == :setup
+      UserMailer.two_step_enabled(current_user).deliver_later
+    else
+      UserMailer.two_step_changed(current_user).deliver_later
+    end
+  end
+
   def qr_code_data_uri
     qr_code = RQRCode::QRCode.new(otp_secret_key_uri, level: :m)
     qr_code.as_png(size: 180, fill: ChunkyPNG::Color::TRANSPARENT).to_data_url

@@ -1,6 +1,9 @@
 require 'test_helper'
 
 class SuperAdminResetTwoStepVerificationTest < ActionDispatch::IntegrationTest
+  include EmailHelpers
+  include ActiveJob::TestHelper
+
   setup do
     @user = create(:user, otp_secret_key: 'sekret')
   end
@@ -27,12 +30,17 @@ class SuperAdminResetTwoStepVerificationTest < ActionDispatch::IntegrationTest
       signin(@super_admin)
     end
 
-    should 'reset 2-step verification for the chosen user' do
-      assert_response_contains('2-step verification enabled')
+    should 'reset 2-step verification and notify the chosen user by email' do
+      perform_enqueued_jobs do
+        assert_response_contains '2-step verification enabled'
 
-      click_link 'Reset 2-step verification'
+        click_link 'Reset 2-step verification'
 
-      assert_response_contains('2-step verification is now reset')
+        assert_response_contains '2-step verification is now reset'
+
+        assert last_email
+        assert_equal '2-step verification has been reset', last_email.subject
+      end
     end
   end
 end

@@ -44,6 +44,8 @@ class UsersController < ApplicationController
 
     @user.skip_reconfirmation!
     if @user.update_attributes(user_params)
+      send_two_step_flag_notification(@user)
+
       @user.application_permissions.reload
       PermissionUpdater.perform_on(@user)
 
@@ -123,6 +125,7 @@ class UsersController < ApplicationController
 
   def reset_two_step_verification
     @user.reset_2sv!(current_user)
+    UserMailer.two_step_reset(@user).deliver_later
 
     redirect_to :root, notice: '2-step verification is now reset'
   end
@@ -188,6 +191,12 @@ class UsersController < ApplicationController
       @users.includes(:organisation).find_each do |user|
         csv << presenter.row(user)
       end
+    end
+  end
+
+  def send_two_step_flag_notification(user)
+    if user.send_two_step_flag_notification?
+      UserMailer.two_step_flagged(user).deliver_later
     end
   end
 

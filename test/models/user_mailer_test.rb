@@ -7,6 +7,43 @@ class UserMailerTest < ActionMailer::TestCase
     end
   end
 
+  def assert_not_body_includes(search, email = @email)
+    email.body.parts.each do |part|
+      assert_not_includes part.body, search
+    end
+  end
+
+  context "2-step verification set up" do
+    setup do
+      user = stub(name: "Ben", email: "test@example.com")
+      @email = UserMailer.two_step_enabled(user)
+    end
+
+    context "in the preview environment" do
+      setup do
+        GovukAdminTemplate.stubs(environment_label: "Preview")
+      end
+
+      should "include [PREVIEW] in the subject" do
+        assert_includes @email.subject, "[PREVIEW]"
+      end
+
+      should "include the 'verify for production separately' warning" do
+        assert_body_includes "separately for your Production"
+      end
+    end
+
+    context "in other environments" do
+      should "not include [PREVIEW] in the subject" do
+        assert_not_includes @email.subject, "[PREVIEW]"
+      end
+
+      should "not include the 'verify for production separately' warning" do
+        assert_not_body_includes "separately for your Production"
+      end
+    end
+  end
+
   context "emailing a user" do
     setup do
       stub_user = stub(name: "User", email: "user@example.com")

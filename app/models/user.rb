@@ -50,6 +50,7 @@ class User < ActiveRecord::Base
   before_validation :fix_apostrophe_in_email
   before_create :generate_uid
   after_create :update_stats
+  before_save :mark_two_step_flag_changed
 
   scope :web_users, -> { where(api_user: false) }
   scope :not_suspended, -> { where(suspended_at: nil) }
@@ -277,7 +278,20 @@ class User < ActiveRecord::Base
     end
   end
 
+  def send_two_step_flag_notification?
+    require_2sv? && require_2sv_changed? || two_step_flag_changed?
+  end
+
 private
+
+  def two_step_flag_changed?
+    @two_step_flag_changed
+  end
+
+  def mark_two_step_flag_changed
+    @two_step_flag_changed = require_2sv_changed?
+    true
+  end
 
   # Override devise_security_extension for updating expired passwords
   def update_password_changed

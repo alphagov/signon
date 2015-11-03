@@ -4,7 +4,28 @@ class UserMailer < Devise::Mailer
 
   default from: Proc.new { email_from }
 
-  helper_method :suspension_time, :account_name, :instance_name, :locked_time, :unlock_time
+  helper_method :suspension_time, :account_name, :instance_name, :locked_time, :unlock_time, :preview?
+
+  def two_step_reset(user)
+    @user = user
+    mail(to: @user.email, subject: "2-step verification has been reset")
+  end
+
+  def two_step_changed(user)
+    @user = user
+    mail(to: @user.email, subject: "Your 2-step verification phone has been changed")
+  end
+
+  def two_step_enabled(user)
+    prefix = "[PREVIEW] " if preview?
+    @user = user
+    mail(to: @user.email, subject: "#{prefix}2-step verification set up")
+  end
+
+  def two_step_flagged(user)
+    @user = user
+    mail(to: @user.email, subject: "Make your Signon account more secure")
+  end
 
   def suspension_reminder(user, days)
     @user = user
@@ -69,5 +90,9 @@ private
   def subject_for(key)
     I18n.t(:"#{devise_mapping.name}_subject", scope: [:devise, :mailer, key],
       default: [:subject, key.to_s.humanize], app_name: app_name)
+  end
+
+  def preview?
+    GovukAdminTemplate.environment_label == "Preview"
   end
 end
