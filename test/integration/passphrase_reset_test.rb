@@ -41,7 +41,7 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
       trigger_reset_for(user.email)
 
       visit root_path
-      signin(email: user.email, password: user.password)
+      signin_with(email: user.email, password: user.password)
 
       open_email(user.email)
       assert current_email
@@ -103,7 +103,7 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
     user = create(:user, password_changed_at: 91.days.ago)
 
     visit root_path
-    signin(email: user.email, password: user.password)
+    signin_with(email: user.email, password: user.password)
 
     # partially signed-in user should be able to reset passphrase using link in reset passphrase instructions
     click_link 'Forgot your passphrase?'

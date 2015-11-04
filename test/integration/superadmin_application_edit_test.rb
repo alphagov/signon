@@ -9,7 +9,7 @@ class SuperAdminApplicationEditTest < ActionDispatch::IntegrationTest
 
       @superadmin = create(:superadmin_user)
       visit new_user_session_path
-      signin(@superadmin)
+      signin_with(@superadmin)
       within("ul.nav") do
         click_link "Applications"
       end

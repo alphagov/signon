@@ -8,7 +8,7 @@ class UserSuspensionTest < ActionDispatch::IntegrationTest
 
   should "prevent users from signing in" do
     visit new_user_session_path
-    signin(@user)
+    signin_with(@user)
 
     assert_response_contains("account has been suspended")
   end
@@ -16,7 +16,7 @@ class UserSuspensionTest < ActionDispatch::IntegrationTest
   should "show the suspension reason to admins" do
     admin = create(:user, role: 'admin')
     visit new_user_session_path
-    signin(admin)
+    signin_with(admin)
 
     visit edit_user_path(@user)
     assert_response_contains("gross misconduct")

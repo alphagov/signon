@@ -7,7 +7,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
 
       @superadmin = create(:superadmin_user)
       visit new_user_session_path
-      signin(@superadmin)
+      signin_with(@superadmin)
 
       @api_user = create(:api_user, with_permissions: { @application => ["write"] })
       create(:access_token, resource_owner_id: @api_user.id, application_id: @application.id)

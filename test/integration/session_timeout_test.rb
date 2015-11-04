@@ -10,7 +10,7 @@ class SessionTimeoutTest < ActionDispatch::IntegrationTest
   should "not extend an expired session by viewing the login form" do
     Timecop.freeze((User.timeout_in + 5.minutes).ago) do
       visit root_path
-      signin(email: @user_email, password: @user_password)
+      signin_with(email: @user_email, password: @user_password)
     end
 
     visit "/users/sign_in"

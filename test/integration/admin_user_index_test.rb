@@ -8,7 +8,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       @admin = create(:admin_user, name: "Admin User", email: "admin@example.com")
       visit new_user_session_path
-      signin(@admin)
+      signin_with(@admin)
 
       org1 = create(:organisation, name: "Org 1")
       org2 = create(:organisation, name: "Org 2")

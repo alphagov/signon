@@ -11,7 +11,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
 
   test "record successful login" do
     visit root_path
-    signin @user
+    signin_with(@user)
 
     assert_equal 1, @user.event_logs.count
     assert_equal EventLog::SUCCESSFUL_LOGIN, @user.event_logs.last.event
@@ -20,7 +20,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
   context "recording unsuccessful login" do
     should "record unsuccessful login for a valid email" do
       visit root_path
-      signin(email: @user.email, password: :incorrect)
+      signin_with(email: @user.email, password: :incorrect)
 
       assert_equal 1, @user.event_logs.count
       assert_equal EventLog::UNSUCCESSFUL_LOGIN, @user.event_logs.last.event
@@ -28,7 +28,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
 
     should "log nothing for an invalid email" do
       visit root_path
-      signin(email: "nonexistent@example.com", password: "anything")
+      signin_with(email: "nonexistent@example.com", password: "anything")
 
       assert_equal 0, EventLog.count
     end
@@ -73,7 +73,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
   test "record successful passphrase change" do
     new_password = "correct horse battery daffodil"
     visit root_path
-    signin @user
+    signin_with(@user)
     change_password(old: @user.password,
                     new: new_password,
                     new_confirmation: new_password)
@@ -84,7 +84,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
 
   test "record unsuccessful passphrase change" do
     visit root_path
-    signin @user
+    signin_with(@user)
     change_password(old: @user.password,
                     new: @user.password,
                     new_confirmation: @user.password)
@@ -95,7 +95,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
 
   test "record account locked if password entered too many times" do
     visit root_path
-    7.times { signin(email: @user.email, password: :incorrect) }
+    7.times { signin_with(email: @user.email, password: :incorrect) }
 
     # multiple events are registered with the same time, order changes.
     assert_includes @user.event_logs.map(&:event), EventLog::ACCOUNT_LOCKED
@@ -105,7 +105,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     @user.lock_access!
 
     visit root_path
-    signin @admin
+    signin_with(@admin)
     first_letter_of_name = @user.name[0]
     visit users_path(letter: first_letter_of_name)
     click_on 'Unlock'
@@ -116,7 +116,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
 
   test "record user suspension along with event initiator" do
     visit root_path
-    signin @admin
+    signin_with(@admin)
     first_letter_of_name = @user.name[0]
     visit users_path(letter: first_letter_of_name)
     click_on "#{@user.name}"
@@ -133,7 +133,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     @user.suspend('Assaulting superior officer')
 
     visit root_path
-    signin @user
+    signin_with(@user)
 
     assert_equal @user.event_logs.last.event, EventLog::SUSPENDED_ACCOUNT_AUTHENTICATED_LOGIN
   end
@@ -142,7 +142,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     @user.suspend('Gross negligence')
 
     visit root_path
-    signin @admin
+    signin_with(@admin)
     first_letter_of_name = @user.name[0]
     visit users_path(letter: first_letter_of_name)
     click_on "#{@user.name}"
@@ -158,14 +158,14 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     @user.password_changed_at = 100.days.ago; @user.save!
 
     visit root_path
-    signin @user
+    signin_with(@user)
 
     assert_includes @user.event_logs.map(&:event), EventLog::PASSPHRASE_EXPIRED
   end
 
   test "users don't have permission to view account access log" do
     visit root_path
-    signin @user
+    signin_with(@user)
 
     click_link "Change your email or passphrase"
     assert page.has_no_link? 'Account access log'
@@ -174,7 +174,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
   test "admins have permission to view account access log" do
     @user.lock_access!
     visit root_path
-    signin @admin
+    signin_with(@admin)
     visit edit_user_path(@user)
     click_on 'Account access log'
 
@@ -186,7 +186,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     super_nintendo_chalmers = create(:superadmin_user)
 
     visit root_path
-    signin super_nintendo_chalmers
+    signin_with(super_nintendo_chalmers)
     visit edit_user_path(@user)
     click_on 'Account access log'
 
@@ -199,7 +199,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     user.lock_access!
 
     visit root_path
-    signin admin
+    signin_with(admin)
     visit edit_user_path(user)
     click_on 'Account access log'
 
@@ -210,7 +210,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     admin = create(:organisation_admin)
 
     visit root_path
-    signin admin
+    signin_with(admin)
     visit event_logs_user_path(@user)
 
     assert page.has_content?("You do not have permission to perform this action")

@@ -1,24 +1,23 @@
 module UserHelpers
-  def signin(user_or_options)
-    email = user_or_options.is_a?(Hash) ? user_or_options[:email] : user_or_options.email
-    password = user_or_options.is_a?(Hash) ? user_or_options[:password] : user_or_options.password
+  def signin_with(user = nil, email: nil, password: nil, second_step: true, set_up_2sv: true)
+    user ||= User.find_by(email: email)
+    email ||= user.email
+    password ||= user.password
+
+    if user && user.require_2sv? && user.otp_secret_key.blank? && set_up_2sv
+      user.update_attribute(:otp_secret_key, ROTP::Base32.random_base32)
+    end
 
     fill_in "Email", with: email
     fill_in "Passphrase", with: password
     click_button "Sign in"
-  end
 
-  def signin_with_2sv(user_or_options)
-    signin(user_or_options)
-    if user_or_options.is_a? Hash
-      user = User.find_by(email: user_or_options[:email])
-    else
-      user = user_or_options
-    end
-
-    Timecop.freeze do
-      fill_in :code, with: ROTP::TOTP.new(user.otp_secret_key).now
-      click_button "Sign in"
+    if second_step && user && user.otp_secret_key
+      code = second_step == true ? ROTP::TOTP.new(user.otp_secret_key).now : second_step
+      Timecop.freeze do
+        fill_in :code, with: code
+        click_button "Sign in"
+      end
     end
   end
 

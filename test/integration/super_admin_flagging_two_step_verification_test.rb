@@ -9,7 +9,7 @@ class SuperAdminFlaggingTwoStepVerificationTest < ActionDispatch::IntegrationTes
       super_admin = create(:superadmin_user)
       user = create(:user)
       visit root_path
-      signin(super_admin)
+      signin_with(super_admin)
 
       visit edit_user_path(user)
     end

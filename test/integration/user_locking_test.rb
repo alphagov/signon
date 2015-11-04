@@ -7,9 +7,9 @@ class UserLockingTest < ActionDispatch::IntegrationTest
     perform_enqueued_jobs do
       user = create(:user)
       visit root_path
-      8.times { signin(email: user.email, password: "wrong password") }
+      8.times { signin_with(email: user.email, password: "wrong password") }
 
-      signin(user)
+      signin_with(user)
 
       assert_equal user.email, last_email.to[0]
       assert_equal "Your GOV.UK Signon development account has been locked", last_email.subject
@@ -26,7 +26,7 @@ class UserLockingTest < ActionDispatch::IntegrationTest
     visit root_path
 
     assert_enqueued_jobs(1) do
-      8.times { signin(email: user.email, password: "wrong password") }
+      8.times { signin_with(email: user.email, password: "wrong password") }
     end
   end
 
@@ -36,7 +36,7 @@ class UserLockingTest < ActionDispatch::IntegrationTest
     user.lock_access!
 
     visit root_path
-    signin(admin)
+    signin_with(admin)
     first_letter_of_name = user.name[0]
     visit users_path(letter: first_letter_of_name)
     click_button 'Unlock account'
@@ -51,7 +51,7 @@ class UserLockingTest < ActionDispatch::IntegrationTest
     user.lock_access!
 
     visit root_path
-    signin(admin)
+    signin_with(admin)
     visit edit_user_path(user)
 
     click_button 'Unlock account'

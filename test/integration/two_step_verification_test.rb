@@ -16,7 +16,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
       setup do
         @user = create(:user, email: "jane.user@example.com", otp_secret_key: @original_secret)
         visit new_user_session_path
-        signin_with_2sv(@user)
+        signin_with(@user)
         visit two_step_verification_path
       end
 
@@ -54,15 +54,15 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
           click_link "Sign out"
         end
 
-        signin_with_2sv(@user)
+        signin_with(@user)
       end
     end
 
     context "for a user without an existing 2SV setup" do
       setup do
-        @user = create(:admin_user, email: "jane.user@example.com")
-        visit users_path
-        signin(@user)
+        @user = create(:user, email: "jane.user@example.com")
+        visit root_path
+        signin_with(@user)
         visit two_step_verification_path
       end
 

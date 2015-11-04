@@ -16,7 +16,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
           user = create(:user)
 
           visit new_user_session_path
-          signin(@admin)
+          signin_with(@admin)
           admin_changes_email_address(user: user, new_email: "new@email.com")
 
           assert_equal "new@email.com", last_email.to[0]
@@ -29,7 +29,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
           user = create(:user, email: 'old@email.com')
 
           visit new_user_session_path
-          signin(@admin)
+          signin_with(@admin)
           admin_changes_email_address(user: user, new_email: "new@email.com")
 
           visit event_logs_user_path(user)
@@ -41,7 +41,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         user = create(:user)
 
         visit new_user_session_path
-        signin(@admin)
+        signin_with(@admin)
         admin_changes_email_address(user: user, new_email: "")
 
         assert_response_contains("Email can't be blank")
@@ -59,7 +59,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
           assert_equal 'Please confirm your account', current_email.subject
 
           visit new_user_session_path
-          signin(@admin)
+          signin_with(@admin)
           admin_changes_email_address(user: user, new_email: "new@email.com")
 
           email = emails_sent_to("new@email.com").detect { |mail| mail.subject == 'Please confirm your account' }
@@ -80,7 +80,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         original_email = user.email
 
         visit new_user_session_path
-        signin(@admin)
+        signin_with(@admin)
         visit edit_user_path(user)
         click_link "Cancel email change"
         signout
@@ -100,7 +100,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
     should "trigger a confirmation email to the user's new address and a notification to the user's old address" do
       perform_enqueued_jobs do
         visit new_user_session_path
-        signin(@user)
+        signin_with(@user)
 
         click_link "Change your email or passphrase"
         fill_in "Email", with: "new@email.com"
@@ -117,7 +117,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
     should "log email change events in the user's event log" do
       perform_enqueued_jobs do
         visit new_user_session_path
-        signin(@user)
+        signin_with(@user)
 
         click_link "Change your email or passphrase"
         fill_in "Email", with: "new@email.com"
@@ -126,7 +126,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         first_email_sent_to("new@email.com").click_link("Confirm my account")
 
         signout
-        signin(create(:admin_user))
+        signin_with(create(:admin_user))
         visit event_logs_user_path(@user)
         assert_response_contains "Email change initiated by #{@user.name} from original@email.com to new@email.com"
         assert_response_contains "Email change confirmed"
@@ -135,7 +135,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
     should "show an error and not send a confirmation if the email is blank" do
       visit new_user_session_path
-      signin(@user)
+      signin_with(@user)
 
       click_link "Change your email or passphrase"
       fill_in "Email", with: ""
@@ -150,7 +150,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       use_javascript_driver
 
       visit new_user_session_path
-      signin(@user)
+      signin_with(@user)
 
       click_link "Change your email or passphrase"
       fill_in "Email", with: "new@email.com"

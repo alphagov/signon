@@ -5,7 +5,7 @@ class UserLinkTest < ActionDispatch::IntegrationTest
     setup do
       @admin = create(:admin_user, name: "Adam Adminson", email: "admin@example.com")
       visit new_user_session_path
-      signin(@admin)
+      signin_with(@admin)
     end
 
     should "link to the current user's edit page" do
