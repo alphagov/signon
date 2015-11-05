@@ -51,6 +51,7 @@ class User < ActiveRecord::Base
   before_create :generate_uid
   after_create :update_stats
   before_save :mark_two_step_flag_changed
+  before_save :set_2sv_for_admin_roles
 
   scope :web_users, -> { where(api_user: false) }
   scope :not_suspended, -> { where(suspended_at: nil) }
@@ -225,6 +226,11 @@ class User < ActiveRecord::Base
 
   def need_two_step_verification?
     has_2sv?
+  end
+
+  def set_2sv_for_admin_roles
+    return if GovukAdminTemplate.environment_label == "Preview"
+    self.require_2sv = true if role_changed? && (admin? || superadmin?)
   end
 
   def authenticate_otp(code)

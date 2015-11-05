@@ -12,7 +12,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
       ignoring_spurious_error do
         visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
       end
-      signin(@user)
+      signin_with(@user, set_up_2sv: false)
     end
 
     should "not confirm the authorisation" do
@@ -36,7 +36,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     refute Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
 
     ignoring_spurious_error do
-      signin(@user)
+      signin_with(@user)
     end
 
     assert_redirected_to_application @app
@@ -49,7 +49,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     @user.save!
 
     visit "/"
-    signin(@user)
+    signin_with(@user)
     ignoring_spurious_error do
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     end
@@ -61,7 +61,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     @user.update_attribute(:otp_secret_key, ROTP::Base32.random_base32)
 
     visit "/"
-    signin(@user)
+    signin_with(@user, second_step: false)
     ignoring_spurious_error do
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     end
@@ -71,7 +71,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
 
   should "confirm the authorisation for a signed-in user" do
     visit "/"
-    signin(@user)
+    signin_with(@user)
     ignoring_spurious_error do
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     end
@@ -84,7 +84,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     @user.update_attribute(:otp_secret_key, ROTP::Base32.random_base32)
 
     visit "/"
-    signin_with_2sv(@user)
+    signin_with(@user)
     ignoring_spurious_error do
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     end

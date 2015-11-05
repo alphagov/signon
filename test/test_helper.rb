@@ -32,6 +32,16 @@ require 'helpers/confirmation_token_helper'
 class ActionController::TestCase
   include Devise::TestHelpers
   include ConfirmationTokenHelper
+
+  def sign_in(user)
+    warden.stubs(authenticate!: user)
+    @controller.stubs(current_user: user)
+  end
+
+  def sign_out(user)
+    warden.unstub(:authenticate!)
+    @controller.unstub(:current_user)
+  end
 end
 
 require 'capybara/rails'

@@ -5,7 +5,7 @@ class TwoStepVerificationPromptTest < ActionDispatch::IntegrationTest
     setup do
       @user = create(:two_step_flagged_user)
       visit users_path
-      signin(@user)
+      signin_with(@user, set_up_2sv: false)
     end
 
     should 'prompt the user to complete verification' do

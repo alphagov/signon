@@ -13,7 +13,7 @@ class SuperAdminResetTwoStepVerificationTest < ActionDispatch::IntegrationTest
       @admin = create(:admin_user)
 
       visit edit_user_path(@user)
-      signin(@admin)
+      signin_with(@admin)
     end
 
     should 'not display the link' do
@@ -27,7 +27,7 @@ class SuperAdminResetTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
       use_javascript_driver
       visit edit_user_path(@user)
-      signin(@super_admin)
+      signin_with(@super_admin)
     end
 
     should 'reset 2-step verification and notify the chosen user by email' do

@@ -8,7 +8,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
     should "not display the 2SV flagging checkbox" do
       admin = create(:admin_user)
       visit root_path
-      signin(admin)
+      signin_with(admin)
 
       visit new_user_invitation_path
 
@@ -21,7 +21,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       perform_enqueued_jobs do
         admin = create(:user, role: "admin")
         visit root_path
-        signin(admin)
+        signin_with(admin)
 
         visit new_user_invitation_path
         fill_in "Name", with: "Fred Bloggs"
@@ -48,7 +48,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
     should "show an error message when attempting to create a user without an email" do
       admin = create(:user, role: "admin")
       visit root_path
-      signin(admin)
+      signin_with(admin)
 
       visit new_user_invitation_path
       fill_in "Name", with: "Fred Bloggs"
@@ -63,7 +63,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       perform_enqueued_jobs do
         admin = create(:user, role: "superadmin")
         visit root_path
-        signin(admin)
+        signin_with(admin)
 
         visit new_user_invitation_path
         fill_in "Name", with: "Fred Bloggs"
@@ -88,7 +88,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       perform_enqueued_jobs do
         admin = create(:admin_user)
         visit root_path
-        signin(admin)
+        signin_with(admin)
 
         visit new_user_invitation_path
         assert has_no_select?("Role")

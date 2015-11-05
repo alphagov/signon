@@ -14,7 +14,7 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
     should "not ask the user to change their password" do
       visit new_user_session_path
 
-      signin(@user)
+      signin_with(@user)
       refute_response_contains(PROMPT_TO_CHANGE_PASSWORD)
     end
   end
@@ -28,7 +28,7 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
     should "force the user to change their password" do
       visit new_user_session_path
 
-      signin(@user)
+      signin_with(@user)
       assert_response_contains(PROMPT_TO_CHANGE_PASSWORD)
 
       reset_expired_passphrase(@user.password, @new_password, @new_password)
@@ -40,7 +40,7 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
     should "remember where the user was trying to get to before the password reset" do
       visit "/users/#{@user.id}/edit_email_or_passphrase?arbitrary=1"
 
-      signin(@user)
+      signin_with(@user)
       reset_expired_passphrase(@user.password, @new_password, @new_password)
 
       assert_current_url "/users/#{@user.id}/edit_email_or_passphrase?arbitrary=1"
@@ -48,7 +48,7 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
 
     should "continue prompting for a new password if an incorrect password was provided" do
       visit new_user_session_path
-      signin(@user)
+      signin_with(@user)
 
       reset_expired_passphrase("nonsense", @new_password, @new_password)
 
@@ -58,7 +58,7 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
 
     should "continue prompting for a new password if the password was not confirmed" do
       visit new_user_session_path
-      signin(@user)
+      signin_with(@user)
 
       reset_expired_passphrase(@user.password, @new_password, "rubbish")
 
@@ -68,7 +68,7 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
 
     should "continue prompting for a new password if the user navigates away from the password reset page" do
       visit new_user_session_path
-      signin(@user)
+      signin_with(@user)
 
       visit new_user_session_path
       assert_response_contains(PROMPT_TO_CHANGE_PASSWORD)

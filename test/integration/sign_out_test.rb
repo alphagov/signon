@@ -7,7 +7,7 @@ class SignOutTest < ActionDispatch::IntegrationTest
   end
 
   should "perform reauth on downstream apps" do
-    signin(@user)
+    signin_with(@user)
     ReauthEnforcer.expects(:perform_on).with(@user).once
 
     within("main") do

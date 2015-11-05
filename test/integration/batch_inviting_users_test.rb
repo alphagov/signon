@@ -8,7 +8,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
       application = create(:application)
       user = create(:user, role: "admin")
       visit root_path
-      signin(user)
+      signin_with(user)
 
       visit new_batch_invitation_path
       path = File.join(::Rails.root, "test", "fixtures", "users.csv")

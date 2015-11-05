@@ -6,7 +6,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     @user = create(:user)
 
     visit root_path
-    signin(@admin)
+    signin_with(@admin)
   end
 
   should "support granting signin permissions" do

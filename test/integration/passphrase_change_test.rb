@@ -10,7 +10,7 @@ class PassphraseChangeTest < ActionDispatch::IntegrationTest
       @original_password = "some v3ry s3cure passphrase"
       @user = create(:user, email: "jane.user@example.com", password: @original_password)
       visit new_user_session_path
-      signin(@user)
+      signin_with(@user)
     end
 
     should "change passphrase if the new passphrase is secure enough" do
@@ -66,7 +66,7 @@ class PassphraseChangeTest < ActionDispatch::IntegrationTest
 
       signout
       visit root_path
-      signin(@user)
+      signin_with(@user)
 
       click_link "Change your email or passphrase"
       fill_in "Current passphrase", with: @original_password
@@ -119,7 +119,7 @@ class PassphraseChangeTest < ActionDispatch::IntegrationTest
       original_password = "some v3ry s3cure passphrase"
       @user = create(:admin_user, password: original_password)
       visit new_user_session_path
-      signin(@user)
+      signin_with(@user)
 
       change_password_to("4 totally! dzzzifferent pass-phrase")
 
