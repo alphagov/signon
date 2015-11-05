@@ -92,6 +92,17 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
           assert SUCCESS, last_email.subject
         end
       end
+
+      should "accept a valid code from a device which has a small time lag" do
+        old_code = Timecop.freeze(35.seconds.ago) { ROTP::TOTP.new(@new_secret).now }
+
+        Timecop.freeze do
+          fill_in "code", with: old_code
+          click_button "submit_code"
+        end
+
+        assert_response_contains "2-step verification set up"
+      end
     end
   end
 end
