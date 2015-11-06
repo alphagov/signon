@@ -99,7 +99,9 @@
                     Finish set up
                   <% end %>
                 </button>
-                <a href="/" class="btn btn-lg btn-default add-left-margin js-track">Cancel</a>
+                <% unless current_user.after_2sv_go_live? || current_user.has_2sv? %>
+                  <a href="/" class="btn btn-lg btn-default add-left-margin js-track">Cancel</a>
+                <% end %>
               <% end %>
           </div>
         </div>
