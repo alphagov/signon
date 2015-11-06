@@ -10,6 +10,9 @@
 <div class="panel panel-default">
   <div class="panel-body">
     <p class="lead">Make your signon account more secure by setting up 2&#8209;step verification. You’ll need to install an app on your phone which will generate a security code to enter when you sign in.</p>
+    <% unless current_user.after_2sv_go_live? %>
+      <p class="lead">From Friday 20 November 2-step verification will be mandatory.</p>
+    <% end %>
     <p class="lead remove-bottom-margin">Set up takes about 5 minutes.</p>
   </div>
   <div class="panel-footer" data-module="track-click">
