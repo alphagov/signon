@@ -10,8 +10,12 @@ class Devise::TwoStepVerificationController < DeviseController
   end
 
   def defer
-    current_user.defer_two_step_verification
-    redirect_to_prior_flow
+    if current_user.force_2sv?
+      redirect_to root_path
+    else
+      current_user.defer_two_step_verification
+      redirect_to_prior_flow
+    end
   end
 
   def show
