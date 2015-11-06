@@ -50,8 +50,8 @@ class User < ActiveRecord::Base
   before_validation :fix_apostrophe_in_email
   before_create :generate_uid
   after_create :update_stats
-  before_save :mark_two_step_flag_changed
   before_save :set_2sv_for_admin_roles
+  before_save :mark_two_step_flag_changed
 
   scope :web_users, -> { where(api_user: false) }
   scope :not_suspended, -> { where(suspended_at: nil) }

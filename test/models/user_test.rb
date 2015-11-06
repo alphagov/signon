@@ -70,6 +70,14 @@ class UserTest < ActiveSupport::TestCase
           assert @user.send_two_step_flag_notification?
         end
       end
+
+      context "when promoting a user" do
+        should "be true" do
+          @user.update_attribute(:role, "admin")
+
+          assert @user.send_two_step_flag_notification?
+        end
+      end
     end
 
     context 'when already flagged' do
