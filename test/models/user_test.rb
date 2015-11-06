@@ -119,6 +119,26 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
+    context 'when on or after the go-live date of 20/11/2015' do
+      context 'when the user is flagged for 2SV' do
+        setup { @admin = build(:two_step_flagged_user, deferred_2sv_at: 1.hour.ago) }
+
+        should 'be true regardless of deferral' do
+          travel_to User::TWO_STEP_GO_LIVE_DATE do
+            assert @admin.prompt_for_2sv?
+          end
+        end
+      end
+
+      context 'when the user is not flagged for 2SV' do
+        should 'be false' do
+          travel_to User::TWO_STEP_GO_LIVE_DATE do
+            refute @user.prompt_for_2sv?
+          end
+        end
+      end
+    end
+
     context 'when the user deferred within the last 24hrs' do
       should 'be false' do
         refute build(:two_step_flagged_user, deferred_2sv_at: 3.hours.ago).prompt_for_2sv?
