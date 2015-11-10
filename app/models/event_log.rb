@@ -1,6 +1,4 @@
 class EventLog < ActiveRecord::Base
-  include ActiveModel::ForbiddenAttributesProtection
-
   LOCKED_DURATION = "#{Devise.unlock_in / 1.hour} #{'hour'.pluralize(Devise.unlock_in / 1.hour)}"
 
   ACCOUNT_LOCKED = "Passphrase verification failed too many times, account locked for #{LOCKED_DURATION}"
