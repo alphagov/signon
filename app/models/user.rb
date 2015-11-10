@@ -87,7 +87,6 @@ class User < ActiveRecord::Base
   def after_2sv_go_live?
     Time.zone.now >= TWO_STEP_GO_LIVE_DATE
   end
-  alias :force_2sv? :after_2sv_go_live?
 
   def prompt_for_2sv?
     return false if has_2sv?

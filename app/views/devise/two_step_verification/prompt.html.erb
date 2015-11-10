@@ -17,7 +17,7 @@
   </div>
   <div class="panel-footer" data-module="track-click">
     <%= link_to 'Start set up', two_step_verification_path, class: 'btn btn-success btn-lg js-track', "data-track-label" => "setup" %>
-    <% unless current_user.force_2sv? %>
+    <% unless current_user.after_2sv_go_live? %>
       <%= submit_tag 'Not now', class: 'btn btn-default btn-lg pull-right js-track', "data-track-label" => "defer" %>
     <% end %>
   </div>
