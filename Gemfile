@@ -66,7 +66,7 @@ group :test do
   gem 'database_cleaner', '1.5.0'
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'mocha', '1.1.0', require: false
-  gem 'webmock', '1.17.3'
+  gem 'webmock', '1.22.3'
   gem 'minitest', '~> 5.8.0'
   gem 'ci_reporter', '1.7.0'
   gem 'timecop', '0.7.1'
