@@ -1,6 +1,36 @@
 require 'test_helper'
 
 class TwoStepVerificationPromptTest < ActionDispatch::IntegrationTest
+  context 'for an admin user that has not been flagged' do
+    setup do
+      @user = create(:admin_user)
+    end
+
+    context 'before the 2SV hard go live date' do
+      should 'display the go live disclaimer' do
+        travel_to User::TWO_STEP_GO_LIVE_DATE - 1 do
+          visit users_path
+          signin_with(@user, set_up_2sv: false)
+
+          assert page.has_text?('From Friday 20 November')
+        end
+      end
+    end
+
+    context 'after the 2SV hard go live date' do
+      should 'not permit deferral or display go live disclaimer' do
+        travel_to User::TWO_STEP_GO_LIVE_DATE do
+          visit users_path
+          signin_with(@user, set_up_2sv: false)
+
+          assert page.has_link?('Start set up')
+          assert page.has_no_button?('Not now')
+          assert page.has_no_text?('From Friday 20 November')
+        end
+      end
+    end
+  end
+
   context 'when the user has been flagged for 2-step verification' do
     setup do
       @user = create(:two_step_flagged_user)

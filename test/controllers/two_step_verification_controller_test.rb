@@ -9,6 +9,25 @@ class TwoStepVerificationControllerTest < ActionController::TestCase
     sign_in @user
   end
 
+  context 'after the 2SV hard go live date' do
+    context 'for admin accounts' do
+      setup do
+        sign_out @user
+
+        @admin = create(:admin_user)
+        sign_in @admin
+      end
+
+      should 'not permit deferral' do
+        travel_to User::TWO_STEP_GO_LIVE_DATE do
+          put :defer
+
+          assert_redirected_to root_path
+        end
+      end
+    end
+  end
+
   context 'when unauthenticated' do
     setup { sign_out @user }
 
