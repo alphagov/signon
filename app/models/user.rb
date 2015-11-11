@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
   belongs_to :organisation
 
   before_validation :fix_apostrophe_in_email
-  before_create :generate_uid
+  after_initialize :generate_uid
   after_create :update_stats
   before_save :set_2sv_for_admin_roles
   before_save :mark_two_step_flag_changed
@@ -116,7 +116,7 @@ class User < ActiveRecord::Base
   end
 
   def generate_uid
-    self.uid = UUID.generate
+    self.uid ||= UUID.generate
   end
 
   def invited_but_not_accepted
@@ -306,13 +306,6 @@ private
   def mark_two_step_flag_changed
     @two_step_flag_changed = require_2sv_changed?
     true
-  end
-
-  # Override devise_security_extension for updating expired passwords
-  def update_password_changed
-    super.tap do |result|
-      EventLog.record_event(self, EventLog::SUCCESSFUL_PASSPHRASE_CHANGE) if result
-    end
   end
 
   def organisation_admin_belongs_to_organisation
