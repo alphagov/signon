@@ -55,7 +55,7 @@ class EventLog < ActiveRecord::Base
 
   def self.record_event(user, event, options = {})
     attributes = { uid: user.uid, event: event }.merge!(options.slice(*VALID_OPTIONS))
-    EventLog.create(attributes)
+    EventLog.create!(attributes)
   end
 
   def self.record_email_change(user, email_was, email_is, initiator = user)
