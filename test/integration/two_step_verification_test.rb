@@ -31,7 +31,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
         assert_response_contains "Sorry that code didn’t work. Please try again."
         assert_response_contains "Enter the code manually: #{@new_secret}"
-        assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_CHANGE_FAILED, uid: @user.uid).count
+        assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_CHANGE_FAILED.id, uid: @user.uid).count
       end
 
       should "accept a valid code, persist the secret and log the event" do
@@ -40,7 +40,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
           assert_response_contains "2-step verification phone changed successfully"
           assert_equal @new_secret, @user.reload.otp_secret_key
-          assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_CHANGED, uid: @user.uid).count
+          assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_CHANGED.id, uid: @user.uid).count
 
           assert last_email
           assert "Your 2-step verification phone has been changed", last_email.subject
@@ -76,7 +76,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
         assert_response_contains "Sorry that code didn’t work. Please try again."
         assert_response_contains "Enter the code manually: #{@new_secret}"
-        assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_ENABLE_FAILED, uid: @user.uid).count
+        assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_ENABLE_FAILED.id, uid: @user.uid).count
       end
 
       should "accept a valid code, persist the secret, log an event and notify by email" do
@@ -86,7 +86,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
           assert_response_contains SUCCESS
           assert_equal @new_secret, @user.reload.otp_secret_key
-          assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_ENABLED, uid: @user.uid).count
+          assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_ENABLED.id, uid: @user.uid).count
 
           assert last_email
           assert SUCCESS, last_email.subject

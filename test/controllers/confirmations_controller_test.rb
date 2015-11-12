@@ -63,7 +63,7 @@ class ConfirmationsControllerTest < ActionController::TestCase
 
       should "log an event upon confirmation" do
         get :show, confirmation_token: @confirmation_token
-        assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_CONFIRMED, uid: @user.uid).count
+        assert_equal 1, EventLog.where(event_id: EventLog::EMAIL_CHANGE_CONFIRMED.id, uid: @user.uid).count
       end
     end
 
@@ -95,7 +95,7 @@ class ConfirmationsControllerTest < ActionController::TestCase
       put :update,
             confirmation_token: @confirmation_token,
             user: { password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z" }
-      assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_CONFIRMED, uid: @user.uid).count
+      assert_equal 1, EventLog.where(event_id: EventLog::EMAIL_CHANGE_CONFIRMED.id, uid: @user.uid).count
     end
 
     should "reject with an incorrect token" do

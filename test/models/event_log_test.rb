@@ -1,8 +1,22 @@
 require 'test_helper'
 
 class EventLogTest < ActiveSupport::TestCase
+  context "#event" do
+    context "when the event has an `event_id`" do
+      should "return the correctly mapped event description" do
+        assert_equal "Account suspended", EventLog.new(event_id: EventLog::ACCOUNT_SUSPENDED.id).event
+      end
+    end
+
+    context "when the event has no `event_id`" do
+      should "return the correctly mapped event description" do
+        assert_equal "Account suspended", EventLog.new(event: EventLog::ACCOUNT_SUSPENDED.description).event
+      end
+    end
+  end
+
   test "can create a valid eventlog" do
-    assert EventLog.new(uid: :uid, event: :event).valid?
+    assert EventLog.new(uid: :uid, event_id: EventLog::TWO_STEP_ENABLED.id).valid?
   end
 
   test "requires a user uid" do
@@ -13,16 +27,20 @@ class EventLogTest < ActiveSupport::TestCase
     refute EventLog.new(uid: :uid).valid?
   end
 
-  EventLog::EVENTS_REQUIRING_INITIATOR.each do |event_name|
-    test "for #{event_name} event is invalid without the initiator" do
-      event_log = EventLog.new(uid: :uid, event: event_name)
+  test "requires an event_id" do
+    refute EventLog.new(uid: :uid, event: 'whoops').valid?
+  end
+
+  test "requires a mappable event_id" do
+    refute EventLog.new(uid: :uid, event_id: 99999).valid?
+  end
+
+  EventLog::EVENTS_REQUIRING_INITIATOR.each do |event|
+    test "for #{event.description} event is invalid without the initiator" do
+      event_log = EventLog.new(uid: :uid, event_id: event.id)
       refute event_log.valid?
       assert_includes event_log.errors.full_messages, "Initiator can't be blank"
     end
-  end
-
-  test "can use a helper to create the eventlog" do
-    assert EventLog.record_event(create(:user), :event).valid?
   end
 
   context ".record_email_change" do
@@ -30,14 +48,14 @@ class EventLogTest < ActiveSupport::TestCase
       user = create(:user, email: 'new@example.com')
       event_log = EventLog.record_email_change(user, 'old@example.com', user.email, create(:admin_user))
 
-      assert_equal EventLog::EMAIL_CHANGED, event_log.event
+      assert_equal EventLog::EMAIL_CHANGED, event_log.entry
     end
 
     should "record event EMAIL_CHANGE_INITIATED when a user is changing their own email" do
       user = create(:user, email: 'new@example.com')
       event_log = EventLog.record_email_change(user, 'old@example.com', user.email)
 
-      assert_equal EventLog::EMAIL_CHANGE_INITIATED, event_log.event
+      assert_equal EventLog::EMAIL_CHANGE_INITIATED, event_log.entry
     end
 
     should "record email change events with a trailing message" do
@@ -60,21 +78,21 @@ class EventLogTest < ActiveSupport::TestCase
 
   test "records the initiator of the event passed as an option" do
     initiator = create(:admin_user)
-    EventLog.record_event(create(:user), :event, initiator: initiator)
+    EventLog.record_event(create(:user), EventLog::EMAIL_CHANGED, initiator: initiator)
 
     assert_equal initiator, EventLog.last.initiator
   end
 
   test "records the application associated with the event passed as an option" do
     application = create(:application)
-    EventLog.record_event(create(:user), :event, application: application)
+    EventLog.record_event(create(:user), EventLog::ACCESS_TOKEN_REGENERATED, application: application)
 
     assert_equal application, EventLog.last.application
   end
 
   test "skips invalid options passed" do
     user = create(:user)
-    EventLog.record_event(user, :event, uid: build(:user).uid)
+    EventLog.record_event(user, EventLog::TWO_STEP_CHANGED, uid: build(:user).uid)
 
     assert_equal user.uid, EventLog.last.uid
   end
@@ -85,7 +103,7 @@ class EventLogTest < ActiveSupport::TestCase
     log = user.event_logs.first
 
     assert_equal log.uid, user.uid
-    assert_equal log.event, EventLog::PASSPHRASE_RESET_REQUEST
+    assert_equal log.entry, EventLog::PASSPHRASE_RESET_REQUEST
     assert_not_nil log.created_at
   end
 end
