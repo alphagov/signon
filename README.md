@@ -101,7 +101,7 @@ bundle exec sidekiq -C config/sidekiq.yml
 The application is divided into two parts: user management (User sign-on and
 passwords) and OAuth delegation (SSO service, contacts API).
 
-Uesr management is handled by
+User management is handled by
 [Devise](https://github.com/plataformatec/devise). Configuration is in
 `config/initializers/devise` and views are either concrete (under
 app/views/devise) or pulled in from the Devise gem. Likewise with Controllers,
