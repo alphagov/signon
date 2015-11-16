@@ -46,7 +46,6 @@ ActiveRecord::Schema.define(version: 20151120134709) do
 
   create_table "event_logs", force: :cascade do |t|
     t.string   "uid",              limit: 255, null: false
-    t.string   "event",            limit: 255, null: false
     t.datetime "created_at",                   null: false
     t.integer  "initiator_id",     limit: 4
     t.integer  "application_id",   limit: 4
