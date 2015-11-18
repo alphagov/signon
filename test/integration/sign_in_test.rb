@@ -110,7 +110,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
       assert_response_contains "Welcome to GOV.UK"
       assert_response_contains "Signed in successfully"
-      assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_VERIFIED, uid: @user.uid).count
+      assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_VERIFIED.id, uid: @user.uid).count
     end
 
     should "prevent access with a blank code" do
@@ -118,7 +118,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: "")
 
       assert_response_contains "get your code"
-      assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_VERIFICATION_FAILED, uid: @user.uid).count
+      assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_VERIFICATION_FAILED.id, uid: @user.uid).count
     end
 
     should "prevent access with an old code" do
@@ -128,7 +128,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: old_code)
 
       assert_response_contains "get your code"
-      assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_VERIFICATION_FAILED, uid: @user.uid).count
+      assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_VERIFICATION_FAILED.id, uid: @user.uid).count
     end
 
     should "prevent access with a garbage code" do
@@ -136,7 +136,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: "abcdef")
 
       assert_response_contains "get your code"
-      assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_VERIFICATION_FAILED, uid: @user.uid).count
+      assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_VERIFICATION_FAILED.id, uid: @user.uid).count
     end
 
     should "prevent access if max attempts reached" do
@@ -152,7 +152,7 @@ class SignInTest < ActionDispatch::IntegrationTest
         assert_response_contains 1.hour.from_now.to_s(:govuk_time)
       end
       assert_response_contains "entered too many times"
-      assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_LOCKED, uid: @user.uid).count
+      assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_LOCKED.id, uid: @user.uid).count
     end
 
     should "not permit an expired cookie to be used to bypass 2SV" do

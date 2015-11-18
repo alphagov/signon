@@ -93,7 +93,7 @@ class UsersControllerTest < ActionController::TestCase
 
       should "log an event" do
         put :update_email, id: @user.id, user: { email: "new@email.com" }
-        assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGE_INITIATED, uid: @user.uid, initiator_id: @user.id).count
+        assert_equal 1, EventLog.where(event_id: EventLog::EMAIL_CHANGE_INITIATED.id, uid: @user.uid, initiator_id: @user.id).count
       end
     end
   end
@@ -562,7 +562,7 @@ class UsersControllerTest < ActionController::TestCase
           normal_user = create(:user, email: "old@email.com")
           put :update, id: normal_user.id, user: { email: "new@email.com" }
 
-          assert_equal 1, EventLog.where(event: EventLog::EMAIL_CHANGED, uid: normal_user.uid, initiator_id: @user.id).count
+          assert_equal 1, EventLog.where(event_id: EventLog::EMAIL_CHANGED.id, uid: normal_user.uid, initiator_id: @user.id).count
         end
 
         should "send email change notifications to old and new email address" do

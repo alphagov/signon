@@ -14,7 +14,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     signin_with(@user)
 
     assert_equal 1, @user.event_logs.count
-    assert_equal EventLog::SUCCESSFUL_LOGIN, @user.event_logs.last.event
+    assert_equal EventLog::SUCCESSFUL_LOGIN, @user.event_logs.last.entry
   end
 
   context "recording unsuccessful login" do
@@ -23,7 +23,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
       signin_with(email: @user.email, password: :incorrect)
 
       assert_equal 1, @user.event_logs.count
-      assert_equal EventLog::UNSUCCESSFUL_LOGIN, @user.event_logs.last.event
+      assert_equal EventLog::UNSUCCESSFUL_LOGIN, @user.event_logs.last.entry
     end
 
     should "log nothing for an invalid email" do
@@ -48,14 +48,14 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     fill_in "Email", with: @user.email
     click_on "Send me passphrase reset instructions"
 
-    assert_equal EventLog::PASSPHRASE_RESET_REQUEST, @user.event_logs.first.event
+    assert_equal EventLog::PASSPHRASE_RESET_REQUEST, @user.event_logs.first.entry
   end
 
   test "record passphrase reset page requested" do
     token_received_in_email = @user.send_reset_password_instructions
     visit edit_user_password_path(reset_password_token: token_received_in_email)
 
-    assert_equal EventLog::PASSPHRASE_RESET_LOADED, @user.event_logs.first.event
+    assert_equal EventLog::PASSPHRASE_RESET_LOADED, @user.event_logs.first.entry
   end
 
   test "record passphrase reset failed" do
@@ -65,7 +65,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     click_on "Change passphrase"
     event_log = @user.event_logs.first
 
-    assert_equal EventLog::PASSPHRASE_RESET_FAILURE, event_log.event
+    assert_equal EventLog::PASSPHRASE_RESET_FAILURE, event_log.entry
     assert_match "Passphrase can't be blank", event_log.trailing_message
     assert_match "Passphrase not strong enough", event_log.trailing_message
   end
@@ -79,7 +79,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
                     new_confirmation: new_password)
 
     # multiple events are registered with the same time, order changes.
-    assert_includes @user.event_logs.map(&:event), EventLog::SUCCESSFUL_PASSPHRASE_CHANGE
+    assert_includes @user.event_logs.map(&:entry), EventLog::SUCCESSFUL_PASSPHRASE_CHANGE
   end
 
   test "record unsuccessful passphrase change" do
@@ -90,7 +90,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
                     new_confirmation: @user.password)
 
     # multiple events are registered with the same time, order changes.
-    assert_includes @user.event_logs.map(&:event), EventLog::UNSUCCESSFUL_PASSPHRASE_CHANGE
+    assert_includes @user.event_logs.map(&:entry), EventLog::UNSUCCESSFUL_PASSPHRASE_CHANGE
   end
 
   test "record account locked if password entered too many times" do
@@ -98,7 +98,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     7.times { signin_with(email: @user.email, password: :incorrect) }
 
     # multiple events are registered with the same time, order changes.
-    assert_includes @user.event_logs.map(&:event), EventLog::ACCOUNT_LOCKED
+    assert_includes @user.event_logs.map(&:entry), EventLog::ACCOUNT_LOCKED
   end
 
   test "record account unlocked along with event initiator" do
@@ -111,7 +111,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     click_on 'Unlock'
 
     visit event_logs_user_path(@user)
-    assert page.has_content?(EventLog::MANUAL_ACCOUNT_UNLOCK + ' by ' + @admin.name)
+    assert page.has_content?(EventLog::MANUAL_ACCOUNT_UNLOCK.description + ' by ' + @admin.name)
   end
 
   test "record user suspension along with event initiator" do
@@ -126,7 +126,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     click_on 'Save'
 
     visit event_logs_user_path(@user)
-    assert page.has_content?(EventLog::ACCOUNT_SUSPENDED + ' by ' + @admin.name)
+    assert page.has_content?(EventLog::ACCOUNT_SUSPENDED.description + ' by ' + @admin.name)
   end
 
   test "record suspended user's attempt to login with correct credentials" do
@@ -135,7 +135,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     visit root_path
     signin_with(@user)
 
-    assert_equal @user.event_logs.last.event, EventLog::SUSPENDED_ACCOUNT_AUTHENTICATED_LOGIN
+    assert_equal @user.event_logs.last.entry, EventLog::SUSPENDED_ACCOUNT_AUTHENTICATED_LOGIN
   end
 
   test "record user unsuspension along with event initiator" do
@@ -151,7 +151,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     click_on 'Save'
 
     visit event_logs_user_path(@user)
-    assert page.has_content?(EventLog::ACCOUNT_UNSUSPENDED + ' by ' + @admin.name)
+    assert page.has_content?(EventLog::ACCOUNT_UNSUSPENDED.description + ' by ' + @admin.name)
   end
 
   test "record password expiration" do
@@ -160,7 +160,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     visit root_path
     signin_with(@user)
 
-    assert_includes @user.event_logs.map(&:event), EventLog::PASSPHRASE_EXPIRED
+    assert_includes @user.event_logs.map(&:entry), EventLog::PASSPHRASE_EXPIRED
   end
 
   test "users don't have permission to view account access log" do

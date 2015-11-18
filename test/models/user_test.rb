@@ -105,7 +105,7 @@ class UserTest < ActiveSupport::TestCase
 
     should 'record the event' do
       assert_equal 1, EventLog.where(
-        event: EventLog::TWO_STEP_RESET,
+        event_id: EventLog::TWO_STEP_RESET.id,
         uid: @two_step_user.uid,
         initiator: @super_admin
       ).count
@@ -163,7 +163,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should 'record an event' do
-      assert_equal 1, EventLog.where(event: EventLog::TWO_STEP_PROMPT_DEFERRED, uid: @user.uid).count
+      assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_PROMPT_DEFERRED.id, uid: @user.uid).count
     end
   end
 
