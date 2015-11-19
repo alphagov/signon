@@ -4,7 +4,7 @@
 account more secure. Next time you sign in, you’ll need the phone you used
 during set up.</p>
 
-<% if preview? %>
+<% unless production? %>
 <p>You’ll have to set up 2-step verification separately for your Production
 account.</p>
 <% end %>

@@ -19,13 +19,13 @@ class UserMailerTest < ActionMailer::TestCase
       @email = UserMailer.two_step_enabled(user)
     end
 
-    context "in the preview environment" do
+    context "in a non-production environment" do
       setup do
-        GovukAdminTemplate.stubs(environment_label: "Preview")
+        Rails.application.config.stubs(instance_name: "foobar")
       end
 
-      should "include [PREVIEW] in the subject" do
-        assert_includes @email.subject, "[PREVIEW]"
+      should "include the environment in the subject" do
+        assert_includes @email.subject, "[Foobar]"
       end
 
       should "include the 'verify for production separately' warning" do
@@ -33,9 +33,13 @@ class UserMailerTest < ActionMailer::TestCase
       end
     end
 
-    context "in other environments" do
-      should "not include [PREVIEW] in the subject" do
-        assert_not_includes @email.subject, "[PREVIEW]"
+    context "in the production environment" do
+      setup do
+        Rails.application.config.stubs(instance_name: nil)
+      end
+
+      should "not include the environment in the subject" do
+        refute_match /^\[/, @email.subject
       end
 
       should "not include the 'verify for production separately' warning" do
