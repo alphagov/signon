@@ -238,7 +238,7 @@ class User < ActiveRecord::Base
   end
 
   def set_2sv_for_admin_roles
-    return if GovukAdminTemplate.environment_label == "Preview"
+    return if Rails.application.config.instance_name.present?
     self.require_2sv = true if role_changed? && (admin? || superadmin?)
   end
 

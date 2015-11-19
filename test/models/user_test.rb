@@ -5,6 +5,8 @@ class UserTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
   def setup
+    Rails.application.config.stubs(instance_name: nil)
+
     @user = create(:user)
   end
 
@@ -13,13 +15,13 @@ class UserTest < ActiveSupport::TestCase
       refute create(:user).require_2sv?
     end
 
-    should "default to true for admins and superadmins" do
+    should "default to true for admins and superadmins in production" do
       assert create(:admin_user).require_2sv?
       assert create(:superadmin_user).require_2sv?
     end
 
-    should "default to false for admins and superadmins in preview" do
-      GovukAdminTemplate.stubs(environment_label: "Preview")
+    should "default to false for admins and superadmins in non-production" do
+      Rails.application.config.stubs(instance_name: "foobar")
 
       refute create(:admin_user).require_2sv?
       refute create(:superadmin_user).require_2sv?
