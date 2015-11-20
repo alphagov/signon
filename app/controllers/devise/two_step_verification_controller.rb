@@ -1,21 +1,12 @@
 class Devise::TwoStepVerificationController < DeviseController
-  before_filter -> { authenticate_user!(force: true) }, only: [:defer, :prompt]
-  before_filter :prepare_and_validate, except: [:prompt, :defer]
+  before_filter -> { authenticate_user!(force: true) }, only: :prompt
+  before_filter :prepare_and_validate, except: :prompt
   skip_before_filter :handle_two_step_verification
 
   attr_reader :otp_secret_key
   private :otp_secret_key
 
   def prompt
-  end
-
-  def defer
-    if current_user.after_2sv_go_live?
-      redirect_to root_path
-    else
-      current_user.defer_two_step_verification
-      redirect_to_prior_flow
-    end
   end
 
   def show
