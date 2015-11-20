@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151112110911) do
+ActiveRecord::Schema.define(version: 20151116103432) do
 
   create_table "batch_invitation_application_permissions", force: :cascade do |t|
     t.integer  "batch_invitation_id",     limit: 4, null: false
@@ -46,7 +46,6 @@ ActiveRecord::Schema.define(version: 20151112110911) do
 
   create_table "event_logs", force: :cascade do |t|
     t.string   "uid",              limit: 255, null: false
-    t.string   "event",            limit: 255, null: false
     t.datetime "created_at",                   null: false
     t.integer  "initiator_id",     limit: 4
     t.integer  "application_id",   limit: 4
