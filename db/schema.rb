@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151112110911) do
+ActiveRecord::Schema.define(version: 20151120134709) do
 
   create_table "batch_invitation_application_permissions", force: :cascade do |t|
     t.integer  "batch_invitation_id",     limit: 4, null: false
@@ -187,7 +187,6 @@ ActiveRecord::Schema.define(version: 20151112110911) do
     t.integer  "second_factor_attempts_count", limit: 4,   default: 0
     t.boolean  "require_2sv",                              default: false,    null: false
     t.string   "unlock_token",                 limit: 255
-    t.datetime "deferred_2sv_at"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

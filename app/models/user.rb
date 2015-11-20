@@ -11,8 +11,6 @@ class User < ActiveRecord::Base
 
   SUSPENSION_THRESHOLD_PERIOD = 45.days
   UNSUSPENSION_GRACE_PERIOD = 3.days
-  TWO_STEP_PROMPT_THRESHOLD_PERIOD = 24.hours
-  TWO_STEP_GO_LIVE_DATE = Time.new(2015, 11, 20)
 
   MAX_2SV_LOGIN_ATTEMPTS = 10
   MAX_2SV_DRIFT_SECONDS = 30
@@ -84,31 +82,10 @@ class User < ActiveRecord::Base
     end
   }
 
-  def after_2sv_go_live?
-    Time.zone.now >= TWO_STEP_GO_LIVE_DATE
-  end
-
   def prompt_for_2sv?
     return false if has_2sv?
 
-    if require_2sv?
-      return true if after_2sv_go_live?
-
-      if deferred_2sv_at?
-        last_prompted_ago = Time.zone.now - deferred_2sv_at
-        last_prompted_ago > TWO_STEP_PROMPT_THRESHOLD_PERIOD
-      else
-        true
-      end
-    end
-  end
-
-  def defer_two_step_verification
-    transaction do
-      touch(:deferred_2sv_at)
-
-      EventLog.record_event(self, EventLog::TWO_STEP_PROMPT_DEFERRED)
-    end
+    require_2sv?
   end
 
   def event_logs

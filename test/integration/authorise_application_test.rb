@@ -18,16 +18,6 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     should "not confirm the authorisation" do
       assert_response_contains("Make your account more secure")
     end
-
-    context "when the user defers 2SV" do
-      should "redirect them to the originally authorised app" do
-        ignoring_spurious_error do
-          click_button "Not now"
-        end
-
-        assert_redirected_to_application @app
-      end
-    end
   end
 
   should "not confirm the authorisation until the user signs in" do

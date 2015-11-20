@@ -21,14 +21,4 @@ class DashboardTest < ActionDispatch::IntegrationTest
     assert_response_contains(app.description)
     assert page.has_css?("a[href='#{app.home_uri}']")
   end
-
-  should "display a link to 2SV setup when flagged" do
-    user = create(:two_step_flagged_user)
-    visit root_path
-    signin_with(user, set_up_2sv: false)
-
-    click_button 'Not now'
-
-    assert page.has_link?("Set up 2-step verification")
-  end
 end
