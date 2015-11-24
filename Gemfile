@@ -9,6 +9,8 @@ gem 'alphabetical_paginate', '2.2.3'
 gem 'mysql2', '0.3.20'
 gem 'govuk_admin_template', '3.3.1'
 
+gem 'nokogiri', github: "alphagov/nokogiri", branch: "v1.6.6.5.rc"
+
 gem 'airbrake', '3.1.15'
 gem 'plek', '1.7.0'
 gem 'json', '1.8.3'
