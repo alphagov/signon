@@ -1,4 +1,7 @@
 class EventLog < ActiveRecord::Base
+  extend DeprecatedColumns
+  deprecated_columns :event
+
   LOCKED_DURATION = "#{Devise.unlock_in / 1.hour} #{'hour'.pluralize(Devise.unlock_in / 1.hour)}"
 
   EVENTS = [
