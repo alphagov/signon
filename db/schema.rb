@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151120134709) do
+ActiveRecord::Schema.define(version: 20151202120153) do
 
   create_table "batch_invitation_application_permissions", force: :cascade do |t|
     t.integer  "batch_invitation_id",     limit: 4, null: false
@@ -45,13 +45,13 @@ ActiveRecord::Schema.define(version: 20151120134709) do
   add_index "batch_invitations", ["outcome"], name: "index_batch_invitations_on_outcome", using: :btree
 
   create_table "event_logs", force: :cascade do |t|
-    t.string   "uid",              limit: 255, null: false
-    t.string   "event",            limit: 255, null: false
-    t.datetime "created_at",                   null: false
+    t.string   "uid",              limit: 255,              null: false
+    t.datetime "created_at",                                null: false
     t.integer  "initiator_id",     limit: 4
     t.integer  "application_id",   limit: 4
     t.string   "trailing_message", limit: 255
     t.integer  "event_id",         limit: 4
+    t.string   "event",            limit: 255, default: "", null: false
   end
 
   add_index "event_logs", ["uid", "created_at"], name: "index_event_logs_on_uid_and_created_at", using: :btree
@@ -185,8 +185,8 @@ ActiveRecord::Schema.define(version: 20151120134709) do
     t.datetime "invitation_created_at"
     t.string   "otp_secret_key",               limit: 255
     t.integer  "second_factor_attempts_count", limit: 4,   default: 0
-    t.boolean  "require_2sv",                              default: false,    null: false
     t.string   "unlock_token",                 limit: 255
+    t.boolean  "require_2sv",                              default: false,    null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
