@@ -43,9 +43,8 @@ class EventLog < ActiveRecord::Base
   VALID_OPTIONS = [:initiator, :application, :trailing_message]
 
   validates :uid, presence: true
-  validates :event, presence: true
   validates_presence_of :event_id
-  validate :validate_event_mappable, if: :event_id?
+  validate :validate_event_mappable
   validates_presence_of :initiator_id,   if: Proc.new { |event_log| EVENTS_REQUIRING_INITIATOR.include? event_log.entry }
   validates_presence_of :application_id, if: Proc.new { |event_log| EVENTS_REQUIRING_APPLICATION.include? event_log.entry }
 
@@ -53,11 +52,7 @@ class EventLog < ActiveRecord::Base
   belongs_to :application, class_name: "Doorkeeper::Application"
 
   def event
-    if event_id? && entry
-      entry.description
-    else
-      super
-    end
+    entry.description
   end
 
   def entry
@@ -67,8 +62,7 @@ class EventLog < ActiveRecord::Base
   def self.record_event(user, event, options = {})
     attributes = {
       uid: user.uid,
-      event_id: event.id,
-      event: event.description
+      event_id: event.id
     }.merge!(options.slice(*VALID_OPTIONS))
 
     EventLog.create!(attributes)
