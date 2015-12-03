@@ -7,12 +7,6 @@ class EventLogTest < ActiveSupport::TestCase
         assert_equal "Account suspended", EventLog.new(event_id: EventLog::ACCOUNT_SUSPENDED.id).event
       end
     end
-
-    context "when the event has no `event_id`" do
-      should "return the correctly mapped event description" do
-        assert_equal "Account suspended", EventLog.new(event: EventLog::ACCOUNT_SUSPENDED.description).event
-      end
-    end
   end
 
   test "can create a valid eventlog" do
@@ -20,15 +14,11 @@ class EventLogTest < ActiveSupport::TestCase
   end
 
   test "requires a user uid" do
-    refute EventLog.new(event: :event).valid?
-  end
-
-  test "requires an event" do
-    refute EventLog.new(uid: :uid).valid?
+    refute EventLog.new(event_id: EventLog::TWO_STEP_ENABLED.id).valid?
   end
 
   test "requires an event_id" do
-    refute EventLog.new(uid: :uid, event: 'whoops').valid?
+    refute EventLog.new(uid: :uid).valid?
   end
 
   test "requires a mappable event_id" do
