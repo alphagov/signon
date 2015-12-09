@@ -17,14 +17,14 @@ class SuperAdminApplicationUsersTest < ActionDispatch::IntegrationTest
       end
 
       # Create a user that's authorized to use our app
-      @user = create(:user, name: "My Test User")
-      ::Doorkeeper::AccessToken.create!(resource_owner_id: @user.id, application_id: @application.id, token: "1234")
+      user = create(:user, name: "My Test User")
+      user.grant_application_permission(@application, "signin")
 
       click_link @application.name
 
       click_link "Users with access"
 
-      assert page.has_content?(@user.name)
+      assert page.has_content?(user.name)
     end
   end
 end
