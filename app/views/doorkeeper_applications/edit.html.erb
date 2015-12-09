@@ -9,6 +9,10 @@
   <h1>Edit application &ldquo;<%= @application.name %>&rdquo;</h1>
 </div>
 
+<p>
+  <%= link_to "Users with access", users_with_access_doorkeeper_application_path(@application) %>
+</p>
+
 <%= form_for @application, :html => {:class => 'well'} do |f| %>
 
   <% if @application.errors.count > 0 %>

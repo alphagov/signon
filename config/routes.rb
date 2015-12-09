@@ -39,6 +39,9 @@ Signonotron2::Application.routes.draw do
   resources :suspensions, only: [:edit, :update]
 
   resources :doorkeeper_applications, only: [:index, :edit, :update] do
+    member do
+      get :users_with_access
+    end
     resources :supported_permissions, only: [:index, :new, :create, :edit, :update]
   end
 

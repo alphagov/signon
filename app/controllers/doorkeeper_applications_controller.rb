@@ -17,6 +17,11 @@ class DoorkeeperApplicationsController < ApplicationController
     end
   end
 
+  def users_with_access
+    authorized_users_user_ids = @application.authorized_tokens.select(:resource_owner_id)
+    @users = policy_scope(User).where(id: authorized_users_user_ids).includes(:organisation).page(params[:page]).per(100)
+  end
+
   private
 
   def load_and_authorize_application
