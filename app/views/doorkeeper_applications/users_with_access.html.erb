@@ -1,0 +1,54 @@
+<% content_for :title, "Users with access to #{@application.name}" %>
+
+<ol class="breadcrumb">
+  <li><%= link_to 'Applications', doorkeeper_applications_path %></li>
+  <li><%= link_to @application.name, edit_doorkeeper_application_path(@application) %></li>
+  <li class="active">Users with access</li>
+</ol>
+
+<div class="page-title">
+  <h1>Users with access to <%= @application.name %></h1>
+</div>
+
+<%= paginate @users, theme: 'twitter-bootstrap-3' %>
+
+<table class="table table-striped table-bordered">
+  <thead>
+    <tr class="table-header">
+      <th scope="col">Name and email</th>
+      <th scope="col">Role</th>
+      <th scope="col">Organisation</th>
+      <th scope="col">Sign-in count</th>
+      <th scope="col">Last sign-in</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td class="email">
+          <%= user.suspended? ? "<del>".html_safe : "" %>
+            <strong>
+              <%= link_to "#{user.name}", edit_user_path(user) %>
+            </strong>
+          <%= user.suspended? ? "</del>".html_safe : "" %>
+          <br><span class="text-muted"><%= user.email %></span>
+        </td>
+        <td class="role"><%= user.role.humanize %></td>
+        <td class="organisation"><%= user.organisation.try(:name) %></td>
+        <td><%= user.sign_in_count %></td>
+        <td class="last-sign-in">
+          <% if user.current_sign_in_at %>
+            <%= time_ago_in_words(user.current_sign_in_at) %> ago
+          <% else %>
+            never signed in
+          <% end %>
+        </td>
+        <td><%= user.status.humanize %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= paginate @users, theme: 'twitter-bootstrap-3' %>
