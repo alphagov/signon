@@ -18,12 +18,8 @@ class DoorkeeperApplicationsController < ApplicationController
   end
 
   def users_with_access
-    authorized_users_user_ids = UserApplicationPermission.where(
-      supported_permission: @application.signin_permission,
-      application: @application
-    ).select(:user_id)
-
-    @users = policy_scope(User).where(id: authorized_users_user_ids).includes(:organisation).page(params[:page]).per(100)
+    query = UsersWithAccess.new(policy_scope(User), @application).users
+    @users = query.page(params[:page]).per(100)
   end
 
   private
