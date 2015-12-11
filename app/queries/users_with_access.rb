@@ -10,6 +10,7 @@ class UsersWithAccess
     scope
       .where(id: authorized_users_user_ids)
       .includes(:organisation)
+      .order('current_sign_in_at DESC')
   end
 
 private
