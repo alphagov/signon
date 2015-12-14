@@ -21,6 +21,7 @@
       <th scope="col">Sign-in count</th>
       <th scope="col">Last sign-in</th>
       <th scope="col">Status</th>
+      <th scope="col">Permissions</th>
     </tr>
   </thead>
 
@@ -46,6 +47,7 @@
           <% end %>
         </td>
         <td><%= user.status.humanize %></td>
+        <td><%= user.eager_loaded_permission_for(@application).to_sentence %></td>
       </tr>
     <% end %>
   </tbody>
