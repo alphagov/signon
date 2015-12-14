@@ -18,7 +18,7 @@ class DoorkeeperApplicationsController < ApplicationController
   end
 
   def users_with_access
-    query = UsersWithAccess.new(policy_scope(User), @application).users
+    query = policy_scope(User).with_access_to_application(@application)
     @users = query.page(params[:page]).per(100)
   end
 

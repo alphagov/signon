@@ -61,6 +61,7 @@ class User < ActiveRecord::Base
   scope :last_signed_in_before, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) < date(?)', date) }
   scope :last_signed_in_after, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) >= date(?)', date) }
   scope :not_recently_unsuspended, lambda { where(['unsuspended_at IS NULL OR unsuspended_at < ?', UNSUSPENSION_GRACE_PERIOD.ago]) }
+  scope :with_access_to_application, lambda { |application| UsersWithAccess.new(self, application).users }
 
   scope :with_status, lambda { |status|
     case status
