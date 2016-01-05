@@ -1,4 +1,6 @@
 class UserExportPresenter
+  include UsersHelper
+
   attr_reader :applications, :app_permissions
 
   def initialize(applications)
@@ -38,7 +40,7 @@ class UserExportPresenter
       user.current_sign_in_at.try(:to_formatted_s, :db),
       user.created_at.try(:to_formatted_s, :db),
       user.status.humanize,
-      user.has_2sv? ? 'Enabled' : 'Not set up',
+      two_step_status(user),
     ].concat(app_permissions_for(user))
   end
 

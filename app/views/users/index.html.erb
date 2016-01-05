@@ -50,13 +50,7 @@
         </td>
         <td><%= time_ago_in_words(user.created_at) %> ago</td>
         <td><%= user.status.humanize %></td>
-        <td>
-          <% if user.has_2sv? %>
-            Enabled
-          <% else %>
-            Not set up
-          <% end %>
-        </td>
+        <td><%= two_step_status(user) %></td>
         <td>
           <% if user.invited_but_not_accepted %>
             <%= form_tag resend_user_invitation_path(user) do %>
