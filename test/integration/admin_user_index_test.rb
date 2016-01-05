@@ -105,7 +105,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
         assert page.has_content?(normal_user.email)
       end
 
-      select_role("All roles")
+      select_role("All Roles")
 
       %w(Aardvark Abbot Abbey Admin).each do |user_name|
         assert page.has_content?(user_name)
@@ -121,7 +121,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       assert ! page.has_content?("Aardvark")
       assert page.has_content?('Suspended McFee')
 
-      select_status('All statuses')
+      select_status('All Statuses')
 
       %w(Aardvark Abbot Abbey Admin Suspended).each do |user_name|
         assert page.has_content?(user_name)
@@ -136,7 +136,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       assert ! page.has_content?("Aardvark")
       assert page.has_content?('Ed')
 
-      select_organisation('All organisations')
+      select_organisation('All Organisations')
 
       %w(Aardvark Abbot Abbey Admin Suspended).each do |user_name|
         assert page.has_content?(user_name)
@@ -158,7 +158,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
   def assert_role_not_present(role_name)
     within ".filter-by-role-menu" do
-      click_on "Role"
+      click_on "Role", match: :prefer_exact
       within ".dropdown-menu" do
         assert page.has_no_content? role_name
       end
@@ -167,7 +167,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
   def select_role(role_name)
     within ".filter-by-role-menu" do
-      click_on "Role"
+      click_on "Role", match: :prefer_exact
       within ".dropdown-menu" do
         click_on role_name
       end

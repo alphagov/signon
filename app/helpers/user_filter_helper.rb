@@ -9,15 +9,19 @@ module UserFilterHelper
     "#{params[:role] if params[:role]} users".strip.humanize.capitalize
   end
 
+  def title_from(filter_type)
+    filter_type.to_s.humanize.capitalize
+  end
+
   def user_filter_list_items(filter_type)
-    case filter_type
-    when :role
-      items = filtered_user_roles
-    when :status
-      items = User::USER_STATUSES
-    when :organisation
-      items = Organisation.order(:name).joins(:users).uniq.map {|org| [org.id, org.name_with_abbreviation]}
-    end
+    items = case filter_type
+            when :role
+              filtered_user_roles
+            when :status
+              User::USER_STATUSES
+            when :organisation
+              Organisation.order(:name).joins(:users).uniq.map {|org| [org.id, org.name_with_abbreviation]}
+            end
 
     list_items = items.map do |item|
       if item.is_a? String
@@ -33,7 +37,7 @@ module UserFilterHelper
     end
 
     list_items << content_tag(:li,
-      link_to("All #{filter_type.to_s.pluralize}",
+      link_to("All #{title_from(filter_type).pluralize}",
       current_path_with_filter(filter_type, nil)))
 
     list_items.join("\n").html_safe
@@ -43,7 +47,7 @@ module UserFilterHelper
     current_user.manageable_roles
   end
 
-  def filter_value(filter_type)
+  def value_from(filter_type)
     value = params[filter_type]
     return nil if value.blank?
     if filter_type == :organisation

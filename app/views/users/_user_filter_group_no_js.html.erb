@@ -1,5 +1,5 @@
 <% if params[filter_type] %>
-  <% filter_title = filter_type.to_s.humanize.capitalize %>
+  <% filter_title = title_from(filter_type) %>
   <div class="if-js-hide row">
     <nav class="filters col-md-8">
       <div class="panel panel-default">
