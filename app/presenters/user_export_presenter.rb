@@ -24,6 +24,7 @@ class UserExportPresenter
       'Last sign-in',
       'Created',
       'Status',
+      '2SV Status',
     ].concat applications.map &:name
   end
 
@@ -37,6 +38,7 @@ class UserExportPresenter
       user.current_sign_in_at.try(:to_formatted_s, :db),
       user.created_at.try(:to_formatted_s, :db),
       user.status.humanize,
+      user.has_2sv? ? 'Enabled' : 'Not set up',
     ].concat(app_permissions_for(user))
   end
 

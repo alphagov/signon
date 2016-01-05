@@ -4,7 +4,7 @@ class UserExportPresenterTest < ActiveSupport::TestCase
   def setup
     Timecop.freeze(2015, 1, 15, 9, 0)
     @apps = 5.times.map {|i| create(:application, name: "App #{i}") }
-    @user = create(:user, name: 'Test User', email: 'test@dept.gov.uk')
+    @user = create(:user, name: 'Test User', email: 'test@dept.gov.uk', otp_secret_key: 'ssshhh')
     create(:supported_permission, application: @apps[0], name: 'editor')
     create(:supported_permission, application: @apps[2], name: 'editor')
     create(:supported_permission, application: @apps[2], name: 'admin')
@@ -16,7 +16,7 @@ class UserExportPresenterTest < ActiveSupport::TestCase
 
     expected = [
       'Name', 'Email', 'Role', 'Organisation', 'Sign-in count', 'Last sign-in',
-      'Created', 'Status', 'App 0', 'App 1', 'App 2', 'App 3', 'App 4'
+      'Created', 'Status', '2SV Status', 'App 0', 'App 1', 'App 2', 'App 3', 'App 4'
     ]
     assert_equal(expected, header_row)
   end
@@ -34,7 +34,7 @@ class UserExportPresenterTest < ActiveSupport::TestCase
   should 'output user details' do
     row = UserExportPresenter.new([]).row(@user)
     expected = [
-      'Test User', 'test@dept.gov.uk', 'Normal', nil, 0, nil, '2015-01-15 09:00:00', 'Active'
+      'Test User', 'test@dept.gov.uk', 'Normal', nil, 0, nil, '2015-01-15 09:00:00', 'Active', 'Enabled'
     ]
     assert_equal(expected, row)
   end
