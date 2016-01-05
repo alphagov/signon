@@ -23,6 +23,7 @@
       <th scope="col">Last sign-in</th>
       <th scope="col">Created</th>
       <th scope="col">Status</th>
+      <th scope="col">2SV Status</th>
       <th scope="col">Actions</th>
     </tr>
   </thead>
@@ -49,6 +50,13 @@
         </td>
         <td><%= time_ago_in_words(user.created_at) %> ago</td>
         <td><%= user.status.humanize %></td>
+        <td>
+          <% if user.has_2sv? %>
+            Enabled
+          <% else %>
+            Not set up
+          <% end %>
+        </td>
         <td>
           <% if user.invited_but_not_accepted %>
             <%= form_tag resend_user_invitation_path(user) do %>

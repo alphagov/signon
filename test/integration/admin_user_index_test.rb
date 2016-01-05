@@ -14,7 +14,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       org2 = create(:organisation, name: "Org 2")
 
       create(:user, name: "Aardvark", email: "aardvark@example.com", current_sign_in_at: current_time - 5.minutes)
-      create(:user, name: "Abbey", email: "abbey@example.com")
+      create(:user, name: "Abbey", email: "abbey@example.com", otp_secret_key: 'ssshh')
       create(:user, name: "Abbot", email: "mr_ab@example.com")
       create(:user, name: "Bert", email: "bbbert@example.com")
       create(:user, name: "Ed", email: "ed@example.com", organisation: org1)
@@ -25,6 +25,15 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
     teardown do
       Timecop.return
+    end
+
+    should "display the 2SV enrollment status for users" do
+      visit "/users"
+
+      within "table" do
+        assert has_css?("td", text: "Enabled", count: 1)
+        assert has_css?("td", text: "Not set up", count: 3)
+      end
     end
 
     should "see when the user last logged in" do
