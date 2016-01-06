@@ -14,7 +14,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       org2 = create(:organisation, name: "Org 2")
 
       create(:user, name: "Aardvark", email: "aardvark@example.com", current_sign_in_at: current_time - 5.minutes)
-      create(:user, name: "Abbey", email: "abbey@example.com")
+      create(:user, name: "Abbey", email: "abbey@example.com", otp_secret_key: 'ssshh')
       create(:user, name: "Abbot", email: "mr_ab@example.com")
       create(:user, name: "Bert", email: "bbbert@example.com")
       create(:user, name: "Ed", email: "ed@example.com", organisation: org1)
@@ -25,6 +25,15 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
     teardown do
       Timecop.return
+    end
+
+    should "display the 2SV enrollment status for users" do
+      visit "/users"
+
+      within "table" do
+        assert has_css?("td", text: "Enabled", count: 1)
+        assert has_css?("td", text: "Not set up", count: 3)
+      end
     end
 
     should "see when the user last logged in" do
@@ -96,7 +105,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
         assert page.has_content?(normal_user.email)
       end
 
-      select_role("All roles")
+      select_role("All Roles")
 
       %w(Aardvark Abbot Abbey Admin).each do |user_name|
         assert page.has_content?(user_name)
@@ -112,7 +121,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       assert ! page.has_content?("Aardvark")
       assert page.has_content?('Suspended McFee')
 
-      select_status('All statuses')
+      select_status('All Statuses')
 
       %w(Aardvark Abbot Abbey Admin Suspended).each do |user_name|
         assert page.has_content?(user_name)
@@ -127,11 +136,31 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       assert ! page.has_content?("Aardvark")
       assert page.has_content?('Ed')
 
-      select_organisation('All organisations')
+      select_organisation('All Organisations')
 
       %w(Aardvark Abbot Abbey Admin Suspended).each do |user_name|
         assert page.has_content?(user_name)
       end
+    end
+
+    should "filter users by 2SV status" do
+      visit "/users"
+      total_enabled = 1
+      total_disabled = 8
+
+      within ".filter-by-two_step_status-menu .dropdown-menu" do
+        click_on "Enabled"
+      end
+
+      assert has_css?("td", text: "Enabled", count: total_enabled)
+      assert has_no_css?("td", text: "Not set up")
+
+      within ".filter-by-two_step_status-menu .dropdown-menu" do
+        click_on "Not set up"
+      end
+
+      assert has_no_css?("td", text: "Enabled")
+      assert has_css?("td", text: "Not set up", count: total_disabled)
     end
   end
 
@@ -149,7 +178,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
   def assert_role_not_present(role_name)
     within ".filter-by-role-menu" do
-      click_on "Role"
+      click_on "Role", match: :prefer_exact
       within ".dropdown-menu" do
         assert page.has_no_content? role_name
       end
@@ -158,7 +187,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
   def select_role(role_name)
     within ".filter-by-role-menu" do
-      click_on "Role"
+      click_on "Role", match: :prefer_exact
       within ".dropdown-menu" do
         click_on role_name
       end

@@ -9,15 +9,30 @@ module UserFilterHelper
     "#{params[:role] if params[:role]} users".strip.humanize.capitalize
   end
 
-  def user_filter_list_items(filter_type)
-    case filter_type
-    when :role
-      items = filtered_user_roles
-    when :status
-      items = User::USER_STATUSES
-    when :organisation
-      items = Organisation.order(:name).joins(:users).uniq.map {|org| [org.id, org.name_with_abbreviation]}
+  def two_step_abbr_tag
+    content_tag(:abbr, "2SV", title: "Two step verification")
+  end
+
+  def title_from(filter_type)
+    if filter_type == :two_step_status
+      two_step_abbr_tag + " Status"
+    else
+      filter_type.to_s.humanize.capitalize
     end
+  end
+
+  def user_filter_list_items(filter_type)
+    items = case filter_type
+            when :role
+              filtered_user_roles
+            when :status
+              User::USER_STATUSES
+            when :organisation
+              Organisation.order(:name).joins(:users).uniq.map {|org| [org.id, org.name_with_abbreviation]}
+            when :two_step_status
+              #rubocop:disable Style/WordArray
+              [['true', 'Enabled'], ['false', 'Not set up']]
+            end
 
     list_items = items.map do |item|
       if item.is_a? String
@@ -33,7 +48,7 @@ module UserFilterHelper
     end
 
     list_items << content_tag(:li,
-      link_to("All #{filter_type.to_s.pluralize}",
+      link_to("All #{title_from(filter_type).pluralize}".html_safe,
       current_path_with_filter(filter_type, nil)))
 
     list_items.join("\n").html_safe
@@ -43,15 +58,22 @@ module UserFilterHelper
     current_user.manageable_roles
   end
 
-  def filter_value(filter_type)
+  def value_from(filter_type)
     value = params[filter_type]
     return nil if value.blank?
-    if filter_type == :organisation
+    case filter_type
+    when :organisation
       org = Organisation.find(value)
       if org.abbreviation.presence
         content_tag(:abbr, org.abbreviation, title: org.name)
       else
         org.name
+      end
+    when :two_step_status
+      if value == "true"
+        "Enabled"
+      else
+        "Not set up"
       end
     else
       value.humanize.capitalize

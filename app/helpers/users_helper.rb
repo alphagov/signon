@@ -1,4 +1,8 @@
 module UsersHelper
+  def two_step_status(user)
+    user.has_2sv? ? 'Enabled' : 'Not set up'
+  end
+
   def organisation_options(form_builder)
     accessible_organisations = policy_scope(Organisation)
     options_from_collection_for_select(accessible_organisations, :id,

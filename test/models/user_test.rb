@@ -198,6 +198,19 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context ".with_2sv_enabled" do
+    should "return users with 2SV enabled" do
+      enabled_user = create(:user, otp_secret_key: 'shh')
+      enabled_users = User.with_2sv_enabled(true)
+      assert_equal 1, enabled_users.count
+      assert_equal enabled_user, enabled_users.first
+
+      disabled_users = User.with_2sv_enabled("false")
+      assert_equal 1, disabled_users.count
+      assert_equal @user, disabled_users.first
+    end
+  end
+
   context "email validation" do
     should "require an email" do
       user = build(:user, email: nil)

@@ -1,4 +1,6 @@
 class UserExportPresenter
+  include UsersHelper
+
   attr_reader :applications, :app_permissions
 
   def initialize(applications)
@@ -24,6 +26,7 @@ class UserExportPresenter
       'Last sign-in',
       'Created',
       'Status',
+      '2SV Status',
     ].concat applications.map &:name
   end
 
@@ -37,6 +40,7 @@ class UserExportPresenter
       user.current_sign_in_at.try(:to_formatted_s, :db),
       user.created_at.try(:to_formatted_s, :db),
       user.status.humanize,
+      two_step_status(user),
     ].concat(app_permissions_for(user))
   end
 

@@ -143,6 +143,7 @@ class UsersController < ApplicationController
     @users = @users.with_role(params[:role]) if can_filter_role?
     @users = @users.with_organisation(params[:organisation]) if params[:organisation].present?
     @users = @users.with_status(params[:status]) if params[:status].present?
+    @users = @users.with_2sv_enabled(params[:two_step_status]) if params[:two_step_status].present?
   end
 
   def can_filter_role?
@@ -167,7 +168,11 @@ class UsersController < ApplicationController
   end
 
   def any_filter?
-    params[:filter].present? || params[:role].present? || params[:status].present? || params[:organisation].present?
+    params[:filter].present? ||
+      params[:role].present? ||
+      params[:status].present? ||
+      params[:organisation].present? ||
+      params[:two_step_status].present?
   end
 
   def application_making_request
