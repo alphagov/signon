@@ -94,7 +94,7 @@ class UserTest < ActiveSupport::TestCase
   context '#reset_2sv!' do
     setup do
       @super_admin   = create(:superadmin_user)
-      @two_step_user = create(:user, otp_secret_key: 'sekret')
+      @two_step_user = create(:two_step_enabled_user)
       @two_step_user.reset_2sv!(@super_admin)
     end
 
@@ -200,7 +200,7 @@ class UserTest < ActiveSupport::TestCase
 
   context ".with_2sv_enabled" do
     should "return users with 2SV enabled" do
-      enabled_user = create(:user, otp_secret_key: 'shh')
+      enabled_user = create(:two_step_enabled_user)
       enabled_users = User.with_2sv_enabled(true)
       assert_equal 1, enabled_users.count
       assert_equal enabled_user, enabled_users.first

@@ -24,7 +24,7 @@ class DashboardTest < ActionDispatch::IntegrationTest
 
   context "when the user has enrolled in 2SV" do
     should "display the 'change' link" do
-      user = create(:user, otp_secret_key: 'ssh')
+      user = create(:two_step_enabled_user)
       visit root_path
       signin_with(user)
 
