@@ -19,6 +19,7 @@
         <% else %>
           <%= render partial: 'user_filter_group', locals: {filter_type: :organisation} %>
         <% end %>
+        <%= render partial: 'user_filter_group', locals: {filter_type: :two_step_status} %>
         <li class="filter-by-name">
           <%= form_tag nil, method: "get", class: 'add-left-margin form-inline' do %>
           <%= hidden_field_tag :role, params[:role] if params[:role] %>
@@ -40,3 +41,4 @@
 <%= render partial: 'user_filter_group_no_js', locals: {filter_type: :role} %>
 <%= render partial: 'user_filter_group_no_js', locals: {filter_type: :status} %>
 <%= render partial: 'user_filter_group_no_js', locals: {filter_type: :organisation} %>
+<%= render partial: 'user_filter_group_no_js', locals: {filter_type: :two_step_status} %>

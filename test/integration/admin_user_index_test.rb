@@ -142,6 +142,26 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
         assert page.has_content?(user_name)
       end
     end
+
+    should "filter users by 2SV status" do
+      visit "/users"
+      total_enabled = 1
+      total_disabled = 8
+
+      within ".filter-by-two_step_status-menu .dropdown-menu" do
+        click_on "Enabled"
+      end
+
+      assert has_css?("td", text: "Enabled", count: total_enabled)
+      assert has_no_css?("td", text: "Not set up")
+
+      within ".filter-by-two_step_status-menu .dropdown-menu" do
+        click_on "Not set up"
+      end
+
+      assert has_no_css?("td", text: "Enabled")
+      assert has_css?("td", text: "Not set up", count: total_disabled)
+    end
   end
 
   def select_organisation(organisation_name)

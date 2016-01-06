@@ -10,7 +10,11 @@ module UserFilterHelper
   end
 
   def title_from(filter_type)
-    filter_type.to_s.humanize.capitalize
+    if filter_type == :two_step_status
+      "2SV Status"
+    else
+      filter_type.to_s.humanize.capitalize
+    end
   end
 
   def user_filter_list_items(filter_type)
@@ -21,6 +25,9 @@ module UserFilterHelper
               User::USER_STATUSES
             when :organisation
               Organisation.order(:name).joins(:users).uniq.map {|org| [org.id, org.name_with_abbreviation]}
+            when :two_step_status
+              #rubocop:disable Style/WordArray
+              [['true', 'Enabled'], ['false', 'Not set up']]
             end
 
     list_items = items.map do |item|
@@ -50,12 +57,19 @@ module UserFilterHelper
   def value_from(filter_type)
     value = params[filter_type]
     return nil if value.blank?
-    if filter_type == :organisation
+    case filter_type
+    when :organisation
       org = Organisation.find(value)
       if org.abbreviation.presence
         content_tag(:abbr, org.abbreviation, title: org.name)
       else
         org.name
+      end
+    when :two_step_status
+      if value == "true"
+        "Enabled"
+      else
+        "Not set up"
       end
     else
       value.humanize.capitalize
