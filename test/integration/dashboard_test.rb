@@ -21,4 +21,24 @@ class DashboardTest < ActionDispatch::IntegrationTest
     assert_response_contains(app.description)
     assert page.has_css?("a[href='#{app.home_uri}']")
   end
+
+  context "when the user has enrolled in 2SV" do
+    should "display the 'change' link" do
+      user = create(:user, otp_secret_key: 'ssh')
+      visit root_path
+      signin_with(user)
+
+      assert has_link?("Change your 2-step verification phone")
+    end
+  end
+
+  context "when the user is not enrolled in 2SV" do
+    should "display the 'set up' link" do
+      user = create(:user)
+      visit root_path
+      signin_with(user)
+
+      assert has_link?("Make your account more secure")
+    end
+  end
 end
