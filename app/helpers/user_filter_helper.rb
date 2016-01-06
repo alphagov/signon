@@ -9,9 +9,13 @@ module UserFilterHelper
     "#{params[:role] if params[:role]} users".strip.humanize.capitalize
   end
 
+  def two_step_abbr_tag
+    content_tag(:abbr, "2SV", title: "Two step verification")
+  end
+
   def title_from(filter_type)
     if filter_type == :two_step_status
-      "2SV Status"
+      two_step_abbr_tag + " Status"
     else
       filter_type.to_s.humanize.capitalize
     end
@@ -44,7 +48,7 @@ module UserFilterHelper
     end
 
     list_items << content_tag(:li,
-      link_to("All #{title_from(filter_type).pluralize}",
+      link_to("All #{title_from(filter_type).pluralize}".html_safe,
       current_path_with_filter(filter_type, nil)))
 
     list_items.join("\n").html_safe
