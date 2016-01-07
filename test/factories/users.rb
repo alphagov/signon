@@ -34,6 +34,10 @@ FactoryGirl.define do
     end
   end
 
+  factory :two_step_enabled_user, parent: :user do
+    otp_secret_key "Sssshh"
+  end
+
   factory :two_step_flagged_user, parent: :superadmin_user do
     require_2sv true
   end

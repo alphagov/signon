@@ -5,7 +5,7 @@ class SuperAdminResetTwoStepVerificationTest < ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper
 
   setup do
-    @user = create(:user, otp_secret_key: 'sekret')
+    @user = create(:two_step_enabled_user)
   end
 
   context 'when logged in as a regular admin' do
