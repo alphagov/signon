@@ -7,6 +7,12 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 module Signonotron2
+  autoload :DbAdapter, "signonotron2/db_adapter"
+
+  def self.db_adapter
+    DbAdapter.instance
+  end
+
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -29,10 +35,11 @@ module Signonotron2
     # current_password, password_confirmation and password-strength-score
     config.filter_parameters += [:password]
 
-    # Use SQL instead of Active Record's schema dumper when creating the database.
-    # This is necessary if your schema can't be completely dumped by the schema dumper,
-    # like if you have constraints or database-specific column types
-    # config.active_record.schema_format = :sql
+    if Signonotron2.db_adapter.postgresql?
+      config.active_record.schema_format = :sql
+    else
+      config.active_record.schema_format = :ruby
+    end
 
     # Enable the asset pipeline
     config.assets.enabled = true

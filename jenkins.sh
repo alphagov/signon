@@ -15,5 +15,8 @@ if [[ ${GIT_BRANCH} != "origin/master" ]]; then
 fi
 
 bundle exec rake stats
-bundle exec rake db:drop db:create db:schema:load
-bundle exec rake --trace
+
+for db_adapter in mysql postgresql; do
+  SIGNONOTRON2_DB_ADAPTER=$db_adapter bundle exec rake db:drop db:create db:schema:load
+  SIGNONOTRON2_DB_ADAPTER=$db_adapter bundle exec rake --trace
+done

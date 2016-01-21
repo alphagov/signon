@@ -1,3 +1,9 @@
+class Permission < ActiveRecord::Base
+  belongs_to :user
+  belongs_to :application, class_name: 'Doorkeeper::Application'
+  serialize :permissions, Array
+end
+
 class MigratePermissionsToUserApplicationPermissionsJoinTable < ActiveRecord::Migration
   def up
     puts "Migrating #{Permission.count} permissions to user_application_permissions join table"
