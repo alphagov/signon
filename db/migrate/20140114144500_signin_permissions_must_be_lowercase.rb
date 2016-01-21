@@ -1,5 +1,6 @@
 class SigninPermissionsMustBeLowercase < ActiveRecord::Migration
   def up
-    SupportedPermission.update_all({ name: 'signin' }, { name: 'Signin' })
+    SupportedPermission.where(name: 'Signin')
+                       .update_all(name: 'signin')
   end
 end
