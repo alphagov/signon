@@ -6,6 +6,10 @@
   <%= yield :content_for_head %>
 <% end %>
 
+<% if sensitive_query_parameters? %>
+  <% content_for :custom_pageview_fullpath, sanitised_fullpath %>
+<% end %>
+
 <% if user_signed_in? && params[:controller] !~ %r{doorkeeper/} %>
   <% unless content_for :suppress_navbar_items %>
     <% content_for :navbar_items do %>
