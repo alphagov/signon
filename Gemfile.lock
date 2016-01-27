@@ -385,6 +385,7 @@ PLATFORMS
 
 DEPENDENCIES
   activejob-retry
+  addressable (~> 2.3.8)
   airbrake (= 3.1.15)
   alphabetical_paginate (= 2.2.3)
   ancestry (= 2.0.0)

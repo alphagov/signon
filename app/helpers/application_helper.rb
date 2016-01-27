@@ -1,3 +1,5 @@
+require 'addressable/uri'
+
 module ApplicationHelper
   def nav_link(text, link)
     recognized = Rails.application.routes.recognize_path(link)
