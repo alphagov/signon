@@ -50,6 +50,7 @@ Signonotron2::Application.configure do
 
   # Use a different logger for distributed setups.
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
+  config.logger = ActiveSupport::TaggedLogging.new(Logger.new($stderr))
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -74,9 +75,11 @@ Signonotron2::Application.configure do
 
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false
+  real_stdout = $stdout.clone
+  $stdout.reopen($stderr)
 
   config.logstasher.enabled = true
-  config.logstasher.logger = Logger.new("#{Rails.root}/log/#{Rails.env}.json.log")
+  config.logstasher.logger = Logger.new(real_stdout)
   config.logstasher.suppress_app_log = true
 
   config.action_mailer.default_url_options = {
