@@ -9,6 +9,6 @@ class FixPasswordResetForExistingUsers < ActiveRecord::Migration
     # is set.
     #
     # So to make the old users look like users created now, those users need to have confirmed_at set.
-    User.update_all("confirmed_at = created_at", "confirmed_at is NULL")
+    User.where(confirmed_at: nil).update_all("confirmed_at = created_at")
   end
 end

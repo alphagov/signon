@@ -9,6 +9,6 @@ class FixPasswordResetForSomeUsers < ActiveRecord::Migration
     # There was a change in behaviour of devise_invitable which meant that confirmed_at
     # was no longer set at create/invite time.
     # We've reinstated that, but we need to fix accounts created in the meantime.
-    User.update_all("confirmed_at = created_at", "confirmed_at is NULL")
+    User.where(confirmed_at: nil).update_all("confirmed_at = created_at")
   end
 end
