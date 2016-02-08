@@ -7,4 +7,4 @@ ALPHABETICAL_PAGINATE_CONFIG = {
   bootstrap3: true
 }
 
-ALPHABETICAL_PAGINATE_CONFIG[:db_mode] = true if Signonotron2.db_adapter.mysql?
+ALPHABETICAL_PAGINATE_CONFIG[:db_mode] = true if ENV.fetch("SIGNONOTRON2_DB_ADAPTER", "mysql") == "mysql"
