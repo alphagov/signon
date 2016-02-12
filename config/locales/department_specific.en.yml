@@ -1,0 +1,31 @@
+en:
+  department_name: "GOV.UK"
+  department_url: "https://www.gov.uk/"
+  devise:
+    issuer: "GOV.UK%20Signon"
+    two_step_verification_session:
+      max_2sv_login_attempts_reached:
+        quick_unlock_message: |
+          If you need your account unlocked sooner, please contact a managing GOV.UK editor in your organisation
+          (or your parent organisation). They can either unlock your account themselves or use the support form
+          to get help from the GOV.UK team.
+      new:
+        contact_header: Contact GOV.UK
+        contact_details:
+          para1: |
+            If you can’t get your verification code, you’ll need to ask %{department_link} to reset 2-step
+            verification on your Signon account.
+          para2: |
+            If you can’t do this yourself, you’ll need to contact a managing %{department_link} editor in your
+            organisation (or your parent organisation). They can raise a %{support_ticket_link} on your behalf.
+          para3: |
+            %{department_link} is only able to respond to these requests 9am to 5pm, Monday to Friday.
+  mailer:
+    app_name: "GOV.UK Signon %{instance_name}"
+    email_from_address:
+      instance: "noreply-signon-%{instance_name}@digital.cabinet-office.gov.uk"
+      no-instance: "noreply-signon@digital.cabinet-office.gov.uk"
+
+  noisy_batch_invitation_mailer:
+    to: "signon-alerts@digital.cabinet-office.gov.uk"
+
