@@ -4,18 +4,14 @@ module MailerHelper
   end
 
   def app_name
-    if instance_name.present?
-      "GOV.UK Signon #{instance_name}"
-    else
-      "GOV.UK Signon"
-    end
+    I18n.t('mailer.app_name', instance_name: instance_name)
   end
 
   def email_from_address
     if instance_name.present?
-      "noreply-signon-#{instance_name.parameterize}@digital.cabinet-office.gov.uk"
+      I18n.t('mailer.email_from_address.instance', instance_name: instance_name.parameterize)
     else
-      "noreply-signon@digital.cabinet-office.gov.uk"
+      I18n.t('mailer.email_from_address.no-instance')
     end
   end
 
