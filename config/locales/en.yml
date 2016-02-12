@@ -18,8 +18,9 @@ en:
 
   users:
     edit:
-      change_passphrase: "Change your passphrase"
       change: "Change passphrase"
+    edit_email_or_passphrase:
+      change_passphrase: "Change your passphrase"
 
   supported_permissions:
     form:
