@@ -1,6 +1,6 @@
 en:
   devise:
-    issuer: "GOV.UK%20Signon"
+    issuer: "GOV.UK Signon"
   mailer:
     app_name: "GOV.UK Signon %{instance_name}"
     email_from_address:
