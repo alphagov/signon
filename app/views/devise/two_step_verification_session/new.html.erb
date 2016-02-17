@@ -26,10 +26,10 @@
       <div data-module="toggle">
         <%= link_to "Can’t get your verification code?", "#", class: "js-toggle js-toggle-target if-no-js-hide js-track" %>
         <div class="js-toggle-target if-js-hide">
-          <h4>Contact GOV.UK</h4>
-          <p>If you can’t get your verification code, you’ll need to ask <%= link_to "GOV.UK", "https://www.gov.uk/" %> to reset 2-step verification on your Signon account.</p>
-          <p>If you can’t do this yourself, you’ll need to contact a managing <%= link_to "GOV.UK", "https://www.gov.uk/" %> editor in your organisation (or your parent organisation). They can raise a <%= link_to "support ticket", "https://www.gov.uk/support/internal/" %> on your behalf.</p>
-          <p><%= link_to "GOV.UK", "https://www.gov.uk/" %> is only able to respond to these requests 9am to 5pm, Monday to Friday.</p>
+          <h4>Contact <%= t('department.name') %></h4>
+          <p>If you can’t get your verification code, you’ll need to ask <%= link_to t('department.name'), t('department.url') %> to reset 2-step verification on your Signon account.</p>
+          <p>If you can’t do this yourself, you’ll need to contact a managing <%= link_to t('department.name'), t('department.url') %> editor in your organisation (or your parent organisation). They can raise a <%= link_to "support ticket", "#{t('department.url')}support/internal/" %> on your behalf.</p>
+          <p><%= link_to t('department.name'), t('department.url') %> is only able to respond to these requests 9am to 5pm, Monday to Friday.</p>
         </div>
       </div>
     </div>

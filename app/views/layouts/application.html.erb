@@ -1,4 +1,4 @@
-<% content_for :page_title, "#{yield(:title)} | GOV.UK Signon" %>
+<% content_for :page_title, "#{yield(:title)} | #{t('department.name')} Signon" %>
 <% content_for :head do %>
   <%= csrf_meta_tags %>
   <%= stylesheet_link_tag 'application' %>
