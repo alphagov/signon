@@ -47,4 +47,19 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
       assert_equal '"GOV.UK Signon Test Fools" <noreply-signon-test-fools@digital.cabinet-office.gov.uk>', @email[:from].to_s
     end
   end
+
+  context "work correctly when no instance name is set" do
+    setup do
+      Rails.application.config.stubs(:instance_name).returns(nil)
+
+      user = create(:user, name: "Bob Loblaw")
+      @batch_invitation = create(:batch_invitation, user: user)
+      create(:batch_invitation_user, batch_invitation: @batch_invitation)
+      @email = NoisyBatchInvitation.make_noise(@batch_invitation).deliver_now
+    end
+
+    should "from address should include the instance name" do
+      assert_equal '"GOV.UK Signon" <noreply-signon@digital.cabinet-office.gov.uk>', @email[:from].to_s
+    end
+  end
 end

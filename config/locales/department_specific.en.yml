@@ -1,0 +1,12 @@
+en:
+  devise:
+    issuer: "GOV.UK Signon"
+  mailer:
+    app_name: "GOV.UK Signon %{instance_name}"
+    email_from_address:
+      instance: "noreply-signon-%{instance_name}@digital.cabinet-office.gov.uk"
+      no-instance: "noreply-signon@digital.cabinet-office.gov.uk"
+
+  noisy_batch_invitation_mailer:
+    to: "signon-alerts@digital.cabinet-office.gov.uk"
+
