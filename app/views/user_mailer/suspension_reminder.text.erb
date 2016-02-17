@@ -1,5 +1,3 @@
-Hello <%= @user.name %>,
-
 GOV.UK Signon accounts are suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.
 
 Your GOV.UK Signon <%= account_name %>, for <%= @user.email %>, will be suspended <%= suspension_time %>. After suspension you won't be able to access any GOV.UK <%= account_name %> applications, eg Whitehall Publisher or Licensing.
@@ -19,8 +17,3 @@ If you’ve forgotten your passphrase, you can request a new one from the sign i
 Read our blog post about suspending unused GOV.UK accounts:
 
 https://insidegovuk.blog.gov.uk/2014/08/21/suspending-unused-gov-uk-accounts
-
-All the best,
-
-GOV.UK team
-Government Digital Service

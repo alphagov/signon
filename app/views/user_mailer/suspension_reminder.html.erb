@@ -1,5 +1,3 @@
-<p>Hello <%= @user.name %>,</p>
-
 <p><%= link_to 'GOV.UK', "https://www.gov.uk" %> Signon accounts are suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.</p>
 
 <p>Your <%= link_to 'GOV.UK', "https://www.gov.uk" %> Signon <%= account_name %>, for <%= @user.email %>, will be suspended <%= suspension_time %>. After suspension you won't be able to access any <%= link_to 'GOV.UK', "https://www.gov.uk" %> <%= account_name %> applications, eg Whitehall Publisher or Licensing.</p>
@@ -15,9 +13,3 @@
 <p>If you’ve forgotten your passphrase, you can request a new one from the <%= link_to 'sign in', new_user_session_url(protocol: 'https') %> screen.</p>
 
 <p>Read our blog post about <%= link_to 'suspending unused GOV.UK accounts', 'https://insidegovuk.blog.gov.uk/2014/08/21/suspending-unused-gov-uk-accounts' %>.</p>
-
-<p>All the best,</p>
-
-<p><%= link_to 'GOV.UK', "https://www.gov.uk" %> team</p>
-<p>Government Digital Service</p>
-
