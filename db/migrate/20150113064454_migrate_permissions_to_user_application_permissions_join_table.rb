@@ -1,4 +1,7 @@
 class MigratePermissionsToUserApplicationPermissionsJoinTable < ActiveRecord::Migration
+  class Permission < ActiveRecord::Base
+  end
+
   def up
     puts "Migrating #{Permission.count} permissions to user_application_permissions join table"
     cache_supported_permissions
