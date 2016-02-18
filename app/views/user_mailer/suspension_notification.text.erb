@@ -1,15 +1,15 @@
-GOV.UK Signon accounts are suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.
+<%= t('department.name') %> Signon accounts are suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.
 
-Your GOV.UK Signon <%= account_name %>, for <%= @user.email %>, has now been suspended and you won't be able to access any GOV.UK <%= account_name %> applications, eg Whitehall Publisher or Licensing.
+Your <%= t('department.name') %> Signon <%= account_name %>, for <%= @user.email %>, has now been suspended and you won't be able to access any <%= t('department.name') %> <%= account_name %> applications, eg Whitehall Publisher or Licensing.
 
 <% if instance_name.present? %>
-<%= account_name.humanize %> suspensions do not suspend production accounts or remove access to GOV.UK production applications.
+<%= account_name.humanize %> suspensions do not suspend production accounts or remove access to <%= t('department.name') %> production applications.
 <% end %>
 
 If you don't need the account you can ignore this email.
 
-If you do still need the account you will have to contact a managing GOV.UK editor in your organisation (or your parent organisation). They can either unsuspend your account themselves or use the support form to get help from the GOV.UK team.
+If you do still need the account you will have to contact a managing <%= t('department.name') %> editor in your organisation (or your parent organisation). They can either unsuspend your account themselves or use the support form to get help from the <%= t('department.name') %> team.
 
-Read our blog post about suspending unused GOV.UK accounts:
+Read our blog post about suspending unused <%= t('department.name') %> accounts:
 
 https://insidegovuk.blog.gov.uk/2014/08/21/suspending-unused-gov-uk-accounts

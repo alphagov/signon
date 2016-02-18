@@ -1,9 +1,9 @@
-<p><%= link_to 'GOV.UK', "https://www.gov.uk" %> Signon accounts are suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.</p>
+<p><%= link_to t('department.name'), t('department.url') %> Signon accounts are suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.</p>
 
-<p>Your <%= link_to 'GOV.UK', "https://www.gov.uk" %> Signon <%= account_name %>, for <%= @user.email %>, will be suspended <%= suspension_time %>. After suspension you won't be able to access any <%= link_to 'GOV.UK', "https://www.gov.uk" %> <%= account_name %> applications, eg Whitehall Publisher or Licensing.</p>
+<p>Your <%= link_to t('department.name'), t('department.url') %> Signon <%= account_name %>, for <%= @user.email %>, will be suspended <%= suspension_time %>. After suspension you won't be able to access any <%= link_to t('department.name'), t('department.url') %> <%= account_name %> applications, eg Whitehall Publisher or Licensing.</p>
 
 <% if instance_name.present? %>
-<p><%= account_name.humanize %> suspensions do not suspend production accounts or remove access to <%= link_to 'GOV.UK', "https://www.gov.uk" %> production applications.</p>
+<p><%= account_name.humanize %> suspensions do not suspend production accounts or remove access to <%= link_to t('department.name'), t('department.url') %> production applications.</p>
 <% end %>
 
 <p>If you don't need the account you can ignore these emails.</p>
@@ -12,4 +12,4 @@
 
 <p>If you’ve forgotten your passphrase, you can request a new one from the <%= link_to 'sign in', new_user_session_url(protocol: 'https') %> screen.</p>
 
-<p>Read our blog post about <%= link_to 'suspending unused GOV.UK accounts', 'https://insidegovuk.blog.gov.uk/2014/08/21/suspending-unused-gov-uk-accounts' %>.</p>
+<p>Read our blog post about <%= link_to "suspending unused #{t('department.name')} accounts", 'https://insidegovuk.blog.gov.uk/2014/08/21/suspending-unused-gov-uk-accounts' %>.</p>

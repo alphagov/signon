@@ -1,4 +1,8 @@
 en:
+  department:
+    name: 'GOV.UK'
+    url: 'https://www.gov.uk/'
+    full_name: 'Government Digital Service'
   devise:
     issuer: "GOV.UK Signon"
   mailer:
