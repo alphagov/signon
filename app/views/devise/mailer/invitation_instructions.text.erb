@@ -1,5 +1,3 @@
-Hello <%= @resource.name %>,
-
 Someone has invited you to <%= t('department.name') %> Signon, you can accept it copying-and-pasting the link below into your browser's URL bar:
 
 <%= accept_invitation_url(@resource, :invitation_token => @token) %>
