@@ -7,6 +7,7 @@ class PasswordsController < Devise::PasswordsController
 
     user = user_from_params
     unless user && user.reset_password_period_valid?
+      record_reset_page_loaded_token_expired
       render 'devise/passwords/reset_error'
     end
   end
@@ -45,6 +46,10 @@ private
 
   def record_reset_page_loaded
     EventLog.record_event(user_from_params, EventLog::PASSPHRASE_RESET_LOADED) if user_from_params
+  end
+
+  def record_reset_page_loaded_token_expired
+    EventLog.record_event(user_from_params, EventLog::PASSPHRASE_RESET_LOADED_BUT_TOKEN_EXPIRED) if user_from_params
   end
 
   def record_password_reset_failure(user)

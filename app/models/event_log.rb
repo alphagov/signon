@@ -34,6 +34,7 @@ class EventLog < ActiveRecord::Base
     ACCESS_TOKEN_REGENERATED              = LogEntry.new(id: 28, description: "Access token re-generated", require_application: true),
     ACCESS_TOKEN_GENERATED                = LogEntry.new(id: 29, description: "Access token generated", require_application: true, require_initiator: true),
     ACCESS_TOKEN_REVOKED                  = LogEntry.new(id: 30, description: "Access token revoked", require_application: true, require_initiator: true),
+    PASSPHRASE_RESET_LOADED_BUT_TOKEN_EXPIRED = LogEntry.new(id: 31, description: "Passphrase reset page loaded but the token has expired"),
   ]
 
   EVENTS_REQUIRING_INITIATOR   = EVENTS.select(&:require_initiator?)
