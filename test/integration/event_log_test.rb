@@ -58,6 +58,15 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     assert_equal EventLog::PASSPHRASE_RESET_LOADED, @user.event_logs.first.entry
   end
 
+  test "record passphrase reset page loaded but token expired" do
+    token_received_in_email = Timecop.freeze((User.reset_password_within + 1.hour).ago) do
+      @user.send_reset_password_instructions
+    end
+    visit edit_user_password_path(reset_password_token: token_received_in_email)
+
+    assert_equal EventLog::PASSPHRASE_RESET_LOADED_BUT_TOKEN_EXPIRED, @user.event_logs.first.entry
+  end
+
   test "record passphrase reset failed" do
     token_received_in_email = @user.send_reset_password_instructions
     visit edit_user_password_path(reset_password_token: token_received_in_email)
