@@ -79,6 +79,18 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     assert_match "Passphrase not strong enough", event_log.trailing_message
   end
 
+  test "record successful passphrase reset from email" do
+    token_received_in_email = @user.send_reset_password_instructions
+    visit edit_user_password_path(reset_password_token: token_received_in_email)
+
+    new_passphrase = "diagram donkey doodle"
+    fill_in "New passphrase", with: new_passphrase
+    fill_in "Confirm new passphrase", with: new_passphrase
+    click_on "Change passphrase"
+
+    assert_includes @user.event_logs.map(&:entry), EventLog::SUCCESSFUL_PASSPHRASE_RESET
+  end
+
   test "record successful passphrase change" do
     new_password = "correct horse battery daffodil"
     visit root_path
