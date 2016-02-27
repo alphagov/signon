@@ -163,7 +163,11 @@ class UsersController < ApplicationController
         @users = @users.page(params[:page]).per(100)
       end
     else
-      @users, @sorting_params = @users.alpha_paginate(params[:letter], ALPHABETICAL_PAGINATE_CONFIG)
+      @users, @sorting_params = @users.alpha_paginate(
+        params[:letter],
+        ALPHABETICAL_PAGINATE_CONFIG,
+        &:name
+      )
     end
   end
 
