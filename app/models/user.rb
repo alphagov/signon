@@ -106,7 +106,11 @@ class User < ActiveRecord::Base
   end
 
   def permissions_for(application)
-    application_permissions.joins(:supported_permission).where(application_id: application.id).pluck(:name)
+    application_permissions
+      .joins(:supported_permission)
+      .where(application_id: application.id)
+      .order('supported_permissions.name')
+      .pluck(:name)
   end
 
   # Avoid N+1 queries by using the relations eager loaded with `includes()`.
