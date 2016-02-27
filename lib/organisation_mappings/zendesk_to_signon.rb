@@ -15,7 +15,7 @@ module OrganisationMappings
     end
 
     def self.substring_function
-      if ENV.fetch("SIGNONOTRON2_DB_ADAPTER", "mysql") == "mysql"
+      if Signonotron2.mysql?
         "substring_index(email, '@', -1)"
       else
         "split_part(email, '@', 2)"
