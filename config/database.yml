@@ -1,29 +1,28 @@
-development: &development
+<% adapter = ENV.fetch("SIGNONOTRON2_DB_ADAPTER", "mysql") %>
+mysql_default: &mysql_default
   adapter: mysql2
   encoding: utf8
   reconnect: false
-  database: signonotron2_development
-  pool: 5
   username: signonotron2
   password: signonotron2
+  pool: 5
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-test: &test
-  adapter: mysql2
-  encoding: utf8
-  reconnect: false
-  database: signonotron2_test
+postgresql_default: &postgresql_default
+  adapter: postgresql
+  encoding: unicode
+  template: template0
   pool: 5
-  username: signonotron2
-  password: signonotron2
+
+development:
+  <<: *<%= adapter %>_default
+  database: signonotron2_development
+
+test: &test
+  <<: *<%= adapter %>_default
+  database: signonotron2_test
 
 production:
-  adapter: mysql2
-  encoding: utf8
-  reconnect: false
+  <<: *<%= adapter %>_default
   database: halberd_production
-  pool: 5
   username: halberd
   password:

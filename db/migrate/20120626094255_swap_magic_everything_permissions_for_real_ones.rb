@@ -1,19 +1,19 @@
+class User < ActiveRecord::Base
+  has_many :permissions
+end
+
+class Permission < ActiveRecord::Base
+  belongs_to :user
+  belongs_to :application, class_name: 'Doorkeeper::Application'
+  serialize :permissions, Array
+
+  validates_presence_of :application_id
+  validates_presence_of :user_id
+end
+
 class SwapMagicEverythingPermissionsForRealOnes < ActiveRecord::Migration
-  class User < ActiveRecord::Base
-    has_many :permissions
-  end
-
-  class Permission < ActiveRecord::Base
-    belongs_to :user
-    belongs_to :application, class_name: 'Doorkeeper::Application'
-    serialize :permissions, Array
-
-    validates_presence_of :application_id
-    validates_presence_of :user_id
-  end
-
-  class ::Doorkeeper::Application < ActiveRecord::Base
-    has_many :permissions, :dependent => :destroy, class_name: 'SwapMagicEverythingPermissionsForRealOnes::Permission'
+  class ::Doorkeeper::Application
+    has_many :permissions, :dependent => :destroy
   end
 
   def up

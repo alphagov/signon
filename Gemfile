@@ -6,6 +6,7 @@ gem 'bootstrap-kaminari-views', '0.0.5'
 
 gem 'alphabetical_paginate', '2.2.3'
 gem 'mysql2', '0.3.20'
+gem 'pg', '~> 0.18'
 gem 'govuk_admin_template', '4.1.1'
 gem 'deprecated_columns', '0.1.0'
 

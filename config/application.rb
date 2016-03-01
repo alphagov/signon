@@ -7,6 +7,10 @@ require 'rails/all'
 Bundler.require(*Rails.groups)
 
 module Signonotron2
+  def self.mysql?
+    ENV.fetch("SIGNONOTRON2_DB_ADAPTER", "mysql") == "mysql"
+  end
+
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -28,11 +32,6 @@ module Signonotron2
     # Note: filter_parameters are treated as regexes, so :password also matches
     # current_password, password_confirmation and password-strength-score
     config.filter_parameters += [:password]
-
-    # Use SQL instead of Active Record's schema dumper when creating the database.
-    # This is necessary if your schema can't be completely dumped by the schema dumper,
-    # like if you have constraints or database-specific column types
-    # config.active_record.schema_format = :sql
 
     # Enable the asset pipeline
     config.assets.enabled = true

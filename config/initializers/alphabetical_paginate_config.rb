@@ -1,5 +1,4 @@
 ALPHABETICAL_PAGINATE_CONFIG = {
-  db_mode: true,
   db_field: "users.name",
   numbers: false,
   others: false,
@@ -7,3 +6,5 @@ ALPHABETICAL_PAGINATE_CONFIG = {
   js: false,
   bootstrap3: true
 }
+
+ALPHABETICAL_PAGINATE_CONFIG[:db_mode] = true if Signonotron2.mysql?

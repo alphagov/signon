@@ -57,7 +57,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       select "Managing Editor", from: "Permissions for Whitehall"
       click_button "Update API user"
 
-      assert page.has_selector?("abbr[title='Permissions: signin and Managing Editor']", text: "Whitehall")
+      assert page.has_selector?("abbr[title='Permissions: Managing Editor and signin']", text: "Whitehall")
 
       click_link @api_user.name
 

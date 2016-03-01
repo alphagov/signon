@@ -2,7 +2,7 @@
 
 class ReplaceApostropheInUserEmails < ActiveRecord::Migration
   def up
-    User.where(%q{ email LIKE "%’%" }).update_all(%q{ email = REPLACE(email, "’", "'") })
+    User.where("email LIKE '%’%'").update_all(email: %q{REPLACE(email, "’", "'") })
   end
 
   def down
