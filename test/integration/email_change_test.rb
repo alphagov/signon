@@ -20,7 +20,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
           admin_changes_email_address(user: user, new_email: "new@email.com")
 
           assert_equal "new@email.com", last_email.to[0]
-          assert_equal 'Your GOV.UK Signon development email address has been updated', last_email.subject
+          assert_match /Your .* Signon development email address has been updated/, last_email.subject
         end
       end
 
@@ -110,7 +110,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         assert_equal "new@email.com", confirmation_email.to.first
         assert_equal 'Confirm your email change', confirmation_email.subject
         assert_equal "original@email.com", notification_email.to.first
-        assert_equal 'Your GOV.UK Signon development email address is being changed', notification_email.subject
+        assert_match /Your .* Signon development email address is being changed/, notification_email.subject
       end
     end
 

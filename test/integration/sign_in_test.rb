@@ -79,13 +79,13 @@ class SignInTest < ActionDispatch::IntegrationTest
     should "not prompt for a verification code twice per browser in 30 days" do
       visit root_path
       signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
-      assert_response_contains "Welcome to GOV.UK"
+      assert_response_contains "Welcome to"
 
       signout
       visit root_path
 
       signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: false)
-      assert_response_contains "Welcome to GOV.UK"
+      assert_response_contains "Welcome to"
 
       signout
       visit root_path
@@ -93,7 +93,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       Timecop.travel(30.days.from_now + 1) do
         visit root_path
         signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
-        assert_response_contains "Welcome to GOV.UK"
+        assert_response_contains "Welcome to"
       end
     end
 
@@ -108,7 +108,7 @@ class SignInTest < ActionDispatch::IntegrationTest
     should "allow access with a correctly-generated code" do
       visit root_path
       signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
-      assert_response_contains "Welcome to GOV.UK"
+      assert_response_contains "Welcome to"
       assert_response_contains "Signed in successfully"
       assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_VERIFIED.id, uid: @user.uid).count
     end
@@ -193,7 +193,7 @@ class SignInTest < ActionDispatch::IntegrationTest
     should "not remember a user's 2SV session if they've changed 2SV secret" do
       visit root_path
       signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
-      assert_response_contains "Welcome to GOV.UK"
+      assert_response_contains "Welcome to"
 
       signout
       visit root_path
@@ -208,7 +208,7 @@ class SignInTest < ActionDispatch::IntegrationTest
     should "not prevent login if 2SV is disabled for user with a remembered session" do
       visit root_path
       signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
-      assert_response_contains "Welcome to GOV.UK"
+      assert_response_contains "Welcome to"
 
       signout
       visit root_path
