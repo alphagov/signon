@@ -74,7 +74,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
         post :create, batch_invitation: { user_names_and_emails: users_csv }, user: { supported_permission_ids: [] }
 
         email = ActionMailer::Base.deliveries.detect do |m|
-          m.to == ["signon-alerts@digital.cabinet-office.gov.uk"]
+          m.to.any? { |to| to =~ /signon-alerts@.*\.gov\.uk/ }
         end
         assert_not_nil email
         assert_equal "[SIGNON] #{@user.name} created a batch of 2 users in development", email.subject
