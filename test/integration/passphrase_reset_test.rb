@@ -45,7 +45,7 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
 
       open_email(user.email)
       assert current_email
-      assert_equal "noreply-signon-development@digital.cabinet-office.gov.uk", current_email.from[0]
+      assert_match /noreply-signon-development@.+\.gov\.uk/, current_email.from[0]
       assert_equal nil, last_email.reply_to[0]
       assert_equal "Reset passphrase instructions", current_email.subject
 
