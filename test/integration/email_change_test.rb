@@ -134,16 +134,20 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
     end
 
     should "show an error and not send a confirmation if the email is blank" do
-      visit new_user_session_path
-      signin_with(@user)
+      ActionMailer::Base.deliveries.clear
+      perform_enqueued_jobs do
 
-      click_link "Change your email or passphrase"
-      fill_in "Email", with: ""
-      click_button "Change email"
+        visit new_user_session_path
+        signin_with(@user)
 
-      assert_response_contains "Email can't be blank"
+        click_link "Change your email or passphrase"
+        fill_in "Email", with: ""
+        click_button "Change email"
 
-      assert_nil last_email
+        assert_response_contains "Email can't be blank"
+
+        assert_nil last_email
+      end
     end
 
     should "be cancellable" do
