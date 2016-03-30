@@ -3,7 +3,7 @@ module AnalyticsHelper
     {
       'module' => 'auto-track-event',
       'track-action' => "alert-#{type}",
-      'track-label' => flash_text_without_email_addresses(message)
+      'track-label' => strip_tags(message)
     }
   end
 end
