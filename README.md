@@ -10,7 +10,7 @@ that provides username/password and 2-Factor authentication.
 ## Technical documentation
 
 [Devise](https://github.com/plataformatec/devise) is used to provide username 
-password sign-in, and [Doorkeeper](https://github.com/applicake/doorkeeper/) to
+password sign-in, and [Doorkeeper](https://github.com/applicake/doorkeeper/)
 as an OAuth 2 provider.
 
 Details of our interpretation of OAuth are provided in
@@ -18,9 +18,9 @@ Details of our interpretation of OAuth are provided in
 
 ## Dependencies
 
-[Various Rubygems](Gemfile.rb)
+[Various Rubygems](Gemfile)
 
-MySql or Postgres for main data storage
+MySQL or Postgres for main data storage. We use MySQL in GOV.UK Production
 
 Redis/Sidekiq for ActiveJob asynchronous tasks
 
