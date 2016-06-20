@@ -599,6 +599,28 @@ class UsersControllerTest < ActionController::TestCase
 
         put :update, id: another_user.id, user: { name: "New Name" }
       end
+
+      context "update application access" do
+        setup do
+          sign_in create(:admin_user)
+          @application = create(:application)
+          @another_user = create(:user)
+        end
+
+        should "remove all applications access for a user" do
+          @another_user.grant_application_permission(@application, 'signin')
+
+          put :update, id: @another_user.id, user: {}
+
+          assert_empty @another_user.reload.application_permissions
+        end
+
+        should "add application access for a user" do
+          put :update, id: @another_user.id, user: { supported_permission_ids: [@application.id] }
+
+          assert_equal 1, @another_user.reload.application_permissions.count
+        end
+      end
     end
 
     context "PUT resend_email_change" do

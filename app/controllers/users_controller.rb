@@ -5,6 +5,7 @@ class UsersController < ApplicationController
 
   before_filter :authenticate_user!, except: :show
   before_filter :load_and_authorize_user, except: [:index, :show]
+  before_filter :allow_no_application_access, only: [:update]
   helper_method :applications_and_permissions, :any_filter?
   respond_to :html
 
@@ -208,6 +209,12 @@ class UsersController < ApplicationController
     if user.send_two_step_flag_notification?
       UserMailer.two_step_flagged(user).deliver_later
     end
+  end
+
+  # When no permissions are selected for a user, we set the value to [] so
+  # a user can have no permissions
+  def allow_no_application_access
+    params[:user][:supported_permission_ids] ||= []
   end
 
   def user_params
