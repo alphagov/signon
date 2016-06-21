@@ -60,6 +60,7 @@ end
 group :development, :test do
   gem 'jasmine', '2.1.0'
   gem 'govuk-lint', '~> 0.4'
+  gem 'pry-byebug'
 end
 
 gem 'logstasher', '0.4.8'
@@ -77,5 +78,4 @@ group :test do
   gem 'ci_reporter', '1.7.0'
   gem 'timecop', '0.7.1'
   gem 'shoulda-context', '1.2.1', require: false
-  gem 'pry-byebug'
 end
