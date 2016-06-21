@@ -3,10 +3,24 @@ require 'test_helper'
 class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper
 
-  should "create users whose details are specified in a CSV file" do
+
+  should "admin user can create users whose details are specified in a CSV file" do
+    application = create(:application)
+    user = create(:user, role: "admin")
+
+    perform_batch_invite_with_user(user, application)
+  end
+
+  should "organisation admin user can create users whose details are specified in a CSV file" do
+    application = create(:application)
+    user = create(:user_in_organisation, role: 'organisation_admin')
+    user.grant_application_permission(application, ['signin'])
+
+    perform_batch_invite_with_user(user, application)
+  end
+
+  def perform_batch_invite_with_user(user, application)
     perform_enqueued_jobs do
-      application = create(:application)
-      user = create(:user, role: "admin")
       visit root_path
       signin_with(user)
 

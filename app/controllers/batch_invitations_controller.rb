@@ -8,7 +8,7 @@ class BatchInvitationsController < ApplicationController
   helper_method :recent_batch_invitations
 
   def new
-    @batch_invitation = BatchInvitation.new
+    @batch_invitation = BatchInvitation.new(organisation_id: current_user.organisation_id)
     authorize @batch_invitation
   end
 
