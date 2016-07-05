@@ -1,6 +1,6 @@
 require "sidekiq"
 
-redis_config = { namespace: "signon_sidekiq" }
+redis_config = { namespace: "signon" }
 redis_config[:url] = ENV['REDIS_URL'] if ENV['REDIS_URL']
 
 Sidekiq.configure_server do |config|
