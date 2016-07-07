@@ -8,7 +8,5 @@
   <%= devise_error_messages! %>
   <%= f.hidden_field :invitation_token %>
 
-  <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: resource } %>
-
-  <p><%= f.submit "Set my passphrase", class: "add-top-margin btn btn-primary" %></p>
+  <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: resource, submit_text: t("users.edit.set_passphrase") } %>
 <% end %>

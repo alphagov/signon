@@ -19,6 +19,7 @@ en:
   users:
     edit:
       change: "Change passphrase"
+      set_passphrase: "Set my passphrase"
     edit_email_or_passphrase:
       change_passphrase: "Change your passphrase"
 
