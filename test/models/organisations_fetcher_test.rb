@@ -57,6 +57,29 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
     assert_equal("new-slug", Organisation.first.slug)
   end
 
+  test "it updates an existing organisation when its content id changes" do
+    content_id = 'abc-123'
+    slug = 'ministry-of-fun'
+    organisation = create(
+      :organisation,
+      name: 'Ministry Of Misery',
+      slug: slug
+    )
+    assert_equal(1, Organisation.count)
+
+    bodies = [
+      organisation_details_for_slug(slug, content_id)
+    ]
+    organisations_api_has_organisations_with_bodies(bodies)
+
+    OrganisationsFetcher.new.call
+
+    assert_equal(1, Organisation.count)
+    organisation.reload
+    assert_equal('Ministry Of Fun', organisation.name)
+    assert_equal('abc-123', organisation.content_id)
+  end
+
   test "it updates the child organisation with information about it's parent" do
     slug = 'ministry-of-fun'
     fun = create(:organisation, name: 'Ministry of Fun', slug: slug)
