@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
+require_relative '../lib/same_site_security/middleware'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -56,5 +57,7 @@ module Signonotron2
     config.autoload_paths << Rails.root.join('lib')
 
     config.active_job.queue_adapter = :sidekiq
+
+    config.middleware.insert_before 0, SameSiteSecurity::Middleware
   end
 end
