@@ -101,4 +101,16 @@ namespace :users do
       raise "Could not find an application called 'Content Preview'"
     end
   end
+
+  desc "Migrates user permissions from source to target application"
+  task migrate_permissions: :environment do
+    source_application = ENV["SOURCE"]
+    target_application = ENV["TARGET"]
+
+    unless source_application && target_application
+      raise "Please supply SOURCE and TARGET application names"
+    end
+
+    UserPermissionMigrator.migrate(source: source_application, target: target_application)
+  end
 end
