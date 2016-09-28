@@ -4,7 +4,8 @@
   <h1>Passphrase reset</h1>
 </div>
 
-<div class="alert alert-warning">
-  <p>That passphrase reset didn’t work. It may be that the link you were using has expired or was invalid.</p>
+<% info_message = 'That passphrase reset didn’t work. It may be that the link you were using has expired or was invalid.' %>
+<%= content_tag :div, class: "alert alert-warning", data: track_analytics_data(:danger, info_message) do %>
+  <p><%= info_message %></p>
   <p class="add-top-margin"><%= link_to 'Try again', new_user_password_path, class: 'btn btn-default' %></p>
-</div>
+<% end %>
