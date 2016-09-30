@@ -36,6 +36,7 @@ class EventLog < ActiveRecord::Base
     ACCESS_TOKEN_REVOKED                      = LogEntry.new(id: 30, description: "Access token revoked", require_application: true, require_initiator: true),
     PASSPHRASE_RESET_LOADED_BUT_TOKEN_EXPIRED = LogEntry.new(id: 31, description: "Passphrase reset page loaded but the token has expired"),
     SUCCESSFUL_PASSPHRASE_RESET               = LogEntry.new(id: 32, description: "Passphrase reset successfully"),
+    ROLE_CHANGED                              = LogEntry.new(id: 33, description: "Role changed", require_initiator: true),
   ]
 
   EVENTS_REQUIRING_INITIATOR   = EVENTS.select(&:require_initiator?)
@@ -72,6 +73,10 @@ class EventLog < ActiveRecord::Base
   def self.record_email_change(user, email_was, email_is, initiator = user)
     event = (user == initiator) ? EMAIL_CHANGE_INITIATED : EMAIL_CHANGED
     record_event(user, event, initiator: initiator, trailing_message: "from #{email_was} to #{email_is}")
+  end
+
+  def self.record_role_change(user, previous_role, new_role, initiator)
+    record_event(user, ROLE_CHANGED, initiator: initiator, trailing_message: "from #{previous_role} to #{new_role}")
   end
 
   def self.for(user)
