@@ -20,7 +20,7 @@
           <%= application.description %>
         </td>
         <td><%= application.redirect_uri %></td>
-        <td><%= link_to application.home_uri, application.home_uri %></td>
+        <td><%= link_to_if application.home_uri, application.home_uri, application.home_uri %></td>
         <td><%= link_to "Edit", edit_doorkeeper_application_path(application) %></td>
       </tr>
     <% end %>
