@@ -75,7 +75,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       click_link @api_user.name
 
       assert page.has_selector?("td:first-child", text: @application.name)
-      click_link "Revoke"
+      click_button "Revoke"
 
       assert page.has_text?("Access for #{@application.name} was revoked")
       assert ! page.has_selector?("td:first-child", text: @application.name)
@@ -88,7 +88,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       click_link @api_user.name
 
       assert page.has_selector?("td:first-child", text: @application.name)
-      click_link "Re-generate"
+      click_button "Re-generate"
 
       assert page.has_selector?("div.alert-danger", text: "Make sure to copy the access token for #{@application.name} now. You won't be able to see it again!")
       assert page.has_selector?("div.alert-info", text: "Access token for #{@application.name}: #{@api_user.authorisations.last.token}")
