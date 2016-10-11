@@ -593,6 +593,16 @@ class UsersControllerTest < ActionController::TestCase
         end
       end
 
+      context "changing a role" do
+        should "log an event" do
+          @user.update_column(:role, "superadmin")
+          another_user = create(:user, role: "admin")
+          put :update, id: another_user.id, user: { role: "normal" }
+
+          assert_equal 1, EventLog.where(event_id: EventLog::ROLE_CHANGED.id, uid: another_user.uid, initiator_id: @user.id).count
+        end
+      end
+
       should "push changes out to apps" do
         another_user = create(:user, name: "Old Name")
         PermissionUpdater.expects(:perform_on).with(another_user).once

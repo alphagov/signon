@@ -58,6 +58,10 @@ class UsersController < ApplicationController
         end
       end
 
+      if role_change = @user.previous_changes[:role]
+        EventLog.record_role_change(@user, role_change.first, role_change.last, current_user)
+      end
+
       redirect_to users_path, notice: "Updated user #{@user.email} successfully"
     else
       render :edit
