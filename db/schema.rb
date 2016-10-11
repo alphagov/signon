@@ -11,13 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160420145549) do
+ActiveRecord::Schema.define(version: 20161011143644) do
 
   create_table "batch_invitation_application_permissions", force: :cascade do |t|
     t.integer  "batch_invitation_id",     limit: 4, null: false
     t.integer  "supported_permission_id", limit: 4, null: false
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "batch_invitation_application_permissions", ["batch_invitation_id", "supported_permission_id"], name: "index_batch_invite_app_perms_on_batch_invite_and_supported_perm", unique: true, using: :btree
@@ -27,8 +27,8 @@ ActiveRecord::Schema.define(version: 20160420145549) do
     t.string   "name",                limit: 255
     t.string   "email",               limit: 255
     t.string   "outcome",             limit: 255
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "batch_invitation_users", ["batch_invitation_id"], name: "index_batch_invitation_users_on_batch_invitation_id", using: :btree
@@ -36,8 +36,8 @@ ActiveRecord::Schema.define(version: 20160420145549) do
   create_table "batch_invitations", force: :cascade do |t|
     t.text     "applications_and_permissions", limit: 65535
     t.string   "outcome",                      limit: 255
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "user_id",                      limit: 4,     null: false
     t.integer  "organisation_id",              limit: 4
   end
@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(version: 20160420145549) do
   add_index "oauth_access_grants", ["token"], name: "index_oauth_access_grants_on_token", unique: true, using: :btree
 
   create_table "oauth_access_tokens", force: :cascade do |t|
-    t.integer  "resource_owner_id", limit: 4,   null: false
+    t.integer  "resource_owner_id", limit: 4
     t.integer  "application_id",    limit: 4,   null: false
     t.string   "token",             limit: 255, null: false
     t.string   "refresh_token",     limit: 255
@@ -84,12 +84,12 @@ ActiveRecord::Schema.define(version: 20160420145549) do
   add_index "oauth_access_tokens", ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
 
   create_table "oauth_applications", force: :cascade do |t|
-    t.string   "name",                  limit: 255
+    t.string   "name",                  limit: 255,                null: false
     t.string   "uid",                   limit: 255,                null: false
     t.string   "secret",                limit: 255,                null: false
     t.string   "redirect_uri",          limit: 255,                null: false
-    t.datetime "created_at",                                       null: false
-    t.datetime "updated_at",                                       null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "home_uri",              limit: 255
     t.string   "description",           limit: 255
     t.boolean  "supports_push_updates",             default: true
@@ -113,8 +113,8 @@ ActiveRecord::Schema.define(version: 20160420145549) do
     t.string   "name",              limit: 255,                 null: false
     t.string   "organisation_type", limit: 255,                 null: false
     t.string   "abbreviation",      limit: 255
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.string   "ancestry",          limit: 255
     t.string   "content_id",        limit: 255,                 null: false
     t.boolean  "closed",                        default: false
@@ -141,14 +141,13 @@ ActiveRecord::Schema.define(version: 20160420145549) do
     t.integer  "application_id",          limit: 4, null: false
     t.integer  "supported_permission_id", limit: 4, null: false
     t.datetime "last_synced_at"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "user_application_permissions", ["user_id", "application_id", "supported_permission_id"], name: "index_app_permissions_on_user_and_app_and_supported_permission", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "name",                         limit: 255,                    null: false
     t.string   "email",                        limit: 255, default: "",       null: false
     t.string   "encrypted_password",           limit: 255, default: ""
     t.string   "reset_password_token",         limit: 255
@@ -158,12 +157,13 @@ ActiveRecord::Schema.define(version: 20160420145549) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip",           limit: 255
     t.string   "last_sign_in_ip",              limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "uid",                          limit: 255,                    null: false
     t.integer  "failed_attempts",              limit: 4,   default: 0
     t.datetime "locked_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.datetime "suspended_at"
+    t.string   "name",                         limit: 255,                    null: false
+    t.string   "uid",                          limit: 255
     t.string   "invitation_token",             limit: 255
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
@@ -184,8 +184,8 @@ ActiveRecord::Schema.define(version: 20160420145549) do
     t.datetime "invitation_created_at"
     t.string   "otp_secret_key",               limit: 255
     t.integer  "second_factor_attempts_count", limit: 4,   default: 0
-    t.string   "unlock_token",                 limit: 255
     t.boolean  "require_2sv",                              default: false,    null: false
+    t.string   "unlock_token",                 limit: 255
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
