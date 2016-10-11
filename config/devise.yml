@@ -1,0 +1,12 @@
+development:
+  pepper: 'fake-pepper'
+  secret_key: 'fake-secret-key'
+
+test:
+  pepper: 'fake-pepper'
+  secret_key: 'fake-secret-key'
+  stretches: 1
+
+production:
+  pepper: <%= ENV['DEVISE_PEPPER'] %>
+  secret_key: <%= ENV['DEVISE_SECRET_KEY'] %>

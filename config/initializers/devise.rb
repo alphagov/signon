@@ -1,6 +1,12 @@
 require 'statsd'
 require_relative 'instance_name'
 
+devise_config = Rails.application.config_for(:devise).symbolize_keys
+
+if devise_config[:secret_key].blank? || devise_config[:pepper].blank?
+  raise 'Required Devise secrets are unset'
+end
+
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -82,10 +88,10 @@ Devise.setup do |config|
   # Limiting the stretches to just one in testing will increase the performance of
   # your test suite dramatically. However, it is STRONGLY RECOMMENDED to not use
   # a value less than 10 in other environments.
-  config.stretches = Rails.env.test? ? 1 : 1000
+  config.stretches = (devise_config[:stretches] || 1000)
 
   # Setup a pepper to generate the encrypted password.
-  # config.pepper = "0da2a585999238d59f829d6915cc45741d98aaa300bad7aaa77ad4e2e6dcb5f6871b76de4b6e3707b3afa5376ef17ac1bebf61629d5cb0e7d777529867119600"
+  config.pepper = devise_config[:pepper]
 
   # ==> Configuration for :invitable
   # The period the generated invitation token is valid, after
@@ -314,9 +320,5 @@ Devise.setup do |config|
   # Time period for account expiry from last_activity_at
   # config.expire_after = 90.days
 
-  config.secret_key = if Rails.env.production?
-                        ENV['DEVISE_SECRET_KEY']
-                      else
-                        'fake-secret-key'
-                      end
+  config.secret_key = devise_config[:secret_key]
 end
