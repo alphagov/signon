@@ -17,7 +17,6 @@ gem 'nokogiri', '~> 1.6.6.4'
 gem 'airbrake', '3.1.15'
 gem 'plek', '1.7.0'
 gem 'json', '1.8.3'
-gem 'whenever', '~> 0.9.4', require: false
 gem 'addressable', '~> 2.3.8'
 
 gem 'uuid'
