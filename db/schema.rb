@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160420145549) do
+ActiveRecord::Schema.define(version: 20161223162747) do
 
   create_table "batch_invitation_application_permissions", force: :cascade do |t|
     t.integer  "batch_invitation_id",     limit: 4, null: false
@@ -93,8 +93,10 @@ ActiveRecord::Schema.define(version: 20160420145549) do
     t.string   "home_uri",              limit: 255
     t.string   "description",           limit: 255
     t.boolean  "supports_push_updates",             default: true
+    t.time     "deleted_at"
   end
 
+  add_index "oauth_applications", ["deleted_at"], name: "index_oauth_applications_on_deleted_at", using: :btree
   add_index "oauth_applications", ["name"], name: "unique_application_name", unique: true, using: :btree
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
