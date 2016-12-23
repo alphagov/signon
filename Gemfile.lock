@@ -40,6 +40,9 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    acts_as_paranoid (0.5.0)
+      activerecord (>= 4.0, < 5.1)
+      activesupport (>= 4.0, < 5.1)
     addressable (2.3.8)
     airbrake (3.1.15)
       builder
@@ -342,6 +345,7 @@ PLATFORMS
 
 DEPENDENCIES
   activejob-retry
+  acts_as_paranoid (= 0.5.0)
   addressable (~> 2.3.8)
   airbrake (= 3.1.15)
   alphabetical_paginate (= 2.2.3)
