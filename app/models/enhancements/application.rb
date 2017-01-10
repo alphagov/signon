@@ -3,6 +3,8 @@ require "doorkeeper/orm/active_record/application"
 class ::Doorkeeper::Application < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
+  acts_as_paranoid
+
   has_many :supported_permissions, dependent: :destroy
 
   default_scope { order('oauth_applications.name') }
@@ -19,6 +21,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
 
   after_create :create_signin_supported_permission
   after_save :create_user_update_supported_permission
+  before_destroy :remove_sso_push_support
 
   def self.policy_class; ApplicationPolicy; end
 
@@ -51,5 +54,9 @@ private
 
   def create_user_update_supported_permission
     supported_permissions.where(name: 'user_update_permission', grantable_from_ui: false).first_or_create! if supports_push_updates?
+  end
+
+  def remove_sso_push_support
+    self.supports_push_updates = false
   end
 end
