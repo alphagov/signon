@@ -30,7 +30,7 @@ gem 'pundit', '0.3.0'
 gem 'rotp', '~> 2.1.1'
 gem 'rqrcode'
 
-gem 'doorkeeper', '2.2.1'
+gem 'doorkeeper', '4.2.0'
 gem 'ancestry', '2.0.0'
 
 gem 'gds-api-adapters', '20.1.1'
