@@ -121,7 +121,7 @@ class UsersController < ApplicationController
     if @user.update_with_password(password_params)
       EventLog.record_event(@user, EventLog::SUCCESSFUL_PASSPHRASE_CHANGE)
       flash[:notice] = t(:updated, scope: 'devise.passwords')
-      sign_in(@user, bypass: true)
+      bypass_sign_in(@user)
       redirect_to root_path
     else
       EventLog.record_event(@user, EventLog::UNSUCCESSFUL_PASSPHRASE_CHANGE)
