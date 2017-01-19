@@ -1,9 +1,5 @@
 class PushUserUpdatesJob < ActiveJob::Base
-  include ActiveJob::Retry
-
-  def self.inherited(subclass)
-    subclass.exponential_retry limit: 6
-  end
+  include ActiveJob::Retry.new(strategy: :exponential, limit: 6)
 
   def perform(*args)
     raise NotImplementedError, "PushUserUpdatesJob must be subclassed"
