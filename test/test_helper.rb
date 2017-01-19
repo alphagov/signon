@@ -30,7 +30,7 @@ WebMock.disable_net_connect!(allow_localhost: true)
 require 'helpers/confirmation_token_helper'
 
 class ActionController::TestCase
-  include Devise::TestHelpers
+  include Devise::Test::ControllerHelpers
   include ConfirmationTokenHelper
 
   def sign_in(user)
