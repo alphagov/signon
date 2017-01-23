@@ -12,7 +12,8 @@ gem 'deprecated_columns', '0.1.0'
 
 gem 'rails-html-sanitizer', '1.0.3'
 
-gem 'nokogiri', '~> 1.6.6.4'
+# This change was made via Snyk to fix a vulnerability
+gem 'nokogiri', '>= 1.7.0.1'
 
 gem 'airbrake', '3.1.15'
 gem 'plek', '1.7.0'
@@ -22,15 +23,17 @@ gem 'addressable', '~> 2.3.8'
 gem 'uuid'
 
 # Gems used to provide Authentication and Authorization services.
-gem 'devise', '3.5.1'
-gem 'devise_invitable', '1.5.2'
+# This change was made via Snyk to fix a vulnerability
+gem 'devise', '>= 4.2.0'
+gem 'devise_invitable', '1.7.0'
 gem 'devise-encryptable', '0.2.0'
 gem 'devise_zxcvbn', '1.1.1'
 gem 'pundit', '0.3.0'
 gem 'rotp', '~> 2.1.1'
 gem 'rqrcode'
 
-gem 'doorkeeper', '2.2.1'
+# This change was made via Snyk to fix a vulnerability
+gem 'doorkeeper', '>= 4.2.0'
 gem 'ancestry', '2.0.0'
 
 gem 'gds-api-adapters', '20.1.1'
@@ -46,8 +49,10 @@ gem 'zeroclipboard-rails'
 gem 'rake', '10.4.1'
 
 gem 'sass-rails', '~> 5.0.6'
+gem 'sprockets-rails', '~> 3.1.1'
 
-gem 'uglifier', '2.7.1'
+# This change was made via Snyk to fix a vulnerability
+gem 'uglifier', '>= 3.0.4'
 
 group :development do
   gem 'quiet_assets', '1.0.2'
@@ -76,4 +81,5 @@ group :test do
   gem 'ci_reporter', '1.7.0'
   gem 'timecop', '0.7.1'
   gem 'shoulda-context', '1.2.1', require: false
+  gem 'test_after_commit'
 end

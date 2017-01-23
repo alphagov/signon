@@ -1,5 +1,6 @@
 # coding: utf-8
 require 'test_helper'
+require 'bcrypt'
 
 class UserTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
