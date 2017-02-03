@@ -22,6 +22,7 @@ class ActiveSupport::TestCase
     Timecop.return
     WebMock.reset!
     DatabaseCleaner.clean
+    Mail::TestMailer.deliveries.clear
   end
 end
 
@@ -120,6 +121,5 @@ class ActionDispatch::IntegrationTest
     Capybara.reset_sessions!
     Capybara.use_default_driver
     ActionController::Base.allow_forgery_protection = @original_forgery_protection_value
-    clear_emails
   end
 end
