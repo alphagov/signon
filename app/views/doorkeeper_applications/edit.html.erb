@@ -67,6 +67,16 @@
     </label>
   </p>
 
+  <p class="checkbox">
+    <label>
+      <%= f.check_box :retired %> This application is retired
+    </label>
+    <span class="help-block">
+      Retiring an application will hide the application from the dashboard. It will
+      not delete data. If you're retiring an app you should also disable push updates.
+    </span>
+  </p>
+
   <% if policy(Doorkeeper::Application).edit? %>
     <hr />
     <p class="add-top-margin">
