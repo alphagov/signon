@@ -6,7 +6,6 @@
   <thead>
     <tr class="table-header">
       <th scope="col">Name</th>
-      <th scope="col">Redirect URI</th>
       <th scope="col">Home URI</th>
       <th scope="col">Actions</th>
     </tr>
@@ -19,7 +18,6 @@
           <br>
           <%= application.description %>
         </td>
-        <td><%= application.redirect_uri %></td>
         <td><%= link_to_if application.home_uri, application.home_uri, application.home_uri %></td>
         <td><%= link_to "Edit", edit_doorkeeper_application_path(application) %></td>
       </tr>
