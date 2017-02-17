@@ -6,7 +6,6 @@
   <thead>
     <tr class="table-header">
       <th scope="col">Name</th>
-      <th scope="col">Redirect URI</th>
       <th scope="col">Home URI</th>
       <th scope="col">Actions</th>
     </tr>
@@ -15,11 +14,14 @@
     <% @applications.each do |application| %>
       <tr>
         <td>
-          <%= link_to application.name, edit_doorkeeper_application_path(application) %>
+          <% if application.retired? %>
+            <del><%= link_to application.name, edit_doorkeeper_application_path(application) %> (retired)</del>
+          <% else %>
+            <%= link_to application.name, edit_doorkeeper_application_path(application) %>
+          <% end %>
           <br>
           <%= application.description %>
         </td>
-        <td><%= application.redirect_uri %></td>
         <td><%= link_to_if application.home_uri, application.home_uri, application.home_uri %></td>
         <td><%= link_to "Edit", edit_doorkeeper_application_path(application) %></td>
       </tr>

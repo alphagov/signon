@@ -38,6 +38,7 @@ class DoorkeeperApplicationsController < ApplicationController
       :uid,
       :secret,
       :redirect_uri,
+      :retired,
       :home_uri,
       :supports_push_updates,
     )

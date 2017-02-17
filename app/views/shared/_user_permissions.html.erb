@@ -18,7 +18,11 @@
        supported_permission_field_prefix = "#{attribute_name}_application_#{application.id}_supported_permission" %>
       <tr>
         <td>
-          <%= application.name %>
+          <% if application.retired? %>
+            <del><%= application.name %></del>
+          <% else %>
+            <%= application.name %>
+          <% end %>
         </td>
         <% if user_object.api_user? %>
           <%

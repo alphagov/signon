@@ -57,6 +57,20 @@ class SuperAdminApplicationEditTest < ActionDispatch::IntegrationTest
       # trigger a push update for reauth
       remote_logout(@user)
     end
+
+    should "be able to retire applications" do
+      @application.update_attribute :retired, false
+      click_link @application.name
+
+      refute page.has_checked_field?("This application is retired")
+      check "This application is retired"
+      click_button "Update Application"
+
+      click_link @application.name
+
+      assert page.has_checked_field?("This application is retired")
+      assert @application.reload.retired?, "The record should be retired"
+    end
   end
 
   def remote_logout(user)
