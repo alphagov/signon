@@ -15,10 +15,7 @@ class PasswordsController < Devise::PasswordsController
   # overrides http://git.io/sOhoaA to prevent expirable from
   # intercepting reset password flow for a partially signed-in user
   def require_no_authentication
-    if (params[:reset_password_token] || params[:forgot_expired_passphrase]) &&
-        current_user && current_user.need_change_password?
-      sign_out(current_user)
-    end
+    sign_out(current_user) if params[:reset_password_token]
     super
   end
 

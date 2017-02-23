@@ -18,11 +18,9 @@ class User < ActiveRecord::Base
 
   USER_STATUS_SUSPENDED = 'suspended'
   USER_STATUS_INVITED = 'invited'
-  USER_STATUS_PASSPHRASE_EXPIRED = 'passphrase expired'
   USER_STATUS_LOCKED = 'locked'
   USER_STATUS_ACTIVE = 'active'
-  USER_STATUSES = [USER_STATUS_SUSPENDED, USER_STATUS_INVITED, USER_STATUS_PASSPHRASE_EXPIRED,
-                   USER_STATUS_LOCKED, USER_STATUS_ACTIVE]
+  USER_STATUSES = [USER_STATUS_SUSPENDED, USER_STATUS_INVITED, USER_STATUS_LOCKED, USER_STATUS_ACTIVE]
 
   devise :database_authenticatable,
          :recoverable, :trackable,
@@ -32,8 +30,7 @@ class User < ActiveRecord::Base
          :zxcvbnable,
          :encryptable,
          :confirmable,
-         :password_archivable, # in signonotron2/lib/devise/models/password_archivable.rb
-         :password_expirable   # in signonotron2/lib/devise/models/password_expirable.rb
+         :password_archivable # in signonotron2/lib/devise/models/password_archivable.rb
 
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
@@ -73,15 +70,12 @@ class User < ActiveRecord::Base
       where.not(suspended_at: nil)
     when USER_STATUS_INVITED
       where.not(invitation_sent_at: nil).where(invitation_accepted_at: nil)
-    when USER_STATUS_PASSPHRASE_EXPIRED
-      with_need_change_password
     when USER_STATUS_LOCKED
       where.not(locked_at: nil)
     when USER_STATUS_ACTIVE
       where(suspended_at: nil, locked_at: nil).
         where(arel_table[:invitation_sent_at].eq(nil).
-          or(arel_table[:invitation_accepted_at].not_eq(nil))).
-        without_need_change_password
+          or(arel_table[:invitation_accepted_at].not_eq(nil)))
     else
       raise NotImplementedError.new("Filtering by status '#{status}' not implemented.")
     end
@@ -208,7 +202,6 @@ class User < ActiveRecord::Base
     return USER_STATUS_SUSPENDED if suspended?
     unless api_user?
       return USER_STATUS_INVITED if invited_but_not_yet_accepted?
-      return USER_STATUS_PASSPHRASE_EXPIRED if need_change_password?
     end
     return USER_STATUS_LOCKED if access_locked?
 
