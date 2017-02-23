@@ -9,6 +9,7 @@ class EventLog < ActiveRecord::Base
     ACCOUNT_UNSUSPENDED                       = LogEntry.new(id: 3, description: "Account unsuspended", require_initiator: true),
     ACCOUNT_AUTOSUSPENDED                     = LogEntry.new(id: 4, description: "Account auto-suspended"),
     MANUAL_ACCOUNT_UNLOCK                     = LogEntry.new(id: 5, description: "Manual account unlock", require_initiator: true),
+    PASSPHRASE_EXPIRED                        = LogEntry.new(id: 6, description: "Passphrase expired"),
     PASSPHRASE_RESET_REQUEST                  = LogEntry.new(id: 7, description: "Passphrase reset request"),
     PASSPHRASE_RESET_LOADED                   = LogEntry.new(id: 8, description: "Passphrase reset page loaded"),
     PASSPHRASE_RESET_FAILURE                  = LogEntry.new(id: 9, description: "Passphrase reset attempt failure"),
