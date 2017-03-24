@@ -37,6 +37,7 @@ class EventLog < ActiveRecord::Base
     PASSPHRASE_RESET_LOADED_BUT_TOKEN_EXPIRED = LogEntry.new(id: 31, description: "Passphrase reset page loaded but the token has expired"),
     SUCCESSFUL_PASSPHRASE_RESET               = LogEntry.new(id: 32, description: "Passphrase reset successfully"),
     ROLE_CHANGED                              = LogEntry.new(id: 33, description: "Role changed", require_initiator: true),
+    ACCOUNT_UPDATED                           = LogEntry.new(id: 34, description: "Account updated", require_initiator: true),
   ]
 
   EVENTS_REQUIRING_INITIATOR   = EVENTS.select(&:require_initiator?)
