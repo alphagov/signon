@@ -9,9 +9,12 @@ class UserUpdate
 
   def update
     user.skip_reconfirmation!
+    old_permissions = fetch_user_permissions
     return unless user.update_attributes(user_params)
+    user.application_permissions.reload
 
     record_update
+    record_permission_changes(old_permissions)
     record_role_change
     send_two_step_flag_notification
     perform_permissions_update
@@ -20,6 +23,33 @@ class UserUpdate
   end
 
 private
+
+  def record_permission_changes(old_permissions)
+    new_permissions = fetch_user_permissions
+
+    permissions_added = (new_permissions - old_permissions).group_by(&:application_id)
+    permissions_removed = (old_permissions - new_permissions).group_by(&:application_id)
+
+    permissions_added.each do |application_id, permissions|
+      EventLog.record_event(
+        user,
+        EventLog::PERMISSIONS_ADDED,
+        initiator: current_user,
+        application_id: application_id,
+        trailing_message: "(#{permissions.map(&:name).join(', ')})",
+      )
+    end
+
+    permissions_removed.each do |application_id, permissions|
+      EventLog.record_event(
+        user,
+        EventLog::PERMISSIONS_REMOVED,
+        initiator: current_user,
+        application_id: application_id,
+        trailing_message: "(#{permissions.map(&:name).join(', ')})"
+      )
+    end
+  end
 
   def record_update
     EventLog.record_event(
@@ -42,7 +72,6 @@ private
   end
 
   def perform_permissions_update
-    user.application_permissions.reload
     PermissionUpdater.perform_on(user)
   end
 
@@ -61,6 +90,14 @@ private
 
     email_change.each do |to_address|
       UserMailer.email_changed_by_admin_notification(user, email_change.first, to_address).deliver_later
+    end
+  end
+
+  Permission = Struct.new(:name, :application_id)
+
+  def fetch_user_permissions
+    user.application_permissions.includes(:supported_permission).map do |p|
+      Permission.new(p.supported_permission.name, p.application_id)
     end
   end
 end
