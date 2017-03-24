@@ -45,6 +45,8 @@ class UsersController < ApplicationController
 
     @user.skip_reconfirmation!
     if @user.update_attributes(user_params)
+      UserUpdatedEvent.new(@user, current_user).record
+
       send_two_step_flag_notification(@user)
 
       @user.application_permissions.reload
@@ -56,10 +58,6 @@ class UsersController < ApplicationController
         email_change.each do |to_address|
           UserMailer.email_changed_by_admin_notification(@user, email_change.first, to_address).deliver_later
         end
-      end
-
-      if role_change = @user.previous_changes[:role]
-        EventLog.record_role_change(@user, role_change.first, role_change.last, current_user)
       end
 
       redirect_to users_path, notice: "Updated user #{@user.email} successfully"
