@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-REPOSITORY = 'signonotron2'
+REPOSITORY = 'signon'
 DB_ADAPTERS = ['mysql', 'postgresql']
 
 node {

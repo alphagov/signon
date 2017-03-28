@@ -2,7 +2,7 @@ require 'gds_api/base'
 require 'exception_handler'
 
 class SSOPushClient < GdsApi::Base
-  include Signonotron2::ExceptionHandler
+  include Signon::ExceptionHandler
 
   def initialize(application)
     @application = application

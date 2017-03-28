@@ -7,7 +7,7 @@ require_relative '../lib/same_site_security/middleware'
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module Signonotron2
+module Signon
   def self.mysql?
     ENV.fetch("SIGNONOTRON2_DB_ADAPTER", "mysql") == "mysql"
   end

@@ -1,6 +1,6 @@
 require 'sso_push_error'
 
-module Signonotron2
+module Signon
   module ExceptionHandler
     def with_exception_handling
       yield
