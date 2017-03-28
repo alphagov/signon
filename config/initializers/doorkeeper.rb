@@ -7,9 +7,7 @@ Doorkeeper.configure do
     # to call them on routes object eg.
     # routes.new_user_session_path
     user = current_user || warden.authenticate!(scope: :user)
-    if user.need_change_password?
-      redirect_to user_password_expired_path
-    elsif user.need_two_step_verification? && warden.session(:user)['need_two_step_verification']
+    if user.need_two_step_verification? && warden.session(:user)['need_two_step_verification']
       redirect_to new_two_step_verification_session_path
     elsif user.prompt_for_2sv?
       redirect_to prompt_two_step_verification_path

@@ -175,15 +175,6 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     assert page.has_content?(EventLog::ACCOUNT_UNSUSPENDED.description + ' by ' + @admin.name)
   end
 
-  test "record password expiration" do
-    @user.password_changed_at = 100.days.ago; @user.save!
-
-    visit root_path
-    signin_with(@user)
-
-    assert_includes @user.event_logs.map(&:entry), EventLog::PASSPHRASE_EXPIRED
-  end
-
   test "users don't have permission to view account access log" do
     visit root_path
     signin_with(@user)

@@ -392,7 +392,6 @@ class UserTest < ActiveSupport::TestCase
       @suspended = create(:user)
       @suspended.suspend("because grumble")
       @invited = User.invite!(name: "Oberyn Martell", email: "redviper@dorne.com")
-      @expired = create(:user, password_changed_at: 91.days.ago)
     end
 
     context "filtering" do
@@ -408,10 +407,6 @@ class UserTest < ActiveSupport::TestCase
 
       should "filter invited" do
         assert_equal [@invited], User.with_status(User::USER_STATUS_INVITED).all
-      end
-
-      should "filter passphrase expired" do
-        assert_equal [@expired], User.with_status(User::USER_STATUS_PASSPHRASE_EXPIRED).all
       end
 
       should "filter locked" do
@@ -430,10 +425,6 @@ class UserTest < ActiveSupport::TestCase
 
       should "detect invited" do
         assert_equal "invited", @invited.status
-      end
-
-      should "detect passphrase expired" do
-        assert_equal "passphrase expired", @expired.status
       end
 
       should "detect locked" do
@@ -470,11 +461,6 @@ class UserTest < ActiveSupport::TestCase
       api_user.update_column :api_user, true
 
       assert_not_equal "invited", api_user.reload.status
-    end
-
-    should "not return passphrase expired" do
-      api_user = create(:api_user, password_changed_at: 91.days.ago)
-      assert_not_equal "passphrase expired", api_user.status
     end
   end
 

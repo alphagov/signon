@@ -261,7 +261,6 @@ Devise.setup do |config|
   # ==> Custom Modules for Devise
   require 'devise/models/suspendable'
   require 'devise/models/password_archivable'
-  require 'devise/models/password_expirable'
   require 'devise/routes'
 
   # ==> Password strength test
@@ -271,12 +270,6 @@ Devise.setup do |config|
   # Metrics!
   Warden::Manager.after_authentication do |_user, _auth, _opts|
     Statsd.new(::STATSD_HOST).increment("#{::STATSD_PREFIX}.logins.success")
-  end
-
-  Warden::Manager.after_authentication do |user, _auth, _opts|
-    if user.need_change_password?
-      EventLog.record_event(user, EventLog::PASSPHRASE_EXPIRED)
-    end
   end
 
   Warden::Manager.before_failure do |_env, _opts|
