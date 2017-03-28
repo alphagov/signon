@@ -15,7 +15,7 @@ module OrganisationMappings
     end
 
     def self.substring_function
-      if Signonotron2.mysql?
+      if Signon.mysql?
         "substring_index(email, '@', -1)"
       else
         "split_part(email, '@', 2)"

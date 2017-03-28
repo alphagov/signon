@@ -1,4 +1,4 @@
-Signonotron2::Application.routes.draw do
+Signon::Application.routes.draw do
   use_doorkeeper
 
   devise_for :users, controllers: {
