@@ -43,25 +43,8 @@ class UsersController < ApplicationController
     raise Pundit::NotAuthorizedError if current_user.organisation_admin? &&
         ! current_user.organisation.subtree.map(&:id).include?(params[:user][:organisation_id].to_i)
 
-    @user.skip_reconfirmation!
-    if @user.update_attributes(user_params)
-      send_two_step_flag_notification(@user)
-
-      @user.application_permissions.reload
-      PermissionUpdater.perform_on(@user)
-
-      if email_change = @user.previous_changes[:email]
-        EventLog.record_email_change(@user, email_change.first, email_change.last, current_user)
-        @user.invite! if @user.invited_but_not_yet_accepted?
-        email_change.each do |to_address|
-          UserMailer.email_changed_by_admin_notification(@user, email_change.first, to_address).deliver_later
-        end
-      end
-
-      if role_change = @user.previous_changes[:role]
-        EventLog.record_role_change(@user, role_change.first, role_change.last, current_user)
-      end
-
+    updater = UserUpdate.new(@user, user_params, current_user)
+    if updater.update
       redirect_to users_path, notice: "Updated user #{@user.email} successfully"
     else
       render :edit
@@ -206,12 +189,6 @@ class UsersController < ApplicationController
       @users.includes(:organisation).find_each do |user|
         csv << presenter.row(user)
       end
-    end
-  end
-
-  def send_two_step_flag_notification(user)
-    if user.send_two_step_flag_notification?
-      UserMailer.two_step_flagged(user).deliver_later
     end
   end
 
