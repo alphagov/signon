@@ -1,8 +1,48 @@
 #!/usr/bin/env ruby
 require_relative "../config/environment"
 
-def config_for_app(application_config_file)
-  lines = IO.read(application_config_file).split("\n")
+def application_repo_name(application)
+  case application.name
+  when /Contacts/i
+    "contacts-admin"
+  when /Content API/i
+    "govuk_content_api"
+  else
+    application.name.downcase.gsub(/\s/, '-')
+  end
+end
+
+def env_var_directory_name(application)
+  if application.name =~ /Content API/i
+    "contentapi"
+  else
+    application.name.downcase.gsub(/\s/, '-')
+  end
+end
+
+def env_var_path_for_app(application)
+  "/etc/govuk/#{env_var_directory_name(application)}/env.d"
+end
+
+def config_path_for_app(application)
+  if application.name =~ /Content API/i
+    "../../#{application_repo_name(application)}/config/gds_sso_config.rb"
+  else
+    "../../#{application_repo_name(application)}/config/initializers/gds-sso.rb"
+  end
+end
+
+def env_var_values_for_app(oauth_id_file:, oauth_secret_file:)
+  oauth_id = File.read(oauth_id_file)
+  oauth_secret = File.read(oauth_secret_file)
+  {
+    oauth_id: oauth_id,
+    oauth_secret: oauth_secret,
+  }
+end
+
+def config_values_for_app(config_file:)
+  lines = File.read(config_file).split("\n")
   config = {}
   lines.each do |line|
     next if line =~ Regexp.new(Regexp.escape("GDS::SSO.config do |config|"))
@@ -16,52 +56,70 @@ def config_for_app(application_config_file)
       value = /\|\| ["|'](.+)["|']/.match(line).to_a[1]
     else
       # We've got a line like this:
-      #   config.oauth_id     = 'an_oauth_id'
+      #   config.oauth_id     = "an_oauth_id"
       # so extract "an_oauth_id":
       value = /=[\s]+?['|"]([^'"]+)['|"]/.match(line).to_a[1]
     end
-    config[key] = value
+    config[key.to_sym] = value unless key.nil?
   end
   config
 end
 
+def update_application(application:, oauth_id:, oauth_secret:, type:)
+  application.redirect_uri = deverise_uri(application.redirect_uri)
+  application.home_uri     = deverise_uri(application.home_uri)
+  application.uid          = oauth_id
+  application.secret       = oauth_secret
+  update_type = if type == :env_var
+    "environment variables"
+  else
+    "gds-sso config file"
+  end
+  puts "Updating application #{application.name} from #{update_type}"
+  begin
+    application.save!
+  rescue ActiveRecord::RecordInvalid => e
+    puts "ERROR Failed to update #{application.name} because: #{e.message}"
+  end
+end
+
 def deverise_uri(uri)
-  uri.gsub(/[a-z]*.alphagov.co.uk/, "dev.gov.uk").gsub(/https:/, "http:")
-end
-
-def application_repo_name(application)
-  if application.name =~ /Content API/i
-    "govuk_content_api"
-  else
-    application.name.downcase.gsub(/\s/, '-')
-  end
-end
-
-def config_path_for_app(application)
-  if application.name =~ /Content API/i
-    "../#{application_repo_name(application)}/config/gds_sso_config.rb"
-  else
-    "../#{application_repo_name(application)}/config/initializers/gds-sso.rb"
-  end
+  uri.gsub(".integration.publishing.service.gov.uk", ".dev.gov.uk").gsub(/https:/, "http:")
 end
 
 puts "Updating SSO config so that it works in development..."
-::Doorkeeper::Application.all.each do |application|
+applications = ::Doorkeeper::Application.where(retired: false)
+applications.each do |application|
+  env_var_path = env_var_path_for_app(application)
+  oauth_id_file = File.join(env_var_path, "OAUTH_ID")
+  oauth_secret_file = File.join(env_var_path, "OAUTH_SECRET")
   config_file = config_path_for_app(application)
-  if File.exists?(config_file)
-    local_config = config_for_app(config_file)
-
-    application.redirect_uri = deverise_uri(application.redirect_uri)
-    application.home_uri     = deverise_uri(application.home_uri)
-    application.uid          = local_config["oauth_id"]
-    application.secret       = local_config["oauth_secret"]
-    puts "Updating application #{application.name}"
-    begin
-      application.save!
-    rescue ActiveRecord::RecordInvalid => e
-      puts "ERROR Failed to update #{application.name} because: #{e.message}"
-    end
+  if File.exist?(oauth_id_file) && !File.zero?(oauth_id_file) &&
+     File.exist?(oauth_secret_file) && !File.zero?(oauth_secret_file)
+    # Get the OAuth credentials from the env vars
+    local_config = env_var_values_for_app(
+      oauth_id_file: oauth_id_file,
+      oauth_secret_file: oauth_secret_file
+    )
+    update_application(
+      application: application,
+      oauth_id: local_config[:oauth_id],
+      oauth_secret: local_config[:oauth_secret],
+      type: :env_var
+    )
+  elsif File.exist?(config_file)
+    # Get the OAuth credentials from the gds-sso config file
+    local_config = config_values_for_app(config_file: config_file)
+    update_application(
+      application: application,
+      oauth_id: local_config[:oauth_id],
+      oauth_secret: local_config[:oauth_secret],
+      type: :config_file
+    )
   else
-    puts "WARNING Skipping #{application.name}, as it doesn't use gds-sso, is not checked out or the repo isn't \"#{application_repo_name(application)}\"."
+    puts "INFO Skipping #{application.name}, as it doesn't use environment"\
+    " variables or gds-sso, is not checked out, the repo isn't"\
+    " \"#{application_repo_name(application)}\" or the env var directory isn't"\
+    " \"#{env_var_directory_name(application)}\"."
   end
 end
