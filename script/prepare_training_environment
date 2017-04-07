@@ -1,0 +1,180 @@
+#!/usr/bin/env ruby
+require_relative "../config/environment"
+
+# This script creates applications and users in the signon database to be
+# used for training purposes. Each application has its OAuth credentials set
+# from either its environment variables (set by puppet) or its gds-sso config
+# file. Users are also created with identical usernames and passwords.
+# All users have full access to all applications. Any existing data in the
+# signon database will be deleted.
+
+unless ARGV[0] == "--really-setup-training-environment"
+  puts "This script must be run with the --really-setup-training-environment argument"
+  exit
+end
+
+NUMBER_OF_USERS = 15.freeze
+USER_ENCRYPTED_PASSWORD = "03f37392c5421e274acec6bc9d8e9b10ba9d060e0dca91bb966f775f3400bb44d6c1ac9003e7a7929febf1a406c50372537f5cff5b966da1a06e6d965027d8fd".freeze
+USER_ENCRYPTED_PASSWORD_SALT = "oAh4_bcQxcaxydqas1r8".freeze
+TRAINING_APIS = [
+  {
+    directory_name: "asset-manager",
+    slug: "asset-manager",
+    name: "Asset Manager",
+    redirect_uri: "http://asset-manager.dev.gov.uk/auth/gds/callback",
+    home_uri: "http://asset-manager.dev.gov.uk/",
+    description: "Manage all the assets",
+    supported_permissions: []
+  },
+  {
+    directory_name: "govuk_content_api",
+    slug: "content-api",
+    name: "Content API",
+    redirect_uri: "http://contentapi.dev.gov.uk/notapplicable",
+    home_uri: "http://contentapi.dev.gov.uk/",
+    description: "API for content on GOV.UK",
+    supported_permissions: ["access_unpublished"]
+  },
+  {
+    directory_name: "publishing-api",
+    slug: "publishing-api",
+    name: "Publishing API",
+    redirect_uri: "http://publishing-api.dev.gov.uk/auth/gds/callback",
+    home_uri: "http://publishing-api.dev.gov.uk/",
+    description: "Central store for all publishing content on GOV.UK",
+    supported_permissions: ["view_all"]
+  }
+].freeze
+
+TRAINING_PUBLISHING_APPLICATIONS = [
+  {
+    directory_name: "manuals-publisher",
+    slug: "manuals-publisher",
+    name: "Manuals Publisher",
+    redirect_uri: "http://manuals-publisher.dev.gov.uk/auth/gds/callback",
+    home_uri: "http://manuals-publisher.dev.gov.uk/",
+    description: "Manuals Publisher publishes manuals",
+    supported_permissions: ["gds_editor"]
+  },
+  {
+    directory_name: "publisher",
+    slug: "publisher",
+    name: "Publisher",
+    redirect_uri: "http://publisher.dev.gov.uk/auth/gds/callback",
+    home_uri: "http://publisher.dev.gov.uk/",
+    description: "Publisher",
+    supported_permissions: ["force_publisher", "skip_review"]
+  },
+  {
+    directory_name: "specialist-publisher",
+    slug: "specialist-publisher",
+    name: "Specialist Publisher",
+    redirect_uri: "http://specialist-publisher.dev.gov.uk/auth/gds/callback",
+    home_uri: "http://specialist-publisher.dev.gov.uk/",
+    description: "Publisher tool for specialist documents",
+    supported_permissions: ["gds_editor"]
+  },
+  {
+    directory_name: "whitehall",
+    slug: "whitehall",
+    name: "Whitehall",
+    redirect_uri: "http://whitehall-admin.dev.gov.uk/auth/gds/callback",
+    home_uri: "http://whitehall-admin.dev.gov.uk/",
+    description: "Whitehall",
+    supported_permissions: ["GDS Editor"]
+  }
+].freeze
+
+puts "Reloading the database schema..."
+`bundle exec rake db:schema:load`
+
+puts "Creating applications and permissions..."
+(TRAINING_PUBLISHING_APPLICATIONS + TRAINING_APIS).each do |application|
+  application_root = "/var/govuk/#{application[:directory_name]}"
+  unless File.directory?(application_root)
+    puts "ERROR #{application[:name]} does not exist in #{application_root}"
+    next
+  end
+
+  doorkeeper_application = Doorkeeper::Application.create!(
+    name: application[:name],
+    redirect_uri: application[:redirect_uri],
+    home_uri: application[:home_uri],
+    description: application[:description]
+  )
+
+  application[:supported_permissions].each do |permission|
+    SupportedPermission.create!(
+      application_id: doorkeeper_application.id,
+      name: permission
+    )
+  end
+end
+
+puts "Creating organisation..."
+organisation = Organisation.create!(
+  slug: "cabinet-office",
+  name: "Cabinet Office",
+  organisation_type: "Ministerial department",
+  abbreviation: "CO",
+  content_id: "96ae61d6-c2a1-48cb-8e67-da9d105ae381"
+)
+
+puts "Creating and assigning permissions to users..."
+all_permissions = SupportedPermission.all
+(1..NUMBER_OF_USERS).each do |i|
+  name = "Training User #{i}"
+  email = "training-user-#{i}@digital.cabinet-office.gov.uk"
+  user = User.new(
+    name: name,
+    email: email,
+    password: USER_ENCRYPTED_PASSWORD,
+    password_confirmation: USER_ENCRYPTED_PASSWORD,
+    role: "normal",
+    organisation_id: organisation.id
+  )
+  user.skip_confirmation!
+  user.save!
+
+  all_permissions.each do |permission|
+    UserApplicationPermission.create!(
+      user_id: user.id,
+      application_id: permission.application_id,
+      supported_permission_id: permission.id
+    )
+  end
+end
+
+puts "Creating and assigning permissions to API users..."
+TRAINING_APIS.each do |api|
+  application = Doorkeeper::Application.where(name: api[:name]).first
+  token = "oauth-bearer-token-#{api[:slug]}"
+  name = "API access user for #{api[:name]}"
+  email = "#{api[:slug]}@digital.cabinet-office.gov.uk"
+  user = ApiUser.new(
+    name: name,
+    email: email,
+    password: USER_ENCRYPTED_PASSWORD,
+    password_confirmation: USER_ENCRYPTED_PASSWORD,
+    role: "normal"
+  )
+  user.skip_confirmation!
+  user.api_user = true
+  user.save!
+  user.grant_application_permissions(application, api[:supported_permissions])
+  authorisation = user.authorisations.build(expires_in: ApiUser::DEFAULT_TOKEN_LIFE)
+  authorisation.application_id = application.id
+  authorisation.save!
+  authorisation.token = token
+  authorisation.save!
+end
+
+puts "Munging user passwords..."
+ActiveRecord::Base.connection.execute(<<-EOQ)
+  UPDATE users SET
+  encrypted_password = #{ActiveRecord::Base.connection.quote(USER_ENCRYPTED_PASSWORD)},
+  password_salt = #{ActiveRecord::Base.connection.quote(USER_ENCRYPTED_PASSWORD_SALT)}
+EOQ
+
+puts "Fixing OAuth credentials..."
+`./make_oauth_work_in_dev`
