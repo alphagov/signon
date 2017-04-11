@@ -151,6 +151,7 @@ TRAINING_APIS.each do |api|
   token = "oauth-bearer-token-#{api[:slug]}"
   name = "API access user for #{api[:name]}"
   email = "#{api[:slug]}@digital.cabinet-office.gov.uk"
+  supported_permissions = api[:supported_permissions] + ["signin"]
   user = ApiUser.new(
     name: name,
     email: email,
@@ -161,7 +162,7 @@ TRAINING_APIS.each do |api|
   user.skip_confirmation!
   user.api_user = true
   user.save!
-  user.grant_application_permissions(application, api[:supported_permissions])
+  user.grant_application_permissions(application, supported_permissions)
   authorisation = user.authorisations.build(expires_in: ApiUser::DEFAULT_TOKEN_LIFE)
   authorisation.application_id = application.id
   authorisation.save!
