@@ -14,8 +14,8 @@ unless ARGV[0] == "--really-setup-training-environment"
 end
 
 NUMBER_OF_USERS = 15.freeze
-USER_ENCRYPTED_PASSWORD = "03f37392c5421e274acec6bc9d8e9b10ba9d060e0dca91bb966f775f3400bb44d6c1ac9003e7a7929febf1a406c50372537f5cff5b966da1a06e6d965027d8fd".freeze
-USER_ENCRYPTED_PASSWORD_SALT = "oAh4_bcQxcaxydqas1r8".freeze
+USER_ENCRYPTED_PASSWORD = "f50696281bcd7c0d21741e166ef8c2359033d4cb9bc7eb6297519575a8126cea1a299fdc6000487791cbd925151ffac86f860f2cedaf1655063f4c16e7442d31".freeze
+USER_ENCRYPTED_PASSWORD_SALT = "zfAeksQr_9W2E2KuuC9n".freeze
 TRAINING_APIS = [
   {
     directory_name: "asset-manager",
@@ -123,8 +123,8 @@ organisation = Organisation.create!(
 puts "Creating and assigning permissions to users..."
 all_permissions = SupportedPermission.all
 (1..NUMBER_OF_USERS).each do |i|
-  name = "Training User #{i}"
-  email = "training-user-#{i}@digital.cabinet-office.gov.uk"
+  name = "Sample User #{i}"
+  email = "sample-user-#{i}@digital.cabinet-office.gov.uk"
   user = User.new(
     name: name,
     email: email,
