@@ -13,7 +13,7 @@ gem 'deprecated_columns', '0.1.0'
 gem 'rails-html-sanitizer', '1.0.3'
 
 # This change was made via Snyk to fix a vulnerability
-gem 'nokogiri', '>= 1.7.0.1'
+gem 'nokogiri', '>= 1.7.2'
 
 gem 'airbrake', '3.1.15'
 gem 'plek', '1.7.0'
@@ -44,7 +44,7 @@ gem 'activejob-retry'
 
 gem 'redis', '3.2.1'
 
-gem 'zeroclipboard-rails'
+gem 'zeroclipboard-rails', '>= 0.1.2'
 
 gem 'rake', '10.4.1'
 
