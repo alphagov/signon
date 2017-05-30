@@ -15,6 +15,7 @@ class BatchInvitationsController < ApplicationController
   def create
     @batch_invitation = BatchInvitation.new(user: current_user, organisation_id: params[:batch_invitation][:organisation_id])
     @batch_invitation.supported_permission_ids = params[:user][:supported_permission_ids] if params[:user]
+    grant_default_permissions(@batch_invitation)
     authorize @batch_invitation
 
     unless file_uploaded?
@@ -68,6 +69,12 @@ class BatchInvitationsController < ApplicationController
       false
     else
       true
+    end
+  end
+
+  def grant_default_permissions(batch_invitation)
+    SupportedPermission.default.each do |default_permission|
+      batch_invitation.supported_permissions << default_permission
     end
   end
 end

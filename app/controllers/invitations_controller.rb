@@ -26,6 +26,7 @@ class InvitationsController < Devise::InvitationsController
 
       self.resource = resource_class.invite!(resource_params, current_inviter)
       if resource.errors.empty?
+        grant_default_permissions(self.resource)
         set_flash_message :notice, :send_instructions, email: self.resource.email
         respond_with resource, location: after_invite_path_for(resource)
       else
@@ -103,5 +104,11 @@ class InvitationsController < Devise::InvitationsController
 
   def update_resource_params
     resource_params
+  end
+
+  def grant_default_permissions(user)
+    SupportedPermission.default.each do |default_permission|
+      user.grant_permission(default_permission)
+    end
   end
 end

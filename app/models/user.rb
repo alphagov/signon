@@ -142,8 +142,12 @@ class User < ActiveRecord::Base
   def grant_application_permissions(application, supported_permission_names)
     supported_permission_names.map do |supported_permission_name|
       supported_permission = SupportedPermission.find_by_application_id_and_name(application.id, supported_permission_name)
-      application_permissions.where(supported_permission_id: supported_permission.id).first_or_create!
+      grant_permission(supported_permission)
     end
+  end
+
+  def grant_permission(supported_permission)
+    application_permissions.where(supported_permission_id: supported_permission.id).first_or_create!
   end
 
   # override Devise::Recoverable behavior to:

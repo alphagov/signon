@@ -41,6 +41,31 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
     assert_equal root_path, current_path
   end
 
+  should "batch invited users get default permissions even when not checked in UI" do
+    application = create(:application)
+    create(:supported_permission, application: application, name: 'reader', default: true)
+    support_app = create(:application, name: 'support', with_supported_permissions: ['signin'])
+    support_app.signin_permission.update_attributes(default: true)
+    user = create(:user_in_organisation, role: 'admin')
+
+    visit root_path
+    signin_with(user)
+
+    perform_enqueued_jobs do
+      visit new_batch_invitation_path
+      path = File.join(::Rails.root, "test", "fixtures", "users.csv")
+      attach_file("Choose a CSV file of users with names and email addresses", path)
+      uncheck "Has access to #{support_app.name}?"
+      check "Has access to #{application.name}?"
+      unselect 'reader', from: "Permissions for #{application.name}"
+      click_button "Create users and send emails"
+
+      invited_user = User.find_by_email("fred@example.com")
+      assert invited_user.has_access_to?(support_app)
+      assert invited_user.permissions_for(application).include? 'reader'
+    end
+  end
+
   def perform_batch_invite_with_user(user, application)
     perform_enqueued_jobs do
       visit root_path
