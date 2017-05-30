@@ -3,22 +3,13 @@ namespace :users do
   task create: :environment do
     raise "Requires name, email and applications specified in environment" unless ENV['name'] && ENV['email'] && ENV['applications']
 
-    applications = ENV['applications'].split(',').uniq.map do |application_name|
-      Doorkeeper::Application.find_by_name!(application_name)
-    end
+    user_creator = UserCreator.new(ENV['name'], ENV['email'], ENV['applications'])
+    user_creator.create_user!
 
-    user = User.invite!(name: ENV['name'].dup, email: ENV['email'].dup)
-    permissions = ENV.fetch('permissions', '').split(',').uniq
-
-    applications.each do |application|
-      user.grant_application_permission(application, 'signin')
-    end
-
-    invitation_url = "#{Plek.current.find('signon')}/users/invitation/accept?invitation_token=#{user.raw_invitation_token}"
-    puts "User created: user.name <#{user.name}>"
-    puts "              user.email <#{user.email}>"
-    puts "              signin permissions for: '#{applications.map(&:name).join("', '")}' "
-    puts "              follow this link to set a password: #{invitation_url}"
+    puts "User created: user.name <#{user_creator.user.name}>"
+    puts "              user.email <#{user_creator.user.email}>"
+    puts "              signin permissions for: '#{user_creator.applications.map(&:name).join("', '")}' "
+    puts "              follow this link to set a password: #{user_creator.invitation_url}"
   end
 
   desc "Remind users that their account will get suspended"
