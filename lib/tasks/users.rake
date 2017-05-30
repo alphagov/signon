@@ -113,4 +113,9 @@ namespace :users do
 
     UserPermissionMigrator.migrate(source: source_application, target: target_application)
   end
+
+  desc "Add permission for a given app to all users"
+  task :bulk_add_permission, [:permission, :application] => :envuronment do
+    UserPermissionsBulkGranter.new(args[:application]).grant!(args[:permission])
+  end
 end
