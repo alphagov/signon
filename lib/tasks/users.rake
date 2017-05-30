@@ -11,10 +11,6 @@ namespace :users do
     permissions = ENV.fetch('permissions', '').split(',').uniq
 
     applications.each do |application|
-      unsupported_permissions = permissions - application.supported_permission_strings
-      if unsupported_permissions.any?
-        raise UnsupportedPermissionError, "Cannot grant '#{unsupported_permissions.join("', '")}' permission(s), they are not supported by the '#{application.name}' application"
-      end
       user.grant_application_permission(application, 'signin')
     end
 
