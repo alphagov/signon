@@ -12,6 +12,8 @@ module Signon
     ENV.fetch("SIGNONOTRON2_DB_ADAPTER", "mysql") == "mysql"
   end
 
+  mattr_accessor :default_permissions_for_all_users
+
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers

@@ -32,14 +32,16 @@ class UserCreatorTest < ActiveSupport::TestCase
     assert user_creator.user.has_access_to? app_erator
   end
 
-  test 'it grants "signin" permission to the support app, even if not supplied' do
-    support_app = FactoryGirl.create(:application, name: 'support', with_supported_permissions: ['signin'])
+  test 'it grants all default permissions, even if not signin' do
     app_o_tron = FactoryGirl.create(:application, name: 'app-o-tron', with_supported_permissions: ['signin'])
+    app_erator = FactoryGirl.create(:application, name: 'app-erator', with_supported_permissions: %w(signin bounce))
+    Signon.add_default_permission('app-erator', 'bounce')
     user_creator = UserCreator.new('Alicia', 'alicia@example.com', 'app-o-tron')
 
     user_creator.create_user!
 
     assert user_creator.user.has_access_to? app_o_tron
-    assert user_creator.user.has_access_to? support_app
+    refute user_creator.user.has_access_to? app_erator
+    assert user_creator.user.permissions_for(app_erator).include? 'bounce'
   end
 end

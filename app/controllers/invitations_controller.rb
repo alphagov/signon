@@ -105,9 +105,8 @@ class InvitationsController < Devise::InvitationsController
   end
 
   def grant_default_permissions(user)
-    support_application = ::Doorkeeper::Application.find_by(name: 'support')
-    if support_application.present?
-      user.grant_application_permission(support_application, 'signin')
+    Signon.default_permissions_for_all_users.each do |default_permission|
+      user.grant_permission(default_permission)
     end
   end
 end

@@ -10,14 +10,13 @@ class UserCreator
   end
 
   def applications
-    @applications ||= (extract_applications_from_names + default_applications).uniq
+    @applications ||= extract_applications_from_names
   end
 
   def create_user!
     @user = User.invite!(name: name, email: email)
-    applications.each do |application|
-      @user.grant_application_permission(application, 'signin')
-    end
+    grant_requested_signin_permissions
+    grant_default_permissions
   end
 
   def invitation_url
@@ -34,7 +33,15 @@ private
     end
   end
 
-  def default_applications
-    ['support'].map { |default_app| ::Doorkeeper::Application.find_by(name: default_app) }.compact
+  def grant_requested_signin_permissions
+    applications.each do |application|
+      user.grant_application_permission(application, 'signin')
+    end
+  end
+
+  def grant_default_permissions
+    Signon.default_permissions_for_all_users.each do |default_permission|
+      user.grant_permission(default_permission)
+    end
   end
 end

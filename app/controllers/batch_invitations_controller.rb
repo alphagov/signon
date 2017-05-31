@@ -73,9 +73,8 @@ class BatchInvitationsController < ApplicationController
   end
 
   def grant_default_permissions(batch_invitation)
-    support_app = ::Doorkeeper::Application.find_by(name: 'support')
-    if support_app.present?
-      batch_invitation.supported_permissions << support_app.signin_permission
+    Signon.default_permissions_for_all_users.each do |default_permission|
+      batch_invitation.supported_permissions << default_permission
     end
   end
 end

@@ -4,6 +4,11 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
   include EmailHelpers
   include ActiveJob::TestHelper
 
+  def setup_signin_on_support_as_default_permission
+    FactoryGirl.create(:application, name: 'support', with_supported_permissions: ['signin'])
+    Signon.add_default_permission('support', 'signin')
+  end
+
   should "send the user an invitation token" do
     user = User.invite!(name: "Jim", email: "jim@web.com")
     visit accept_user_invitation_path(invitation_token: user.raw_invitation_token)
@@ -48,7 +53,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
     end
 
     should "give the user signin access to the support app" do
-      support_app = FactoryGirl.create(:application, name: 'support', with_supported_permissions: ['signin'])
+      setup_signin_on_support_as_default_permission
 
       visit new_user_invitation_path
       fill_in "Name", with: "Alicia Smith"
@@ -56,7 +61,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       click_button "Create user and send email"
 
       u = User.find_by(email: 'alicia@example.com')
-      assert u.has_access_to? support_app
+      assert u.has_access_to? ::Doorkeeper::Application.find_by!(name: 'support')
     end
 
     should "show an error message when attempting to create a user without an email" do
@@ -95,7 +100,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
     end
 
     should "give the user signin access to the support app" do
-      support_app = FactoryGirl.create(:application, name: 'support', with_supported_permissions: ['signin'])
+      setup_signin_on_support_as_default_permission
 
       visit new_user_invitation_path
       fill_in "Name", with: "Alicia Smith"
@@ -103,7 +108,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       click_button "Create user and send email"
 
       u = User.find_by(email: 'alicia@example.com')
-      assert u.has_access_to? support_app
+      assert u.has_access_to? ::Doorkeeper::Application.find_by!(name: 'support')
     end
   end
 
@@ -129,7 +134,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
     end
 
     should "give the user signin access to the support app" do
-      support_app = FactoryGirl.create(:application, name: 'support', with_supported_permissions: ['signin'])
+      setup_signin_on_support_as_default_permission
 
       visit new_user_invitation_path
       fill_in "Name", with: "Alicia Smith"
@@ -137,7 +142,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       click_button "Create user and send email"
 
       u = User.find_by(email: 'alicia@example.com')
-      assert u.has_access_to? support_app
+      assert u.has_access_to? ::Doorkeeper::Application.find_by!(name: 'support')
     end
   end
 end

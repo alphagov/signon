@@ -3,7 +3,6 @@ require 'test_helper'
 class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper
 
-
   should "admin user can create users whose details are specified in a CSV file" do
     application = create(:application)
     user = create(:user, role: "admin")
@@ -22,6 +21,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
   should "batch invited users get signin access to 'support' app even when not checked in UI" do
     application = create(:application)
     support_application = create(:application, name: 'support', with_supported_permissions: ['signin'])
+    Signon.add_default_permission('support', 'signin')
     user = create(:user_in_organisation, role: 'admin')
 
     visit root_path
