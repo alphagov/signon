@@ -30,4 +30,62 @@ describe OrganisationPolicy do
       expect(subject).not_to permit(organisation_admin, build(:organisation))
     end
   end
+
+  describe described_class::Scope do
+    let!(:org_root_one) { create(:organisation) }
+    let!(:org_root_one_child_one) { create(:organisation, parent: org_root_one) }
+    let!(:org_root_one_child_two) { create(:organisation, parent: org_root_one) }
+    let!(:org_root_one_grandchild_one) { create(:organisation, parent: org_root_one_child_one) }
+    let!(:org_root_two) { create(:organisation) }
+    let!(:org_root_two_child_one) { create(:organisation, parent: org_root_two) }
+    subject { described_class.new(user, Organisation.all) }
+    let(:resolved_scope) { subject.resolve }
+
+    context 'for super admins' do
+      let(:user) { create(:superadmin_user) }
+
+      it 'includes all organisations' do
+        expect(resolved_scope).to include(org_root_one)
+        expect(resolved_scope).to include(org_root_one_child_one)
+        expect(resolved_scope).to include(org_root_one_child_two)
+        expect(resolved_scope).to include(org_root_one_grandchild_one)
+        expect(resolved_scope).to include(org_root_two)
+        expect(resolved_scope).to include(org_root_two_child_one)
+      end
+    end
+
+    context 'for admins' do
+      let(:user) { create(:admin_user) }
+
+      it 'includes all organisations' do
+        expect(resolved_scope).to include(org_root_one)
+        expect(resolved_scope).to include(org_root_one_child_one)
+        expect(resolved_scope).to include(org_root_one_child_two)
+        expect(resolved_scope).to include(org_root_one_grandchild_one)
+        expect(resolved_scope).to include(org_root_two)
+        expect(resolved_scope).to include(org_root_two_child_one)
+      end
+    end
+
+    context 'for org admins' do
+      let(:user) { create(:organisation_admin, organisation: org_root_one) }
+
+      it 'includes only organisations within their orgs subtree' do
+        expect(resolved_scope).to include(org_root_one)
+        expect(resolved_scope).to include(org_root_one_child_one)
+        expect(resolved_scope).to include(org_root_one_child_two)
+        expect(resolved_scope).to include(org_root_one_grandchild_one)
+        expect(resolved_scope).not_to include(org_root_two)
+        expect(resolved_scope).not_to include(org_root_two_child_one)
+      end
+    end
+
+    context 'for normal users' do
+      let(:user) { create(:user) }
+
+      it 'is empty' do
+        expect(resolved_scope).to be_empty
+      end
+    end
+  end
 end

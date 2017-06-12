@@ -17,7 +17,7 @@ class OrganisationPolicy < BasePolicy
       elsif current_user.admin? || current_user.superadmin?
         scope.all
       else
-        []
+        scope.none
       end
     end
   end
