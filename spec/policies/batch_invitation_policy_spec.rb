@@ -9,17 +9,16 @@ describe BatchInvitationPolicy do
       expect(subject).to permit(create(:user_in_organisation, role: 'admin'), BatchInvitation.new)
     end
 
-    context 'organisation admin' do
-      let(:organisation_admin) { create(:user_in_organisation, role: 'organisation_admin') }
+    it 'is forbidden for organisation admins to create new batch uploads even within their organisation subtree' do
+      organisation_admin = create(:user_in_organisation, role: 'organisation_admin')
 
-      it 'allows new batch upload for organisations within their organisation subtree' do
-        expect(subject).to permit(organisation_admin, BatchInvitation.new(organisation_id: organisation_admin.organisation_id))
-      end
+      expect(subject).not_to permit(organisation_admin, BatchInvitation.new)
+      expect(subject).not_to permit(organisation_admin, BatchInvitation.new(organisation_id: create(:organisation).id))
+      expect(subject).not_to permit(organisation_admin, BatchInvitation.new(organisation_id: organisation_admin.organisation_id))
+    end
 
-      it 'blocks batch upload for organisations outside their organisation subtree' do
-        expect(subject).not_to permit(create(:user_in_organisation, role: 'organisation_admin'), BatchInvitation.new)
-        expect(subject).not_to permit(create(:user_in_organisation, role: 'organisation_admin'), BatchInvitation.new(organisation_id: create(:organisation).id))
-      end
+    it 'is forbidden for normal users' do
+      expect(subject).not_to permit(create(:user), BatchInvitation.new)
     end
   end
 end

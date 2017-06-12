@@ -3,8 +3,26 @@ require 'rails_helper'
 describe UserPolicy do
   subject { described_class }
 
-  [:new?, :index?].each do |permission_name|
-    permissions permission_name do
+  permissions :index? do
+    it "is allowed for superadmins" do
+      expect(subject).to permit(build(:superadmin_user), User)
+    end
+
+    it "is allowed for admins" do
+      expect(subject).to permit(build(:admin_user), User)
+    end
+
+    it "is allowed for organisation admins" do
+      expect(subject).to permit(build(:organisation_admin), User)
+    end
+
+    it "is forbidden for normal users" do
+      expect(subject).not_to permit(build(:user), User)
+    end
+  end
+
+  [:new?, :assign_organisations?].each do |permission|
+    permissions permission do
       it "is allowed for superadmins" do
         expect(subject).to permit(build(:superadmin_user), User)
       end
@@ -13,11 +31,11 @@ describe UserPolicy do
         expect(subject).to permit(build(:admin_user), User)
       end
 
-      it "is allowed for organisation admins" do
-        expect(subject).to permit(build(:organisation_admin), User)
+      it "is forbidden for organisation admins" do
+        expect(subject).not_to permit(build(:organisation_admin), User)
       end
 
-      it "is forbidden for normal user" do
+      it "is forbidden for normal users" do
         expect(subject).not_to permit(build(:user), User)
       end
     end
@@ -54,6 +72,20 @@ describe UserPolicy do
         expect(subject).to permit(admin, build(:user))
       end
 
+      it "is forbidden for normal users accessing other normal users" do
+        normal_user = create(:user)
+        expect(subject).not_to permit(normal_user, build(:user))
+      end
+    end
+  end
+
+  org_admin_disallowed_actions = %i(
+    create?
+    assign_organisations?
+  )
+
+  (user_management_actions - org_admin_disallowed_actions).each do |allowed_org_admin_permission|
+    permissions allowed_org_admin_permission do
       it "is allowed for organisation admins accessing normal users within their organisation" do
         organisation_admin = create(:organisation_admin)
 
@@ -64,10 +96,19 @@ describe UserPolicy do
 
         expect(subject).to permit(organisation_admin, build(:user_in_organisation, organisation: organisation_admin.organisation))
       end
+    end
+  end
 
-      it "is forbidden for normal users accessing other normal users" do
-        normal_user = create(:user)
-        expect(subject).not_to permit(normal_user, build(:user))
+  org_admin_disallowed_actions.each do |disallowed_org_admin_permission|
+    permissions disallowed_org_admin_permission do
+      it "is forbidden for organisation admins even on normal users within their organisation" do
+        organisation_admin = create(:organisation_admin)
+
+        expect(subject).not_to permit(organisation_admin, build(:superadmin_user))
+        expect(subject).not_to permit(organisation_admin, build(:admin_user))
+        expect(subject).not_to permit(organisation_admin, build(:organisation_admin))
+        expect(subject).not_to permit(organisation_admin, build(:user_in_organisation))
+        expect(subject).not_to permit(organisation_admin, build(:user_in_organisation, organisation: organisation_admin.organisation))
       end
     end
   end

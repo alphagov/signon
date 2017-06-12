@@ -1,9 +1,16 @@
 class UserPolicy < BasePolicy
-  def new?
-    # invitations#new
+  def index?
     current_user.superadmin? || current_user.admin? || current_user.organisation_admin?
   end
-  alias_method :index?, :new?
+
+  def new? # invitations#new
+    current_user.superadmin? || current_user.admin?
+  end
+  alias_method :assign_organisations?, :new?
+
+  def create? # invitations#create
+    current_user.superadmin? || (current_user.admin? && !record.superadmin?)
+  end
 
   def edit?
     case current_user.role
@@ -13,12 +20,11 @@ class UserPolicy < BasePolicy
       !record.superadmin?
     when 'organisation_admin'
       allow_self_only ||
-        (record.normal? && belong_to_same_organisation_subtree?(current_user, record))
+        (record.normal? && record_in_own_organisation?)
     else # 'normal'
       false
     end
   end
-  alias_method :create?, :edit? # invitations#create
   alias_method :update?, :edit?
   alias_method :unlock?, :edit?
   alias_method :suspension?, :edit?
@@ -56,6 +62,10 @@ private
 
   def allow_self_only
     current_user.id == record.id
+  end
+
+  def record_in_own_organisation?
+    record.organisation && (record.organisation.id == current_user.organisation.id)
   end
 
   class Scope < ::BasePolicy::Scope
