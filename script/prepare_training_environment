@@ -27,15 +27,6 @@ TRAINING_APIS = [
     supported_permissions: []
   },
   {
-    directory_name: "govuk_content_api",
-    slug: "content-api",
-    name: "Content API",
-    redirect_uri: "http://contentapi.dev.gov.uk/notapplicable",
-    home_uri: "http://contentapi.dev.gov.uk/",
-    description: "API for content on GOV.UK",
-    supported_permissions: ["access_unpublished"]
-  },
-  {
     directory_name: "publishing-api",
     slug: "publishing-api",
     name: "Publishing API",
