@@ -64,6 +64,7 @@ Capybara.javascript_driver = :poltergeist
 
 require 'helpers/user_helpers'
 require 'helpers/email_helpers'
+require 'helpers/analytics_helpers'
 
 class ActiveRecord::Base
   mattr_accessor :shared_connection
@@ -82,6 +83,7 @@ class ActionDispatch::IntegrationTest
   include UserHelpers
   include EmailHelpers
   include ConfirmationTokenHelper
+  include AnalyticsHelpers
 
   def assert_response_contains(content)
     assert page.has_content?(content), "Expected to find '#{content}' in:\n#{page.text}"

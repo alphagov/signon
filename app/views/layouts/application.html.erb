@@ -34,6 +34,10 @@
     <%= link_to current_user.name, user_link_target %>
     &bull; <%= link_to 'Sign out', destroy_user_session_path %>
   <% end %>
+
+  <% content_for :before_pageview_js do %>
+    GOVUKAdmin.setDimension(8, "<%= current_user.organisation ? current_user.organisation.slug : '(not set)' %>")
+  <% end %>
 <% end %>
 
 <% content_for :content do %>

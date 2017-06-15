@@ -2,7 +2,8 @@ require 'test_helper'
 
 class SignInTest < ActionDispatch::IntegrationTest
   setup do
-    @user = create(:user, email: "email@example.com", password: "some passphrase with various $ymb0l$")
+    @organisation = create(:organisation, name: 'Ministry of Lindy-hop', slug: 'ministry-of-lindy-hop')
+    @user = create(:user_in_organisation, email: "email@example.com", password: "some passphrase with various $ymb0l$", organisation: @organisation)
   end
 
   should "display a confirmation for successful sign-ins" do
@@ -11,10 +12,44 @@ class SignInTest < ActionDispatch::IntegrationTest
     assert_response_contains("Signed in successfully.")
   end
 
+  should "send a GA event including the users org slug when successfully signed-in" do
+    use_javascript_driver
+    with_ga_enabled do
+      visit root_path
+      refute_dimension_is_set(8)
+
+      signin_with(email: 'email@example.com', password: "some passphrase with various $ymb0l$")
+      assert_dimension_is_set(8, with_value: 'ministry-of-lindy-hop')
+    end
+  end
+
+  should "send a GA event including '(not set)' for the org slug when the user has no org" do
+    use_javascript_driver
+    @user.update_attributes(organisation: nil)
+    with_ga_enabled do
+      visit root_path
+      refute_dimension_is_set(8)
+
+      signin_with(email: 'email@example.com', password: "some passphrase with various $ymb0l$")
+      assert_dimension_is_set(8, with_value: '(not set)')
+    end
+  end
+
   should "display a rejection for unsuccessful sign-ins" do
     visit root_path
     signin_with(email: "email@example.com", password: "some incorrect passphrase with various $ymb0l$")
     assert_response_contains("Invalid email or passphrase")
+  end
+
+  should "not send a GA event including the users org slug for unsuccessful sign-ins" do
+    use_javascript_driver
+    with_ga_enabled do
+      visit root_path
+      refute_dimension_is_set(8)
+
+      signin_with(email: "email@example.com", password: "some incorrect passphrase with various $ymb0l$")
+      refute_dimension_is_set(8)
+    end
   end
 
   should "display the same rejection for failed logins, empty passwords, and missing accounts" do
