@@ -5,19 +5,13 @@ def application_repo_name(application)
   case application.name
   when /Contacts/i
     "contacts-admin"
-  when /Content API/i
-    "govuk_content_api"
   else
     application.name.downcase.gsub(/\s/, '-')
   end
 end
 
 def env_var_directory_name(application)
-  if application.name =~ /Content API/i
-    "contentapi"
-  else
-    application.name.downcase.gsub(/\s/, '-')
-  end
+  application.name.downcase.gsub(/\s/, '-')
 end
 
 def env_var_path_for_app(application)
@@ -25,11 +19,7 @@ def env_var_path_for_app(application)
 end
 
 def config_path_for_app(application)
-  if application.name =~ /Content API/i
-    "../../#{application_repo_name(application)}/config/gds_sso_config.rb"
-  else
-    "../../#{application_repo_name(application)}/config/initializers/gds-sso.rb"
-  end
+  "../../#{application_repo_name(application)}/config/initializers/gds-sso.rb"
 end
 
 def env_var_values_for_app(oauth_id_file:, oauth_secret_file:)
