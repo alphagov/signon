@@ -23,6 +23,7 @@ class ActiveSupport::TestCase
     WebMock.reset!
     DatabaseCleaner.clean
     Mail::TestMailer.deliveries.clear
+    Signon.default_permissions_for_all_users = []
   end
 end
 
