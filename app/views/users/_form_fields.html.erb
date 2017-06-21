@@ -65,10 +65,12 @@
   </dl>
 <% end %>
 
-<p class="form-group">
-  <%= f.label :organisation_id, "Organisation" %><br />
-  <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control", 'data-module' => 'chosen' } %>
-</p>
+<% if policy(User).assign_organisations? %>
+  <p class="form-group">
+    <%= f.label :organisation_id, "Organisation" %><br />
+    <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control", 'data-module' => 'chosen' } %>
+  </p>
+<% end %>
 
 <h2 class="add-vertical-margins">Permissions</h2>
 

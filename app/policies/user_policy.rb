@@ -1,9 +1,16 @@
 class UserPolicy < BasePolicy
-  def new?
-    # invitations#new
+  def index?
     current_user.superadmin? || current_user.admin? || current_user.organisation_admin?
   end
-  alias_method :index?, :new?
+
+  def new? # invitations#new
+    current_user.superadmin? || current_user.admin?
+  end
+  alias_method :assign_organisations?, :new?
+
+  def create? # invitations#create
+    current_user.superadmin? || (current_user.admin? && !record.superadmin?)
+  end
 
   def edit?
     case current_user.role
@@ -12,40 +19,30 @@ class UserPolicy < BasePolicy
     when 'admin'
       !record.superadmin?
     when 'organisation_admin'
-      current_user.id == record.id ||
-        (record.normal? && belong_to_same_organisation_subtree?(current_user, record))
-    when 'normal'
+      allow_self_only ||
+        (record.normal? && record_in_own_organisation?)
+    else # 'normal'
       false
     end
   end
-  alias_method :create?, :edit? # invitations#create
   alias_method :update?, :edit?
   alias_method :unlock?, :edit?
   alias_method :suspension?, :edit?
   alias_method :resend?, :edit?
+  alias_method :event_logs?, :edit?
 
   def edit_email_or_passphrase?
-    current_user.id == record.id
+    allow_self_only
   end
-
-  def update_email?
-    current_user.id == record.id
-  end
-
-  def update_passphrase?
-    current_user.id == record.id
-  end
+  alias_method :update_email?, :edit_email_or_passphrase?
+  alias_method :update_passphrase?, :edit_email_or_passphrase?
 
   def cancel_email_change?
-    (current_user.id == record.id) || edit?
+    allow_self_only || edit?
   end
 
   def resend_email_change?
-    (current_user.id == record.id) || edit?
-  end
-
-  def event_logs?
-    current_user.normal? ? false : edit?
+    allow_self_only || edit?
   end
 
   def assign_role?
@@ -61,6 +58,16 @@ class UserPolicy < BasePolicy
   end
   alias_method :reset_two_step_verification?, :reset_2sv?
 
+private
+
+  def allow_self_only
+    current_user.id == record.id
+  end
+
+  def record_in_own_organisation?
+    record.organisation && (record.organisation.id == current_user.organisation.id)
+  end
+
   class Scope < ::BasePolicy::Scope
     def resolve
       if current_user.superadmin?
@@ -69,6 +76,8 @@ class UserPolicy < BasePolicy
         scope.web_users.where(role: %w(admin organisation_admin normal))
       elsif current_user.organisation_admin?
         scope.web_users.where(role: %w(organisation_admin normal)).where(organisation_id: current_user.organisation_id)
+      else
+        scope.none
       end
     end
   end

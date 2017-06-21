@@ -40,8 +40,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    raise Pundit::NotAuthorizedError if current_user.organisation_admin? &&
-        ! current_user.organisation.subtree.map(&:id).include?(params[:user][:organisation_id].to_i)
+    raise Pundit::NotAuthorizedError if params[:user][:organisation_id].present? && !policy(@user).assign_organisations?
 
     updater = UserUpdate.new(@user, user_params, current_user)
     if updater.update
