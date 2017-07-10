@@ -21,8 +21,8 @@ TRAINING_APIS = [
     directory_name: "asset-manager",
     slug: "asset-manager",
     name: "Asset Manager",
-    redirect_uri: "http://asset-manager.dev.gov.uk/auth/gds/callback",
-    home_uri: "http://asset-manager.dev.gov.uk/",
+    redirect_uri: "https://asset-manager.training.publishing.service.gov.uk/auth/gds/callback",
+    home_uri: "https://asset-manager.training.publishing.service.gov.uk/",
     description: "Manage all the assets",
     supported_permissions: []
   },
@@ -30,8 +30,8 @@ TRAINING_APIS = [
     directory_name: "publishing-api",
     slug: "publishing-api",
     name: "Publishing API",
-    redirect_uri: "http://publishing-api.dev.gov.uk/auth/gds/callback",
-    home_uri: "http://publishing-api.dev.gov.uk/",
+    redirect_uri: "https://publishing-api.training.publishing.service.gov.uk/auth/gds/callback",
+    home_uri: "https://publishing-api.training.publishing.service.gov.uk/",
     description: "Central store for all publishing content on GOV.UK",
     supported_permissions: ["view_all"]
   }
@@ -42,8 +42,8 @@ TRAINING_PUBLISHING_APPLICATIONS = [
     directory_name: "manuals-publisher",
     slug: "manuals-publisher",
     name: "Manuals Publisher",
-    redirect_uri: "http://manuals-publisher.dev.gov.uk/auth/gds/callback",
-    home_uri: "http://manuals-publisher.dev.gov.uk/",
+    redirect_uri: "https://manuals-publisher.training.publishing.service.gov.uk/auth/gds/callback",
+    home_uri: "https://manuals-publisher.training.publishing.service.gov.uk/",
     description: "Manuals Publisher publishes manuals",
     supported_permissions: ["gds_editor"]
   },
@@ -51,8 +51,8 @@ TRAINING_PUBLISHING_APPLICATIONS = [
     directory_name: "publisher",
     slug: "publisher",
     name: "Publisher",
-    redirect_uri: "http://publisher.dev.gov.uk/auth/gds/callback",
-    home_uri: "http://publisher.dev.gov.uk/",
+    redirect_uri: "https://publisher.training.publishing.service.gov.uk/auth/gds/callback",
+    home_uri: "https://publisher.training.publishing.service.gov.uk/",
     description: "Publisher",
     supported_permissions: ["force_publisher", "skip_review"]
   },
@@ -60,8 +60,8 @@ TRAINING_PUBLISHING_APPLICATIONS = [
     directory_name: "specialist-publisher",
     slug: "specialist-publisher",
     name: "Specialist Publisher",
-    redirect_uri: "http://specialist-publisher.dev.gov.uk/auth/gds/callback",
-    home_uri: "http://specialist-publisher.dev.gov.uk/",
+    redirect_uri: "https://specialist-publisher.training.publishing.service.gov.uk/auth/gds/callback",
+    home_uri: "https://specialist-publisher.training.publishing.service.gov.uk/",
     description: "Publisher tool for specialist documents",
     supported_permissions: ["gds_editor"]
   },
@@ -69,8 +69,8 @@ TRAINING_PUBLISHING_APPLICATIONS = [
     directory_name: "whitehall",
     slug: "whitehall",
     name: "Whitehall",
-    redirect_uri: "http://whitehall-admin.dev.gov.uk/auth/gds/callback",
-    home_uri: "http://whitehall-admin.dev.gov.uk/",
+    redirect_uri: "https://whitehall-admin.training.publishing.service.gov.uk/auth/gds/callback",
+    home_uri: "https://whitehall-admin.training.publishing.service.gov.uk/",
     description: "Whitehall",
     supported_permissions: ["GDS Editor"]
   }
