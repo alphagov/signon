@@ -10,7 +10,7 @@ class UserUpdate
   def update
     user.skip_reconfirmation!
     old_permissions = fetch_user_permissions
-    return unless user.update_attributes(user_params)
+    return unless update_user
     user.application_permissions.reload
 
     record_update
@@ -23,6 +23,49 @@ class UserUpdate
   end
 
 private
+
+  class SupportedPermissionsSanitizer
+    attr_reader :current_user, :user, :param_set
+    def initialize(current_user, user, param_set)
+      @current_user = current_user
+      @user = user
+      @param_set = param_set
+    end
+
+    def sanitized_supported_permission_ids
+      # any permissions not in "attempting_to_add" should be removed if we're
+      # allowed to manipulate them
+      allowed_to_be_removed = authorised_supported_permission_ids - attempting_to_set_supported_permission_ids
+      # any permissions in "attempting_to_add" should be added if they're in the
+      # set we're allowed to manipulate
+      allowed_to_be_added = attempting_to_set_supported_permission_ids & authorised_supported_permission_ids
+
+      (existing_supported_permission_ids - allowed_to_be_removed) | allowed_to_be_added
+    end
+
+  private
+
+    def authorised_supported_permission_ids
+      @authorised_supported_permissions ||= Pundit.policy_scope(current_user, SupportedPermission).pluck(:id).map(&:to_s)
+    end
+
+    def existing_supported_permission_ids
+      @existing_supported_permission_ids ||= user.supported_permission_ids.map(&:to_s)
+    end
+
+    def attempting_to_set_supported_permission_ids
+      @attempting_to_set_supported_permission_ids ||= param_set.fetch(:supported_permission_ids, []).map(&:to_s)
+    end
+  end
+
+  def sanitised_user_params
+    sanitizer = SupportedPermissionsSanitizer.new(current_user, user, user_params)
+    user_params.merge(supported_permission_ids: sanitizer.sanitized_supported_permission_ids)
+  end
+
+  def update_user
+    user.update_attributes(sanitised_user_params)
+  end
 
   def record_permission_changes(old_permissions)
     new_permissions = fetch_user_permissions

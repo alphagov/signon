@@ -3,7 +3,7 @@ require 'test_helper'
 class UserUpdateTest < ActionView::TestCase
   should "record an event" do
     affected_user = create(:user)
-    current_user = create(:user)
+    current_user = create(:superadmin_user)
 
     UserUpdate.new(affected_user, {}, current_user).update
 
@@ -11,7 +11,7 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "records permission changes" do
-    current_user = create(:user)
+    current_user = create(:superadmin_user)
 
     affected_user = create(:user)
     app = create(:application, name: "App", with_supported_permissions: ["Editor", "signin", "Something Else"])
