@@ -10,7 +10,7 @@ class UserUpdate
   def update
     user.skip_reconfirmation!
     old_permissions = fetch_user_permissions
-    return unless user.update_attributes(user_params)
+    return unless update_user
     user.application_permissions.reload
 
     record_update
@@ -23,6 +23,15 @@ class UserUpdate
   end
 
 private
+
+  def filtered_user_params
+    filter = SupportedPermissionParameterFilter.new(current_user, user, user_params)
+    user_params.merge(supported_permission_ids: filter.filtered_supported_permission_ids)
+  end
+
+  def update_user
+    user.update_attributes(filtered_user_params)
+  end
 
   def record_permission_changes(old_permissions)
     new_permissions = fetch_user_permissions
