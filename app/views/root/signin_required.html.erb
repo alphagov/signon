@@ -1,0 +1,11 @@
+<h1>Sorry, you don't have permission to access <%= @application.present? ? @application.name : 'this application' %></h1>
+
+<p>Please contact your Delivery Manager or main GDS contact if you need access.</p>
+
+<p>If you think something is wrong, try <%= link_to "signing out", destroy_user_session_path %> and then
+  <%- if @application.present? -%>
+    <%= link_to 'back in', @application.home_uri -%>
+  <%- else -%>
+    back in
+  <%- end %>.</p>
+

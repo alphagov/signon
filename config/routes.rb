@@ -1,5 +1,7 @@
 Signon::Application.routes.draw do
-  use_doorkeeper
+  use_doorkeeper do
+    controllers authorizations: 'signin_required_authorizations'
+  end
 
   devise_for :users, controllers: {
     invitations: 'invitations',
@@ -63,6 +65,8 @@ Signon::Application.routes.draw do
   # Prototyping
   get '/phone-unavailable' => 'prototype#phone_unavailable'
   get '/recover-account'   => 'prototype#recover_account'
+
+  get '/signin-required' => 'root#signin_required'
 
   root to: 'root#index'
 end

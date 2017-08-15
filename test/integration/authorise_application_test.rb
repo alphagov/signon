@@ -3,7 +3,7 @@ require 'test_helper'
 class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
   setup do
     @app = create(:application, name: "MyApp")
-    @user = create(:user)
+    @user = create(:user, with_signin_permissions_for: [@app])
   end
 
   context "when the user is flagged for 2SV" do
@@ -59,7 +59,19 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     refute Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
   end
 
-  should "confirm the authorisation for a signed-in user" do
+  should "not confirm the authorisation if the user does not have 'signin' permission for the application" do
+    @user.application_permissions.where(supported_permission_id: @app.signin_permission).destroy_all
+
+    visit "/"
+    signin_with(@user)
+    ignoring_spurious_error do
+      visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
+    end
+    assert_response_contains("you don't have permission to access #{@app.name}")
+    refute Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
+  end
+
+  should "confirm the authorisation for a signed-in user with 'signin' permission to the app" do
     visit "/"
     signin_with(@user)
     ignoring_spurious_error do
