@@ -21,7 +21,7 @@
               <%= batch_invitation.batch_invitation_users.count %> users by <%= batch_invitation.user.name %> at <%= batch_invitation.created_at.to_s(:govuk_date) %>
             <% end %>
           </td>
-          <td><%= status_message(batch_invitation) %></td>
+          <td><%= batch_invite_status_message(batch_invitation) %></td>
         </tr>
       <% end %>
     </tbody>
