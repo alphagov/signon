@@ -44,6 +44,22 @@ ActiveRecord::Schema.define(version: 20171103151119) do
 
   add_index "batch_invitations", ["outcome"], name: "index_batch_invitations_on_outcome", using: :btree
 
+  create_table "bulk_grant_permission_set_application_permissions", force: :cascade do |t|
+    t.integer  "bulk_grant_permission_set_id", limit: 4, null: false
+    t.integer  "supported_permission_id",      limit: 4, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "bulk_grant_permission_set_application_permissions", ["bulk_grant_permission_set_id", "supported_permission_id"], name: "index_app_permissions_on_bulk_grant_permission_set", unique: true, using: :btree
+
+  create_table "bulk_grant_permission_sets", force: :cascade do |t|
+    t.integer  "user_id",    limit: 4,   null: false
+    t.string   "outcome",    limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "event_logs", force: :cascade do |t|
     t.string   "uid",              limit: 255, null: false
     t.datetime "created_at",                   null: false
