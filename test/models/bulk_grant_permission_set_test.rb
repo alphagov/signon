@@ -62,9 +62,27 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
       assert_equal %w(signin), orgadmin_user.permissions_for(@app)
     end
 
+    should "record the total number of users to be processed" do
+      create_list(:user, 4)
+
+      @permission_set.perform
+
+      # we created 4 but there's already one for the permission_set's own user
+      assert_equal 5, @permission_set.reload.total_users
+    end
+
     should "record the outcome against the BulkGrantPermissionSet" do
       @permission_set.perform
       assert_equal "success", @permission_set.outcome
+    end
+
+    should "record the total number of users that actually were processed" do
+      create_list(:user, 4)
+
+      @permission_set.perform
+
+      # we created 4 but there's already one for the permission_set's own user
+      assert_equal 5, @permission_set.reload.processed_users
     end
 
     should "not fail if a user already has one of the supplied permissions" do
@@ -87,12 +105,22 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
     end
 
     should "mark it as failed if there is an error during processing and pass the error on for the worker to record the error details" do
-      UserApplicationPermission.any_instance.expects(:save!).raises("ArbitraryError")
+      UserApplicationPermission.any_instance.stubs(:save!).raises("ArbitraryError")
 
       assert_raises RuntimeError, "ArbitraryError" do
         @permission_set.perform
       end
       assert_equal "fail", @permission_set.outcome
+    end
+
+    should "mark how many users it managed to process if it fails" do
+      create_list(:user, 4)
+      UserApplicationPermission.any_instance.stubs(:save!).returns(true).then.returns(true).then.raises("ArbitraryError")
+
+      assert_raises RuntimeError, "ArbitraryError" do
+        @permission_set.perform
+      end
+      assert_equal 2, @permission_set.reload.processed_users
     end
   end
 end

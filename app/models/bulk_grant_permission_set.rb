@@ -7,18 +7,27 @@ class BulkGrantPermissionSet < ActiveRecord::Base
   validates :outcome, inclusion: { in: %w(success fail), allow_nil: true }
   validate :must_have_at_least_one_supported_permission
 
+  def in_progress?
+    outcome.nil?
+  end
+
+  def successful?
+    outcome == 'success'
+  end
+
   def enqueue
     BulkGrantPermissionSetJob.perform_later(self.id)
   end
 
   def perform(_options = {})
+    self.update_column(:total_users, User.count)
     User.find_each do |user|
       supported_permissions.each do |permission|
         user.application_permissions.where(supported_permission_id: permission.id).first_or_create!
       end
+      self.class.increment_counter(:processed_users, self.id)
     end
-    self.outcome = "success"
-    self.save!
+    self.update_column(:outcome, "success")
   rescue StandardError
     self.update_column(:outcome, "fail")
     raise

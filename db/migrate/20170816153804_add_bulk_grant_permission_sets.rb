@@ -3,6 +3,8 @@ class AddBulkGrantPermissionSets < ActiveRecord::Migration
     create_table :bulk_grant_permission_sets do |t|
       t.belongs_to :user, null: false
       t.string :outcome
+      t.integer :processed_users, default: 0, null: false
+      t.integer :total_users, default: 0, null: false
       t.timestamps
     end
 
