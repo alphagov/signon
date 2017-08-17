@@ -1,0 +1,15 @@
+<% content_for :title, "Grant permissions to all users" %>
+
+<div class="page-title">
+  <h1>Grant permissions to all users</h1>
+</div>
+
+<div class="well">
+  <%= form_for @bulk_grant_permission_set do |f| %>
+    <h2>Permissions to grant</h2>
+
+    <%= render partial: "shared/user_permissions", locals: { user_object: User.new } %>
+
+    <%= f.submit "Grant permissions to all users", :class => 'btn btn-success' %>
+  <% end %>
+</div>

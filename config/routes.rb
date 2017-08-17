@@ -37,6 +37,7 @@ Signon::Application.routes.draw do
   resource :user, only: [:show]
 
   resources :batch_invitations, only: [:new, :create, :show]
+  resources :bulk_grant_permission_sets, only: [:new, :create, :show]
   resources :organisations, only: [:index]
   resources :suspensions, only: [:edit, :update]
 
