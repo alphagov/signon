@@ -14,10 +14,14 @@ class BulkGrantPermissionSetsController < ApplicationController
     @bulk_grant_permission_set.supported_permission_ids = params[:user][:supported_permission_ids] if params[:user]
     authorize @bulk_grant_permission_set
 
-    @bulk_grant_permission_set.save
-    @bulk_grant_permission_set.enqueue
-    flash[:notice] = "Scheduled grant of #{@bulk_grant_permission_set.supported_permission_ids.count} permissions to all users"
-    redirect_to bulk_grant_permission_set_path(@bulk_grant_permission_set)
+    if @bulk_grant_permission_set.save
+      @bulk_grant_permission_set.enqueue
+      flash[:notice] = "Scheduled grant of #{@bulk_grant_permission_set.supported_permission_ids.count} permissions to all users"
+      redirect_to bulk_grant_permission_set_path(@bulk_grant_permission_set)
+    else
+      flash.now[:alert] = "Couldn't schedule granting #{@bulk_grant_permission_set.supported_permission_ids.count} permissions to all users, please try again"
+      render :new
+    end
   end
 
   def show

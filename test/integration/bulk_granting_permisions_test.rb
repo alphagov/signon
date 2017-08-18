@@ -35,6 +35,20 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
     perform_bulk_grant_as_user(user, permissions)
   end
 
+  should "present errors when no permissions are selected to grant" do
+    user = create(:admin_user)
+
+    visit root_path
+    signin_with(user)
+
+    visit new_bulk_grant_permission_set_path
+
+    click_button "Grant permissions to all users"
+
+    assert_response_contains("Couldn't schedule granting 0 permissions to all users")
+    assert_response_contains("Supported permissions must not be blank. Choose at least one permission to grant to all users.")
+  end
+
   should "super organisation admin user can not grant multiple permissions to all users in one go" do
     user = create(:super_org_admin)
 

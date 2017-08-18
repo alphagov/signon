@@ -17,7 +17,7 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
     permission_set = build(:bulk_grant_permission_set, with_permissions: [])
 
     refute permission_set.valid?
-    assert_equal ["must add at least one permission to grant to all users"], permission_set.errors[:supported_permissions]
+    assert_equal ["must not be blank. Choose at least one permission to grant to all users."], permission_set.errors[:supported_permissions]
   end
 
   context "validating #outcome" do

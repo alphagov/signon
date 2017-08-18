@@ -36,6 +36,6 @@ class BulkGrantPermissionSet < ActiveRecord::Base
 private
 
   def must_have_at_least_one_supported_permission
-    errors.add(:supported_permissions, 'must add at least one permission to grant to all users') if bulk_grant_permission_set_application_permissions.size.zero?
+    errors.add(:supported_permissions, 'must not be blank. Choose at least one permission to grant to all users.') if bulk_grant_permission_set_application_permissions.size.zero?
   end
 end
