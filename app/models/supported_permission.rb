@@ -10,6 +10,7 @@ class SupportedPermission < ActiveRecord::Base
   default_scope { order(:name) }
   scope :delegatable, -> { where(delegatable: true) }
   scope :grantable_from_ui, -> { where(grantable_from_ui: true) }
+  scope :default, -> { where(default: true) }
 
 private
 

@@ -153,6 +153,7 @@ ActiveRecord::Schema.define(version: 20171103151119) do
     t.datetime "updated_at"
     t.boolean  "delegatable",                   default: false
     t.boolean  "grantable_from_ui",             default: true,  null: false
+    t.boolean  "default",                       default: false, null: false
   end
 
   add_index "supported_permissions", ["application_id", "name"], name: "index_supported_permissions_on_application_id_and_name", unique: true, using: :btree

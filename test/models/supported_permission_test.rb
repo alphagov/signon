@@ -27,4 +27,24 @@ class SupportedPermissionTest < ActiveSupport::TestCase
 
     assert_empty user.reload.application_permissions
   end
+
+  test 'we can find all the default permissions' do
+    application_one = create(:application)
+    permission_one = create(:supported_permission, application: application_one, name: 'writer')
+    permission_two = create(:supported_permission, application: application_one, name: 'reader', default: true)
+    permission_three = create(:supported_permission, application: application_one, name: 'critic')
+
+    application_two = create(:application)
+    application_two.signin_permission.update_attributes(default: true)
+    permission_four = create(:supported_permission, application: application_two, name: 'ignorer', default: true)
+
+    default_permissions = SupportedPermission.default
+    assert default_permissions.include? permission_two
+    assert default_permissions.include? permission_four
+    assert default_permissions.include? application_two.signin_permission
+
+    refute default_permissions.include? permission_one
+    refute default_permissions.include? permission_three
+    refute default_permissions.include? application_one.signin_permission
+  end
 end
