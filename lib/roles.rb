@@ -17,13 +17,15 @@ module Roles
 
   module ClassMethods
     def role_classes
-      (Roles.constants.select { |c| Class === Roles.const_get(c) }).map do |role_class|
+      class_names = Roles.constants.select { |c| Class === Roles.const_get(c) && Roles.const_get(c) != Roles::Base }
+
+      class_names.map do |role_class|
         "Roles::#{role_class}".constantize
       end
     end
 
     def admin_role_classes
-      role_classes - [Roles::Normal]
+      role_classes - [Roles::Normal, Roles::Base]
     end
 
     def roles

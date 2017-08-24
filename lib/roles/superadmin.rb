@@ -1,5 +1,5 @@
 module Roles
-  class Superadmin
+  class Superadmin < Base
     def self.permitted_user_params
       [
         :uid,

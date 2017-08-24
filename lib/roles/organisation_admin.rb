@@ -1,5 +1,5 @@
 module Roles
-  class OrganisationAdmin
+  class OrganisationAdmin < Base
     def self.permitted_user_params
       [
         :uid,
