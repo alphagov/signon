@@ -1,5 +1,5 @@
 module Roles
-  class OrganisationAdmin
+  class OrganisationAdmin < Base
     def self.permitted_user_params
       [
         :uid,
@@ -21,7 +21,7 @@ module Roles
     def self.level; 2; end
 
     def self.manageable_roles
-      ['normal']
+      %w{normal organisation_admin}
     end
   end
 end

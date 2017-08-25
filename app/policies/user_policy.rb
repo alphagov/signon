@@ -19,8 +19,7 @@ class UserPolicy < BasePolicy
     when 'admin'
       !record.superadmin?
     when 'organisation_admin'
-      allow_self_only ||
-        (record.normal? && record_in_own_organisation?)
+      allow_self_only || (can_manage? && record_in_own_organisation?)
     else # 'normal'
       false
     end
@@ -62,6 +61,10 @@ private
 
   def allow_self_only
     current_user.id == record.id
+  end
+
+  def can_manage?
+    Roles.const_get(current_user.role.classify).can_manage?(record.role)
   end
 
   def record_in_own_organisation?

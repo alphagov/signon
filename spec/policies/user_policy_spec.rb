@@ -2,164 +2,200 @@ require 'rails_helper'
 
 describe UserPolicy do
   subject { described_class }
+  let(:organisation_admin) { create(:organisation_admin) }
 
-  permissions :index? do
-    it "is allowed for superadmins" do
-      expect(subject).to permit(build(:superadmin_user), User)
-    end
+  primary_management_actions = [:new?, :assign_organisations?]
+  user_management_actions = [:edit?, :create?, :update?, :unlock?, :suspension?, :cancel_email_change?, :resend_email_change?, :event_logs?]
+  self_management_actions = [:edit_email_or_passphrase?, :update_email?, :update_passphrase?, :cancel_email_change?, :resend_email_change?]
+  superadmin_actions = [:assign_role?, :flag_2sv?, :reset_2sv?]
+  disallowed_actions_org_admin = [:create?, :assign_organisations?]
+  org_admin_actions = user_management_actions - disallowed_actions_org_admin
+  admin_actions = user_management_actions - self_management_actions
 
-    it "is allowed for admins" do
-      expect(subject).to permit(build(:admin_user), User)
-    end
-
-    it "is allowed for organisation admins" do
-      expect(subject).to permit(build(:organisation_admin), User)
-    end
-
-    it "is forbidden for normal users" do
-      expect(subject).not_to permit(build(:user), User)
-    end
-  end
-
-  [:new?, :assign_organisations?].each do |permission|
-    permissions permission do
+  context "for superadmins" do
+    permissions :index? do
       it "is allowed for superadmins" do
         expect(subject).to permit(build(:superadmin_user), User)
       end
+    end
 
+    primary_management_actions.each do |permission|
+      permissions permission do
+        it "is allowed for superadmins" do
+          expect(subject).to permit(build(:superadmin_user), User)
+        end
+      end
+    end
+
+    user_management_actions.each do |permission_name|
+      permissions permission_name do
+        it "is allowed for superadmins accessing any type of user" do
+          superadmin = create(:superadmin_user)
+
+          expect(subject).to permit(superadmin, build(:user))
+          expect(subject).to permit(superadmin, build(:organisation_admin))
+          expect(subject).to permit(superadmin, build(:admin_user))
+          expect(subject).to permit(superadmin, build(:superadmin_user))
+        end
+      end
+    end
+
+    superadmin_actions.each do |permission_name|
+      permissions permission_name do
+        it "is allowed only for superadmins" do
+          expect(subject).to permit(create(:superadmin_user), User)
+        end
+      end
+    end
+  end
+
+  context "for admins" do
+    permissions :index? do
       it "is allowed for admins" do
         expect(subject).to permit(build(:admin_user), User)
       end
+    end
 
-      it "is forbidden for organisation admins" do
-        expect(subject).not_to permit(build(:organisation_admin), User)
+    primary_management_actions.each do |permission|
+      permissions permission do
+        it "is allowed for admins" do
+          expect(subject).to permit(build(:admin_user), User)
+        end
       end
+    end
 
+    user_management_actions.each do |permission_name|
+      permissions permission_name do
+        it "is allowed for admins accessing users with equal or fewer priviledges" do
+          admin = create(:admin_user)
+
+          expect(subject).not_to permit(admin, build(:superadmin_user))
+          expect(subject).to permit(admin, build(:admin_user))
+          expect(subject).to permit(admin, build(:organisation_admin))
+          expect(subject).to permit(admin, build(:user))
+        end
+      end
+    end
+
+    superadmin_actions.each do |permission_name|
+      permissions permission_name do
+        it "is forbidden for admins" do
+          expect(subject).not_to permit(create(:admin_user), User)
+        end
+      end
+    end
+  end
+
+  context "for org admins" do
+    permissions :index? do
+      it "is allowed for organisation admins" do
+        expect(subject).to permit(build(:organisation_admin), User)
+      end
+    end
+
+    primary_management_actions.each do |permission|
+      permissions permission do
+        it "is forbidden for organisation admins" do
+          expect(subject).not_to permit(build(:organisation_admin), User)
+        end
+      end
+    end
+
+    disallowed_actions_org_admin.each do |disallowed_org_admin_permission|
+      permissions disallowed_org_admin_permission do
+        it "is forbidden for org admins to create any type of user or assign orgs to them" do
+          expect(subject).not_to permit(organisation_admin, build(:superadmin_user))
+          expect(subject).not_to permit(organisation_admin, build(:admin_user))
+          expect(subject).not_to permit(organisation_admin, build(:organisation_admin))
+          expect(subject).not_to permit(organisation_admin, build(:user_in_organisation))
+          expect(subject).not_to permit(organisation_admin, build(:user_in_organisation, organisation: organisation_admin.organisation))
+        end
+      end
+    end
+
+    org_admin_actions.each do |allowed_org_admin_permission|
+      permissions allowed_org_admin_permission do
+        it "is allowed for org admins to access normal users from within their own organisation" do
+          expect(subject).not_to permit(organisation_admin, build(:user_in_organisation))
+        end
+
+        it "is forbidden for org admins to access normal users from other organisations" do
+          expect(subject).to permit(organisation_admin, build(:user_in_organisation, organisation: organisation_admin.organisation))
+        end
+
+        it "is allowed for org admins to access org admins from within their own organisation" do
+          expect(subject).to permit(organisation_admin, build(:organisation_admin, organisation: organisation_admin.organisation))
+        end
+
+        it "is forbidden for org admins to access org admins from other organisations" do
+          expect(subject).to permit(organisation_admin, build(:organisation_admin, organisation: organisation_admin.organisation))
+        end
+
+        it "is forbidden for org admins to access superadmins and admin users from either their own or other organisations" do
+          expect(subject).not_to permit(organisation_admin, build(:superadmin_user))
+          expect(subject).not_to permit(organisation_admin, build(:admin_user))
+        end
+      end
+    end
+
+    superadmin_actions.each do |permission_name|
+      permissions permission_name do
+        it "is forbidden for organisation admins" do
+          expect(subject).not_to permit(create(:organisation_admin), User)
+        end
+      end
+    end
+  end
+
+  context "for normal users" do
+    permissions :index? do
       it "is forbidden for normal users" do
         expect(subject).not_to permit(build(:user), User)
       end
     end
-  end
 
-  user_management_actions = %i(
-    edit?
-    create?
-    update?
-    unlock?
-    suspension?
-    cancel_email_change?
-    resend_email_change?
-    event_logs?
-  )
-
-  user_management_actions.each do |permission_name|
-    permissions permission_name do
-      it "is allowed for superadmins accessing any type of user" do
-        superadmin = create(:superadmin_user)
-
-        expect(subject).to permit(superadmin, build(:user))
-        expect(subject).to permit(superadmin, build(:organisation_admin))
-        expect(subject).to permit(superadmin, build(:admin_user))
-        expect(subject).to permit(superadmin, build(:superadmin_user))
-      end
-
-      it "is allowed for admins accessing users with equal or fewer priviledges" do
-        admin = create(:admin_user)
-
-        expect(subject).not_to permit(admin, build(:superadmin_user))
-        expect(subject).to permit(admin, build(:admin_user))
-        expect(subject).to permit(admin, build(:organisation_admin))
-        expect(subject).to permit(admin, build(:user))
-      end
-
-      it "is forbidden for normal users accessing other normal users" do
-        normal_user = create(:user)
-        expect(subject).not_to permit(normal_user, build(:user))
+    primary_management_actions.each do |permission|
+      permissions permission do
+        it "is forbidden for normal users" do
+          expect(subject).not_to permit(build(:user), User)
+        end
       end
     end
-  end
 
-  org_admin_disallowed_actions = %i(
-    create?
-    assign_organisations?
-  )
-
-  (user_management_actions - org_admin_disallowed_actions).each do |allowed_org_admin_permission|
-    permissions allowed_org_admin_permission do
-      it "is allowed for organisation admins accessing normal users within their organisation" do
-        organisation_admin = create(:organisation_admin)
-
-        expect(subject).not_to permit(organisation_admin, build(:superadmin_user))
-        expect(subject).not_to permit(organisation_admin, build(:admin_user))
-        expect(subject).not_to permit(organisation_admin, build(:organisation_admin))
-        expect(subject).not_to permit(organisation_admin, build(:user_in_organisation))
-
-        expect(subject).to permit(organisation_admin, build(:user_in_organisation, organisation: organisation_admin.organisation))
+    user_management_actions.each do |permission_name|
+      permissions permission_name do
+        it "is forbidden for normal users accessing other normal users" do
+          normal_user = create(:user)
+          expect(subject).not_to permit(normal_user, build(:user))
+        end
       end
     end
-  end
 
-  org_admin_disallowed_actions.each do |disallowed_org_admin_permission|
-    permissions disallowed_org_admin_permission do
-      it "is forbidden for organisation admins even on normal users within their organisation" do
-        organisation_admin = create(:organisation_admin)
-
-        expect(subject).not_to permit(organisation_admin, build(:superadmin_user))
-        expect(subject).not_to permit(organisation_admin, build(:admin_user))
-        expect(subject).not_to permit(organisation_admin, build(:organisation_admin))
-        expect(subject).not_to permit(organisation_admin, build(:user_in_organisation))
-        expect(subject).not_to permit(organisation_admin, build(:user_in_organisation, organisation: organisation_admin.organisation))
+    self_management_actions.each do |permission_name|
+      permissions permission_name do
+        it "is allowed for normal users accessing their own record" do
+          normal_user = create(:user)
+          expect(subject).to permit(normal_user, normal_user)
+        end
       end
     end
-  end
 
-  self_management_actions = [:edit_email_or_passphrase?, :update_email?, :update_passphrase?, :cancel_email_change?, :resend_email_change?]
-  self_management_actions.each do |permission_name|
-    permissions permission_name do
-      it "is allowed for normal users accessing their own record" do
-        normal_user = create(:user)
-        expect(subject).to permit(normal_user, normal_user)
+    superadmin_actions.each do |permission_name|
+      permissions permission_name do
+        it "is forbidden for normal users" do
+          expect(subject).not_to permit(create(:user), User)
+        end
       end
     end
-  end
 
-  # Users shouldn't be able to do admin-only things to themselves
-  (user_management_actions - self_management_actions).each do |permission_name|
-    permissions permission_name do
-      it "is not allowed for normal users accessing their own record" do
-        normal_user = create(:user)
-        expect(subject).not_to permit(normal_user, normal_user)
+    # Users shouldn't be able to do admin-only things to themselves
+    admin_actions.each do |permission_name|
+      permissions permission_name do
+        it "is not allowed for normal users accessing their own record" do
+          normal_user = create(:user)
+          expect(subject).not_to permit(normal_user, normal_user)
+        end
       end
-    end
-  end
-
-  permissions :assign_role? do
-    it "is allowed only for superadmins" do
-      expect(subject).to permit(create(:superadmin_user), User)
-
-      expect(subject).not_to permit(create(:admin_user), User)
-      expect(subject).not_to permit(create(:organisation_admin), User)
-      expect(subject).not_to permit(create(:user), User)
-    end
-  end
-
-  permissions :flag_2sv? do
-    it "is only allowed for superadmins" do
-      expect(subject).to permit(build(:superadmin_user), User)
-
-      expect(subject).not_to permit(create(:admin_user), User)
-      expect(subject).not_to permit(create(:organisation_admin), User)
-      expect(subject).not_to permit(create(:user), User)
-    end
-  end
-
-  permissions :reset_2sv? do
-    it "is only allowed for superadmins" do
-      expect(subject).to permit(build(:superadmin_user), User)
-
-      expect(subject).not_to permit(create(:admin_user), User)
-      expect(subject).not_to permit(create(:organisation_admin), User)
-      expect(subject).not_to permit(create(:user), User)
     end
   end
 
