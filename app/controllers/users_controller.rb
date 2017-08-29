@@ -39,6 +39,10 @@ class UsersController < ApplicationController
     end
   end
 
+  def edit
+    @application_permissions = all_applications_and_permissions_for(@user)
+  end
+
   def update
     raise Pundit::NotAuthorizedError if params[:user][:organisation_id].present? && !policy(@user).assign_organisations?
 

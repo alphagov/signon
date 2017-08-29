@@ -72,6 +72,10 @@
   </p>
 <% end %>
 
-<h2 class="add-vertical-margins">Permissions</h2>
-
+<h2 class="add-vertical-margins"> <%= "Editable " if is_org_admin? %>Permissions</h2>
 <%= render partial: "shared/user_permissions", locals: { user_object: f.object }%>
+
+<% if is_org_admin? %>
+    <h2 class="add-vertical-margins">All Permissions for this user</h2>
+    <%= render partial: "app_permissions", locals: { user_object: f.object }%>
+<% end %>
