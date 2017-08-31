@@ -1,0 +1,34 @@
+<table id="all-permissions" class="table table-bordered table-striped table-on-white">
+  <thead>
+    <tr class="table-header">
+      <th>Application</th>
+      <% unless user_object.api_user? %>
+          <th>Has access?</th>
+      <% end %>
+      <th><%= "Other" unless user_object.api_user? %> Permissions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @application_permissions.each do |application, permissions|
+      permission_names = permissions.map(&:name)
+    %>
+      <tr>
+        <td>
+          <% if application.retired? %>
+              <del><%= application.name %></del>
+          <% else %>
+              <%= application.name %>
+          <% end %>
+        </td>
+        <% unless user_object.api_user? %>
+          <td>
+            <%= permission_names.include?('signin') ? 'Yes' : 'No' %>
+          </td>
+        <% end %>
+        <td>
+          <%= permission_names.reject{|p| p == 'signin'}.to_sentence %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
