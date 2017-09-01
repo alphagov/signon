@@ -104,4 +104,13 @@ class EventLogTest < ActiveSupport::TestCase
     assert_equal log.entry, EventLog::PASSPHRASE_RESET_REQUEST
     assert_not_nil log.created_at
   end
+
+  test "can record an account invitation" do
+    user = create(:user)
+    admin = create(:admin_user)
+
+    event_log = EventLog.record_account_invitation(user, admin)
+    assert_equal admin, event_log.initiator
+    assert_equal EventLog::ACCOUNT_INVITED, event_log.entry
+  end
 end

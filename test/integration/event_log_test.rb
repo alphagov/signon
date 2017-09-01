@@ -237,6 +237,38 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     assert page.has_content?("You do not have permission to perform this action")
   end
 
+  test "record user's login ip address" do
+    page.driver.options[:headers] = { 'REMOTE_ADDR' => '1.2.3.4' }
+    visit root_path
+    signin_with(@user)
+
+    ip_address = @user.event_logs.last.trailing_message.split.first
+    assert_equal '1.2.3.4', ip_address
+  end
+
+  test "record user's login browser" do
+    page.driver.header('User-agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36')
+    visit root_path
+    signin_with(@user)
+
+    browser_name = @user.event_logs.last.trailing_message.split.last
+    assert_equal "Chrome", browser_name
+  end
+
+  test "record who the account was created by" do
+    visit root_path
+    signin_with(@admin)
+    visit users_path
+    click_on "Create user"
+    fill_in 'Name', with: 'New User'
+    fill_in 'Email', with: 'test@test.com'
+    click_on "Create user and send email"
+
+    event_log = User.last.event_logs.first
+    assert_equal @admin, event_log.initiator
+    assert_equal EventLog::ACCOUNT_INVITED, event_log.entry
+  end
+
   def assert_account_access_log_page_content(user)
     assert_text 'Time'
     assert_text 'Event'
