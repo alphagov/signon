@@ -16,11 +16,20 @@ class SessionsController < Devise::SessionsController
 
   def log_event
     if current_user.present?
-      EventLog.record_event(current_user, EventLog::SUCCESSFUL_LOGIN)
+      EventLog.record_event(current_user, EventLog::SUCCESSFUL_LOGIN,
+                            trailing_message: user_ip_address + ' ' + user_browser)
     else
       # Call to_s to flatten out any unexpected params (eg a hash).
       user = User.find_by_email(params[:user][:email].to_s)
       EventLog.record_event(user, EventLog::UNSUCCESSFUL_LOGIN) if user
     end
+  end
+
+  def user_ip_address
+    request.remote_ip
+  end
+
+  def user_browser
+    browser.name
   end
 end

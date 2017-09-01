@@ -40,6 +40,7 @@ class EventLog < ActiveRecord::Base
     ACCOUNT_UPDATED                           = LogEntry.new(id: 34, description: "Account updated", require_initiator: true),
     PERMISSIONS_ADDED                         = LogEntry.new(id: 35, description: "Permissions added", require_initiator: true),
     PERMISSIONS_REMOVED                       = LogEntry.new(id: 36, description: "Permissions removed", require_initiator: true),
+    ACCOUNT_INVITED                           = LogEntry.new(id: 37, description: "Account was invited", require_initiator: true),
   ]
 
   EVENTS_REQUIRING_INITIATOR   = EVENTS.select(&:require_initiator?)
@@ -80,6 +81,10 @@ class EventLog < ActiveRecord::Base
 
   def self.record_role_change(user, previous_role, new_role, initiator)
     record_event(user, ROLE_CHANGED, initiator: initiator, trailing_message: "from #{previous_role} to #{new_role}")
+  end
+
+  def self.record_account_invitation(user, initiator)
+    record_event(user, ACCOUNT_INVITED, initiator: initiator)
   end
 
   def self.for(user)
