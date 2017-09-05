@@ -37,7 +37,7 @@ gem 'doorkeeper', '>= 4.2.0'
 gem 'ancestry', '2.0.0'
 
 gem 'gds-api-adapters', '20.1.1'
-gem 'statsd-ruby', '1.1.0'
+gem 'statsd-ruby', '~> 1.4'
 gem 'unicorn', '4.9.0'
 gem 'govuk_sidekiq', '0.0.3'
 gem 'activejob-retry'

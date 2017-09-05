@@ -308,7 +308,7 @@ GEM
       actionpack (>= 4.0)
       activesupport (>= 4.0)
       sprockets (>= 3.0.0)
-    statsd-ruby (1.1.0)
+    statsd-ruby (1.4.0)
     systemu (2.6.5)
     test_after_commit (1.1.0)
       activerecord (>= 3.2)
@@ -396,7 +396,7 @@ DEPENDENCIES
   sass-rails (~> 5.0.6)
   shoulda-context (= 1.2.1)
   sprockets-rails (~> 3.1.1)
-  statsd-ruby (= 1.1.0)
+  statsd-ruby (~> 1.4)
   test_after_commit
   timecop (= 0.7.1)
   uglifier (>= 3.0.4)
