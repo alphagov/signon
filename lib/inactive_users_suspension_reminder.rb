@@ -24,9 +24,9 @@ class InactiveUsersSuspensionReminder
         sleep(3) && retry if (tries -= 1) > 0
 
         Rails.logger.warn "#{self.class}: Failed to send suspension reminder email to #{user.email}."
-        notify_airbrake(e, user)
+        log_error(e, user)
       rescue => e
-        notify_airbrake(e, user)
+        log_error(e, user)
         begin
           Rails.logger.warn "#{self.class}: #{e.response.error.message} while sending email to #{user.email}."
         rescue NoMethodError
@@ -38,7 +38,7 @@ class InactiveUsersSuspensionReminder
 
 private
 
-  def notify_airbrake(e, user)
-    Airbrake.notify_or_ignore e, parameters: { receiver_email: user.email }
+  def log_error(e, user)
+    GovukError.notify e, extra: { receiver_email: user.email }
   end
 end
