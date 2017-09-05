@@ -402,7 +402,6 @@ DEPENDENCIES
   sass-rails (~> 5.0.6)
   shoulda-context (= 1.2.1)
   sprockets-rails (~> 3.1.1)
-  statsd-ruby (~> 1.4)
   test_after_commit
   timecop (= 0.7.1)
   uglifier (>= 3.0.4)
