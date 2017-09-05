@@ -11,13 +11,13 @@ class SSOPushClient < GdsApi::Base
 
   def update_user(uid, user)
     with_exception_handling do
-      put_json!("#{base_url}/users/#{CGI.escape(uid)}", user)
+      put_json("#{base_url}/users/#{CGI.escape(uid)}", user)
     end
   end
 
   def reauth_user(uid)
     with_exception_handling do
-      post_json!("#{base_url}/users/#{CGI.escape(uid)}/reauth", {})
+      post_json("#{base_url}/users/#{CGI.escape(uid)}/reauth", {})
     end
   end
 
