@@ -1,3 +1,4 @@
+require "resolv"
 class EventLog < ActiveRecord::Base
   deprecated_columns :event
 
@@ -46,7 +47,7 @@ class EventLog < ActiveRecord::Base
   EVENTS_REQUIRING_INITIATOR   = EVENTS.select(&:require_initiator?)
   EVENTS_REQUIRING_APPLICATION = EVENTS.select(&:require_application?)
 
-  VALID_OPTIONS = [:initiator, :application, :application_id, :trailing_message]
+  VALID_OPTIONS = [:initiator, :application, :application_id, :trailing_message, :ip_address, :user_agent_id]
 
   validates :uid, presence: true
   validates_presence_of :event_id
@@ -56,6 +57,9 @@ class EventLog < ActiveRecord::Base
 
   belongs_to :initiator, class_name: "User"
   belongs_to :application, class_name: "Doorkeeper::Application"
+  belongs_to :user_agent
+
+  delegate :user_agent_string, to: :user_agent
 
   def event
     entry.description
@@ -65,7 +69,19 @@ class EventLog < ActiveRecord::Base
     EVENTS.detect { |event| event.id == event_id }
   end
 
+  def ip_address_string
+    convert_integer_to_ip_address(self.ip_address)
+  end
+
   def self.record_event(user, event, options = {})
+    if options[:ip_address]
+      if options[:ip_address] =~ Resolv::IPv6::Regex
+        Raven.capture_message("Received IP address: #{options[:ip_address]}. IPv6 logging is not supported yet")
+        options[:ip_address] = nil
+      else
+        options[:ip_address] = convert_ip_address_to_integer(options[:ip_address])
+      end
+    end
     attributes = {
       uid: user.uid,
       event_id: event.id
@@ -92,9 +108,18 @@ class EventLog < ActiveRecord::Base
   end
 
 private
+
   def validate_event_mappable
     unless entry
       errors.add(:event_id, "must have a corresponding `LogEntry` for #{event_id}")
     end
+  end
+
+  def self.convert_ip_address_to_integer ip
+    ip.split(/\./).map(&:to_i).pack("C*").unpack("N").first
+  end
+
+  def convert_integer_to_ip_address n
+    [n].pack("N").unpack("C*").join "."
   end
 end
