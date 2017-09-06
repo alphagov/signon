@@ -83,7 +83,7 @@ Signon::Application.configure do
   config.logstasher.suppress_app_log = true
 
   config.action_mailer.default_url_options = {
-    host: URI.parse(Plek.current.find('signon')).host,
+    host: URI.parse(Plek.find('signon')).host,
     protocol: 'https'
   }
   # Use default logging formatter so that PID and timestamp are not suppressed.

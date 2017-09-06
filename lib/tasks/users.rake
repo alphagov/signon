@@ -18,7 +18,7 @@ namespace :users do
       user.grant_application_permission(application, 'signin')
     end
 
-    invitation_url = "#{Plek.current.find('signon')}/users/invitation/accept?invitation_token=#{user.raw_invitation_token}"
+    invitation_url = "#{Plek.find('signon')}/users/invitation/accept?invitation_token=#{user.raw_invitation_token}"
     puts "User created: user.name <#{user.name}>"
     puts "              user.email <#{user.email}>"
     puts "              signin permissions for: '#{applications.map(&:name).join("', '")}' "

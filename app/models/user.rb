@@ -193,7 +193,7 @@ class User < ActiveRecord::Base
   end
 
   def update_stats
-    Statsd.new(::STATSD_HOST).increment("#{::STATSD_PREFIX}.users.created")
+    GovukStatsd.increment("users.created")
   end
 
   # Override Devise::Model::Lockable#lock_access! to add event logging

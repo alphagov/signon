@@ -15,8 +15,7 @@ gem 'rails-html-sanitizer', '1.0.3'
 # This change was made via Snyk to fix a vulnerability
 gem 'nokogiri', '>= 1.7.2'
 
-gem 'airbrake', '3.1.15'
-gem 'plek', '1.7.0'
+gem 'plek', '~> 2.0'
 gem 'json', '1.8.3'
 gem 'addressable', '~> 2.3.8'
 
@@ -36,10 +35,10 @@ gem 'rqrcode'
 gem 'doorkeeper', '>= 4.2.0'
 gem 'ancestry', '2.0.0'
 
-gem 'gds-api-adapters', '20.1.1'
-gem 'statsd-ruby', '1.1.0'
+gem 'govuk_app_config', '~> 0.2'
+gem 'gds-api-adapters', '~> 47.9'
 gem 'unicorn', '4.9.0'
-gem 'govuk_sidekiq', '0.0.3'
+gem 'govuk_sidekiq', '~> 2.0'
 gem 'activejob-retry'
 
 gem 'redis', '3.2.1'

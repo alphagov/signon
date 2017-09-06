@@ -1,4 +1,4 @@
-require 'statsd'
+require 'govuk_app_config'
 require_relative 'instance_name'
 
 devise_config = Rails.application.config_for(:devise).symbolize_keys
@@ -270,7 +270,7 @@ Devise.setup do |config|
 
   # Metrics!
   Warden::Manager.after_authentication do |_user, _auth, _opts|
-    Statsd.new(::STATSD_HOST).increment("#{::STATSD_PREFIX}.logins.success")
+    GovukStatsd.increment("logins.success")
   end
 
   Warden::Manager.after_authentication do |user, _auth, _opts|
@@ -280,7 +280,7 @@ Devise.setup do |config|
   end
 
   Warden::Manager.before_failure do |_env, _opts|
-    Statsd.new(::STATSD_HOST).increment("#{::STATSD_PREFIX}.logins.failure")
+    GovukStatsd.increment("logins.failure")
   end
 
   # ==> Security Extension
