@@ -16,8 +16,14 @@ class SessionsController < Devise::SessionsController
 
   def log_event
     if current_user.present?
+      user_agent_record_id = nil
+      unless user_agent.nil?
+        user_agent_record = UserAgent.find_or_create_by!(user_agent_string: user_agent)
+        user_agent_record_id = user_agent_record.id
+      end
       EventLog.record_event(current_user, EventLog::SUCCESSFUL_LOGIN,
-                            trailing_message: user_ip_address + ' ' + user_browser)
+                            ip_address: user_ip_address,
+                            user_agent_id: user_agent_record_id)
     else
       # Call to_s to flatten out any unexpected params (eg a hash).
       user = User.find_by_email(params[:user][:email].to_s)
@@ -29,7 +35,7 @@ class SessionsController < Devise::SessionsController
     request.remote_ip
   end
 
-  def user_browser
-    browser.name
+  def user_agent
+    request.headers['user-agent']
   end
 end
