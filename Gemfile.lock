@@ -63,6 +63,7 @@ GEM
     bootstrap-sass (3.3.5.1)
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.3.0)
+    browser (2.5.0)
     builder (3.2.3)
     byebug (9.0.6)
     capybara (2.5.0)
@@ -362,6 +363,7 @@ DEPENDENCIES
   better_errors (= 2.1.1)
   binding_of_caller (= 0.7.2)
   bootstrap-kaminari-views (= 0.0.5)
+  browser
   capybara (~> 2.5.0)
   capybara-email (~> 2.4.0)
   ci_reporter (= 1.7.0)

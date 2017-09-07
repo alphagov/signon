@@ -94,7 +94,7 @@ class User < ActiveRecord::Base
   end
 
   def event_logs
-    EventLog.where(uid: uid).order(created_at: :desc)
+    EventLog.where(uid: uid).order(created_at: :desc).includes(:user_agent)
   end
 
   def generate_uid

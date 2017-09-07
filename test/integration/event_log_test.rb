@@ -36,7 +36,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     should "not blow up if not given a string for the email" do
       # Assert we don't blow up when looking up the attempted user
       # when people have been messing with the posted params.
-      post "/users/sign_in", "user" => {"email" => {"foo" => "bar"}, :password => "anything"}
+      post "/users/sign_in", "user" => { "email" => { "foo" => "bar" }, :password => "anything" }
 
       assert response.success?
     end
@@ -235,6 +235,41 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     visit event_logs_user_path(@user)
 
     assert page.has_content?("You do not have permission to perform this action")
+  end
+
+  context "recording user's ip address" do
+    should "record user's ip address on login" do
+      page.driver.options[:headers] = { 'REMOTE_ADDR' => '1.2.3.4' }
+      visit root_path
+      signin_with(@user)
+
+      ip_address = @user.event_logs.first.ip_address_string
+      assert_equal '1.2.3.4', ip_address
+    end
+
+    should "call Raven for ipv6 addresses" do
+      page.driver.options[:headers] = { 'REMOTE_ADDR' => '2001:0db8:0000:0000:0008:0800:200c:417a' }
+      Raven.expects(:capture_message)
+      visit root_path
+      signin_with(@user)
+
+      ip_address = @user.event_logs.first.ip_address
+      assert_equal nil, ip_address
+    end
+  end
+
+  test "record who the account was created by" do
+    visit root_path
+    signin_with(@admin)
+    visit users_path
+    click_on "Create user"
+    fill_in 'Name', with: 'New User'
+    fill_in 'Email', with: 'test@test.com'
+    click_on "Create user and send email"
+
+    event_log = User.last.event_logs.first
+    assert_equal @admin, event_log.initiator
+    assert_equal EventLog::ACCOUNT_INVITED, event_log.entry
   end
 
   def assert_account_access_log_page_content(user)
