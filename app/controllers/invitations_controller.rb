@@ -31,8 +31,6 @@ class InvitationsController < Devise::InvitationsController
       else
         respond_with_navigational(resource) { render :new }
       end
-
-      EventLog.record_account_invitation(@user, current_user)
     end
   end
 
