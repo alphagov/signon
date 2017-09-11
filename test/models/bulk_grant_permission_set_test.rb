@@ -122,5 +122,64 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
       end
       assert_equal 2, @permission_set.reload.processed_users
     end
+
+    context 'recording events against users' do
+      setup do
+        @app2 = create(:application, with_supported_permissions: %w(signin editor))
+        @permission_set.supported_permissions += @app2.supported_permissions
+        @permission_set.save!
+      end
+
+      should 'record a permissions added event for each app that we grant permissions for' do
+        user = create(:user)
+        user.event_logs.destroy_all
+        @permission_set.perform
+
+        recorded_events = user.event_logs
+        assert_equal 2, recorded_events.length
+
+        assert_equal EventLog::PERMISSIONS_ADDED, recorded_events[0].entry
+        assert_equal @app2, recorded_events[0].application
+        assert_equal '(editor, signin)', recorded_events[0].trailing_message
+
+        assert_equal EventLog::PERMISSIONS_ADDED, recorded_events[1].entry
+        assert_equal @app, recorded_events[1].application
+        assert_equal '(signin)', recorded_events[1].trailing_message
+      end
+
+      should 'not include a permission in the event if the user already has it' do
+        user = create(:user, with_permissions: { @app2 => %w(editor) })
+        user.event_logs.destroy_all
+        @permission_set.perform
+
+        recorded_events = user.event_logs
+        assert_equal 2, recorded_events.length
+
+        assert_equal EventLog::PERMISSIONS_ADDED, recorded_events[0].entry
+        assert_equal @app2, recorded_events[0].application
+        assert_equal '(signin)', recorded_events[0].trailing_message
+      end
+
+      should 'not create an event log for the app if the user already has all the permissions we are trying to grant for that app' do
+        user = create(:user, with_permissions: { @app => %w(signin) })
+        user.event_logs.destroy_all
+        @permission_set.perform
+
+        recorded_events = user.event_logs
+        assert_equal 1, recorded_events.length
+
+        assert_equal EventLog::PERMISSIONS_ADDED, recorded_events[0].entry
+        assert_equal @app2, recorded_events[0].application
+      end
+
+      should 'not create any event logs if the user already has all the permissions we are trying to grant' do
+        user = create(:user, with_permissions: { @app => %w(signin), @app2 => %w(signin editor) })
+        user.event_logs.destroy_all
+        @permission_set.perform
+
+        recorded_events = user.event_logs
+        assert_equal 0, recorded_events.length
+      end
+    end
   end
 end

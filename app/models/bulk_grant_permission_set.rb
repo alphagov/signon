@@ -21,9 +21,21 @@ class BulkGrantPermissionSet < ActiveRecord::Base
 
   def perform(_options = {})
     self.update_column(:total_users, User.count)
-    User.find_each do |user|
-      supported_permissions.each do |permission|
-        user.application_permissions.where(supported_permission_id: permission.id).first_or_create!
+    User.find_each do |user_to_change|
+      permissions_granted = supported_permissions.select do |permission|
+        granted_permission = user_to_change.application_permissions.where(supported_permission_id: permission.id).first_or_create!
+        # if 'id' changed then it was a new permission, otherwise it
+        # already existed
+        granted_permission.previous_changes.has_key? 'id'
+      end
+      permissions_granted.group_by(&:application_id).each do |application_id, permissions|
+        EventLog.record_event(
+          user_to_change,
+          EventLog::PERMISSIONS_ADDED,
+          initiator: user,
+          application_id: application_id,
+          trailing_message: "(#{permissions.map(&:name).join(', ')})",
+        )
       end
       self.class.increment_counter(:processed_users, self.id)
     end
