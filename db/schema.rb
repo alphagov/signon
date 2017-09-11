@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170216105512) do
+ActiveRecord::Schema.define(version: 20170908160100) do
 
   create_table "batch_invitation_application_permissions", force: :cascade do |t|
     t.integer  "batch_invitation_id",     limit: 4, null: false
@@ -51,9 +51,13 @@ ActiveRecord::Schema.define(version: 20170216105512) do
     t.integer  "application_id",   limit: 4
     t.string   "trailing_message", limit: 255
     t.integer  "event_id",         limit: 4
+    t.integer  "ip_address",       limit: 8
+    t.integer  "user_agent_id",    limit: 4
   end
 
   add_index "event_logs", ["uid", "created_at"], name: "index_event_logs_on_uid_and_created_at", using: :btree
+  add_index "event_logs", ["user_agent_id"], name: "event_logs_user_agent_id_fk", using: :btree
+
 
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", limit: 4,   null: false
@@ -137,6 +141,12 @@ ActiveRecord::Schema.define(version: 20170216105512) do
   add_index "supported_permissions", ["application_id", "name"], name: "index_supported_permissions_on_application_id_and_name", unique: true, using: :btree
   add_index "supported_permissions", ["application_id"], name: "index_supported_permissions_on_application_id", using: :btree
 
+  create_table "user_agents", force: :cascade do |t|
+    t.string "user_agent_string", limit: 1000, null: false
+  end
+
+  add_index "user_agents", ["user_agent_string"], name: "index_user_agents_on_user_agent_string", length: {"user_agent_string"=>255}, using: :btree
+
   create_table "user_application_permissions", force: :cascade do |t|
     t.integer  "user_id",                 limit: 4, null: false
     t.integer  "application_id",          limit: 4, null: false
@@ -197,4 +207,5 @@ ActiveRecord::Schema.define(version: 20170216105512) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
+  add_foreign_key "event_logs", "user_agents", name: "event_logs_user_agent_id_fk"
 end

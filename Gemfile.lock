@@ -159,6 +159,7 @@ GEM
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
     kgio (2.11.0)
+    lhm (2.2.0)
     link_header (0.0.8)
     logstash-event (1.1.5)
     logstasher (0.4.8)
@@ -381,6 +382,7 @@ DEPENDENCIES
   jasmine (= 2.1.0)
   json (= 1.8.3)
   kaminari (~> 0.16.3)
+  lhm
   logstasher (= 0.4.8)
   minitest (~> 5.8.0)
   mocha (= 1.1.0)
