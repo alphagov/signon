@@ -69,6 +69,8 @@ end
 
 gem 'logstasher', '0.4.8'
 
+gem 'browser'
+
 group :test do
   gem 'rspec-rails', '~> 3.3.3'
   gem 'capybara', '~> 2.5.0'
