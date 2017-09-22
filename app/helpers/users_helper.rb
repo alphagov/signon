@@ -26,7 +26,11 @@ module UsersHelper
   end
 
   def is_org_admin?
-    current_user.role == 'organisation_admin'
+    current_user.organisation_admin?
+  end
+
+  def is_super_org_admin?
+    current_user.super_organisation_admin?
   end
 
   def sync_needed?(permissions)
