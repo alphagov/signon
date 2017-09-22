@@ -12,8 +12,8 @@ class BasePolicy
 
   protected
 
-  def belong_to_same_organisation_subtree?(current_user, record)
-    current_user.organisation.subtree.pluck(:id).include?(record.organisation_id.to_i)
+  def belong_to_same_organisation_subtree?
+    current_user.organisation.subtree.include?(record.organisation)
   end
 
   class Scope

@@ -4,10 +4,11 @@ describe OrganisationPolicy do
   subject { described_class }
 
   permissions :index? do
-    it "is forbidden to organisation admins and normal users" do
+    it "is forbidden to super organisation admins, organisation admins and normal users" do
       expect(subject).to permit(create(:superadmin_user), Organisation)
       expect(subject).to permit(create(:admin_user), Organisation)
 
+      expect(subject).not_to permit(create(:super_org_admin), Organisation)
       expect(subject).not_to permit(create(:organisation_admin), Organisation)
       expect(subject).not_to permit(create(:user), Organisation)
     end
@@ -17,6 +18,19 @@ describe OrganisationPolicy do
     it "allows superadmins and admins to assign a user to any organisation" do
       expect(subject).to permit(create(:user_in_organisation, role: 'superadmin'), build(:organisation))
       expect(subject).to permit(create(:user_in_organisation, role: 'admin'), build(:organisation))
+    end
+
+    it "is forbidden for super organisation admins" do
+      super_org_admin = create(:super_org_admin)
+      admins_organisation = super_org_admin.organisation
+      child_organisation = create(:organisation, parent_id: admins_organisation.id)
+
+      # can't assign some random org
+      expect(subject).not_to permit(super_org_admin, build(:organisation))
+      # can't assign the org they are an admin for
+      expect(subject).not_to permit(super_org_admin, admins_organisation)
+      # can't assign an org that is in the subtree of the one they are an admin for
+      expect(subject).not_to permit(super_org_admin, child_organisation)
     end
 
     it "is forbidden for organisation admins" do
@@ -69,7 +83,15 @@ describe OrganisationPolicy do
       end
     end
 
-    context 'for org admins' do
+    context 'for super organisation admins' do
+      let(:user) { create(:super_org_admin, organisation: org_root_one) }
+
+      it 'is empty' do
+        expect(resolved_scope).to be_empty
+      end
+    end
+
+    context 'for organisation admins' do
       let(:user) { create(:organisation_admin, organisation: org_root_one) }
 
       it 'is empty' do

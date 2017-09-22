@@ -1,10 +1,10 @@
 class UserPolicy < BasePolicy
   def index?
-    current_user.superadmin? || current_user.admin? || current_user.organisation_admin?
+    %w(superadmin admin super_organisation_admin organisation_admin).include? current_user.role
   end
 
   def new? # invitations#new
-    current_user.superadmin? || current_user.admin?
+    %w(superadmin admin).include? current_user.role
   end
   alias_method :assign_organisations?, :new?
 
@@ -17,7 +17,9 @@ class UserPolicy < BasePolicy
     when 'superadmin'
       true
     when 'admin'
-      !record.superadmin?
+      can_manage?
+    when 'super_organisation_admin'
+      allow_self_only || (can_manage? && record_in_own_organisation?)
     when 'organisation_admin'
       allow_self_only || (can_manage? && record_in_own_organisation?)
     else # 'normal'
@@ -68,7 +70,11 @@ private
   end
 
   def record_in_own_organisation?
-    record.organisation && (record.organisation.id == current_user.organisation.id)
+    record.organisation && (record.organisation_id == current_user.organisation_id)
+  end
+
+  def record_in_child_organisation?
+    current_user.organisation.subtree_ids.include?(record.organisation_id)
   end
 
   class Scope < ::BasePolicy::Scope
@@ -76,9 +82,9 @@ private
       if current_user.superadmin?
         scope.web_users
       elsif current_user.admin?
-        scope.web_users.where(role: %w(admin organisation_admin normal))
-      elsif current_user.organisation_admin?
-        scope.web_users.where(role: %w(organisation_admin normal)).where(organisation_id: current_user.organisation_id)
+        scope.web_users.where(role: current_user.manageable_roles)
+      elsif current_user.super_organisation_admin? || current_user.organisation_admin?
+        scope.web_users.where(role: current_user.manageable_roles).where(organisation: current_user.organisation)
       else
         scope.none
       end

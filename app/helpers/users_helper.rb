@@ -10,7 +10,7 @@ module UsersHelper
   end
 
   def organisation_select_options
-    { include_blank: is_org_admin? ? false : 'None' }
+    { include_blank: (is_org_admin? || is_super_org_admin?) ? false : 'None' }
   end
 
   def user_email_tokens(user = current_user)

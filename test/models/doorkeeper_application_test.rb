@@ -32,11 +32,26 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       assert_equal %w(signin write), app.supported_permission_strings(user)
     end
 
+    should "only show permissions that super organisation admins themselves have" do
+      app = create(:application, with_delegatable_supported_permissions: %w(write approve))
+      super_org_admin = create(:super_org_admin, with_permissions: { app => ["write"] })
+
+      assert_equal ["write"], app.supported_permission_strings(super_org_admin)
+    end
+
+    should "only show delegatable permissions to super organisation admins" do
+      super_org_admin = create(:super_org_admin)
+      app = create(:application, with_delegatable_supported_permissions: ['write'], with_supported_permissions: ['approve'])
+      super_org_admin.grant_application_permissions(app, %w(write approve))
+
+      assert_equal ["write"], app.supported_permission_strings(super_org_admin)
+    end
+
     should "only show permissions that organisation admins themselves have" do
       app = create(:application, with_delegatable_supported_permissions: %w(write approve))
-      user = create(:organisation_admin, with_permissions: { app => ["write"] })
+      organisation_admin = create(:organisation_admin, with_permissions: { app => ["write"] })
 
-      assert_equal ["write"], app.supported_permission_strings(user)
+      assert_equal ["write"], app.supported_permission_strings(organisation_admin)
     end
 
     should "only show delegatable permissions to organisation admins" do

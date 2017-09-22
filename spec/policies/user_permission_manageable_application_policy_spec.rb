@@ -39,7 +39,29 @@ describe UserPermissionManageableApplicationPolicy do
       end
     end
 
-    context 'for org admins' do
+    context 'for super organisation admins' do
+      let(:acting_user) { create(:super_org_admin) }
+
+      before do
+        acting_user.grant_application_permission(app_one, 'signin')
+        acting_user.grant_application_permission(app_two, 'signin')
+      end
+
+      it 'includes applications with delegatable signin that the super organisation admin has access to' do
+        expect(resolved_scope).to include(app_one)
+      end
+
+      it 'does not include applications without delegatable signin that the super organisation admin does has access to' do
+        expect(resolved_scope).not_to include(app_two)
+      end
+
+      it 'does not include applications that the super organisation admin does not have access to' do
+        expect(resolved_scope).not_to include(app_three)
+        expect(resolved_scope).not_to include(app_four)
+      end
+    end
+
+    context 'for organisation admins' do
       let(:acting_user) { create(:organisation_admin) }
 
       before do
@@ -47,15 +69,15 @@ describe UserPermissionManageableApplicationPolicy do
         acting_user.grant_application_permission(app_two, 'signin')
       end
 
-      it 'includes applications with delegatable signin that the org admin has access to' do
+      it 'includes applications with delegatable signin that the organisation admin has access to' do
         expect(resolved_scope).to include(app_one)
       end
 
-      it 'does not include applications without delegatable signin that the org admin does has access to' do
+      it 'does not include applications without delegatable signin that the organisation admin does has access to' do
         expect(resolved_scope).not_to include(app_two)
       end
 
-      it 'does not include applications that the org admin does not have access to' do
+      it 'does not include applications that the organisation admin does not have access to' do
         expect(resolved_scope).not_to include(app_three)
         expect(resolved_scope).not_to include(app_four)
       end

@@ -72,7 +72,38 @@ describe SupportedPermissionPolicy do
       end
     end
 
-    context 'for org admins' do
+    context 'for super organisation admins' do
+      let(:user) do
+        create(:super_org_admin).tap do |u|
+          u.grant_application_permission(app_one, 'signin')
+          u.grant_application_permission(app_two, 'signin')
+        end
+      end
+
+      it 'contains all permissions for apps with delegatable signin permission that the super organisation admin has access to' do
+        expect(resolved_scope).to include(app_one_signin_permission)
+        expect(resolved_scope).to include(app_one_cat_permission)
+        expect(resolved_scope).to include(app_one_hat_permission)
+      end
+
+      it 'does not contain any permissions for apps with non-delegatbale signin permission the super organisation admin has access to' do
+        expect(resolved_scope).not_to include(app_two_signin_permission)
+        expect(resolved_scope).not_to include(app_two_rat_permission)
+        expect(resolved_scope).not_to include(app_two_bat_permission)
+      end
+
+      it 'does not contain any permissions for apps the super organisation admin does not have access to' do
+        expect(resolved_scope).not_to include(app_three_signin_permission)
+        expect(resolved_scope).not_to include(app_three_fat_permission)
+        expect(resolved_scope).not_to include(app_three_vat_permission)
+
+        expect(resolved_scope).not_to include(app_four_signin_permission)
+        expect(resolved_scope).not_to include(app_four_pat_permission)
+        expect(resolved_scope).not_to include(app_four_sat_permission)
+      end
+    end
+
+    context 'for organisation admins' do
       let(:user) do
         create(:organisation_admin).tap do |u|
           u.grant_application_permission(app_one, 'signin')
@@ -80,19 +111,19 @@ describe SupportedPermissionPolicy do
         end
       end
 
-      it 'contains all permissions for apps with delegatable signin permission that the org admin has access to' do
+      it 'contains all permissions for apps with delegatable signin permission that the organisation admin has access to' do
         expect(resolved_scope).to include(app_one_signin_permission)
         expect(resolved_scope).to include(app_one_cat_permission)
         expect(resolved_scope).to include(app_one_hat_permission)
       end
 
-      it 'does not contain any permissions for apps with non-delegatbale signin permission the org admin has access to' do
+      it 'does not contain any permissions for apps with non-delegatbale signin permission the organisation admin has access to' do
         expect(resolved_scope).not_to include(app_two_signin_permission)
         expect(resolved_scope).not_to include(app_two_rat_permission)
         expect(resolved_scope).not_to include(app_two_bat_permission)
       end
 
-      it 'does not contain any permissions for apps the org admin does not have access to' do
+      it 'does not contain any permissions for apps the organisation admin does not have access to' do
         expect(resolved_scope).not_to include(app_three_signin_permission)
         expect(resolved_scope).not_to include(app_three_fat_permission)
         expect(resolved_scope).not_to include(app_three_vat_permission)

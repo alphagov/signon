@@ -24,7 +24,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   def self.policy_class; ApplicationPolicy; end
 
   def supported_permission_strings(user = nil)
-    if user && user.role == 'organisation_admin'
+    if user && %w(organisation_admin super_organisation_admin).include?(user.role)
       supported_permissions.delegatable.pluck(:name) & user.permissions_for(self)
     else
       supported_permissions.pluck(:name)

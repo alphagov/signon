@@ -9,6 +9,7 @@ describe ApplicationPolicy do
         expect(subject).to permit(create(:superadmin_user), User)
 
         expect(subject).not_to permit(create(:admin_user), User)
+        expect(subject).not_to permit(create(:super_org_admin), User)
         expect(subject).not_to permit(create(:organisation_admin), User)
         expect(subject).not_to permit(create(:user), User)
       end
