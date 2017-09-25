@@ -19,7 +19,7 @@ class UserPolicy < BasePolicy
     when 'admin'
       can_manage?
     when 'super_organisation_admin'
-      allow_self_only || (can_manage? && record_in_own_organisation?)
+      allow_self_only || (can_manage? && (record_in_own_organisation? || record_in_child_organisation?))
     when 'organisation_admin'
       allow_self_only || (can_manage? && record_in_own_organisation?)
     else # 'normal'
@@ -69,21 +69,15 @@ private
     Roles.const_get(current_user.role.classify).can_manage?(record.role)
   end
 
-  def record_in_own_organisation?
-    record.organisation && (record.organisation_id == current_user.organisation_id)
-  end
-
-  def record_in_child_organisation?
-    current_user.organisation.subtree_ids.include?(record.organisation_id)
-  end
-
   class Scope < ::BasePolicy::Scope
     def resolve
       if current_user.superadmin?
         scope.web_users
       elsif current_user.admin?
         scope.web_users.where(role: current_user.manageable_roles)
-      elsif current_user.super_organisation_admin? || current_user.organisation_admin?
+      elsif current_user.super_organisation_admin?
+        scope.web_users.where(role: current_user.manageable_roles).where(organisation: current_user.organisation.subtree)
+      elsif current_user.organisation_admin?
         scope.web_users.where(role: current_user.manageable_roles).where(organisation: current_user.organisation)
       else
         scope.none

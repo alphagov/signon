@@ -48,12 +48,12 @@ describe OrganisationPolicy do
   end
 
   describe described_class::Scope do
-    let!(:org_root_one) { create(:organisation) }
-    let!(:org_root_one_child_one) { create(:organisation, parent: org_root_one) }
-    let!(:org_root_one_child_two) { create(:organisation, parent: org_root_one) }
-    let!(:org_root_one_grandchild_one) { create(:organisation, parent: org_root_one_child_one) }
-    let!(:org_root_two) { create(:organisation) }
-    let!(:org_root_two_child_one) { create(:organisation, parent: org_root_two) }
+    let!(:parent_organisation) { create(:organisation) }
+    let!(:child_organisation_one) { create(:organisation, parent: parent_organisation) }
+    let!(:child_organisation_two) { create(:organisation, parent: parent_organisation) }
+    let!(:grandchild_organisation_one) { create(:organisation, parent: child_organisation_one) }
+    let!(:second_parent_organisation) { create(:organisation) }
+    let!(:child_second_organisation) { create(:organisation, parent: second_parent_organisation) }
     subject { described_class.new(user, Organisation.all) }
     let(:resolved_scope) { subject.resolve }
 
@@ -61,12 +61,12 @@ describe OrganisationPolicy do
       let(:user) { create(:superadmin_user) }
 
       it 'includes all organisations' do
-        expect(resolved_scope).to include(org_root_one)
-        expect(resolved_scope).to include(org_root_one_child_one)
-        expect(resolved_scope).to include(org_root_one_child_two)
-        expect(resolved_scope).to include(org_root_one_grandchild_one)
-        expect(resolved_scope).to include(org_root_two)
-        expect(resolved_scope).to include(org_root_two_child_one)
+        expect(resolved_scope).to include(parent_organisation)
+        expect(resolved_scope).to include(child_organisation_one)
+        expect(resolved_scope).to include(child_organisation_two)
+        expect(resolved_scope).to include(grandchild_organisation_one)
+        expect(resolved_scope).to include(second_parent_organisation)
+        expect(resolved_scope).to include(child_second_organisation)
       end
     end
 
@@ -74,17 +74,17 @@ describe OrganisationPolicy do
       let(:user) { create(:admin_user) }
 
       it 'includes all organisations' do
-        expect(resolved_scope).to include(org_root_one)
-        expect(resolved_scope).to include(org_root_one_child_one)
-        expect(resolved_scope).to include(org_root_one_child_two)
-        expect(resolved_scope).to include(org_root_one_grandchild_one)
-        expect(resolved_scope).to include(org_root_two)
-        expect(resolved_scope).to include(org_root_two_child_one)
+        expect(resolved_scope).to include(parent_organisation)
+        expect(resolved_scope).to include(child_organisation_one)
+        expect(resolved_scope).to include(child_organisation_two)
+        expect(resolved_scope).to include(grandchild_organisation_one)
+        expect(resolved_scope).to include(second_parent_organisation)
+        expect(resolved_scope).to include(child_second_organisation)
       end
     end
 
     context 'for super organisation admins' do
-      let(:user) { create(:super_org_admin, organisation: org_root_one) }
+      let(:user) { create(:super_org_admin, organisation: parent_organisation) }
 
       it 'is empty' do
         expect(resolved_scope).to be_empty
@@ -92,7 +92,7 @@ describe OrganisationPolicy do
     end
 
     context 'for organisation admins' do
-      let(:user) { create(:organisation_admin, organisation: org_root_one) }
+      let(:user) { create(:organisation_admin, organisation: parent_organisation) }
 
       it 'is empty' do
         expect(resolved_scope).to be_empty

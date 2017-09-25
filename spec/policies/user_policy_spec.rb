@@ -133,10 +133,11 @@ describe UserPolicy do
           expect(subject).not_to permit(super_org_admin, build(:admin_user))
         end
 
-        it "is forbidden for super organisation admins to access users of similar permissions or below from within their own organisation's subtree" do
-          expect(subject).not_to permit(super_org_admin, build(:user_in_organisation, organisation: child_organisation))
-          expect(subject).not_to permit(super_org_admin, build(:organisation_admin, organisation: child_organisation))
-          expect(subject).not_to permit(super_org_admin, build(:super_org_admin, organisation: child_organisation))
+        it "is allowed for super organisation admins to access users of similar permissions or below from within their own organisation's subtree" do
+          expect(subject).to permit(super_org_admin, build(:user_in_organisation, organisation: child_organisation))
+          expect(subject).to permit(super_org_admin, build(:organisation_admin, organisation: child_organisation))
+          expect(subject).to permit(super_org_admin, build(:super_org_admin, organisation: child_organisation))
+
           expect(subject).not_to permit(super_org_admin, build(:superadmin_user, organisation: child_organisation))
           expect(subject).not_to permit(super_org_admin, build(:admin_user, organisation: child_organisation))
         end
@@ -380,9 +381,9 @@ describe UserPolicy do
       it 'includes users of similar permission or below belonging to a child organisation' do
         expect(resolved_scope).not_to include(super_admin_in_child_org)
         expect(resolved_scope).not_to include(admin_in_child_org)
-        expect(resolved_scope).not_to include(super_org_admin_in_child_org)
-        expect(resolved_scope).not_to include(org_admin_in_child_org)
-        expect(resolved_scope).not_to include(normal_user_in_child_org)
+        expect(resolved_scope).to include(super_org_admin_in_child_org)
+        expect(resolved_scope).to include(org_admin_in_child_org)
+        expect(resolved_scope).to include(normal_user_in_child_org)
       end
 
       it 'does not include users of similar permission or below belonging to another organisation' do

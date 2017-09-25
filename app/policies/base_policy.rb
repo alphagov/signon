@@ -12,7 +12,11 @@ class BasePolicy
 
   protected
 
-  def belong_to_same_organisation_subtree?
+  def record_in_own_organisation?
+    record.organisation && (record.organisation_id == current_user.organisation_id)
+  end
+
+  def record_in_child_organisation?
     current_user.organisation.subtree.include?(record.organisation)
   end
 
