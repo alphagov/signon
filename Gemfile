@@ -12,8 +12,7 @@ gem 'deprecated_columns', '0.1.0'
 
 gem 'rails-html-sanitizer', '1.0.3'
 
-# This change was made via Snyk to fix a vulnerability
-gem 'nokogiri', '>= 1.7.2'
+gem 'nokogiri', '>= 1.8.1'
 
 gem 'plek', '~> 2.0'
 gem 'json', '1.8.3'
