@@ -17,9 +17,21 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
     perform_batch_invite_with_user(user, application)
   end
 
-  should "organisation admin user can not create users whose details are specified in a CSV file" do
+  should "not allow organisation admin user to create users whose details are specified in a CSV file" do
     application = create(:application)
     user = create(:user_in_organisation, role: 'organisation_admin')
+    user.grant_application_permission(application, ['signin'])
+
+    visit root_path
+    signin_with(user)
+
+    visit new_batch_invitation_path
+    assert_equal root_path, current_path
+  end
+
+  should "not allow super organisation admin user to create users whose details are specified in a CSV file" do
+    application = create(:application)
+    user = create(:user_in_organisation, role: 'super_organisation_admin')
     user.grant_application_permission(application, ['signin'])
 
     visit root_path

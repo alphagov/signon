@@ -300,8 +300,8 @@ private
   end
 
   def organisation_admin_belongs_to_organisation
-    if self.role == 'organisation_admin' && self.organisation_id.blank?
-      errors.add(:organisation_id, "can't be 'None' for an Organisation admin")
+    if %w(organisation_admin super_organisation_admin).include?(self.role) && self.organisation_id.blank?
+      errors.add(:organisation_id, "can't be 'None' for #{self.role.titleize}")
     end
   end
 

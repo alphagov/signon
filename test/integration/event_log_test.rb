@@ -214,13 +214,50 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     assert_account_access_log_page_content(@user)
   end
 
-  test "organisation admins have permission to view access logs of users belonging to their organisation" do
-    admin = create(:organisation_admin)
-    user = create(:user_in_organisation, organisation: admin.organisation)
+  test "super organisation admins have permission to view access logs of users belonging to their organisation" do
+    super_org_admin = create(:super_org_admin)
+    user = create(:user_in_organisation, organisation: super_org_admin.organisation)
     user.lock_access!
 
     visit root_path
-    signin_with(admin)
+    signin_with(super_org_admin)
+    visit edit_user_path(user)
+    click_on 'Account access log'
+
+    assert_account_access_log_page_content(user)
+  end
+
+  test "super organisation admins have permission to view access logs of users belonging to child organisations" do
+    super_org_admin = create(:super_org_admin)
+    child_org = create(:organisation, parent: super_org_admin.organisation)
+    user = create(:user_in_organisation, organisation: child_org)
+    user.lock_access!
+
+    visit root_path
+    signin_with(super_org_admin)
+    visit edit_user_path(user)
+    click_on 'Account access log'
+
+    assert_account_access_log_page_content(user)
+  end
+
+  test "super organisation admins don't have permission to view access logs of users belonging to another organisation" do
+    super_org_admin = create(:super_org_admin)
+
+    visit root_path
+    signin_with(super_org_admin)
+    visit event_logs_user_path(@user)
+
+    assert page.has_content?("You do not have permission to perform this action")
+  end
+
+  test "organisation admins have permission to view access logs of users belonging to their organisation" do
+    organisation_admin = create(:organisation_admin)
+    user = create(:user_in_organisation, organisation: organisation_admin.organisation)
+    user.lock_access!
+
+    visit root_path
+    signin_with(organisation_admin)
     visit edit_user_path(user)
     click_on 'Account access log'
 
@@ -228,10 +265,10 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "organisation admins don't have permission to view access logs of users belonging to another organisation" do
-    admin = create(:organisation_admin)
+    organisation_admin = create(:organisation_admin)
 
     visit root_path
-    signin_with(admin)
+    signin_with(organisation_admin)
     visit event_logs_user_path(@user)
 
     assert page.has_content?("You do not have permission to perform this action")

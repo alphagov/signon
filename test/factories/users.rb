@@ -49,14 +49,18 @@ FactoryGirl.define do
     confirmation_sent_at Time.zone.now
   end
 
+  factory :superadmin_user, parent: :user do
+    sequence(:email) { |n| "superadmin#{n}@example.com" }
+    role "superadmin"
+  end
+
   factory :admin_user, parent: :user do
     sequence(:email) { |n| "admin#{n}@example.com" }
     role "admin"
   end
 
-  factory :superadmin_user, parent: :user do
-    sequence(:email) { |n| "superadmin#{n}@example.com" }
-    role "superadmin"
+  factory :super_org_admin, parent: :user_in_organisation do
+    role "super_organisation_admin"
   end
 
   factory :organisation_admin, parent: :user_in_organisation do

@@ -278,14 +278,16 @@ class UsersControllerTest < ActionController::TestCase
 
       should "show user roles" do
         create(:user, email: "user@email.com")
+        create(:super_org_admin, email: "superorgadmin@email.com")
         create(:organisation_admin, email: "orgadmin@email.com")
 
         get :index
 
         assert_select "td.role", "Normal"
         assert_select "td.role", "Organisation admin"
+        assert_select "td.role", "Super organisation admin"
         assert_select "td.role", "Admin"
-        assert_select "td.role", count: 3
+        assert_select "td.role", count: 4
       end
 
       should "show user organisation" do
@@ -514,6 +516,86 @@ class UsersControllerTest < ActionController::TestCase
           sign_in organisation_admin
 
           user = create(:user_in_organisation, organisation: organisation_admin.organisation,
+                        with_permissions: { delegatable_app => ['Editor'],
+                                            non_delegatable_app => ['signin', 'GDS Admin'],
+                                            delegatable_no_access_to_app => ['signin', 'GDS Editor'],
+                                            non_delegatable_no_access_to_app => ['signin', 'Import CSVs'] })
+
+          get :edit, id: user.id
+
+          assert_select "h2", "All Permissions for this user"
+          assert_select "#all-permissions" do
+            # can see permissions for a delegatable app the user has access to
+            assert_select "td", count: 1, text: delegatable_app.name
+            # can see permissions to a non-delegatable app the user has access to
+            assert_select "td", count: 1, text: non_delegatable_app.name
+            # can see permissions to a delegatable app the user has access to
+            assert_select "td", count: 1, text: delegatable_no_access_to_app.name
+            # can see permissions to a non delegatable app the user has access to
+            assert_select "td", count: 1, text: non_delegatable_no_access_to_app.name
+            # can see that user has signin permission for three of the four applications in "Has access?" column
+            assert_select "td", count: 3, text: "Yes"
+            assert_select "td", count: 1, text: "No"
+            # can see role
+            assert_select "td", count: 1, text: "Editor"
+            assert_select "td", count: 1, text: "GDS Admin"
+            assert_select "td", count: 1, text: "GDS Editor"
+            assert_select "td", count: 1, text: "Import CSVs"
+          end
+        end
+      end
+
+      context "super organisation admin" do
+        should "not be able to assign organisations" do
+          super_org_admin = create(:super_org_admin)
+          outside_organisation = create(:organisation)
+          sign_in super_org_admin
+
+          user = create(:user_in_organisation, organisation: super_org_admin.organisation)
+
+          get :edit, id: user.id
+
+          assert_select "select[name='user[organisation_id]']", count: 0
+          assert_select "td", count: 0, text: outside_organisation.id
+        end
+
+        should "be able to give permissions only to applications they themselves have access to and that also have delegatable signin permissions" do
+          delegatable_app = create(:application, with_delegatable_supported_permissions: ["signin"])
+          non_delegatable_app = create(:application, with_supported_permissions: ['signin'])
+          delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ['signin'])
+          non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ['signin'])
+
+          super_org_admin = create(:super_org_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
+
+          sign_in super_org_admin
+
+          user = create(:user_in_organisation, organisation: super_org_admin.organisation)
+
+          get :edit, id: user.id
+
+          assert_select "#editable-permissions" do
+            # can give access to a delegatable app they have access to
+            assert_select "td", count: 1, text: delegatable_app.name
+            # can not give access to a non-delegatable app they have access to
+            assert_select "td", count: 0, text: non_delegatable_app.name
+            # can not give access to a delegatable app they do not have access to
+            assert_select "td", count: 0, text: delegatable_no_access_to_app.name
+            # can not give access to a non delegatable app they do not have access to
+            assert_select "td", count: 0, text: non_delegatable_no_access_to_app.name
+          end
+        end
+
+        should "be able to see all permissions to applications for a user" do
+          delegatable_app = create(:application, with_delegatable_supported_permissions: %w(signin Editor))
+          non_delegatable_app = create(:application, with_supported_permissions: ['signin', 'GDS Admin'])
+          delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ['signin', 'GDS Editor'])
+          non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ['signin', 'Import CSVs'])
+
+          super_org_admin = create(:super_org_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
+
+          sign_in super_org_admin
+
+          user = create(:user_in_organisation, organisation: super_org_admin.organisation,
                         with_permissions: { delegatable_app => ['Editor'],
                                             non_delegatable_app => ['signin', 'GDS Admin'],
                                             delegatable_no_access_to_app => ['signin', 'GDS Editor'],

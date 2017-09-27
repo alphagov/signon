@@ -19,6 +19,12 @@ class InvitationsControllerTest < ActionController::TestCase
       get :new
       assert_redirected_to root_path
     end
+
+    should "disallow access to super organisation admins" do
+      @user.update_attributes(role: 'super_organisation_admin', organisation_id: create(:organisation).id)
+      get :new
+      assert_redirected_to root_path
+    end
   end
 
   context "POST create" do
@@ -48,6 +54,12 @@ class InvitationsControllerTest < ActionController::TestCase
       post :create, user: { name: 'Testing Org Admins', email: 'testing_org_admins@example.com' }
       assert_redirected_to root_path
     end
+
+    should "disallow access to super organisation admins" do
+      @user.update_attributes(role: 'super_organisation_admin', organisation_id: create(:organisation).id)
+      post :create, user: { name: 'Testing Org Admins', email: 'testing_org_admins@example.com' }
+      assert_redirected_to root_path
+    end
   end
 
   context "POST resend" do
@@ -60,6 +72,13 @@ class InvitationsControllerTest < ActionController::TestCase
 
     should "disallow access to organisation admins" do
       @user.update_attributes(role: 'organisation_admin', organisation_id: create(:organisation).id)
+      user_to_resend_for = create(:user)
+      post :resend, id: user_to_resend_for.id
+      assert_redirected_to root_path
+    end
+
+    should "disallow access to super organisation admins" do
+      @user.update_attributes(role: 'super_organisation_admin', organisation_id: create(:organisation).id)
       user_to_resend_for = create(:user)
       post :resend, id: user_to_resend_for.id
       assert_redirected_to root_path

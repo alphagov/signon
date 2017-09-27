@@ -4,8 +4,8 @@ class SuspensionsControllerTest < ActionController::TestCase
   context "organisation admin" do
     should "be unable to control suspension of a user outside their organisation" do
       user = create(:suspended_user, reason_for_suspension: "Negligence")
-      admin = create(:organisation_admin)
-      sign_in admin
+      organisation_admin = create(:organisation_admin)
+      sign_in organisation_admin
 
       put :update, id: user.id, user: { suspended: "0" }
 
@@ -13,9 +13,43 @@ class SuspensionsControllerTest < ActionController::TestCase
     end
 
     should "be able to control suspension of a user within their organisation" do
-      admin = create(:organisation_admin)
-      sign_in admin
-      user = create(:suspended_user, reason_for_suspension: "Negligence", organisation: admin.organisation)
+      organisation_admin = create(:organisation_admin)
+      sign_in organisation_admin
+      user = create(:suspended_user, reason_for_suspension: "Negligence", organisation: organisation_admin.organisation)
+
+      put :update, id: user.id, user: { suspended: "0" }
+
+      refute user.reload.suspended?
+    end
+  end
+
+  context "super organisation admin" do
+    should "be unable to control suspension of a user outside their organisation subtree" do
+      user = create(:suspended_user, reason_for_suspension: "Negligence")
+      super_org_admin = create(:super_org_admin)
+      sign_in super_org_admin
+
+      put :update, id: user.id, user: { suspended: "0" }
+
+      assert user.reload.suspended?
+    end
+
+    should "be able to control suspension of a user within their organisation" do
+      super_org_admin = create(:super_org_admin)
+      sign_in super_org_admin
+      user = create(:suspended_user, reason_for_suspension: "Negligence", organisation: super_org_admin.organisation)
+
+      put :update, id: user.id, user: { suspended: "0" }
+
+      refute user.reload.suspended?
+    end
+
+    should "be able to control suspension of a user within child organisations" do
+      super_org_admin = create(:super_org_admin)
+      child_org = create(:organisation, parent: super_org_admin.organisation)
+
+      sign_in super_org_admin
+      user = create(:suspended_user, reason_for_suspension: "Negligence", organisation: child_org)
 
       put :update, id: user.id, user: { suspended: "0" }
 

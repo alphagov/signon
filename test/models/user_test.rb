@@ -298,7 +298,14 @@ class UserTest < ActiveSupport::TestCase
     user = build(:user, role: 'organisation_admin', organisation_id: nil)
 
     refute user.valid?
-    assert_equal "can't be 'None' for an Organisation admin", user.errors[:organisation_id].first
+    assert_equal "can't be 'None' for Organisation Admin", user.errors[:organisation_id].first
+  end
+
+  test "super organisation admin must belong to an organisation" do
+    user = build(:user, role: 'super_organisation_admin', organisation_id: nil)
+
+    refute user.valid?
+    assert_equal "can't be 'None' for Super Organisation Admin", user.errors[:organisation_id].first
   end
 
   test "it doesn't migrate password unless correct one given" do
