@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170926101024) do
-
+ActiveRecord::Schema.define(version: 20170927105747) do
   create_table "batch_invitation_application_permissions", force: :cascade do |t|
     t.integer  "batch_invitation_id",     limit: 4, null: false
     t.integer  "supported_permission_id", limit: 4, null: false
