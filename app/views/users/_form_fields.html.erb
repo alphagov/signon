@@ -30,8 +30,10 @@
     <%= f.label :role %><br />
     <%= f.select :role, options_for_select(filtered_user_roles.map(&:humanize).zip(filtered_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
     <span class="help-block">
+      <strong>Superadmins</strong> can create and edit all user types and edit applications.<br />
       <strong>Admins</strong> can create and edit normal users.<br />
-      <strong>Superadmins</strong> can create and edit all user types and edit applications.
+      <strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.<br />
+      <strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.
     </span>
   </p>
 <% end %>
