@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171005140101) do
+ActiveRecord::Schema.define(version: 20171017152038) do
+
   create_table "batch_invitation_application_permissions", force: :cascade do |t|
     t.integer  "batch_invitation_id",     limit: 4, null: false
     t.integer  "supported_permission_id", limit: 4, null: false
@@ -57,7 +58,6 @@ ActiveRecord::Schema.define(version: 20171005140101) do
   add_index "event_logs", ["uid", "created_at"], name: "index_event_logs_on_uid_and_created_at", using: :btree
   add_index "event_logs", ["user_agent_id"], name: "event_logs_user_agent_id_fk", using: :btree
 
-
   create_table "oauth_access_grants", force: :cascade do |t|
     t.integer  "resource_owner_id", limit: 4,   null: false
     t.integer  "application_id",    limit: 4,   null: false
@@ -88,11 +88,11 @@ ActiveRecord::Schema.define(version: 20171005140101) do
 
   create_table "oauth_applications", force: :cascade do |t|
     t.string   "name",                  limit: 255
-    t.string   "uid",                   limit: 255,                null: false
-    t.string   "secret",                limit: 255,                null: false
-    t.string   "redirect_uri",          limit: 255,                null: false
-    t.datetime "created_at",                                       null: false
-    t.datetime "updated_at",                                       null: false
+    t.string   "uid",                   limit: 255,                 null: false
+    t.string   "secret",                limit: 255,                 null: false
+    t.string   "redirect_uri",          limit: 255,                 null: false
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
     t.string   "home_uri",              limit: 255
     t.string   "description",           limit: 255
     t.boolean  "supports_push_updates",             default: true
