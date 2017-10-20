@@ -27,7 +27,7 @@ class PasswordsController < Devise::PasswordsController
       if resource.valid?
         record_password_reset_success(resource)
       else
-        record_password_reset_failure(resource) if resource.persisted?
+        record_password_reset_failure(resource)
       end
     end
   end
