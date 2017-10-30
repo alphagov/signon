@@ -1,8 +1,8 @@
 module ConfirmationTokenHelper
   def token_sent_to(user)
-    raw, enc = Devise.token_generator.generate(User, :confirmation_token)
-    user.confirmation_token = enc
+    token = Devise.friendly_token
+    user.confirmation_token = token
     user.save(validate: false)
-    raw
+    token
   end
 end
