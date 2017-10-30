@@ -17,6 +17,12 @@ Signon::Application.configure do
   config.action_mailer.raise_delivery_errors = false
   config.action_mailer.default_url_options = { host: URI.parse(Plek.find('signon')).host }
 
+  # Send emails to the local MailHog instance
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    port: 1025
+  }
+
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
 
