@@ -166,5 +166,44 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       assert_response_contains("Couldn't confirm email change. Please contact support to request a new confirmation email.")
       assert_equal "original@email.com", @user.reload.email
     end
+
+    should "allow a signed in user to complete email change" do
+      @user.update_attribute(:unconfirmed_email, "new@email.com")
+      confirmation_token = token_sent_to(@user)
+
+      visit new_user_session_path
+      signin_with(@user)
+
+      visit user_confirmation_path(confirmation_token: confirmation_token)
+      assert_response_contains("Your account was successfully confirmed. You are now signed in.")
+      assert_equal "new@email.com", @user.reload.email
+    end
+
+    should "disallow a signed in user completing an email change for another account" do
+      @user.update_attribute(:unconfirmed_email, "new@email.com")
+      confirmation_token = token_sent_to(@user)
+      @other_user = create(:user, email: "dave@email.com")
+
+      visit new_user_session_path
+      signin_with(@other_user)
+
+      visit user_confirmation_path(confirmation_token: confirmation_token)
+      assert_response_contains("It appears you followed a link meant for another user.")
+      assert_equal "original@email.com", @user.reload.email
+    end
+
+    should "prompt unauthenticated user for passphrase when changing email" do
+      password = "L0ng S3cure P4ssw0rd"
+      @user.update_attributes(
+        unconfirmed_email: "new@email.com",
+        password: password
+      )
+
+      confirm_email_change(
+        password: password,
+        confirmation_token: token_sent_to(@user)
+      )
+      assert_equal "new@email.com", @user.reload.email
+    end
   end
 end
