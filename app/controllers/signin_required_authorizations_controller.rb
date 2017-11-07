@@ -1,4 +1,6 @@
 class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsController
+  EXPECTED_DOORKEEPER_VERSION = '4.2.0'
+
   def new
     if pre_auth.authorizable?
       if skip_authorization? || matching_token?

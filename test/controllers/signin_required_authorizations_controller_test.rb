@@ -28,6 +28,15 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     @controller.stubs(current_resource_owner: @user)
   end
 
+  test 'warn if doorkeeper has been updated' do
+    # We extracted SigninRequiredAuthorizationsController and its tests from
+    # those for Doorkeeper::AuthorizationsController in version 4.2.0 it's very
+    # possible that future versions of doorkeeper change the implementation or
+    # tests and we should keep our versions up to date.  They may also have
+    # introduced a better way for us to customise the behaviour.
+    assert_equal SigninRequiredAuthorizationsController::EXPECTED_DOORKEEPER_VERSION, Doorkeeper::VERSION, "SigninRequiredAuthorizationsController was extracted from Doorkeeper::AuthorizationsController and has been checked against version #{SigninRequiredAuthorizationsController::EXPECTED_DOORKEEPER_VERSION} of the Gem.  It's now #{Doorkeeper::VERSION} so review the new version to check for updates."
+  end
+
   context 'POST #create' do
     setup do
       post :create, client_id: @application.uid, response_type: 'token', redirect_uri: @application.redirect_uri
