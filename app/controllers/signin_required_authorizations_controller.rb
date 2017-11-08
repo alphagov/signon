@@ -1,4 +1,5 @@
 class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsController
+  include Pundit
   EXPECTED_DOORKEEPER_VERSION = '4.2.0'
 
   def new
