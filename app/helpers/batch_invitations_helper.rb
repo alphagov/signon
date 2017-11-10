@@ -1,5 +1,5 @@
 module BatchInvitationsHelper
-  def status_message(batch_invitation)
+  def batch_invite_status_message(batch_invitation)
     if batch_invitation.in_progress?
       "In progress. " +
         "#{batch_invitation.batch_invitation_users.processed.count} of " +

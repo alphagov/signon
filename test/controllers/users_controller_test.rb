@@ -237,14 +237,14 @@ class UsersControllerTest < ActionController::TestCase
       assert_not_nil user.application_permissions.first.last_synced_at
     end
 
-    should "fetching json profile should succeed even if no permission for relevant app" do
+    should "fetching json profile should fail if no signin permission for relevant app" do
       user = create(:user)
       token = create(:access_token, application: @application, resource_owner_id: user.id)
 
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
       get :show, {client_id: @application.uid, format: :json}
 
-      assert_response :ok
+      assert_response :unauthorized
     end
   end
 

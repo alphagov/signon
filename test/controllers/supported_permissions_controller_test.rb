@@ -15,6 +15,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
       assert_select "h1", /My first app/
       assert_select "td[class=name]", /permission1/
       assert_select "td[class=delegatable]", /Yes/
+      assert_select "td[class=default]", /No/
       assert_select "a[id='add']", true
     end
   end
@@ -26,6 +27,8 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
       assert_select "h1", /Add permission/
       assert_select ".breadcrumb li", /My first app/
       assert_select "input[name='supported_permission[name]']", true
+      assert_select "input[name='supported_permission[delegatable]']", true
+      assert_select "input[name='supported_permission[default]']", true
     end
   end
 
@@ -42,36 +45,53 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
     should "create a new permission" do
       app = create(:application, name: "My first app")
 
-      post :create, doorkeeper_application_id: app.id, supported_permission: { name: "permission1" }
+      post :create, doorkeeper_application_id: app.id, supported_permission: { name: "permission1", default: '1' }
 
       assert_redirected_to(controller: "supported_permissions", action: :index)
       assert_equal "Successfully added permission permission1 to My first app", flash[:notice]
-      assert_equal app.reload.supported_permissions.first.name, "permission1"
+      new_permission = app.reload.supported_permissions.first
+      assert_equal new_permission.name, "permission1"
+      assert new_permission.default
     end
   end
 
   context "PUT update" do
     should "show error if name is not provided and not edit the permission" do
       app = create(:application, name: "My first app")
-      perm = create(:supported_permission, application_id: app.id,
-                                  name: "permission1", delegatable: true, created_at: 2.days.ago)
+      perm = create(
+        :supported_permission,
+        application_id: app.id,
+        name: "permission1",
+        delegatable: true,
+        default: true,
+        created_at: 2.days.ago
+      )
 
-      put :update, doorkeeper_application_id: app.id, id: perm.id, supported_permission: { name: "", delegatable: false }
+      put :update, doorkeeper_application_id: app.id, id: perm.id, supported_permission: { name: "", delegatable: '0', default: '0' }
 
       assert_select "ul[class='errors'] li", "Name can't be blank"
-      assert perm.reload.delegatable
+      perm.reload
+      assert perm.delegatable
+      assert perm.default
     end
 
     should "edit permission" do
       app = create(:application, name: "My first app")
-      perm = create(:supported_permission, application_id: app.id,
-                                  name: "permission1", delegatable: true, created_at: 2.days.ago)
+      perm = create(
+        :supported_permission,
+        application_id: app.id,
+        name: "permission1",
+        delegatable: true,
+        default: true,
+        created_at: 2.days.ago)
 
-      put :update, doorkeeper_application_id: app.id, id: perm.id, supported_permission: { delegatable: false }
+      put :update, doorkeeper_application_id: app.id, id: perm.id, supported_permission: { delegatable: '0', default: '0' }
 
       assert_redirected_to(controller: "supported_permissions", action: :index)
       assert_equal "Successfully updated permission permission1", flash[:notice]
-      refute perm.reload.delegatable
+      perm.reload
+      refute perm.delegatable
+      refute perm.default
     end
   end
 end

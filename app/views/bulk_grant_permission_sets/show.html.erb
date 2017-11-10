@@ -1,0 +1,53 @@
+<% content_for :title, "Granting permissions to all users" %>
+
+<% if @bulk_grant_permission_set.in_progress? %>
+  <% content_for(:content_for_head) do %>
+    <meta http-equiv="refresh" content="3">
+  <% end %>
+<% end %>
+
+<div class="page-title">
+  <h1>Granting permissions to all users</h1>
+</div>
+
+<div class="alert <%= bulk_grant_permission_set_status_class(@bulk_grant_permission_set) %>">
+  <%= bulk_grant_permission_set_status_message(@bulk_grant_permission_set) %>
+</div>
+
+<table class="table table-bordered table-striped table-on-white">
+  <thead>
+    <tr class="table-header">
+      <th>Application</th>
+      <th>Has access to?</th>
+      <th>Other Permissions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% bulk_grant_permissions_by_application(@bulk_grant_permission_set).each do |(application, permissions)| %>
+      <tr>
+        <td>
+          <% if application.retired? %>
+            <del><%= application.name %></del>
+          <% else %>
+            <%= application.name %>
+          <% end %>
+        </td>
+        <td>
+          <% if permissions.include? application.signin_permission %>
+            Yes
+          <% else %>
+            No
+          <% end %>
+        </td>
+        <td>
+          <%= (permissions - [application.signin_permission]).map { |p| p.name }.to_sentence %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<div class="well">
+  <%= link_to "All users", users_path, class: "btn btn-primary" %>
+</div>

@@ -1,0 +1,25 @@
+<% content_for :title, "Grant permissions to all users" %>
+
+<div class="page-title">
+  <h1>Grant permissions to all users</h1>
+</div>
+
+<div class="well">
+  <%= form_for @bulk_grant_permission_set do |f| %>
+    <h2>Permissions to grant</h2>
+
+    <% if @bulk_grant_permission_set.errors.count > 0 %>
+      <div class="alert alert-danger">
+        <ul>
+          <% @bulk_grant_permission_set.errors.full_messages.each do |message| %>
+            <%= content_tag :li, message, data: track_analytics_data(:danger, message) %>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= render partial: "shared/user_permissions", locals: { user_object: User.new } %>
+
+    <%= f.submit "Grant permissions to all users", :class => 'btn btn-success' %>
+  <% end %>
+</div>

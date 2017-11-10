@@ -5,7 +5,10 @@
   <div class="pull-right add-top-margin">
     <%= link_to "Create user", new_user_invitation_path, class: "btn btn-success add-right-margin" %>
     <% if policy(User).new? %>
-      <%= link_to "Upload a batch of users", new_batch_invitation_path, class: "btn btn-default" %>
+      <%= link_to "Upload a batch of users", new_batch_invitation_path, class: "btn btn-default add-right-margin" %>
+    <% end %>
+    <% if policy(BulkGrantPermissionSet).new? %>
+      <%= link_to "Grant permissions to all users", new_bulk_grant_permission_set_path, class: "btn btn-default" %>
     <% end %>
   </div>
 </div>

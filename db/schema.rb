@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171103151119) do
+ActiveRecord::Schema.define(version: 20171107153427) do
 
   create_table "batch_invitation_application_permissions", force: :cascade do |t|
     t.integer  "batch_invitation_id",     limit: 4, null: false
@@ -43,6 +43,24 @@ ActiveRecord::Schema.define(version: 20171103151119) do
   end
 
   add_index "batch_invitations", ["outcome"], name: "index_batch_invitations_on_outcome", using: :btree
+
+  create_table "bulk_grant_permission_set_application_permissions", force: :cascade do |t|
+    t.integer  "bulk_grant_permission_set_id", limit: 4, null: false
+    t.integer  "supported_permission_id",      limit: 4, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "bulk_grant_permission_set_application_permissions", ["bulk_grant_permission_set_id", "supported_permission_id"], name: "index_app_permissions_on_bulk_grant_permission_set", unique: true, using: :btree
+
+  create_table "bulk_grant_permission_sets", force: :cascade do |t|
+    t.integer  "user_id",         limit: 4,               null: false
+    t.string   "outcome",         limit: 255
+    t.integer  "processed_users", limit: 4,   default: 0, null: false
+    t.integer  "total_users",     limit: 4,   default: 0, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "event_logs", force: :cascade do |t|
     t.string   "uid",              limit: 255, null: false
@@ -135,6 +153,7 @@ ActiveRecord::Schema.define(version: 20171103151119) do
     t.datetime "updated_at"
     t.boolean  "delegatable",                   default: false
     t.boolean  "grantable_from_ui",             default: true,  null: false
+    t.boolean  "default",                       default: false, null: false
   end
 
   add_index "supported_permissions", ["application_id", "name"], name: "index_supported_permissions_on_application_id_and_name", unique: true, using: :btree

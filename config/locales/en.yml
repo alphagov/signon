@@ -26,6 +26,7 @@ en:
   supported_permissions:
     form:
       delegatable: 'Can be delegated'
+      default: 'Default permission added to all new users'
       placeholder:
         name: 'Name of application permission'
 

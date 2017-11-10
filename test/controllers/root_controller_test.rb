@@ -33,17 +33,6 @@ class RootControllerTest < ActionController::TestCase
     get :index
 
     assert_select "h3", "Everybody app"
-    assert_select "h3", "Support"
-    assert_select "h3", count: 2
-  end
-
-  # Because currently, permissions aren't required for the Support app
-  test "Your Applications should include the 'Support' app if it exists, whether or not you have signin permission" do
-    user = create(:user)
-    sign_in user
-
-    get :index
-
-    assert_select "h3", "Support"
+    assert_select "h3", count: 1
   end
 end

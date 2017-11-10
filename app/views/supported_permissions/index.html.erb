@@ -27,6 +27,9 @@
         Can be delegated?
       </th>
       <th>
+        Is a default permission given to all new users?
+      </th>
+      <th>
         Actions
       </th>
     </tr>
@@ -42,6 +45,9 @@
         </td>
         <td class="delegatable">
           <%= supported_permission.delegatable? ? 'Yes' : 'No' %>
+        </td>
+        <td class="default">
+          <%= supported_permission.default? ? 'Yes' : 'No' %>
         </td>
         <td>
           <%= link_to 'Edit', edit_doorkeeper_application_supported_permission_path(@application, supported_permission) %>

@@ -4,6 +4,17 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
   include EmailHelpers
   include ActiveJob::TestHelper
 
+  should "send the user an invitation token" do
+    user = User.invite!(name: "Jim", email: "jim@web.com")
+    visit accept_user_invitation_path(invitation_token: user.raw_invitation_token)
+
+    fill_in "New passphrase", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
+    fill_in "Confirm new passphrase", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
+    click_button "Set my passphrase"
+
+    assert_response_contains("You are now signed in")
+  end
+
   context "for non-superadmins" do
     should "not display the 2SV flagging checkbox" do
       admin = create(:admin_user)
@@ -17,12 +28,14 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
   end
 
   context "for an end-user by an admin" do
+    setup do
+      admin = create(:user, role: "admin")
+      visit root_path
+      signin_with(admin)
+    end
+
     should "create and notify the user" do
       perform_enqueued_jobs do
-        admin = create(:user, role: "admin")
-        visit root_path
-        signin_with(admin)
-
         visit new_user_invitation_path
         fill_in "Name", with: "Fred Bloggs"
         fill_in "Email", with: "fred@example.com"
@@ -34,22 +47,23 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       end
     end
 
-    should "send the user an invitation token" do
-      user = User.invite!(name: "Jim", email: "jim@web.com")
-      visit accept_user_invitation_path(invitation_token: user.raw_invitation_token)
+    should "grant the user any default permissions" do
+      application_one = create(:application)
+      create(:supported_permission, application: application_one, name: 'editor', default: true)
+      application_two = create(:application)
+      application_two.signin_permission.update_attributes(default: true)
 
-      fill_in "New passphrase", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
-      fill_in "Confirm new passphrase", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
-      click_button "Set my passphrase"
+      visit new_user_invitation_path
+      fill_in "Name", with: "Alicia Smith"
+      fill_in "Email", with: "alicia@example.com"
+      click_button "Create user and send email"
 
-      assert_response_contains("You are now signed in")
+      u = User.find_by(email: 'alicia@example.com')
+      assert u.has_access_to? application_two
+      assert_equal ['editor'], u.permissions_for(application_one)
     end
 
     should "show an error message when attempting to create a user without an email" do
-      admin = create(:user, role: "admin")
-      visit root_path
-      signin_with(admin)
-
       visit new_user_invitation_path
       fill_in "Name", with: "Fred Bloggs"
       click_button "Create user and send email"
@@ -59,12 +73,14 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
   end
 
   context "for an admin by a superadmin" do
+    setup do
+      admin = create(:user, role: "superadmin")
+      visit root_path
+      signin_with(admin)
+    end
+
     should "create and notify the admin" do
       perform_enqueued_jobs do
-        admin = create(:user, role: "superadmin")
-        visit root_path
-        signin_with(admin)
-
         visit new_user_invitation_path
         fill_in "Name", with: "Fred Bloggs"
         select "Admin", from: "Role"
@@ -81,15 +97,33 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
         assert_match 'Please confirm your account', last_email.subject
       end
     end
+
+    should "grant the user any default permissions" do
+      application_one = create(:application)
+      create(:supported_permission, application: application_one, name: 'editor', default: true)
+      application_two = create(:application)
+      application_two.signin_permission.update_attributes(default: true)
+
+      visit new_user_invitation_path
+      fill_in "Name", with: "Alicia Smith"
+      fill_in "Email", with: "alicia@example.com"
+      click_button "Create user and send email"
+
+      u = User.find_by(email: 'alicia@example.com')
+      assert u.has_access_to? application_two
+      assert_equal ['editor'], u.permissions_for(application_one)
+    end
   end
 
   context "a normal user being invited by an admin" do
+    setup do
+      admin = create(:admin_user)
+      visit root_path
+      signin_with(admin)
+    end
+
     should "create and notify the user" do
       perform_enqueued_jobs do
-        admin = create(:admin_user)
-        visit root_path
-        signin_with(admin)
-
         visit new_user_invitation_path
         assert has_no_select?("Role")
         fill_in "Name", with: "Fred Bloggs"
@@ -100,6 +134,22 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
         assert_equal "normal_fred@example.com", last_email.to[0]
         assert_match 'Please confirm your account', last_email.subject
       end
+    end
+
+    should "grant the user any default permissions" do
+      application_one = create(:application)
+      create(:supported_permission, application: application_one, name: 'editor', default: true)
+      application_two = create(:application)
+      application_two.signin_permission.update_attributes(default: true)
+
+      visit new_user_invitation_path
+      fill_in "Name", with: "Alicia Smith"
+      fill_in "Email", with: "alicia@example.com"
+      click_button "Create user and send email"
+
+      u = User.find_by(email: 'alicia@example.com')
+      assert u.has_access_to? application_two
+      assert_equal ['editor'], u.permissions_for(application_one)
     end
   end
 end

@@ -24,6 +24,11 @@
         <%= f.check_box :delegatable %> <%= t('supported_permissions.form.delegatable') %>
       </label>
     </p>
+    <p class="checkbox">
+      <label>
+        <%= f.check_box :default %> <%= t('supported_permissions.form.default') %>
+      </label>
+    </p>
     <hr />
     <%= f.submit "Save permission", class: "btn btn-success" %>
   <% end %>

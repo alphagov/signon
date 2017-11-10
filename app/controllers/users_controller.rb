@@ -170,10 +170,6 @@ class UsersController < ApplicationController
       params[:two_step_status].present?
   end
 
-  def application_making_request
-    ::Doorkeeper::Application.find(doorkeeper_token.application_id)
-  end
-
   def validate_token_matches_client_id
     # FIXME: Once gds-sso is updated everywhere, this should always validate
     # the client_id param.  It should 401 if no client_id is given.

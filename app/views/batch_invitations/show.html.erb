@@ -12,15 +12,15 @@
 
 <% if @batch_invitation.in_progress? %>
   <div class="alert alert-info">
-    <%= status_message(@batch_invitation) %>
+    <%= batch_invite_status_message(@batch_invitation) %>
   </div>
 <% elsif @batch_invitation.all_successful? %>
   <div class="alert alert-success">
-    <%= status_message(@batch_invitation) %>
+    <%= batch_invite_status_message(@batch_invitation) %>
   </div>
 <% else %>
   <div class="alert alert-danger">
-    <%= status_message(@batch_invitation) %>
+    <%= batch_invite_status_message(@batch_invitation) %>
   </div>
 <% end %>
 

@@ -10,8 +10,8 @@ class ApiAuthenticationTest < ActionDispatch::IntegrationTest
 
   setup do
     @app1 = create(:application, name: "MyApp", with_supported_permissions: ["write"])
-    user = create(:user, with_permissions: { @app1 => ["write"] })
-    user.authorisations.create!(application_id: @app1.id)
+    @user = create(:user, with_permissions: { @app1 => %w(signin write) })
+    @user.authorisations.create!(application_id: @app1.id)
   end
 
   should "grant access to the user details with a valid access token" do
@@ -31,6 +31,13 @@ class ApiAuthenticationTest < ActionDispatch::IntegrationTest
     parsed_response = JSON.parse(response.body)
     assert parsed_response.has_key?('user')
     assert parsed_response['user']['permissions'].is_a?(Array)
+  end
+
+  should "not grant access without 'signin' permission to the app" do
+    @user.application_permissions.where(supported_permission_id: @app1.signin_permission).destroy_all
+    access_user_endpoint(get_valid_token.token)
+
+    assert_equal 401, response.status
   end
 
   should "not grant access without an access token" do
