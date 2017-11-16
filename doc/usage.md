@@ -73,6 +73,27 @@ a new permission from there.
 
 Note that this UI won't let you edit or delete existing permissions.
 
+## Creating new organisations
+
+Instead of creating organisations directly in signon we pull them in from
+whitehall which is the canonical source.  If you run:
+
+    rake organisations:fetch
+
+This will communicate with whitehall to get the complete list of orgs and
+the relationships between them.  It then uses this information to make sure
+signon is up to date.
+
+One downside to this is that whitehall allows an org to have multiple parents
+whereas signon only allows for a single parent.  Signon's behaviour is
+currently to set the parent of an org with multiple parents to the one that
+appears last in the api response.
+
+On deployed environments this rake task is run nightly at 11pm via jenkins.
+This is configured in [govuk-puppet](https://github.com/alphagov/govuk-puppet).
+If you want orgs and their relationships to be modelled correctly in signon,
+you should do it whitehall and then let this nightly import do its thing.
+
 ## Implementation Notes
 
 The application is divided into two parts: user management (User sign-on and
