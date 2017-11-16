@@ -45,7 +45,7 @@ class ApiUsersControllerTest < ActionController::TestCase
     context "POST create" do
       should "create a new API user" do
         assert_difference 'ApiUser.count', 1 do
-          post :create, api_user: { name: "Content Store Application", email: "content.store@gov.uk" }
+          post :create, params: { api_user: { name: "Content Store Application", email: "content.store@gov.uk" } }
         end
       end
 
@@ -53,11 +53,11 @@ class ApiUsersControllerTest < ActionController::TestCase
         EventLog.stubs(:record_event) # to ignore logs being created, other than the one under test
         EventLog.expects(:record_event).with(instance_of(ApiUser), EventLog::API_USER_CREATED, initiator: @superadmin)
 
-        post :create, api_user: { name: "Content Store Application", email: "content.store@gov.uk" }
+        post :create, params: { api_user: { name: "Content Store Application", email: "content.store@gov.uk" } }
       end
 
       should "redisplay the form with errors if save fails" do
-        post :create, api_user: { name: "Content Store Application", email: "content.store at gov uk" }
+        post :create, params: { api_user: { name: "Content Store Application", email: "content.store at gov uk" } }
 
         assert_template :new
         assert_select "div.alert ul li", "Email is invalid"
@@ -68,7 +68,7 @@ class ApiUsersControllerTest < ActionController::TestCase
       should "show the form" do
         api_user = create(:api_user)
 
-        get :edit, id: api_user.id
+        get :edit, params: { id: api_user.id }
 
         assert_select "input[name='api_user[name]'][value='#{api_user.name}']"
         assert_select "input[name='api_user[email]'][value='#{api_user.email}']"
@@ -79,7 +79,7 @@ class ApiUsersControllerTest < ActionController::TestCase
       should "update the user" do
         api_user = create(:api_user, name: "Old Name")
 
-        put :update, id: api_user.id, api_user: { name: "New Name" }
+        put :update, params: { id: api_user.id, api_user: { name: "New Name" } }
 
         assert_equal "New Name", api_user.reload.name
         assert_redirected_to :api_users
@@ -89,7 +89,7 @@ class ApiUsersControllerTest < ActionController::TestCase
       should "redisplay the form with errors if save fails" do
         api_user = create(:api_user)
 
-        put :update, id: api_user.id, api_user: { name: "" }
+        put :update, params: { id: api_user.id, api_user: { name: "" } }
 
         assert_template :edit
         assert_select "div.alert ul li", "Name can't be blank"
@@ -101,8 +101,9 @@ class ApiUsersControllerTest < ActionController::TestCase
 
         PermissionUpdater.expects(:perform_on).with(api_user).once
 
-        put :update, "id" => api_user.id, "api_user" => { "name" => api_user.name, "email" => api_user.email,
-          "permissions_attributes" => { "0" => {"application_id" => application.id, "id" => "", "permissions" => ["admin"] }}}
+        put :update, params: {
+          "id" => api_user.id, "api_user" => { "name" => api_user.name, "email" => api_user.email,
+            "permissions_attributes" => { "0" => { "application_id" => application.id, "id" => "", "permissions" => ["admin"] } } } }
       end
     end
   end
