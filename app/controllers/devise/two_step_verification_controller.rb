@@ -1,7 +1,7 @@
 class Devise::TwoStepVerificationController < DeviseController
-  before_filter -> { authenticate_user!(force: true) }, only: :prompt
-  before_filter :prepare_and_validate, except: :prompt
-  skip_before_filter :handle_two_step_verification
+  before_action -> { authenticate_user!(force: true) }, only: :prompt
+  before_action :prepare_and_validate, except: :prompt
+  skip_before_action :handle_two_step_verification
 
   attr_reader :otp_secret_key
   private :otp_secret_key

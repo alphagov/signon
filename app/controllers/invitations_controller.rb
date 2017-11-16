@@ -1,7 +1,7 @@
 # https://raw.github.com/scambra/devise_invitable/master/app/controllers/devise/invitations_controller.rb
 class InvitationsController < Devise::InvitationsController
-  before_filter :authenticate_user!
-  after_filter :verify_authorized, except: [:edit, :update]
+  before_action :authenticate_user!
+  after_action :verify_authorized, except: [:edit, :update]
 
   include UserPermissionsControllerMethods
   helper_method :applications_and_permissions

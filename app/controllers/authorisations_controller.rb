@@ -1,8 +1,8 @@
 class AuthorisationsController < ApplicationController
   include UserPermissionsControllerMethods
 
-  before_filter :authenticate_user!
-  before_filter :load_and_authorize_api_user
+  before_action :authenticate_user!
+  before_action :load_and_authorize_api_user
 
   respond_to :html
 
