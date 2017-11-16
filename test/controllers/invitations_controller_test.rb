@@ -30,12 +30,12 @@ class InvitationsControllerTest < ActionController::TestCase
   context "POST create" do
     should "disallow access to non-admins" do
       @user.update_column(:role, 'normal')
-      post :create, user: { name: 'Testing Non-admins', email: 'testing_non_admins@example.com' }
+      post :create, params: { user: { name: 'Testing Non-admins', email: 'testing_non_admins@example.com' } }
       assert_redirected_to root_path
     end
 
     should "not allow creation of api users" do
-      post :create, user: { name: 'Testing APIs', email: 'api@example.com', api_user: true }
+      post :create, params: { user: { name: 'Testing APIs', email: 'api@example.com', api_user: true } }
 
       assert_empty User.where(api_user: true)
     end
@@ -43,7 +43,7 @@ class InvitationsControllerTest < ActionController::TestCase
     should "not error while inviting an existing user" do
       user = create(:user)
 
-      post :create, user: { name: user.name, email: user.email }
+      post :create, params: { user: { name: user.name, email: user.email } }
 
       assert_redirected_to users_path
       assert_equal "User already invited. If you want to, you can click 'Resend signup email'.", flash[:alert]
@@ -51,13 +51,13 @@ class InvitationsControllerTest < ActionController::TestCase
 
     should "disallow access to organisation admins" do
       @user.update_attributes(role: 'organisation_admin', organisation_id: create(:organisation).id)
-      post :create, user: { name: 'Testing Org Admins', email: 'testing_org_admins@example.com' }
+      post :create, params: { user: { name: 'Testing Org Admins', email: 'testing_org_admins@example.com' } }
       assert_redirected_to root_path
     end
 
     should "disallow access to super organisation admins" do
       @user.update_attributes(role: 'super_organisation_admin', organisation_id: create(:organisation).id)
-      post :create, user: { name: 'Testing Org Admins', email: 'testing_org_admins@example.com' }
+      post :create, params: { user: { name: 'Testing Org Admins', email: 'testing_org_admins@example.com' } }
       assert_redirected_to root_path
     end
   end
@@ -66,21 +66,21 @@ class InvitationsControllerTest < ActionController::TestCase
     should "disallow access to non-admins" do
       @user.update_column(:role, 'normal')
       user_to_resend_for = create(:user)
-      post :resend, id: user_to_resend_for.id
+      post :resend, params: { id: user_to_resend_for.id }
       assert_redirected_to root_path
     end
 
     should "disallow access to organisation admins" do
       @user.update_attributes(role: 'organisation_admin', organisation_id: create(:organisation).id)
       user_to_resend_for = create(:user)
-      post :resend, id: user_to_resend_for.id
+      post :resend, params: { id: user_to_resend_for.id }
       assert_redirected_to root_path
     end
 
     should "disallow access to super organisation admins" do
       @user.update_attributes(role: 'super_organisation_admin', organisation_id: create(:organisation).id)
       user_to_resend_for = create(:user)
-      post :resend, id: user_to_resend_for.id
+      post :resend, params: { id: user_to_resend_for.id }
       assert_redirected_to root_path
     end
 
@@ -90,7 +90,7 @@ class InvitationsControllerTest < ActionController::TestCase
       User.any_instance.expects(:invite!).once
       sign_in admin
 
-      post :resend, id: user_to_resend_for.id
+      post :resend, params: { id: user_to_resend_for.id }
 
       assert_redirected_to users_path
     end

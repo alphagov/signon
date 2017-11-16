@@ -17,7 +17,7 @@ class DoorkeeperApplicationsControllerTest < ActionController::TestCase
   context "GET edit" do
     should "render the form" do
       app = create(:application, name: "My first app")
-      get :edit, id: app.id
+      get :edit, params: { id: app.id }
       assert_select "input[name='doorkeeper_application[name]'][value='My first app']"
     end
   end
@@ -25,7 +25,7 @@ class DoorkeeperApplicationsControllerTest < ActionController::TestCase
   context "PUT update" do
     should "update the application" do
       app = create(:application, name: "My first app")
-      put :update, id: app.id, doorkeeper_application: { name: "A better name" }
+      put :update, params: { id: app.id, doorkeeper_application: { name: "A better name" } }
 
       assert_equal "A better name", app.reload.name
       assert_redirected_to doorkeeper_applications_path
@@ -34,7 +34,7 @@ class DoorkeeperApplicationsControllerTest < ActionController::TestCase
 
     should "redisplay the form if save fails" do
       app = create(:application, name: "My first app")
-      put :update, id: app.id, doorkeeper_application: { name: "" }
+      put :update, params: { id: app.id, doorkeeper_application: { name: "" } }
       assert_select "form#edit_doorkeeper_application_#{app.id}"
     end
   end

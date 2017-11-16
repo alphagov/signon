@@ -10,7 +10,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
     should "render the permissions list" do
       app = create(:application, name: "My first app", with_delegatable_supported_permissions: ["permission1"])
 
-      get :index, doorkeeper_application_id: app.id
+      get :index, params: { doorkeeper_application_id: app.id }
 
       assert_select "h1", /My first app/
       assert_select "td[class=name]", /permission1/
@@ -23,7 +23,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
   context "GET new" do
     should "render the form" do
       app = create(:application, name: "My first app", with_supported_permissions: ["permission1"])
-      get :new, doorkeeper_application_id: app.id
+      get :new, params: { doorkeeper_application_id: app.id }
       assert_select "h1", /Add permission/
       assert_select ".breadcrumb li", /My first app/
       assert_select "input[name='supported_permission[name]']", true
@@ -36,7 +36,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
     should "show error if name is not provided and not create a permission" do
       app = create(:application, name: "My first app")
 
-      post :create, doorkeeper_application_id: app.id, supported_permission: { name: "" }
+      post :create, params: { doorkeeper_application_id: app.id, supported_permission: { name: "" } }
 
       assert_select "ul[class='errors'] li", "Name can't be blank"
       assert_equal app.reload.supported_permissions, [app.signin_permission]
@@ -45,7 +45,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
     should "create a new permission" do
       app = create(:application, name: "My first app")
 
-      post :create, doorkeeper_application_id: app.id, supported_permission: { name: "permission1", default: '1' }
+      post :create, params: { doorkeeper_application_id: app.id, supported_permission: { name: "permission1", default: '1' } }
 
       assert_redirected_to(controller: "supported_permissions", action: :index)
       assert_equal "Successfully added permission permission1 to My first app", flash[:notice]
@@ -67,7 +67,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
         created_at: 2.days.ago
       )
 
-      put :update, doorkeeper_application_id: app.id, id: perm.id, supported_permission: { name: "", delegatable: '0', default: '0' }
+      put :update, params: { doorkeeper_application_id: app.id, id: perm.id, supported_permission: { name: "", delegatable: '0', default: '0' } }
 
       assert_select "ul[class='errors'] li", "Name can't be blank"
       perm.reload
@@ -85,7 +85,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
         default: true,
         created_at: 2.days.ago)
 
-      put :update, doorkeeper_application_id: app.id, id: perm.id, supported_permission: { delegatable: '0', default: '0' }
+      put :update, params: { doorkeeper_application_id: app.id, id: perm.id, supported_permission: { delegatable: '0', default: '0' } }
 
       assert_redirected_to(controller: "supported_permissions", action: :index)
       assert_equal "Successfully updated permission permission1", flash[:notice]
