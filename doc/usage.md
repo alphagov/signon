@@ -24,7 +24,7 @@ applications=Comma,Seperated,ListOf,Application,Names* \
 ```
 
 \* You can also set the applications in a comma separated list via an
-`ENV['APPLICATIONS']` variable if you prefer.
+`ENV['applications']` variable if you prefer.
 
 ## Access Tokens
 
@@ -63,7 +63,7 @@ if you just want to get this working, follow the steps below:
   GDS_SSO_STRATEGY=real bundle exec rails s
   ```
 
-### Creating new permissions
+## Creating new permissions
 
 To create a new permission for an existing app, you first need to have the
 "superadmin" role on your account (or have access to someone who does): you'll
