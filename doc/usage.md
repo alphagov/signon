@@ -93,14 +93,14 @@ owner* through an authenticator block, defined in
 `config/initializers/doorkeeper`.
 
 To require Devise authentication in a controller (ie, you want a user sitting at
-a computer looking at the page), add `before_filter:authenticate_user!` to the
+a computer looking at the page), add `before_action:authenticate_user!` to the
 controller.
 
 For example:
 
 ```ruby
 class SettingsController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   def show
     settings = current_user.settings
@@ -110,13 +110,13 @@ end
 
 To require Doorkeeper authentication in a controller (i.e., you want an
 application that has been granted a token on behalf of a user to interact with
-the controller), add `before_filter :doorkeeper_authorize!` to the controller.
+the controller), add `before_action :doorkeeper_authorize!` to the controller.
 
 For example:
 
 ```ruby
 class AutomaticApiController
-  before_filter :doorkeeper_authorize!
+  before_action :doorkeeper_authorize!
 
   def swizzle
     @token_owning_user = User.find_by_id(doorkeeper_token.resource_owner_id)

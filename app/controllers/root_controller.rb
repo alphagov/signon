@@ -1,7 +1,7 @@
 class RootController < ApplicationController
   include UserPermissionsControllerMethods
-  before_filter :authenticate_user!
-  skip_after_filter :verify_authorized
+  before_action :authenticate_user!
+  skip_after_action :verify_authorized
 
   def index
     applications = ::Doorkeeper::Application.can_signin(current_user)

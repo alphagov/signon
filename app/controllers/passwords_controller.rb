@@ -1,6 +1,6 @@
 class PasswordsController < Devise::PasswordsController
-  before_filter :record_password_reset_request, only: :create
-  before_filter :record_reset_page_loaded, only: :edit
+  before_action :record_password_reset_request, only: :create
+  before_action :record_reset_page_loaded, only: :edit
 
   def edit
     super

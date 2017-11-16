@@ -3,15 +3,15 @@ require 'csv'
 class UsersController < ApplicationController
   include UserPermissionsControllerMethods
 
-  before_filter :authenticate_user!, except: :show
-  before_filter :load_and_authorize_user, except: [:index, :show]
-  before_filter :allow_no_application_access, only: [:update]
+  before_action :authenticate_user!, except: :show
+  before_action :load_and_authorize_user, except: [:index, :show]
+  before_action :allow_no_application_access, only: [:update]
   helper_method :applications_and_permissions, :any_filter?
   respond_to :html
 
-  before_filter :doorkeeper_authorize!, only: :show
-  before_filter :validate_token_matches_client_id, only: :show
-  skip_after_filter :verify_authorized, only: :show
+  before_action :doorkeeper_authorize!, only: :show
+  before_action :validate_token_matches_client_id, only: :show
+  skip_after_action :verify_authorized, only: :show
 
   def show
     current_resource_owner.permissions_synced!(application_making_request)
