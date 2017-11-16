@@ -8,9 +8,9 @@ class ApplicationController < ActionController::Base
   include TwoStepVerificationHelper
 
   before_action :handle_two_step_verification
-  after_filter :verify_authorized, unless: :devise_controller?
+  after_action :verify_authorized, unless: :devise_controller?
 
-  before_filter do
+  before_action do
     headers['X-Frame-Options'] = 'SAMEORIGIN'
   end
 

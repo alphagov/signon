@@ -1,8 +1,8 @@
 class ApiUsersController < ApplicationController
   include UserPermissionsControllerMethods
 
-  before_filter :authenticate_user!
-  before_filter :load_and_authorize_api_user, only: [:edit, :update]
+  before_action :authenticate_user!
+  before_action :load_and_authorize_api_user, only: [:edit, :update]
   helper_method :applications_and_permissions, :visible_applications
 
   respond_to :html
