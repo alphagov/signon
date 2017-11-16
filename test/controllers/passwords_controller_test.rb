@@ -8,7 +8,7 @@ class PasswordsControllerTest < ActionController::TestCase
   end
 
   test "GET /edit with a bad reset token shows an error page" do
-    get :edit, id: @user.id, reset_password_token: 'not_a_real_token'
+    get :edit, params: { id: @user.id, reset_password_token: 'not_a_real_token' }
 
     assert_response :success
     assert_template 'devise/passwords/reset_error'
@@ -17,7 +17,7 @@ class PasswordsControllerTest < ActionController::TestCase
   test "GET /edit with an expired reset token shows an error page" do
     @user.update_attribute(:reset_password_sent_at, 1.year.ago)
 
-    get :edit, reset_password_token: @token_received_in_email
+    get :edit, params: { reset_password_token: @token_received_in_email }
 
     assert_response :success
     assert_template 'devise/passwords/reset_error'
@@ -29,7 +29,7 @@ class PasswordsControllerTest < ActionController::TestCase
     # simulate a partially signed-in user. for example,
     # user with an expired password being asked to change the password
     sign_in @user
-    get :edit, id: @user.id, reset_password_token: @token_received_in_email
+    get :edit, params: { id: @user.id, reset_password_token: @token_received_in_email }
 
     assert_nil request.env['warden'].user
   end
@@ -38,7 +38,7 @@ class PasswordsControllerTest < ActionController::TestCase
     @user.update_attribute(:password_changed_at, 91.days.ago)
     sign_in @user
 
-    get :edit, id: @user.id, reset_password_token: @token_received_in_email
+    get :edit, params: { id: @user.id, reset_password_token: @token_received_in_email }
 
     assert_response :ok
     assert_template 'devise/passwords/edit'
@@ -50,7 +50,7 @@ class PasswordsControllerTest < ActionController::TestCase
     # simulate a partially signed-in user. for example,
     # user with an expired password being asked to change the password
     sign_in @user
-    get :new, forgot_expired_passphrase: 1
+    get :new, params: { forgot_expired_passphrase: 1 }
 
     assert_nil request.env['warden'].user
     assert_template 'devise/passwords/new'

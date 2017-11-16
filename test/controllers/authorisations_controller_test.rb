@@ -12,7 +12,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
     end
 
     should "not be able to authorise API users" do
-      get :new, api_user_id: @api_user.id
+      get :new, params: { api_user_id: @api_user.id }
 
       assert_redirected_to root_path
       assert_equal "You do not have permission to perform this action.", flash[:alert]
@@ -21,7 +21,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
     should "not be able to revoke API user's authorisations" do
       access_token = create(:access_token, resource_owner_id: @api_user.id)
 
-      get :revoke, api_user_id: @api_user.id, id: access_token.id
+      get :revoke, params: { api_user_id: @api_user.id, id: access_token.id }
 
       assert_redirected_to root_path
       assert_equal "You do not have permission to perform this action.", flash[:alert]
@@ -38,7 +38,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
 
     context "GET new" do
       should "should show a form to authorise api access to a particular application" do
-        get :new, api_user_id: @api_user.id
+        get :new, params: { api_user_id: @api_user.id }
         assert_select "option[value='#{@application.id}']", @application.name
       end
     end
@@ -46,7 +46,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
     context "POST create" do
       should "create a new access token and populate flash with it" do
         assert_difference 'Doorkeeper::AccessToken.count', 1 do
-          post :create, api_user_id: @api_user.id, doorkeeper_access_token: { application_id: @application.id }
+          post :create, params: { api_user_id: @api_user.id, doorkeeper_access_token: { application_id: @application.id } }
         end
 
         token = Doorkeeper::AccessToken.last
@@ -54,7 +54,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
       end
 
       should "add a 'signin' permission for the authorised application" do
-        post :create, api_user_id: @api_user.id, doorkeeper_access_token: { application_id: @application.id }
+        post :create, params: { api_user_id: @api_user.id, doorkeeper_access_token: { application_id: @application.id } }
 
         assert @api_user.has_access_to?(@application)
       end
@@ -62,7 +62,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
       should "not duplicate 'signin' permission for the authorised application if it already exists" do
         @api_user.grant_application_permission(@application, 'signin')
 
-        post :create, api_user_id: @api_user.id, doorkeeper_access_token: { application_id: @application.id }
+        post :create, params: { api_user_id: @api_user.id, doorkeeper_access_token: { application_id: @application.id } }
 
         assert_equal ['signin'], @api_user.permissions_for(@application)
       end
