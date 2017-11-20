@@ -24,31 +24,6 @@ class UserParameterSanitiserTest < ActiveSupport::TestCase
     end
   end
 
-  context "with ActionController params object" do
-    setup do
-      permitted_params_by_role = { normal: [:name, :email] }
-      @user_params = ActionController::Parameters.new(
-        { name: "Bill", email: "bill@bill.com" }
-      )
-
-      @sanitised_params = UserParameterSanitiser.new(
-        user_params: @user_params,
-        current_user_role: :normal,
-        permitted_params_by_role: permitted_params_by_role,
-      ).sanitise
-    end
-
-    should "return permitted params object" do
-      assert_instance_of ActionController::Parameters, @sanitised_params
-      assert @sanitised_params.permitted?
-    end
-
-    should "permit the permitted params" do
-      assert_equal @user_params[:name], @sanitised_params[:name]
-      assert_equal @user_params[:email], @sanitised_params[:email]
-    end
-  end
-
   context "when unpermitted params are supplied" do
     setup do
       permitted_params_by_role = {
