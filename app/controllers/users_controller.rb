@@ -58,7 +58,7 @@ class UsersController < ApplicationController
     EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK, initiator: current_user)
     @user.unlock_access!
     flash[:notice] = "Unlocked #{@user.email}"
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def resend_email_change
@@ -79,7 +79,7 @@ class UsersController < ApplicationController
     @user.unconfirmed_email = nil
     @user.confirmation_token = nil
     @user.save(validate: false)
-    redirect_to :back
+    redirect_back(fallback_location: root_path)
   end
 
   def event_logs
