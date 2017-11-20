@@ -54,8 +54,13 @@ private
 
   def api_user_params
     UserParameterSanitiser.new(
-      user_params: params.require(:api_user),
+      user_params: permitted_user_params(params.require(:api_user)).to_h,
       current_user_role: current_user.role.to_sym,
     ).sanitise
   end
+
+  def permitted_user_params(params)
+    params.permit(:email, :name, permissions_attributes: {}, supported_permission_ids: [])
+  end
+
 end
