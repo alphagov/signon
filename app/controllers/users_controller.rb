@@ -194,6 +194,7 @@ class UsersController < ApplicationController
   # When no permissions are selected for a user, we set the value to [] so
   # a user can have no permissions
   def allow_no_application_access
+    params[:user] ||= {}
     params[:user][:supported_permission_ids] ||= []
   end
 
