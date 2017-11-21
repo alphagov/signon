@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
   scope :not_recently_unsuspended, lambda { where(['unsuspended_at IS NULL OR unsuspended_at < ?', UNSUSPENSION_GRACE_PERIOD.ago]) }
   scope :with_access_to_application, lambda { |application| UsersWithAccess.new(self, application).users }
   scope :with_2sv_enabled, lambda { |enabled|
-    enabled = ActiveRecord::Type::Boolean.new.type_cast_from_user(enabled)
+    enabled = ActiveRecord::Type::Boolean.new.cast(enabled)
     where("otp_secret_key IS #{'NOT' if enabled} NULL")
   }
 
