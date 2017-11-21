@@ -34,7 +34,7 @@ class UsersController < ApplicationController
       end
       format.csv do
         headers['Content-Disposition'] = 'attachment; filename="signon_users.csv"'
-        render text: export, content_type: 'text/csv'
+        render plain: export, content_type: 'text/csv'
       end
     end
   end
