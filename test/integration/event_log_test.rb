@@ -76,7 +76,6 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
 
     assert_equal EventLog::PASSPHRASE_RESET_FAILURE, event_log.entry
     assert_match "Passphrase can't be blank", event_log.trailing_message
-    assert_match "Passphrase not strong enough", event_log.trailing_message
   end
 
   test "record successful passphrase reset from email" do
