@@ -24,7 +24,7 @@ class PasswordsController < Devise::PasswordsController
 
   def update
     super do |resource|
-      if resource.valid?
+      if resource.errors.empty?
         record_password_reset_success(resource)
       else
         record_password_reset_failure(resource)
