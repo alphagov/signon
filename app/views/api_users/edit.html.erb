@@ -32,10 +32,10 @@
 
 <% if authorisation = flash[:authorisation] %>
   <div class="alert alert-danger">
-    Make sure to copy the access token for <%= authorisation[:application_name] %> now. You won't be able to see it again!
+    Make sure to copy the access token for <%= authorisation["application_name"] %> now. You won't be able to see it again!
   </div>
   <div class="alert alert-info">
-    Access token for <%= authorisation[:application_name] %>: <span id='access-token'><%= authorisation[:token] %></span>
+    Access token for <%= authorisation["application_name"] %>: <span id='access-token'><%= authorisation["token"] %></span>
     <%= link_to 'Copy to clipboard', '#', class: 'btn btn-info add-left-margin', data: { 'clipboard-target' => 'access-token' }, id: 'clip-button', title: 'Click to copy access token' %>
   </div>
 <% end %>
