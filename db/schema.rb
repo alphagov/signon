@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171108150355) do
+ActiveRecord::Schema.define(version: 20171122121841) do
 
   create_table "batch_invitation_application_permissions", force: :cascade do |t|
     t.integer  "batch_invitation_id",     limit: 4, null: false
@@ -70,7 +70,7 @@ ActiveRecord::Schema.define(version: 20171108150355) do
     t.string   "trailing_message", limit: 255
     t.integer  "event_id",         limit: 4
     t.integer  "ip_address",       limit: 8
-    t.integer  "user_agent_id",    limit: 4
+    t.integer  "user_agent_id",    limit: 8
   end
 
   add_index "event_logs", ["uid", "created_at"], name: "index_event_logs_on_uid_and_created_at", using: :btree

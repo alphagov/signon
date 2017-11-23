@@ -2,7 +2,7 @@ require 'csv'
 
 class BatchInvitationsController < ApplicationController
   include UserPermissionsControllerMethods
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
   helper_method :applications_and_permissions
   helper_method :recent_batch_invitations
