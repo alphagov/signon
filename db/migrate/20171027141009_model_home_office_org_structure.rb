@@ -1,4 +1,4 @@
-class ModelHomeOfficeOrgStructure < ActiveRecord::Migration
+class ModelHomeOfficeOrgStructure < ActiveRecord::Migration[4.2]
   def up
     ho = Organisation.find_by(name: "Home Office")
 

@@ -1,4 +1,4 @@
-class MakeOrganisationContentIdNotNullable < ActiveRecord::Migration
+class MakeOrganisationContentIdNotNullable < ActiveRecord::Migration[4.2]
   class User < ActiveRecord::Base
     belongs_to :organisation
   end

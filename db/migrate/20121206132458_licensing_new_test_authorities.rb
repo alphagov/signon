@@ -1,4 +1,4 @@
-class LicensingNewTestAuthorities < ActiveRecord::Migration
+class LicensingNewTestAuthorities < ActiveRecord::Migration[4.2]
   def up
     unless licensing.nil?
       SupportedPermission.create(application: licensing, name: "gds-test-2")

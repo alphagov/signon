@@ -1,4 +1,4 @@
-class AddAdminSupportedPermissionToNeedoTron < ActiveRecord::Migration
+class AddAdminSupportedPermissionToNeedoTron < ActiveRecord::Migration[4.2][4.2]
   class SupportedPermission < ActiveRecord::Base
     belongs_to :application, class_name: 'Doorkeeper::Application'
   end

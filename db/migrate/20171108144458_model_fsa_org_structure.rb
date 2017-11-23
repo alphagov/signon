@@ -1,4 +1,4 @@
-class ModelFsaOrgStructure < ActiveRecord::Migration
+class ModelFsaOrgStructure < ActiveRecord::Migration[4.2]
   def up
     fsa = Organisation.find_by(name: "Food Standards Agency")
 

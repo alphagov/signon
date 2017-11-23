@@ -1,4 +1,4 @@
-class RemoveSoftDeleteCorrectly < ActiveRecord::Migration
+class RemoveSoftDeleteCorrectly < ActiveRecord::Migration[4.2]
   def up
     remove_index :oauth_applications, :deleted_at if index_exists?(:oauth_applications, :deleted_at)
     remove_column :oauth_applications, :deleted_at if column_exists?(:oauth_applications, :deleted_at)

@@ -1,4 +1,4 @@
-class ModelMojOrgStructure < ActiveRecord::Migration
+class ModelMojOrgStructure < ActiveRecord::Migration[4.2]
   def up
     moj = Organisation.find_by(name: "Ministry of Justice")
     hmcts = Organisation.find_by(name: "HM Courts & Tribunals Service")

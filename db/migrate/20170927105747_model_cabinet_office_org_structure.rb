@@ -1,4 +1,4 @@
-class ModelCabinetOfficeOrgStructure < ActiveRecord::Migration
+class ModelCabinetOfficeOrgStructure < ActiveRecord::Migration[4.2]
   def up
     cabinet_office = Organisation.find_by(name: "Cabinet Office")
     downing_street = Organisation.find_by(name: "Prime Minister's Office, 10 Downing Street")

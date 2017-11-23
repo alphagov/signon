@@ -1,4 +1,4 @@
-class UserInSingleOrganisation < ActiveRecord::Migration
+class UserInSingleOrganisation < ActiveRecord::Migration[4.2][4.2]
   def up
     drop_table :organisations_users
 

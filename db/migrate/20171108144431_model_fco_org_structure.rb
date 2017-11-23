@@ -1,4 +1,4 @@
-class ModelFcoOrgStructure < ActiveRecord::Migration
+class ModelFcoOrgStructure < ActiveRecord::Migration[4.2][4.2]
   def up
     fco = Organisation.find_by(name: "Foreign & Commonwealth Office")
     gch = Organisation.find_by(name: "Government Communications Headquarters")

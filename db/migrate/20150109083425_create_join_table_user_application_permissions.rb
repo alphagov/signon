@@ -1,4 +1,4 @@
-class CreateJoinTableUserApplicationPermissions < ActiveRecord::Migration
+class CreateJoinTableUserApplicationPermissions < ActiveRecord::Migration[4.2]
   def change
     create_table :user_application_permissions do |t|
       t.integer :user_id, null: false

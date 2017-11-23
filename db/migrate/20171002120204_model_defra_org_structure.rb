@@ -1,4 +1,4 @@
-class ModelDefraOrgStructure < ActiveRecord::Migration
+class ModelDefraOrgStructure < ActiveRecord::Migration[4.2]
   def up
     defra = Organisation.find_by(name: "Department for Environment, Food & Rural Affairs")
     fera = Organisation.find_by(name: "The Food and Environment Research Agency")

@@ -1,4 +1,4 @@
-class UpdateEventLogIndices < ActiveRecord::Migration
+class UpdateEventLogIndices < ActiveRecord::Migration[4.2][4.2]
   def up
     change_column :event_logs, :created_at, :datetime, :null => false
     add_index :event_logs, [:uid, :created_at]

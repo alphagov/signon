@@ -1,4 +1,4 @@
-class ModelDfeOrgStructure < ActiveRecord::Migration
+class ModelDfeOrgStructure < ActiveRecord::Migration[4.2]
   def up
     dfe = Organisation.find_by(name: "Department for Education")
 

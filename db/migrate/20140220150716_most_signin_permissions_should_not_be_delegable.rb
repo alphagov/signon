@@ -1,4 +1,4 @@
-class MostSigninPermissionsShouldNotBeDelegable < ActiveRecord::Migration
+class MostSigninPermissionsShouldNotBeDelegable < ActiveRecord::Migration[4.2]
   def up
     require 'enhancements/application.rb'
 

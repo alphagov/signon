@@ -1,4 +1,4 @@
-class ModelDclgOrgStructure < ActiveRecord::Migration
+class ModelDclgOrgStructure < ActiveRecord::Migration[4.2]
   def up
     dclg = Organisation.find_by(name: "Department for Communities and Local Government")
 

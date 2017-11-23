@@ -1,4 +1,4 @@
-class AddDescriptionToApplications < ActiveRecord::Migration
+class AddDescriptionToApplications < ActiveRecord::Migration[4.2]
   def change
     add_column :oauth_applications, :home_uri, :string
     add_column :oauth_applications, :description, :string
