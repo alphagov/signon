@@ -1,4 +1,4 @@
-class AssignAphaOrgToNewParent < ActiveRecord::Migration
+class AssignAphaOrgToNewParent < ActiveRecord::Migration[4.2]
   def up
     defra = Organisation.find_by(name: "Department for Environment, Food & Rural Affairs")
 

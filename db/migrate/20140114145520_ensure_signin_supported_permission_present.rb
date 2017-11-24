@@ -1,4 +1,4 @@
-class EnsureSigninSupportedPermissionPresent < ActiveRecord::Migration
+class EnsureSigninSupportedPermissionPresent < ActiveRecord::Migration[4.2]
   def up
     require 'enhancements/application.rb'
 

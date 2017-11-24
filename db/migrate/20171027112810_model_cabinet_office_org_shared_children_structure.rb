@@ -1,4 +1,4 @@
-class ModelCabinetOfficeOrgSharedChildrenStructure < ActiveRecord::Migration
+class ModelCabinetOfficeOrgSharedChildrenStructure < ActiveRecord::Migration[4.2]
   def up
     cabinet_office = Organisation.find_by(name: "Cabinet Office")
 

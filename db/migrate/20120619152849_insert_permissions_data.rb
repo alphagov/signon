@@ -1,4 +1,4 @@
-class InsertPermissionsData < ActiveRecord::Migration
+class InsertPermissionsData < ActiveRecord::Migration[4.2]
   def up
     everything_app = ::Doorkeeper::Application.create!(name: "Everything", uid: "not-a-real-app", secret: "does-not-have-a-secret", redirect_uri: "https://not-a-domain.com")
     User.all.each do |user|

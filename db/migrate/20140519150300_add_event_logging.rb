@@ -1,4 +1,4 @@
-class AddEventLogging < ActiveRecord::Migration
+class AddEventLogging < ActiveRecord::Migration[4.2][4.2]
   def self.up
     create_table :event_logs do |t|
       t.string   :uid, :null => false

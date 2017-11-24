@@ -1,4 +1,4 @@
-class AddContentIdToOrganisations < ActiveRecord::Migration
+class AddContentIdToOrganisations < ActiveRecord::Migration[4.2][4.2]
   def change
     # This can be made not-nullable once populated
     add_column :organisations, :content_id, :string

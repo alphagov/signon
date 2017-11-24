@@ -1,4 +1,4 @@
-class GrantEditorPermsToAllMaslowUsers < ActiveRecord::Migration
+class GrantEditorPermsToAllMaslowUsers < ActiveRecord::Migration[4.2][4.2]
   class Permission < ActiveRecord::Base
     serialize :permissions, Array
   end

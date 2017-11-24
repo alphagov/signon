@@ -1,4 +1,4 @@
-class ModelAgoOrgStructure < ActiveRecord::Migration
+class ModelAgoOrgStructure < ActiveRecord::Migration[4.2]
   def up
     ago = Organisation.find_by(name: "Attorney General's Office")
     tsd = Organisation.find_by(name: "Treasury Solicitor’s Department")

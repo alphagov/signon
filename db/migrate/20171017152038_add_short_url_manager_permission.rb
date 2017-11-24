@@ -1,4 +1,4 @@
-class AddShortUrlManagerPermission < ActiveRecord::Migration
+class AddShortUrlManagerPermission < ActiveRecord::Migration[4.2]
   def up
     app = Doorkeeper::Application.find_by(name: "Short URL Manager")
     manage_short_urls = SupportedPermission.find_by(application: app, name: "manage_short_urls")

@@ -1,4 +1,4 @@
-class FixPasswordResetForExistingUsers < ActiveRecord::Migration
+class FixPasswordResetForExistingUsers < ActiveRecord::Migration[4.2]
   def up
     # devise_invitable #invite! calls #skip_confirmation!, which in turn sets confirmed_at to Time.zone.now.
     # That means that when the user accepts the invitation, they are already "confirmed", and everything works.

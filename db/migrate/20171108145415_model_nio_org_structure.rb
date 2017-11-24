@@ -1,4 +1,4 @@
-class ModelNioOrgStructure < ActiveRecord::Migration
+class ModelNioOrgStructure < ActiveRecord::Migration[4.2]
   def up
     nio = Organisation.find_by(name: "Northern Ireland Office")
     so = Organisation.find_by(name: "Scotland Office")

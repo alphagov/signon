@@ -1,4 +1,4 @@
-class AddIndicesForUser < ActiveRecord::Migration
+class AddIndicesForUser < ActiveRecord::Migration[4.2]
   def try_to(&block)
     begin
       yield
