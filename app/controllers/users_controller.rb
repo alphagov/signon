@@ -3,15 +3,15 @@ require 'csv'
 class UsersController < ApplicationController
   include UserPermissionsControllerMethods
 
-  before_action :authenticate_user!, except: :show
-  before_action :load_and_authorize_user, except: [:index, :show]
-  before_action :allow_no_application_access, only: [:update]
+  before_filter :authenticate_user!, except: :show
+  before_filter :load_and_authorize_user, except: [:index, :show]
+  before_filter :allow_no_application_access, only: [:update]
   helper_method :applications_and_permissions, :any_filter?
   respond_to :html
 
-  before_action :doorkeeper_authorize!, only: :show
-  before_action :validate_token_matches_client_id, only: :show
-  skip_after_action :verify_authorized, only: :show
+  before_filter :doorkeeper_authorize!, only: :show
+  before_filter :validate_token_matches_client_id, only: :show
+  skip_after_filter :verify_authorized, only: :show
 
   def show
     current_resource_owner.permissions_synced!(application_making_request)
@@ -34,7 +34,7 @@ class UsersController < ApplicationController
       end
       format.csv do
         headers['Content-Disposition'] = 'attachment; filename="signon_users.csv"'
-        render plain: export, content_type: 'text/csv'
+        render text: export, content_type: 'text/csv'
       end
     end
   end
@@ -58,7 +58,7 @@ class UsersController < ApplicationController
     EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK, initiator: current_user)
     @user.unlock_access!
     flash[:notice] = "Unlocked #{@user.email}"
-    redirect_back(fallback_location: root_path)
+    redirect_to :back
   end
 
   def resend_email_change
@@ -79,7 +79,7 @@ class UsersController < ApplicationController
     @user.unconfirmed_email = nil
     @user.confirmation_token = nil
     @user.save(validate: false)
-    redirect_back(fallback_location: root_path)
+    redirect_to :back
   end
 
   def event_logs
@@ -194,19 +194,14 @@ class UsersController < ApplicationController
   # When no permissions are selected for a user, we set the value to [] so
   # a user can have no permissions
   def allow_no_application_access
-    params[:user] ||= {}
     params[:user][:supported_permission_ids] ||= []
   end
 
   def user_params
     UserParameterSanitiser.new(
-      user_params: permitted_user_params,
+      user_params: params.require(:user),
       current_user_role: current_user.role.to_sym,
     ).sanitise
-  end
-
-  def permitted_user_params
-    params.require(:user).permit(:user, :name, :email, :organisation_id, :require_2sv, :role, supported_permission_ids: []).to_h
   end
 
   def password_params

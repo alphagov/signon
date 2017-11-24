@@ -39,7 +39,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
 
   context 'POST #create' do
     setup do
-      post :create, params: { client_id: @application.uid, response_type: 'token', redirect_uri: @application.redirect_uri }
+      post :create, client_id: @application.uid, response_type: 'token', redirect_uri: @application.redirect_uri
     end
 
     should 'redirect after authorization' do
@@ -59,8 +59,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     end
 
     should 'include token expiration in fragment' do
-      assert_not_nil fragments('expires_in')
-      assert fragments('expires_in').to_i >= 1.hour.to_i
+      assert_equal 2.hours.to_i, fragments('expires_in').to_i
     end
 
     should 'issue the token for the current client' do
@@ -75,7 +74,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
   context 'POST #create with errors' do
     setup do
       default_scopes_exist :public
-      post :create, params: { client_id: @application.uid, response_type: 'token', scope: 'invalid', redirect_uri: @application.redirect_uri }
+      post :create, client_id: @application.uid, response_type: 'token', scope: 'invalid', redirect_uri: @application.redirect_uri
     end
 
     should 'redirect after authorization' do
@@ -107,7 +106,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     setup do
       @user.application_permissions.where(supported_permission_id: @application.signin_permission).destroy_all
       @user.application_permissions.reload
-      post :create, params: { client_id: @application.uid, response_type: 'token', redirect_uri: @application.redirect_uri }
+      post :create, client_id: @application.uid, response_type: 'token', redirect_uri: @application.redirect_uri
     end
 
     should 'redirect after authorization' do
@@ -128,7 +127,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
       # technically redundant as this is our configuration anyway
       Doorkeeper.configuration.stubs(skip_authorization: ->(*_args) { true })
       @application.update_attribute :redirect_uri, 'urn:ietf:wg:oauth:2.0:oob'
-      get :new, params: { client_id: @application.uid, response_type: 'token', redirect_uri: @application.redirect_uri }
+      get :new, client_id: @application.uid, response_type: 'token', redirect_uri: @application.redirect_uri
     end
 
     should 'redirect immediately' do
@@ -151,7 +150,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
       # technically redundant as this is our configuration anyway
       Doorkeeper.configuration.stubs(skip_authorization: ->(*_args) { true })
       @application.update_attribute :redirect_uri, 'urn:ietf:wg:oauth:2.0:oob'
-      get :new, params: { client_id: @application.uid, response_type: 'code', redirect_uri: @application.redirect_uri }
+      get :new, client_id: @application.uid, response_type: 'code', redirect_uri: @application.redirect_uri
     end
 
     should 'redirect immediately' do
@@ -172,7 +171,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     setup do
       # technically redundant as this is our configuration anyway
       Doorkeeper.configuration.stubs(skip_authorization: ->(*_args) { true })
-      get :new, params: { client_id: @application.uid, response_type: 'token', redirect_uri: @application.redirect_uri }
+      get :new, client_id: @application.uid, response_type: 'token', redirect_uri: @application.redirect_uri
     end
 
     should 'redirect immediately' do
@@ -189,8 +188,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     end
 
     should 'include token expiration in fragment' do
-      assert_not_nil fragments('expires_in')
-      assert fragments('expires_in').to_i >= 1.hour.to_i
+      assert_equal 2.hours.to_i, fragments('expires_in').to_i
     end
 
     should 'issue the token for the current client' do
@@ -205,7 +203,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
   context 'GET #new with errors' do
     setup do
       default_scopes_exist :public
-      get :new, params: { an_invalid: 'request' }
+      get :new, an_invalid: 'request'
     end
 
     should 'not redirect' do
@@ -224,7 +222,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
       @user.application_permissions.reload
       # technically redundant as this is our configuration anyway
       Doorkeeper.configuration.stubs(skip_authorization: ->(*_args) { true })
-      get :new, params: { client_id: @application.uid, response_type: 'token', redirect_uri: @application.redirect_uri }
+      get :new, client_id: @application.uid, response_type: 'token', redirect_uri: @application.redirect_uri
     end
 
     should 'redirect after authorization' do

@@ -1,4 +1,4 @@
-Rails.application.routes.draw do
+Signon::Application.routes.draw do
   use_doorkeeper do
     controllers authorizations: 'signin_required_authorizations'
   end

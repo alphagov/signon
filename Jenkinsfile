@@ -47,7 +47,6 @@ node {
 
     for (adapter in DB_ADAPTERS) {
       stage("Set up the DB") {
-        sh("RAILS_ENV=test SIGNONOTRON2_DB_ADAPTER=${adapter} bin/rails db:environment:set")
         sh("RAILS_ENV=test SIGNONOTRON2_DB_ADAPTER=${adapter} bundle exec rake db:drop db:create db:schema:load")
       }
 

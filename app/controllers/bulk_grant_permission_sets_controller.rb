@@ -1,6 +1,6 @@
 class BulkGrantPermissionSetsController < ApplicationController
   include UserPermissionsControllerMethods
-  before_action :authenticate_user!
+  before_filter :authenticate_user!
 
   helper_method :applications_and_permissions
 
