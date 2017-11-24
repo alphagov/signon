@@ -1,6 +1,6 @@
 class PasswordsController < Devise::PasswordsController
-  before_action :record_password_reset_request, only: :create
-  before_action :record_reset_page_loaded, only: :edit
+  before_filter :record_password_reset_request, only: :create
+  before_filter :record_reset_page_loaded, only: :edit
 
   def edit
     super
@@ -24,7 +24,7 @@ class PasswordsController < Devise::PasswordsController
 
   def update
     super do |resource|
-      if resource.errors.empty?
+      if resource.valid?
         record_password_reset_success(resource)
       else
         record_password_reset_failure(resource)

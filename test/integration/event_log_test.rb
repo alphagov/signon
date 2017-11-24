@@ -36,7 +36,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
     should "not blow up if not given a string for the email" do
       # Assert we don't blow up when looking up the attempted user
       # when people have been messing with the posted params.
-      post "/users/sign_in", params: { "user" => { "email" => { "foo" => "bar" }, :password => "anything" } }
+      post "/users/sign_in", "user" => { "email" => { "foo" => "bar" }, :password => "anything" }
 
       assert response.success?
     end
@@ -76,6 +76,7 @@ class EventLogIntegrationTest < ActionDispatch::IntegrationTest
 
     assert_equal EventLog::PASSPHRASE_RESET_FAILURE, event_log.entry
     assert_match "Passphrase can't be blank", event_log.trailing_message
+    assert_match "Passphrase not strong enough", event_log.trailing_message
   end
 
   test "record successful passphrase reset from email" do

@@ -39,7 +39,7 @@ private
       self.update_column(:outcome, "skipped")
     else
       begin
-        user = User.invite!(sanitised_attributes.to_h, inviting_user)
+        user = User.invite!(sanitised_attributes, inviting_user)
         if user.persisted?
           self.update_column(:outcome, "success")
         else

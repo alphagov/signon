@@ -1,7 +1,7 @@
 # https://raw.github.com/scambra/devise_invitable/master/app/controllers/devise/invitations_controller.rb
 class InvitationsController < Devise::InvitationsController
-  before_action :authenticate_user!
-  after_action :verify_authorized, except: [:edit, :update]
+  before_filter :authenticate_user!
+  after_filter :verify_authorized, except: [:edit, :update]
 
   include UserPermissionsControllerMethods
   helper_method :applications_and_permissions
@@ -65,9 +65,9 @@ class InvitationsController < Devise::InvitationsController
     ).sanitise
 
     if params[:action] == "update"
-      sanitised_params.to_h.merge(invitation_token: invitation_token)
+      sanitised_params.merge(invitation_token: invitation_token)
     else
-      sanitised_params.to_h
+      sanitised_params
     end
   end
 
@@ -80,12 +80,7 @@ class InvitationsController < Devise::InvitationsController
   # https://github.com/plataformatec/devise/blob/v2.2/app/controllers/devise_controller.rb#L99
   # for details :)
   def unsanitised_user_params
-    params.require(:user).permit(
-      :name, :email, :organisation_id,
-      :invitation_token, :password,
-      :password_confirmation, :require_2sv,
-      :role
-    ).to_h
+    params.fetch(:user, {})
   end
 
   # NOTE: `current_user` doesn't exist for `#edit` and `#update` actions as
