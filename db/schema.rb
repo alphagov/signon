@@ -11,9 +11,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171122121841) do
+ActiveRecord::Schema.define(version: 20171108150355) do
 
-  create_table "batch_invitation_application_permissions", force: :cascade do |t|
+  create_table "batch_invitation_application_permissions", id: :integer, force: :cascade do |t|
     t.integer  "batch_invitation_id",     limit: 4, null: false
     t.integer  "supported_permission_id", limit: 4, null: false
     t.datetime "created_at",                        null: false
@@ -22,7 +22,7 @@ ActiveRecord::Schema.define(version: 20171122121841) do
 
   add_index "batch_invitation_application_permissions", ["batch_invitation_id", "supported_permission_id"], name: "index_batch_invite_app_perms_on_batch_invite_and_supported_perm", unique: true, using: :btree
 
-  create_table "batch_invitation_users", force: :cascade do |t|
+  create_table "batch_invitation_users", id: :integer, force: :cascade do |t|
     t.integer  "batch_invitation_id", limit: 4
     t.string   "name",                limit: 255
     t.string   "email",               limit: 255
@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 20171122121841) do
 
   add_index "batch_invitation_users", ["batch_invitation_id"], name: "index_batch_invitation_users_on_batch_invitation_id", using: :btree
 
-  create_table "batch_invitations", force: :cascade do |t|
+  create_table "batch_invitations", id: :integer, force: :cascade do |t|
     t.text     "applications_and_permissions", limit: 65535
     t.string   "outcome",                      limit: 255
     t.datetime "created_at",                                 null: false
@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 20171122121841) do
 
   add_index "batch_invitations", ["outcome"], name: "index_batch_invitations_on_outcome", using: :btree
 
-  create_table "bulk_grant_permission_set_application_permissions", force: :cascade do |t|
+  create_table "bulk_grant_permission_set_application_permissions", id: :integer, force: :cascade do |t|
     t.integer  "bulk_grant_permission_set_id", limit: 4, null: false
     t.integer  "supported_permission_id",      limit: 4, null: false
     t.datetime "created_at"
@@ -53,7 +53,7 @@ ActiveRecord::Schema.define(version: 20171122121841) do
 
   add_index "bulk_grant_permission_set_application_permissions", ["bulk_grant_permission_set_id", "supported_permission_id"], name: "index_app_permissions_on_bulk_grant_permission_set", unique: true, using: :btree
 
-  create_table "bulk_grant_permission_sets", force: :cascade do |t|
+  create_table "bulk_grant_permission_sets", id: :integer, force: :cascade do |t|
     t.integer  "user_id",         limit: 4,               null: false
     t.string   "outcome",         limit: 255
     t.integer  "processed_users", limit: 4,   default: 0, null: false
@@ -62,7 +62,7 @@ ActiveRecord::Schema.define(version: 20171122121841) do
     t.datetime "updated_at"
   end
 
-  create_table "event_logs", force: :cascade do |t|
+  create_table "event_logs", id: :integer, force: :cascade do |t|
     t.string   "uid",              limit: 255, null: false
     t.datetime "created_at",                   null: false
     t.integer  "initiator_id",     limit: 4
@@ -70,13 +70,13 @@ ActiveRecord::Schema.define(version: 20171122121841) do
     t.string   "trailing_message", limit: 255
     t.integer  "event_id",         limit: 4
     t.integer  "ip_address",       limit: 8
-    t.integer  "user_agent_id",    limit: 8
+    t.integer  "user_agent_id",    limit: 4
   end
 
   add_index "event_logs", ["uid", "created_at"], name: "index_event_logs_on_uid_and_created_at", using: :btree
   add_index "event_logs", ["user_agent_id"], name: "event_logs_user_agent_id_fk", using: :btree
 
-  create_table "oauth_access_grants", force: :cascade do |t|
+  create_table "oauth_access_grants", id: :integer, force: :cascade do |t|
     t.integer  "resource_owner_id", limit: 4,   null: false
     t.integer  "application_id",    limit: 4,   null: false
     t.string   "token",             limit: 255, null: false
@@ -89,7 +89,7 @@ ActiveRecord::Schema.define(version: 20171122121841) do
 
   add_index "oauth_access_grants", ["token"], name: "index_oauth_access_grants_on_token", unique: true, using: :btree
 
-  create_table "oauth_access_tokens", force: :cascade do |t|
+  create_table "oauth_access_tokens", id: :integer, force: :cascade do |t|
     t.integer  "resource_owner_id", limit: 4,   null: false
     t.integer  "application_id",    limit: 4,   null: false
     t.string   "token",             limit: 255, null: false
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 20171122121841) do
   add_index "oauth_access_tokens", ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id", using: :btree
   add_index "oauth_access_tokens", ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
 
-  create_table "oauth_applications", force: :cascade do |t|
+  create_table "oauth_applications", id: :integer, force: :cascade do |t|
     t.string   "name",                  limit: 255
     t.string   "uid",                   limit: 255,                 null: false
     t.string   "secret",                limit: 255,                 null: false
@@ -120,7 +120,7 @@ ActiveRecord::Schema.define(version: 20171122121841) do
   add_index "oauth_applications", ["name"], name: "unique_application_name", unique: true, using: :btree
   add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
 
-  create_table "old_passwords", force: :cascade do |t|
+  create_table "old_passwords", id: :integer, force: :cascade do |t|
     t.string   "encrypted_password",       limit: 255, null: false
     t.string   "password_salt",            limit: 255
     t.integer  "password_archivable_id",   limit: 4,   null: false
@@ -130,7 +130,7 @@ ActiveRecord::Schema.define(version: 20171122121841) do
 
   add_index "old_passwords", ["password_archivable_type", "password_archivable_id"], name: "index_password_archivable", using: :btree
 
-  create_table "organisations", force: :cascade do |t|
+  create_table "organisations", id: :integer, force: :cascade do |t|
     t.string   "slug",              limit: 255,                 null: false
     t.string   "name",              limit: 255,                 null: false
     t.string   "organisation_type", limit: 255,                 null: false
@@ -146,7 +146,7 @@ ActiveRecord::Schema.define(version: 20171122121841) do
   add_index "organisations", ["content_id"], name: "index_organisations_on_content_id", unique: true, using: :btree
   add_index "organisations", ["slug"], name: "index_organisations_on_slug", unique: true, using: :btree
 
-  create_table "supported_permissions", force: :cascade do |t|
+  create_table "supported_permissions", id: :integer, force: :cascade do |t|
     t.integer  "application_id",    limit: 4
     t.string   "name",              limit: 255
     t.datetime "created_at"
@@ -159,13 +159,13 @@ ActiveRecord::Schema.define(version: 20171122121841) do
   add_index "supported_permissions", ["application_id", "name"], name: "index_supported_permissions_on_application_id_and_name", unique: true, using: :btree
   add_index "supported_permissions", ["application_id"], name: "index_supported_permissions_on_application_id", using: :btree
 
-  create_table "user_agents", force: :cascade do |t|
+  create_table "user_agents", id: :integer, force: :cascade do |t|
     t.string "user_agent_string", limit: 1000, null: false
   end
 
   add_index "user_agents", ["user_agent_string"], name: "index_user_agents_on_user_agent_string", length: {"user_agent_string"=>255}, using: :btree
 
-  create_table "user_application_permissions", force: :cascade do |t|
+  create_table "user_application_permissions", id: :integer, force: :cascade do |t|
     t.integer  "user_id",                 limit: 4, null: false
     t.integer  "application_id",          limit: 4, null: false
     t.integer  "supported_permission_id", limit: 4, null: false
@@ -176,7 +176,7 @@ ActiveRecord::Schema.define(version: 20171122121841) do
 
   add_index "user_application_permissions", ["user_id", "application_id", "supported_permission_id"], name: "index_app_permissions_on_user_and_app_and_supported_permission", unique: true, using: :btree
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :integer, force: :cascade do |t|
     t.string   "name",                         limit: 255,                    null: false
     t.string   "email",                        limit: 255, default: "",       null: false
     t.string   "encrypted_password",           limit: 255, default: ""
