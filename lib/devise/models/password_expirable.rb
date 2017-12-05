@@ -48,7 +48,7 @@ module Devise
         ::Devise::Models.config(self, :expire_password_after)
 
         def password_expires?
-          self.expire_password_after.is_a?(Fixnum) || self.expire_password_after.is_a?(Float)
+          self.expire_password_after.is_a?(Integer) || self.expire_password_after.is_a?(Float)
         end
       end
     end
