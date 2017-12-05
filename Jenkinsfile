@@ -37,6 +37,11 @@ node {
       govuk.mergeMasterBranch()
     }
 
+    stage("Configure environment") {
+      govuk.setEnvar("DISABLE_DATABASE_ENVIRONMENT_CHECK", "1")
+      govuk.setEnvar("RAILS_ENV", "test")
+    }
+
     stage("bundle install") {
       govuk.bundleApp()
     }
@@ -51,7 +56,7 @@ node {
       }
 
       stage("Run tests") {
-        sh("RAILS_ENV=test SIGNONOTRON2_DB_ADAPTER=${adapter} bundle exec rake --trace")
+        sh("SIGNONOTRON2_DB_ADAPTER=${adapter} bundle exec rake --trace")
       }
     }
 

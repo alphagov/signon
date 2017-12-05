@@ -1,4 +1,4 @@
-require File.expand_path('../boot', __FILE__)
+require_relative 'boot'
 
 require 'rails/all'
 require_relative '../lib/same_site_security/middleware'
@@ -13,6 +13,8 @@ module Signon
   end
 
   class Application < Rails::Application
+    config.load_defaults 5.1
+    config.active_record.belongs_to_required_by_default = false
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -54,12 +56,10 @@ module Signon
       Doorkeeper::ApplicationController.layout "application"
     end
 
-    config.autoload_paths << Rails.root.join('lib')
+    config.eager_load_paths << Rails.root.join('lib')
 
     config.active_job.queue_adapter = :sidekiq
 
     config.middleware.insert_before 0, SameSiteSecurity::Middleware
-
-    config.active_record.raise_in_transactional_callbacks = true
   end
 end

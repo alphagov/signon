@@ -1,5 +1,5 @@
 class SuspensionsController < ApplicationController
-  before_filter :authenticate_user!, :load_and_authorize_user
+  before_action :authenticate_user!, :load_and_authorize_user
   respond_to :html
 
   def update
