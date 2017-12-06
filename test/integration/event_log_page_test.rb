@@ -99,6 +99,23 @@ class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
     assert page.has_content?("You do not have permission to perform this action")
   end
 
+  test "pages are paginated properly" do
+    # 1 more than the number of items on the page to force pagination
+    101.times { EventLog.record_event(@user, EventLog::SUCCESSFUL_LOGIN) }
+
+    visit root_path
+
+    signin_with(create(:superadmin_user))
+
+    visit event_logs_user_path(@user)
+
+    assert_text 'Successful login'
+
+    first("a[rel=next]").click
+
+    assert_text 'Successful login'
+  end
+
   def assert_account_access_log_page_content(user)
     assert_text 'Time'
     assert_text 'Event'
