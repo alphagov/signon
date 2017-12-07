@@ -45,6 +45,30 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       end
     end
 
+    should "grant the permissions selected" do
+      application_one = create(:application)
+      create(:supported_permission, application: application_one, name: 'editor')
+      application_two = create(:application)
+      create(:supported_permission, application: application_two, name: 'gds-admin')
+
+      visit new_user_invitation_path
+      fill_in "Name", with: "Alicia Smith"
+      fill_in "Email", with: "alicia@example.com"
+
+      uncheck "Has access to #{application_one.name}?"
+      check "Has access to #{application_two.name}?"
+      select 'editor', from: "Permissions for #{application_one.name}"
+      unselect 'gds-admin', from: "Permissions for #{application_two.name}"
+
+      click_button "Create user and send email"
+
+      u = User.find_by(email: 'alicia@example.com')
+      refute u.has_access_to? application_one
+      assert_includes u.permissions_for(application_one), 'editor'
+      assert u.has_access_to? application_two
+      refute_includes u.permissions_for(application_two), 'gds-admin'
+    end
+
     should "grant the user any default permissions" do
       application_one = create(:application)
       create(:supported_permission, application: application_one, name: 'editor', default: true)
@@ -104,6 +128,30 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
         assert_equal "fred_admin@example.com", last_email.to[0]
         assert_match 'Please confirm your account', last_email.subject
       end
+    end
+
+    should "grant the permissions selected" do
+      application_one = create(:application)
+      create(:supported_permission, application: application_one, name: 'editor')
+      application_two = create(:application)
+      create(:supported_permission, application: application_two, name: 'gds-admin')
+
+      visit new_user_invitation_path
+      fill_in "Name", with: "Alicia Smith"
+      fill_in "Email", with: "alicia@example.com"
+
+      uncheck "Has access to #{application_one.name}?"
+      check "Has access to #{application_two.name}?"
+      select 'editor', from: "Permissions for #{application_one.name}"
+      unselect 'gds-admin', from: "Permissions for #{application_two.name}"
+
+      click_button "Create user and send email"
+
+      u = User.find_by(email: 'alicia@example.com')
+      refute u.has_access_to? application_one
+      assert_includes u.permissions_for(application_one), 'editor'
+      assert u.has_access_to? application_two
+      refute_includes u.permissions_for(application_two), 'gds-admin'
     end
 
     should "grant the user any default permissions" do
