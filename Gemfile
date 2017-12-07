@@ -15,7 +15,7 @@ gem 'rails-html-sanitizer', '1.0.3'
 gem 'nokogiri', '>= 1.8.1'
 
 gem 'plek', '~> 2.0'
-gem 'json', '1.8.3'
+gem 'json', '2.1.0'
 gem 'addressable', '~> 2.3.8'
 
 gem 'uuid'
@@ -78,7 +78,7 @@ group :test do
   gem 'database_cleaner', '1.6.2'
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'mocha', '1.1.0', require: false
-  gem 'webmock', '1.22.3'
+  gem 'webmock', '~> 2.3.0'
   gem 'minitest', '~> 5.8.0'
   gem 'ci_reporter', '1.7.0'
   gem 'timecop', '0.7.1'

@@ -30,7 +30,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
 
   test 'warn if doorkeeper has been updated' do
     # We extracted SigninRequiredAuthorizationsController and its tests from
-    # those for Doorkeeper::AuthorizationsController in version 4.2.0 it's very
+    # those for Doorkeeper::AuthorizationsController in version 4.2.6 it's very
     # possible that future versions of doorkeeper change the implementation or
     # tests and we should keep our versions up to date.  They may also have
     # introduced a better way for us to customise the behaviour.
@@ -120,6 +120,23 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
 
     should 'not issue any access token' do
       assert Doorkeeper::AccessToken.all.empty?
+    end
+  end
+
+  context 'POST #create with application already authorized' do
+    setup do
+      Doorkeeper.configuration.stubs(reuse_access_token: true)
+      @access_token = create(:access_token, resource_owner_id: @user.id, application_id: @application.id)
+      @access_token.save!
+      post :create, params: { client_id: @application.uid, response_type: 'token', redirect_uri: @application.redirect_uri }
+    end
+
+    should 'returns the existing access token in a fragment' do
+      assert_equal fragments('access_token'), @access_token.token
+    end
+
+    should 'not creates a new access token' do
+      assert_equal Doorkeeper::AccessToken.count, 1
     end
   end
 

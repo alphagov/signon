@@ -25,7 +25,7 @@ module Devise
       private
 
       def password_archive_included?
-        unless self.class.deny_old_passwords.is_a? Fixnum
+        unless self.class.deny_old_passwords.is_a? Integer
           if self.class.deny_old_passwords.is_a?(TrueClass) && archive_count > 0
             self.class.deny_old_passwords = archive_count
           else

@@ -1,6 +1,6 @@
 class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsController
   include Pundit
-  EXPECTED_DOORKEEPER_VERSION = '4.2.0'
+  EXPECTED_DOORKEEPER_VERSION = '4.2.6'
 
   def new
     if pre_auth.authorizable?
