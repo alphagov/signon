@@ -24,7 +24,7 @@ applications=Comma,Seperated,ListOf,Application,Names* \
 ```
 
 \* You can also set the applications in a comma separated list via an
-`ENV['APPLICATIONS']` variable if you prefer.
+`ENV['applications']` variable if you prefer.
 
 ## Access Tokens
 
@@ -63,7 +63,7 @@ if you just want to get this working, follow the steps below:
   GDS_SSO_STRATEGY=real bundle exec rails s
   ```
 
-### Creating new permissions
+## Creating new permissions
 
 To create a new permission for an existing app, you first need to have the
 "superadmin" role on your account (or have access to someone who does): you'll
@@ -72,6 +72,27 @@ application you want to change, follow the "Supported Permissions" link and add
 a new permission from there.
 
 Note that this UI won't let you edit or delete existing permissions.
+
+## Creating new organisations
+
+Instead of creating organisations directly in signon we pull them in from
+whitehall which is the canonical source.  If you run:
+
+    rake organisations:fetch
+
+This will communicate with whitehall to get the complete list of orgs and
+the relationships between them.  It then uses this information to make sure
+signon is up to date.
+
+One downside to this is that whitehall allows an org to have multiple parents
+whereas signon only allows for a single parent.  Signon's behaviour is
+currently to set the parent of an org with multiple parents to the one that
+appears last in the api response.
+
+On deployed environments this rake task is run nightly at 11pm via jenkins.
+This is configured in [govuk-puppet](https://github.com/alphagov/govuk-puppet).
+If you want orgs and their relationships to be modelled correctly in signon,
+you should do it whitehall and then let this nightly import do its thing.
 
 ## Implementation Notes
 
