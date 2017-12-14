@@ -82,5 +82,5 @@ group :test do
   gem 'minitest', '~> 5.8.0'
   gem 'ci_reporter', '1.7.0'
   gem 'timecop', '0.7.1'
-  gem 'shoulda-context', '1.2.1', require: false
+  gem 'shoulda-context', '1.2.2', require: false
 end
