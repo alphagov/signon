@@ -80,7 +80,7 @@ group :test do
   gem 'mocha', '1.1.0', require: false
   gem 'webmock', '~> 2.3.0'
   gem 'minitest', '~> 5.8.0'
-  gem 'ci_reporter', '1.7.0'
+  gem 'ci_reporter', '2.0.0'
   gem 'timecop', '0.7.1'
   gem 'shoulda-context', '1.2.1', require: false
 end
