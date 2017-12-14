@@ -76,7 +76,7 @@ group :test do
   gem 'capybara-email', '~> 2.4.0'
   gem 'poltergeist', '1.6.0'
   gem 'database_cleaner', '1.6.2'
-  gem 'factory_girl_rails', '~> 4.5.0'
+  gem 'factory_girl_rails', '~> 4.9.0'
   gem 'mocha', '1.1.0', require: false
   gem 'webmock', '~> 2.3.0'
   gem 'minitest', '~> 5.8.0'
