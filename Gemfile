@@ -65,7 +65,7 @@ group :development, :test do
   gem 'pry-byebug'
 end
 
-gem 'logstasher', '0.4.8'
+gem 'logstasher', '1.2.2'
 
 gem 'browser'
 
