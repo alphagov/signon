@@ -57,7 +57,7 @@ GEM
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
       rack (>= 0.9.0)
-    binding_of_caller (0.7.2)
+    binding_of_caller (0.7.3)
       debug_inspector (>= 0.0.1)
     bootstrap-kaminari-views (0.0.5)
       kaminari (>= 0.13)
@@ -370,7 +370,7 @@ DEPENDENCIES
   alphabetical_paginate (= 2.2.3)
   ancestry (= 2.0.0)
   better_errors (= 2.1.1)
-  binding_of_caller (= 0.7.2)
+  binding_of_caller (= 0.7.3)
   bootstrap-kaminari-views (= 0.0.5)
   browser
   capybara (~> 2.7.0)
