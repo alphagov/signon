@@ -55,7 +55,7 @@ gem 'uglifier', '>= 3.0.4'
 gem 'lhm'
 
 group :development do
-  gem 'better_errors', '2.1.1'
+  gem 'better_errors', '2.4.0'
   gem 'binding_of_caller', '0.7.3'
 end
 
