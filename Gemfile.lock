@@ -255,7 +255,7 @@ GEM
     rainbow (2.2.2)
       rake
     raindrops (0.19.0)
-    rake (10.4.1)
+    rake (10.5.0)
     redis (3.2.1)
     redis-namespace (1.5.3)
       redis (~> 3.0, >= 3.0.4)
@@ -406,7 +406,7 @@ DEPENDENCIES
   rails (= 5.1.4)
   rails-controller-testing
   rails-html-sanitizer (= 1.0.3)
-  rake (= 10.4.1)
+  rake (= 10.5.0)
   redis (= 3.2.1)
   rotp (~> 2.1.1)
   rqrcode

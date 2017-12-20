@@ -44,7 +44,7 @@ gem 'redis', '3.2.1'
 
 gem 'zeroclipboard-rails', '>= 0.1.2'
 
-gem 'rake', '10.4.1'
+gem 'rake', '10.5.0'
 
 gem 'sass-rails', '~> 5.0.6'
 gem 'sprockets-rails', '~> 3.1.1'
