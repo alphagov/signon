@@ -188,7 +188,7 @@ GEM
     mime-types-data (3.2016.0521)
     mini_mime (1.0.0)
     mini_portile2 (2.3.0)
-    minitest (5.8.5)
+    minitest (5.10.3)
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     multi_json (1.12.2)
@@ -396,7 +396,7 @@ DEPENDENCIES
   kaminari (~> 0.17.0)
   lhm
   logstasher (= 1.2.2)
-  minitest (~> 5.8.0)
+  minitest (~> 5.10.3)
   mocha (= 1.1.0)
   mysql2 (= 0.4.10)
   nokogiri (>= 1.8.1)
