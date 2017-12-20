@@ -43,7 +43,7 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     addressable (2.3.8)
-    alphabetical_paginate (2.2.3)
+    alphabetical_paginate (2.3.2)
     ancestry (2.0.0)
       activerecord (>= 3.0.0)
     arel (8.0.0)
@@ -369,7 +369,7 @@ PLATFORMS
 DEPENDENCIES
   activejob-retry
   addressable (~> 2.3.8)
-  alphabetical_paginate (= 2.2.3)
+  alphabetical_paginate (= 2.3.2)
   ancestry (= 2.0.0)
   better_errors (= 2.4.0)
   binding_of_caller (= 0.7.3)
