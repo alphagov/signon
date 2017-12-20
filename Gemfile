@@ -73,7 +73,7 @@ group :test do
   gem 'rspec-rails', '~> 3.7.1'
   gem 'rails-controller-testing'
   gem 'capybara', '~> 2.7.0'
-  gem 'capybara-email', '~> 2.4.0'
+  gem 'capybara-email', '~> 2.5.0'
   gem 'poltergeist', '1.6.0'
   gem 'database_cleaner', '1.6.2'
   gem 'factory_girl_rails', '~> 4.5.0'
