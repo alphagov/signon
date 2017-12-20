@@ -268,7 +268,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rotp (2.1.2)
+    rotp (3.3.0)
     rqrcode (0.10.1)
       chunky_png (~> 1.0)
     rspec-core (3.7.0)
@@ -410,7 +410,7 @@ DEPENDENCIES
   rails-html-sanitizer (= 1.0.3)
   rake (= 10.5.0)
   redis (= 3.3.5)
-  rotp (~> 2.1.1)
+  rotp (~> 3.3.0)
   rqrcode
   rspec-rails (~> 3.7.1)
   sass-rails (~> 5.0.6)

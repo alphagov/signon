@@ -27,7 +27,7 @@ gem 'devise_invitable', '1.7.0'
 gem 'devise-encryptable', '0.2.0'
 gem 'devise_zxcvbn', '1.1.1'
 gem 'pundit', '1.1.0'
-gem 'rotp', '~> 2.1.1'
+gem 'rotp', '~> 3.3.0'
 gem 'rqrcode'
 
 # This change was made via Snyk to fix a vulnerability
