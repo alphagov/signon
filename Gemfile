@@ -16,7 +16,7 @@ gem 'nokogiri', '>= 1.8.1'
 
 gem 'plek', '~> 2.0'
 gem 'json', '2.1.0'
-gem 'addressable', '~> 2.3.8'
+gem 'addressable', '~> 2.5.2'
 
 gem 'uuid'
 
