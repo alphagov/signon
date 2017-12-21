@@ -23,7 +23,7 @@ gem 'uuid'
 # Gems used to provide Authentication and Authorization services.
 # This change was made via Snyk to fix a vulnerability
 gem 'devise', '>= 4.2.0'
-gem 'devise_invitable', '1.7.0'
+gem 'devise_invitable', '1.7.2'
 gem 'devise-encryptable', '0.2.0'
 gem 'devise_zxcvbn', '1.1.1'
 gem 'pundit', '1.1.0'
