@@ -47,7 +47,7 @@ gem 'zeroclipboard-rails', '>= 0.1.2'
 gem 'rake', '10.5.0'
 
 gem 'sass-rails', '~> 5.0.6'
-gem 'sprockets-rails', '~> 3.1.1'
+gem 'sprockets-rails', '~> 3.2.1'
 
 # This change was made via Snyk to fix a vulnerability
 gem 'uglifier', '>= 3.0.4'
