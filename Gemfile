@@ -34,7 +34,7 @@ gem 'rqrcode'
 gem 'doorkeeper', '>= 4.2.0'
 gem 'ancestry', '2.0.0'
 
-gem 'govuk_app_config', '~> 0.2'
+gem 'govuk_app_config', '~> 1.1'
 gem 'gds-api-adapters', '~> 47.9'
 gem 'unicorn', '5.4.0'
 gem 'govuk_sidekiq', '~> 2.0'
