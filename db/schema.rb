@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -13,217 +12,202 @@
 
 ActiveRecord::Schema.define(version: 20171108150355) do
 
-  create_table "batch_invitation_application_permissions", id: :integer, force: :cascade do |t|
-    t.integer  "batch_invitation_id",     limit: 4, null: false
-    t.integer  "supported_permission_id", limit: 4, null: false
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+  create_table "batch_invitation_application_permissions", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "batch_invitation_id", null: false
+    t.integer "supported_permission_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["batch_invitation_id", "supported_permission_id"], name: "index_batch_invite_app_perms_on_batch_invite_and_supported_perm", unique: true
   end
 
-  add_index "batch_invitation_application_permissions", ["batch_invitation_id", "supported_permission_id"], name: "index_batch_invite_app_perms_on_batch_invite_and_supported_perm", unique: true, using: :btree
-
-  create_table "batch_invitation_users", id: :integer, force: :cascade do |t|
-    t.integer  "batch_invitation_id", limit: 4
-    t.string   "name",                limit: 255
-    t.string   "email",               limit: 255
-    t.string   "outcome",             limit: 255
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+  create_table "batch_invitation_users", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.integer "batch_invitation_id"
+    t.string "name"
+    t.string "email"
+    t.string "outcome"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["batch_invitation_id"], name: "index_batch_invitation_users_on_batch_invitation_id"
   end
 
-  add_index "batch_invitation_users", ["batch_invitation_id"], name: "index_batch_invitation_users_on_batch_invitation_id", using: :btree
-
-  create_table "batch_invitations", id: :integer, force: :cascade do |t|
-    t.text     "applications_and_permissions", limit: 65535
-    t.string   "outcome",                      limit: 255
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
-    t.integer  "user_id",                      limit: 4,     null: false
-    t.integer  "organisation_id",              limit: 4
+  create_table "batch_invitations", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.text "applications_and_permissions"
+    t.string "outcome"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.integer "organisation_id"
+    t.index ["outcome"], name: "index_batch_invitations_on_outcome"
   end
 
-  add_index "batch_invitations", ["outcome"], name: "index_batch_invitations_on_outcome", using: :btree
+  create_table "bulk_grant_permission_set_application_permissions", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "bulk_grant_permission_set_id", null: false
+    t.integer "supported_permission_id", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["bulk_grant_permission_set_id", "supported_permission_id"], name: "index_app_permissions_on_bulk_grant_permission_set", unique: true
+  end
 
-  create_table "bulk_grant_permission_set_application_permissions", id: :integer, force: :cascade do |t|
-    t.integer  "bulk_grant_permission_set_id", limit: 4, null: false
-    t.integer  "supported_permission_id",      limit: 4, null: false
+  create_table "bulk_grant_permission_sets", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "user_id", null: false
+    t.string "outcome"
+    t.integer "processed_users", default: 0, null: false
+    t.integer "total_users", default: 0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "bulk_grant_permission_set_application_permissions", ["bulk_grant_permission_set_id", "supported_permission_id"], name: "index_app_permissions_on_bulk_grant_permission_set", unique: true, using: :btree
-
-  create_table "bulk_grant_permission_sets", id: :integer, force: :cascade do |t|
-    t.integer  "user_id",         limit: 4,               null: false
-    t.string   "outcome",         limit: 255
-    t.integer  "processed_users", limit: 4,   default: 0, null: false
-    t.integer  "total_users",     limit: 4,   default: 0, null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "event_logs", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "uid", null: false
+    t.datetime "created_at", null: false
+    t.integer "initiator_id"
+    t.integer "application_id"
+    t.string "trailing_message"
+    t.integer "event_id"
+    t.bigint "ip_address"
+    t.integer "user_agent_id"
+    t.index ["uid", "created_at"], name: "index_event_logs_on_uid_and_created_at"
+    t.index ["user_agent_id"], name: "event_logs_user_agent_id_fk"
   end
 
-  create_table "event_logs", id: :integer, force: :cascade do |t|
-    t.string   "uid",              limit: 255, null: false
-    t.datetime "created_at",                   null: false
-    t.integer  "initiator_id",     limit: 4
-    t.integer  "application_id",   limit: 4
-    t.string   "trailing_message", limit: 255
-    t.integer  "event_id",         limit: 4
-    t.integer  "ip_address",       limit: 8
-    t.integer  "user_agent_id",    limit: 4
-  end
-
-  add_index "event_logs", ["uid", "created_at"], name: "index_event_logs_on_uid_and_created_at", using: :btree
-  add_index "event_logs", ["user_agent_id"], name: "event_logs_user_agent_id_fk", using: :btree
-
-  create_table "oauth_access_grants", id: :integer, force: :cascade do |t|
-    t.integer  "resource_owner_id", limit: 4,   null: false
-    t.integer  "application_id",    limit: 4,   null: false
-    t.string   "token",             limit: 255, null: false
-    t.integer  "expires_in",        limit: 4,   null: false
-    t.string   "redirect_uri",      limit: 255, null: false
-    t.datetime "created_at",                    null: false
+  create_table "oauth_access_grants", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.integer "resource_owner_id", null: false
+    t.integer "application_id", null: false
+    t.string "token", null: false
+    t.integer "expires_in", null: false
+    t.string "redirect_uri", null: false
+    t.datetime "created_at", null: false
     t.datetime "revoked_at"
-    t.string   "scopes",            limit: 255
+    t.string "scopes"
+    t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
   end
 
-  add_index "oauth_access_grants", ["token"], name: "index_oauth_access_grants_on_token", unique: true, using: :btree
-
-  create_table "oauth_access_tokens", id: :integer, force: :cascade do |t|
-    t.integer  "resource_owner_id", limit: 4,   null: false
-    t.integer  "application_id",    limit: 4,   null: false
-    t.string   "token",             limit: 255, null: false
-    t.string   "refresh_token",     limit: 255
-    t.integer  "expires_in",        limit: 4
+  create_table "oauth_access_tokens", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.integer "resource_owner_id", null: false
+    t.integer "application_id", null: false
+    t.string "token", null: false
+    t.string "refresh_token"
+    t.integer "expires_in"
     t.datetime "revoked_at"
-    t.datetime "created_at",                    null: false
-    t.string   "scopes",            limit: 255
+    t.datetime "created_at", null: false
+    t.string "scopes"
+    t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
+    t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
+    t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
   end
 
-  add_index "oauth_access_tokens", ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true, using: :btree
-  add_index "oauth_access_tokens", ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id", using: :btree
-  add_index "oauth_access_tokens", ["token"], name: "index_oauth_access_tokens_on_token", unique: true, using: :btree
-
-  create_table "oauth_applications", id: :integer, force: :cascade do |t|
-    t.string   "name",                  limit: 255
-    t.string   "uid",                   limit: 255,                 null: false
-    t.string   "secret",                limit: 255,                 null: false
-    t.string   "redirect_uri",          limit: 255,                 null: false
-    t.datetime "created_at",                                        null: false
-    t.datetime "updated_at",                                        null: false
-    t.string   "home_uri",              limit: 255
-    t.string   "description",           limit: 255
-    t.boolean  "supports_push_updates",             default: true
-    t.boolean  "retired",                           default: false
+  create_table "oauth_applications", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "name"
+    t.string "uid", null: false
+    t.string "secret", null: false
+    t.string "redirect_uri", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "home_uri"
+    t.string "description"
+    t.boolean "supports_push_updates", default: true
+    t.boolean "retired", default: false
+    t.index ["name"], name: "unique_application_name", unique: true
+    t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
 
-  add_index "oauth_applications", ["name"], name: "unique_application_name", unique: true, using: :btree
-  add_index "oauth_applications", ["uid"], name: "index_oauth_applications_on_uid", unique: true, using: :btree
-
-  create_table "old_passwords", id: :integer, force: :cascade do |t|
-    t.string   "encrypted_password",       limit: 255, null: false
-    t.string   "password_salt",            limit: 255
-    t.integer  "password_archivable_id",   limit: 4,   null: false
-    t.string   "password_archivable_type", limit: 255, null: false
+  create_table "old_passwords", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string "encrypted_password", null: false
+    t.string "password_salt"
+    t.integer "password_archivable_id", null: false
+    t.string "password_archivable_type", null: false
     t.datetime "created_at"
+    t.index ["password_archivable_type", "password_archivable_id"], name: "index_password_archivable"
   end
 
-  add_index "old_passwords", ["password_archivable_type", "password_archivable_id"], name: "index_password_archivable", using: :btree
-
-  create_table "organisations", id: :integer, force: :cascade do |t|
-    t.string   "slug",              limit: 255,                 null: false
-    t.string   "name",              limit: 255,                 null: false
-    t.string   "organisation_type", limit: 255,                 null: false
-    t.string   "abbreviation",      limit: 255
-    t.datetime "created_at",                                    null: false
-    t.datetime "updated_at",                                    null: false
-    t.string   "ancestry",          limit: 255
-    t.string   "content_id",        limit: 255,                 null: false
-    t.boolean  "closed",                        default: false
+  create_table "organisations", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+    t.string "slug", null: false
+    t.string "name", null: false
+    t.string "organisation_type", null: false
+    t.string "abbreviation"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "ancestry"
+    t.string "content_id", null: false
+    t.boolean "closed", default: false
+    t.index ["ancestry"], name: "index_organisations_on_ancestry"
+    t.index ["content_id"], name: "index_organisations_on_content_id", unique: true
+    t.index ["slug"], name: "index_organisations_on_slug", unique: true
   end
 
-  add_index "organisations", ["ancestry"], name: "index_organisations_on_ancestry", using: :btree
-  add_index "organisations", ["content_id"], name: "index_organisations_on_content_id", unique: true, using: :btree
-  add_index "organisations", ["slug"], name: "index_organisations_on_slug", unique: true, using: :btree
-
-  create_table "supported_permissions", id: :integer, force: :cascade do |t|
-    t.integer  "application_id",    limit: 4
-    t.string   "name",              limit: 255
+  create_table "supported_permissions", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "application_id"
+    t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "delegatable",                   default: false
-    t.boolean  "grantable_from_ui",             default: true,  null: false
-    t.boolean  "default",                       default: false, null: false
+    t.boolean "delegatable", default: false
+    t.boolean "grantable_from_ui", default: true, null: false
+    t.boolean "default", default: false, null: false
+    t.index ["application_id", "name"], name: "index_supported_permissions_on_application_id_and_name", unique: true
+    t.index ["application_id"], name: "index_supported_permissions_on_application_id"
   end
 
-  add_index "supported_permissions", ["application_id", "name"], name: "index_supported_permissions_on_application_id_and_name", unique: true, using: :btree
-  add_index "supported_permissions", ["application_id"], name: "index_supported_permissions_on_application_id", using: :btree
-
-  create_table "user_agents", id: :integer, force: :cascade do |t|
+  create_table "user_agents", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string "user_agent_string", limit: 1000, null: false
+    t.index ["user_agent_string"], name: "index_user_agents_on_user_agent_string", length: { user_agent_string: 255 }
   end
 
-  add_index "user_agents", ["user_agent_string"], name: "index_user_agents_on_user_agent_string", length: {"user_agent_string"=>255}, using: :btree
-
-  create_table "user_application_permissions", id: :integer, force: :cascade do |t|
-    t.integer  "user_id",                 limit: 4, null: false
-    t.integer  "application_id",          limit: 4, null: false
-    t.integer  "supported_permission_id", limit: 4, null: false
+  create_table "user_application_permissions", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "user_id", null: false
+    t.integer "application_id", null: false
+    t.integer "supported_permission_id", null: false
     t.datetime "last_synced_at"
-    t.datetime "created_at",                        null: false
-    t.datetime "updated_at",                        null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id", "application_id", "supported_permission_id"], name: "index_app_permissions_on_user_and_app_and_supported_permission", unique: true
   end
 
-  add_index "user_application_permissions", ["user_id", "application_id", "supported_permission_id"], name: "index_app_permissions_on_user_and_app_and_supported_permission", unique: true, using: :btree
-
-  create_table "users", id: :integer, force: :cascade do |t|
-    t.string   "name",                         limit: 255,                    null: false
-    t.string   "email",                        limit: 255, default: "",       null: false
-    t.string   "encrypted_password",           limit: 255, default: ""
-    t.string   "reset_password_token",         limit: 255
+  create_table "users", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string "name", null: false
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: ""
+    t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
-    t.integer  "sign_in_count",                limit: 4,   default: 0
+    t.integer "sign_in_count", default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip",           limit: 255
-    t.string   "last_sign_in_ip",              limit: 255
+    t.string "current_sign_in_ip"
+    t.string "last_sign_in_ip"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "uid",                          limit: 255,                    null: false
-    t.integer  "failed_attempts",              limit: 4,   default: 0
+    t.string "uid", null: false
+    t.integer "failed_attempts", default: 0
     t.datetime "locked_at"
     t.datetime "suspended_at"
-    t.string   "invitation_token",             limit: 255
+    t.string "invitation_token"
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
-    t.integer  "invitation_limit",             limit: 4
-    t.integer  "invited_by_id",                limit: 4
-    t.string   "invited_by_type",              limit: 255
-    t.string   "reason_for_suspension",        limit: 255
-    t.string   "password_salt",                limit: 255
-    t.string   "confirmation_token",           limit: 255
+    t.integer "invitation_limit"
+    t.integer "invited_by_id"
+    t.string "invited_by_type"
+    t.string "reason_for_suspension"
+    t.string "password_salt"
+    t.string "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.string   "unconfirmed_email",            limit: 255
-    t.string   "role",                         limit: 255, default: "normal"
+    t.string "unconfirmed_email"
+    t.string "role", default: "normal"
     t.datetime "password_changed_at"
-    t.integer  "organisation_id",              limit: 4
-    t.boolean  "api_user",                                 default: false,    null: false
+    t.integer "organisation_id"
+    t.boolean "api_user", default: false, null: false
     t.datetime "unsuspended_at"
     t.datetime "invitation_created_at"
-    t.string   "otp_secret_key",               limit: 255
-    t.integer  "second_factor_attempts_count", limit: 4,   default: 0
-    t.string   "unlock_token",                 limit: 255
-    t.boolean  "require_2sv",                              default: false,    null: false
+    t.string "otp_secret_key"
+    t.integer "second_factor_attempts_count", default: 0
+    t.string "unlock_token"
+    t.boolean "require_2sv", default: false, null: false
+    t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["invitation_token"], name: "index_users_on_invitation_token"
+    t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
+    t.index ["organisation_id"], name: "index_users_on_organisation_id"
+    t.index ["otp_secret_key"], name: "index_users_on_otp_secret_key", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", using: :btree
-  add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
-  add_index "users", ["organisation_id"], name: "index_users_on_organisation_id", using: :btree
-  add_index "users", ["otp_secret_key"], name: "index_users_on_otp_secret_key", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
-
-  add_foreign_key "event_logs", "user_agents", name: "event_logs_user_agent_id_fk"
 end
