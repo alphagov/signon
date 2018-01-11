@@ -56,7 +56,7 @@ gem 'lhm'
 
 group :development do
   gem 'better_errors', '2.4.0'
-  gem 'binding_of_caller', '0.7.3'
+  gem 'binding_of_caller', '0.8.0'
 end
 
 group :development, :test do
