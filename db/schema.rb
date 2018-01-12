@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171108150355) do
+ActiveRecord::Schema.define(version: 20180111145345) do
 
   create_table "batch_invitation_application_permissions", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "batch_invitation_id", null: false
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20171108150355) do
     t.string "outcome"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "organisation_slug"
     t.index ["batch_invitation_id"], name: "index_batch_invitation_users_on_batch_invitation_id"
   end
 
