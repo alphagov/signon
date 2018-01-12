@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :bulk_grant_permission_set do
     transient do
       with_permissions { [create(:supported_permission)] }

@@ -2,7 +2,7 @@ require 'test_helper'
 
 class UserCreatorTest < ActiveSupport::TestCase
   test 'it creates a new user with the supplied name and email' do
-    FactoryGirl.create(:application, name: 'app-o-tron', with_supported_permissions: ['signin'])
+    FactoryBot.create(:application, name: 'app-o-tron', with_supported_permissions: ['signin'])
     user_creator = UserCreator.new('Alicia', 'alicia@example.com', 'app-o-tron')
 
     user_creator.create_user!
@@ -13,7 +13,7 @@ class UserCreatorTest < ActiveSupport::TestCase
   end
 
   test 'invites the new user, so they must validate their email before they can signin' do
-    FactoryGirl.create(:application, name: 'app-o-tron', with_supported_permissions: ['signin'])
+    FactoryBot.create(:application, name: 'app-o-tron', with_supported_permissions: ['signin'])
     user_creator = UserCreator.new('Alicia', 'alicia@example.com', 'app-o-tron')
 
     user_creator.create_user!
@@ -22,8 +22,8 @@ class UserCreatorTest < ActiveSupport::TestCase
   end
 
   test 'it grants "signin" permission to each application supplied' do
-    app_o_tron = FactoryGirl.create(:application, name: 'app-o-tron', with_supported_permissions: ['signin'])
-    app_erator = FactoryGirl.create(:application, name: 'app-erator', with_supported_permissions: ['signin'])
+    app_o_tron = FactoryBot.create(:application, name: 'app-o-tron', with_supported_permissions: ['signin'])
+    app_erator = FactoryBot.create(:application, name: 'app-erator', with_supported_permissions: ['signin'])
     user_creator = UserCreator.new('Alicia', 'alicia@example.com', 'app-o-tron,app-erator')
 
     user_creator.create_user!
@@ -33,8 +33,8 @@ class UserCreatorTest < ActiveSupport::TestCase
   end
 
   test 'it grants all default permissions, even if not signin' do
-    app_o_tron = FactoryGirl.create(:application, name: 'app-o-tron', with_supported_permissions: %w(signin))
-    app_erator = FactoryGirl.create(:application, name: 'app-erator', with_supported_permissions: %w(signin fall))
+    app_o_tron = FactoryBot.create(:application, name: 'app-o-tron', with_supported_permissions: %w(signin))
+    app_erator = FactoryBot.create(:application, name: 'app-erator', with_supported_permissions: %w(signin fall))
     create(:supported_permission, application: app_o_tron, name: 'bounce', default: true)
     app_erator.signin_permission.update_attributes(default: true)
     user_creator = UserCreator.new('Alicia', 'alicia@example.com', '')

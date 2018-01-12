@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :application, class: Doorkeeper::Application do
     transient do
       with_supported_permissions []

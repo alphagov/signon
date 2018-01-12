@@ -1,5 +1,5 @@
 class InactiveUsersSuspensionReminder
-  ERRORS_TO_RETRY_ON = [TimeoutError,
+  ERRORS_TO_RETRY_ON = [Timeout::Error,
                         SocketError,
                         Net::SMTPServerBusy,
                         Errno::ETIMEDOUT,

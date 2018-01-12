@@ -2,7 +2,7 @@ require 'rails_helper'
 
 feature 'cookies security' do
   scenario 'with valid email and password' do
-    user = FactoryGirl.create(:two_step_enabled_user)
+    user = FactoryBot.create(:two_step_enabled_user)
     sign_up_with user.email, user.password
     visit new_user_session_path
     response_cookies = Capybara.current_session.driver.response.headers["Set-Cookie"]
