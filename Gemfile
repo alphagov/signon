@@ -79,7 +79,7 @@ group :test do
   gem 'factory_bot_rails', '~> 4.8'
   gem 'mocha', '1.3.0', require: false
   gem 'webmock', '~> 3.1.1'
-  gem 'minitest', '~> 5.8.0'
+  gem 'minitest', '~> 5.11.1'
   gem 'ci_reporter', '1.7.0'
   gem 'timecop', '0.7.1'
   gem 'shoulda-context', '1.2.2', require: false
