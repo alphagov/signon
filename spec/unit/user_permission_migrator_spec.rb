@@ -16,11 +16,11 @@ RSpec.describe UserPermissionMigrator do
     FactoryBot.create(:supported_permission, application: unrelated_application, name: "editor")
   end
 
-  let!(:gds_editor) { FactoryBot.create(:user, with_permissions: {"Specialist Publisher" => %w(editor gds_editor signin)}) }
-  let!(:editor) { FactoryBot.create(:user, with_permissions: {"Specialist Publisher" => %w(editor signin)}) }
-  let!(:writer) { FactoryBot.create(:user, with_permissions: {"Specialist Publisher" => %w(signin)}) }
+  let!(:gds_editor) { FactoryBot.create(:user, with_permissions: { "Specialist Publisher" => %w(editor gds_editor signin) }) }
+  let!(:editor) { FactoryBot.create(:user, with_permissions: { "Specialist Publisher" => %w(editor signin) }) }
+  let!(:writer) { FactoryBot.create(:user, with_permissions: { "Specialist Publisher" => %w(signin) }) }
   let!(:user_without_access) { FactoryBot.create(:user) }
-  let!(:user_with_unrelated_access) { FactoryBot.create(:user, with_permissions: {"unrelated application" => %w(editor gds_editor signin)}) }
+  let!(:user_with_unrelated_access) { FactoryBot.create(:user, with_permissions: { "unrelated application" => %w(editor gds_editor signin) }) }
 
   it "copies permissions over for all users of an application to another application" do
     UserPermissionMigrator.migrate(
