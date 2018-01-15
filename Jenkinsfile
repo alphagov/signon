@@ -1,7 +1,6 @@
 #!/usr/bin/env groovy
 
 REPOSITORY = 'signon'
-DB_ADAPTERS = ['mysql', 'postgresql']
 repoName = JOB_NAME.split('/')[0]
 
 node {
@@ -50,14 +49,12 @@ node {
       govuk.rubyLinter('app test lib spec config')
     }
 
-    for (adapter in DB_ADAPTERS) {
-      stage("Set up the DB") {
-        sh("RAILS_ENV=test SIGNONOTRON2_DB_ADAPTER=${adapter} bundle exec rake db:drop db:create db:schema:load")
-      }
+    stage("Set up the DB") {
+      sh("RAILS_ENV=test bundle exec rake db:drop db:create db:schema:load")
+    }
 
-      stage("Run tests") {
-        sh("SIGNONOTRON2_DB_ADAPTER=${adapter} bundle exec rake --trace")
-      }
+    stage("Run tests") {
+      sh("bundle exec rake --trace")
     }
 
     if (govuk.hasDockerfile()) {
