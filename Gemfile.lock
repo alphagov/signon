@@ -351,7 +351,7 @@ GEM
       macaddr (~> 1.0)
     warden (1.2.7)
       rack (>= 1.0)
-    webmock (3.1.1)
+    webmock (3.2.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
@@ -421,7 +421,7 @@ DEPENDENCIES
   uglifier (>= 3.0.4)
   unicorn (= 5.4.0)
   uuid
-  webmock (~> 3.1.1)
+  webmock (~> 3.2.1)
   zeroclipboard-rails (>= 0.1.2)
 
 BUNDLED WITH
