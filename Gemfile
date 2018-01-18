@@ -60,7 +60,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'jasmine', '2.8.0'
+  gem 'jasmine', '2.9.0'
   gem 'govuk-lint', '~> 0.4'
   gem 'pry-byebug'
 end
