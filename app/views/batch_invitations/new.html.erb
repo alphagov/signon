@@ -44,7 +44,7 @@ Name,Email,Organisation
 Jane Smith,jane@example.com,government-digital-service
 Winston Churchill,winston@example.com,cabinet-office
           </pre>
-          <p class="help-block">The values in the Organisation column should be the slug of the organisation the user will be assigned to.  If the value is blank, the user will be assigned to the Organisation selected in the drop-down below.  If the value is provided, but is not a valid slug, the user will not be invited.</p>
+          <p class="help-block">The values in the Organisation column should be the slug of the organisation the user will be assigned to.  If the value is blank, the user will be assigned to the Organisation selected in the drop-down below.  If the value is provided, but is not a valid slug, the user will not be invited.  You can find the slug for an organisation on <%= link_to 'the list of organisations', organisations_path %>.</p>
         <% else %>
           <pre>
 Name,Email
