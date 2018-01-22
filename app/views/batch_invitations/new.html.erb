@@ -38,18 +38,33 @@
       </div>
       <div class="col-md-5 pull-right">
         <p>The format of the CSV should be as follows:</p>
-        <pre>
+        <% if policy(f.object).assign_organisation_from_csv? %>
+          <pre>
+Name,Email,Organisation
+Jane Smith,jane@example.com,government-digital-service
+Winston Churchill,winston@example.com,cabinet-office
+          </pre>
+          <p class="help-block">The values in the Organisation column should be the slug of the organisation the user will be assigned to.  If the value is blank, the user will be assigned to the Organisation selected in the drop-down below.  If the value is provided, but is not a valid slug, the user will not be invited.  You can find the slug for an organisation on <%= link_to 'the list of organisations', organisations_path %>.</p>
+        <% else %>
+          <pre>
 Name,Email
 Jane Smith,jane@example.com
 Winston Churchill,winston@example.com
-        </pre>
+          </pre>
+        <% end %>
+        <p class="help-block">Any fields in the CSV other than those shown above will be ignored.</p>
       </div>
     </div>
 
-    <p>
+    <div class="form-group">
       <%= f.label :organisation_id, "Organisation" %>
       <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select", 'data-module' => 'chosen' } %>
-    </p>
+      <% if policy(f.object).assign_organisation_from_csv? %>
+        <p class="help-block">If the uploaded CSV doesn't contain an Organisation column, or the value is blank for a row, the user will be assigned to this organisation instead.</p>
+      <% else %>
+        <p class="help-block">All users in the CSV will be assigned to the organisation selected here.</p>
+      <% end %>
+    </div>
 
     <h2>Permissions for the users</h2>
 
