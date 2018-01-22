@@ -16,6 +16,7 @@ postgresql_default: &postgresql_default
 development:
   <<: *<%= adapter %>_default
   database: signonotron2_development
+  url: <%= ENV["DATABASE_URL"] %>
 
 test: &test
   <<: *<%= adapter %>_default
