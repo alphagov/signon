@@ -29,6 +29,7 @@
     <tr class="table-header">
       <th>Name</th>
       <th>Email</th>
+      <th>Organisation</th>
       <th>Outcome</th>
     </tr>
   </thead>
@@ -37,6 +38,7 @@
       <tr class="<%= user.outcome == "failed" ? "error" : "" %>">
         <td><%= user.name %></td>
         <td><%= user.email %></td>
+        <td><%= batch_invite_organisation_for_user(user) %></td>
         <td><%= user.humanized_outcome %></td>
       </tr>
     <% end %>
