@@ -80,7 +80,7 @@ node {
       }
 
       stage("Deploy to integration") {
-        govuk.deployIntegration(REPOSITORY, env.BRANCH_NAME, 'release', 'deploy')
+        govuk.deployIntegration(REPOSITORY, env.BRANCH_NAME, "release_${env.BUILD_NUMBER}", 'deploy')
       }
     }
 
