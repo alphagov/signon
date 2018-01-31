@@ -14,7 +14,7 @@ gem 'rails-html-sanitizer', '1.0.3'
 
 gem 'nokogiri', '>= 1.8.1'
 
-gem 'plek', '~> 2.0'
+gem 'plek', '~> 2.1'
 gem 'json', '2.1.0'
 gem 'addressable', '~> 2.5.2'
 
