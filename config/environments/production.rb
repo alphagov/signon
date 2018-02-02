@@ -50,7 +50,6 @@ Rails.application.configure do
 
   # Use a different logger for distributed setups.
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
-  config.logger = ActiveSupport::TaggedLogging.new(Logger.new($stderr))
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
@@ -73,19 +72,10 @@ Rails.application.configure do
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
 
-  # Disable automatic flushing of the log to improve performance.
-  # config.autoflush_log = false
-  real_stdout = $stdout.clone
-  $stdout.reopen($stderr)
-
-  config.logstasher.enabled = true
-  config.logstasher.logger = Logger.new(real_stdout)
-  config.logstasher.suppress_app_log = true
-
   config.action_mailer.default_url_options = {
     host: URI.parse(Plek.find('signon')).host,
     protocol: 'https'
   }
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  # config.log_formatter = ::Logger::Formatter.new
 end

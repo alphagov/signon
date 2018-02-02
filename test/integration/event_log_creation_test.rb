@@ -193,9 +193,9 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
       assert_equal '1.2.3.4', ip_address
     end
 
-    should "call Raven for ipv6 addresses" do
+    should "call alert error service for ipv6 addresses" do
       page.driver.options[:headers] = { 'REMOTE_ADDR' => '2001:0db8:0000:0000:0008:0800:200c:417a' }
-      Raven.expects(:capture_message)
+      GovukError.expects(:notify)
       visit root_path
       signin_with(@user)
 

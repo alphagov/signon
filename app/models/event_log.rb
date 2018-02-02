@@ -76,7 +76,7 @@ class EventLog < ActiveRecord::Base
   def self.record_event(user, event, options = {})
     if options[:ip_address]
       if options[:ip_address] =~ Resolv::IPv6::Regex
-        Raven.capture_message("Received IP address: #{options[:ip_address]}. IPv6 logging is not supported yet")
+        GovukError.notify("Received IP address: #{options[:ip_address]}. IPv6 logging is not supported yet")
         options[:ip_address] = nil
       else
         options[:ip_address] = convert_ip_address_to_integer(options[:ip_address])
