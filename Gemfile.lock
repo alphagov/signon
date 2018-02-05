@@ -119,7 +119,7 @@ GEM
     factory_bot_rails (4.8.2)
       factory_bot (~> 4.8.2)
       railties (>= 3.0.0)
-    faraday (0.13.1)
+    faraday (0.14.0)
       multipart-post (>= 1.2, < 3)
     gds-api-adapters (51.2.0)
       addressable
@@ -138,9 +138,11 @@ GEM
       bootstrap-sass (= 3.3.5.1)
       jquery-rails (~> 4.3.1)
       rails (>= 3.2.0)
-    govuk_app_config (0.3.0)
-      sentry-raven (~> 2.6.3)
+    govuk_app_config (1.3.0)
+      logstasher (~> 1.2.2)
+      sentry-raven (~> 2.7.1)
       statsd-ruby (~> 1.4.0)
+      unicorn (~> 5.4.0)
     govuk_sidekiq (2.0.0)
       gds-api-adapters (>= 19.1.0)
       redis-namespace (~> 1.5.2)
@@ -310,7 +312,7 @@ GEM
     scss_lint (0.44.0)
       rake (~> 10.0)
       sass (~> 3.4.15)
-    sentry-raven (2.6.3)
+    sentry-raven (2.7.2)
       faraday (>= 0.7.6, < 1.0)
     shoulda-context (1.2.2)
     sidekiq (4.2.10)
@@ -391,13 +393,12 @@ DEPENDENCIES
   gds-api-adapters (~> 51.2)
   govuk-lint (~> 0.4)
   govuk_admin_template (~> 6.5)
-  govuk_app_config (~> 0.2)
+  govuk_app_config (~> 1.3)
   govuk_sidekiq (~> 2.0)
   jasmine (= 2.9.0)
   json (= 2.1.0)
   kaminari (~> 0.17.0)
   lhm
-  logstasher (= 1.2.2)
   minitest (~> 5.11.2)
   mocha (= 1.3.0)
   mysql2 (= 0.4.10)
@@ -420,10 +421,9 @@ DEPENDENCIES
   sprockets-rails (~> 3.1.1)
   timecop (= 0.7.1)
   uglifier (>= 3.0.4)
-  unicorn (= 5.4.0)
   uuid
   webmock (~> 3.3.0)
   zeroclipboard-rails (>= 0.1.2)
 
 BUNDLED WITH
-   1.15.1
+   1.16.1
