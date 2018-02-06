@@ -36,7 +36,7 @@ gem 'ancestry', '3.0.1'
 
 gem 'govuk_app_config', '~> 1.3'
 gem 'gds-api-adapters', '~> 51.2'
-gem 'govuk_sidekiq', '~> 2.0'
+gem 'govuk_sidekiq', '~> 3.0'
 gem 'activejob-retry'
 
 gem 'redis', '3.3.5'
