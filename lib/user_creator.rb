@@ -20,7 +20,7 @@ class UserCreator
   end
 
   def invitation_url
-    "#{Plek.find('signon')}/users/invitation/accept?invitation_token=#{user.raw_invitation_token}"
+    "#{Plek.new.external_url_for('signon')}/users/invitation/accept?invitation_token=#{user.raw_invitation_token}"
   end
 
 private
