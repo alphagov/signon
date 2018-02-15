@@ -15,7 +15,7 @@ Rails.application.configure do
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_url_options = { host: URI.parse(Plek.find('signon')).host }
+  config.action_mailer.default_url_options = { host: URI.parse(Plek.new.external_url_for('signon')).host }
 
   # Send emails to the local MailHog instance
   config.action_mailer.delivery_method = :smtp
