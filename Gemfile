@@ -71,7 +71,7 @@ group :test do
   gem 'rails-controller-testing'
   gem 'capybara', '~> 2.16.1'
   gem 'capybara-email', '~> 2.4.0'
-  gem 'poltergeist', '1.6.0'
+  gem 'poltergeist', '1.17.0'
   gem 'database_cleaner', '1.6.2'
   gem 'factory_bot_rails', '~> 4.8'
   gem 'mocha', '1.3.0', require: false
