@@ -78,6 +78,6 @@ group :test do
   gem 'webmock', '~> 3.3.0'
   gem 'minitest', '~> 5.11.2'
   gem 'ci_reporter', '1.7.0'
-  gem 'timecop', '0.7.1'
+  gem 'timecop', '0.9.1'
   gem 'shoulda-context', '1.2.2', require: false
 end
