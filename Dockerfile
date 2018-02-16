@@ -2,6 +2,7 @@ FROM ruby:2.4.2
 
 RUN apt-get update -qq && apt-get upgrade -y
 RUN apt-get install -y build-essential nodejs && apt-get clean
+RUN gem install foreman
 
 ENV APP_HOME /app
 ENV DATABASE_URL mysql2://root:root@mysql/signon
@@ -25,4 +26,4 @@ RUN GOVUK_APP_DOMAIN=www.gov.uk RAILS_ENV=production \
 
 HEALTHCHECK CMD curl --silent --fail localhost:$PORT || exit 1
 
-CMD bundle exec unicorn -p $PORT
+CMD foreman run web
