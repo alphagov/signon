@@ -32,7 +32,7 @@ gem 'rqrcode'
 
 # This change was made via Snyk to fix a vulnerability
 gem 'doorkeeper', '>= 4.2.0'
-gem 'ancestry', '2.0.0'
+gem 'ancestry', '3.0.1'
 
 gem 'govuk_app_config', '~> 1.3'
 gem 'gds-api-adapters', '~> 51.2'
