@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '5.1.4'
-gem 'kaminari', '~> 0.17.0'
+gem 'kaminari', '~> 1.1.1'
 gem 'bootstrap-kaminari-views', '0.0.5'
 
 gem 'alphabetical_paginate', '2.2.3'
