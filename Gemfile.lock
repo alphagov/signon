@@ -44,7 +44,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
-    alphabetical_paginate (2.2.3)
+    alphabetical_paginate (2.3.3)
     ancestry (2.0.0)
       activerecord (>= 3.0.0)
     arel (8.0.0)
@@ -373,7 +373,7 @@ PLATFORMS
 DEPENDENCIES
   activejob-retry
   addressable (~> 2.5.2)
-  alphabetical_paginate (= 2.2.3)
+  alphabetical_paginate (= 2.3.3)
   ancestry (= 2.0.0)
   better_errors (= 2.4.0)
   binding_of_caller (= 0.8.0)
