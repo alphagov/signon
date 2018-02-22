@@ -1,25 +1,29 @@
-FROM ruby:2.4.2-slim
-MAINTAINER "govuk-role-platform-accounts-members@digital.cabinet-office.gov.uk"
+FROM ruby:2.4.2
 
-RUN apt-get update && \
-    apt-get upgrade -y
+RUN apt-get update -qq && apt-get upgrade -y
+RUN apt-get install -y build-essential nodejs && apt-get clean
+RUN gem install foreman
 
-RUN apt-get install -y \
-      # base dependencies
-      ruby-dev build-essential libgmp3-dev libmysqlclient-dev libpq-dev \
-      # for bundle exec rake -T and assets commands to work
-      nodejs \
-      # for healthcheck
-      curl
+ENV APP_HOME /app
+ENV DATABASE_URL mysql2://root:root@mysql/signon
+ENV GOVUK_APP_NAME signon
+ENV PORT 3016
+ENV RAILS_ENV development
+ENV TEST_DATABASE_URL mysql2://root:root@mysql/signon_test
 
-COPY . .
+RUN mkdir $APP_HOME
 
+WORKDIR $APP_HOME
+ADD Gemfile* .ruby-version $APP_HOME/
 RUN bundle install
-RUN bundle exec rake assets:clean assets:precompile
 
-HEALTHCHECK --interval=15s --timeout=3s\
-  CMD curl -f http://localhost:3016/ || exit 1
+ADD . $APP_HOME
 
-CMD ["bundle", "exec", "rails", "server", "-b", "0.0.0.0", "-p", "3016"]
+RUN GOVUK_APP_DOMAIN=www.gov.uk RAILS_ENV=production \
+  DEVISE_PEPPER=`openssl rand -base64 40` \
+  DEVISE_SECRET_KEY=`openssl rand -base64 40` \
+  bundle exec rails assets:clean assets:precompile
 
-EXPOSE 3016
+HEALTHCHECK CMD curl --silent --fail localhost:$PORT || exit 1
+
+CMD foreman run web

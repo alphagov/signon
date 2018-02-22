@@ -16,13 +16,16 @@ postgresql_default: &postgresql_default
 development:
   <<: *<%= adapter %>_default
   database: signonotron2_development
+  url: <%= ENV["DATABASE_URL"] %>
 
 test: &test
   <<: *<%= adapter %>_default
   database: signonotron2_test
+  url: <%= ENV["TEST_DATABASE_URL"] %>
 
 production:
   <<: *<%= adapter %>_default
   database: halberd_production
   username: halberd
   password:
+  url: <%= ENV["DATABASE_URL"] %>
