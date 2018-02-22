@@ -155,8 +155,8 @@ class UsersController < ApplicationController
       end
     else
       @users, @sorting_params = @users.alpha_paginate(
-        params[:letter],
-        ALPHABETICAL_PAGINATE_CONFIG,
+        params.fetch(:letter, 'A'),
+        ALPHABETICAL_PAGINATE_CONFIG.dup,
         &:name
       )
     end
