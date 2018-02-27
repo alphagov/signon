@@ -45,7 +45,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'govuk-lint', '~> 0.4'
+  gem 'govuk-lint', '~> 3.6'
   gem 'jasmine', '3.0.0'
   gem 'pry-byebug'
 end
