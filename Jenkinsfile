@@ -1,7 +1,8 @@
 #!/usr/bin/env groovy
 
+library("govuk")
+
 node {
-  def govuk = load '/var/lib/jenkins/groovy_scripts/govuk_jenkinslib.groovy'
 
   // These environment variables need to be defined for the assets:precompile step
   govuk.setEnvar("DEVISE_PEPPER", UUID.randomUUID().toString())
