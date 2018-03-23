@@ -184,7 +184,7 @@ GEM
       activesupport (>= 4.0)
       logstash-event (~> 1.2.0)
       request_store
-    loofah (2.2.1)
+    loofah (2.2.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     lrucache (0.1.4)
@@ -257,8 +257,8 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.0.3)
-      loofah (~> 2.0)
+    rails-html-sanitizer (1.0.4)
+      loofah (~> 2.2, >= 2.2.2)
     railties (5.1.5)
       actionpack (= 5.1.5)
       activesupport (= 5.1.5)
@@ -426,7 +426,7 @@ DEPENDENCIES
   pundit (= 1.1.0)
   rails (= 5.1.5)
   rails-controller-testing
-  rails-html-sanitizer (= 1.0.3)
+  rails-html-sanitizer (= 1.0.4)
   rake (= 12.3.1)
   redis (= 3.3.5)
   rotp (~> 3.3.1)
