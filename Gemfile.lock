@@ -118,7 +118,7 @@ GEM
     faraday (0.14.0)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.23)
-    gds-api-adapters (52.1.0)
+    gds-api-adapters (52.2.1)
       addressable
       link_header
       lrucache (~> 0.1.1)
@@ -406,7 +406,7 @@ DEPENDENCIES
   devise_zxcvbn (= 1.1.1)
   doorkeeper (>= 4.2.0)
   factory_bot_rails (~> 4.8)
-  gds-api-adapters (~> 52.1)
+  gds-api-adapters (~> 52.2)
   govuk-lint (~> 3.7)
   govuk_admin_template (~> 6.5)
   govuk_app_config (~> 1.4)
