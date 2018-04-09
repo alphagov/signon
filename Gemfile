@@ -56,7 +56,7 @@ group :test do
   gem 'database_cleaner', '1.6.2'
   gem 'factory_bot_rails', '~> 4.8'
   gem 'minitest', '~> 5.11.2'
-  gem 'mocha', '1.4.0', require: false
+  gem 'mocha', '1.5.0', require: false
   gem 'poltergeist', '1.17.0'
   gem 'rails-controller-testing'
   gem 'rspec-rails', '~> 3.7.1'
