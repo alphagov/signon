@@ -100,9 +100,9 @@ GEM
     devise_invitable (1.7.4)
       actionmailer (>= 4.1.0)
       devise (>= 4.0.0)
-    devise_zxcvbn (1.1.1)
+    devise_zxcvbn (4.4.1)
       devise
-      zxcvbn-ruby (>= 0.0.2)
+      zxcvbn-js (~> 4.4.1)
     diff-lcs (1.3)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
@@ -382,7 +382,8 @@ GEM
       nokogiri (~> 1.8)
     zeroclipboard-rails (0.1.2)
       railties (>= 3.1)
-    zxcvbn-ruby (0.1.2)
+    zxcvbn-js (4.4.3)
+      execjs
 
 PLATFORMS
   ruby
@@ -403,7 +404,7 @@ DEPENDENCIES
   devise (>= 4.2.0)
   devise-encryptable (= 0.2.0)
   devise_invitable (= 1.7.4)
-  devise_zxcvbn (= 1.1.1)
+  devise_zxcvbn (= 4.4.1)
   doorkeeper (>= 4.2.0)
   factory_bot_rails (~> 4.8)
   gds-api-adapters (~> 52.5)
