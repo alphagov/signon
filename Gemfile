@@ -52,7 +52,7 @@ end
 
 group :test do
   gem 'capybara', '~> 2.18.0'
-  gem 'capybara-email', '~> 2.5.0'
+  gem 'capybara-email', '~> 3.0.0'
   gem 'database_cleaner', '1.6.2'
   gem 'factory_bot_rails', '~> 4.8'
   gem 'minitest', '~> 5.11.2'
