@@ -85,7 +85,7 @@ GEM
     crack (0.4.3)
       safe_yaml (~> 1.0.0)
     crass (1.0.4)
-    database_cleaner (1.6.2)
+    database_cleaner (1.7.0)
     debug_inspector (0.0.3)
     deprecated_columns (0.1.1)
       rails (>= 4.0)
@@ -398,7 +398,7 @@ DEPENDENCIES
   browser
   capybara (~> 2.18.0)
   capybara-email (~> 3.0.1)
-  database_cleaner (= 1.6.2)
+  database_cleaner (= 1.7.0)
   deprecated_columns (= 0.1.1)
   devise (>= 4.2.0)
   devise-encryptable (= 0.2.0)
