@@ -371,7 +371,7 @@ GEM
       macaddr (~> 1.0)
     warden (1.2.7)
       rack (>= 1.0)
-    webmock (3.4.0)
+    webmock (3.4.1)
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff
@@ -438,7 +438,7 @@ DEPENDENCIES
   timecop (= 0.9.1)
   uglifier (>= 3.0.4)
   uuid
-  webmock (~> 3.4.0)
+  webmock (~> 3.4.1)
   zeroclipboard-rails (>= 0.1.2)
 
 BUNDLED WITH
