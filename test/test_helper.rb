@@ -45,6 +45,8 @@ class ActionController::TestCase
   end
 end
 
+Capybara.server = :webrick
+
 require 'capybara/rails'
 
 Capybara.register_driver :rack_test do |app|
