@@ -83,7 +83,7 @@ class BatchInvitationsController < ApplicationController
 
   def grant_default_permissions(batch_invitation)
     SupportedPermission.default.each do |default_permission|
-      batch_invitation.supported_permissions << default_permission
+      batch_invitation.grant_permission(default_permission)
     end
   end
 end
