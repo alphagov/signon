@@ -20,6 +20,12 @@ class BatchInvitationTest < ActiveSupport::TestCase
     assert_equal bi.organisation, organisation
   end
 
+  should "allow multiple supported permissions of the same to be added" do
+    @bi.grant_permission(@app.signin_permission)
+    @bi.grant_permission(@app.signin_permission)
+    @bi.save!
+  end
+
   context "perform" do
     should "create the users and assign them permissions" do
       @bi.reload.perform

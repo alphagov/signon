@@ -37,4 +37,8 @@ class BatchInvitation < ActiveRecord::Base
     self.update_column(:outcome, "fail")
     raise
   end
+
+  def grant_permission(supported_permission)
+    supported_permissions << supported_permission unless supported_permissions.include?(supported_permission)
+  end
 end
