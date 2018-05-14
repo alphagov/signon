@@ -200,7 +200,7 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
       signin_with(@user)
 
       ip_address = @user.event_logs.first.ip_address
-      assert_equal nil, ip_address
+      assert_nil ip_address
     end
   end
 

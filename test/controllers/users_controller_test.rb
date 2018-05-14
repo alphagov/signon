@@ -135,8 +135,8 @@ class UsersControllerTest < ActionController::TestCase
       delete :cancel_email_change, params: { id: @user.id }
 
       @user.reload
-      assert_equal nil, @user.unconfirmed_email
-      assert_equal nil, @user.confirmation_token
+      assert_nil @user.unconfirmed_email
+      assert_nil @user.confirmation_token
     end
 
     should "redirect to the user edit email or passphrase page" do
