@@ -41,7 +41,8 @@ class BatchInvitationsController < ApplicationController
       return
     end
 
-    @batch_invitation.save
+    @batch_invitation.save!
+
     csv.each do |row|
       batch_user_args = {
         batch_invitation: @batch_invitation,
