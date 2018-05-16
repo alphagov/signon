@@ -367,7 +367,7 @@ GEM
     unicorn (5.4.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
-    uuid (2.3.8)
+    uuid (2.3.9)
       macaddr (~> 1.0)
     warden (1.2.7)
       rack (>= 1.0)
