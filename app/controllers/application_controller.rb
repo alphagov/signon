@@ -12,6 +12,7 @@ class ApplicationController < ActionController::Base
 
   before_action do
     headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers[Slimmer::Headers::SKIP_HEADER] = "true"
   end
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized

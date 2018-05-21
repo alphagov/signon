@@ -2,6 +2,8 @@ class SuspensionsController < ApplicationController
   before_action :authenticate_user!, :load_and_authorize_user
   respond_to :html
 
+  layout 'admin_layout'
+
   def update
     if params[:user][:suspended] == "1"
       succeeded = @user.suspend(params[:user][:reason_for_suspension])

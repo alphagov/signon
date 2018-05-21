@@ -1,24 +1,46 @@
-<% content_for :title, "Suspend [#{@user.name}]" %>
+<% content_for :title, "Suspend #{@user.name}" %>
 
-<ol class="breadcrumb">
-  <li><%= link_to @user.name, user_path(@user) %></li>
-  <li class="active">Suspend</li>
-</ol>
+<% content_for :breadcrumb do %>
+  <%= render "govuk_publishing_components/components/breadcrumbs", {
+    breadcrumbs: [
+      {
+        title: "Dashboard",
+        url: root_path,
+      },
+      {
+        title: "Users",
+        url: users_path,
+      },
+      {
+        title: @user.name,
+        url: edit_user_path_by_user_type(@user),
+      },
+      {
+        title: "Suspension",
+      }
+    ]
+  } %>
+<% end %>
 
-<h1 class="page-title">Suspend &ldquo;<%= @user.name %>&rdquo;</h1>
-
-<%= form_tag suspension_path(@user), method: "put", :class => 'well remove-top-padding' do %>
-  <div class="checkbox add-top-margin">
-    <label>
-      <%= check_box_tag "user[suspended]", "1", @user.suspended? %>
-      Suspended?
-    </label>
+<%= form_tag suspension_path(@user), method: "put" do %>
+  <div class="govuk-checkboxes">
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input" id="nationality-1" name="user[suspended]" type="checkbox" value="1" <%= @user.suspended? ? "checked" : "" %>>
+      <label class="govuk-label govuk-checkboxes__label" for="nationality-1">
+        Suspended?
+      </label>
+    </div>
   </div>
-  <div class="form-group">
-    <label for="user_reason_for_suspension">Reason for suspension</label>
-    <%= text_field_tag "user[reason_for_suspension]", @user.reason_for_suspension, class: 'form-control input-md-6' %>
-  </div>
-  <hr />
-  <%= submit_tag "Save", class: "btn btn-primary add-right-margin" %>
-  <%= link_to "Cancel", user_path(@user), class: "btn btn-default" %>
+  <br/>
+
+  <%= render "govuk_publishing_components/components/input", {
+    label: {
+      text: "Reason for suspension"
+    },
+    name: "user[reason_for_suspension]",
+    type: "text",
+    value: @user.reason_for_suspension,
+  } %>
+
+  <%= render "govuk_publishing_components/components/button", text: "Update user" %>
 <% end %>

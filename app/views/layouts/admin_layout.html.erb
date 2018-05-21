@@ -1,0 +1,50 @@
+<%= render "govuk_publishing_components/components/admin_layout", page_title: yield(:title) do %>
+  <% if current_user %>
+    <ul class='tabbies govuk-list'>
+      <%= nav_link 'Dashboard', root_path %>
+
+      <% if policy(User).index? %>
+        <%= nav_link 'Users', users_path %>
+      <% end %>
+
+      <% if policy(ApiUser).index? %>
+        <%= nav_link 'API Users', api_users_path %>
+      <% end %>
+
+      <% if policy(Doorkeeper::Application).index? %>
+        <%= nav_link 'Applications', doorkeeper_applications_path %>
+      <% end %>
+
+      <% if policy(Organisation).index? %>
+        <%= nav_link 'Organisations', organisations_path %>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <%= yield :breadcrumb %>
+
+  <% if flash[:alert] %>
+    <div class="govuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+      <h2 class="govuk-error-summary__title" id="error-summary-title">
+        Something went wrong
+      </h2>
+      <div class="govuk-error-summary__body">
+        <ul class="govuk-list govuk-error-summary__list">
+          <li><%= content_tag :li,
+            flash[:alert],
+            data: track_analytics_data(bootstrap_flash_class(:alert), flash[:alert]) %></li>
+          </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <% if flash[:success] %>
+    <%= render "govuk_publishing_components/components/success_alert", {
+      message: flash[:success],
+    } %>
+  <% end %>
+
+  <%= render "govuk_publishing_components/components/title", title: yield(:title) %>
+
+  <%= yield %>
+<% end %>

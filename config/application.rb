@@ -50,7 +50,7 @@ module Signon
     config.action_dispatch.ip_spoofing_check = false
 
     # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-    config.assets.precompile += %w(password-strength-indicator.js)
+    config.assets.precompile += %w(password-strength-indicator.js admin_layout.css)
 
     config.to_prepare do
       Doorkeeper::ApplicationController.layout "application"

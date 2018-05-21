@@ -1,0 +1,12 @@
+@import "govuk_publishing_components/admin_layout";
+
+// hacky tabs because there's nothing like it
+
+.tabbies li {
+  display: inline-block;
+  margin-right: 20px;
+
+  &.active a {
+    color: #000;
+  }
+}
