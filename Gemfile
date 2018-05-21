@@ -2,6 +2,8 @@ source 'https://rubygems.org'
 
 gem 'rails', '5.1.6'
 
+gem 'govuk_publishing_components', github: 'alphagov/govuk_publishing_components', branch: 'build-a-layout-with-govuk-frontend'
+
 gem 'activejob-retry'
 gem 'addressable', '~> 2.5.2'
 gem 'alphabetical_paginate', '2.3.3'
