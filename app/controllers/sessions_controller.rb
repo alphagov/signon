@@ -1,4 +1,6 @@
 class SessionsController < Devise::SessionsController
+  layout 'admin_layout'
+
   skip_before_action :handle_two_step_verification
 
   def destroy

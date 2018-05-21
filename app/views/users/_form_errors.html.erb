@@ -1,9 +1,7 @@
-<% if @user.errors.count > 0 %>
-  <div class="alert alert-danger">
-    <ul>
-      <% @user.errors.full_messages.each do |message| %>
-        <%= content_tag :li, message, data: track_analytics_data(:danger, message) %>
-      <% end %>
-    </ul>
-  </div>
+<% if @user.errors.any? %>
+<%= render "govuk_publishing_components/components/error_summary", {
+  title: "Something went wrong",
+  items: @user.errors.full_messages.map { |message| { text: message } }
+} %>
+<br/>
 <% end %>

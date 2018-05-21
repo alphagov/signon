@@ -1,37 +1,31 @@
-<% content_for :title, "Sign in" %>
-<% content_for :thin_form, true %>
+<%= render "govuk_publishing_components/components/title", title: "Sign in" %>
 
-<div class="page-title">
-  <h1>Sign in</h1>
-</div>
+<%= form_for resource, as: resource_name, url: session_path(resource_name), html: { autocomplete: 'on' } do |f| %>
+  <%= render "govuk_publishing_components/components/input", {
+    label: {
+      text: "Email"
+    },
+    name: "user[email]",
+    type: "email",
+  } %>
 
-<!--[if lte IE 7]>
-  <div class="alert alert-warning add-bottom-margin">
-    <h4>Your browser is not supported</h4>
-    <p>Pages might not work as expected. You should <a href="https://www.gov.uk/help/browsers" class="link-inherit">upgrade your browser</a> – you might need to ask your IT administrator to do this for you.</p>
-  </div>
-<![endif]-->
-<%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'panel panel-default', autocomplete: 'on' }) do |f| %>
-  <div class="panel-body">
-    <div class="form-group">
-      <%= f.label :email %>
-      <%= f.email_field :email, class: 'form-control input-lg', tabindex: 1, autofocus: 'autofocus' %>
-    </div>
+  <%= render "govuk_publishing_components/components/input", {
+    label: {
+      text: "Passphrase"
+    },
+    name: "user[password]",
+    type: "password",
+  } %>
 
-    <div class="form-group">
-      <%= f.label :password, "Passphrase" %>
-      <%= f.password_field :password, tabindex: 2, class: 'form-control input-lg' %>
-    </div>
+  <p>
+    <%= link_to "Forgot your passphrase?", new_password_path(resource_name) %><br />
+  </p>
 
-    <%= render "links" %>
-
-    <% if devise_mapping.rememberable? %>
-      <label class="checkbox" for="remember_me">Remember me?
-        <%= f.check_box :remember_me, class: 'checkbox' %>
-      </label>
-    <% end %>
-  </div>
-  <div class="panel-footer">
-    <%= f.submit "Sign in", tabindex: 3, class: 'btn btn-success btn-lg btn-block' %>
-  </div>
+  <%= render "govuk_publishing_components/components/button", text: "Sign in" %>
 <% end %>
+
+<style>
+ form {
+   max-width: 700px;
+ }
+</style>

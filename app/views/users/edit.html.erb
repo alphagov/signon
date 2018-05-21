@@ -1,11 +1,25 @@
-<% content_for :title, "Edit [#{@user.name}]" %>
+<% content_for :title, @user.name %>
 
-<h1>Edit &ldquo;<%= @user.name %>&rdquo;</h1>
+<% content_for :breadcrumb do %>
+  <%= render "govuk_publishing_components/components/breadcrumbs", {
+    breadcrumbs: [
+      {
+        title: "Dashboard",
+        url: root_path,
+      },
+      {
+        title: "Users",
+        url: users_path,
+      },
+      {
+        title: @user.name,
+      }
+    ]
+  } %>
+<% end %>
 
 <p class="suspenders">
-  User <strong><%= @user.status %></strong> &bull;
-  <%= link_to "Account access log", event_logs_user_path(@user) %> &bull;
-  <%= link_to "#{@user.suspended? ? "Uns" : "S"}uspend user", edit_suspension_path(@user) %>
+  User status: <strong><%= @user.status %>
 </p>
 
 <% if @user.access_locked? %>
@@ -18,18 +32,24 @@
   </div>
 <% end %>
 
+<ul class="govuk-list">
+  <li><%= link_to "Account access log", event_logs_user_path(@user) %></li>
+  <li><%= link_to "#{@user.suspended? ? "Uns" : "S"}uspend user", edit_suspension_path(@user) %></li>
+</li>
+
+<br/>
+
+<%= render "govuk_publishing_components/components/heading", text: "Details", margin_bottom: 2 %>
+
 <% if @user.suspended? and @user.reason_for_suspension.present? %>
   <p class="alert alert-warning">
     <strong>User suspended:</strong> <em><%= @user.reason_for_suspension %></em>
   </p>
 <% end %>
 
-<%= form_for @user, :html => {:class => 'well add-top-margin'} do |f| %>
-
+<%= form_for @user do |f| %>
   <%= render partial: "form_errors" %>
   <%= render partial: "form_fields", locals: { f: f } %>
 
-  <hr>
-
-  <%= f.submit :class => 'btn btn-primary' %>
+  <%= render "govuk_publishing_components/components/button", text: "Update user" %>
 <% end %>

@@ -1,17 +1,26 @@
-<p class="form-group">
-  <%= f.label :name %>
-  <%= f.text_field :name, autofocus: true, class: 'form-control input-md-6 ' %>
-</p>
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    text: "Name"
+  },
+  name: "user[name]",
+  type: "text",
+  value: f.object.name,
+} %>
 
-<p class="form-group">
-  <%= f.label :email %>
-  <%= f.text_field :email, class: 'form-control input-md-6 add-label-margin' %>
-  <% if f.object.persisted? %>
-    <% if f.object.invited_but_not_yet_accepted? %>
-      <span class="help-block">Changes will trigger a new signup email.</span>
-    <% end %>
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    text: "Email"
+  },
+  name: "user[email]",
+  type: "email",
+  value: f.object.email,
+} %>
+
+<% if f.object.persisted? %>
+  <% if f.object.invited_but_not_yet_accepted? %>
+    <span class="help-block">Changes will trigger a new signup email.</span>
   <% end %>
-</p>
+<% end %>
 
 <% if f.object.unconfirmed_email.present? %>
   <p class="form-group">
@@ -26,21 +35,28 @@
 <% end %>
 
 <% if policy(User).assign_role? %>
-  <p class="form-group">
-    <%= f.label :role %><br />
-    <%= f.select :role, options_for_select(filtered_user_roles.map(&:humanize).zip(filtered_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
-    <span class="help-block">
-      <strong>Superadmins</strong> can create and edit all user types and edit applications.<br />
-      <strong>Admins</strong> can create and edit normal users.<br />
-      <strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.<br />
-      <strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.
-    </span>
-  </p>
+  <%= render "govuk_publishing_components/components/heading", text: "Role", margin_bottom: 2 %>
+
+  <% role_hints = {
+    superadmin: "Superadmins can create and edit all user types and edit applications",
+    admin: "Admins can create and edit normal users",
+    super_organisation_admin: "Super Organisation Admins can unlock and unsuspend their organisation and related organisation accounts",
+    organisation_admin: "Organisation Admins can unlock and unsuspend their organisation accounts",
+  }
+  %>
+
+  <%= render "govuk_publishing_components/components/radio",
+    name: "user[role]",
+    items: filtered_user_roles.map(&:humanize).zip(filtered_user_roles).map { |text, value|
+      { text: text, value: value, hint_text: role_hints[value.to_sym], checked: (f.object.role == value) }
+    }
+  %>
 <% end %>
+<br/>
+<%= render "govuk_publishing_components/components/heading", text: "Account security", margin_bottom: 2 %>
 
 <% if policy(User).flag_2sv? %>
   <dl>
-    <dt>Account security</dt>
     <dd>
       <% if f.object.has_2sv? %>
         <p>2-step verification enabled</p>

@@ -13,6 +13,8 @@ class UsersController < ApplicationController
   before_action :validate_token_matches_client_id, only: :show
   skip_after_action :verify_authorized, only: :show
 
+  layout 'admin_layout', only: %w[edit update event_logs]
+
   def show
     current_resource_owner.permissions_synced!(application_making_request)
     respond_to do |format|

@@ -1,48 +1,35 @@
-<% content_for :title, "Dashboard" %>
-<div class="page-title">
-  <h1>Welcome to <%= t('department.name') %></h1>
-</div>
-<div class="well">
-<div class="row">
-  <div class="col-md-4">
-  <h2 class="remove-top-margin add-bottom-margin">Your account</h2>
-  <ul data-module="track-click">
-    <li><%= link_to "Change your email or passphrase", edit_email_or_passphrase_user_path(current_user) %></li>
-    <% if current_user.has_2sv? %>
-      <li><%= link_to "Change your 2-step verification phone", two_step_verification_path, class: "js-track" %></li>
-    <% else %>
-      <li><%= link_to "Make your account more secure", two_step_verification_path, class: "js-track" %></li>
-    <% end %>
-    <li><%= link_to "Sign out", destroy_user_session_path %></li>
-  </ul>
-  </div>
-  <div class="col-md-8">
-  <h2 class="remove-top-margin add-bottom-margin">Your Applications</h2>
-  <% if @applications_and_permissions.any? %>
-    <div class="list-group remove-bottom-margin">
-      <% @applications_and_permissions.each do |application, permissions| %>
-        <div class="list-group-item">
-          <h3 class="remove-top-margin add-label-margin">
-            <%= link_to_if application.home_uri, application.name, application.home_uri %>
-          </h3>
-          <div class="text-muted">
-          <% if application.description.present? %>
-            <%= application.description %>
-          <% end %>
-          <% if permissions.any? %>
-            <% if application.description.present? %>&bull; <% end %>
-            Roles: <em><%= current_user.permissions_for(application).map(&:humanize).to_sentence %></em>
-          <% end %>
-          </div>
-        </div>
-      <% end %>
-    </div>
+<% content_for :title, "Welcome to GOV.UK" %>
+
+<ul class="govuk-list">
+  <li><%= link_to "Change your email or passphrase", edit_email_or_passphrase_user_path(current_user) %></li>
+
+  <% if current_user.has_2sv? %>
+    <li><%= link_to "Change your 2-step verification phone", two_step_verification_path, class: "js-track" %></li>
   <% else %>
-    <p class="list-group-item no-content no-content-bordered">
-      You haven’t been assigned to<br />
-      any applications yet
-    </p>
+    <li><%= link_to "Make your account more secure", two_step_verification_path, class: "js-track" %></li>
   <% end %>
-  </div>
-</div>
-</div>
+</ul>
+
+<br/>
+<br/>
+
+<%= render "govuk_publishing_components/components/heading", heading_level: 2, text: "Your Applications", margin_bottom: 2 %>
+
+<% if @applications_and_permissions.any? %>
+    <% @applications_and_permissions.each do |application, permissions| %>
+      <%= render "govuk_publishing_components/components/heading", text: link_to(application.name, application.home_uri), heading_level: 3 %>
+
+      <% if application.description.present? %>
+        <p><%= application.description %></p>
+      <% end %>
+
+      <% if permissions.any? %>
+        <p>
+          Roles: <em><%= current_user.permissions_for(application).map(&:humanize).to_sentence %></em>
+        </p>
+      <% end %>
+    <% end %>
+<% else %>
+  <%= render "govuk_publishing_components/components/lead_paragraph",
+    text: "You haven’t been assigned to any applications yet" %>
+<% end %>
