@@ -218,7 +218,7 @@ GEM
     pg (0.21.0)
     phantomjs (2.1.1.0)
     plek (2.1.1)
-    poltergeist (1.18.0)
+    poltergeist (1.18.1)
       capybara (>= 2.1, < 4)
       cliver (~> 0.3.1)
       websocket-driver (>= 0.2.0)
@@ -421,7 +421,7 @@ DEPENDENCIES
   nokogiri (>= 1.8.1)
   pg (~> 0.18)
   plek (~> 2.1)
-  poltergeist (= 1.18.0)
+  poltergeist (= 1.18.1)
   pry-byebug
   pundit (= 1.1.0)
   rails (= 5.1.6)
