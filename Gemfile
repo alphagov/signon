@@ -57,7 +57,7 @@ group :test do
   gem 'factory_bot_rails', '~> 4.10'
   gem 'minitest', '~> 5.11.2'
   gem 'mocha', '1.5.0', require: false
-  gem 'poltergeist', '1.18.0'
+  gem 'poltergeist', '1.18.1'
   gem 'rails-controller-testing'
   gem 'rspec-rails', '~> 3.7.1'
   gem 'shoulda-context', '1.2.2', require: false
