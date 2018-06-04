@@ -51,7 +51,7 @@ group :development, :test do
 end
 
 group :test do
-  gem 'capybara', '~> 3.1.1'
+  gem 'capybara', '~> 3.2.0'
   gem 'capybara-email', '~> 3.0.1'
   gem 'database_cleaner', '1.7.0'
   gem 'factory_bot_rails', '~> 4.10'
