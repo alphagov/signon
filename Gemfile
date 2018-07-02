@@ -35,7 +35,7 @@ gem 'zeroclipboard-rails', '>= 0.1.2'
 gem 'deprecated_columns', '0.1.1'
 gem 'gds-api-adapters', '~> 52.6'
 gem 'govuk_admin_template', '~> 6.6'
-gem 'govuk_app_config', '~> 1.5'
+gem 'govuk_app_config', '~> 1.6'
 gem 'govuk_sidekiq', '~> 3.0'
 gem 'plek', '~> 2.1'
 
