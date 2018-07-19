@@ -1,3 +1,5 @@
+require 'date'
+
 namespace :users do
   desc "Create a new user (specify name and email in environment)"
   task create: :environment do
@@ -68,6 +70,27 @@ namespace :users do
     raise "Requires ENV variable EXPORT_DIR to be set to a valid directory path" if ENV['EXPORT_DIR'].blank?
 
     UserPermissionsExporter.new(ENV['EXPORT_DIR'], Logger.new(STDOUT)).export_signon
+  end
+
+  desc "Exports users which have been auto-suspended since the given date, and details of their unsuspension"
+  task export_auto_suspended_users: :environment do
+    raise "Requires ENV variable EXPORT_DIR to be set to a valid directory path" if ENV['EXPORT_DIR'].blank?
+
+    if ENV['DATE'].blank?
+      raise "Requires ENV variable USERS_SINCE to be set to a valid date" if ENV['USERS_SINCE'].blank?
+      users_since_date = Date.parse(ENV['USERS_SINCE'])
+
+      raise "Requires ENV variable SUSPENSIONS_SINCE to be set to a valid date" if ENV['SUSPENSIONS_SINCE'].blank?
+      suspensions_since_date = Date.parse(ENV['SUSPENSIONS_SINCE'])
+    else
+      users_since_date = Date.parse(ENV['DATE'])
+      suspensions_since_date = Date.parse(ENV['DATE'])
+    end
+
+    raise "Requires ENV variable USERS_SINCE to be set to a valid date" unless users_since_date
+    raise "Requires ENV variable SUSPENSIONS_SINCE to be set to a valid date" unless suspensions_since_date
+
+    UserSuspensionsExporter.call(ENV['EXPORT_DIR'], users_since_date, suspensions_since_date, Logger.new(STDOUT))
   end
 
   desc "Grant access to Content Preview for all active users who don't have it"
