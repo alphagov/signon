@@ -1,10 +1,11 @@
 require 'csv'
 
 class UserSuspensionsExporter
-  attr_reader :applications, :export_dir, :suspensions_since_date, :logger
+  attr_reader :applications, :export_dir, :users_since_date, :suspensions_since_date, :logger
 
-  def initialize(export_dir, suspensions_since_date, logger = Rails.logger)
+  def initialize(export_dir, users_since_date, suspensions_since_date, logger = Rails.logger)
     @export_dir = export_dir
+    @users_since_date = users_since_date
     @suspensions_since_date = suspensions_since_date
     @logger = logger
   end
@@ -14,7 +15,7 @@ class UserSuspensionsExporter
 
     CSV.open(file_path, 'wb', headers: true) do |csv|
       csv << ["Name", "Email", "Organisation", "Role", "Auto-suspended at", "Unsuspended at", "Unsuspended by"]
-      User.order(:name).find_each do |user|
+      User.where('created_at > ?', users_since_date).order(:name).find_each do |user|
         org_name = user.organisation ? user.organisation.name : ""
         # because the suspension and the unsuspension are separate
         # events, and the suspension comes first, we need to store it
