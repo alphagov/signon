@@ -32,7 +32,7 @@ class UserSuspensionsExporterTest < ActionView::TestCase
 
     csv_data = CSV.read(@tmpfile.path)
 
-    assert_equal ["Name", "Email", "Organisation", "Role", "Auto-suspended at", "Unsuspended at", "Unsuspended by"], csv_data[0]
+    assert_equal ["Name", "Email", "Organisation", "Role", "Created at", "Auto-suspended at", "Unsuspended at", "Unsuspended by"], csv_data[0]
     assert_equal 1, csv_data.count
   end
 
@@ -41,7 +41,7 @@ class UserSuspensionsExporterTest < ActionView::TestCase
 
     csv_data = CSV.read(@tmpfile.path)
 
-    assert_equal ["Name", "Email", "Organisation", "Role", "Auto-suspended at", "Unsuspended at", "Unsuspended by"], csv_data[0]
+    assert_equal ["Name", "Email", "Organisation", "Role", "Created at", "Auto-suspended at", "Unsuspended at", "Unsuspended by"], csv_data[0]
     assert_equal 1, csv_data.count
   end
 
@@ -50,8 +50,8 @@ class UserSuspensionsExporterTest < ActionView::TestCase
 
     csv_data = CSV.read(@tmpfile.path)
 
-    assert_equal ["Name", "Email", "Organisation", "Role", "Auto-suspended at", "Unsuspended at", "Unsuspended by"], csv_data[0]
-    assert_equal ["Mary", "mary@mary.com", "Ministry of brown sauce", "admin", "2018-03-05 00:00:00 +0000", "", ""], csv_data[1]
+    assert_equal ["Name", "Email", "Organisation", "Role", "Created at", "Auto-suspended at", "Unsuspended at", "Unsuspended by"], csv_data[0]
+    assert_equal ["Mary", "mary@mary.com", "Ministry of brown sauce", "admin", "2000-01-01 00:00:00 +0000", "2018-03-05 00:00:00 +0000", "", ""], csv_data[1]
     assert_equal 2, csv_data.count
   end
 
@@ -60,9 +60,9 @@ class UserSuspensionsExporterTest < ActionView::TestCase
 
     csv_data = CSV.read(@tmpfile.path)
 
-    assert_equal ["Name", "Email", "Organisation", "Role", "Auto-suspended at", "Unsuspended at", "Unsuspended by"], csv_data[0]
-    assert_equal ["Anne", "anne@anne.com", "Ministry of ketchup", "superadmin", "2018-02-01 00:00:00 +0000", "", ""], csv_data[1]
-    assert_equal ["Mary", "mary@mary.com", "Ministry of brown sauce", "admin", "2018-03-05 00:00:00 +0000", "", ""], csv_data[2]
+    assert_equal ["Name", "Email", "Organisation", "Role", "Created at", "Auto-suspended at", "Unsuspended at", "Unsuspended by"], csv_data[0]
+    assert_equal ["Anne", "anne@anne.com", "Ministry of ketchup", "superadmin", "2010-10-10 00:00:00 +0100", "2018-02-01 00:00:00 +0000", "", ""], csv_data[1]
+    assert_equal ["Mary", "mary@mary.com", "Ministry of brown sauce", "admin", "2000-01-01 00:00:00 +0000", "2018-03-05 00:00:00 +0000", "", ""], csv_data[2]
     assert_equal 3, csv_data.count
   end
 
@@ -71,10 +71,10 @@ class UserSuspensionsExporterTest < ActionView::TestCase
 
     csv_data = CSV.read(@tmpfile.path)
 
-    assert_equal ["Name", "Email", "Organisation", "Role", "Auto-suspended at", "Unsuspended at", "Unsuspended by"], csv_data[0]
-    assert_equal ["Bill", "bill@bill.com", "Ministry of chips", "normal", "2018-01-01 00:00:00 +0000", "2018-01-15 00:00:00 +0000", "anne@anne.com"], csv_data[1]
-    assert_equal ["Bill", "bill@bill.com", "Ministry of chips", "normal", "2018-01-16 00:00:00 +0000", "2018-01-31 00:00:00 +0000", "mary@mary.com"], csv_data[2]
-    assert_equal ["Anne", "anne@anne.com", "Ministry of ketchup", "superadmin", "2018-02-01 00:00:00 +0000", "", ""], csv_data[3]
+    assert_equal ["Name", "Email", "Organisation", "Role", "Created at", "Auto-suspended at", "Unsuspended at", "Unsuspended by"], csv_data[0]
+    assert_equal ["Bill", "bill@bill.com", "Ministry of chips", "normal", "2010-10-10 00:00:00 +0100", "2018-01-01 00:00:00 +0000", "2018-01-15 00:00:00 +0000", "anne@anne.com"], csv_data[1]
+    assert_equal ["Bill", "bill@bill.com", "Ministry of chips", "normal", "2010-10-10 00:00:00 +0100", "2018-01-16 00:00:00 +0000", "2018-01-31 00:00:00 +0000", "mary@mary.com"], csv_data[2]
+    assert_equal ["Anne", "anne@anne.com", "Ministry of ketchup", "superadmin", "2010-10-10 00:00:00 +0100", "2018-02-01 00:00:00 +0000", "", ""], csv_data[3]
     assert_equal 4, csv_data.count
   end
 
@@ -83,11 +83,11 @@ class UserSuspensionsExporterTest < ActionView::TestCase
 
     csv_data = CSV.read(@tmpfile.path)
 
-    assert_equal ["Name", "Email", "Organisation", "Role", "Auto-suspended at", "Unsuspended at", "Unsuspended by"], csv_data[0]
-    assert_equal ["Bill", "bill@bill.com", "Ministry of chips", "normal", "2018-01-01 00:00:00 +0000", "2018-01-15 00:00:00 +0000", "anne@anne.com"], csv_data[1]
-    assert_equal ["Bill", "bill@bill.com", "Ministry of chips", "normal", "2018-01-16 00:00:00 +0000", "2018-01-31 00:00:00 +0000", "mary@mary.com"], csv_data[2]
-    assert_equal ["Anne", "anne@anne.com", "Ministry of ketchup", "superadmin", "2018-02-01 00:00:00 +0000", "", ""], csv_data[3]
-    assert_equal ["Mary", "mary@mary.com", "Ministry of brown sauce", "admin", "2018-03-05 00:00:00 +0000", "", ""], csv_data[4]
+    assert_equal ["Name", "Email", "Organisation", "Role", "Created at", "Auto-suspended at", "Unsuspended at", "Unsuspended by"], csv_data[0]
+    assert_equal ["Bill", "bill@bill.com", "Ministry of chips", "normal", "2010-10-10 00:00:00 +0100", "2018-01-01 00:00:00 +0000", "2018-01-15 00:00:00 +0000", "anne@anne.com"], csv_data[1]
+    assert_equal ["Bill", "bill@bill.com", "Ministry of chips", "normal", "2010-10-10 00:00:00 +0100", "2018-01-16 00:00:00 +0000", "2018-01-31 00:00:00 +0000", "mary@mary.com"], csv_data[2]
+    assert_equal ["Anne", "anne@anne.com", "Ministry of ketchup", "superadmin", "2010-10-10 00:00:00 +0100", "2018-02-01 00:00:00 +0000", "", ""], csv_data[3]
+    assert_equal ["Mary", "mary@mary.com", "Ministry of brown sauce", "admin", "2000-01-01 00:00:00 +0000", "2018-03-05 00:00:00 +0000", "", ""], csv_data[4]
     assert_equal 5, csv_data.count
   end
 end

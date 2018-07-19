@@ -16,7 +16,7 @@ class UserSuspensionsExporter
     event_ids = [EventLog::ACCOUNT_AUTOSUSPENDED, EventLog::ACCOUNT_UNSUSPENDED].map(&:id)
 
     CSV.open(file_path, 'wb', headers: true) do |csv|
-      csv << ["Name", "Email", "Organisation", "Role", "Auto-suspended at", "Unsuspended at", "Unsuspended by"]
+      csv << ["Name", "Email", "Organisation", "Role", "Created at", "Auto-suspended at", "Unsuspended at", "Unsuspended by"]
       User.where('created_at > ?', users_since_date).order(:name).find_each do |user|
         org_name = user.organisation ? user.organisation.name : ""
         # because the suspension and the unsuspension are separate
@@ -32,7 +32,7 @@ class UserSuspensionsExporter
             # 'suspensions_since_date' and unsuspended after, we'll
             # see an unsuspend event with no corresponding suspend.
             if suspended_at
-              csv << [user.name, user.email, org_name, user.role, suspended_at, event.created_at, event.initiator.email]
+              csv << [user.name, user.email, org_name, user.role, user.created_at, suspended_at, event.created_at, event.initiator.email]
             end
             suspended_at = nil
           end
@@ -40,7 +40,7 @@ class UserSuspensionsExporter
         # if we have a non-nil 'suspended_at' here, then the user is
         # still suspended.
         if suspended_at
-          csv << [user.name, user.email, org_name, user.role, suspended_at, "", ""]
+          csv << [user.name, user.email, org_name, user.role, user.created_at, suspended_at, "", ""]
         end
       end
     end
