@@ -1,7 +1,9 @@
 require 'csv'
 
 class UserSuspensionsExporter
-  attr_reader :applications, :export_dir, :users_since_date, :suspensions_since_date, :logger
+  def self.call(*args)
+    new(*args).export_suspensions
+  end
 
   def initialize(export_dir, users_since_date, suspensions_since_date, logger = Rails.logger)
     @export_dir = export_dir
@@ -45,6 +47,10 @@ class UserSuspensionsExporter
 
     logger.info("User suspensions exported to #{file_path}")
   end
+
+private
+
+  attr_reader :applications, :export_dir, :users_since_date, :suspensions_since_date, :logger
 
   def file_path
     File.join(export_dir, "#{Time.zone.now.to_s(:number)}-suspensions.csv")

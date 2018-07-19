@@ -28,7 +28,7 @@ class UserSuspensionsExporterTest < ActionView::TestCase
   end
 
   def test_export_no_users_in_date
-    UserSuspensionsExporter.new(@tmpfile.path, Date.new(2019, 1, 1), Date.new(1970, 1, 1)).export_suspensions
+    UserSuspensionsExporter.call(@tmpfile.path, Date.new(2019, 1, 1), Date.new(1970, 1, 1))
 
     csv_data = CSV.read(@tmpfile.path)
 
@@ -37,7 +37,7 @@ class UserSuspensionsExporterTest < ActionView::TestCase
   end
 
   def test_export_no_suspensions_in_date
-    UserSuspensionsExporter.new(@tmpfile.path, Date.new(1970, 1, 1), Date.new(2019, 1, 1)).export_suspensions
+    UserSuspensionsExporter.call(@tmpfile.path, Date.new(1970, 1, 1), Date.new(2019, 1, 1))
 
     csv_data = CSV.read(@tmpfile.path)
 
@@ -46,7 +46,7 @@ class UserSuspensionsExporterTest < ActionView::TestCase
   end
 
   def test_export_missing_unsuspension
-    UserSuspensionsExporter.new(@tmpfile.path, Date.new(1970, 1, 1), Date.new(2018, 2, 15)).export_suspensions
+    UserSuspensionsExporter.call(@tmpfile.path, Date.new(1970, 1, 1), Date.new(2018, 2, 15))
 
     csv_data = CSV.read(@tmpfile.path)
 
@@ -56,7 +56,7 @@ class UserSuspensionsExporterTest < ActionView::TestCase
   end
 
   def test_export_missing_suspension
-    UserSuspensionsExporter.new(@tmpfile.path, Date.new(1970, 1, 1), Date.new(2018, 1, 17)).export_suspensions
+    UserSuspensionsExporter.call(@tmpfile.path, Date.new(1970, 1, 1), Date.new(2018, 1, 17))
 
     csv_data = CSV.read(@tmpfile.path)
 
@@ -67,7 +67,7 @@ class UserSuspensionsExporterTest < ActionView::TestCase
   end
 
   def test_export_user_too_old
-    UserSuspensionsExporter.new(@tmpfile.path, Date.new(2005, 5, 5), Date.new(1970, 1, 1)).export_suspensions
+    UserSuspensionsExporter.call(@tmpfile.path, Date.new(2005, 5, 5), Date.new(1970, 1, 1))
 
     csv_data = CSV.read(@tmpfile.path)
 
@@ -79,7 +79,7 @@ class UserSuspensionsExporterTest < ActionView::TestCase
   end
 
   def test_export_all
-    UserSuspensionsExporter.new(@tmpfile.path, Date.new(1970, 1, 1), Date.new(1970, 1, 1)).export_suspensions
+    UserSuspensionsExporter.call(@tmpfile.path, Date.new(1970, 1, 1), Date.new(1970, 1, 1))
 
     csv_data = CSV.read(@tmpfile.path)
 

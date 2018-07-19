@@ -90,7 +90,7 @@ namespace :users do
     raise "Requires ENV variable USERS_SINCE to be set to a valid date" unless users_since_date
     raise "Requires ENV variable SUSPENSIONS_SINCE to be set to a valid date" unless suspensions_since_date
 
-    UserSuspensionsExporter.new(ENV['EXPORT_DIR'], users_since_date, suspensions_since_date, Logger.new(STDOUT)).export_suspensions
+    UserSuspensionsExporter.call(ENV['EXPORT_DIR'], users_since_date, suspensions_since_date, Logger.new(STDOUT))
   end
 
   desc "Grant access to Content Preview for all active users who don't have it"
