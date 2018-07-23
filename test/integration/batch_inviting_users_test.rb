@@ -37,11 +37,11 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
       assert_user_created_and_invited('fred@example.com', @application, organisation: @cabinet_office)
     end
 
-    should "ignore org details specified in a CSV file, creating all the users assigned to one org" do
+    should "allow creating users with org details specified in a CSV file, overriding the org selected in the form" do
       perform_batch_invite_with_user(@user, @application, fixture_file: 'users_with_orgs.csv', user_count: 3, organisation: @cabinet_office)
-      assert_user_created_and_invited('fred@example.com', @application, organisation: @cabinet_office)
+      assert_user_created_and_invited('fred@example.com', @application, organisation: @department_of_hats)
       assert_user_created_and_invited('lara@example.com', @application, organisation: @cabinet_office)
-      assert_user_created_and_invited('emma@example.com', @application, organisation: @cabinet_office)
+      assert_user_not_created('emma@example.com')
     end
   end
 

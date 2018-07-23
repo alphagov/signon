@@ -35,8 +35,8 @@ describe BatchInvitationPolicy do
       expect(subject).to permit(create(:superadmin_user), BatchInvitation.new)
     end
 
-    it 'is forbidden for admins' do
-      expect(subject).not_to permit(create(:admin_user), BatchInvitation.new)
+    it 'is allowed for admins' do
+      expect(subject).to permit(create(:admin_user), BatchInvitation.new)
     end
 
     it 'is forbidden for super organisation admins' do
