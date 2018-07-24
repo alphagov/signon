@@ -8,6 +8,6 @@ class BatchInvitationPolicy < BasePolicy
   alias_method :show?, :new?
 
   def assign_organisation_from_csv?
-    current_user.superadmin?
+    current_user.superadmin? || current_user.admin?
   end
 end
