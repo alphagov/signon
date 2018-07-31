@@ -230,7 +230,7 @@ GEM
       byebug (~> 10.0)
       pry (~> 0.10)
     public_suffix (3.0.2)
-    pundit (1.1.0)
+    pundit (2.0.0)
       activesupport (>= 3.0.0)
     rack (2.0.5)
     rack-cache (1.8.0)
@@ -423,7 +423,7 @@ DEPENDENCIES
   plek (~> 2.1)
   poltergeist (= 1.18.1)
   pry-byebug
-  pundit (= 1.1.0)
+  pundit (= 2.0.0)
   rails (= 5.1.6)
   rails-controller-testing
   rails-html-sanitizer (= 1.0.4)
