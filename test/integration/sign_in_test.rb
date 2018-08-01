@@ -81,8 +81,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
     fill_in "Email", with: @user.email
     fill_in "Passphrase", with: @user.password
-    click_button "Sign in"
-    assert_response_contains("You need to sign in before continuing.")
+    assert_raises(ActionController::InvalidAuthenticityToken) { click_button "Sign in" }
   end
 
   should "not remotely sign out user when visiting with an expired session cookie" do

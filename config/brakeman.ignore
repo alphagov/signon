@@ -1,0 +1,65 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 4,
+      "fingerprint": "0b8f343234a3e8032ef58bff6dbad18fa3160c1f1983a132ba7044d86ee30631",
+      "check_name": "LinkToHref",
+      "message": "Potentially unsafe model attribute in link_to href",
+      "file": "app/views/root/signin_required.html.erb",
+      "line": 7,
+      "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
+      "code": "link_to(\"back in\", ::Doorkeeper::Application.find_by_id(session.delete(:signin_missing_for_application)).home_uri)",
+      "render_path": [{"type":"controller","class":"RootController","method":"signin_required","line":14,"file":"app/controllers/root_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "root/signin_required"
+      },
+      "user_input": "::Doorkeeper::Application.find_by_id(session.delete(:signin_missing_for_application)).home_uri",
+      "confidence": "Weak",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "6e625e6e38b22e2d8d17724f2fe2e1552bfefba31ae24b4c0d989a133dcb5211",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "lib/organisation_mappings/zendesk_to_signon.rb",
+      "line": 9,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "User.where(:organisation_id => nil).where(\"#{substring_function} IN (?)\", domain_names)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "OrganisationMappings::ZendeskToSignon",
+        "method": "s(:self).apply"
+      },
+      "user_input": "substring_function",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "a523842347bd06ea68475c6cf18e8a3fc2428eeb24bb02dc5cdb578679bd2a50",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/batch_invitations_controller.rb",
+      "line": 69,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "BatchInvitation.where(\"created_at > '#{3.days.ago}'\")",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "BatchInvitationsController",
+        "method": "recent_batch_invitations"
+      },
+      "user_input": "3.days.ago",
+      "confidence": "Medium",
+      "note": ""
+    }
+  ],
+  "updated": "2018-03-19 09:09:23 +0000",
+  "brakeman_version": "4.2.0"
+}
