@@ -1,0 +1,45 @@
+{
+  "ignored_warnings": [
+    {
+      "warning_type": "Cross-Site Scripting",
+      "warning_code": 4,
+      "fingerprint": "0b8f343234a3e8032ef58bff6dbad18fa3160c1f1983a132ba7044d86ee30631",
+      "check_name": "LinkToHref",
+      "message": "Potentially unsafe model attribute in link_to href",
+      "file": "app/views/root/signin_required.html.erb",
+      "line": 7,
+      "link": "https://brakemanscanner.org/docs/warning_types/link_to_href",
+      "code": "link_to(\"back in\", ::Doorkeeper::Application.find_by_id(session.delete(:signin_missing_for_application)).home_uri)",
+      "render_path": [{"type":"controller","class":"RootController","method":"signin_required","line":14,"file":"app/controllers/root_controller.rb"}],
+      "location": {
+        "type": "template",
+        "template": "root/signin_required"
+      },
+      "user_input": "::Doorkeeper::Application.find_by_id(session.delete(:signin_missing_for_application)).home_uri",
+      "confidence": "Weak",
+      "note": "This is not an issue as we control the database."
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "6e625e6e38b22e2d8d17724f2fe2e1552bfefba31ae24b4c0d989a133dcb5211",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "lib/organisation_mappings/zendesk_to_signon.rb",
+      "line": 9,
+      "link": "https://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "User.where(:organisation_id => nil).where(\"#{substring_function} IN (?)\", domain_names)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "OrganisationMappings::ZendeskToSignon",
+        "method": "s(:self).apply"
+      },
+      "user_input": "substring_function",
+      "confidence": "Medium",
+      "note": "This isn't a SQL injection, we control the function and it simply returns a static string depending on whether we're on MySQL or PostgreSQL. No user inpurt."
+    }
+  ],
+  "updated": "2018-08-02 14:43:42 +0100",
+  "brakeman_version": "4.3.1"
+}

@@ -9,5 +9,5 @@ node("postgresql-9.3") {
   govuk.setEnvar("DEVISE_SECRET_KEY", UUID.randomUUID().toString())
 
   // FIXME: Re-enable sass lint and fix the issues
-  govuk.buildProject(sassLint: false)
+  govuk.buildProject(sassLint: false, brakeman: true)
 }
