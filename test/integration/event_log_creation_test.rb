@@ -33,12 +33,10 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
       assert_equal 0, EventLog.count
     end
 
-    should "not blow up if not given a string for the email" do
-      # Assert we don't blow up when looking up the attempted user
-      # when people have been messing with the posted params.
-      post "/users/sign_in", params: { "user" => { "email" => { "foo" => "bar" }, :password => "anything" } }
-
-      assert response.success?
+    should "raise an error when missing CSRF token" do
+      assert_raises ActionController::InvalidAuthenticityToken do
+        post "/users/sign_in", params: { "user" => { "email" => { "foo" => "bar" }, :password => "anything" } }
+      end
     end
   end
 
