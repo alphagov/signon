@@ -54,7 +54,7 @@ group :test do
   gem 'capybara', '~> 3.5.1'
   gem 'capybara-email', '~> 3.0.1'
   gem 'database_cleaner', '1.7.0'
-  gem 'factory_bot_rails', '~> 4.10'
+  gem 'factory_bot_rails', '~> 4.11'
   gem 'minitest', '~> 5.11.2'
   gem 'mocha', '1.6.0', require: false
   gem 'poltergeist', '1.18.1'
