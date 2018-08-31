@@ -216,7 +216,7 @@ GEM
     parallel (1.12.1)
     parser (2.5.1.2)
       ast (~> 2.4.0)
-    pg (0.21.0)
+    pg (1.1.2)
     phantomjs (2.1.1.0)
     plek (2.1.1)
     poltergeist (1.18.1)
@@ -421,7 +421,7 @@ DEPENDENCIES
   mocha (= 1.6.0)
   mysql2 (= 0.4.10)
   nokogiri (>= 1.8.1)
-  pg (~> 0.18)
+  pg (~> 1.1)
   plek (~> 2.1)
   poltergeist (= 1.18.1)
   pry-byebug
