@@ -1,7 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    PriorityQueue (0.1.2)
     actioncable (5.1.6)
       actionpack (= 5.1.6)
       nio4r (~> 2.0)
@@ -118,10 +117,9 @@ GEM
     faraday (0.15.2)
       multipart-post (>= 1.2, < 3)
     ffi (1.9.25)
-    gds-api-adapters (52.8.0)
+    gds-api-adapters (53.0.0)
       addressable
       link_header
-      lrucache (~> 0.1.1)
       null_logger
       plek (>= 1.9.0)
       rack-cache
@@ -189,8 +187,6 @@ GEM
     loofah (2.2.2)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
-    lrucache (0.1.4)
-      PriorityQueue (~> 0.1.2)
     macaddr (1.7.1)
       systemu (~> 2.6.2)
     mail (2.7.0)
@@ -408,7 +404,7 @@ DEPENDENCIES
   devise_zxcvbn (= 1.1.1)
   doorkeeper (>= 4.2.0)
   factory_bot_rails (~> 4.11)
-  gds-api-adapters (~> 52.8)
+  gds-api-adapters (~> 53.0)
   govuk-lint (~> 3.9)
   govuk_admin_template (~> 6.6)
   govuk_app_config (~> 1.8)
