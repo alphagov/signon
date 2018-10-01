@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'helpers/passphrase_support'
+require 'helpers/password_support'
 
 class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
-  include PassPhraseSupport
+  include PasswordSupport
 
   setup do
     @admin = create(:admin_user, name: "Admin User")
@@ -13,7 +13,7 @@ class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
     visit root_path
     signin_with(@user)
 
-    click_link "Change your email or passphrase"
+    click_link "Change your email or password"
     assert page.has_no_link? 'Account access log'
   end
 

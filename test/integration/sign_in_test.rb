@@ -3,12 +3,12 @@ require 'test_helper'
 class SignInTest < ActionDispatch::IntegrationTest
   setup do
     @organisation = create(:organisation, name: 'Ministry of Lindy-hop', slug: 'ministry-of-lindy-hop')
-    @user = create(:user_in_organisation, email: "email@example.com", password: "some passphrase with various $ymb0l$", organisation: @organisation)
+    @user = create(:user_in_organisation, email: "email@example.com", password: "some password with various $ymb0l$", organisation: @organisation)
   end
 
   should "display a confirmation for successful sign-ins" do
     visit root_path
-    signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+    signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
     assert_response_contains("Signed in successfully.")
   end
 
@@ -18,7 +18,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       visit root_path
       refute_dimension_is_set(8)
 
-      signin_with(email: 'email@example.com', password: "some passphrase with various $ymb0l$")
+      signin_with(email: 'email@example.com', password: "some password with various $ymb0l$")
       assert_dimension_is_set(8, with_value: 'ministry-of-lindy-hop')
     end
   end
@@ -30,15 +30,15 @@ class SignInTest < ActionDispatch::IntegrationTest
       visit root_path
       refute_dimension_is_set(8)
 
-      signin_with(email: 'email@example.com', password: "some passphrase with various $ymb0l$")
+      signin_with(email: 'email@example.com', password: "some password with various $ymb0l$")
       assert_dimension_is_set(8, with_value: '(not set)')
     end
   end
 
   should "display a rejection for unsuccessful sign-ins" do
     visit root_path
-    signin_with(email: "email@example.com", password: "some incorrect passphrase with various $ymb0l$")
-    assert_response_contains("Invalid email or passphrase")
+    signin_with(email: "email@example.com", password: "some incorrect password with various $ymb0l$")
+    assert_response_contains("Invalid email or password")
   end
 
   should "not send a GA event including the users org slug for unsuccessful sign-ins" do
@@ -47,7 +47,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       visit root_path
       refute_dimension_is_set(8)
 
-      signin_with(email: "email@example.com", password: "some incorrect passphrase with various $ymb0l$")
+      signin_with(email: "email@example.com", password: "some incorrect password with various $ymb0l$")
       refute_dimension_is_set(8)
     end
   end
@@ -55,22 +55,22 @@ class SignInTest < ActionDispatch::IntegrationTest
   should "display the same rejection for failed logins, empty passwords, and missing accounts" do
     visit root_path
     signin_with(email: "does-not-exist@example.com", password: "some made up p@ssw0rd")
-    assert_response_contains("Invalid email or passphrase")
+    assert_response_contains("Invalid email or password")
 
     visit root_path
-    signin_with(email: "email@example.com", password: "some incorrect passphrase with various $ymb0l$")
-    assert_response_contains("Invalid email or passphrase")
+    signin_with(email: "email@example.com", password: "some incorrect password with various $ymb0l$")
+    assert_response_contains("Invalid email or password")
 
     visit root_path
     signin_with(email: "email@example.com", password: "")
-    assert_response_contains("Invalid email or passphrase")
+    assert_response_contains("Invalid email or password")
   end
 
   should "succeed if the Client-IP header is set" do
     page.driver.browser.header("Client-IP", "127.0.0.1")
 
     visit root_path
-    signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+    signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
     assert_response_contains("Signed in successfully.")
   end
 
@@ -80,7 +80,7 @@ class SignInTest < ActionDispatch::IntegrationTest
     find('#new_user input[name=authenticity_token]', visible: false).set('not_the_authenticity_token')
 
     fill_in "Email", with: @user.email
-    fill_in "Passphrase", with: @user.password
+    fill_in "Password", with: @user.password
 
     assert_raises(ActionController::InvalidAuthenticityToken) do
       click_button "Sign in"
@@ -89,7 +89,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
   should "not remotely sign out user when visiting with an expired session cookie" do
     visit root_path
-    signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+    signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
     assert_response_contains("Signed in successfully.")
 
     ReauthEnforcer.expects(:perform_on).never
@@ -97,7 +97,7 @@ class SignInTest < ActionDispatch::IntegrationTest
     Timecop.travel(User.timeout_in + 5.minutes)
 
     visit root_path
-    signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+    signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
     assert_response_contains("Signed in successfully.")
   end
 
@@ -108,20 +108,20 @@ class SignInTest < ActionDispatch::IntegrationTest
 
     should "prompt for a verification code" do
       visit root_path
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: false)
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
       assert_response_contains "get your code"
       assert_selector "input[name=code]"
     end
 
     should "not prompt for a verification code twice per browser in 30 days" do
       visit root_path
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
       assert_response_contains "Welcome to"
 
       signout
       visit root_path
 
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: false)
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
       assert_response_contains "Welcome to"
 
       signout
@@ -129,14 +129,14 @@ class SignInTest < ActionDispatch::IntegrationTest
 
       Timecop.travel(30.days.from_now + 1) do
         visit root_path
-        signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+        signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
         assert_response_contains "Welcome to"
       end
     end
 
     should "prevent access to signon until fully authenticated" do
       visit root_path
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: false)
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
       visit root_path
       assert_response_contains "get your code"
       assert_selector "input[name=code]"
@@ -144,7 +144,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
     should "allow access with a correctly-generated code" do
       visit root_path
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
       assert_response_contains "Welcome to"
       assert_response_contains "Signed in successfully"
       assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_VERIFIED.id, uid: @user.uid).count
@@ -152,7 +152,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
     should "prevent access with a blank code" do
       visit root_path
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: "")
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: "")
 
       assert_response_contains "get your code"
       assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_VERIFICATION_FAILED.id, uid: @user.uid).count
@@ -162,7 +162,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       old_code = Timecop.freeze(2.minutes.ago) { ROTP::TOTP.new(@user.otp_secret_key).now }
 
       visit root_path
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: old_code)
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: old_code)
 
       assert_response_contains "get your code"
       assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_VERIFICATION_FAILED.id, uid: @user.uid).count
@@ -170,7 +170,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
     should "prevent access with a garbage code" do
       visit root_path
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: "abcdef")
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: "abcdef")
 
       assert_response_contains "get your code"
       assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_VERIFICATION_FAILED.id, uid: @user.uid).count
@@ -178,7 +178,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
     should "prevent access if max attempts reached" do
       visit root_path
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: false)
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
 
       Timecop.freeze do
         User::MAX_2SV_LOGIN_ATTEMPTS.times do
@@ -194,7 +194,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
     should "not permit an expired cookie to be used to bypass 2SV" do
       visit root_path
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
       remember_2sv_session = Capybara.current_session.driver.request.cookies["remember_2sv_session"]
 
       Timecop.travel(30.days.from_now + 1) do
@@ -204,7 +204,7 @@ class SignInTest < ActionDispatch::IntegrationTest
         Capybara.current_session.driver.request.cookies["remember_2sv_session"] = remember_2sv_session
 
         visit root_path
-        signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: false)
+        signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
         assert_response_contains "get your code"
         assert_selector "input[name=code]"
       end
@@ -220,7 +220,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       signout
 
       visit root_path
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: false)
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
       Capybara.current_session.driver.request.cookies["remember_2sv_session"] = remember_2sv_session
       visit root_path
       assert_response_contains "get your code"
@@ -229,14 +229,14 @@ class SignInTest < ActionDispatch::IntegrationTest
 
     should "not remember a user's 2SV session if they've changed 2SV secret" do
       visit root_path
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
       assert_response_contains "Welcome to"
 
       signout
       visit root_path
 
       @user.update_attribute(:otp_secret_key, ROTP::Base32.random_base32)
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: false)
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
 
       assert_response_contains "get your code"
       assert_selector "input[name=code]"
@@ -244,21 +244,21 @@ class SignInTest < ActionDispatch::IntegrationTest
 
     should "not prevent login if 2SV is disabled for user with a remembered session" do
       visit root_path
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$")
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
       assert_response_contains "Welcome to"
 
       signout
       visit root_path
 
       @user.update_attribute(:otp_secret_key, nil)
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: false)
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
 
       assert_response_contains "Signed in successfully"
     end
 
     should "allow the user to cancel 2SV by signing out" do
       visit root_path
-      signin_with(email: "email@example.com", password: "some passphrase with various $ymb0l$", second_step: false)
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
       click_link "Sign out"
 
       assert_text "Signed out successfully."

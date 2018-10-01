@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'helpers/passphrase_support'
+require 'helpers/password_support'
 
 class UserStatusTest < ActionDispatch::IntegrationTest
-  include PassPhraseSupport
+  include PasswordSupport
 
   setup do
     @admin = create(:admin_user)
@@ -14,6 +14,6 @@ class UserStatusTest < ActionDispatch::IntegrationTest
     signin_with(@admin)
     visit user_path(@user)
 
-    assert page.has_content?("User passphrase expired")
+    assert page.has_content?("User password expired")
   end
 end

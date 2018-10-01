@@ -2,7 +2,7 @@ require 'test_helper'
 
 class SignOutTest < ActionDispatch::IntegrationTest
   setup do
-    @user = create(:user_in_organisation, email: "email@example.com", password: "some passphrase with various $ymb0l$")
+    @user = create(:user_in_organisation, email: "email@example.com", password: "some password with various $ymb0l$")
     visit root_path
   end
 

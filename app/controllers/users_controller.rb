@@ -92,26 +92,26 @@ class UsersController < ApplicationController
     new_email = params[:user][:email]
     if current_email == new_email.strip
       flash[:alert] = "Nothing to update."
-      render :edit_email_or_passphrase
+      render :edit_email_or_password
     elsif @user.update_attributes(email: new_email)
       EventLog.record_email_change(@user, current_email, new_email)
       UserMailer.email_changed_notification(@user).deliver_later
       redirect_to root_path, notice: "An email has been sent to #{new_email}. Follow the link in the email to update your address."
     else
       flash[:alert] = "Failed to change email."
-      render :edit_email_or_passphrase
+      render :edit_email_or_password
     end
   end
 
-  def update_passphrase
+  def update_password
     if @user.update_with_password(password_params)
-      EventLog.record_event(@user, EventLog::SUCCESSFUL_PASSPHRASE_CHANGE)
+      EventLog.record_event(@user, EventLog::SUCCESSFUL_PASSWORD_CHANGE)
       flash[:notice] = t(:updated, scope: 'devise.passwords')
       bypass_sign_in(@user)
       redirect_to root_path
     else
-      EventLog.record_event(@user, EventLog::UNSUCCESSFUL_PASSPHRASE_CHANGE)
-      render :edit_email_or_passphrase
+      EventLog.record_event(@user, EventLog::UNSUCCESSFUL_PASSWORD_CHANGE)
+      render :edit_email_or_password
     end
   end
 

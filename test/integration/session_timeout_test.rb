@@ -3,7 +3,7 @@ require 'test_helper'
 class SessionTimeoutTest < ActionDispatch::IntegrationTest
   setup do
     @user_email = "email@example.com"
-    @user_password = "some passphrase with various $ymb0l$"
+    @user_password = "some password with various $ymb0l$"
     @user = create(:user, email: @user_email, password: @user_password)
   end
 

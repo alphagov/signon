@@ -1,10 +1,10 @@
-<% content_for :title, "Passphrase reset" %>
+<% content_for :title, "Password reset" %>
 
 <div class="page-title">
-  <h1>Passphrase reset</h1>
+  <h1>Password reset</h1>
 </div>
 
-<% info_message = 'That passphrase reset didn’t work. It may be that the link you were using has expired or was invalid.' %>
+<% info_message = 'That password reset didn’t work. It may be that the link you were using has expired or was invalid.' %>
 <%= content_tag :div, class: "alert alert-warning", data: track_analytics_data(:danger, info_message) do %>
   <p><%= info_message %></p>
   <p class="add-top-margin"><%= link_to 'Try again', new_user_password_path, class: 'btn btn-default' %></p>

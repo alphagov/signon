@@ -1,26 +1,26 @@
 require 'test_helper'
-require 'helpers/passphrase_support'
+require 'helpers/password_support'
 
-class PassphraseResetTest < ActionDispatch::IntegrationTest
-  include PassPhraseSupport
+class PasswordResetTest < ActionDispatch::IntegrationTest
+  include PasswordSupport
   include ActiveJob::TestHelper
 
-  BLANKET_RESET_MESSAGE = "If your email address is recognised, you’ll receive an email with instructions about how to reset your passphrase.".freeze
+  BLANKET_RESET_MESSAGE = "If your email address is recognised, you’ll receive an email with instructions about how to reset your password.".freeze
 
   should "email password reset instructions and allow the user to set a new one" do
     perform_enqueued_jobs do
       user = create(:user)
-      new_password = "some v3ry s3cure passphrase"
+      new_password = "some v3ry s3cure password"
 
       trigger_reset_for(user.email)
       assert_response_contains(BLANKET_RESET_MESSAGE)
 
       open_email(user.email)
       assert current_email
-      assert_equal "Reset passphrase instructions", current_email.subject
+      assert_equal "Reset password instructions", current_email.subject
 
       complete_password_reset(current_email, new_password: new_password)
-      assert_response_contains("Your passphrase was changed successfully")
+      assert_response_contains("Your password was changed successfully")
 
       user.reload
       assert user.valid_password?(new_password)
@@ -34,7 +34,7 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
     assert_response_contains(BLANKET_RESET_MESSAGE)
   end
 
-  should "work for a partially signed-in user with an expired passphrase" do
+  should "work for a partially signed-in user with an expired password" do
     perform_enqueued_jobs do
       user = create(:user, password_changed_at: 91.days.ago)
 
@@ -47,33 +47,33 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
       assert current_email
       assert_equal "noreply-signon-development@digital.cabinet-office.gov.uk", current_email.from[0]
       assert_nil last_email.reply_to[0]
-      assert_equal "Reset passphrase instructions", current_email.subject
+      assert_equal "Reset password instructions", current_email.subject
 
-      # partially signed-in user should be able to reset passphrase using link in reset passphrase instructions
-      complete_password_reset(current_email, new_password: "some v3ry s3cure passphrase")
-      assert_response_contains("Your passphrase was changed successfully")
+      # partially signed-in user should be able to reset password using link in reset password instructions
+      complete_password_reset(current_email, new_password: "some v3ry s3cure password")
+      assert_response_contains("Your password was changed successfully")
     end
   end
 
   should "not allow a reset link to be used more than once" do
     perform_enqueued_jobs do
       user = create(:user)
-      new_password = "some v3ry s3cure passphrase"
+      new_password = "some v3ry s3cure password"
 
       trigger_reset_for(user.email)
 
       open_email(user.email)
       assert current_email
-      assert_equal "Reset passphrase instructions", current_email.subject
+      assert_equal "Reset password instructions", current_email.subject
 
       complete_password_reset(current_email, new_password: new_password)
-      assert_response_contains("Your passphrase was changed successfully")
+      assert_response_contains("Your password was changed successfully")
 
       signout
 
-      current_email.click_link("Change my passphrase")
+      current_email.click_link("Change my password")
 
-      assert_response_contains("That passphrase reset didn’t work.")
+      assert_response_contains("That password reset didn’t work.")
     end
   end
 
@@ -85,19 +85,19 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
 
     perform_enqueued_jobs do
       user = create(:user)
-      new_password = "some v3ry s3cure passphrase"
+      new_password = "some v3ry s3cure password"
 
       trigger_reset_for(user.email)
 
       open_email(user.email)
       assert current_email
-      assert_equal "Reset passphrase instructions", current_email.subject
+      assert_equal "Reset password instructions", current_email.subject
 
       # simulate something following the link in the email.
-      current_email.click_link("Change my passphrase")
+      current_email.click_link("Change my password")
 
       complete_password_reset(current_email, new_password: new_password)
-      assert_response_contains("Your passphrase was changed successfully")
+      assert_response_contains("Your password was changed successfully")
     end
   end
 
@@ -107,9 +107,9 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
     visit root_path
     signin_with(email: user.email, password: user.password)
 
-    # partially signed-in user should be able to reset passphrase using link in reset passphrase instructions
-    click_link 'Forgot your passphrase?'
-    assert_response_contains("Request a passphrase reset")
+    # partially signed-in user should be able to reset password using link in reset password instructions
+    click_link 'Forgot your password?'
+    assert_response_contains("Request a password reset")
   end
 
   should "show error messages when password reset doesn't work" do
@@ -119,12 +119,12 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
 
       open_email(user.email)
 
-      current_email.click_link("Change my passphrase")
-      fill_in "New passphrase", with: "A Password"
-      fill_in "Confirm new passphrase", with: "Not That Password"
-      click_button "Change passphrase"
+      current_email.click_link("Change my password")
+      fill_in "New password", with: "A Password"
+      fill_in "Confirm new password", with: "Not That Password"
+      click_button "Change password"
 
-      assert_response_contains("Passphrase confirmation doesn't match")
+      assert_response_contains("Password confirmation doesn't match")
     end
   end
 end

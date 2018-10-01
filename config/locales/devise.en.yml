@@ -17,9 +17,9 @@ en:
       already_authenticated: 'You are already signed in.'
       unauthenticated: ""
       unconfirmed: 'You have to confirm your account before continuing.'
-      locked: 'Invalid email or passphrase. Entering an incorrect passphrase 6 times will lock your account and you will be sent an email to reset it.'
-      invalid: 'Invalid email or passphrase. Entering an incorrect passphrase 6 times will lock your account and you will be sent an email to reset it.'
-      not_found_in_database: 'Invalid email or passphrase. Entering an incorrect passphrase 6 times will lock your account and you will be sent an email to reset it.'
+      locked: 'Invalid email or password. Entering an incorrect password 6 times will lock your account and you will be sent an email to reset it.'
+      invalid: 'Invalid email or password. Entering an incorrect password 6 times will lock your account and you will be sent an email to reset it.'
+      not_found_in_database: 'Invalid email or password. Entering an incorrect password 6 times will lock your account and you will be sent an email to reset it.'
       invalid_token: 'Invalid authentication token.'
       timeout: 'Your session expired, please sign in again to continue.'
       inactive: 'Your account was not activated yet.'
@@ -28,12 +28,12 @@ en:
       signed_in: 'Signed in successfully.'
       signed_out: 'Signed out successfully.'
     passwords:
-      send_instructions: 'You will receive an email with instructions about how to reset your passphrase in a few minutes.'
-      updated: 'Your passphrase was changed successfully.'
-      updated_not_active: 'Your passphrase was changed successfully.'
-      send_paranoid_instructions: "If your email address is recognised, you’ll receive an email with instructions about how to reset your passphrase."
+      send_instructions: 'You will receive an email with instructions about how to reset your password in a few minutes.'
+      updated: 'Your password was changed successfully.'
+      updated_not_active: 'Your password was changed successfully.'
+      send_paranoid_instructions: "If your email address is recognised, you’ll receive an email with instructions about how to reset your password."
       new:
-        send_passphrase_reset: "Send me passphrase reset instructions"
+        send_password_reset: "Send me password reset instructions"
     confirmations:
       send_instructions: 'You will receive an email with instructions about how to confirm your account in a few minutes.'
       send_paranoid_instructions: 'If your email exists on our database, you will receive an email with instructions about how to confirm your account in a few minutes.'
@@ -57,13 +57,13 @@ en:
       confirmation_instructions:
         subject: 'Confirm your email change'
       reset_password_instructions:
-        subject: 'Reset passphrase instructions'
+        subject: 'Reset password instructions'
       unlock_instructions:
         subject: 'Your %{app_name} account has been locked'
     links:
       signup: "Sign up"
       signin: "Sign in"
-      forgot_passphrase: 'Forgot your passphrase?'
+      forgot_password: 'Forgot your password?'
       no_confirmation_instructions: "Didn't receive confirmation instructions?"
       no_unlock_instructions: "Didn't receive unlock instructions?"
       signin_with_omniauth: "Sign in with %{provider}"

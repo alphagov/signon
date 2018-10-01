@@ -33,7 +33,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     assert_kind_of Doorkeeper::AccessGrant, Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
   end
 
-  should "not confirm the authorisation if the user's passphrase has expired" do
+  should "not confirm the authorisation if the user's password has expired" do
     @user.password_changed_at = 91.days.ago
     @user.save!
 
@@ -42,7 +42,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     ignoring_spurious_error do
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     end
-    assert_response_contains("Choose a new passphrase")
+    assert_response_contains("Choose a new password")
     refute Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
   end
 

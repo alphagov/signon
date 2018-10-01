@@ -32,7 +32,7 @@
         guidance.push('password-too-short');
       }
 
-      var isPasswordNotStrongEnough = (result.score < options["strong_passphrase_boundary"]);
+      var isPasswordNotStrongEnough = (result.score < options["strong_password_boundary"]);
 
       var aWeakWordFoundInPassword = $(options["weak_words"]).is(function(i, weak_word) {
         return (password.indexOf(weak_word) >= 0);
@@ -92,7 +92,7 @@ $(function() {
       password_confirmation_guidance: $('#password-confirmation-guidance'),
 
       weak_words: $passwordField.data('weak-words').split(","),
-      strong_passphrase_boundary: 4,
+      strong_password_boundary: 4,
       min_password_length: $passwordField.data('min-password-length'),
 
       update_indicator: function(guidance, strengthScore) {

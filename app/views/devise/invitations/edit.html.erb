@@ -1,12 +1,12 @@
-<% content_for :title, "Set your passphrase" %>
+<% content_for :title, "Set your password" %>
 
 <div class="page-title">
-  <h1>Set your passphrase</h1>
+  <h1>Set your password</h1>
 </div>
 
 <%= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => { :method => :put } do |f| %>
   <%= devise_error_messages! %>
   <%= f.hidden_field :invitation_token %>
 
-  <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: resource, submit_text: t("users.edit.set_passphrase") } %>
+  <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: resource, submit_text: t("users.edit.set_password") } %>
 <% end %>

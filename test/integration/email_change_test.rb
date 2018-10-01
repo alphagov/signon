@@ -102,7 +102,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         visit new_user_session_path
         signin_with(@user)
 
-        click_link "Change your email or passphrase"
+        click_link "Change your email or password"
         fill_in "Email", with: "new@email.com"
         click_button "Change email"
 
@@ -119,7 +119,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         visit new_user_session_path
         signin_with(@user)
 
-        click_link "Change your email or passphrase"
+        click_link "Change your email or password"
         fill_in "Email", with: "new@email.com"
         click_button "Change email"
 
@@ -137,7 +137,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin_with(@user)
 
-      click_link "Change your email or passphrase"
+      click_link "Change your email or password"
       fill_in "Email", with: ""
       click_button "Change email"
 
@@ -152,13 +152,13 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin_with(@user)
 
-      click_link "Change your email or passphrase"
+      click_link "Change your email or password"
       fill_in "Email", with: "new@email.com"
       click_button "Change email"
 
       confirmation_token = token_sent_to(@user)
 
-      click_link "Change your email or passphrase"
+      click_link "Change your email or password"
       click_link "Cancel email change"
       signout
 
@@ -192,7 +192,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       assert_equal "original@email.com", @user.reload.email
     end
 
-    should "prompt unauthenticated user for passphrase when changing email" do
+    should "prompt unauthenticated user for password when changing email" do
       password = "L0ng S3cure P4ssw0rd"
       @user.update_attributes(
         unconfirmed_email: "new@email.com",

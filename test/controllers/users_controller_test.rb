@@ -9,7 +9,7 @@ class UsersControllerTest < ActionController::TestCase
     original_password_hash = user.encrypted_password
     sign_in user
 
-    post :update_passphrase, params: { id: user.id, user: {
+    post :update_password, params: { id: user.id, user: {
       current_password: original_password,
       password: new_password,
       password_confirmation: new_password
@@ -18,7 +18,7 @@ class UsersControllerTest < ActionController::TestCase
     [user, original_password_hash]
   end
 
-  context "PUT update_passphrase" do
+  context "PUT update_password" do
     should "changing passwords to something strong should succeed" do
       user, orig_password = change_user_password(:user, 'destabilizers842}orthophosphate')
 
@@ -50,7 +50,7 @@ class UsersControllerTest < ActionController::TestCase
     end
   end
 
-  context "GET edit_email_or_passphrase" do
+  context "GET edit_email_or_password" do
     context "changing an email" do
       setup do
         @user = create(:user_with_pending_email_change)
@@ -58,7 +58,7 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "show the unconfirmed_email" do
-        get :edit_email_or_passphrase, params: { id: @user.id }
+        get :edit_email_or_password, params: { id: @user.id }
 
         assert_select "input#user_unconfirmed_email[value=?]", @user.unconfirmed_email
       end
@@ -128,7 +128,7 @@ class UsersControllerTest < ActionController::TestCase
     setup do
       @user = create(:user_with_pending_email_change)
       sign_in @user
-      request.env["HTTP_REFERER"] = edit_email_or_passphrase_user_path(@user)
+      request.env["HTTP_REFERER"] = edit_email_or_password_user_path(@user)
     end
 
     should "clear the unconfirmed_email and the confirmation_token" do
@@ -139,9 +139,9 @@ class UsersControllerTest < ActionController::TestCase
       assert_nil @user.confirmation_token
     end
 
-    should "redirect to the user edit email or passphrase page" do
+    should "redirect to the user edit email or password page" do
       delete :cancel_email_change, params: { id: @user.id }
-      assert_redirected_to edit_email_or_passphrase_user_path(@user)
+      assert_redirected_to edit_email_or_password_user_path(@user)
     end
   end
 

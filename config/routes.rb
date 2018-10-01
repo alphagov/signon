@@ -24,9 +24,9 @@ Rails.application.routes.draw do
 
   resources :users, except: [:show] do
     member do
-      get :edit_email_or_passphrase
+      get :edit_email_or_password
       patch :update_email
-      patch :update_passphrase
+      patch :update_password
       post :unlock
       put :resend_email_change
       delete :cancel_email_change

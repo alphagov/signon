@@ -1,0 +1,14 @@
+Style/CommentedKeyword:
+  Enabled: false
+
+Lint/AmbiguousRegexpLiteral:
+  Enabled: false
+
+Lint/UselessAssignment:
+  Enabled: false
+
+Lint/HandleExceptions:
+  Enabled: false
+
+Lint/AssignmentInCondition:
+  Enabled: false

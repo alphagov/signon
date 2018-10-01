@@ -7,7 +7,7 @@
   <div class="col-md-4">
   <h2 class="remove-top-margin add-bottom-margin">Your account</h2>
   <ul data-module="track-click">
-    <li><%= link_to "Change your email or passphrase", edit_email_or_passphrase_user_path(current_user) %></li>
+    <li><%= link_to "Change your email or password", edit_email_or_password_user_path(current_user) %></li>
     <% if current_user.has_2sv? %>
       <li><%= link_to "Change your 2-step verification phone", two_step_verification_path, class: "js-track" %></li>
     <% else %>

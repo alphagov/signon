@@ -1,4 +1,4 @@
-<% content_for :title, "Request a passphrase reset" %>
+<% content_for :title, "Request a password reset" %>
 <% content_for :back_link, new_session_path(resource_name) %>
 
 <div class="govuk-grid-row">
@@ -13,7 +13,7 @@
       } %>
 
       <%= render "govuk_publishing_components/components/button", {
-        text: t("devise.passwords.new.send_passphrase_reset")
+        text: t("devise.passwords.new.send_password_reset")
       } %>
     <% end %>
   </div>

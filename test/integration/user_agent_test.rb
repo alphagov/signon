@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'helpers/passphrase_support'
+require 'helpers/password_support'
 
 class UserAgentIntegrationTest < ActionDispatch::IntegrationTest
-  include PassPhraseSupport
+  include PasswordSupport
 
   setup do
     @user = create(:user, name: "Normal User")
