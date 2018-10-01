@@ -1,37 +1,31 @@
-<% content_for :title, "Sign in" %>
-<% content_for :thin_form, true %>
+<% content_for :title, "Sign in to GOV.UK" %>
 
-<div class="page-title">
-  <h1>Sign in</h1>
-</div>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { autocomplete: 'on' }) do |f| %>
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Email"
+        },
+        name: "user[email]",
+        type: "email"
+      } %>
 
-<!--[if lte IE 7]>
-  <div class="alert alert-warning add-bottom-margin">
-    <h4>Your browser is not supported</h4>
-    <p>Pages might not work as expected. You should <a href="https://www.gov.uk/help/browsers" class="link-inherit">upgrade your browser</a> – you might need to ask your IT administrator to do this for you.</p>
-  </div>
-<![endif]-->
-<%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: 'panel panel-default', autocomplete: 'on' }) do |f| %>
-  <div class="panel-body">
-    <div class="form-group">
-      <%= f.label :email %>
-      <%= f.email_field :email, class: 'form-control input-lg', tabindex: 1, autofocus: 'autofocus' %>
-    </div>
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Passphrase"
+        },
+        name: "user[password]",
+        type: "password"
+      } %>
 
-    <div class="form-group">
-      <%= f.label :password, "Passphrase" %>
-      <%= f.password_field :password, tabindex: 2, class: 'form-control input-lg' %>
-    </div>
-
-    <%= render "links" %>
-
-    <% if devise_mapping.rememberable? %>
-      <label class="checkbox" for="remember_me">Remember me?
-        <%= f.check_box :remember_me, class: 'checkbox' %>
-      </label>
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Sign in"
+      } %>
     <% end %>
+
+    <p class="govuk-body govuk-!-margin-top-5">
+      <%= link_to t('devise.links.forgot_passphrase'), new_password_path(resource_name), class: "govuk-link" %>
+    </p>
   </div>
-  <div class="panel-footer">
-    <%= f.submit "Sign in", tabindex: 3, class: 'btn btn-success btn-lg btn-block' %>
-  </div>
-<% end %>
+</div>
