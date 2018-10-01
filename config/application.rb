@@ -78,6 +78,5 @@ module Signon
     }
 
     config.govuk_environment = govuk_environments.fetch(ENV["ERRBIT_ENVIRONMENT_NAME"], "development")
-    config.govuk_environment = "production"
   end
 end
