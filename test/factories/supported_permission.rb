@@ -5,6 +5,6 @@ FactoryBot.define do
   end
 
   factory :delegatable_supported_permission, parent: :supported_permission do
-    delegatable true
+    delegatable { true }
   end
 end
