@@ -1,7 +1,7 @@
-<% content_for :title, "Choose a new passphrase" %>
+<% content_for :title, "Choose a new password" %>
 
 <div class="page-title">
-  <h1>Choose a new passphrase</h1>
+  <h1>Choose a new password</h1>
 </div>
 
 <div class="well">
@@ -11,4 +11,4 @@
   <% end %>
 </div>
 
-<%= link_to t('devise.links.forgot_passphrase'), new_password_path(resource_name, forgot_expired_passphrase: 1) %><br />
+<%= link_to t('devise.links.forgot_password'), new_password_path(resource_name, forgot_expired_password: 1) %><br />

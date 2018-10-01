@@ -275,7 +275,7 @@ Devise.setup do |config|
 
   Warden::Manager.after_authentication do |user, _auth, _opts|
     if user.need_change_password?
-      EventLog.record_event(user, EventLog::PASSPHRASE_EXPIRED)
+      EventLog.record_event(user, EventLog::PASSWORD_EXPIRED)
     end
   end
 

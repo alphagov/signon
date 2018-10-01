@@ -109,7 +109,7 @@ class ConfirmationsControllerTest < ActionController::TestCase
       assert_equal @user.reload.email, "old@email.com"
     end
 
-    should "reject with an incorrect passphrase" do
+    should "reject with an incorrect password" do
       put :update, params: {
             confirmation_token: @confirmation_token,
             user: { password: "not the real password" }

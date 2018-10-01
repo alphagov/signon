@@ -129,7 +129,7 @@ class UserMailerTest < ActionMailer::TestCase
       stub_user = stub(name: 'User', email: 'user@example.com')
       email = UserMailer.notify_reset_password_disallowed_due_to_suspension(stub_user)
 
-      assert_body_includes "You can't request a passphrase reset on a suspended account.", email
+      assert_body_includes "You can't request a password reset on a suspended account.", email
     end
   end
 end

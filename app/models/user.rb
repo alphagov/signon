@@ -18,10 +18,10 @@ class User < ActiveRecord::Base
 
   USER_STATUS_SUSPENDED = 'suspended'.freeze
   USER_STATUS_INVITED = 'invited'.freeze
-  USER_STATUS_PASSPHRASE_EXPIRED = 'passphrase expired'.freeze
+  USER_STATUS_PASSWORD_EXPIRED = 'password expired'.freeze
   USER_STATUS_LOCKED = 'locked'.freeze
   USER_STATUS_ACTIVE = 'active'.freeze
-  USER_STATUSES = [USER_STATUS_SUSPENDED, USER_STATUS_INVITED, USER_STATUS_PASSPHRASE_EXPIRED,
+  USER_STATUSES = [USER_STATUS_SUSPENDED, USER_STATUS_INVITED, USER_STATUS_PASSWORD_EXPIRED,
                    USER_STATUS_LOCKED, USER_STATUS_ACTIVE].freeze
 
   devise :database_authenticatable,
@@ -73,7 +73,7 @@ class User < ActiveRecord::Base
       where.not(suspended_at: nil)
     when USER_STATUS_INVITED
       where.not(invitation_sent_at: nil).where(invitation_accepted_at: nil)
-    when USER_STATUS_PASSPHRASE_EXPIRED
+    when USER_STATUS_PASSWORD_EXPIRED
       with_need_change_password
     when USER_STATUS_LOCKED
       where.not(locked_at: nil)
@@ -213,7 +213,7 @@ class User < ActiveRecord::Base
 
     unless api_user?
       return USER_STATUS_INVITED if invited_but_not_yet_accepted?
-      return USER_STATUS_PASSPHRASE_EXPIRED if need_change_password?
+      return USER_STATUS_PASSWORD_EXPIRED if need_change_password?
     end
     return USER_STATUS_LOCKED if access_locked?
 
@@ -259,7 +259,7 @@ class User < ActiveRecord::Base
     if max_2sv_login_attempts?
       :two_step
     else
-      :passphrase
+      :password
     end
   end
 

@@ -50,7 +50,7 @@ class PasswordsControllerTest < ActionController::TestCase
     # simulate a partially signed-in user. for example,
     # user with an expired password being asked to change the password
     sign_in @user
-    get :new, params: { forgot_expired_passphrase: 1 }
+    get :new, params: { forgot_expired_password: 1 }
 
     assert_nil request.env['warden'].user
     assert_template 'devise/passwords/new'

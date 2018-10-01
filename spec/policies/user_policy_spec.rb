@@ -9,7 +9,7 @@ describe UserPolicy do
 
   primary_management_actions = %i[new? assign_organisations?]
   user_management_actions = %i[edit? create? update? unlock? suspension? cancel_email_change? resend_email_change? event_logs?]
-  self_management_actions = %i[edit_email_or_passphrase? update_email? update_passphrase? cancel_email_change? resend_email_change?]
+  self_management_actions = %i[edit_email_or_password? update_email? update_password? cancel_email_change? resend_email_change?]
   disallowed_actions_org_admin = %i[create? assign_organisations?]
   disallowed_actions_super_org_admin = %i[create? assign_organisations?]
 

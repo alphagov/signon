@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'helpers/passphrase_support'
+require 'helpers/password_support'
 
 class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
-  include PassPhraseSupport
+  include PasswordSupport
 
   setup do
     @admin = create(:admin_user, name: "Admin User")
@@ -40,55 +40,55 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test "record passphrase reset request" do
+  test "record password reset request" do
     visit root_path
-    click_on "Forgot your passphrase?"
+    click_on "Forgot your password?"
     fill_in "Email", with: @user.email
-    click_on "Send me passphrase reset instructions"
+    click_on "Send me password reset instructions"
 
-    assert_equal EventLog::PASSPHRASE_RESET_REQUEST, @user.event_logs.first.entry
+    assert_equal EventLog::PASSWORD_RESET_REQUEST, @user.event_logs.first.entry
   end
 
-  test "record passphrase reset page requested" do
+  test "record password reset page requested" do
     token_received_in_email = @user.send_reset_password_instructions
     visit edit_user_password_path(reset_password_token: token_received_in_email)
 
-    assert_equal EventLog::PASSPHRASE_RESET_LOADED, @user.event_logs.first.entry
+    assert_equal EventLog::PASSWORD_RESET_LOADED, @user.event_logs.first.entry
   end
 
-  test "record passphrase reset page loaded but token expired" do
+  test "record password reset page loaded but token expired" do
     token_received_in_email = Timecop.freeze((User.reset_password_within + 1.hour).ago) do
       @user.send_reset_password_instructions
     end
     visit edit_user_password_path(reset_password_token: token_received_in_email)
 
-    assert_equal EventLog::PASSPHRASE_RESET_LOADED_BUT_TOKEN_EXPIRED, @user.event_logs.first.entry
+    assert_equal EventLog::PASSWORD_RESET_LOADED_BUT_TOKEN_EXPIRED, @user.event_logs.first.entry
   end
 
-  test "record passphrase reset failed" do
+  test "record password reset failed" do
     token_received_in_email = @user.send_reset_password_instructions
     visit edit_user_password_path(reset_password_token: token_received_in_email)
 
-    click_on "Change passphrase"
+    click_on "Change password"
     event_log = @user.event_logs.first
 
-    assert_equal EventLog::PASSPHRASE_RESET_FAILURE, event_log.entry
-    assert_match "Passphrase can't be blank", event_log.trailing_message
+    assert_equal EventLog::PASSWORD_RESET_FAILURE, event_log.entry
+    assert_match "Password can't be blank", event_log.trailing_message
   end
 
-  test "record successful passphrase reset from email" do
+  test "record successful password reset from email" do
     token_received_in_email = @user.send_reset_password_instructions
     visit edit_user_password_path(reset_password_token: token_received_in_email)
 
-    new_passphrase = "diagram donkey doodle"
-    fill_in "New passphrase", with: new_passphrase
-    fill_in "Confirm new passphrase", with: new_passphrase
-    click_on "Change passphrase"
+    new_password = "diagram donkey doodle"
+    fill_in "New password", with: new_password
+    fill_in "Confirm new password", with: new_password
+    click_on "Change password"
 
-    assert_includes @user.event_logs.map(&:entry), EventLog::SUCCESSFUL_PASSPHRASE_RESET
+    assert_includes @user.event_logs.map(&:entry), EventLog::SUCCESSFUL_PASSWORD_RESET
   end
 
-  test "record successful passphrase change" do
+  test "record successful password change" do
     new_password = "correct horse battery daffodil"
     visit root_path
     signin_with(@user)
@@ -97,10 +97,10 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
                     new_confirmation: new_password)
 
     # multiple events are registered with the same time, order changes.
-    assert_includes @user.event_logs.map(&:entry), EventLog::SUCCESSFUL_PASSPHRASE_CHANGE
+    assert_includes @user.event_logs.map(&:entry), EventLog::SUCCESSFUL_PASSWORD_CHANGE
   end
 
-  test "record unsuccessful passphrase change" do
+  test "record unsuccessful password change" do
     visit root_path
     signin_with(@user)
     change_password(old: @user.password,
@@ -108,7 +108,7 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
                     new_confirmation: @user.password)
 
     # multiple events are registered with the same time, order changes.
-    assert_includes @user.event_logs.map(&:entry), EventLog::UNSUCCESSFUL_PASSPHRASE_CHANGE
+    assert_includes @user.event_logs.map(&:entry), EventLog::UNSUCCESSFUL_PASSWORD_CHANGE
   end
 
   test "record account locked if password entered too many times" do
@@ -178,7 +178,7 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     visit root_path
     signin_with(@user)
 
-    assert_includes @user.event_logs.map(&:entry), EventLog::PASSPHRASE_EXPIRED
+    assert_includes @user.event_logs.map(&:entry), EventLog::PASSWORD_EXPIRED
   end
 
   context "recording user's ip address" do

@@ -16,7 +16,7 @@ class PasswordsController < Devise::PasswordsController
   # overrides http://git.io/sOhoaA to prevent expirable from
   # intercepting reset password flow for a partially signed-in user
   def require_no_authentication
-    if (params[:reset_password_token] || params[:forgot_expired_passphrase]) &&
+    if (params[:reset_password_token] || params[:forgot_expired_password]) &&
         current_user && current_user.need_change_password?
       sign_out(current_user)
     end
@@ -37,25 +37,25 @@ private
 
   def record_password_reset_request
     user = User.find_by_email(params[:user][:email]) if params[:user].present?
-    EventLog.record_event(user, EventLog::PASSPHRASE_RESET_REQUEST) if user
+    EventLog.record_event(user, EventLog::PASSWORD_RESET_REQUEST) if user
     GovukStatsd.increment("users.password_reset_request")
   end
 
   def record_reset_page_loaded
-    EventLog.record_event(user_from_params, EventLog::PASSPHRASE_RESET_LOADED) if user_from_params
+    EventLog.record_event(user_from_params, EventLog::PASSWORD_RESET_LOADED) if user_from_params
   end
 
   def record_password_reset_success(user)
-    EventLog.record_event(user, EventLog::SUCCESSFUL_PASSPHRASE_RESET)
+    EventLog.record_event(user, EventLog::SUCCESSFUL_PASSWORD_RESET)
   end
 
   def record_reset_page_loaded_token_expired
-    EventLog.record_event(user_from_params, EventLog::PASSPHRASE_RESET_LOADED_BUT_TOKEN_EXPIRED) if user_from_params
+    EventLog.record_event(user_from_params, EventLog::PASSWORD_RESET_LOADED_BUT_TOKEN_EXPIRED) if user_from_params
   end
 
   def record_password_reset_failure(user)
     message = "(errors: #{user.errors.full_messages.join(', ')})".truncate(255)
-    EventLog.record_event(user, EventLog::PASSPHRASE_RESET_FAILURE, trailing_message: message)
+    EventLog.record_event(user, EventLog::PASSWORD_RESET_FAILURE, trailing_message: message)
   end
 
   def user_from_params

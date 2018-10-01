@@ -320,7 +320,7 @@ class UserTest < ActiveSupport::TestCase
     refute u.valid_password?("something else")
     u.reload
 
-    assert_equal old_encrypted_password, u.encrypted_password, "Changed passphrase"
+    assert_equal old_encrypted_password, u.encrypted_password, "Changed password"
   end
 
   test "can grant permissions to users and return the created permission" do
@@ -373,8 +373,8 @@ class UserTest < ActiveSupport::TestCase
   test "doesn't allow previously used password" do
     password = @user.password
 
-    @user.password = "some v3ry s3cure passphrase"
-    @user.password_confirmation = "some v3ry s3cure passphrase"
+    @user.password = "some v3ry s3cure password"
+    @user.password_confirmation = "some v3ry s3cure password"
     @user.save!
 
     @user.password = password
@@ -418,8 +418,8 @@ class UserTest < ActiveSupport::TestCase
         assert_equal [@invited], User.with_status(User::USER_STATUS_INVITED).all
       end
 
-      should "filter passphrase expired" do
-        assert_equal [@expired], User.with_status(User::USER_STATUS_PASSPHRASE_EXPIRED).all
+      should "filter password expired" do
+        assert_equal [@expired], User.with_status(User::USER_STATUS_PASSWORD_EXPIRED).all
       end
 
       should "filter locked" do
@@ -440,8 +440,8 @@ class UserTest < ActiveSupport::TestCase
         assert_equal "invited", @invited.status
       end
 
-      should "detect passphrase expired" do
-        assert_equal "passphrase expired", @expired.status
+      should "detect password expired" do
+        assert_equal "password expired", @expired.status
       end
 
       should "detect locked" do
@@ -480,9 +480,9 @@ class UserTest < ActiveSupport::TestCase
       assert_not_equal "invited", api_user.reload.status
     end
 
-    should "not return passphrase expired" do
+    should "not return password expired" do
       api_user = create(:api_user, password_changed_at: 91.days.ago)
-      assert_not_equal "passphrase expired", api_user.status
+      assert_not_equal "password expired", api_user.status
     end
   end
 

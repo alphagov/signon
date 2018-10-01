@@ -9,7 +9,7 @@ module UserHelpers
     end
 
     fill_in "Email", with: email
-    fill_in "Passphrase", with: password
+    fill_in "Password", with: password
     click_button "Sign in"
 
     if second_step && user && user.otp_secret_key

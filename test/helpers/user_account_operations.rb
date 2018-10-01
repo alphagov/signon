@@ -6,9 +6,9 @@ module UserAccountOperations
 
     signout
     visit accept_user_invitation_path(invitation_token: options[:invitation_token])
-    fill_in "New passphrase", with: options[:password]
-    fill_in "Confirm new passphrase", with: options[:password]
-    click_button "Set my passphrase"
+    fill_in "New password", with: options[:password]
+    fill_in "Confirm new password", with: options[:password]
+    click_button "Set my password"
   end
 
   # usage: confirm_email_change(password: "<new password>", confirmation_token: "<token>")
@@ -19,7 +19,7 @@ module UserAccountOperations
     signout
     visit user_confirmation_path(confirmation_token: options[:confirmation_token])
     assert_response_contains("Confirm account email changes")
-    fill_in "Passphrase", with: options[:password]
+    fill_in "Password", with: options[:password]
     click_button "Confirm email change"
   end
 end

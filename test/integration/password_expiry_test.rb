@@ -1,10 +1,10 @@
 require 'test_helper'
-require 'helpers/passphrase_support'
+require 'helpers/password_support'
 
-class PassphraseExpiryTest < ActionDispatch::IntegrationTest
-  include PassPhraseSupport
+class PasswordExpiryTest < ActionDispatch::IntegrationTest
+  include PasswordSupport
 
-  PROMPT_TO_CHANGE_PASSWORD = "Your passphrase has expired. Please choose a new passphrase".freeze
+  PROMPT_TO_CHANGE_PASSWORD = "Your password has expired. Please choose a new password".freeze
 
   context "logging in with a brand new user" do
     setup do
@@ -22,7 +22,7 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
   context "logging in with a user with an expired password" do
     setup do
       @user = create(:user, password_changed_at: 91.days.ago)
-      @new_password = "some 3v3n more s3cure passphrase"
+      @new_password = "some 3v3n more s3cure password"
     end
 
     should "force the user to change their password" do
@@ -31,26 +31,26 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
       signin_with(@user)
       assert_response_contains(PROMPT_TO_CHANGE_PASSWORD)
 
-      reset_expired_passphrase(@user.password, @new_password, @new_password)
-      assert_response_contains("Your new passphrase is saved")
+      reset_expired_password(@user.password, @new_password, @new_password)
+      assert_response_contains("Your new password is saved")
 
       assert_equal root_url, current_url
     end
 
     should "remember where the user was trying to get to before the password reset" do
-      visit "/users/#{@user.id}/edit_email_or_passphrase?arbitrary=1"
+      visit "/users/#{@user.id}/edit_email_or_password?arbitrary=1"
 
       signin_with(@user)
-      reset_expired_passphrase(@user.password, @new_password, @new_password)
+      reset_expired_password(@user.password, @new_password, @new_password)
 
-      assert_current_url "/users/#{@user.id}/edit_email_or_passphrase?arbitrary=1"
+      assert_current_url "/users/#{@user.id}/edit_email_or_password?arbitrary=1"
     end
 
     should "continue prompting for a new password if an incorrect password was provided" do
       visit new_user_session_path
       signin_with(@user)
 
-      reset_expired_passphrase("nonsense", @new_password, @new_password)
+      reset_expired_password("nonsense", @new_password, @new_password)
 
       visit new_user_session_path
       assert_response_contains(PROMPT_TO_CHANGE_PASSWORD)
@@ -60,7 +60,7 @@ class PassphraseExpiryTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin_with(@user)
 
-      reset_expired_passphrase(@user.password, @new_password, "rubbish")
+      reset_expired_password(@user.password, @new_password, "rubbish")
 
       visit new_user_session_path
       assert_response_contains(PROMPT_TO_CHANGE_PASSWORD)

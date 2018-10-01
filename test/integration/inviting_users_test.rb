@@ -8,9 +8,9 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
     user = User.invite!(name: "Jim", email: "jim@web.com")
     visit accept_user_invitation_path(invitation_token: user.raw_invitation_token)
 
-    fill_in "New passphrase", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
-    fill_in "Confirm new passphrase", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
-    click_button "Set my passphrase"
+    fill_in "New password", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
+    fill_in "Confirm new password", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
+    click_button "Set my password"
 
     assert_response_contains("You are now signed in")
   end
