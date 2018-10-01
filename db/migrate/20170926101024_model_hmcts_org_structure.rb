@@ -9,7 +9,7 @@ class ModelHmctsOrgStructure < ActiveRecord::Migration
         begin
           hmcts.update_attribute(parent: moj)
           puts "Assigned HMCTS to have MOJ as parent"
-        rescue => error
+        rescue StandardError => error
           puts "Could not update parent for #{hmcts.name} to MOJ because of error: #{error.message}"
         end
       else
@@ -72,11 +72,11 @@ class ModelHmctsOrgStructure < ActiveRecord::Migration
       else
         if org.parent != hmcts
           begin
-            old_parent_name = org.parent.nil?? "nil" : org.parent.name
+            old_parent_name = org.parent.nil? ? "nil" : org.parent.name
             puts "Checking parent for #{child_name}. Old parent is #{old_parent_name}"
             org.update_attributes!(parent: hmcts)
             puts "Updated parent for #{child_name} from #{old_parent_name} to hmcts"
-          rescue => error
+          rescue StandardError => error
             puts "Parent re-assignment failed for: #{child_name} with error '#{error.message}'"
           end
         else

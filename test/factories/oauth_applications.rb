@@ -23,11 +23,13 @@ FactoryBot.define do
 
       evaluator.with_supported_permissions_not_grantable_from_ui.each do |permission_name|
         next if permission_name == 'signin'
+
         create(:supported_permission, application_id: app.id, name: permission_name, grantable_from_ui: false)
       end
 
       evaluator.with_delegatable_supported_permissions.each do |permission_name|
         next if permission_name == 'signin'
+
         create(:delegatable_supported_permission, application_id: app.id, name: permission_name)
       end
     end

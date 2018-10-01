@@ -14,11 +14,9 @@ class ModelFcoOrgStructure < ActiveRecord::Migration
                 "Preventing Sexual Violence Initiative",
                 "Secret Intelligence Service",
                 "Westminster Foundation for Democracy",
-                "Wilton Park"
-        ],
+                "Wilton Park"],
         gch => ["CESG",
-                "National Cyber Security Centre"
-        ]
+                "National Cyber Security Centre"]
     }
 
     missing_orgs = []
@@ -45,11 +43,11 @@ class ModelFcoOrgStructure < ActiveRecord::Migration
   def update_parent(org, parent)
     if org.parent != parent
       begin
-        old_parent_name = org.parent.nil?? "nil" : org.parent.name
+        old_parent_name = org.parent.nil? ? "nil" : org.parent.name
         puts "Checking parent for #{org.name}. Old parent is #{old_parent_name}"
         org.update_attributes!(parent: parent)
         puts "Updating parent for #{org.name} from #{old_parent_name} to #{parent.name}"
-      rescue => error
+      rescue StandardError => error
         puts "Parent re-assignment failed for: #{org.name} with error '#{error.message}'"
       end
     else

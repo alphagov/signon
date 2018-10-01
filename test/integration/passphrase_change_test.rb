@@ -1,4 +1,5 @@
 #encoding: utf-8
+
 require 'test_helper'
 require 'helpers/passphrase_support'
 
@@ -128,7 +129,8 @@ class PassphraseChangeTest < ActionDispatch::IntegrationTest
     end
   end
 
-  private
+private
+
   def change_password_to(new_password)
     change_password(old: @user.password,
                     new: new_password,

@@ -3,7 +3,7 @@ require 'test_helper'
 class UserParameterSanitiserTest < ActiveSupport::TestCase
   context "with Plain Old Ruby Hash for params" do
     setup do
-      permitted_params_by_role = { normal: [:name, :email] }
+      permitted_params_by_role = { normal: %i[name email] }
       @user_params = { name: "Anne", email: "anne@anne.com" }
 
       @sanitised_params = UserParameterSanitiser.new(
@@ -27,8 +27,8 @@ class UserParameterSanitiserTest < ActiveSupport::TestCase
   context "when unpermitted params are supplied" do
     setup do
       permitted_params_by_role = {
-        normal: [:name, :email],
-        superadmin: [:name, :email, :birthday],
+        normal: %i[name email],
+        superadmin: %i[name email birthday],
       }
       user_params = { name: "Mary", birthday: "today!" }
 

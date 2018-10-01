@@ -16,8 +16,9 @@ end
 
 def load_config_file(config_path)
   raise "File '#{config_path}' not found" unless File.exist?(config_path)
-  string_keys = YAML.load_file(config_path)[ENV['RAILS_ENV']].select {|k,v| %w{host username password database}.include?(k)}
-  Hash[string_keys.map {|k,v| [k.to_sym, v]}]
+
+  string_keys = YAML.load_file(config_path)[ENV['RAILS_ENV']].select { |k, _v| %w{host username password database}.include?(k) }
+  Hash[string_keys.map { |k, v| [k.to_sym, v] }]
 end
 
 def connect_to_mysql(params)

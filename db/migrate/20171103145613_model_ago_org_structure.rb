@@ -5,10 +5,10 @@ class ModelAgoOrgStructure < ActiveRecord::Migration
 
     parent_child_orgs = {
         ago => ["Treasury Solicitor’s Department",
-                  "Crown Prosecution Service",
-                  "Serious Fraud Office",
-                  "HM Crown Prosecution Service Inspectorate",
-                  "Government Legal Department"],
+                "Crown Prosecution Service",
+                "Serious Fraud Office",
+                "HM Crown Prosecution Service Inspectorate",
+                "Government Legal Department"],
         tsd => ["Bank of England"]
     }
 
@@ -36,11 +36,11 @@ class ModelAgoOrgStructure < ActiveRecord::Migration
   def update_parent(org, parent)
     if org.parent != parent
       begin
-        old_parent_name = org.parent.nil?? "nil" : org.parent.name
+        old_parent_name = org.parent.nil? ? "nil" : org.parent.name
         puts "Checking parent for #{org.name}. Old parent is #{old_parent_name}"
         org.update_attributes!(parent: parent)
         puts "Updating parent for #{org.name} from #{old_parent_name} to #{parent.name}"
-      rescue => error
+      rescue StandardError => error
         puts "Parent re-assignment failed for: #{org.name} with error '#{error.message}'"
       end
     else

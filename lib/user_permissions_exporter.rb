@@ -70,6 +70,6 @@ private
   end
 
   def file_name
-    "#{Time.zone.now.to_s(:number)}-#{@applications.map {|a| a.name.parameterize}.join('-')}.csv"
+    "#{Time.zone.now.to_s(:number)}-#{@applications.map { |a| a.name.parameterize }.join('-')}.csv"
   end
 end

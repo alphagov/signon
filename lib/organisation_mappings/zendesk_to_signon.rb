@@ -25,7 +25,7 @@ module OrganisationMappings
 
   # obtained from Zendesk Organisations Api
   def self.domain_names_to_organisations
-    {["attorneygeneral.gsi.gov.uk"] => "Attorney General's Office",
+    { ["attorneygeneral.gsi.gov.uk"] => "Attorney General's Office",
      ["digital.cabinet-office.gov.uk"] => "Cabinet Office",
      ["bis.gsi.gov.uk"] => "Department for Business, Innovation & Skills",
      ["communities.gsi.gov.uk"] => "Department for Communities and Local Government",
@@ -62,6 +62,6 @@ module OrganisationMappings
      ["voa.gsi.gov.uk"] => "Valuation Office Agency",
      ["vosa.gsi.gov.uk"] => "Vehicle and Operator Services Agency",
      ["vca.gov.uk"] => "Vehicle Certification Agency",
-     ["walesoffice.gsi.gov.uk"] => "Wales Office"}
+     ["walesoffice.gsi.gov.uk"] => "Wales Office" }
   end
 end

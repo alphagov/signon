@@ -1,7 +1,7 @@
 module Roles
   class Normal < Base
     def self.permitted_user_params
-      [:uid, :name, :email, :password, :password_confirmation]
+      %i[uid name email password password_confirmation]
     end
 
     def self.role_name

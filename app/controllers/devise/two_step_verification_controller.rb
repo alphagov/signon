@@ -4,10 +4,8 @@ class Devise::TwoStepVerificationController < DeviseController
   skip_before_action :handle_two_step_verification
 
   attr_reader :otp_secret_key
-  private :otp_secret_key
 
-  def prompt
-  end
+  def prompt; end
 
   def show
     generate_secret
@@ -36,9 +34,9 @@ class Devise::TwoStepVerificationController < DeviseController
     "otpauth://totp/#{issuer}:#{current_user.email}?secret=#{@otp_secret_key.upcase}&issuer=#{issuer}"
   end
 
-  private
+private
 
-  def send_notification(user, mode)
+  def send_notification(_user, mode)
     if mode == :setup
       UserMailer.two_step_enabled(current_user).deliver_later
     else

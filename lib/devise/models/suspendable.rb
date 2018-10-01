@@ -17,6 +17,7 @@ module Devise
       def active_for_authentication?
         if super
           return true unless suspended?
+
           EventLog.record_event(self, EventLog::SUSPENDED_ACCOUNT_AUTHENTICATED_LOGIN)
         end
         false

@@ -12,6 +12,7 @@ class LicensingNewTestAuthorities < ActiveRecord::Migration
       SupportedPermission.create(application: licensing, name: "gds-test-3").delete_all
     end
   end
+
   def licensing
     @licensing ||= Doorkeeper::Application.find_by_name("Licensify")
   end

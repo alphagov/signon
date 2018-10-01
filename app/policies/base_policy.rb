@@ -10,7 +10,7 @@ class BasePolicy
     Pundit.policy_scope!(current_user, record.class)
   end
 
-  protected
+protected
 
   def record_in_own_organisation?
     record.organisation && (record.organisation_id == current_user.organisation_id)

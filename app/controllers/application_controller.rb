@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
 
-  def after_sign_out_path_for(resource_or_scope)
+  def after_sign_out_path_for(_resource_or_scope)
     new_user_session_path
   end
 
@@ -28,11 +28,12 @@ class ApplicationController < ActionController::Base
     @_application_making_request ||= ::Doorkeeper::Application.find(doorkeeper_token.application_id) if doorkeeper_token
   end
 
-  private
+private
 
   def doorkeeper_authorize!
     original_return_value = super
     return original_return_value if api_user_via_token_has_signin_permission_on_app?
+
     # The following code is a distillation of the error path of
     # doorkeeper_authorize! from Doorkeeper::Rails::Helpers which is the
     # super version called above.
@@ -52,7 +53,7 @@ class ApplicationController < ActionController::Base
     current_resource_owner && application_making_request && current_resource_owner.has_access_to?(application_making_request)
   end
 
-  def user_not_authorized(exception)
+  def user_not_authorized(_exception)
     flash[:alert] = "You do not have permission to perform this action."
     redirect_to root_path
   end

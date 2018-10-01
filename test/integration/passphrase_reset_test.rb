@@ -5,7 +5,7 @@ class PassphraseResetTest < ActionDispatch::IntegrationTest
   include PassPhraseSupport
   include ActiveJob::TestHelper
 
-  BLANKET_RESET_MESSAGE = "If your email address is recognised, you’ll receive an email with instructions about how to reset your passphrase."
+  BLANKET_RESET_MESSAGE = "If your email address is recognised, you’ll receive an email with instructions about how to reset your passphrase.".freeze
 
   should "email password reset instructions and allow the user to set a new one" do
     perform_enqueued_jobs do

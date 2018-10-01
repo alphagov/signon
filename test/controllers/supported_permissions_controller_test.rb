@@ -8,7 +8,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
   context "GET index" do
     should "render the permissions list" do
-      app = create(:application, name: "My first app", with_delegatable_supported_permissions: ["permission1"])
+      app = create(:application, name: "My first app", with_delegatable_supported_permissions: %w[permission1])
 
       get :index, params: { doorkeeper_application_id: app.id }
 
@@ -22,7 +22,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
   context "GET new" do
     should "render the form" do
-      app = create(:application, name: "My first app", with_supported_permissions: ["permission1"])
+      app = create(:application, name: "My first app", with_supported_permissions: %w[permission1])
       get :new, params: { doorkeeper_application_id: app.id }
       assert_select "h1", /Add permission/
       assert_select ".breadcrumb li", /My first app/
@@ -83,7 +83,8 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
         name: "permission1",
         delegatable: true,
         default: true,
-        created_at: 2.days.ago)
+        created_at: 2.days.ago
+)
 
       put :update, params: { doorkeeper_application_id: app.id, id: perm.id, supported_permission: { delegatable: '0', default: '0' } }
 

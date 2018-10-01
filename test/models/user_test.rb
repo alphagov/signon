@@ -1,4 +1,5 @@
 # coding: utf-8
+
 require 'test_helper'
 require 'bcrypt'
 
@@ -310,7 +311,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "it doesn't migrate password unless correct one given" do
     password = ("4 l0nG sT!,ng " * 10)[0..127]
-    old_encrypted_password = ::BCrypt::Password.create("#{password}", cost: 10).to_s
+    old_encrypted_password = ::BCrypt::Password.create(password.to_s, cost: 10).to_s
 
     u = create(:user)
     u.update_column :encrypted_password, old_encrypted_password
@@ -339,11 +340,11 @@ class UserTest < ActiveSupport::TestCase
     user.grant_application_permission(app, "signin")
     user.grant_application_permission(app, "signin")
 
-    assert_user_has_permissions ['signin'], app, user
+    assert_user_has_permissions %w[signin], app, user
   end
 
   test "returns multiple permissions in name order" do
-    app = create(:application, name: "my_app", with_supported_permissions: ["edit"])
+    app = create(:application, name: "my_app", with_supported_permissions: %w[edit])
     user = create(:user)
 
     user.grant_application_permission(app, "signin")
@@ -508,14 +509,14 @@ class UserTest < ActiveSupport::TestCase
     context "for a suspended user" do
       should "return the user" do
         user = create(:suspended_user)
-        assert_equal user, User.send_reset_password_instructions({ email: user.email })
+        assert_equal user, User.send_reset_password_instructions(email: user.email)
       end
 
       should "notify them that reset password is disallowed and not send reset instructions" do
         user = create(:suspended_user)
 
         assert_enqueued_jobs 1 do
-          User.send_reset_password_instructions({ email: user.email })
+          User.send_reset_password_instructions(email: user.email)
         end
       end
     end
@@ -525,7 +526,7 @@ class UserTest < ActiveSupport::TestCase
       user = create(:user)
 
       assert_raise(Net::SMTPFatalError) do
-        User.send_reset_password_instructions({ email: user.email })
+        User.send_reset_password_instructions(email: user.email)
       end
     end
   end

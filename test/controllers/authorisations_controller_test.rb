@@ -64,7 +64,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
 
         post :create, params: { api_user_id: @api_user.id, doorkeeper_access_token: { application_id: @application.id } }
 
-        assert_equal ['signin'], @api_user.permissions_for(@application)
+        assert_equal %w[signin], @api_user.permissions_for(@application)
       end
     end
   end

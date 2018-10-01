@@ -7,16 +7,16 @@ describe UserPolicy do
   let(:super_org_admin)             { create(:super_org_admin, organisation: parent_organisation) }
   let(:organisation_admin)          { create(:organisation_admin, organisation: parent_organisation) }
 
-  primary_management_actions = [:new?, :assign_organisations?]
-  user_management_actions = [:edit?, :create?, :update?, :unlock?, :suspension?, :cancel_email_change?, :resend_email_change?, :event_logs?]
-  self_management_actions = [:edit_email_or_passphrase?, :update_email?, :update_passphrase?, :cancel_email_change?, :resend_email_change?]
-  disallowed_actions_org_admin = [:create?, :assign_organisations?]
-  disallowed_actions_super_org_admin = [:create?, :assign_organisations?]
+  primary_management_actions = %i[new? assign_organisations?]
+  user_management_actions = %i[edit? create? update? unlock? suspension? cancel_email_change? resend_email_change? event_logs?]
+  self_management_actions = %i[edit_email_or_passphrase? update_email? update_passphrase? cancel_email_change? resend_email_change?]
+  disallowed_actions_org_admin = %i[create? assign_organisations?]
+  disallowed_actions_super_org_admin = %i[create? assign_organisations?]
 
   org_admin_actions = user_management_actions - disallowed_actions_org_admin
   super_org_admin_actions = user_management_actions - disallowed_actions_super_org_admin
   admin_actions = user_management_actions - self_management_actions
-  superadmin_actions = [:assign_role?, :flag_2sv?, :reset_2sv?]
+  superadmin_actions = %i[assign_role? flag_2sv? reset_2sv?]
 
   context "for superadmins" do
     permissions :index? do

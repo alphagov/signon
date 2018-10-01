@@ -1,12 +1,12 @@
 module UserFilterHelper
   def current_path_with_filter(filter_type, filter_value)
     query_parameters = (request.query_parameters.clone || {})
-    filter_value.nil? ? query_parameters.delete(filter_type) : query_parameters.merge!(filter_type => filter_value)
+    filter_value.nil? ? query_parameters.delete(filter_type) : query_parameters[filter_type] = filter_value
     request.path_info + '?' + query_parameters.map { |k, v| "#{k}=#{v}" }.join('&')
   end
 
   def user_role_text
-    "#{params[:role] if params[:role]} users".strip.humanize.capitalize
+    "#{params[:role]} users".strip.humanize.capitalize
   end
 
   def two_step_abbr_tag
@@ -65,6 +65,7 @@ module UserFilterHelper
   def value_from(filter_type)
     value = params[filter_type]
     return nil if value.blank?
+
     case filter_type
     when :organisation
       org = Organisation.find(value)

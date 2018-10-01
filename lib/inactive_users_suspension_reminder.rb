@@ -5,7 +5,7 @@ class InactiveUsersSuspensionReminder
                         Errno::ETIMEDOUT,
                         Errno::EHOSTUNREACH,
                         Errno::ECONNREFUSED,
-                        EOFError]
+                        EOFError].freeze
 
   def initialize(users, days_to_suspension)
     @users = users
@@ -25,7 +25,7 @@ class InactiveUsersSuspensionReminder
 
         Rails.logger.warn "#{self.class}: Failed to send suspension reminder email to #{user.email}."
         log_error(e, user)
-      rescue => e
+      rescue StandardError => e
         log_error(e, user)
         begin
           Rails.logger.warn "#{self.class}: #{e.response.error.message} while sending email to #{user.email}."

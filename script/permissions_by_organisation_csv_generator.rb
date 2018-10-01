@@ -4,7 +4,7 @@ class PermissionsByOrganisationCsvGenerator
   def self.generate
     filename = 'permissions_by_organisation.csv'
     CSV.open(filename, "wb") do |csv|
-      csv << ['Organisation', 'Application', 'Permission']
+      csv << %w[Organisation Application Permission]
       permissions_by_organisation.each { |line| csv << line }
     end
     puts "Permissions by organisations saved to ./#{filename}"

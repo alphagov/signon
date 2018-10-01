@@ -8,10 +8,10 @@ class AssignAphaOrgToNewParent < ActiveRecord::Migration
     else
       if apha.parent != defra
         begin
-          old_parent_name = apha.parent.nil?? "nil" : apha.parent.name
+          old_parent_name = apha.parent.nil? ? "nil" : apha.parent.name
           apha.update_attributes!(parent: defra)
           puts "Updating parent for 'Animal and Plant Health Agency' from #{old_parent_name} to #{defra.name}"
-        rescue => error
+        rescue StandardError => error
           puts "Parent re-assignment failed for: 'Animal and Plant Health Agency' with error '#{error.message}'"
         end
       else

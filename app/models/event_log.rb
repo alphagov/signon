@@ -2,7 +2,7 @@ require "resolv"
 class EventLog < ActiveRecord::Base
   deprecated_columns :event
 
-  LOCKED_DURATION = "#{Devise.unlock_in / 1.hour} #{'hour'.pluralize(Devise.unlock_in / 1.hour)}"
+  LOCKED_DURATION = "#{Devise.unlock_in / 1.hour} #{'hour'.pluralize(Devise.unlock_in / 1.hour)}".freeze
 
   EVENTS = [
     ACCOUNT_LOCKED                            = LogEntry.new(id: 1, description: "Passphrase verification failed too many times, account locked for #{LOCKED_DURATION}"),
@@ -42,12 +42,12 @@ class EventLog < ActiveRecord::Base
     PERMISSIONS_ADDED                         = LogEntry.new(id: 35, description: "Permissions added", require_initiator: true),
     PERMISSIONS_REMOVED                       = LogEntry.new(id: 36, description: "Permissions removed", require_initiator: true),
     ACCOUNT_INVITED                           = LogEntry.new(id: 37, description: "Account was invited", require_initiator: true),
-  ]
+  ].freeze
 
   EVENTS_REQUIRING_INITIATOR   = EVENTS.select(&:require_initiator?)
   EVENTS_REQUIRING_APPLICATION = EVENTS.select(&:require_application?)
 
-  VALID_OPTIONS = [:initiator, :application, :application_id, :trailing_message, :ip_address, :user_agent_id]
+  VALID_OPTIONS = %i[initiator application application_id trailing_message ip_address user_agent_id].freeze
 
   validates :uid, presence: true
   validates_presence_of :event_id
@@ -75,7 +75,7 @@ class EventLog < ActiveRecord::Base
 
   def self.record_event(user, event, options = {})
     if options[:ip_address]
-      if options[:ip_address] =~ Resolv::IPv6::Regex
+      if Resolv::IPv6::Regex.match?(options[:ip_address])
         GovukError.notify("Received IP address: #{options[:ip_address]}. IPv6 logging is not supported yet")
         options[:ip_address] = nil
       else
@@ -91,7 +91,7 @@ class EventLog < ActiveRecord::Base
   end
 
   def self.record_email_change(user, email_was, email_is, initiator = user)
-    event = (user == initiator) ? EMAIL_CHANGE_INITIATED : EMAIL_CHANGED
+    event = user == initiator ? EMAIL_CHANGE_INITIATED : EMAIL_CHANGED
     record_event(user, event, initiator: initiator, trailing_message: "from #{email_was} to #{email_is}")
   end
 
@@ -116,7 +116,7 @@ private
   end
 
   def self.convert_ip_address_to_integer(ip_address_string)
-    ip_address_string.split(/\./).map(&:to_i).pack("C*").unpack("N").first
+    ip_address_string.split(/\./).map(&:to_i).pack("C*").unpack1("N")
   end
 
   def self.convert_integer_to_ip_address(integer)

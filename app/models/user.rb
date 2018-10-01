@@ -16,13 +16,13 @@ class User < ActiveRecord::Base
   MAX_2SV_DRIFT_SECONDS = 30
   REMEMBER_2SV_SESSION_FOR = 30.days
 
-  USER_STATUS_SUSPENDED = 'suspended'
-  USER_STATUS_INVITED = 'invited'
-  USER_STATUS_PASSPHRASE_EXPIRED = 'passphrase expired'
-  USER_STATUS_LOCKED = 'locked'
-  USER_STATUS_ACTIVE = 'active'
+  USER_STATUS_SUSPENDED = 'suspended'.freeze
+  USER_STATUS_INVITED = 'invited'.freeze
+  USER_STATUS_PASSPHRASE_EXPIRED = 'passphrase expired'.freeze
+  USER_STATUS_LOCKED = 'locked'.freeze
+  USER_STATUS_ACTIVE = 'active'.freeze
   USER_STATUSES = [USER_STATUS_SUSPENDED, USER_STATUS_INVITED, USER_STATUS_PASSPHRASE_EXPIRED,
-                   USER_STATUS_LOCKED, USER_STATUS_ACTIVE]
+                   USER_STATUS_LOCKED, USER_STATUS_ACTIVE].freeze
 
   devise :database_authenticatable,
          :recoverable, :trackable,
@@ -123,7 +123,7 @@ class User < ActiveRecord::Base
   end
 
   def has_access_to?(application)
-    application_permissions.detect {|permission| permission.supported_permission_id == application.signin_permission.id }
+    application_permissions.detect { |permission| permission.supported_permission_id == application.signin_permission.id }
   end
 
   def permissions_synced!(application)
@@ -210,6 +210,7 @@ class User < ActiveRecord::Base
 
   def status
     return USER_STATUS_SUSPENDED if suspended?
+
     unless api_user?
       return USER_STATUS_INVITED if invited_but_not_yet_accepted?
       return USER_STATUS_PASSPHRASE_EXPIRED if need_change_password?
@@ -234,6 +235,7 @@ class User < ActiveRecord::Base
 
   def set_2sv_for_admin_roles
     return if Rails.application.config.instance_name.present?
+
     self.require_2sv = true if role_changed? && (admin? || superadmin?)
   end
 

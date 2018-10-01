@@ -58,6 +58,7 @@ class BatchInvitationUser < ActiveRecord::Base
   class InvalidOrganisationSlug < StandardError; end
 
 private
+
   def invite_user_with_attributes(sanitised_attributes, inviting_user)
     if User.find_by_email(self.email)
       self.update_column(:outcome, "skipped")
