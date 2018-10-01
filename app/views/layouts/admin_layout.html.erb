@@ -25,7 +25,7 @@
         } %>
       <% end %>
 
-      <% if flash["alert"] %>
+      <% if flash["alert"].present? %>
         <%= render "govuk_publishing_components/components/error_alert", {
           message: flash["alert"]
         } %>
