@@ -4,7 +4,6 @@ ALPHABETICAL_PAGINATE_CONFIG = {
   others: false,
   include_all: false,
   js: false,
-  bootstrap3: true
-}
-
-ALPHABETICAL_PAGINATE_CONFIG[:db_mode] = true if Signon.mysql?
+  bootstrap3: true,
+  db_mode: Signon.mysql?,
+}.freeze

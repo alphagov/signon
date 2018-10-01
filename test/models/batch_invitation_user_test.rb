@@ -12,12 +12,12 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
 
       # the attributes that're passed to User#invite! should be a permitted
       # params object
-      invitation_attributes = ActionController::Parameters.new({
+      invitation_attributes = ActionController::Parameters.new(
         name: user.name,
         email: user.email,
         organisation_id: user.organisation_id,
         supported_permission_ids: [1, 2, 3]
-      })
+      )
       User.expects(:invite!).with(invitation_attributes, @inviting_user)
 
       user.invite(@inviting_user, [1, 2, 3])

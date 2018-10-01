@@ -13,11 +13,11 @@ class Organisation < ActiveRecord::Base
   validates :organisation_type, presence: true
 
   def name_with_abbreviation
-    if abbreviation.present? && abbreviation != name
-      return_value = "#{name} – #{abbreviation}"
-    else
-      return_value = name
-    end
+    return_value = if abbreviation.present? && abbreviation != name
+                     "#{name} – #{abbreviation}"
+                   else
+                     name
+                   end
 
     return_value += " (closed)" if closed?
 

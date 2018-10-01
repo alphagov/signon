@@ -19,7 +19,6 @@ class AddUnconfirmedEmail < ActiveRecord::Migration
   end
 
   def down
-
     change_table(:users) do |t|
       t.string   :confirmation_token
       t.datetime :confirmed_at

@@ -19,7 +19,7 @@ class SupportedPermissionTest < ActiveSupport::TestCase
 
   test "associated user application permissions are destroyed when supported permissions are destroyed" do
     user = create(:user)
-    application = create(:application, with_supported_permissions: ['managing_editor'])
+    application = create(:application, with_supported_permissions: %w[managing_editor])
     managing_editor_permission = application.supported_permissions.where(name: 'managing_editor').first
 
     user.grant_application_permission(application, 'managing_editor')

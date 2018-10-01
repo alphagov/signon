@@ -3,15 +3,14 @@ class CreateGdsAdminPermissionForLicensing < ActiveRecord::Migration
     create_permissions
   end
 
-  def down
-  end
+  def down; end
 
   class ::Doorkeeper::Application < ActiveRecord::Base
-    has_many :permissions, :dependent => :destroy
-    has_many :supported_permissions, :dependent => :destroy
+    has_many :permissions, dependent: :destroy
+    has_many :supported_permissions, dependent: :destroy
 
     def self.default_permission_strings
-      ["signin"]
+      %w[signin]
     end
 
     def supported_permission_strings
@@ -24,16 +23,17 @@ class CreateGdsAdminPermissionForLicensing < ActiveRecord::Migration
     end
   end
 
-   private
-    def licence_application()
-      Doorkeeper::Application.where(name: 'Licensify').first
-    end
+private
 
-    def create_permissions
-       app = licence_application()
-
-       if(!app.nil?)
-          app.supported_permissions.find_or_create_by(name: "GDSAdministrator")
-    end
+  def licence_application
+    Doorkeeper::Application.where(name: 'Licensify').first
   end
+
+  def create_permissions
+    app = licence_application
+
+    if(!app.nil?)
+      app.supported_permissions.find_or_create_by(name: "GDSAdministrator")
+ end
+end
 end

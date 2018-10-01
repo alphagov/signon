@@ -14,7 +14,7 @@ class SessionsController < Devise::SessionsController
     super
   end
 
-  private
+private
 
   def log_event
     if current_user.present?

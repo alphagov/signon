@@ -1,6 +1,6 @@
 class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsController
   include Pundit
-  EXPECTED_DOORKEEPER_VERSION = '4.2.6'
+  EXPECTED_DOORKEEPER_VERSION = '4.2.6'.freeze
 
   def new
     if pre_auth.authorizable?
@@ -34,6 +34,7 @@ private
   def user_has_signin_permission_to_application?
     return false if application.nil?
     return false if current_resource_owner.nil?
+
     current_resource_owner.has_access_to?(application)
   end
 

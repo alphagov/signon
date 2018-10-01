@@ -211,7 +211,7 @@ class UsersControllerTest < ActionController::TestCase
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
       get :show, params: { client_id: @application.uid, format: :json }
       json = JSON.parse(response.body)
-      assert_equal(["signin"], json['user']['permissions'])
+      assert_equal(%w[signin], json['user']['permissions'])
     end
 
     should "fetching json profile should include only permissions for the relevant app" do
@@ -223,7 +223,7 @@ class UsersControllerTest < ActionController::TestCase
       @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
       get :show, params: { client_id: @application.uid, format: :json }
       json = JSON.parse(response.body)
-      assert_equal(["signin"], json['user']['permissions'])
+      assert_equal(%w[signin], json['user']['permissions'])
     end
 
     should "fetching json profile should update last_synced_at for the relevant app" do
@@ -441,10 +441,10 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "can give permissions to all applications" do
-        delegatable_app = create(:application, with_delegatable_supported_permissions: ["signin"])
-        non_delegatable_app = create(:application, with_supported_permissions: ['signin'])
-        delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ['signin'])
-        non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ['signin'])
+        delegatable_app = create(:application, with_delegatable_supported_permissions: %w[signin])
+        non_delegatable_app = create(:application, with_supported_permissions: %w[signin])
+        delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: %w[signin])
+        non_delegatable_no_access_to_app = create(:application, with_supported_permissions: %w[signin])
 
         @user.grant_application_permission(delegatable_app, 'signin')
         @user.grant_application_permission(non_delegatable_app, 'signin')
@@ -480,10 +480,10 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "be able to give permissions only to applications they themselves have access to and that also have delegatable signin permissions" do
-          delegatable_app = create(:application, with_delegatable_supported_permissions: ["signin"])
-          non_delegatable_app = create(:application, with_supported_permissions: ['signin'])
-          delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ['signin'])
-          non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ['signin'])
+          delegatable_app = create(:application, with_delegatable_supported_permissions: %w[signin])
+          non_delegatable_app = create(:application, with_supported_permissions: %w[signin])
+          delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: %w[signin])
+          non_delegatable_no_access_to_app = create(:application, with_supported_permissions: %w[signin])
 
           organisation_admin = create(:organisation_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
 
@@ -516,7 +516,7 @@ class UsersControllerTest < ActionController::TestCase
           sign_in organisation_admin
 
           user = create(:user_in_organisation, organisation: organisation_admin.organisation,
-                        with_permissions: { delegatable_app => ['Editor'],
+                        with_permissions: { delegatable_app => %w[Editor],
                                             non_delegatable_app => ['signin', 'GDS Admin'],
                                             delegatable_no_access_to_app => ['signin', 'GDS Editor'],
                                             non_delegatable_no_access_to_app => ['signin', 'Import CSVs'] })
@@ -560,10 +560,10 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "be able to give permissions only to applications they themselves have access to and that also have delegatable signin permissions" do
-          delegatable_app = create(:application, with_delegatable_supported_permissions: ["signin"])
-          non_delegatable_app = create(:application, with_supported_permissions: ['signin'])
-          delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ['signin'])
-          non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ['signin'])
+          delegatable_app = create(:application, with_delegatable_supported_permissions: %w[signin])
+          non_delegatable_app = create(:application, with_supported_permissions: %w[signin])
+          delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: %w[signin])
+          non_delegatable_no_access_to_app = create(:application, with_supported_permissions: %w[signin])
 
           super_org_admin = create(:super_org_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
 
@@ -596,7 +596,7 @@ class UsersControllerTest < ActionController::TestCase
           sign_in super_org_admin
 
           user = create(:user_in_organisation, organisation: super_org_admin.organisation,
-                        with_permissions: { delegatable_app => ['Editor'],
+                        with_permissions: { delegatable_app => %w[Editor],
                                             non_delegatable_app => ['signin', 'GDS Admin'],
                                             delegatable_no_access_to_app => ['signin', 'GDS Editor'],
                                             non_delegatable_no_access_to_app => ['signin', 'Import CSVs'] })
@@ -637,7 +637,7 @@ class UsersControllerTest < ActionController::TestCase
           sign_in superadmin
 
           user = create(:user_in_organisation, organisation: superadmin.organisation,
-                        with_permissions: { delegatable_app => ['Editor'],
+                        with_permissions: { delegatable_app => %w[Editor],
                                             non_delegatable_app => ['signin', 'GDS Admin'],
                                             delegatable_no_access_to_app => ['signin', 'GDS Editor'],
                                             non_delegatable_no_access_to_app => ['signin', 'Import CSVs'] })
@@ -741,7 +741,7 @@ class UsersControllerTest < ActionController::TestCase
             email_change_notifications = ActionMailer::Base.deliveries[-2..-1]
             assert_equal email_change_notifications.map(&:subject).uniq.count, 1
             assert_match /Your .* Signon development email address has been updated/, email_change_notifications.map(&:subject).first
-            assert_equal %w(old@email.com new@email.com), email_change_notifications.map {|mail| mail.to.first }
+            assert_equal(%w(old@email.com new@email.com), email_change_notifications.map { |mail| mail.to.first })
           end
         end
 

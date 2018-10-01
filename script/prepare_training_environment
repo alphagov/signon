@@ -13,7 +13,7 @@ unless ARGV[0] == "--really-setup-training-environment"
   exit
 end
 
-NUMBER_OF_USERS = 15.freeze
+NUMBER_OF_USERS = 15
 USER_ENCRYPTED_PASSWORD = "f50696281bcd7c0d21741e166ef8c2359033d4cb9bc7eb6297519575a8126cea1a299fdc6000487791cbd925151ffac86f860f2cedaf1655063f4c16e7442d31".freeze
 USER_ENCRYPTED_PASSWORD_SALT = "zfAeksQr_9W2E2KuuC9n".freeze
 TRAINING_APIS = [
@@ -33,7 +33,7 @@ TRAINING_APIS = [
     redirect_uri: "https://publishing-api.training.publishing.service.gov.uk/auth/gds/callback",
     home_uri: "https://publishing-api.training.publishing.service.gov.uk/",
     description: "Central store for all publishing content on GOV.UK",
-    supported_permissions: ["view_all"]
+    supported_permissions: %w[view_all]
   }
 ].freeze
 
@@ -45,7 +45,7 @@ TRAINING_PUBLISHING_APPLICATIONS = [
     redirect_uri: "https://manuals-publisher.training.publishing.service.gov.uk/auth/gds/callback",
     home_uri: "https://manuals-publisher.training.publishing.service.gov.uk/",
     description: "Manuals Publisher publishes manuals",
-    supported_permissions: ["gds_editor"]
+    supported_permissions: %w[gds_editor]
   },
   {
     directory_name: "publisher",
@@ -54,7 +54,7 @@ TRAINING_PUBLISHING_APPLICATIONS = [
     redirect_uri: "https://publisher.training.publishing.service.gov.uk/auth/gds/callback",
     home_uri: "https://publisher.training.publishing.service.gov.uk/",
     description: "Publisher",
-    supported_permissions: ["force_publisher", "skip_review"]
+    supported_permissions: %w[force_publisher skip_review]
   },
   {
     directory_name: "specialist-publisher",
@@ -63,7 +63,7 @@ TRAINING_PUBLISHING_APPLICATIONS = [
     redirect_uri: "https://specialist-publisher.training.publishing.service.gov.uk/auth/gds/callback",
     home_uri: "https://specialist-publisher.training.publishing.service.gov.uk/",
     description: "Publisher tool for specialist documents",
-    supported_permissions: ["gds_editor"]
+    supported_permissions: %w[gds_editor]
   },
   {
     directory_name: "whitehall",
@@ -142,7 +142,7 @@ TRAINING_APIS.each do |api|
   token = "oauth-bearer-token-#{api[:slug]}"
   name = "API access user for #{api[:name]}"
   email = "#{api[:slug]}@digital.cabinet-office.gov.uk"
-  supported_permissions = api[:supported_permissions] + ["signin"]
+  supported_permissions = api[:supported_permissions] + %w[signin]
   user = ApiUser.new(
     name: name,
     email: email,

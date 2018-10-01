@@ -52,7 +52,8 @@ class ConfirmationsController < Devise::ConfirmationsController
     end
   end
 
-  private
+private
+
   def confirmation_user
     @confirmation_user ||= resource_class.find_or_initialize_by(confirmation_token: params[:confirmation_token])
   end

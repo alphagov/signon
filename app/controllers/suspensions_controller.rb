@@ -25,7 +25,7 @@ class SuspensionsController < ApplicationController
     end
   end
 
-  private
+private
 
   def load_and_authorize_user
     @user = User.find(params[:id])

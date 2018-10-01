@@ -28,7 +28,7 @@ private
   attr_reader :name, :email, :application_names
 
   def extract_applications_from_names
-    (application_names.split(',')).uniq.map do |application_name|
+    application_names.split(',').uniq.map do |application_name|
       Doorkeeper::Application.find_by_name!(application_name)
     end
   end

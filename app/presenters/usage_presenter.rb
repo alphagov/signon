@@ -31,7 +31,7 @@ private
         group(:organisation_id).count
       total_count = {}
       (active_users.keys | suspended_users.keys).each do |key|
-        total_count[key] = {active: active_users[key], suspended: suspended_users[key]}
+        total_count[key] = { active: active_users[key], suspended: suspended_users[key] }
       end
 
       month = start_date_m.strftime("%B, %Y")

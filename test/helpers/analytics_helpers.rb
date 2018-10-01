@@ -1,10 +1,10 @@
 module AnalyticsHelpers
   # GA is noisy in tests becayse all GA calls become console.log so we
   # don't want it enabled for all tests, use this to selectively turn it on
-  def with_ga_enabled(&block)
+  def with_ga_enabled
     begin
       GovukAdminTemplate.configure { |c| c.enable_google_analytics_in_tests = true }
-      block.call
+      yield
     ensure
       GovukAdminTemplate.configure { |c| c.enable_google_analytics_in_tests = false }
     end

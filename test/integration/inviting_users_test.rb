@@ -82,7 +82,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
       u = User.find_by(email: 'alicia@example.com')
       assert u.has_access_to? application_two
-      assert_equal ['editor'], u.permissions_for(application_one)
+      assert_equal %w[editor], u.permissions_for(application_one)
     end
 
     should "show an error message when attempting to create a user without an email" do
@@ -167,7 +167,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
       u = User.find_by(email: 'alicia@example.com')
       assert u.has_access_to? application_two
-      assert_equal ['editor'], u.permissions_for(application_one)
+      assert_equal %w[editor], u.permissions_for(application_one)
     end
   end
 end

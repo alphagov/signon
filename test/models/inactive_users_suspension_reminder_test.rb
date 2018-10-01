@@ -3,13 +3,13 @@ require 'test_helper'
 class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
   context "sending reminder emails" do
     should "send reminder emails to users when 1 day from suspension" do
-      suspends_in_1_day = create(:user, current_sign_in_at: (User::SUSPENSION_THRESHOLD_PERIOD).ago)
+      suspends_in_1_day = create(:user, current_sign_in_at: User::SUSPENSION_THRESHOLD_PERIOD.ago)
 
       mailer = mock
       mailer.expects(:deliver_now).returns(true)
       UserMailer.expects(:suspension_reminder).with(suspends_in_1_day, 1).returns(mailer)
 
-      users_to_remind = User.last_signed_in_on((User::SUSPENSION_THRESHOLD_PERIOD).ago)
+      users_to_remind = User.last_signed_in_on(User::SUSPENSION_THRESHOLD_PERIOD.ago)
       InactiveUsersSuspensionReminder.new(users_to_remind, 1).send_reminders
     end
 

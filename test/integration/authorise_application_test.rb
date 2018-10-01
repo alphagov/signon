@@ -100,14 +100,14 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     assert_match /\?code=/, current_url
   end
 
-  def ignoring_spurious_error(&block)
+  def ignoring_spurious_error
     # During testing, requests for all domains get routed to Signon;
     # including the capybara browser being redirected to other apps.
     # The browser gets a redirect to url of the destination app.
     # This then gets routed to Signon but Signon doesn't know how to handle the route.
     # And so it raises the RoutingError
     begin
-      block.call
+      yield
     rescue ActionController::RoutingError
     end
   end

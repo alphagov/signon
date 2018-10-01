@@ -1,5 +1,5 @@
 class InactiveUsersSuspensionReminderMailingList
-  DAYS_TO_SUSPENSION = [14, 7, 3, 1]
+  DAYS_TO_SUSPENSION = [14, 7, 3, 1].freeze
 
   def initialize(suspension_threshold_period)
     @suspension_threshold_period = suspension_threshold_period

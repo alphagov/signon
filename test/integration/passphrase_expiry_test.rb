@@ -4,7 +4,7 @@ require 'helpers/passphrase_support'
 class PassphraseExpiryTest < ActionDispatch::IntegrationTest
   include PassPhraseSupport
 
-  PROMPT_TO_CHANGE_PASSWORD = "Your passphrase has expired. Please choose a new passphrase"
+  PROMPT_TO_CHANGE_PASSWORD = "Your passphrase has expired. Please choose a new passphrase".freeze
 
   context "logging in with a brand new user" do
     setup do

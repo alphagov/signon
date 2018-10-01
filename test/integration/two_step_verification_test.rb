@@ -1,4 +1,5 @@
 #encoding: utf-8
+
 require 'test_helper'
 require 'helpers/passphrase_support'
 
@@ -80,7 +81,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "accept a valid code, persist the secret, log an event and notify by email" do
-        SUCCESS = "2-step verification set up"
+        SUCCESS = "2-step verification set up".freeze
         perform_enqueued_jobs do
           enter_2sv_code(@new_secret)
 

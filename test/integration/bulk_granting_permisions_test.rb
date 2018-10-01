@@ -18,7 +18,7 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
 
     permissions = {
       @application_one => %w(signin editor),
-      @application_two => ['reviewer']
+      @application_two => %w[reviewer]
     }
 
     perform_bulk_grant_as_user(user, permissions)
@@ -29,7 +29,7 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
 
     permissions = {
       @application_one => %w(signin editor),
-      @application_two => ['reviewer']
+      @application_two => %w[reviewer]
     }
 
     perform_bulk_grant_as_user(user, permissions)
@@ -110,7 +110,7 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
           else
             'No '
           end
-        app_permissions_line << (app_permissions - ['signin']).sort.to_sentence
+        app_permissions_line << (app_permissions - %w[signin]).sort.to_sentence
         assert_response_contains app_permissions_line
       end
 

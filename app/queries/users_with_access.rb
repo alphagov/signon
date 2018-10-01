@@ -14,6 +14,7 @@ class UsersWithAccess
   end
 
 private
+
   def authorized_users_user_ids
     UserApplicationPermission.where(
       supported_permission: application.signin_permission,

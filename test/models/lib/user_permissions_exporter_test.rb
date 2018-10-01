@@ -21,7 +21,7 @@ class UserPermissionsExporterTest < ActionView::TestCase
     @anne.grant_application_permissions(foo_app, %w(signin administer add_vinegar))
     @mary.grant_application_permissions(foo_app, %w(signin do_some_stuff))
 
-    UserPermissionsExporter.new(@tmpfile.path).export(["Foo"])
+    UserPermissionsExporter.new(@tmpfile.path).export(%w[Foo])
 
     csv_data = CSV.read(@tmpfile.path)
 
@@ -33,7 +33,7 @@ class UserPermissionsExporterTest < ActionView::TestCase
 
   def test_export_multiple_applications
     foo_app = create(:application, name: "Foo", with_supported_permissions: %w(administer add_vinegar do_some_stuff cook))
-    bar_app = create(:application, name: "Bar", with_supported_permissions: ['administer'])
+    bar_app = create(:application, name: "Bar", with_supported_permissions: %w[administer])
     baz_app = create(:application, name: "Baz")
 
     @bill.grant_application_permissions(foo_app, %w(signin cook))

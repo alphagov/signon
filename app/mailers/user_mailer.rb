@@ -55,6 +55,7 @@ class UserMailer < Devise::Mailer
   end
 
 private
+
   def suspension_time
     if @days == 1
       "tomorrow"

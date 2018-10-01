@@ -2,8 +2,7 @@ class Devise::TwoStepVerificationSessionController < DeviseController
   before_action { |c| c.authenticate_user! force: true }
   skip_before_action :handle_two_step_verification
 
-  def new
-  end
+  def new; end
 
   def create
     render(:show) && return if params[:code].nil?

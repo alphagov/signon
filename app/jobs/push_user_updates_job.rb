@@ -1,7 +1,7 @@
 class PushUserUpdatesJob < ActiveJob::Base
   include ActiveJob::Retry.new(strategy: :exponential, limit: 6)
 
-  def perform(*args)
+  def perform(*_args)
     raise NotImplementedError, "PushUserUpdatesJob must be subclassed"
   end
 

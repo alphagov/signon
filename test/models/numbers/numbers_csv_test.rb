@@ -68,7 +68,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
 
   test "csv contains counts by days since last sign-in" do
     all_users = User.all
-    [6.days.ago, 14.days.ago, 1.minute.ago].each_with_index {|time, i| all_users[i].update_attribute(:current_sign_in_at, time) }
+    [6.days.ago, 14.days.ago, 1.minute.ago].each_with_index { |time, i| all_users[i].update_attribute(:current_sign_in_at, time) }
 
     NumbersCsv.generate
 
@@ -85,7 +85,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
 
   test "csv contains counts by how often users have signed in" do
     all_users = User.all
-    [0, 1, 2, 123].each_with_index {|count, i| all_users[i].update_attribute(:sign_in_count, count) }
+    [0, 1, 2, 123].each_with_index { |count, i| all_users[i].update_attribute(:sign_in_count, count) }
 
     NumbersCsv.generate
 

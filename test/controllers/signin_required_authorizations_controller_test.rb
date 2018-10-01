@@ -7,7 +7,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
   end
 
   def translated_error_message(key)
-    I18n.translate key, scope: [:doorkeeper, :errors, :messages]
+    I18n.translate key, scope: %i[doorkeeper errors messages]
   end
 
   def default_scopes_exist(*scopes)

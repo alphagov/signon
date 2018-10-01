@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   include UserPermissionsControllerMethods
 
   before_action :authenticate_user!, except: :show
-  before_action :load_and_authorize_user, except: [:index, :show]
+  before_action :load_and_authorize_user, except: %i[index show]
   before_action :allow_no_application_access, only: [:update]
   helper_method :applications_and_permissions, :any_filter?
   respond_to :html
@@ -122,7 +122,7 @@ class UsersController < ApplicationController
     redirect_to :root, notice: "Reset 2-step verification for #{@user.email}"
   end
 
-  private
+private
 
   def load_and_authorize_user
     @user = current_user.normal? ? current_user : User.find(params[:id])
@@ -148,11 +148,11 @@ class UsersController < ApplicationController
 
   def paginate_users
     if any_filter?
-      if @users.is_a?(Array)
-        @users = Kaminari.paginate_array(@users).page(params[:page]).per(100)
-      else
-        @users = @users.page(params[:page]).per(100)
-      end
+      @users = if @users.is_a?(Array)
+                 Kaminari.paginate_array(@users).page(params[:page]).per(100)
+               else
+                 @users.page(params[:page]).per(100)
+               end
     else
       @users, @sorting_params = @users.alpha_paginate(
         params.fetch(:letter, 'A'),

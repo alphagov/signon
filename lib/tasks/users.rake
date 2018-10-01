@@ -36,8 +36,10 @@ namespace :users do
   desc "Suspend a user's access to the site (specify email in environment)"
   task suspend: :environment do
     raise "Requires email specified in environment" unless ENV['email']
+
     user = User.find_by_email(ENV['email'])
     raise "Couldn't find user" unless user
+
     user.suspend
     puts "User account suspended"
   end
@@ -45,8 +47,10 @@ namespace :users do
   desc "Unsuspend a user's access to the site (specify email in environment)"
   task unsuspend: :environment do
     raise "Requires email specified in environment" unless ENV['email']
+
     user = User.find_by_email(ENV['email'])
     raise "Couldn't find user" unless user
+
     user.unsuspend
     puts "User account unsuspended"
   end
@@ -78,9 +82,11 @@ namespace :users do
 
     if ENV['DATE'].blank?
       raise "Requires ENV variable USERS_SINCE to be set to a valid date" if ENV['USERS_SINCE'].blank?
+
       users_since_date = Date.parse(ENV['USERS_SINCE'])
 
       raise "Requires ENV variable SUSPENSIONS_SINCE to be set to a valid date" if ENV['SUSPENSIONS_SINCE'].blank?
+
       suspensions_since_date = Date.parse(ENV['SUSPENSIONS_SINCE'])
     else
       users_since_date = Date.parse(ENV['DATE'])

@@ -11,6 +11,7 @@ class UserUpdate
     user.skip_reconfirmation!
     old_permissions = fetch_user_permissions
     return unless update_user
+
     user.application_permissions.reload
 
     record_update
@@ -93,6 +94,7 @@ private
   def record_email_change_and_notify
     email_change = user.previous_changes[:email]
     return unless email_change
+
     EventLog.record_email_change(user, email_change.first, email_change.last, current_user)
 
     user.invite! if user.invited_but_not_yet_accepted?

@@ -1,5 +1,5 @@
 ENV["RAILS_ENV"] = "test"
-require File.expand_path('../../config/environment', __FILE__)
+require File.expand_path('../config/environment', __dir__)
 
 require 'rails/test_help'
 require 'shoulda/context'
@@ -39,7 +39,7 @@ class ActionController::TestCase
     @controller.stubs(current_user: user)
   end
 
-  def sign_out(user)
+  def sign_out(_user)
     warden.unstub(:authenticate!)
     @controller.unstub(:current_user)
   end

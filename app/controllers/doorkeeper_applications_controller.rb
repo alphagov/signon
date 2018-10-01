@@ -22,7 +22,7 @@ class DoorkeeperApplicationsController < ApplicationController
     @users = query.page(params[:page]).per(100)
   end
 
-  private
+private
 
   def load_and_authorize_application
     @application = Doorkeeper::Application.find(params[:id])

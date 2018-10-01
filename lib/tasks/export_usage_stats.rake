@@ -1,8 +1,8 @@
 desc "Export new users between 2 dates, as CSV"
 
-task :export_usage_stats, [:start_date, :end_date] => :environment do |_, args|
+task :export_usage_stats, %i[start_date end_date] => :environment do |_, args|
   USAGE_MESSAGE = "usage: rake export_usage_stats[<start_date>, <end_date>]\n"\
-    "dates format: YYYY-MM-DD"
+    "dates format: YYYY-MM-DD".freeze
   abort USAGE_MESSAGE unless args[:start_date] && args[:end_date]
   begin
     start_date = Date.parse(args[:start_date])

@@ -38,18 +38,19 @@ def config_values_for_app(config_file:)
     next if line =~ Regexp.new(Regexp.escape("GDS::SSO.config do |config|"))
     next if line =~ Regexp.new(/^end/)
     next if line =~ Regexp.new(/^(\s)+?$/)
+
     key = /config\.([^ ]+)/.match(line).to_a[1]
-    if /ENV\['[a-z_]+'\]/i.match(line)
+    value = if /ENV\['[a-z_]+'\]/i.match?(line)
       # We've got a line like this:
       #   config.oauth_id     = ENV['PUBLISHER_OAUTH_ID'] || "an_oauth_id"
       # so extract "an_oauth_id":
-      value = /\|\| ["|'](.+)["|']/.match(line).to_a[1]
-    else
+              /\|\| ["|'](.+)["|']/.match(line).to_a[1]
+            else
       # We've got a line like this:
       #   config.oauth_id     = "an_oauth_id"
       # so extract "an_oauth_id":
-      value = /=[\s]+?['|"]([^'"]+)['|"]/.match(line).to_a[1]
-    end
+              /=[\s]+?['|"]([^'"]+)['|"]/.match(line).to_a[1]
+            end
     config[key.to_sym] = value unless key.nil?
   end
   config
@@ -61,9 +62,9 @@ def update_application(application:, oauth_id:, oauth_secret:, type:)
   application.uid          = oauth_id
   application.secret       = oauth_secret
   update_type = if type == :env_var
-    "environment variables"
-  else
-    "gds-sso config file"
+                  "environment variables"
+                else
+                  "gds-sso config file"
   end
   puts "Updating application #{application.name} from #{update_type}"
   begin
@@ -85,7 +86,7 @@ applications.each do |application|
   oauth_secret_file = File.join(env_var_path, "OAUTH_SECRET")
   config_file = config_path_for_app(application)
   if File.exist?(oauth_id_file) && !File.zero?(oauth_id_file) &&
-     File.exist?(oauth_secret_file) && !File.zero?(oauth_secret_file)
+      File.exist?(oauth_secret_file) && !File.zero?(oauth_secret_file)
     # Get the OAuth credentials from the env vars
     local_config = env_var_values_for_app(
       oauth_id_file: oauth_id_file,

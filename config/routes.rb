@@ -13,10 +13,10 @@ Rails.application.routes.draw do
   devise_scope :user do
     post "/users/invitation/resend/:id" => "invitations#resend", :as => "resend_user_invitation"
     put "/users/confirmation" => "confirmations#update"
-    resource :two_step_verification, only: [:show, :update],
+    resource :two_step_verification, only: %i[show update],
       path: "/users/two_step_verification",
       controller: "devise/two_step_verification" do
-      resource :session, only: [:new, :create], controller: "devise/two_step_verification_session"
+      resource :session, only: %i[new create], controller: "devise/two_step_verification_session"
 
       member { get :prompt }
     end
@@ -36,20 +36,20 @@ Rails.application.routes.draw do
   end
   resource :user, only: [:show]
 
-  resources :batch_invitations, only: [:new, :create, :show]
-  resources :bulk_grant_permission_sets, only: [:new, :create, :show]
+  resources :batch_invitations, only: %i[new create show]
+  resources :bulk_grant_permission_sets, only: %i[new create show]
   resources :organisations, only: [:index]
-  resources :suspensions, only: [:edit, :update]
+  resources :suspensions, only: %i[edit update]
 
-  resources :doorkeeper_applications, only: [:index, :edit, :update] do
+  resources :doorkeeper_applications, only: %i[index edit update] do
     member do
       get :users_with_access
     end
-    resources :supported_permissions, only: [:index, :new, :create, :edit, :update]
+    resources :supported_permissions, only: %i[index new create edit update]
   end
 
-  resources :api_users, only: [:new, :create, :index, :edit, :update] do
-    resources :authorisations, only: [:new, :create] do
+  resources :api_users, only: %i[new create index edit update] do
+    resources :authorisations, only: %i[new create] do
       member do
         post :revoke
       end
