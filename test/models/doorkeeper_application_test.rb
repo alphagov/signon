@@ -94,7 +94,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
 
     should "not return applications that don't support delegation of signin permission" do
-      application = create(:application, with_supported_permissions: %w[signin])
+      create(:application, with_supported_permissions: %w[signin])
 
       assert_empty Doorkeeper::Application.with_signin_delegatable
     end
