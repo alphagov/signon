@@ -1,4 +1,5 @@
 class PasswordsController < Devise::PasswordsController
+  layout 'admin_layout', only: %w(new)
   before_action :record_password_reset_request, only: :create
   before_action :record_reset_page_loaded, only: :edit
 

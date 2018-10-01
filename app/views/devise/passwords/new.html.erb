@@ -1,24 +1,20 @@
 <% content_for :title, "Request a passphrase reset" %>
-<% content_for :thin_form, true %>
+<% content_for :back_link, new_session_path(resource_name) %>
 
-<ol class="breadcrumb">
-  <li><%= render "links" %></li>
-  <li class="active">Request a passphrase reset</li>
-</ol>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-half">
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Email"
+        },
+        name: "user[email]",
+        type: "email"
+      } %>
 
-<div class="page-title">
-  <h1>Request a passphrase reset</h1>
+      <%= render "govuk_publishing_components/components/button", {
+        text: t("devise.passwords.new.send_passphrase_reset")
+      } %>
+    <% end %>
+  </div>
 </div>
-
-<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post, :class => 'panel panel-default' }) do |f| %>
-  <div class="panel-body">
-    <%= devise_error_messages! %>
-    <div class="form-group">
-      <%= f.label :email %>
-      <%= f.email_field :email, autofocus: true, class: 'form-control input-lg' %>
-    </div>
-  </div>
-  <div class="panel-footer">
-    <%= f.submit t('.send_passphrase_reset'), :class => 'btn btn-success btn-lg btn-block' %>
-  </div>
-<% end %>
