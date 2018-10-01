@@ -273,6 +273,6 @@ class SignInTest < ActionDispatch::IntegrationTest
   should "not be able to access the 2SV login page before logging in" do
     signout
     visit new_two_step_verification_session_path
-    assert_response_contains("You need to sign in before continuing.")
+    assert_equal "/users/sign_in", page.current_path
   end
 end
