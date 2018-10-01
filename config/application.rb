@@ -55,7 +55,7 @@ module Signon
     config.action_dispatch.ip_spoofing_check = false
 
     # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-    config.assets.precompile += %w(password-strength-indicator.js)
+    config.assets.precompile += %w(new_admin_layout.css new_admin_layout.js password-strength-indicator.js)
 
     config.to_prepare do
       Doorkeeper::ApplicationController.layout "application"
@@ -66,5 +66,18 @@ module Signon
     config.active_job.queue_adapter = :sidekiq
 
     config.middleware.insert_before 0, SameSiteSecurity::Middleware
+
+    # TODO: replace by https://github.com/alphagov/govuk_publishing_components/pull/548
+    #
+    # The "acceptance environment" we're in - not the same as Rails env.
+    # Can be production, staging, integration, or development
+    govuk_environments = {
+      "production" => "production",
+      "staging" => "staging",
+      "integration-blue-aws" => "integration",
+    }
+
+    config.govuk_environment = govuk_environments.fetch(ENV["ERRBIT_ENVIRONMENT_NAME"], "development")
+    config.govuk_environment = "production"
   end
 end

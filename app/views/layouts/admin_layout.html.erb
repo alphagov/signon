@@ -1,0 +1,46 @@
+<% content_for :head do %>
+  <%= stylesheet_link_tag "new_admin_layout" %>
+<% end %>
+
+<%= render 'govuk_publishing_components/components/layout_for_admin',
+  environment: Rails.application.config.govuk_environment,
+  browser_title: yield(:title) + " - GOV.UK" do %>
+
+  <%= render "govuk_publishing_components/components/skip_link" %>
+
+  <%= render "govuk_publishing_components/components/layout_header", {
+    environment: Rails.application.config.govuk_environment,
+    navigation_items: [], # TODO: add these
+  }%>
+
+  <div class="govuk-width-container">
+    <% if yield(:back_link).present? %>
+      <%= render "govuk_publishing_components/components/back_link", href: yield(:back_link) %>
+    <% end %>
+
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+      <% if flash["notice"] %>
+        <%= render "govuk_publishing_components/components/success_alert", {
+          message: flash["notice"]
+        } %>
+      <% end %>
+
+      <% if flash["alert"] %>
+        <%= render "govuk_publishing_components/components/error_alert", {
+          message: flash["alert"]
+        } %>
+      <% end %>
+
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <span class="govuk-caption-l"><%= yield(:context) %></span>
+          <h1 class="govuk-heading-l"><%= yield(:title) %></h1>
+        </div>
+      </div>
+      <%= yield %>
+    </main>
+  </div>
+
+  <%= render "govuk_publishing_components/components/layout_footer" %>
+  <%= javascript_include_tag "new_admin_layout" %>
+<% end %>
