@@ -23,7 +23,7 @@ class RootControllerTest < ActionController::TestCase
     assert_equal "SAMEORIGIN", response.header['X-Frame-Options']
   end
 
-  test "Your Applications should include apps you have permission to signin to" do
+  test "Your applications should include apps you have permission to signin to" do
     exclusive_app = create(:application, name: "Exclusive app")
     everybody_app = create(:application, name: "Everybody app")
     user = create(:user, with_permissions: { exclusive_app => [], everybody_app => %w[signin] })

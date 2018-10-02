@@ -12,9 +12,7 @@ class SuperAdminApplicationUsersTest < ActionDispatch::IntegrationTest
     end
 
     should "see all the users with access" do
-      within("ul.nav") do
-        click_link "Applications"
-      end
+      click_link "Apps"
 
       # Create a user that's authorized to use our app
       user = create(:user, name: "My Test User")
