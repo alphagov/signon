@@ -41,7 +41,23 @@
     </main>
   </div>
 
-  <%= render "govuk_publishing_components/components/layout_footer" %>
+  <%= render "govuk_publishing_components/components/layout_footer", {
+    navigation: [
+      {
+        title: "Support and feedback",
+        items: [
+          {
+            href: "https://support.publishing.service.gov.uk/",
+            text: "Raise a support request"
+          },
+          {
+            href: "https://www.gov.uk/government/content-publishing",
+            text: "How to write, publish, and improve content"
+          }
+        ]
+      }
+    ]
+  } %>
   <%= javascript_include_tag "new_admin_layout" %>
 
   <%# TODO: replace with component %>
