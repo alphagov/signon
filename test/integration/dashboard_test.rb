@@ -4,7 +4,9 @@ require 'test_helper'
 
 class DashboardTest < ActionDispatch::IntegrationTest
   should "notify the user if they've not been assigned any applications" do
-    user = create(:user)
+    app = create(:application, name: "MyApp", show_on_dashboard: false)
+    user = create(:user, with_signin_permissions_for: [app])
+
     visit root_path
     signin_with(user)
 
