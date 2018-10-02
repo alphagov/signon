@@ -51,9 +51,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
       should "require the code again on next login" do
         enter_2sv_code(@new_secret)
 
-        within("main") do
-          click_link "Sign out"
-        end
+        click_link "Sign out"
 
         signin_with(@user)
       end
