@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180131120100) do
+ActiveRecord::Schema.define(version: 20181002104116) do
 
   create_table "batch_invitation_application_permissions", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "batch_invitation_id", null: false
@@ -108,6 +108,7 @@ ActiveRecord::Schema.define(version: 20180131120100) do
     t.string "description"
     t.boolean "supports_push_updates", default: true
     t.boolean "retired", default: false
+    t.boolean "show_on_dashboard", default: true, null: false
     t.index ["name"], name: "unique_application_name", unique: true
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end

@@ -41,6 +41,7 @@ private
       :retired,
       :home_uri,
       :supports_push_updates,
+      :show_on_dashboard,
     )
   end
 end
