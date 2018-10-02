@@ -1,4 +1,6 @@
 class Devise::TwoStepVerificationSessionController < DeviseController
+  layout "admin_layout"
+
   before_action { |c| c.authenticate_user! force: true }
   skip_before_action :handle_two_step_verification
 
@@ -25,7 +27,7 @@ class Devise::TwoStepVerificationSessionController < DeviseController
       redirect_to_prior_flow
       current_user.update_attribute(:second_factor_attempts_count, 0)
     else
-      flash.now[:error] = find_message(:attempt_failed)
+      flash[:alert] = find_message(:attempt_failed)
       if current_user.max_2sv_login_attempts?
         sign_out(current_user)
         render :max_2sv_login_attempts_reached
