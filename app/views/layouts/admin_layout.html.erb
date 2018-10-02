@@ -10,7 +10,7 @@
 
   <%= render "govuk_publishing_components/components/layout_header", {
     environment: Rails.application.config.govuk_environment,
-    navigation_items: [], # TODO: add these
+    navigation_items: navigation_items,
   }%>
 
   <div class="govuk-width-container">
@@ -43,4 +43,21 @@
 
   <%= render "govuk_publishing_components/components/layout_footer" %>
   <%= javascript_include_tag "new_admin_layout" %>
+
+  <%# TODO: replace with component %>
+  <script class="analytics">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-26179049-6', '<%= ENV['GOVUK_APP_DOMAIN'] %>');
+    ga('set', 'anonymizeIp', true);
+
+    <% if current_user %>
+      ga('set', 'dimension8', "<%= current_user.organisation ? current_user.organisation.slug : '(not set)' %>");
+    <% end %>
+
+    ga('send', 'pageview');
+  </script>
 <% end %>

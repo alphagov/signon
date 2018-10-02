@@ -12,9 +12,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       @api_user = create(:api_user, with_permissions: { @application => %w[write] })
       create(:access_token, resource_owner_id: @api_user.id, application_id: @application.id)
 
-      within("ul.nav") do
-        click_link "API Users"
-      end
+      click_link "API Users"
     end
 
     should "be able to view a list of API users alongwith their authorised applications" do

@@ -8,7 +8,7 @@ class DashboardTest < ActionDispatch::IntegrationTest
     visit root_path
     signin_with(user)
 
-    assert_response_contains("Your Applications")
+    assert_response_contains("Your applications")
     assert_response_contains("You haven’t been assigned to any applications yet")
   end
 
