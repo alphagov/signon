@@ -1,40 +1,31 @@
 <% content_for :title, "2-step verification" %>
-<% content_for :thin_form, true %>
 <% content_for :suppress_navbar_items, true %>
 
-<div class="page-title">
-  <h1>Sign in</h1>
+<div class="govuk-grid-row govuk-!-margin-bottom-5">
+  <div class="govuk-grid-column-one-half">
+    <%= form_tag(two_step_verification_session_path, method: :post) do %>
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Your verification code"
+        },
+        name: "code",
+        autofocus: true,
+        tabindex: 0,
+        # TODO: disable autocomplete
+        hint: "Use the 6-digit verification app on your phone to get your code. You won’t need to do this again for 30 days."
+      } %>
+
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Sign in"
+      } %>
+    <% end %>
+  </div>
 </div>
 
-<%= form_tag(two_step_verification_session_path, :method => :post) do %>
-  <div class="panel panel-default" data-module="track-click">
-    <div class="panel-heading">
-      <h3 class="panel-title">2-step verification</h3>
-    </div>
-    <div class="panel-body">
-      <div class="form-group">
-        <%= label_tag :code, 'Verification code' %>
-        <p class="text-muted" id="code-hint">Use the verification app on your phone to get your code.<br />You won’t need to do this again for 30 days.</p>
-        <%= text_field_tag :code, nil,
-          class: 'form-control input-md-4 input-lg',
-          placeholder: 'Enter 6-digit code',
-          tabindex: 1,
-          autofocus: 'autofocus',
-          autocomplete: 'off',
-          'aria-describedby': 'code-hint' %>
-      </div>
-      <div data-module="toggle">
-        <%= link_to "Can’t get your verification code?", "#", class: "js-toggle js-toggle-target if-no-js-hide js-track" %>
-        <div class="js-toggle-target if-js-hide">
-          <h4>Contact <%= t('department.name') %></h4>
-          <p>If you can’t get your verification code, you’ll need to ask <%= link_to t('department.name'), t('department.url') %> to reset 2-step verification on your Signon account.</p>
-          <p>If you can’t do this yourself, you’ll need to contact a managing <%= link_to t('department.name'), t('department.url') %> editor in your organisation (or your parent organisation). They can raise a <%= link_to "support ticket", "#{t('department.url')}support/internal/" %> on your behalf.</p>
-          <p><%= link_to t('department.name'), t('department.url') %> is only able to respond to these requests 9am to 5pm, Monday to Friday.</p>
-        </div>
-      </div>
-    </div>
-    <div class="panel-footer">
-      <%= submit_tag "Sign in", tabindex: 2, class: 'btn btn-success btn-lg btn-block js-track' %>
-    </div>
-  </div>
+<%= render "govuk_publishing_components/components/details", {
+  title: "Can’t get your verification code?"
+} do %>
+  <p>If you can’t get your verification code, you’ll need to ask <%= link_to t('department.name'), t('department.url') %> to reset 2-step verification on your Signon account.</p>
+  <p>If you can’t do this yourself, you’ll need to contact a managing <%= link_to t('department.name'), t('department.url') %> editor in your organisation (or your parent organisation). They can raise a <%= link_to "support ticket", "#{t('department.url')}support/internal/" %> on your behalf.</p>
+  <p><%= link_to t('department.name'), t('department.url') %> is only able to respond to these requests 9am to 5pm, Monday to Friday.</p>
 <% end %>
