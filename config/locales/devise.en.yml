@@ -32,8 +32,6 @@ en:
       updated: 'Your password was changed successfully.'
       updated_not_active: 'Your password was changed successfully.'
       send_paranoid_instructions: "If your email address is recognised, you’ll receive an email with instructions about how to reset your password."
-      new:
-        send_password_reset: "Send me password reset instructions"
     confirmations:
       send_instructions: 'You will receive an email with instructions about how to confirm your account in a few minutes.'
       send_paranoid_instructions: 'If your email exists on our database, you will receive an email with instructions about how to confirm your account in a few minutes.'
