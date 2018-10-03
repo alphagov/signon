@@ -60,10 +60,3 @@ en:
         subject: 'Reset password instructions'
       unlock_instructions:
         subject: 'Your %{app_name} account has been locked'
-    links:
-      signup: "Sign up"
-      signin: "Sign in"
-      forgot_password: 'Forgot your password?'
-      no_confirmation_instructions: "Didn't receive confirmation instructions?"
-      no_unlock_instructions: "Didn't receive unlock instructions?"
-      signin_with_omniauth: "Sign in with %{provider}"
