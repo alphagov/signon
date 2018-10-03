@@ -1,19 +1,23 @@
-<% content_for :title, "Request a password reset" %>
+<% content_for :title, "Forgot your password?" %>
 <% content_for :back_link, new_session_path(resource_name) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-half">
+    <p class="govuk-body">
+      We'll send you an email to create a new password.
+    </p>
+
     <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
       <%= render "govuk_publishing_components/components/input", {
         label: {
-          text: "Email"
+          text: "Email address"
         },
         name: "user[email]",
         type: "email"
       } %>
 
       <%= render "govuk_publishing_components/components/button", {
-        text: t("devise.passwords.new.send_password_reset")
+        text: "Send email"
       } %>
     <% end %>
   </div>

@@ -43,8 +43,8 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
   test "record password reset request" do
     visit root_path
     click_on "Forgot your password?"
-    fill_in "Email", with: @user.email
-    click_on "Send me password reset instructions"
+    fill_in "Email address", with: @user.email
+    click_on "Send email"
 
     assert_equal EventLog::PASSWORD_RESET_REQUEST, @user.event_logs.first.entry
   end

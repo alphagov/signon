@@ -18,8 +18,8 @@ module PasswordSupport
 
   def trigger_reset_for(email)
     visit new_user_password_path
-    fill_in "Email", with: email
-    click_button "Send me password reset instructions"
+    fill_in "Email address", with: email
+    click_button "Send email"
   end
 
   def complete_password_reset(email, options)

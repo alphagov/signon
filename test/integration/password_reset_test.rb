@@ -109,7 +109,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
 
     # partially signed-in user should be able to reset password using link in reset password instructions
     click_link 'Forgot your password?'
-    assert_response_contains("Request a password reset")
+    assert_response_contains("We'll send you an email to create a new password.")
   end
 
   should "show error messages when password reset doesn't work" do
