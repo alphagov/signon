@@ -1,11 +1,16 @@
-<% content_for :title, "Password reset" %>
+<% content_for :title, "Sorry, this link doesn't work" %>
+<% content_for :back_link, new_session_path(resource_name) %>
 
-<div class="page-title">
-  <h1>Password reset</h1>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body">
+      This link to set a new password doesn't work. It may be that the link you
+      were using has expired or was invalid.
+    </p>
+
+    <%= render "govuk_publishing_components/components/button", {
+      text: "Try again",
+      href: new_user_password_path
+    } %>
+  </div>
 </div>
-
-<% info_message = 'That password reset didn’t work. It may be that the link you were using has expired or was invalid.' %>
-<%= content_tag :div, class: "alert alert-warning", data: track_analytics_data(:danger, info_message) do %>
-  <p><%= info_message %></p>
-  <p class="add-top-margin"><%= link_to 'Try again', new_user_password_path, class: 'btn btn-default' %></p>
-<% end %>

@@ -9,7 +9,7 @@ class PasswordsController < Devise::PasswordsController
     user = user_from_params
     unless user && user.reset_password_period_valid?
       record_reset_page_loaded_token_expired
-      render 'devise/passwords/reset_error'
+      render 'devise/passwords/reset_error', layout: "admin_layout"
     end
   end
 
