@@ -73,7 +73,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
 
       current_email.click_link("Change my password")
 
-      assert_response_contains("That password reset didn’t work.")
+      assert_response_contains("Sorry, this link doesn't work")
     end
   end
 
