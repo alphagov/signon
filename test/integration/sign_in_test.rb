@@ -9,7 +9,7 @@ class SignInTest < ActionDispatch::IntegrationTest
   should "display a confirmation for successful sign-ins" do
     visit root_path
     signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
-    assert_response_contains("Signed in successfully.")
+    assert_user_is_signed_in
   end
 
   should "send a GA event including the users org slug when successfully signed-in" do
@@ -71,7 +71,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
     visit root_path
     signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
-    assert_response_contains("Signed in successfully.")
+    assert_user_is_signed_in
   end
 
   should "not accept the login with an invalid CSRF token" do
@@ -90,7 +90,7 @@ class SignInTest < ActionDispatch::IntegrationTest
   should "not remotely sign out user when visiting with an expired session cookie" do
     visit root_path
     signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
-    assert_response_contains("Signed in successfully.")
+    assert_user_is_signed_in
 
     ReauthEnforcer.expects(:perform_on).never
 
@@ -98,7 +98,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
     visit root_path
     signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
-    assert_response_contains("Signed in successfully.")
+    assert_user_is_signed_in
   end
 
   context "with a 2SV secret key" do
@@ -116,13 +116,13 @@ class SignInTest < ActionDispatch::IntegrationTest
     should "not prompt for a verification code twice per browser in 30 days" do
       visit root_path
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
-      assert_response_contains "Your applications"
+      assert_user_is_signed_in
 
       signout
       visit root_path
 
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
-      assert_response_contains "Your applications"
+      assert_user_is_signed_in
 
       signout
       visit root_path
@@ -130,7 +130,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       Timecop.travel(30.days.from_now + 1) do
         visit root_path
         signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
-        assert_response_contains "Your applications"
+        assert_user_is_signed_in
       end
     end
 
@@ -145,8 +145,7 @@ class SignInTest < ActionDispatch::IntegrationTest
     should "allow access with a correctly-generated code" do
       visit root_path
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
-      assert_response_contains "Your applications"
-      assert_response_contains "Signed in successfully"
+      assert_user_is_signed_in
       assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_VERIFIED.id, uid: @user.uid).count
     end
 
@@ -230,7 +229,7 @@ class SignInTest < ActionDispatch::IntegrationTest
     should "not remember a user's 2SV session if they've changed 2SV secret" do
       visit root_path
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
-      assert_response_contains "Your applications"
+      assert_user_is_signed_in
 
       signout
       visit root_path
@@ -245,7 +244,7 @@ class SignInTest < ActionDispatch::IntegrationTest
     should "not prevent login if 2SV is disabled for user with a remembered session" do
       visit root_path
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
-      assert_response_contains "Your applications"
+      assert_user_is_signed_in
 
       signout
       visit root_path
@@ -253,7 +252,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       @user.update_attribute(:otp_secret_key, nil)
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
 
-      assert_response_contains "Signed in successfully"
+      assert_user_is_signed_in
     end
 
     should "allow the user to cancel 2SV by signing out" do
@@ -274,5 +273,9 @@ class SignInTest < ActionDispatch::IntegrationTest
     signout
     visit new_two_step_verification_session_path
     assert_equal "/users/sign_in", page.current_path
+  end
+
+  def assert_user_is_signed_in
+    assert_response_contains "Your applications"
   end
 end

@@ -25,7 +25,7 @@ en:
       inactive: 'Your account was not activated yet.'
       suspended: "Your account has been suspended."
     sessions:
-      signed_in: 'Signed in successfully.'
+      signed_in: ""
       signed_out: 'Signed out successfully.'
     passwords:
       send_instructions: 'You will receive an email with instructions about how to reset your password in a few minutes.'

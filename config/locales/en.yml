@@ -43,5 +43,5 @@ en:
           change: "2-step verification phone changed successfully"
           setup: "2-step verification set up"
     two_step_verification_session:
-      success: "Signed in successfully."
+      success: ""
       attempt_failed: "Sorry, that code didn’t work."
