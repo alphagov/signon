@@ -1,6 +1,8 @@
 # Copied from
 # https://github.com/plataformatec/devise/blob/v2.1.2/app/controllers/devise/confirmations_controller.rb#L19
 class ConfirmationsController < Devise::ConfirmationsController
+  layout "admin_layout"
+
   def new
     handle_new_token_needed
   end
@@ -9,7 +11,7 @@ class ConfirmationsController < Devise::ConfirmationsController
     handle_new_token_needed
   end
 
-  # GET /resource/confirmation?confirmation_token=abcdef
+  # GET /users/confirmation?confirmation_token=abcdef
   def show
     if user_signed_in?
       if confirmation_user.persisted? && (current_user.email != confirmation_user.email)

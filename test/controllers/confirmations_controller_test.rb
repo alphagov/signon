@@ -39,7 +39,7 @@ class ConfirmationsControllerTest < ActionController::TestCase
 
       should "render a form" do
         get :show, params: { confirmation_token: @confirmation_token }
-        assert_select "input#user_password"
+        assert_select "input[name='user[password]']"
         assert_select "input[type=hidden][name=confirmation_token][value=?]", @confirmation_token
       end
     end
