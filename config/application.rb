@@ -66,17 +66,5 @@ module Signon
     config.active_job.queue_adapter = :sidekiq
 
     config.middleware.insert_before 0, SameSiteSecurity::Middleware
-
-    # TODO: replace by https://github.com/alphagov/govuk_publishing_components/pull/548
-    #
-    # The "acceptance environment" we're in - not the same as Rails env.
-    # Can be production, staging, integration, or development
-    govuk_environments = {
-      "production" => "production",
-      "staging" => "staging",
-      "integration-blue-aws" => "integration",
-    }
-
-    config.govuk_environment = govuk_environments.fetch(ENV["ERRBIT_ENVIRONMENT_NAME"], "development")
   end
 end
