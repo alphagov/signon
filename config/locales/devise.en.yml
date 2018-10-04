@@ -14,7 +14,7 @@ en:
 
   devise:
     failure:
-      already_authenticated: 'You are already signed in.'
+      already_authenticated: ""
       unauthenticated: ""
       unconfirmed: 'You have to confirm your account before continuing.'
       locked: 'Invalid email or password. Entering an incorrect password 6 times will lock your account and you will be sent an email to reset it.'

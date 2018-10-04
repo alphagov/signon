@@ -14,7 +14,7 @@ class SessionTimeoutTest < ActionDispatch::IntegrationTest
     end
 
     visit "/users/sign_in"
-    refute_response_contains "You are already signed in"
+
     assert_response_contains "Sign in"
   end
 end
