@@ -1,22 +1,19 @@
 <% content_for :title, "Organisations" %>
-<h1 class="page-title">Organisations</h1>
-<table class="table table-striped table-bordered">
-  <thead>
-    <tr class="table-header">
-      <th>Name</th>
-      <th>Abbreviation</th>
-      <th>Organisation Type</th>
-      <th>Slug</th>
-    </tr>
-  </thead>
-  <tbody>
+
+<%= GovukPublishingComponents::AppHelpers::TableHelper.helper(self, "Applications", { caption_classes: "govuk-visually-hidden" }) do |t| %>
+  <%= t.head do %>
+    <%= t.header "Name" %>
+    <%= t.header "Organisation Type" %>
+    <%= t.header "Slug" %>
+  <% end %>
+
+  <%= t.body do %>
     <% @organisations.each do |organisation| %>
-      <tr>
-        <td><%= organisation.name %></td>
-        <td><%= organisation.abbreviation %></td>
-        <td><%= organisation.organisation_type %></td>
-        <td><%= organisation.slug %></td>
-      </tr>
+      <%= t.row do %>
+        <%= t.cell "#{organisation.name} (#{organisation.abbreviation})" %>
+        <%= t.cell organisation.organisation_type %>
+        <%= t.cell organisation.slug %>
+      <% end %>
     <% end %>
-  </tbody>
-</table>
+  <% end %>
+<% end %>
