@@ -12,7 +12,7 @@ class SignOutTest < ActionDispatch::IntegrationTest
 
     click_link "Sign out"
 
-    assert_response_contains("Signed out successfully.")
+    assert_response_contains("Sign in to GOV.UK")
   end
 
   should "not blow up if not already signed in" do
