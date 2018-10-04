@@ -1,30 +1,16 @@
-<% content_for :title, "Single Signon applications" %>
-<div class="page-title">
-  <h1>Single Signon Applications</h1>
-</div>
-<table class="table table-striped table-bordered">
-  <thead>
-    <tr class="table-header">
-      <th scope="col">Name</th>
-      <th scope="col">Home URI</th>
-      <th scope="col">Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @applications.each do |application| %>
-      <tr>
-        <td>
-          <% if application.retired? %>
-            <del><%= link_to application.name, edit_doorkeeper_application_path(application) %> (retired)</del>
-          <% else %>
-            <%= link_to application.name, edit_doorkeeper_application_path(application) %>
-          <% end %>
-          <br>
-          <%= application.description %>
-        </td>
-        <td><%= link_to_if application.home_uri, application.home_uri, application.home_uri %></td>
-        <td><%= link_to "Edit", edit_doorkeeper_application_path(application) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<% content_for :title, "Applications" %>
+
+<%= render "govuk_publishing_components/components/tabs", {
+  tabs: [
+    {
+      id: "active",
+      label: "Active applications",
+      content: render("application_list", applications: @applications.reject(&:retired?))
+    },
+    {
+      id: "retired",
+      label: "Retired applications",
+      content: render("application_list", applications: @applications.select(&:retired?))
+    }
+  ]
+} %>
