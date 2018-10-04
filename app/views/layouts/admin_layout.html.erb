@@ -20,7 +20,7 @@
     <% end %>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
-      <% if flash["notice"] %>
+      <% if flash["notice"].present? %>
         <%= render "govuk_publishing_components/components/success_alert", {
           message: flash["notice"]
         } %>
