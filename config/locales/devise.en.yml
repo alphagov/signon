@@ -14,7 +14,7 @@ en:
 
   devise:
     failure:
-      already_authenticated: 'You are already signed in.'
+      already_authenticated: ""
       unauthenticated: ""
       unconfirmed: 'You have to confirm your account before continuing.'
       locked: 'Invalid email or password. Entering an incorrect password 6 times will lock your account and you will be sent an email to reset it.'
@@ -26,7 +26,7 @@ en:
       suspended: "Your account has been suspended."
     sessions:
       signed_in: ""
-      signed_out: 'Signed out successfully.'
+      signed_out: ""
     passwords:
       send_instructions: 'You will receive an email with instructions about how to reset your password in a few minutes.'
       updated: 'Your password was changed successfully.'

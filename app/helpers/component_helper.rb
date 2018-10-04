@@ -11,7 +11,7 @@ module ComponentHelper
       end
 
       if policy(ApiUser).index?
-        items << { text: 'API Users', href: api_users_path, active: is_current?(users_path) }
+        items << { text: 'APIs', href: api_users_path, active: is_current?(users_path) }
       end
 
       if policy(Doorkeeper::Application).index?
@@ -19,7 +19,7 @@ module ComponentHelper
       end
 
       if policy(Organisation).index?
-        items << { text: 'Organisations', href: organisations_path, active: is_current?(users_path) }
+        items << { text: 'Orgs', href: organisations_path, active: is_current?(users_path) }
       end
     end
 

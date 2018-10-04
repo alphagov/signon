@@ -260,7 +260,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
       click_link "Sign out"
 
-      assert_text "Signed out successfully."
+      assert_text "Sign in to GOV.UK"
     end
   end
 
