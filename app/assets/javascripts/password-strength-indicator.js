@@ -1,5 +1,4 @@
 //= require zxcvbn
-//= require jquery-debounce
 
 (function() {
   "use strict"
@@ -17,7 +16,7 @@
             passwordConfirmation = $(options["password_confirmation_field"]).val();
         instance.updateIndicator(password, passwordConfirmation, options);
       };
-      $(password_field).debounce("keyup", update, 50);
+      $(password_field).on("input", update);
     });
 
     $(options["password_strength_guidance"]).attr("aria-live", "polite").attr("aria-atomic", "true");
