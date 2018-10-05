@@ -22,3 +22,49 @@
 .govuk-footer__heading {
   display: none;
 }
+
+.govuk-input[disabled] {
+  background: #dee0e2;
+}
+
+.app-button--no-margin {
+  margin: 0;
+}
+
+.app-link--inline {
+  display: inline-block;
+  padding: 7px 10px;
+}
+
+.govuk-error-message p {
+  margin: 0;
+}
+
+.app-error-message--validation {
+  display: none;
+}
+
+.govuk-error-summary {
+  li {
+    color: #b10e1e;
+    font-weight: bold;
+  }
+}
+
+// TODO: replace IDs with `js-` prefixed classes as JavaScript selectors
+.not-strong-enough #password-guidance,
+.not-strong-enough #password-entropy,
+.password-too-short #password-guidance,
+.password-too-short #password-too-short,
+.parts-of-email #password-guidance,
+.parts-of-email #parts-of-email,
+.confirmation-not-matching #password-confirmation-guidance {
+  display: block;
+}
+
+#password-entropy,
+#password-too-short,
+#parts-of-email,
+#password-confirmation-guidance {
+  display: none;
+}

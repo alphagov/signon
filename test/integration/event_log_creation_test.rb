@@ -69,7 +69,7 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     token_received_in_email = @user.send_reset_password_instructions
     visit edit_user_password_path(reset_password_token: token_received_in_email)
 
-    click_on "Change password"
+    click_on "Save password"
     event_log = @user.event_logs.first
 
     assert_equal EventLog::PASSWORD_RESET_FAILURE, event_log.entry
@@ -83,7 +83,7 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     new_password = "diagram donkey doodle"
     fill_in "New password", with: new_password
     fill_in "Confirm new password", with: new_password
-    click_on "Change password"
+    click_on "Save password"
 
     assert_includes @user.event_logs.map(&:entry), EventLog::SUCCESSFUL_PASSWORD_RESET
   end

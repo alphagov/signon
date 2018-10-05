@@ -1,9 +1,11 @@
 <% if @user.errors.count > 0 %>
-  <div class="alert alert-danger">
-    <ul>
+<div class="govuk-error-summary alert alert-danger" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+  <div class="govuk-error-summary__body">
+    <ul class="govuk-list govuk-error-summary__list">
       <% @user.errors.full_messages.each do |message| %>
         <%= content_tag :li, message, data: track_analytics_data(:danger, message) %>
       <% end %>
     </ul>
   </div>
+</div>
 <% end %>

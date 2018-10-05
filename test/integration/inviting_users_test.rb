@@ -10,7 +10,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
     fill_in "New password", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
     fill_in "Confirm new password", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
-    click_button "Set my password"
+    click_button "Save password"
 
     assert_response_contains("You are now signed in")
   end

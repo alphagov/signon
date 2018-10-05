@@ -3,6 +3,8 @@ require 'csv'
 class UsersController < ApplicationController
   include UserPermissionsControllerMethods
 
+  layout 'admin_layout', only: %w(edit_email_or_password)
+
   before_action :authenticate_user!, except: :show
   before_action :load_and_authorize_user, except: %i[index show]
   before_action :allow_no_application_access, only: [:update]
@@ -92,14 +94,13 @@ class UsersController < ApplicationController
     new_email = params[:user][:email]
     if current_email == new_email.strip
       flash[:alert] = "Nothing to update."
-      render :edit_email_or_password
+      render :edit_email_or_password, layout: "admin_layout"
     elsif @user.update_attributes(email: new_email)
       EventLog.record_email_change(@user, current_email, new_email)
       UserMailer.email_changed_notification(@user).deliver_later
       redirect_to root_path, notice: "An email has been sent to #{new_email}. Follow the link in the email to update your address."
     else
-      flash[:alert] = "Failed to change email."
-      render :edit_email_or_password
+      render :edit_email_or_password, layout: "admin_layout"
     end
   end
 
@@ -111,7 +112,7 @@ class UsersController < ApplicationController
       redirect_to root_path
     else
       EventLog.record_event(@user, EventLog::UNSUCCESSFUL_PASSWORD_CHANGE)
-      render :edit_email_or_password
+      render :edit_email_or_password, layout: "admin_layout"
     end
   end
 

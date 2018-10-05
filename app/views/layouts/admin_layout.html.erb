@@ -60,6 +60,7 @@
     ]
   } %>
   <%= javascript_include_tag "new_admin_layout" %>
+  <%= yield :optional_javascripts if content_for?(:optional_javascripts) %>
 
   <%# TODO: replace with component %>
   <script class="analytics">

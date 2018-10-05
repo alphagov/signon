@@ -82,7 +82,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         visit new_user_session_path
         signin_with(@admin)
         visit edit_user_path(user)
-        click_link "Cancel email change"
+        click_link "Cancel change"
         signout
 
         visit user_confirmation_path(confirmation_token: confirmation_token)
@@ -159,7 +159,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       confirmation_token = token_sent_to(@user)
 
       click_link "Change your email or password"
-      click_link "Cancel email change"
+      click_link "Cancel change"
       signout
 
       visit user_confirmation_path(confirmation_token: confirmation_token)
