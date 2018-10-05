@@ -1,28 +1,26 @@
-<% content_for :title, "Confirm account email changes" %>
+<% content_for :title, "Confirm change of email address" %>
 
-<h1>Confirm account email changes</h1>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body">
+      Please enter your password to confirm the change of email address from
+      <strong><%= resource.email %></strong> to <strong><%= resource.unconfirmed_email %></strong>.
+    </p>
 
-<div class="alert alert-info">
-  For security, we need you to enter your password before your account email can be changed.
+    <%= form_for resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :put, class: 'well'} do |f| %>
+      <%= hidden_field_tag :confirmation_token, params[:confirmation_token] %>
+
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Your password"
+        },
+        name: "user[password]",
+        type: "password"
+      } %>
+
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Confirm change"
+      } %>
+    <% end %>
+  </div>
 </div>
-
-<%= form_for resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :put, class: 'well'} do |f| %>
-  <%= hidden_field_tag :confirmation_token, params[:confirmation_token] %>
-
-  <p>
-    <%= f.label :email, "Current email" %>
-    <%= f.text_field :email, disabled: "disabled", readonly: "readonly", class: 'form-control input-md-5' %>
-  </p>
-  <p>
-    <%= f.label :unconfirmed_email, "New email" %>
-    <%= f.text_field :unconfirmed_email, disabled: "disabled", readonly: "readonly", class: 'form-control input-md-5' %>
-  </p>
-  <p>
-    <%= f.label :password, "Password" %>
-    <%= f.password_field :password, required: "required", class: 'form-control input-md-5' %>
-  </p>
-
-  <hr>
-
-  <%= f.submit "Confirm email change", class: "btn btn-primary" %>
-<% end %>
