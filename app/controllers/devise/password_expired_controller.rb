@@ -1,4 +1,6 @@
 class Devise::PasswordExpiredController < DeviseController
+  layout "admin_layout"
+
   skip_before_action :handle_password_change
   before_action :skip_password_change, only: %i[show update]
   prepend_before_action :authenticate_scope!, only: %i[show update]

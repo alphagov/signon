@@ -8,7 +8,7 @@ module UserAccountOperations
     visit accept_user_invitation_path(invitation_token: options[:invitation_token])
     fill_in "New password", with: options[:password]
     fill_in "Confirm new password", with: options[:password]
-    click_button "Set my password"
+    click_button "Save password"
   end
 
   # usage: confirm_email_change(password: "<new password>", confirmation_token: "<token>")

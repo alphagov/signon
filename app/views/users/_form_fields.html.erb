@@ -19,8 +19,8 @@
     <%= f.text_field :unconfirmed_email, readonly: "readonly", disabled: "disabled", class: 'form-control' %>
 
     <div class="help-block add-bottom-margin">
-      <%= link_to "Resend email change", resend_email_change_user_path(f.object), :method => :put, :class => "btn btn-primary add-right-margin" %>
-      <%= link_to "Cancel email change", cancel_email_change_user_path(f.object), :method => :delete, :class => "btn btn-danger" %>
+      <%= link_to "Resend confirmation email", resend_email_change_user_path(f.object), :method => :put, :class => "btn btn-primary add-right-margin" %>
+      <%= link_to "Cancel change", cancel_email_change_user_path(f.object), :method => :delete, :class => "btn btn-danger" %>
     </div>
   </p>
 <% end %>

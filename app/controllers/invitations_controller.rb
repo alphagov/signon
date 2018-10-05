@@ -2,6 +2,7 @@
 class InvitationsController < Devise::InvitationsController
   before_action :authenticate_user!
   after_action :verify_authorized, except: %i[edit update]
+  layout "admin_layout", only: %i[edit update]
 
   include UserPermissionsControllerMethods
   helper_method :applications_and_permissions

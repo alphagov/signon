@@ -1,19 +1,11 @@
 <% content_for :title, "Change your password" %>
 
-<ol class="breadcrumb">
-  <li><%= render "links" %></li>
-  <li class="active">Change your password</li>
-</ol>
-
-<div class="page-title">
-  <h1>Change your password</h1>
-</div>
-
-<div class="well">
-  <%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :put }) do |f| %>
-    <%= f.hidden_field :reset_password_token %>
-
-    <%= render partial: "devise/passwords/change_password_errors" %>
-    <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: resource } %>
-  <% end %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+      <%= f.hidden_field :reset_password_token %>
+      <%= render partial: "devise/passwords/change_password_errors" %>
+      <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: resource } %>
+    <% end %>
+  </div>
 </div>

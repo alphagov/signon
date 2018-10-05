@@ -75,27 +75,25 @@ class PasswordChangeTest < ActionDispatch::IntegrationTest
       refute_response_contains("The new password")
 
       fill_in "New password", with: "abcde"
-      assert_response_contains("Your new password")
-      assert_response_contains("Must be at least 10 characters")
+      assert_response_contains("Your password must be at least 10 characters")
 
       fill_in "New password", with: "very weak password"
-      refute_response_contains("Must be at least 10 characters")
-      assert_response_contains("Must be more complex")
+      refute_response_contains("Your password must be at least 10 characters")
+      assert_response_contains("Your password must be more complex")
 
       fill_in "New password", with: "janeuser11"
-      assert_response_contains("Shouldn’t include part or all of your email address")
-      assert_response_contains("Must be more complex")
+      assert_response_contains("Your password shouldn’t include part or all of your email address")
+      assert_response_contains("Your password must be more complex")
 
       fill_in "New password", with: "stronger password purple monkey dishwasher"
-      refute_response_contains("Must be more complex")
-      refute_response_contains("Your new password")
+      refute_response_contains("Your password must be more complex")
 
       fill_in "Confirm new password", with: "stronger password"
-      assert_response_contains("confirmation must match the password")
+      assert_response_contains("The confirmation must match the new password")
       fill_in "Confirm new password", with: "stronger password purple monkey dishwasher"
-      refute_response_contains("confirmation must match the password")
+      refute_response_contains("The confirmation must match the new password")
 
-      click_button "Change password"
+      click_button "Save password"
 
       assert_response_contains("Your password was changed successfully")
     end

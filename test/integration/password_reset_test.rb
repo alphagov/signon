@@ -122,7 +122,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
       current_email.click_link("Change my password")
       fill_in "New password", with: "A Password"
       fill_in "Confirm new password", with: "Not That Password"
-      click_button "Change password"
+      click_button "Save password"
 
       assert_response_contains("Password confirmation doesn't match")
     end

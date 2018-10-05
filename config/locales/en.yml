@@ -18,8 +18,8 @@ en:
 
   users:
     edit:
-      change: "Change password"
-      set_password: "Set my password"
+      change: "Save password"
+      set_password: "Save password"
     edit_email_or_password:
       change_password: "Change your password"
 
