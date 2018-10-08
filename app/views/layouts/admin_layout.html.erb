@@ -3,8 +3,9 @@
 <% end %>
 
 <%= render 'govuk_publishing_components/components/layout_for_admin',
+  product_name: "Signon",
   environment: GovukPublishingComponents::AppHelpers::Environment.current_acceptance_environment,
-  browser_title: yield(:title) + " - GOV.UK" do %>
+  browser_title: yield(:title) do %>
 
   <%= render "govuk_publishing_components/components/skip_link" %>
 
