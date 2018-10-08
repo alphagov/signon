@@ -1,95 +1,115 @@
-<% content_for :title, "Edit application" %>
+<% content_for :title, "Edit ‘#{@application.name}’" %>
+<% content_for :back_link, doorkeeper_applications_path %>
 
-<ol class="breadcrumb">
-  <li><%= link_to 'Applications', doorkeeper_applications_path %></li>
-  <li class="active"><%= @application.name %></li>
-</ol>
+<%= link_to "Users with access",
+  users_with_access_doorkeeper_application_path(@application),
+  class: "govuk-link" %>
 
-<div class="page-title">
-  <h1>Edit application &ldquo;<%= @application.name %>&rdquo;</h1>
+<%= link_to "Edit supported permissions",
+  doorkeeper_application_supported_permissions_path(@application),
+  class: "govuk-link" %>
+
+<div class="govuk-grid-row govuk-!-margin-top-5">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @application do |f| %>
+      <% if @application.errors.count > 0 %>
+        <div class="alert alert-danger remove-bottom-margin">
+          <ul>
+            <% @application.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Application name",
+        },
+        name: "doorkeeper_application[name]",
+        type: "text",
+        value: @application.name,
+      } %>
+
+
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Application description"
+        },
+        name: "doorkeeper_application[description]",
+        type: "text",
+        value: @application.description,
+      } %>
+
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Application home URL"
+        },
+        name: "doorkeeper_application[home_uri]",
+        type: "text",
+        hint: "Used to link to the app on the dashboard",
+        value: @application.home_uri,
+      } %>
+
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Redirect URI"
+        },
+        name: "doorkeeper_application[redirect_uri]",
+        type: "text",
+        hint: "The app should expect this URI. Used in the signin redirect dance.",
+        value: @application.redirect_uri,
+      } %>
+
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "UID"
+        },
+        name: "doorkeeper_application[uid]",
+        type: "text",
+        hint: "The app has a copy of this. Used in the signin redirect dance.",
+        value: @application.uid,
+      } %>
+
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Secret"
+        },
+        name: "doorkeeper_application[secret]",
+        type: "text",
+        hint: "The app has a copy of this. Used in the signin redirect dance.",
+        value: @application.secret,
+      } %>
+
+      <%# TODO: use a checkbox component for this %>
+
+      <div class="govuk-body">
+        <label>
+          <%= f.check_box :supports_push_updates %> Send push updates to this app
+        </label>
+      </div>
+
+      <div class="govuk-body">
+        <label>
+          <%= f.check_box :show_on_dashboard %> Show on dashboard
+        </label>
+      </div>
+
+      <div class="govuk-body">
+        <label>
+          <%= f.check_box :retired %> This application is retired
+        </label>
+
+        <p>
+          Retiring an application will hide the application from the dashboard. It will
+          not delete data. If you're retiring an app you should also disable push updates.
+        </p>
+      </div>
+
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Save",
+        margin_bottom: true
+      } %>
+    <% end %>
+  </div>
 </div>
-
-<p>
-  <%= link_to "Users with access", users_with_access_doorkeeper_application_path(@application) %>
-</p>
-
-<%= form_for @application, :html => {:class => 'well'} do |f| %>
-
-  <% if @application.errors.count > 0 %>
-    <div class="alert alert-danger remove-bottom-margin">
-      <ul>
-        <% @application.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <p class="form-group">
-    <%= f.label :name %>
-    <%= f.text_field :name, required: "required", class: 'form-control input-md-6' %>
-    <span class="help-block">Shown on the Signon homepage.</span>
-  </p>
-
-  <p class="form-group">
-    <%= f.label :description %>
-    <%= f.text_field :description, required: "required", class: 'form-control input-md-6' %>
-    <span class="help-block">Shown on the Signon homepage.</span>
-  </p>
-
-  <p class="form-group">
-    <%= f.label :home_uri, "Home URI" %>
-    <%= f.text_field :home_uri, required: "required", class: 'form-control input-md-6' %>
-    <span class="help-block">Used to link to the app on the Signon homepage.</span>
-  </p>
-
-  <p class="form-group">
-    <%= f.label :redirect_uri, "Redirect URI" %>
-    <%= f.text_field :redirect_uri, required: "required", class: 'form-control input-md-6' %>
-    <span class="help-block">The app should expect this URI. Used in the signin redirect dance.</span>
-  </p>
-
-  <p class="form-group">
-    <%= f.label :uid, "UID" %>
-    <%= f.text_field :uid, required: "required", class: 'form-control input-md-6' %>
-    <span class="help-block">The app has a copy of this. Used in the signin redirect dance.</span>
-  </p>
-
-  <p class="form-group">
-    <%= f.label :secret %>
-    <%= f.text_field :secret, required: "required", class: 'form-control input-md-6' %>
-    <span class="help-block">The app has a copy of this. Used in the signin redirect dance.</span>
-  </p>
-
-  <p class="checkbox">
-    <label>
-      <%= f.check_box :supports_push_updates %> Send push updates to this app
-    </label>
-  </p>
-
-  <p class="checkbox">
-    <label>
-      <%= f.check_box :show_on_dashboard %> Show on dashboard
-    </label>
-  </p>
-
-  <p class="checkbox">
-    <label>
-      <%= f.check_box :retired %> This application is retired
-    </label>
-    <span class="help-block">
-      Retiring an application will hide the application from the dashboard. It will
-      not delete data. If you're retiring an app you should also disable push updates.
-    </span>
-  </p>
-
-  <% if policy(Doorkeeper::Application).edit? %>
-    <hr />
-    <p class="add-top-margin">
-      <%= link_to "Edit supported permissions", doorkeeper_application_supported_permissions_path(@application) %>
-    </p>
-    <hr />
-  <% end %>
-
-  <%= f.submit :class => 'btn btn-primary' %>
-<% end %>

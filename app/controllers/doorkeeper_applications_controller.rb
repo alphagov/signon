@@ -4,7 +4,7 @@ class DoorkeeperApplicationsController < ApplicationController
 
   respond_to :html
 
-  layout "admin_layout", only: %w[index]
+  layout "admin_layout", only: %w[index edit update]
 
   def index
     authorize Doorkeeper::Application

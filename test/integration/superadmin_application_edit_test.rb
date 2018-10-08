@@ -24,7 +24,7 @@ class SuperAdminApplicationEditTest < ActionDispatch::IntegrationTest
       # edit application, enable sso push updates
       assert page.has_unchecked_field?("Send push updates to this app")
       check "Send push updates to this app"
-      click_button "Update Application"
+      click_button "Save"
 
       click_link @application.name
       assert page.has_checked_field?("Send push updates to this app")
@@ -44,7 +44,7 @@ class SuperAdminApplicationEditTest < ActionDispatch::IntegrationTest
       # edit application, disable sso push updates
       assert page.has_checked_field?("Send push updates to this app")
       uncheck "Send push updates to this app"
-      click_button "Update Application"
+      click_button "Save"
 
       click_link @application.name
       assert page.has_unchecked_field?("Send push updates to this app")
@@ -62,7 +62,7 @@ class SuperAdminApplicationEditTest < ActionDispatch::IntegrationTest
 
       refute page.has_checked_field?("This application is retired")
       check "This application is retired"
-      click_button "Update Application"
+      click_button "Save"
 
       click_link @application.name
 
