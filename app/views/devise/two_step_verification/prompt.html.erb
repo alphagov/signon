@@ -1,17 +1,8 @@
 <% content_for :title, "Make your account more secure" %>
-<% content_for :thin_form, true %>
 <% content_for :suppress_navbar_items, true %>
 
-<div class="page-title">
-  <h1>Make your account more secure</h1>
-</div>
-
-<div class="panel panel-default">
-  <div class="panel-body">
-    <p class="lead">Make your signon account more secure by setting up 2&#8209;step verification. You’ll need to install an app on your phone which will generate a security code to enter when you sign in.</p>
-    <p class="lead remove-bottom-margin">Set up takes about 5 minutes.</p>
-  </div>
-  <div class="panel-footer" data-module="track-click">
-    <%= link_to 'Start set up', two_step_verification_path, class: 'btn btn-success btn-lg js-track', "data-track-label" => "setup" %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render "make_your_account_more_secure" %>
   </div>
 </div>
