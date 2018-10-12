@@ -51,6 +51,10 @@
   }
 }
 
+a.gem-c-button.govuk-button {
+  color: #fff;
+}
+
 // TODO: replace IDs with `js-` prefixed classes as JavaScript selectors
 .not-strong-enough #password-guidance,
 .not-strong-enough #password-entropy,
