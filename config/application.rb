@@ -49,9 +49,6 @@ module Signon
     # disabling it solves the above problem and doesn't give us additional risk.
     config.action_dispatch.ip_spoofing_check = false
 
-    # Precompile additional assets (application.js, application.css, and all non-JS/CSS are already added)
-    config.assets.precompile += %w(new_admin_layout.css new_admin_layout.js password-strength-indicator.js)
-
     config.to_prepare do
       Doorkeeper::ApplicationController.layout "application"
     end

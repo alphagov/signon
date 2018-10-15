@@ -2,8 +2,8 @@
 <% content_for :page_title, "#{yield(:title)} | #{t('department.name')} Signon" %>
 <% content_for :head do %>
   <%= csrf_meta_tags %>
-  <%= stylesheet_link_tag 'application' %>
-  <%= javascript_include_tag 'application' %>
+  <%= stylesheet_link_tag 'legacy_layout' %>
+  <%= javascript_include_tag 'legacy_layout' %>
   <%= yield :content_for_head %>
 <% end %>
 
@@ -48,10 +48,6 @@
 <% end %>
 
 <% content_for :footer_version, CURRENT_RELEASE_SHA %>
-
-<% content_for :body_end do %>
-  <%= yield :optional_javascripts if content_for?(:optional_javascripts) %>
-<% end %>
 
 <%# use the govuk_admin_template layout %>
 <%= render :template => 'layouts/govuk_admin_template' %>

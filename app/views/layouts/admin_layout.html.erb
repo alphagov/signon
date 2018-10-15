@@ -1,7 +1,3 @@
-<% content_for :head do %>
-  <%= stylesheet_link_tag "new_admin_layout" %>
-<% end %>
-
 <%= render 'govuk_publishing_components/components/layout_for_admin',
   product_name: "Signon",
   environment: GovukPublishingComponents::AppHelpers::Environment.current_acceptance_environment,
@@ -60,8 +56,6 @@
       }
     ]
   } %>
-  <%= javascript_include_tag "new_admin_layout" %>
-  <%= yield :optional_javascripts if content_for?(:optional_javascripts) %>
 
   <%# TODO: replace with component %>
   <script class="analytics">

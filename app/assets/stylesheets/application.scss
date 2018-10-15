@@ -1,8 +1,72 @@
-@import 'govuk_admin_template';
-@import 'chosen';
+@import "govuk_publishing_components/all_components";
 
-@import 'bootstrap_chosen';
-@import 'filters';
-@import 'admin';
-@import 'thin_form';
-@import 'two_step_setup';
+// TODO: move into component
+.gem-c-success-alert,
+.gem-c-error-alert {
+  margin: 0 0 30px 0;
+}
+
+.gem-c-success-alert__message,
+.gem-c-error-alert__message {
+  margin: 0;
+}
+
+.app-application-list__item {
+  border-top: 1px solid #ccc;
+  padding-top: 20px;
+}
+
+.app-dashboard-side {
+  border-top: 2px solid #005ea5;
+  padding-top: 20px;
+}
+
+.govuk-footer__heading {
+  display: none;
+}
+
+.govuk-input[disabled] {
+  background: #dee0e2;
+}
+
+.app-button--no-margin {
+  margin: 0;
+}
+
+.app-link--inline {
+  display: inline-block;
+  padding: 7px 10px;
+}
+
+.govuk-error-message p {
+  margin: 0;
+}
+
+.app-error-message--validation {
+  display: none;
+}
+
+.govuk-error-summary {
+  li {
+    color: #b10e1e;
+    font-weight: bold;
+  }
+}
+
+// TODO: replace IDs with `js-` prefixed classes as JavaScript selectors
+.not-strong-enough #password-guidance,
+.not-strong-enough #password-entropy,
+.password-too-short #password-guidance,
+.password-too-short #password-too-short,
+.parts-of-email #password-guidance,
+.parts-of-email #parts-of-email,
+.confirmation-not-matching #password-confirmation-guidance {
+  display: block;
+}
+
+#password-entropy,
+#password-too-short,
+#parts-of-email,
+#password-confirmation-guidance {
+  display: none;
+}

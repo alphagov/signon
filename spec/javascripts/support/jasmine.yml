@@ -12,7 +12,7 @@
 #
 src_files:
   - assets/govuk-admin-template.js
-  - assets/application.js
+  - assets/legacy_layout.js
 
 # stylesheets
 #
