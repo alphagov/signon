@@ -5,10 +5,9 @@
 
     <% unless current_user.has_2sv? %>
       <%= render "govuk_publishing_components/components/notice", {
-        title: "Make your account more secure"
-      } do %>
-        <%= render "devise/two_step_verification/make_your_account_more_secure" %>
-      <% end %>
+        title: "Make your account more secure",
+        description_text: (render "devise/two_step_verification/make_your_account_more_secure")
+      } %>
     <% end %>
 
     <% if @applications_and_permissions.empty? %>
