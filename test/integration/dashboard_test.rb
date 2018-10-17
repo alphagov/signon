@@ -41,7 +41,8 @@ class DashboardTest < ActionDispatch::IntegrationTest
       visit root_path
       signin_with(user)
 
-      assert has_link?("Make your account more secure")
+      assert_response_contains("Make your account more secure")
+      assert has_link?("Set up 2-step verification")
     end
   end
 end
