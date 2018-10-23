@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  get "/healthcheck", to: GovukHealthcheck.rack_response(
+    GovukHealthcheck::SidekiqRedis,
+    GovukHealthcheck::ActiveRecord,
+  )
+
   use_doorkeeper do
     controllers authorizations: 'signin_required_authorizations'
   end
