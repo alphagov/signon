@@ -290,9 +290,23 @@ class UsersControllerTest < ActionController::TestCase
           assert_equal @response.content_type, 'text/csv'
         end
 
-        should "export filtered users" do
+        should "export filtered users by role" do
           user = create(:user)
-          get :index, params: { role: 'admin', format: :csv }
+          get :index, params: { role: 'normal', format: :csv }
+          lines = @response.body.lines
+          assert_equal(2, lines.length)
+        end
+
+        should "export filtered users by all fields" do
+          organisation = create(:organisation, name: "Cookies Of Other Lands", abbreviation: 'COOL')
+
+          create(:suspended_user, name: "Special cookie", email: "specialcookie@email.com", role: 'normal', organisation: organisation)
+          create(:suspended_user, name: "Normal cookie", email: "normalcookie@email.com", role: 'normal', organisation: organisation)
+
+          assert_equal(3, User.count)
+
+          get :index, params: { role: 'normal', status: 'suspended', organisation: organisation, two_step_status: false, filter: 'special', format: :csv }
+
           lines = @response.body.lines
           assert_equal(2, lines.length)
         end
