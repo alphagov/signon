@@ -264,7 +264,7 @@ GEM
     public_suffix (3.0.3)
     pundit (2.0.0)
       activesupport (>= 3.0.0)
-    rack (2.0.5)
+    rack (2.0.6)
     rack-cache (1.8.0)
       rack (>= 0.4)
     rack-protection (2.0.4)
