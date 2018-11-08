@@ -4,7 +4,7 @@ require File.expand_path('../config/environment', __dir__)
 require 'rails/test_help'
 require 'shoulda/context'
 require 'webmock/minitest'
-require 'mocha/mini_test'
+require 'mocha/minitest'
 
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
