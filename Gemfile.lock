@@ -44,7 +44,7 @@ GEM
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     alphabetical_paginate (2.3.3)
-    ancestry (3.0.4)
+    ancestry (3.0.5)
       activerecord (>= 3.2.0)
     arel (8.0.0)
     ast (2.4.0)
@@ -429,7 +429,7 @@ DEPENDENCIES
   activejob-retry
   addressable (~> 2.5.2)
   alphabetical_paginate (= 2.3.3)
-  ancestry (= 3.0.4)
+  ancestry (= 3.0.5)
   better_errors (= 2.5.0)
   binding_of_caller (= 0.8.0)
   bootstrap-kaminari-views (= 0.0.5)
