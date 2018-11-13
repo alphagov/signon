@@ -34,7 +34,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     # possible that future versions of doorkeeper change the implementation or
     # tests and we should keep our versions up to date.  They may also have
     # introduced a better way for us to customise the behaviour.
-    assert_equal SigninRequiredAuthorizationsController::EXPECTED_DOORKEEPER_VERSION, Doorkeeper::VERSION, "SigninRequiredAuthorizationsController was extracted from Doorkeeper::AuthorizationsController and has been checked against version #{SigninRequiredAuthorizationsController::EXPECTED_DOORKEEPER_VERSION} of the Gem.  It's now #{Doorkeeper::VERSION} so review the new version to check for updates."
+    assert_equal SigninRequiredAuthorizationsController::EXPECTED_DOORKEEPER_VERSION, Doorkeeper::VERSION::STRING, "SigninRequiredAuthorizationsController was extracted from Doorkeeper::AuthorizationsController and has been checked against version #{SigninRequiredAuthorizationsController::EXPECTED_DOORKEEPER_VERSION} of the Gem.  It's now #{Doorkeeper::VERSION::STRING} so review the new version to check for updates."
   end
 
   context 'POST #create' do
@@ -55,7 +55,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     end
 
     should 'include token type in fragment' do
-      assert_equal 'bearer', fragments('token_type')
+      assert_equal 'Bearer', fragments('token_type')
     end
 
     should 'include token expiration in fragment' do
@@ -202,7 +202,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     end
 
     should 'include token type in fragment' do
-      assert_equal 'bearer', fragments('token_type')
+      assert_equal 'Bearer', fragments('token_type')
     end
 
     should 'include token expiration in fragment' do
