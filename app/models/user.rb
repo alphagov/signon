@@ -294,6 +294,10 @@ class User < ActiveRecord::Base
     require_2sv? && two_step_flag_changed?
   end
 
+  def belongs_to_gds?
+    organisation.try(:content_id).to_s == Organisation::GDS_ORG_CONTENT_ID
+  end
+
 private
 
   def two_step_flag_changed?

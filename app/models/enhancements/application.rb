@@ -44,6 +44,14 @@ class ::Doorkeeper::Application < ActiveRecord::Base
     url_without_path = "#{parsed_url.scheme}://#{parsed_url.host}:#{parsed_url.port}"
   end
 
+  def gds_only?
+    [
+      "Collections Publisher",
+      "Publisher",
+      "Service Manual Publisher"
+    ].include?(name)
+  end
+
 private
 
   def create_signin_supported_permission
