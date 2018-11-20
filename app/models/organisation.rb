@@ -3,6 +3,8 @@
 class Organisation < ActiveRecord::Base
   include ActiveModel::ForbiddenAttributesProtection
 
+  GDS_ORG_CONTENT_ID = "af07d5a5-df63-4ddc-9383-6a666845ebe9".freeze
+
   has_ancestry
 
   has_many :users
