@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '5.1.6'
+gem 'rails', '5.2.1.1'
 
 gem 'activejob-retry'
 gem 'addressable', '~> 2.5.2'
