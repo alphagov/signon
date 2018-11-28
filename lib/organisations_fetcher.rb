@@ -20,7 +20,7 @@ class OrganisationsFetcher
 private
 
   def organisations
-    base_uri = Plek.find('whitehall-admin')
+    base_uri = Plek.new.website_root
     GdsApi::Organisations.new(base_uri).organisations.with_subsequent_pages
   end
 
