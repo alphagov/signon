@@ -33,7 +33,7 @@ gem 'zeroclipboard-rails', '>= 0.1.2'
 
 # GDS Gems
 gem 'deprecated_columns', '0.1.1'
-gem 'gds-api-adapters', '~> 54.1'
+gem 'gds-api-adapters', '~> 55.0'
 gem 'govuk_admin_template', '~> 6.6'
 gem 'govuk_app_config', '~> 1.10'
 gem 'govuk_publishing_components', '~> 12.20'
