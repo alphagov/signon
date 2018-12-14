@@ -301,7 +301,7 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (3.0.0)
     raindrops (0.19.0)
-    rake (12.3.1)
+    rake (12.3.2)
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
@@ -468,7 +468,7 @@ DEPENDENCIES
   rails (= 5.1.6)
   rails-controller-testing
   rails-html-sanitizer (= 1.0.4)
-  rake (= 12.3.1)
+  rake (= 12.3.2)
   redis (= 4.0.3)
   rotp (~> 3.3.1)
   rqrcode
