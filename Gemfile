@@ -63,5 +63,5 @@ group :test do
   gem 'rspec-rails', '~> 3.8.1'
   gem 'shoulda-context', '1.2.2', require: false
   gem 'timecop', '0.9.1'
-  gem 'webmock', '~> 3.4.2'
+  gem 'webmock', '~> 3.5.0'
 end
