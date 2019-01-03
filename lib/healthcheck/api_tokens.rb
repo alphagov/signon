@@ -4,44 +4,72 @@ module Healthcheck
     CRITICAL_THRESHOLD = 1.month.to_i
 
     QUERY = <<-SQL.freeze
-      SELECT users.name, oauth_applications.name FROM oauth_access_tokens
-      INNER JOIN users ON users.id = resource_owner_id
-      INNER JOIN oauth_applications ON oauth_applications.id = application_id
-      WHERE oauth_access_tokens.revoked_at IS NULL
+      SELECT tokens.resource_owner_id,
+             tokens.application_id,
+             tokens.expires_in
+      FROM
+        (
+          SELECT resource_owner_id,
+                 application_id,
+                 revoked_at,
+                 (oauth_access_tokens.expires_in -
+                 (unix_timestamp(now()) -
+                  unix_timestamp(oauth_access_tokens.created_at))) as expires_in
+          FROM oauth_access_tokens
+        ) tokens
+      INNER JOIN users ON users.id = tokens.resource_owner_id
+      WHERE tokens.revoked_at IS NULL
       AND users.api_user = TRUE
-      AND (oauth_access_tokens.expires_in -
-          (unix_timestamp(now()) -
-           unix_timestamp(oauth_access_tokens.created_at))) < %<threshold>s
+      AND tokens.expires_in < #{WARNING_THRESHOLD}
     SQL
 
     def name
       :api_tokens
     end
 
-    def details
-      { warnings: warnings - criticals, criticals: criticals }
+    def message
+      return unless expiring_tokens.any?
+
+      "\n\n" + expiring_tokens.join("\n") + "\n\n"
     end
 
     def status
-      return GovukHealthcheck::CRITICAL if criticals.any?
+      return GovukHealthcheck::CRITICAL if expiring_tokens.any?(&:critical?)
 
-      return GovukHealthcheck::WARNING if warnings.any?
+      return GovukHealthcheck::WARNING if expiring_tokens.any?
 
       GovukHealthcheck::OK
     end
 
   private
 
-    def warnings
-      @warnings ||= connection.execute(QUERY % { threshold: WARNING_THRESHOLD }).to_a
+    Record = Struct.new(:user_id, :application_id, :expires_in) do
+      def critical?
+        expires_in < CRITICAL_THRESHOLD
+      end
+
+      def user
+        User.find(user_id)
+      end
+
+      def application
+        Doorkeeper::Application.find(application_id)
+      end
+
+      def expires_in_days
+        expires_in / 1.day.to_i
+      end
+
+      def to_s
+        "#{user.name} token for #{application.name} expires in #{expires_in_days} days"
+      end
     end
 
-    def criticals
-      @criticals ||= connection.execute(QUERY % { threshold: CRITICAL_THRESHOLD }).to_a
-    end
-
-    def connection
-      ActiveRecord::Base.connection
+    def expiring_tokens
+      @expiring_tokens ||= begin
+        records = ActiveRecord::Base.connection.execute(QUERY)
+        records.to_a.map { |raw_array| Record.new(*raw_array) }
+      end
     end
   end
 end

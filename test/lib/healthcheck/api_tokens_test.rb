@@ -35,34 +35,30 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
 
   context "details" do
     should "return which tokens are causing the check to fail" do
-      warning_user = create :api_user
-      critical_user = create :api_user
+      user = create :api_user
 
-      warning_token = make_api_user_token(
+      expiring_token = make_api_user_token(
         expires_in: Healthcheck::ApiTokens::WARNING_THRESHOLD,
-        user: warning_user,
+        user: user,
       )
 
-      critical_token = make_api_user_token(
-        expires_in: Healthcheck::ApiTokens::CRITICAL_THRESHOLD,
-        user: critical_user,
-      )
+      message = "#{user.name} token for #{expiring_token.application.name} " +
+        "expires in #{Healthcheck::ApiTokens::WARNING_THRESHOLD / 1.day.to_i} days"
 
       check = Healthcheck::ApiTokens.new
-
-      assert_equal(
-        {
-          warnings: [[warning_user.name, warning_token.application.name]],
-          criticals: [[critical_user.name, critical_token.application.name]],
-        },
-        check.details
-      )
+      assert_match(message, check.message)
     end
 
     should "not return expiring token details for normal users" do
       make_normal_user_token(expires_in: Healthcheck::ApiTokens::CRITICAL_THRESHOLD)
       check = Healthcheck::ApiTokens.new
-      assert_equal({ warnings: [], criticals: [] }, check.details)
+      assert_nil check.message
+    end
+
+    should "cope when the token has already expired" do
+      make_api_user_token(expires_in: -1.hour.to_i)
+      check = Healthcheck::ApiTokens.new
+      assert_match("expires in -1 days", check.message)
     end
   end
 
