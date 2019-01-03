@@ -1,6 +1,6 @@
 module Healthcheck
   class ApiTokens
-    WARNING_THRESHOLD = 1.year.to_i
+    WARNING_THRESHOLD = 2.months.to_i
     CRITICAL_THRESHOLD = 1.month.to_i
 
     QUERY = <<-SQL.freeze
