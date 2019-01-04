@@ -266,7 +266,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
   should "not display a link to resend unlock instructions" do
     visit root_path
-    refute_selector "a", text: "Didn't receive unlock instructions?"
+    assert_no_selector "a", text: "Didn't receive unlock instructions?"
   end
 
   should "not be able to access the 2SV login page before logging in" do

@@ -59,8 +59,7 @@ group :test do
   gem 'minitest', '~> 5.11.2'
   gem 'mocha', '1.7.0', require: false
   gem 'poltergeist', '1.18.1'
-  gem 'rails-controller-testing'
-  gem 'rspec-rails', '~> 3.8.1'
+  gem 'rails-controller-testing', '1.0.4'
   gem 'shoulda-context', '1.2.2', require: false
   gem 'timecop', '0.9.1'
   gem 'webmock', '~> 3.5.1'
