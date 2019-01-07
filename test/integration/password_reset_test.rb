@@ -27,6 +27,30 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
     end
   end
 
+  should "not allow password reset for unaccepted invitations" do
+    perform_enqueued_jobs do
+      user = create(:user, invitation_token: SecureRandom.uuid, invitation_accepted_at: nil)
+      trigger_reset_for(user.email)
+      assert_response_contains(BLANKET_RESET_MESSAGE)
+
+      open_email(user.email)
+      assert current_email
+      assert_equal "Your GOV.UK Signon development account has not been activated", current_email.subject
+    end
+  end
+
+  should "not allow password reset for suspended users" do
+    perform_enqueued_jobs do
+      user = create(:suspended_user)
+      trigger_reset_for(user.email)
+      assert_response_contains(BLANKET_RESET_MESSAGE)
+
+      open_email(user.email)
+      assert current_email
+      assert_equal "Your GOV.UK Signon development account has been suspended", current_email.subject
+    end
+  end
+
   should "not give away whether an email exists in the system or not" do
     trigger_reset_for("non-existent-email@example.com")
 
