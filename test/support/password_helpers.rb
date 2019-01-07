@@ -1,4 +1,4 @@
-module PasswordSupport
+module PasswordHelpers
   def change_password(options)
     # this method assumes that the user is logged in
     visit root_path

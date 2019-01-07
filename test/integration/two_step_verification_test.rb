@@ -1,7 +1,6 @@
 #encoding: utf-8
 
 require 'test_helper'
-require 'helpers/password_support'
 
 class TwoStepVerificationTest < ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper

@@ -1,10 +1,10 @@
 #encoding: utf-8
 
 require 'test_helper'
-require 'helpers/password_support'
+require 'support/password_helpers'
 
 class PasswordChangeTest < ActionDispatch::IntegrationTest
-  include PasswordSupport
+  include PasswordHelpers
 
   context "normal user" do
     setup do

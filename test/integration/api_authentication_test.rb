@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'helpers/token_auth_support'
+require 'support/token_auth_helpers'
 
 class ApiAuthenticationTest < ActionDispatch::IntegrationTest
-  include TokenAuthSupport
+  include TokenAuthHelpers
 
   def access_user_endpoint(token = nil, params = {})
     headers = token.nil? ? {} : { "HTTP_AUTHORIZATION" => "Bearer #{token}" }

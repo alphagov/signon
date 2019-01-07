@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'helpers/policy_helper'
+require 'support/policy_helpers'
 
 class UserPolicyTest < ActiveSupport::TestCase
-  include PolicyHelper
+  include PolicyHelpers
 
   setup do
     @parent_organisation = create :organisation

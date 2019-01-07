@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'helpers/policy_helper'
+require 'support/policy_helpers'
 
 class BulkGrantPermissionSetPolicyTest < ActiveSupport::TestCase
-  include PolicyHelper
+  include PolicyHelpers
 
   context "new" do
     should "allow only for superadmins and admins" do

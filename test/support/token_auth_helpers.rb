@@ -1,4 +1,4 @@
-module TokenAuthSupport
+module TokenAuthHelpers
   def get_valid_token
     User.last.authorisations.first
   end
