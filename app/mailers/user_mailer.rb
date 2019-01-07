@@ -43,6 +43,11 @@ class UserMailer < Devise::Mailer
     mail(to: @user.email, subject: suspension_notification_subject)
   end
 
+  def notify_reset_password_disallowed_due_to_unaccepted_invitation(user)
+    @user = user
+    mail(to: @user.email, subject: "Your #{app_name} account has not been activated")
+  end
+
   def email_changed_by_admin_notification(user, email_was, to_address)
     @user = user
     @email_was = email_was
