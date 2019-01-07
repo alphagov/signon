@@ -28,11 +28,11 @@ end
 
 WebMock.disable_net_connect!(allow_localhost: true)
 
-require 'helpers/confirmation_token_helper'
+require 'support/confirmation_token_helpers'
 
 class ActionController::TestCase
   include Devise::Test::ControllerHelpers
-  include ConfirmationTokenHelper
+  include ConfirmationTokenHelpers
 
   def sign_in(user)
     warden.stubs(authenticate!: user)
@@ -64,9 +64,9 @@ end
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 
-require 'helpers/user_helpers'
-require 'helpers/email_helpers'
-require 'helpers/analytics_helpers'
+require 'support/user_helpers'
+require 'support/email_helpers'
+require 'support/analytics_helpers'
 
 class ActiveRecord::Base
   mattr_accessor :shared_connection
@@ -84,7 +84,7 @@ class ActionDispatch::IntegrationTest
   include Capybara::DSL
   include UserHelpers
   include EmailHelpers
-  include ConfirmationTokenHelper
+  include ConfirmationTokenHelpers
   include AnalyticsHelpers
 
   def assert_response_contains(content)

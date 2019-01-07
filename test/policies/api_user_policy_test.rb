@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'helpers/policy_helper'
+require 'support/policy_helpers'
 
 class ApiUserPolicyTest < ActiveSupport::TestCase
-  include PolicyHelper
+  include PolicyHelpers
 
   %i[new create index edit update revoke].each do |permission_name|
     context permission_name do

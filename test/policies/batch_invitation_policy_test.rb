@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'helpers/policy_helper'
+require 'support/policy_helpers'
 
 class BatchInvitationPolicyTest < ActiveSupport::TestCase
-  include PolicyHelper
+  include PolicyHelpers
 
   context "new" do
     should 'allow superadmins and admins to create new batch uploads' do

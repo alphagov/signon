@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'helpers/policy_helper'
+require 'support/policy_helpers'
 
 class OrganisationPolicyTest < ActiveSupport::TestCase
-  include PolicyHelper
+  include PolicyHelpers
 
   context "index" do
     should "allow only for superadmins and admins" do

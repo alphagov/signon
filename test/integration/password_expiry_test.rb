@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'helpers/password_support'
+require 'support/password_helpers'
 
 class PasswordExpiryTest < ActionDispatch::IntegrationTest
-  include PasswordSupport
+  include PasswordHelpers
 
   PROMPT_TO_CHANGE_PASSWORD = "Your password has expired. Please choose a new password".freeze
 

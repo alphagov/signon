@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'helpers/password_support'
+require 'support/password_helpers'
 
 class UserStatusTest < ActionDispatch::IntegrationTest
-  include PasswordSupport
+  include PasswordHelpers
 
   setup do
     @admin = create(:admin_user)

@@ -1,8 +1,8 @@
 require 'test_helper'
-require 'helpers/password_support'
+require 'support/password_helpers'
 
 class PasswordResetTest < ActionDispatch::IntegrationTest
-  include PasswordSupport
+  include PasswordHelpers
   include ActiveJob::TestHelper
 
   BLANKET_RESET_MESSAGE = "If your email address is recognised, you’ll receive an email with instructions about how to reset your password.".freeze

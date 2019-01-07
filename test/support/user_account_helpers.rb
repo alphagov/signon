@@ -1,4 +1,4 @@
-module UserAccountOperations
+module UserAccountHelpers
   # usage: accept_invitation(password: "<new password>", invitation_token: "<token>")
   def accept_invitation(options)
     raise "Please provide password" unless options[:password]
