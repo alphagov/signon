@@ -28,7 +28,7 @@ module Healthcheck
     end
 
     def message
-      return unless expiring_tokens.any?
+      return "" unless expiring_tokens.any?
 
       "\n\n" + expiring_tokens.join("\n") + "\n\n"
     end

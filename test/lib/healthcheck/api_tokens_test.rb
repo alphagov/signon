@@ -52,7 +52,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
     should "not return expiring token details for normal users" do
       make_normal_user_token(expires_in: Healthcheck::ApiTokens::CRITICAL_THRESHOLD)
       check = Healthcheck::ApiTokens.new
-      assert_nil check.message
+      assert_match("", check.message)
     end
 
     should "cope when the token has already expired" do
