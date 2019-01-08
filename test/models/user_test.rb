@@ -520,15 +520,6 @@ class UserTest < ActiveSupport::TestCase
         end
       end
     end
-
-    should "raise any other exception that occured" do
-      User.any_instance.stubs(:send_reset_password_instructions).raises(Net::SMTPFatalError, "Inbox is full")
-      user = create(:user)
-
-      assert_raise(Net::SMTPFatalError) do
-        User.send_reset_password_instructions(email: user.email)
-      end
-    end
   end
 
   def assert_user_has_permissions(expected_permissions, application, user)
