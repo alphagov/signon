@@ -34,11 +34,11 @@
     <% @users.each do |user| %>
       <tr>
         <td class="email">
-          <%= user.suspended? ? "<del>".html_safe : "" %>
+          <%= user.unusable_account? ? "<del>".html_safe : "" %>
             <strong>
               <%= link_to "#{user.name}", edit_user_path(user) %>
             </strong>
-          <%= user.suspended? ? "</del>".html_safe : "" %>
+          <%= user.unusable_account? ? "</del>".html_safe : "" %>
           <br><span class="text-muted"><%= user.email %></span>
         </td>
         <td class="role"><%= user.role.humanize %></td>

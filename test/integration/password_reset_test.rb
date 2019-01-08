@@ -29,7 +29,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
 
   should "not allow password reset for unaccepted invitations" do
     perform_enqueued_jobs do
-      user = create(:user, invitation_token: SecureRandom.uuid, invitation_accepted_at: nil)
+      user = create(:user, invitation_sent_at: Time.zone.now, invitation_accepted_at: nil)
       trigger_reset_for(user.email)
       assert_response_contains(BLANKET_RESET_MESSAGE)
 
