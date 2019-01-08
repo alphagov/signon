@@ -1,8 +1,6 @@
 require "doorkeeper/orm/active_record/application"
 
 class ::Doorkeeper::Application < ActiveRecord::Base
-  include ActiveModel::ForbiddenAttributesProtection
-
   has_many :supported_permissions, dependent: :destroy
 
   default_scope { order('oauth_applications.name') }
