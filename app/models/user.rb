@@ -150,11 +150,7 @@ class User < ActiveRecord::Base
     application_permissions.where(supported_permission_id: supported_permission.id).first_or_create!
   end
 
-  # override Devise::Recoverable behavior to:
-  # 1. notify suspended users that they can't reset their password, and
-  # 2. handle emails blacklisted by AWS such that we conceal whether
-  #    or not an account exists for that email. moved from:
-  #    https://github.com/alphagov/signon/commit/451b89d9
+  # This overrides `Devise::Recoverable` behavior.
   def self.send_reset_password_instructions(attributes = {})
     user = User.find_by_email(attributes[:email])
     if user.present? && user.suspended?
