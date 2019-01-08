@@ -1,6 +1,4 @@
 class SupportedPermission < ActiveRecord::Base
-  include ActiveModel::ForbiddenAttributesProtection
-
   belongs_to :application, class_name: 'Doorkeeper::Application'
   has_many :user_application_permissions, dependent: :destroy, inverse_of: :supported_permission
 
