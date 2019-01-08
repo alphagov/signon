@@ -156,7 +156,7 @@ class User < ActiveRecord::Base
     if user.present? && user.suspended?
       UserMailer.notify_reset_password_disallowed_due_to_suspension(user).deliver_later
       user
-    elsif user.present? && user.invited_to_sign_up? && !user.invitation_accepted?
+    elsif user.present? && user.invited_but_not_yet_accepted?
       UserMailer.notify_reset_password_disallowed_due_to_unaccepted_invitation(user).deliver_later
       user
     else
