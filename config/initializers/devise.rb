@@ -261,8 +261,6 @@ Devise.setup do |config|
   # ==> Custom Modules for Devise
   require 'devise/models/suspendable'
   require 'devise/models/password_archivable'
-  require 'devise/models/password_expirable'
-  require 'devise/routes'
 
   # ==> Password strength test
   # default devise_zxcvbn minimum password score
@@ -273,21 +271,12 @@ Devise.setup do |config|
     GovukStatsd.increment("logins.success")
   end
 
-  Warden::Manager.after_authentication do |user, _auth, _opts|
-    if user.need_change_password?
-      EventLog.record_event(user, EventLog::PASSWORD_EXPIRED)
-    end
-  end
-
   Warden::Manager.before_failure do |_env, _opts|
     GovukStatsd.increment("logins.failure")
   end
 
   # ==> Security Extension
   # Configure security extension for devise
-
-  # How often should the password expire (e.g 3.months)
-  config.expire_password_after = 90.days
 
   # Need 1 char of A-Z, a-z and 0-9
   # config.password_regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/

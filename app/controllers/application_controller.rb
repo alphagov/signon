@@ -4,7 +4,6 @@ class ApplicationController < ActionController::Base
   include Pundit
   protect_from_forgery with: :exception
 
-  include Devise::Helpers::PasswordExpirable
   include TwoStepVerificationHelper
 
   before_action :handle_two_step_verification

@@ -58,27 +58,6 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
     assert_response_contains(BLANKET_RESET_MESSAGE)
   end
 
-  should "work for a partially signed-in user with an expired password" do
-    perform_enqueued_jobs do
-      user = create(:user, password_changed_at: 91.days.ago)
-
-      trigger_reset_for(user.email)
-
-      visit root_path
-      signin_with(email: user.email, password: user.password)
-
-      open_email(user.email)
-      assert current_email
-      assert_equal "noreply-signon-development@digital.cabinet-office.gov.uk", current_email.from[0]
-      assert_nil last_email.reply_to[0]
-      assert_equal "Reset password instructions", current_email.subject
-
-      # partially signed-in user should be able to reset password using link in reset password instructions
-      complete_password_reset(current_email, new_password: "some v3ry s3cure password")
-      assert_response_contains("Your password was changed successfully")
-    end
-  end
-
   should "not allow a reset link to be used more than once" do
     perform_enqueued_jobs do
       user = create(:user)
@@ -123,17 +102,6 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
       complete_password_reset(current_email, new_password: new_password)
       assert_response_contains("Your password was changed successfully")
     end
-  end
-
-  should "be accessible from the change password screen by a partially signed-in user" do
-    user = create(:user, password_changed_at: 91.days.ago)
-
-    visit root_path
-    signin_with(email: user.email, password: user.password)
-
-    # partially signed-in user should be able to reset password using link in reset password instructions
-    click_link 'Forgot your password?'
-    assert_response_contains("We'll send you an email to create a new password.")
   end
 
   should "show error messages when password reset doesn't work" do

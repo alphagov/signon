@@ -10,7 +10,6 @@ class EventLog < ActiveRecord::Base
     ACCOUNT_UNSUSPENDED = LogEntry.new(id: 3, description: "Account unsuspended", require_initiator: true),
     ACCOUNT_AUTOSUSPENDED = LogEntry.new(id: 4, description: "Account auto-suspended"),
     MANUAL_ACCOUNT_UNLOCK = LogEntry.new(id: 5, description: "Manual account unlock", require_initiator: true),
-    PASSWORD_EXPIRED = LogEntry.new(id: 6, description: "Password expired"),
     PASSWORD_RESET_REQUEST = LogEntry.new(id: 7, description: "Password reset request"),
     PASSWORD_RESET_LOADED = LogEntry.new(id: 8, description: "Password reset page loaded"),
     PASSWORD_RESET_FAILURE = LogEntry.new(id: 9, description: "Password reset attempt failure"),
@@ -42,6 +41,9 @@ class EventLog < ActiveRecord::Base
     PERMISSIONS_ADDED = LogEntry.new(id: 35, description: "Permissions added", require_initiator: true),
     PERMISSIONS_REMOVED = LogEntry.new(id: 36, description: "Permissions removed", require_initiator: true),
     ACCOUNT_INVITED = LogEntry.new(id: 37, description: "Account was invited", require_initiator: true),
+
+    # We no longer expire passwords, but we keep this event for history purposes
+    PASSWORD_EXPIRED = LogEntry.new(id: 6, description: "Password expired"),
   ].freeze
 
   EVENTS_REQUIRING_INITIATOR = EVENTS.select(&:require_initiator?)

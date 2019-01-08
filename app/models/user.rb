@@ -18,10 +18,9 @@ class User < ActiveRecord::Base
 
   USER_STATUS_SUSPENDED = 'suspended'.freeze
   USER_STATUS_INVITED = 'invited'.freeze
-  USER_STATUS_PASSWORD_EXPIRED = 'password expired'.freeze
   USER_STATUS_LOCKED = 'locked'.freeze
   USER_STATUS_ACTIVE = 'active'.freeze
-  USER_STATUSES = [USER_STATUS_SUSPENDED, USER_STATUS_INVITED, USER_STATUS_PASSWORD_EXPIRED,
+  USER_STATUSES = [USER_STATUS_SUSPENDED, USER_STATUS_INVITED,
                    USER_STATUS_LOCKED, USER_STATUS_ACTIVE].freeze
 
   devise :database_authenticatable,
@@ -32,8 +31,7 @@ class User < ActiveRecord::Base
          :zxcvbnable,
          :encryptable,
          :confirmable,
-         :password_archivable, # in signon/lib/devise/models/password_archivable.rb
-         :password_expirable   # in signon/lib/devise/models/password_expirable.rb
+         :password_archivable # in signon/lib/devise/models/password_archivable.rb
 
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
@@ -51,6 +49,7 @@ class User < ActiveRecord::Base
   after_create :update_stats
   before_save :set_2sv_for_admin_roles
   before_save :mark_two_step_flag_changed
+  before_save :update_password_changed
 
   scope :web_users, -> { where(api_user: false) }
   scope :not_suspended, -> { where(suspended_at: nil) }
@@ -73,15 +72,12 @@ class User < ActiveRecord::Base
       where.not(suspended_at: nil)
     when USER_STATUS_INVITED
       where.not(invitation_sent_at: nil).where(invitation_accepted_at: nil)
-    when USER_STATUS_PASSWORD_EXPIRED
-      with_need_change_password
     when USER_STATUS_LOCKED
       where.not(locked_at: nil)
     when USER_STATUS_ACTIVE
       where(suspended_at: nil, locked_at: nil).
         where(arel_table[:invitation_sent_at].eq(nil).
-          or(arel_table[:invitation_accepted_at].not_eq(nil))).
-        without_need_change_password
+          or(arel_table[:invitation_accepted_at].not_eq(nil)))
     else
       raise NotImplementedError.new("Filtering by status '#{status}' not implemented.")
     end
@@ -216,8 +212,8 @@ class User < ActiveRecord::Base
 
     unless api_user?
       return USER_STATUS_INVITED if invited_but_not_yet_accepted?
-      return USER_STATUS_PASSWORD_EXPIRED if need_change_password?
     end
+
     return USER_STATUS_LOCKED if access_locked?
 
     USER_STATUS_ACTIVE
@@ -324,5 +320,9 @@ private
 
   def fix_apostrophe_in_email
     self.email.tr!('’', "'") if email.present? && email_changed?
+  end
+
+  def update_password_changed
+    self.password_changed_at = Time.zone.now if (self.new_record? || self.encrypted_password_changed?) && !self.password_changed_at_changed?
   end
 end
