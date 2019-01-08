@@ -172,15 +172,6 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     assert page.has_content?(EventLog::ACCOUNT_UNSUSPENDED.description + ' by ' + @admin.name)
   end
 
-  test "record password expiration" do
-    @user.password_changed_at = 100.days.ago; @user.save!
-
-    visit root_path
-    signin_with(@user)
-
-    assert_includes @user.event_logs.map(&:entry), EventLog::PASSWORD_EXPIRED
-  end
-
   context "recording user's ip address" do
     should "record user's ip address on login" do
       page.driver.options[:headers] = { 'REMOTE_ADDR' => '1.2.3.4' }

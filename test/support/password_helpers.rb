@@ -9,13 +9,6 @@ module PasswordHelpers
     click_button "Save password"
   end
 
-  def reset_expired_password(from, to, confirmation)
-    fill_in "Current password",       with: from
-    fill_in "New password",           with: to
-    fill_in "Confirm new password",   with: confirmation
-    click_button "Save password"
-  end
-
   def trigger_reset_for(email)
     visit new_user_password_path
     fill_in "Email address", with: email
