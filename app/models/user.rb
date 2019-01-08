@@ -164,6 +164,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def unusable_account?
+    invited_but_not_yet_accepted? || suspended? || access_locked?
+  end
+
   # Required for devise_invitable to set role and permissions
   def self.inviter_role(inviter)
     inviter.nil? ? :default : inviter.role.to_sym
