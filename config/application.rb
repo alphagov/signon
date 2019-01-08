@@ -1,6 +1,15 @@
 require_relative 'boot'
 
-require 'rails/all'
+require 'active_record/railtie'
+require 'action_controller/railtie'
+require 'action_view/railtie'
+require 'action_mailer/railtie'
+require 'active_job/railtie'
+require 'action_cable/engine'
+require 'active_storage/engine'
+require 'rails/test_unit/railtie'
+require 'sprockets/railtie'
+
 require_relative '../lib/same_site_security/middleware'
 
 # Require the gems listed in Gemfile, including any gems
