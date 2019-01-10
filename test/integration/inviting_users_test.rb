@@ -45,6 +45,24 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       end
     end
 
+    should "resend the invite" do
+      perform_enqueued_jobs do
+        visit new_user_invitation_path
+        fill_in "Name", with: "Fred Bloggs"
+        fill_in "Email", with: "fred@example.com"
+        click_button "Create user and send email"
+
+        user = User.find_by(email: 'fred@example.com')
+        visit edit_user_path(user)
+
+        click_button "Resend signup email"
+
+        assert page.has_content?("Resent account signup email")
+        emails_received = all_emails.count { |email| email.subject == "Please confirm your account" }
+        assert_equal 2, emails_received
+      end
+    end
+
     should "grant the permissions selected" do
       application_one = create(:application)
       create(:supported_permission, application: application_one, name: 'editor')
