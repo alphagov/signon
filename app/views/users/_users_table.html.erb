@@ -1,6 +1,6 @@
-<p class="govuk-body govuk-!-margin-bottom-1">
-  <%= pluralize(number_with_delimiter(@users.total_count), 'user') %>
-  <%= link_to "Export as CSV", { format: "csv" }, class: "govuk-link" %>
+<p class="govuk-body">
+  <%= pluralize(number_with_delimiter(@users.total_count), "user") %> found
+  <%= link_to "export as CSV", { format: "csv" }, class: "govuk-link" %>
 <p>
 
 <%= GovukPublishingComponents::AppHelpers::TableHelper.helper(self, "Users", { sortable: false, caption_classes: "govuk-visually-hidden" }) do |t| %>
@@ -17,18 +17,16 @@
     <% @users.each do |user| %>
       <%= t.row do %>
         <% name = capture do %>
-          <%= user.unusable_account? ? "<del>".html_safe : "" %>
-              <%= link_to user.name, edit_user_path(user), class: "govuk-link" %>
-          <%= user.unusable_account? ? "</del>".html_safe : "" %>
-          <br/>
-          <span class="govuk-!-font-size-14">
-            <%= user.email %><br/>
-            <%= user.organisation.try(:name) %>
-          </span>
+          <strong>
+            <%= link_to user.name, edit_user_path(user), class: "govuk-link #{user.unusable_account? ? "app-user--unusable" : nil}" %><br/>
+          </strong>
+
+          <%= user.email %><br/>
+          <%= user.organisation.try(:name) %>
+          <%= t.cell user.role.humanize %>
         <% end %>
 
         <%= t.cell name %>
-        <%= t.cell user.role.humanize %>
         <%= t.cell user.current_sign_in_at ? time_ago_in_words(user.current_sign_in_at) + " ago" : nil %>
         <%= t.cell time_ago_in_words(user.created_at) + " ago" %>
 

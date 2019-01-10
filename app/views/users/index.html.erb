@@ -1,15 +1,17 @@
 <% content_for :title, "Users" %>
 
 <% content_for :title_side do %>
-  <%= link_to "Create user", new_user_invitation_path, class: "govuk-link" %>
+  <ul class="govuk-list">
+    <li><%= link_to "Create user", new_user_invitation_path, class: "govuk-link" %></li>
 
-  <% if policy(User).new? %>
-    <%= link_to "Upload a batch of users", new_batch_invitation_path, class: "govuk-link" %>
-  <% end %>
+    <% if policy(User).new? %>
+      <li><%= link_to "Upload a batch of users", new_batch_invitation_path, class: "govuk-link" %></li>
+    <% end %>
 
-  <% if policy(BulkGrantPermissionSet).new? %>
-    <%= link_to "Grant permissions to all users", new_bulk_grant_permission_set_path, class: "govuk-link" %>
-  <% end %>
+    <% if policy(BulkGrantPermissionSet).new? %>
+      <li><%= link_to "Grant permissions to all users", new_bulk_grant_permission_set_path, class: "govuk-link" %></li>
+    <% end %>
+  </ul>
 <% end %>
 
 <div class="govuk-grid-row">
