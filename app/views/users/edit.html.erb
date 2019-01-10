@@ -8,6 +8,17 @@
   <%= link_to "#{@user.suspended? ? "Uns" : "S"}uspend user", edit_suspension_path(@user) %>
 </p>
 
+<% if @user.invited_but_not_accepted %>
+  <div class="alert alert-warning">
+    <strong>Invitation not accepted yet</strong>.<br/>
+    This user hasn't clicked on the link in their signup mail yet.
+
+    <%= form_tag resend_user_invitation_path(@user) do %>
+      <%= submit_tag "Resend signup email", class: "btn btn-default add-top-margin" %>
+    <% end %>
+  </div>
+<% end %>
+
 <% if @user.access_locked? %>
   <div class="alert alert-warning">
     <strong>Account has been locked after too many unsuccessful login attempts.</strong><br/>
