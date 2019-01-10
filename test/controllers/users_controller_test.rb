@@ -240,49 +240,6 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     context "GET index" do
-      should "list users" do
-        create(:user, email: "another_user@email.com")
-        get :index
-        assert_select "td.email", /another_user@email.com/
-      end
-
-      should "not list api users" do
-        create(:api_user, email: "api_user@email.com")
-        get :index
-        assert_select "td.email", count: 0, text: /api_user@email.com/
-      end
-
-      should "not show superadmin users" do
-        create(:superadmin_user, email: "superadmin@email.com")
-
-        get :index
-
-        assert_select "tbody tr", count: 1
-        assert_select "td.email", /#{@user.email}/
-      end
-
-      should "show user roles" do
-        create(:user, email: "user@email.com")
-        create(:super_org_admin, email: "superorgadmin@email.com")
-        create(:organisation_admin, email: "orgadmin@email.com")
-
-        get :index
-
-        assert_select "td.role", "Normal"
-        assert_select "td.role", "Organisation admin"
-        assert_select "td.role", "Super organisation admin"
-        assert_select "td.role", "Admin"
-        assert_select "td.role", count: 4
-      end
-
-      should "show user organisation" do
-        user = create(:user_in_organisation)
-
-        get :index
-
-        assert_select "td.organisation", user.organisation.name
-      end
-
       context "CSV export" do
         should "respond to CSV format" do
           get :index, params: { format: :csv }
@@ -316,88 +273,6 @@ class UsersControllerTest < ActionController::TestCase
           get :index, params: { format: :csv }
           lines = @response.body.lines
           assert_equal(3, lines.length)
-        end
-      end
-
-      should "let you paginate by the first letter of the name" do
-        create(:user, name: "alf", email: "a@email.com")
-        create(:user, name: "zed", email: "z@email.com")
-
-        get :index, params: { letter: "Z" }
-
-        assert_select "td.email", /z@email.com/
-        assert_select "tbody tr", count: 1
-      end
-
-      context "filter" do
-        setup do
-          create(:user, email: "not_admin@gov.uk")
-        end
-
-        should "filter results to users where their name or email contains the string" do
-          create(:user, email: "special@gov.uk")
-          create(:user, name: "Someone special", email: "someone@gov.uk")
-
-          get :index, params: { filter: "special" }
-
-          assert_select "tbody tr", count: 2
-          assert_select "td.email", /special@gov.uk/
-          assert_select "td.email", /someone@gov.uk/
-        end
-
-        should "scope list of users by role" do
-          get :index, params: { role: "normal" }
-
-          assert_select "tbody tr", count: 1
-          assert_select "td.email", /admin@gov.uk/
-        end
-
-        should "scope filtered list of users by role" do
-          create(:organisation_admin, email: "xyz@gov.uk")
-
-          get :index, params: { filter: "admin", role: "admin" }
-
-          assert_select "tbody tr", count: 1
-          assert_select "td.email", /admin@gov.uk/
-        end
-      end
-
-      should "scope list of users by status" do
-        create(:suspended_user, email: "suspended_user@gov.uk")
-
-        get :index, params: { status: 'suspended' }
-
-        assert_select "tbody tr", count: 1
-        assert_select "td.email", /suspended_user@gov.uk/
-      end
-
-      should "scope list of users by status and role" do
-        create(:suspended_user, email: "suspended_user@gov.uk", role: 'admin')
-        create(:suspended_user, email: "normal_suspended_user@gov.uk")
-
-        get :index, params: { status: 'suspended', role: 'admin' }
-
-        assert_select "tbody tr", count: 1
-        assert_select "td.email", /suspended_user@gov.uk/
-      end
-
-      should "scope list of users by organisation" do
-        user = create(:user_in_organisation, email: "orgmember@gov.uk")
-
-        get :index, params: { organisation: user.organisation.id }
-
-        assert_select "tbody tr", count: 1
-        assert_select "td.email", /orgmember@gov.uk/
-      end
-
-      context "as superadmin" do
-        should "not list api users" do
-          @user.update_column(:role, "superadmin")
-          create(:api_user, email: "api_user@email.com")
-
-          get :index
-
-          assert_select "td.email", count: 0, text: /api_user@email.com/
         end
       end
     end
