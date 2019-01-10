@@ -4,7 +4,6 @@ gem 'rails', '5.2.2'
 
 gem 'activejob-retry'
 gem 'addressable', '~> 2.5.2'
-gem 'alphabetical_paginate', '2.3.3'
 gem 'ancestry', '3.0.5'
 gem 'bootstrap-kaminari-views', '0.0.5'
 gem 'browser'
