@@ -1,5 +1,6 @@
 <p class="govuk-body govuk-!-margin-bottom-1">
   <%= pluralize(number_with_delimiter(@users.total_count), 'user') %>
+  <%= link_to "Export as CSV", { format: "csv" }, class: "govuk-link" %>
 <p>
 
 <%= GovukPublishingComponents::AppHelpers::TableHelper.helper(self, "Users", { sortable: false, caption_classes: "govuk-visually-hidden" }) do |t| %>

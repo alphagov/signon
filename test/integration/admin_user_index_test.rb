@@ -161,5 +161,21 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       assert page.has_content?("User With 2SV")
       refute page.has_content?("User Without 2SV")
     end
+
+    should "download users as CSV" do
+      create(:user, name: "A certain user")
+      create(:user, name: "Another user")
+
+      visit "/users"
+
+      fill_in "Name or email", with: "certain"
+      click_on "Search"
+
+      click_on "Export as CSV"
+
+      assert has_content?("Name,Email,Role,Organisation,Sign-in count,Last sign-in,Created,Status,2SV Status")
+      assert has_content?("A certain user")
+      refute has_content?("Another user")
+    end
   end
 end
