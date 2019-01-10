@@ -3,76 +3,70 @@ require "test_helper"
 class AdminUserIndexTest < ActionDispatch::IntegrationTest
   context "logged in as an admin" do
     setup do
-      current_time = Time.zone.now
-      Timecop.freeze(current_time)
+      User.delete_all
+      admin = create(:admin_user, name: "Admin User", email: "admin@example.com")
 
-      @admin = create(:admin_user, name: "Admin User", email: "admin@example.com")
       visit new_user_session_path
-      signin_with(@admin)
-
-      org1 = create(:organisation, name: "Org 1")
-      org2 = create(:organisation, name: "Org 2")
-
-      create(:user, name: "Aardvark", email: "aardvark@example.com", current_sign_in_at: current_time - 5.minutes)
-      create(:two_step_enabled_user, name: "Abbey", email: "abbey@example.com")
-      create(:user, name: "Abbot", email: "mr_ab@example.com")
-      create(:user, name: "Bert", email: "bbbert@example.com")
-      create(:user, name: "Ed", email: "ed@example.com", organisation: org1)
-      create(:user, name: "Eddie", email: "eddie_bb@example.com")
-      create(:user, name: "Ernie", email: "ernie@example.com", organisation: org2)
-      create(:suspended_user, name: 'Suspended McFee', email: 'suspenders@example.com')
-    end
-
-    teardown do
-      Timecop.return
+      signin_with(admin)
     end
 
     should "display the 2SV enrollment status for users" do
+      create(:user)
+      create(:two_step_enabled_user)
+
       visit "/users"
 
       within "table" do
         assert has_css?("td", text: "Enabled", count: 1)
-        assert has_css?("td", text: "Not set up", count: 3)
+        assert has_css?("td", text: "Not set up", count: 2)
       end
     end
 
     should "see when the user last logged in" do
+      current_time = Time.zone.now
+      Timecop.freeze(current_time)
+
+      create(:user)
+      create(:user, current_sign_in_at: current_time - 5.minutes)
+
       visit "/users"
 
       assert page.has_content?("Last sign-in")
 
-      actual_last_sign_in_strings = page.all('table tr td.last-sign-in').map(&:text).map(&:strip)[0..1]
-      assert_equal ["5 minutes ago", "never signed in"], actual_last_sign_in_strings
+      actual_last_sign_in_strings = page.all('table tr td:nth(3)').map(&:text).map(&:strip)[0..1]
+      assert_equal ["5 minutes ago", "Not set"], actual_last_sign_in_strings
+
+      Timecop.return
     end
 
-    should "see list of users paginated alphabetically" do
+    should "paginate through the users" do
+      10.times { create(:user, name: "On the second page") }
+      10.times { create(:user, name: "On the first page") }
+
       visit "/users"
 
-      assert page.has_content?("Users")
+      names_in_table = page.all('table tr td:first').map(&:text).map(&:strip).uniq
+      assert names_in_table.all? { |name| name.start_with?("On the first page") }
 
-      expected = [
-        "Aardvark aardvark@example.com",
-        "Abbey abbey@example.com",
-        "Abbot mr_ab@example.com",
-        "Admin User admin@example.com",
-      ]
-      actual = page.all('table tr td.email').map(&:text).map(&:strip)
-      assert_equal expected, actual
+      click_on "Next"
 
-      within first('.pagination') do
-        click_on "E"
-      end
+      names_in_table = page.all('table tr td:first').map(&:text).map(&:strip).uniq
+      assert names_in_table.all? { |name| name.start_with?("On the second page") }
 
-      expected = [
-        "Ed ed@example.com",
-        "Eddie eddie_bb@example.com",
-        "Ernie ernie@example.com",
-      ]
-      actual = page.all('table tr td.email').map(&:text).map(&:strip)
-      assert_equal expected, actual
+      click_on "Previous"
+
+      names_in_table = page.all('table tr td:first').map(&:text).map(&:strip).uniq
+      assert names_in_table.all? { |name| name.start_with?("On the first page") }
     end
 
-    should "be able to filter users" do
+    should "filter users by name and email" do
+      create(:user, name: "Abbey", email: "abbey@example.com")
+      create(:user, name: "Abbot", email: "mr_ab@example.com")
+      create(:user, name: "Bert", email: "bbbert@example.com")
+      create(:user, name: "Eddie", email: "eddie_bb@example.com")
+      create(:user, name: "Aardvark", email: "aardvark@example.com")
+      create(:user, name: "Ernie", email: "ernie@example.com")
+
       visit "/users"
 
       fill_in "Name or email", with: "bb"
@@ -83,114 +77,89 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       assert page.has_content?("Bert bbbert@example.com")
       assert page.has_content?("Eddie eddie_bb@example.com")
 
-      assert ! page.has_content?("Aardvark aardvark@example.com")
-      assert ! page.has_content?("Ernie ernie@example.com")
+      refute page.has_content?("Aardvark aardvark@example.com")
+      refute page.has_content?("Ernie ernie@example.com")
 
       click_on "Users"
 
-      assert page.has_content?("Users by initial")
+      assert page.has_content?("Users")
       assert page.has_content?("Aardvark aardvark@example.com")
     end
 
     should "filter users by role" do
+      create(:user)
+      create(:user)
+      create(:admin_user)
+
       visit "/users"
 
-      assert_role_not_present("Superadmin")
+      select "Normal", from: "role"
+      click_on "Search"
 
-      select_role("Normal")
+      assert page.has_content?("2 users")
 
-      assert_equal User.with_role(:normal).count, page.all('table tbody tr').count
-      assert ! page.has_content?("Admin User admin@example.com")
-      User.with_role(:normal).each do |normal_user|
-        assert page.has_content?(normal_user.email)
-      end
+      select "Admin", from: "role"
+      click_on "Search"
 
-      select_role("All Roles")
+      assert page.has_content?("2 users")
 
-      %w(Aardvark Abbot Abbey Admin).each do |user_name|
-        assert page.has_content?(user_name)
-      end
+      select "", from: "role"
+      click_on "Search"
+
+      assert page.has_content?("4 users")
     end
 
     should "filter users by status" do
+      create(:suspended_user, name: "Suspended User", email: "suspenders@example.com")
+      create(:user, name: "A non-suspended user", email: "other@example.com")
+
       visit "/users"
 
-      select_status('Suspended')
+      assert page.has_content?("Suspended User")
+      assert page.has_content?("A non-suspended user")
 
-      assert_equal 1, page.all('table tbody tr').count
-      assert ! page.has_content?("Aardvark")
-      assert page.has_content?('Suspended McFee')
+      select "suspended", from: "Status"
+      click_on "Search"
 
-      select_status('All Statuses')
+      assert page.has_content?("Suspended User")
+      refute page.has_content?("A non-suspended user")
 
-      %w(Aardvark Abbot Abbey Admin Suspended).each do |user_name|
-        assert page.has_content?(user_name)
-      end
+      select "", from: "Status"
+      click_on "Search"
+
+      assert page.has_content?("Suspended User")
+      assert page.has_content?("A non-suspended user")
     end
 
     should "filter users by organisation" do
+      create(:user, name: "First Org User", organisation: create(:organisation, name: "Org 1"))
+      create(:user, name: "Second Org User", organisation: create(:organisation, name: "Org 2"))
+
       visit "/users"
 
-      select_organisation('Org 1')
-      assert_equal 1, page.all('table tbody tr').count
-      assert ! page.has_content?("Aardvark")
-      assert page.has_content?('Ed')
+      select "Org 1", from: "Organisation"
+      click_on "Search"
 
-      select_organisation('All Organisations')
-
-      %w(Aardvark Abbot Abbey Admin Suspended).each do |user_name|
-        assert page.has_content?(user_name)
-      end
+      assert page.has_content?("First Org User")
+      assert page.has_content?("1 user")
     end
 
     should "filter users by 2SV status" do
+      create(:user, name: "User Without 2SV")
+      create(:two_step_enabled_user, name: "User With 2SV")
+
       visit "/users"
-      total_enabled = 1
-      total_disabled = 8
+      select "Not set up", from: "Two-step status"
+      click_on "Search"
 
-      within ".filter-by-two_step_status-menu .dropdown-menu" do
-        click_on "Enabled"
-      end
+      assert page.has_content?("User Without 2SV")
+      refute page.has_content?("User With 2SV")
 
-      assert has_css?("td", text: "Enabled", count: total_enabled)
-      assert has_no_css?("td", text: "Not set up")
+      select "Enabled", from: "Two-step status"
+      click_on "Search"
 
-      within ".filter-by-two_step_status-menu .dropdown-menu" do
-        click_on "Not set up"
-      end
-
-      assert has_no_css?("td", text: "Enabled")
-      assert has_css?("td", text: "Not set up", count: total_disabled)
-    end
-  end
-
-  def select_organisation(organisation_name)
-    within ".filter-by-organisation-menu .dropdown-menu" do
-      click_on organisation_name
-    end
-  end
-
-  def select_status(status_name)
-    within ".filter-by-status-menu .dropdown-menu" do
-      click_on status_name
-    end
-  end
-
-  def assert_role_not_present(role_name)
-    within ".filter-by-role-menu" do
-      click_on "Role", match: :prefer_exact
-      within ".dropdown-menu" do
-        assert page.has_no_content? role_name
-      end
-    end
-  end
-
-  def select_role(role_name)
-    within ".filter-by-role-menu" do
-      click_on "Role", match: :prefer_exact
-      within ".dropdown-menu" do
-        click_on role_name
-      end
+      assert page.has_content?("User With 2SV")
+      refute page.has_content?("User Without 2SV")
     end
   end
 end

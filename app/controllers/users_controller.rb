@@ -3,7 +3,7 @@ require 'csv'
 class UsersController < ApplicationController
   include UserPermissionsControllerMethods
 
-  layout 'admin_layout', only: %w(edit_email_or_password)
+  layout 'admin_layout', only: %w(index edit_email_or_password)
 
   before_action :authenticate_user!, except: :show
   before_action :load_and_authorize_user, except: %i[index show]
@@ -29,11 +29,13 @@ class UsersController < ApplicationController
     authorize User
 
     @users = policy_scope(User).includes(:organisation)
-    filter_users if any_filter?
+    @users = any_filter? ? filter_users(@users) : @users.order(id: :desc)
+
     respond_to do |format|
       format.html do
-        paginate_users
+        @users = @users.page(params[:page]).per(10)
       end
+
       format.csv do
         headers['Content-Disposition'] = 'attachment; filename="signon_users.csv"'
         render plain: export, content_type: 'text/csv'
@@ -130,12 +132,13 @@ private
     authorize @user
   end
 
-  def filter_users
-    @users = @users.filter(params[:filter]) if params[:filter].present?
-    @users = @users.with_role(params[:role]) if can_filter_role?
-    @users = @users.with_organisation(params[:organisation]) if params[:organisation].present?
-    @users = @users.with_status(params[:status]) if params[:status].present?
-    @users = @users.with_2sv_enabled(params[:two_step_status]) if params[:two_step_status].present?
+  def filter_users(users)
+    users = users.filter(params[:filter]) if params[:filter].present?
+    users = users.with_role(params[:role]) if can_filter_role?
+    users = users.with_organisation(params[:organisation]) if params[:organisation].present?
+    users = users.with_status(params[:status]) if params[:status].present?
+    users = users.with_2sv_enabled(params[:two_step_status]) if params[:two_step_status].present?
+    users
   end
 
   def can_filter_role?
@@ -145,22 +148,6 @@ private
 
   def should_include_permissions?
     params[:format] == 'csv'
-  end
-
-  def paginate_users
-    if any_filter?
-      @users = if @users.is_a?(Array)
-                 Kaminari.paginate_array(@users).page(params[:page]).per(100)
-               else
-                 @users.page(params[:page]).per(100)
-               end
-    else
-      @users, @sorting_params = @users.alpha_paginate(
-        params.fetch(:letter, 'A'),
-        ALPHABETICAL_PAGINATE_CONFIG.dup,
-        &:name
-      )
-    end
   end
 
   def any_filter?

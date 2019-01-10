@@ -1,0 +1,77 @@
+<%= form_tag({}, method: :get) do %>
+  <%= render "govuk_publishing_components/components/input", {
+    label: {
+      text: "Name or email",
+      bold: true
+    },
+    name: "filter",
+    value: params[:title_or_url],
+    type: "search"
+  } %>
+
+  <div class="govuk-form-group">
+    <%= render "govuk_publishing_components/components/label", {
+      text: "Role",
+      html_for: "role",
+      bold: true
+    } %>
+
+    <%= select_tag "role",
+      options_for_select(filtered_user_roles.map(&:humanize).zip(filtered_user_roles), params[:role]),
+      include_blank: true,
+      id: "role",
+      class: "govuk-select"
+    %>
+  </div>
+
+  <div class="govuk-form-group">
+    <%= render "govuk_publishing_components/components/label", {
+      text: "Status",
+      html_for: "status",
+      bold: true
+    } %>
+
+    <%= select_tag "status",
+      options_for_select(User::USER_STATUSES, params[:status]),
+      include_blank: true,
+      id: "status",
+      class: "govuk-select"
+    %>
+  </div>
+
+  <div class="govuk-form-group">
+    <%= render "govuk_publishing_components/components/label", {
+      text: "Organisation",
+      html_for: "organisation",
+      bold: true
+    } %>
+
+    <%= select_tag "organisation",
+      options_for_select(orgs_that_user_is_allowed_to_see, params[:organisation]),
+      include_blank: true,
+      id: "organisation",
+      class: "govuk-select"
+    %>
+  </div>
+
+  <div class="govuk-form-group">
+    <%= render "govuk_publishing_components/components/label", {
+      text: "Two-step status",
+      html_for: "two_step_status",
+      bold: true
+    } %>
+
+    <%= select_tag "two_step_status",
+      options_for_select({ "Enabled" => true, "Not set up" => false }, params[:two_step_status]),
+      include_blank: true,
+      id: "two_step_status",
+      class: "govuk-select"
+    %>
+  </div>
+
+  <%= render "govuk_publishing_components/components/button", {
+    text: "Search"
+  } %>
+
+  <p><%= link_to "Clear all filters", users_path, class: "govuk-link" %></p>
+<% end %>

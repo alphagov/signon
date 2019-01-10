@@ -75,3 +75,17 @@
   text-align: right;
 }
 
+.govuk-table {
+  .govuk-table__body {
+    .govuk-table__cell {
+      @include govuk-font(16);
+      max-width: 150px;
+      vertical-align: top;
+      white-space: nowrap;
+
+      &:nth-of-type(1) {
+        max-width: none;
+      }
+    }
+  }
+}

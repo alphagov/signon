@@ -1,0 +1,55 @@
+<p class="govuk-body govuk-!-margin-bottom-1">
+  <%= pluralize(number_with_delimiter(@users.total_count), 'user') %>
+<p>
+
+<%= GovukPublishingComponents::AppHelpers::TableHelper.helper(self, "Users", { sortable: false, caption_classes: "govuk-visually-hidden" }) do |t| %>
+  <%= t.head do %>
+    <%= t.header "Name, email, organisation" %>
+    <%= t.header "Role" %>
+    <%= t.header "Last sign-in" %>
+    <%= t.header "Created" %>
+    <%= t.header "Status" %>
+    <%= t.header "2SV Status" %>
+  <% end %>
+
+  <%= t.body do %>
+    <% @users.each do |user| %>
+      <%= t.row do %>
+        <% name = capture do %>
+          <%= user.unusable_account? ? "<del>".html_safe : "" %>
+              <%= link_to user.name, edit_user_path(user), class: "govuk-link" %>
+          <%= user.unusable_account? ? "</del>".html_safe : "" %>
+          <br/>
+          <span class="govuk-!-font-size-14">
+            <%= user.email %><br/>
+            <%= user.organisation.try(:name) %>
+          </span>
+        <% end %>
+
+        <%= t.cell name %>
+        <%= t.cell user.role.humanize %>
+        <%= t.cell user.current_sign_in_at ? time_ago_in_words(user.current_sign_in_at) + " ago" : nil %>
+        <%= t.cell time_ago_in_words(user.created_at) + " ago" %>
+
+        <% status_and_actions = capture do %>
+          <%= user.status.humanize %>
+        <% end %>
+
+        <%= t.cell status_and_actions %>
+        <%= t.cell two_step_status(user) %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% pages = { } %>
+
+<% pages[:previous_page] = { url: users_path({}.merge(page: @users.prev_page)),
+                             label: "Previous",
+                             title: "Previous page" } if @users.prev_page %>
+
+<% pages[:next_page] = { url: users_path({}.merge(page: @users.next_page)),
+                         label: "Next",
+                         title: "Next page" } if @users.next_page %>
+
+<%= render "govuk_publishing_components/components/previous_and_next_navigation", pages %>
