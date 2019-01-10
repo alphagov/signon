@@ -34,7 +34,11 @@
           <span class="govuk-caption-l"><%= yield(:context) %></span>
           <h1 class="govuk-heading-l"><%= yield(:title) %></h1>
         </div>
+        <div class="govuk-grid-column-one-third app-grid-column--end">
+          <%= yield(:title_side) %>
+        </div>
       </div>
+
       <%= yield %>
     </main>
   </div>
