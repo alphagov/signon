@@ -5,12 +5,10 @@
 
 <%= GovukPublishingComponents::AppHelpers::TableHelper.helper(self, "Users", { sortable: false, caption_classes: "govuk-visually-hidden" }) do |t| %>
   <%= t.head do %>
-    <%= t.header "Name, email, organisation" %>
-    <%= t.header "Role" %>
+    <%= t.header "Name, email, role, organisation" %>
     <%= t.header "Last sign-in" %>
     <%= t.header "Created" %>
     <%= t.header "Status" %>
-    <%= t.header "2SV Status" %>
   <% end %>
 
   <%= t.body do %>
@@ -22,8 +20,8 @@
           </strong>
 
           <%= user.email %><br/>
+          <%= user.role.humanize %><br/>
           <%= user.organisation.try(:name) %>
-          <%= t.cell user.role.humanize %>
         <% end %>
 
         <%= t.cell name %>
@@ -35,7 +33,6 @@
         <% end %>
 
         <%= t.cell status_and_actions %>
-        <%= t.cell two_step_status(user) %>
       <% end %>
     <% end %>
   <% end %>

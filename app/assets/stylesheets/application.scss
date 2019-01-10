@@ -87,9 +87,10 @@
       vertical-align: top;
       white-space: nowrap;
 
-      &:nth-of-type(1) {
-        max-width: none;
-      }
     }
   }
+}
+
+.govuk-select {
+  width: 100%;
 }
