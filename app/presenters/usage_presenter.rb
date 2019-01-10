@@ -1,17 +1,22 @@
 require 'csv'
+require 'fileutils'
 
 class UsagePresenter
   include UsersHelper
 
-  attr_reader :start_date, :end_date
+  attr_reader :start_date, :end_date, :file_system, :file_utils
 
-  def initialize(start_date, end_date)
+  def initialize(start_date, end_date, file_system = File, file_utils = FileUtils)
     @start_date = start_date.beginning_of_day
     @end_date = end_date.end_of_day
+    @file_system = file_system
+    @file_utils = file_utils
   end
 
   def write_csv(path)
-    CSV.open(File.join(path, "usage_report_#{start_date.to_date}_#{end_date.to_date}.csv"), "wb") do |csv|
+    file_utils.mkdir_p(path) unless file_system.directory?(path)
+
+    CSV.open(file_system.join(path, "usage_report_#{start_date.to_date}_#{end_date.to_date}.csv"), "wb") do |csv|
       build_csv(csv)
     end
   end
