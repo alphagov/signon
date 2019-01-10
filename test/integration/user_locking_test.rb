@@ -37,8 +37,7 @@ class UserLockingTest < ActionDispatch::IntegrationTest
 
     visit root_path
     signin_with(admin)
-    first_letter_of_name = user.name[0]
-    visit users_path(letter: first_letter_of_name)
+    visit edit_user_path(user)
     click_button 'Unlock account'
 
     user.reload
