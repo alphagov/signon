@@ -55,7 +55,6 @@ end
 group :test do
   gem 'capybara', '~> 3'
   gem 'capybara-email', '~> 3'
-  gem 'database_cleaner', '~> 1'
   gem 'factory_bot_rails', '~> 4'
   gem 'minitest', '~> 5'
   gem 'mocha', '~> 1', require: false

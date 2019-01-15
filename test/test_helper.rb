@@ -8,20 +8,10 @@ require 'mocha/minitest'
 
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
-  self.use_transactional_tests = false
-
-  def db_cleaner_start
-    DatabaseCleaner.strategy = :truncation
-  end
-
-  setup do
-    db_cleaner_start
-  end
 
   teardown do
     Timecop.return
     WebMock.reset!
-    DatabaseCleaner.clean
     Mail::TestMailer.deliveries.clear
   end
 end
@@ -106,13 +96,6 @@ class ActionDispatch::IntegrationTest
 
   def use_javascript_driver
     Capybara.current_driver = Capybara.javascript_driver
-  end
-
- # Override the default strategy as tests with the JS driver require
- # tests not to be wrapped in a transaction
-  def db_cleaner_start
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.start
   end
 
   setup do
