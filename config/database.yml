@@ -2,7 +2,7 @@
 mysql_default: &mysql_default
   adapter: mysql2
   encoding: utf8
-  reconnect: false
+  reconnect: true
   username: signonotron2
   password: signonotron2
   pool: 5
