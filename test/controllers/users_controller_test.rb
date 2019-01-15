@@ -793,7 +793,17 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "add application access for a user" do
-          put :update, params: { id: @another_user.id, user: { supported_permission_ids: [@application.id] } }
+          put(
+            :update,
+            params: {
+              id: @another_user.id,
+              user: {
+                supported_permission_ids: [
+                  @application.supported_permissions.first.id
+                ]
+              }
+            }
+          )
 
           assert_equal 1, @another_user.reload.application_permissions.count
         end
