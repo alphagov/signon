@@ -111,6 +111,20 @@ namespace :users do
     )
   end
 
+  desc "Grant all active users in an organisation access to an application"
+  task :grant_application_access_for_org, [:application, :org] => :environment do |_t, args|
+    application = Doorkeeper::Application.find_by(name: args.application)
+    raise "Couldn't find application: '#{args.application}'" unless application
+
+    organisation = Organisation.find_by(slug: args.org)
+    raise "Couldn't find organisation (by slug): '#{args.org}'" unless organisation
+
+    SigninPermissionGranter.call(
+      users: organisation.users.web_users.not_suspended.find_each,
+      application: application
+    )
+  end
+
   desc "Migrates user permissions from source to target application"
   task migrate_permissions: :environment do
     source_application = ENV["SOURCE"]
