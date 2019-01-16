@@ -99,23 +99,16 @@ namespace :users do
     UserSuspensionsExporter.call(ENV['EXPORT_DIR'], users_since_date, suspensions_since_date, Logger.new(STDOUT))
   end
 
-  desc "Grant access to Content Preview for all active users who don't have it"
-  task grant_content_preview_access: :environment do
-    if content_preview = Doorkeeper::Application.find_by(name: "Content Preview")
-      User.web_users.not_suspended.find_each do |user|
-        puts "Checking user ##{user.id}: #{user.name}"
-        next if user.application_permissions.map(&:application).include?(content_preview)
+  desc "Grant all active users access to an application, who don't have access"
+  task :grant_application_access, [:application] => :environment do |_t, args|
+    application = Doorkeeper::Application.find_by(name: args.application)
 
-        puts "-- Adding signin permission for #{content_preview.name}"
-        user.grant_application_permission(content_preview, "signin")
+    raise "Couldn't find application: '#{args.application}'" unless application
 
-        if content_preview.supports_push_updates?
-          PermissionUpdater.perform_async(user.uid, content_preview.id)
-        end
-      end
-    else
-      raise "Could not find an application called 'Content Preview'"
-    end
+    SigninPermissionGranter.call(
+      users: User.web_users.not_suspended.find_each,
+      application: application
+    )
   end
 
   desc "Migrates user permissions from source to target application"
