@@ -45,7 +45,7 @@ FactoryBot.define do
   factory :user_with_pending_email_change, parent: :user do
     email { "old@email.com" }
     unconfirmed_email { "new@email.com" }
-    sequence(:confirmation_token) { |n| "#{n}a1s2d3"} # see `token_sent_to` in ConfirmationTokenHelper
+    sequence(:confirmation_token) { |n| "#{n}a1s2d3" } # see `token_sent_to` in ConfirmationTokenHelper
     confirmation_sent_at { Time.zone.now }
   end
 
