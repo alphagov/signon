@@ -1,6 +1,7 @@
 module ComponentHelper
   def navigation_items
     return [] unless current_user
+
     items = []
 
     unless content_for(:suppress_navbar_items)
