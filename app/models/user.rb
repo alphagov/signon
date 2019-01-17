@@ -236,7 +236,7 @@ class User < ActiveRecord::Base
 
   def authenticate_otp(code)
     totp = ROTP::TOTP.new(otp_secret_key)
-    result = totp.verify_with_drift(code, MAX_2SV_DRIFT_SECONDS)
+    result = totp.verify(code, drift_behind: MAX_2SV_DRIFT_SECONDS)
 
     if result
       update_attribute(:second_factor_attempts_count, 0)
