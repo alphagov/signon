@@ -16,6 +16,7 @@ class Devise::TwoStepVerificationSessionController < DeviseController
           valid_until: User::REMEMBER_2SV_SESSION_FOR.from_now,
           secret_hash: Digest::SHA256.hexdigest(current_user.otp_secret_key)
         },
+        secure: Rails.env.production?,
         expires: User::REMEMBER_2SV_SESSION_FOR.from_now
       }
 
