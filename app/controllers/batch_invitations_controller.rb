@@ -31,7 +31,7 @@ class BatchInvitationsController < ApplicationController
       render :new
       return
     end
-    if csv.size < 1 # headers: true means .size is the number of data rows
+    if csv.empty?
       flash[:alert] = "CSV had no rows."
       render :new
       return
