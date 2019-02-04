@@ -59,7 +59,7 @@ end
 group :test do
   gem 'capybara', '~> 3'
   gem 'capybara-email', '~> 3'
-  gem 'factory_bot_rails', '~> 4'
+  gem 'factory_bot_rails', '~> 5'
   gem 'minitest', '~> 5'
   gem 'mocha', '~> 1', require: false
   gem 'poltergeist', '~> 1'
