@@ -481,5 +481,8 @@ DEPENDENCIES
   webmock (~> 3)
   zeroclipboard-rails (~> 0.1)
 
+RUBY VERSION
+   ruby 2.6.1p33
+
 BUNDLED WITH
-   1.17.1
+   1.17.3
