@@ -63,7 +63,7 @@ GEM
     aws-xray-sdk (0.10.2)
       oj (~> 3.0)
     bcrypt (3.1.12)
-    better_errors (2.5.0)
+    better_errors (2.5.1)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
@@ -432,7 +432,7 @@ DEPENDENCIES
   addressable (~> 2)
   alphabetical_paginate!
   ancestry (~> 3)
-  better_errors (= 2.5.0)
+  better_errors (= 2.5.1)
   binding_of_caller (= 0.8.0)
   bootsnap
   bootstrap-kaminari-views (= 0.0.5)
