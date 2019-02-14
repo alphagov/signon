@@ -131,7 +131,7 @@ private
   end
 
   def filter_users
-    @users = @users.filter(params[:filter]) if params[:filter].present?
+    @users = @users.filter_by_name(params[:filter]) if params[:filter].present?
     @users = @users.with_role(params[:role]) if can_filter_role?
     @users = @users.with_organisation(params[:organisation]) if params[:organisation].present?
     @users = @users.with_status(params[:status]) if params[:status].present?
