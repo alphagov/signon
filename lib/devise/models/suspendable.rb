@@ -11,7 +11,7 @@ module Devise
         #       but the one in user model is.
         scope :active, -> { where('suspended_at' => nil) }
         scope :suspended, -> { where('suspended_at IS NOT NULL') }
-        scope :current, proc { |current| current == 't' ? active : suspended }
+        scope(:current, proc { |current| current == 't' ? active : suspended })
       end
 
       def active_for_authentication?

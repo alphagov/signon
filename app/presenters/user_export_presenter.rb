@@ -27,7 +27,7 @@ class UserExportPresenter
       'Created',
       'Status',
       '2SV Status',
-    ].concat applications.map &:name
+    ].concat applications.map(&:name)
   end
 
   def row(user)

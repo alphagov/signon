@@ -31,7 +31,7 @@ class Devise::TwoStepVerificationController < DeviseController
       issuer = "#{Rails.application.config.instance_name.titleize} #{issuer}"
     end
 
-    issuer = URI.escape(issuer)
+    issuer = ERB::Util.url_encode(issuer)
     "otpauth://totp/#{issuer}:#{current_user.email}?secret=#{@otp_secret_key.upcase}&issuer=#{issuer}"
   end
 

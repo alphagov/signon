@@ -109,19 +109,19 @@ class EventLog < ActiveRecord::Base
     EventLog.order('created_at DESC').where(uid: user.uid)
   end
 
-private
-
-  def validate_event_mappable
-    unless entry
-      errors.add(:event_id, "must have a corresponding `LogEntry` for #{event_id}")
-    end
-  end
-
   def self.convert_ip_address_to_integer(ip_address_string)
     ip_address_string.split(/\./).map(&:to_i).pack("C*").unpack1("N")
   end
 
   def self.convert_integer_to_ip_address(integer)
     [integer].pack("N").unpack("C*").join "."
+  end
+
+private
+
+  def validate_event_mappable
+    unless entry
+      errors.add(:event_id, "must have a corresponding `LogEntry` for #{event_id}")
+    end
   end
 end

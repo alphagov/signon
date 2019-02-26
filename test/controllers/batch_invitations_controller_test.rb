@@ -50,7 +50,10 @@ class BatchInvitationsControllerTest < ActionController::TestCase
       assert_not_nil bi
       assert_equal [app.signin_permission], bi.supported_permissions
       expected_names_and_emails = [["Arthur Dent", "a@hhg.com"], ["Tricia McMillan", "t@hhg.com"]]
-      assert_equal expected_names_and_emails, bi.batch_invitation_users.map { |u| [u.name, u.email] }
+      assert_equal(
+        expected_names_and_emails,
+        bi.batch_invitation_users.map { |u| [u.name, u.email] }
+      )
     end
 
     should "store the organisation to invite users to" do

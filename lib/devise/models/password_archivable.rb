@@ -33,7 +33,7 @@ module Devise
                                           end
         end
 
-        if self.class.deny_old_passwords > 0 && !self.password.nil?
+        if self.class.deny_old_passwords.positive? && !self.password.nil?
           old_passwords_including_cur_change = self.old_passwords.order(:id).reverse_order.limit(self.class.deny_old_passwords).to_a
           old_passwords_including_cur_change << OldPassword.new(old_password_params) # include most recent change in list, but don't save it yet!
           old_passwords_including_cur_change.each_with_index do |old_password, _i|
@@ -59,7 +59,7 @@ module Devise
       # archive the last password before save and delete all to old passwords from archive
       def archive_password
         if self.encrypted_password_changed?
-          if archive_count.to_i > 0
+          if archive_count.to_i.positive?
             self.old_passwords.create! old_password_params
             self.old_passwords.order(:id).reverse_order.offset(archive_count).destroy_all
           else
