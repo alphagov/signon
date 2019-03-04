@@ -132,7 +132,7 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.10.0)
-    gds-api-adapters (57.4.1)
+    gds-api-adapters (57.4.2)
       addressable
       link_header
       null_logger
@@ -280,7 +280,7 @@ GEM
     pundit (2.0.0)
       activesupport (>= 3.0.0)
     rack (2.0.6)
-    rack-cache (1.8.0)
+    rack-cache (1.9.0)
       rack (>= 0.4)
     rack-protection (2.0.5)
       rack
