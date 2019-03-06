@@ -178,7 +178,7 @@ GEM
       rake
       rouge
       sass-rails (>= 5.0.4)
-    govuk_sidekiq (3.0.2)
+    govuk_sidekiq (3.0.3)
       gds-api-adapters (>= 19.1.0)
       govuk_app_config (>= 1.1)
       redis-namespace (~> 1.6)
