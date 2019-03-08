@@ -3,7 +3,7 @@
 class UserPermissionManageableApplicationPolicy
   attr_reader :current_user
 
-  def initialize(current_user, _ = nil)
+  def initialize(current_user, _record = nil)
     @current_user = current_user
   end
 
@@ -14,7 +14,7 @@ class UserPermissionManageableApplicationPolicy
   class Scope
     attr_reader :current_user
 
-    def initialize(current_user, _ = nil)
+    def initialize(current_user, _record = nil)
       @current_user = current_user
     end
 

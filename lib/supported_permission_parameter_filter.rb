@@ -20,7 +20,11 @@ class SupportedPermissionParameterFilter
 private
 
   def authorised_supported_permission_ids
-    @authorised_supported_permissions ||= Pundit.policy_scope(current_user, SupportedPermission).pluck(:id).map(&:to_s)
+    @authorised_supported_permission_ids ||=
+      Pundit
+        .policy_scope(current_user, SupportedPermission)
+        .pluck(:id)
+        .map(&:to_s)
   end
 
   def existing_supported_permission_ids
