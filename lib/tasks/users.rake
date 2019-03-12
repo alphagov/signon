@@ -120,7 +120,7 @@ namespace :users do
     raise "Couldn't find organisation (by slug): '#{args.org}'" unless organisation
 
     SigninPermissionGranter.call(
-      users: organisation.users.web_users.not_suspended.find_each,
+      users: organisation.users.web_users.find_each,
       application: application
     )
   end
