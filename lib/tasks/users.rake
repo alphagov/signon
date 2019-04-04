@@ -99,7 +99,7 @@ namespace :users do
     UserSuspensionsExporter.call(ENV['EXPORT_DIR'], users_since_date, suspensions_since_date, Logger.new(STDOUT))
   end
 
-  desc "Grant all active users access to an application, who don't have access"
+  desc "Grant all active and suspended users access to an application, who don't have access"
   task :grant_application_access, [:application] => :environment do |_t, args|
     application = Doorkeeper::Application.find_by(name: args.application)
 
