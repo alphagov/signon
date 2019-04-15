@@ -40,6 +40,7 @@ module Devise
         self.reason_for_suspension = nil
         self.suspended_at = nil
         self.unsuspended_at = Time.zone.now
+        self.password = SecureRandom.hex
         save
       end
 
