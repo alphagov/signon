@@ -288,6 +288,16 @@ class UserTest < ActiveSupport::TestCase
     assert_not_empty u.errors[:password]
   end
 
+  test "unlocking an account should randomise the password" do
+    original_password = "sherlock holmes baker street"
+    u = build(:user, email: "sleuth@gmail.com", password: original_password)
+
+    u.suspend "suspended for shenanigans"
+    u.unsuspend
+
+    refute u.valid_password?(original_password)
+  end
+
   test "it requires a reason for suspension to suspend a user" do
     u = create(:user)
     u.suspended_at = 1.minute.ago
