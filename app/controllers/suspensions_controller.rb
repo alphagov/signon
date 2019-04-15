@@ -3,7 +3,7 @@ class SuspensionsController < ApplicationController
   respond_to :html
 
   def update
-    if params[:user][:suspended] == "1"
+    if params[:user] && params[:user][:suspended] == "1"
       succeeded = @user.suspend(params[:user][:reason_for_suspension])
       action = EventLog::ACCOUNT_SUSPENDED
     else
