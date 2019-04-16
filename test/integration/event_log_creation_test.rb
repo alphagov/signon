@@ -139,8 +139,9 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     visit users_path(letter: first_letter_of_name)
     click_on @user.name.to_s
     click_on 'Suspend user'
+    check 'Suspended?'
     fill_in 'Reason for suspension', with: 'Assaulting superior officer'
-    click_on 'Suspend user'
+    click_on 'Save'
 
     visit event_logs_user_path(@user)
     assert page.has_content?(EventLog::ACCOUNT_SUSPENDED.description + ' by ' + @admin.name)
@@ -164,7 +165,8 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     visit users_path(letter: first_letter_of_name)
     click_on @user.name.to_s
     click_on 'Unsuspend user'
-    click_on 'Unsuspend user'
+    uncheck 'Suspended?'
+    click_on 'Save'
 
     visit event_logs_user_path(@user)
     assert page.has_content?(EventLog::ACCOUNT_UNSUSPENDED.description + ' by ' + @admin.name)

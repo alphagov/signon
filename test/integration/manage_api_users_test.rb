@@ -99,13 +99,15 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       click_link @api_user.name
       click_link "Suspend user"
 
+      check "Suspended?"
       fill_in "Reason for suspension", with: "Stole data"
-      click_button "Suspend user"
+      click_button "Save"
 
       assert page.has_selector?("p.alert-warning", text: "User suspended: Stole data")
 
       click_link "Unsuspend user"
-      click_button "Unsuspend user"
+      uncheck "Suspended?"
+      click_button "Save"
 
       assert page.has_selector?(".alert-success", text: "#{@api_user.email} is now active.")
     end
