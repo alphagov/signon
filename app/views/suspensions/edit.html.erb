@@ -19,6 +19,7 @@
     <%= text_field_tag "user[reason_for_suspension]", @user.reason_for_suspension, class: 'form-control input-md-6' %>
   </div>
   <hr />
+  <p>After the user has been unsuspended, they will need to reset their password.</p>
   <%= submit_tag "Save", class: "btn btn-primary add-right-margin" %>
   <%= link_to "Cancel", user_path(@user), class: "btn btn-default" %>
 <% end %>
