@@ -1,8 +1,12 @@
 class CloneTradeTariffAdmin < ActiveRecord::Migration[5.2]
+  class SupportedPermission < ActiveRecord::Base
+    belongs_to :application, class_name: 'Doorkeeper::Application'
+  end
+
   def up
     ActiveRecord::Base.transaction do
-      existing_trade_tariff_admin = Doorkeeper::Application.find(47)
-      cloned_trade_tariff_admin = Doorkeeper::Application.new
+      existing_trade_tariff_admin = ::Doorkeeper::Application.find_by_name("Trade Tariff Admin (PaaS)")
+      cloned_trade_tariff_admin = ::Doorkeeper::Application.new
       existing_trade_tariff_admin.attributes.each_pair do |key, value|
         if !%w(created_at updated_at id uid).include?(key)
           cloned_trade_tariff_admin[key] = value
@@ -11,7 +15,7 @@ class CloneTradeTariffAdmin < ActiveRecord::Migration[5.2]
       cloned_trade_tariff_admin.name = "New London: #{cloned_trade_tariff_admin.name}"
       cloned_trade_tariff_admin.save!
 
-      existing_trade_tariff_admin.supported_permissions.each do |existing_supported_permission|
+      SupportedPermission.where(application_id: existing_trade_tariff_admin.id).each do |existing_supported_permission|
         # Some are created by default and the index will complain if we try to duplicate them
         if !SupportedPermission.exists?(application_id: cloned_trade_tariff_admin.id, name: existing_supported_permission.name)
           cloned_supported_permission = SupportedPermission.new
