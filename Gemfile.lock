@@ -54,7 +54,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.6.0)
       public_suffix (>= 2.0.2, < 4.0)
-    ancestry (3.0.5)
+    ancestry (3.0.6)
       activerecord (>= 3.2.0)
     arel (9.0.0)
     ast (2.4.0)
