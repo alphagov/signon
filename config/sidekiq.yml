@@ -7,5 +7,4 @@
 :logfile: ./log/sidekiq.log
 :queues:
   - default
-  - mailer # Remove this once using `mailers` only.
   - mailers
