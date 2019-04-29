@@ -173,7 +173,7 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   context "recording user's ip address" do
-    should "record user's ip address on login" do
+    should "record user's IPv4 address on login" do
       page.driver.options[:headers] = { 'REMOTE_ADDR' => '1.2.3.4' }
       visit root_path
       signin_with(@user)
@@ -182,14 +182,13 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
       assert_equal '1.2.3.4', ip_address
     end
 
-    should "call alert error service for ipv6 addresses" do
+    should "record user's IPv6 address on login" do
       page.driver.options[:headers] = { 'REMOTE_ADDR' => '2001:0db8:0000:0000:0008:0800:200c:417a' }
-      GovukError.expects(:notify)
       visit root_path
       signin_with(@user)
 
-      ip_address = @user.event_logs.first.ip_address
-      assert_nil ip_address
+      ip_address = @user.event_logs.first.ip_address_string
+      assert_equal '2001:db8::8:800:200c:417a', ip_address
     end
   end
 

@@ -1,4 +1,5 @@
-require "resolv"
+require "ipaddr"
+
 class EventLog < ActiveRecord::Base
   deprecated_columns :event
 
@@ -77,12 +78,7 @@ class EventLog < ActiveRecord::Base
 
   def self.record_event(user, event, options = {})
     if options[:ip_address]
-      if Resolv::IPv6::Regex.match?(options[:ip_address])
-        GovukError.notify("Received IP address: #{options[:ip_address]}. IPv6 logging is not supported yet")
-        options[:ip_address] = nil
-      else
-        options[:ip_address] = convert_ip_address_to_integer(options[:ip_address])
-      end
+      options[:ip_address] = convert_ip_address_to_integer(options[:ip_address])
     end
     attributes = {
       uid: user.uid,
@@ -110,11 +106,17 @@ class EventLog < ActiveRecord::Base
   end
 
   def self.convert_ip_address_to_integer(ip_address_string)
-    ip_address_string.split(/\./).map(&:to_i).pack("C*").unpack1("N")
+    IPAddr.new(ip_address_string).to_i
   end
 
   def self.convert_integer_to_ip_address(integer)
-    [integer].pack("N").unpack("C*").join "."
+    if integer.to_s.length == 38
+      # IPv6 address
+      IPAddr.new(integer, Socket::AF_INET6).to_s
+    else
+      # IPv4 address
+      IPAddr.new(integer, Socket::AF_INET).to_s
+    end
   end
 
 private
