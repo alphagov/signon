@@ -447,6 +447,7 @@ DEPENDENCIES
   devise_zxcvbn (~> 1)
   doorkeeper (~> 5)
   factory_bot_rails (~> 5)
+  faraday (~> 0.15)
   gds-api-adapters (~> 59)
   govuk-lint (~> 3)
   govuk_admin_template (~> 6)
