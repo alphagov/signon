@@ -25,7 +25,9 @@ class UserLockingTest < ActionDispatch::IntegrationTest
     user = create(:user)
     visit root_path
 
-    assert_enqueued_jobs(1) do
+    # One job is enqueued to send the email, 9 jobs are enqueued to stream log entries
+    # for each incorrect login attempt and the email sending
+    assert_enqueued_jobs(10) do
       8.times { signin_with(email: user.email, password: "wrong password") }
     end
   end

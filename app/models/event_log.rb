@@ -76,6 +76,29 @@ class EventLog < ActiveRecord::Base
     self.class.convert_integer_to_ip_address(self.ip_address)
   end
 
+  def send_to_splunk(*)
+    return unless ENV['SPLUNK_EVENT_LOG_ENDPOINT_URL'] && ENV['SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN']
+
+    event = {
+      id: self.id,
+      uid: self.uid,
+      created_at: self.created_at,
+      initiator_name: self.initiator&.name,
+      application_name: self.application&.name,
+      trailing_message: self.trailing_message,
+      event: self.event,
+      ip_address: (self.ip_address_string if self.ip_address.present?),
+      user_agent: self.user_agent&.user_agent_string
+    }
+
+    conn = Faraday.new(ENV['SPLUNK_EVENT_LOG_ENDPOINT_URL'])
+    conn.post do |request|
+      request.headers['Content-Type'] = 'application/json'
+      request.headers['Authorization'] = "Splunk #{ENV['SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN']}"
+      request.body = event.to_json
+    end
+  end
+
   def self.record_event(user, event, options = {})
     if options[:ip_address]
       options[:ip_address] = convert_ip_address_to_integer(options[:ip_address])
@@ -85,7 +108,11 @@ class EventLog < ActiveRecord::Base
       event_id: event.id
     }.merge!(options.slice(*VALID_OPTIONS))
 
-    EventLog.create!(attributes)
+    event_log_entry = EventLog.create!(attributes)
+
+    SplunkLogStreamingJob.perform_later(event_log_entry.id)
+
+    event_log_entry
   end
 
   def self.record_email_change(user, email_was, email_is, initiator = user)
