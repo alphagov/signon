@@ -80,15 +80,15 @@ class EventLog < ActiveRecord::Base
     return unless ENV['SPLUNK_EVENT_LOG_ENDPOINT_URL'] && ENV['SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN']
 
     event = {
-      id: self.id,
-      uid: self.uid,
-      created_at: self.created_at,
-      initiator_name: self.initiator&.name,
-      application_name: self.application&.name,
-      trailing_message: self.trailing_message,
-      event: self.event,
-      ip_address: (self.ip_address_string if self.ip_address.present?),
-      user_agent: self.user_agent&.user_agent_string
+      timestamp: self.created_at,
+      app: self.application&.name,
+      object_id: self.id,
+      user: self.initiator&.name,
+      user_uid: self.uid,
+      src_ip: (self.ip_address_string if self.ip_address.present?),
+      action: self.event,
+      result: self.trailing_message,
+      http_user_agent: self.user_agent&.user_agent_string
     }
 
     conn = Faraday.new(ENV['SPLUNK_EVENT_LOG_ENDPOINT_URL'])
