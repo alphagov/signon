@@ -1,5 +1,5 @@
 module UserPermissionsControllerMethods
-private
+private # rubocop:disable Layout/IndentationWidth
 
   def visible_applications(user)
     if user.api_user?

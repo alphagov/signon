@@ -1,5 +1,5 @@
 module TwoStepVerificationHelper
-private
+private # rubocop:disable Layout/IndentationWidth
 
   def handle_two_step_verification
     if signed_in?(:user)
