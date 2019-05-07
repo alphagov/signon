@@ -95,7 +95,7 @@ class EventLog < ActiveRecord::Base
     conn.post do |request|
       request.headers['Content-Type'] = 'application/json'
       request.headers['Authorization'] = "Splunk #{ENV['SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN']}"
-      request.body = event.to_json
+      request.body = { event: event }.to_json
     end
   end
 
