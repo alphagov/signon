@@ -13,8 +13,8 @@ class OrganisationsFetcher
     # Now that any new organisations have been created and any slug changes
     # have been applied, we can safely tie together organisations
     update_ancestry(organisation_relationships)
-  rescue ActiveRecord::RecordInvalid => invalid
-    raise "Couldn't save organisation #{invalid.record.slug} because: #{invalid.record.errors.full_messages.join(',')}"
+  rescue ActiveRecord::RecordInvalid => e
+    raise "Couldn't save organisation #{e.record.slug} because: #{e.record.errors.full_messages.join(',')}"
   end
 
 private
