@@ -45,7 +45,7 @@ gem 'govuk_admin_template', '~> 6'
 gem 'govuk_app_config', '~> 1'
 gem 'govuk_publishing_components', '~> 16'
 gem 'govuk_sidekiq', '~> 3'
-gem 'plek', '~> 2'
+gem 'plek', '~> 3'
 
 group :development do
   gem 'better_errors', '2.5.1'
