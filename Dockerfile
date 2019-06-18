@@ -22,6 +22,7 @@ ADD . $APP_HOME
 RUN GOVUK_APP_DOMAIN=www.gov.uk RAILS_ENV=production \
   DEVISE_PEPPER=`openssl rand -base64 40` \
   DEVISE_SECRET_KEY=`openssl rand -base64 40` \
+  GOVUK_WEBSITE_ROOT=https://www.gov.uk \
   bundle exec rails assets:clean assets:precompile
 
 HEALTHCHECK CMD curl --silent --fail localhost:$PORT || exit 1
