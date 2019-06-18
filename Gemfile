@@ -35,7 +35,7 @@ gem 'sass-rails', '~> 5'
 gem 'sprockets-rails', '~> 3'
 gem 'uglifier', '~> 4'
 gem 'uuid'
-gem 'whenever', '~> 0.11'
+gem 'whenever', '~> 1.0'
 gem 'zeroclipboard-rails', '~> 0.1'
 
 # GDS Gems
