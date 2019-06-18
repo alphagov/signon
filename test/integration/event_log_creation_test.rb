@@ -173,7 +173,7 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   context "recording user's ip address" do
-    should "record user's IPv4 address on login" do
+    should "record user's IPv4 address for successful login" do
       page.driver.options[:headers] = { 'REMOTE_ADDR' => '1.2.3.4' }
       visit root_path
       signin_with(@user)
@@ -182,7 +182,16 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
       assert_equal '1.2.3.4', ip_address
     end
 
-    should "record user's IPv6 address on login" do
+    should "record user's IPv4 address for unsuccessful login" do
+      page.driver.options[:headers] = { 'REMOTE_ADDR' => '4.5.6.7' }
+      visit root_path
+      signin_with(email: @user.email, password: :incorrect)
+
+      ip_address = @user.event_logs.last.ip_address_string
+      assert_equal '4.5.6.7', ip_address
+    end
+
+    should "record user's IPv6 address" do
       page.driver.options[:headers] = { 'REMOTE_ADDR' => '2001:0db8:0000:0000:0008:0800:200c:417a' }
       visit root_path
       signin_with(@user)
