@@ -80,7 +80,7 @@ class EventLog < ActiveRecord::Base
     return unless ENV['SPLUNK_EVENT_LOG_ENDPOINT_URL'] && ENV['SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN']
 
     event = {
-      timestamp: self.created_at,
+      timestamp: self.created_at.utc,
       app: self.application&.name,
       object_id: self.id,
       user: self.initiator&.name,
