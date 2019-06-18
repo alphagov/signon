@@ -29,6 +29,10 @@ class ApplicationController < ActionController::Base
 
 private
 
+  def user_ip_address
+    request.remote_ip
+  end
+
   def doorkeeper_authorize!
     original_return_value = super
     return original_return_value if api_user_via_token_has_signin_permission_on_app?

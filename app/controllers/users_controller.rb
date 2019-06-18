@@ -57,7 +57,7 @@ class UsersController < ApplicationController
   end
 
   def unlock
-    EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK, initiator: current_user)
+    EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK, initiator: current_user, ip_address: user_ip_address)
     @user.unlock_access!
     flash[:notice] = "Unlocked #{@user.email}"
     redirect_back(fallback_location: root_path)
@@ -106,12 +106,12 @@ class UsersController < ApplicationController
 
   def update_password
     if @user.update_with_password(password_params)
-      EventLog.record_event(@user, EventLog::SUCCESSFUL_PASSWORD_CHANGE)
+      EventLog.record_event(@user, EventLog::SUCCESSFUL_PASSWORD_CHANGE, ip_address: user_ip_address)
       flash[:notice] = t(:updated, scope: 'devise.passwords')
       bypass_sign_in(@user)
       redirect_to root_path
     else
-      EventLog.record_event(@user, EventLog::UNSUCCESSFUL_PASSWORD_CHANGE)
+      EventLog.record_event(@user, EventLog::UNSUCCESSFUL_PASSWORD_CHANGE, ip_address: user_ip_address)
       render :edit_email_or_password, layout: "admin_layout"
     end
   end
