@@ -1,10 +1,11 @@
 class UserUpdate
-  attr_reader :user, :user_params, :current_user
+  attr_reader :user, :user_params, :current_user, :user_ip
 
-  def initialize(user, user_params, current_user)
+  def initialize(user, user_params, current_user, user_ip)
     @user = user
     @user_params = user_params
     @current_user = current_user
+    @user_ip = user_ip
   end
 
   def update
@@ -47,6 +48,7 @@ private
         initiator: current_user,
         application_id: application_id,
         trailing_message: "(#{permissions.map(&:name).join(', ')})",
+        ip_address: user_ip
       )
     end
 
@@ -56,7 +58,8 @@ private
         EventLog::PERMISSIONS_REMOVED,
         initiator: current_user,
         application_id: application_id,
-        trailing_message: "(#{permissions.map(&:name).join(', ')})"
+        trailing_message: "(#{permissions.map(&:name).join(', ')})",
+        ip_address: user_ip
       )
     end
   end
@@ -66,6 +69,7 @@ private
       user,
       EventLog::ACCOUNT_UPDATED,
       initiator: current_user,
+      ip_address: user_ip
     )
   end
 
