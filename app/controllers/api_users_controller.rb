@@ -26,7 +26,7 @@ class ApiUsersController < ApplicationController
     @api_user.api_user = true
 
     if @api_user.save
-      EventLog.record_event(@api_user, EventLog::API_USER_CREATED, initiator: current_user)
+      EventLog.record_event(@api_user, EventLog::API_USER_CREATED, initiator: current_user, ip_address: user_ip_address)
       redirect_to [:edit, @api_user], notice: "Successfully created API user"
     else
       render :new

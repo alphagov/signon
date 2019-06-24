@@ -51,8 +51,7 @@ class ApiUsersControllerTest < ActionController::TestCase
 
       should "log API user created event in the api users event log" do
         EventLog.stubs(:record_event) # to ignore logs being created, other than the one under test
-        EventLog.expects(:record_event).with(instance_of(ApiUser), EventLog::API_USER_CREATED, initiator: @superadmin)
-
+        EventLog.expects(:record_event).with(instance_of(ApiUser), EventLog::API_USER_CREATED, initiator: @superadmin, ip_address: request.remote_ip)
         post :create, params: { api_user: { name: "Content Store Application", email: "content.store@gov.uk" } }
       end
 
