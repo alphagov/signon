@@ -316,7 +316,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rotp (4.1.0)
+    rotp (5.1.0)
       addressable (~> 2.5)
     rouge (3.5.1)
     rqrcode (0.10.1)
@@ -459,7 +459,7 @@ DEPENDENCIES
   rails-html-sanitizer (~> 1)
   rake (~> 12)
   redis (~> 4)
-  rotp (~> 4)
+  rotp (~> 5)
   rqrcode
   sass-rails (~> 5)
   shoulda-context (~> 1)
