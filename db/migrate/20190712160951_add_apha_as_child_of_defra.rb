@@ -1,4 +1,4 @@
-class AddAphaAsChildOfDefra < ActiveRecord::Migration
+class AddAphaAsChildOfDefra < ActiveRecord::Migration[5.2]
   def up
     defra = Organisation.find_by_abbreviation("Defra")
     puts "!! Couldn't find Defra" && return if defra.nil?
