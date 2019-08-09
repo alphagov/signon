@@ -43,7 +43,7 @@ gem 'deprecated_columns', '0.1.1'
 gem 'gds-api-adapters', '~> 59'
 gem 'govuk_admin_template', '~> 6'
 gem 'govuk_app_config', '~> 1'
-gem 'govuk_publishing_components', '~> 17'
+gem 'govuk_publishing_components', '~> 18'
 gem 'govuk_sidekiq', '~> 3'
 gem 'plek', '~> 3'
 
