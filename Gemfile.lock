@@ -131,7 +131,7 @@ GEM
     faraday (0.15.4)
       multipart-post (>= 1.2, < 3)
     ffi (1.11.1)
-    gds-api-adapters (59.6.0)
+    gds-api-adapters (60.0.0)
       addressable
       link_header
       null_logger
@@ -176,6 +176,7 @@ GEM
       sidekiq-logging-json (~> 0.0)
       sidekiq-statsd (~> 0.1)
     hashdiff (1.0.0)
+    http-accept (1.7.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (1.6.0)
@@ -312,7 +313,8 @@ GEM
     responders (3.0.0)
       actionpack (>= 5.0)
       railties (>= 5.0)
-    rest-client (2.0.2)
+    rest-client (2.1.0)
+      http-accept (>= 1.7.0, < 2.0)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
@@ -435,7 +437,7 @@ DEPENDENCIES
   doorkeeper (~> 5)
   factory_bot_rails (~> 5)
   faraday (~> 0.15)
-  gds-api-adapters (~> 59)
+  gds-api-adapters (~> 60)
   govuk-lint (~> 3)
   govuk_admin_template (~> 6)
   govuk_app_config (~> 1)
