@@ -6,53 +6,54 @@ class EventLog < ActiveRecord::Base
   LOCKED_DURATION = "#{Devise.unlock_in / 1.hour} #{'hour'.pluralize(Devise.unlock_in / 1.hour)}".freeze
 
   EVENTS = [
-    ACCOUNT_LOCKED = LogEntry.new(id: 1, description: "Password verification failed too many times, account locked for #{LOCKED_DURATION}"),
-    ACCOUNT_SUSPENDED = LogEntry.new(id: 2, description: "Account suspended", require_initiator: true),
-    ACCOUNT_UNSUSPENDED = LogEntry.new(id: 3, description: "Account unsuspended", require_initiator: true),
-    ACCOUNT_AUTOSUSPENDED = LogEntry.new(id: 4, description: "Account auto-suspended"),
-    MANUAL_ACCOUNT_UNLOCK = LogEntry.new(id: 5, description: "Manual account unlock", require_initiator: true),
-    PASSWORD_RESET_REQUEST = LogEntry.new(id: 7, description: "Password reset request"),
-    PASSWORD_RESET_LOADED = LogEntry.new(id: 8, description: "Password reset page loaded"),
-    PASSWORD_RESET_FAILURE = LogEntry.new(id: 9, description: "Password reset attempt failure"),
-    SUCCESSFUL_PASSWORD_CHANGE = LogEntry.new(id: 10, description: "Successful password change"),
-    SUCCESSFUL_LOGIN = LogEntry.new(id: 11, description: "Successful login"),
-    UNSUCCESSFUL_LOGIN = LogEntry.new(id: 12, description: "Unsuccessful login"),
-    SUSPENDED_ACCOUNT_AUTHENTICATED_LOGIN = LogEntry.new(id: 13, description: "Unsuccessful login attempt to a suspended account, with the correct username and password"),
-    UNSUCCESSFUL_PASSWORD_CHANGE = LogEntry.new(id: 14, description: "Unsuccessful password change"),
-    EMAIL_CHANGED = LogEntry.new(id: 15, description: "Email changed", require_initiator: true),
-    EMAIL_CHANGE_INITIATED = LogEntry.new(id: 16, description: "Email change initiated"),
-    EMAIL_CHANGE_CONFIRMED = LogEntry.new(id: 17, description: "Email change confirmed"),
-    TWO_STEP_ENABLED = LogEntry.new(id: 18, description: "2-step verification enabled"),
-    TWO_STEP_RESET = LogEntry.new(id: 19, description: "2-step verification reset"),
-    TWO_STEP_ENABLE_FAILED = LogEntry.new(id: 20, description: "2-step verification setup failed"),
-    TWO_STEP_VERIFIED = LogEntry.new(id: 21, description: "2-step verification successful"),
-    TWO_STEP_VERIFICATION_FAILED = LogEntry.new(id: 22, description: "2-step verification failed"),
-    TWO_STEP_LOCKED = LogEntry.new(id: 23, description: "2-step verification failed too many times, account locked for #{LOCKED_DURATION}"),
-    TWO_STEP_CHANGED = LogEntry.new(id: 24, description: "2-step verification phone changed"),
-    TWO_STEP_CHANGE_FAILED = LogEntry.new(id: 25, description: "2-step verification phone change failed"),
-    TWO_STEP_PROMPT_DEFERRED = LogEntry.new(id: 26, description: "2-step prompt deferred"),
-    API_USER_CREATED = LogEntry.new(id: 27, description: "Account created", require_initiator: true),
-    ACCESS_TOKEN_REGENERATED = LogEntry.new(id: 28, description: "Access token re-generated", require_application: true),
-    ACCESS_TOKEN_GENERATED = LogEntry.new(id: 29, description: "Access token generated", require_application: true, require_initiator: true),
-    ACCESS_TOKEN_REVOKED = LogEntry.new(id: 30, description: "Access token revoked", require_application: true, require_initiator: true),
-    PASSWORD_RESET_LOADED_BUT_TOKEN_EXPIRED = LogEntry.new(id: 31, description: "Password reset page loaded but the token has expired"),
-    SUCCESSFUL_PASSWORD_RESET = LogEntry.new(id: 32, description: "Password reset successfully"),
-    ROLE_CHANGED = LogEntry.new(id: 33, description: "Role changed", require_initiator: true),
-    ACCOUNT_UPDATED = LogEntry.new(id: 34, description: "Account updated", require_initiator: true),
-    PERMISSIONS_ADDED = LogEntry.new(id: 35, description: "Permissions added", require_initiator: true),
-    PERMISSIONS_REMOVED = LogEntry.new(id: 36, description: "Permissions removed", require_initiator: true),
-    ACCOUNT_INVITED = LogEntry.new(id: 37, description: "Account was invited", require_initiator: true),
+    ACCOUNT_LOCKED = LogEntry.new(id: 1, description: "Password verification failed too many times, account locked for #{LOCKED_DURATION}", require_uid: true),
+    ACCOUNT_SUSPENDED = LogEntry.new(id: 2, description: "Account suspended", require_uid: true, require_initiator: true),
+    ACCOUNT_UNSUSPENDED = LogEntry.new(id: 3, description: "Account unsuspended", require_uid: true, require_initiator: true),
+    ACCOUNT_AUTOSUSPENDED = LogEntry.new(id: 4, description: "Account auto-suspended", require_uid: true),
+    MANUAL_ACCOUNT_UNLOCK = LogEntry.new(id: 5, description: "Manual account unlock", require_uid: true, require_initiator: true),
+    PASSWORD_RESET_REQUEST = LogEntry.new(id: 7, description: "Password reset request", require_uid: true),
+    PASSWORD_RESET_LOADED = LogEntry.new(id: 8, description: "Password reset page loaded", require_uid: true),
+    PASSWORD_RESET_FAILURE = LogEntry.new(id: 9, description: "Password reset attempt failure", require_uid: true),
+    SUCCESSFUL_PASSWORD_CHANGE = LogEntry.new(id: 10, description: "Successful password change", require_uid: true),
+    SUCCESSFUL_LOGIN = LogEntry.new(id: 11, description: "Successful login", require_uid: true),
+    UNSUCCESSFUL_LOGIN = LogEntry.new(id: 12, description: "Unsuccessful login", require_uid: true),
+    SUSPENDED_ACCOUNT_AUTHENTICATED_LOGIN = LogEntry.new(id: 13, description: "Unsuccessful login attempt to a suspended account, with the correct username and password", require_uid: true),
+    UNSUCCESSFUL_PASSWORD_CHANGE = LogEntry.new(id: 14, description: "Unsuccessful password change", require_uid: true),
+    EMAIL_CHANGED = LogEntry.new(id: 15, description: "Email changed", require_uid: true, require_initiator: true),
+    EMAIL_CHANGE_INITIATED = LogEntry.new(id: 16, description: "Email change initiated", require_uid: true),
+    EMAIL_CHANGE_CONFIRMED = LogEntry.new(id: 17, description: "Email change confirmed", require_uid: true),
+    TWO_STEP_ENABLED = LogEntry.new(id: 18, description: "2-step verification enabled", require_uid: true),
+    TWO_STEP_RESET = LogEntry.new(id: 19, description: "2-step verification reset", require_uid: true),
+    TWO_STEP_ENABLE_FAILED = LogEntry.new(id: 20, description: "2-step verification setup failed", require_uid: true),
+    TWO_STEP_VERIFIED = LogEntry.new(id: 21, description: "2-step verification successful", require_uid: true),
+    TWO_STEP_VERIFICATION_FAILED = LogEntry.new(id: 22, description: "2-step verification failed", require_uid: true),
+    TWO_STEP_LOCKED = LogEntry.new(id: 23, description: "2-step verification failed too many times, account locked for #{LOCKED_DURATION}", require_uid: true),
+    TWO_STEP_CHANGED = LogEntry.new(id: 24, description: "2-step verification phone changed", require_uid: true),
+    TWO_STEP_CHANGE_FAILED = LogEntry.new(id: 25, description: "2-step verification phone change failed", require_uid: true),
+    TWO_STEP_PROMPT_DEFERRED = LogEntry.new(id: 26, description: "2-step prompt deferred", require_uid: true),
+    API_USER_CREATED = LogEntry.new(id: 27, description: "Account created", require_uid: true, require_initiator: true),
+    ACCESS_TOKEN_REGENERATED = LogEntry.new(id: 28, description: "Access token re-generated", require_uid: true, require_application: true),
+    ACCESS_TOKEN_GENERATED = LogEntry.new(id: 29, description: "Access token generated", require_uid: true, require_application: true, require_initiator: true),
+    ACCESS_TOKEN_REVOKED = LogEntry.new(id: 30, description: "Access token revoked", require_uid: true, require_application: true, require_initiator: true),
+    PASSWORD_RESET_LOADED_BUT_TOKEN_EXPIRED = LogEntry.new(id: 31, description: "Password reset page loaded but the token has expired", require_uid: true),
+    SUCCESSFUL_PASSWORD_RESET = LogEntry.new(id: 32, description: "Password reset successfully", require_uid: true),
+    ROLE_CHANGED = LogEntry.new(id: 33, description: "Role changed", require_uid: true, require_initiator: true),
+    ACCOUNT_UPDATED = LogEntry.new(id: 34, description: "Account updated", require_uid: true, require_initiator: true),
+    PERMISSIONS_ADDED = LogEntry.new(id: 35, description: "Permissions added", require_uid: true, require_initiator: true),
+    PERMISSIONS_REMOVED = LogEntry.new(id: 36, description: "Permissions removed", require_uid: true, require_initiator: true),
+    ACCOUNT_INVITED = LogEntry.new(id: 37, description: "Account was invited", require_uid: true, require_initiator: true),
 
     # We no longer expire passwords, but we keep this event for history purposes
     PASSWORD_EXPIRED = LogEntry.new(id: 6, description: "Password expired"),
   ].freeze
 
+  EVENTS_REQUIRING_UID = EVENTS.select(&:require_uid?)
   EVENTS_REQUIRING_INITIATOR = EVENTS.select(&:require_initiator?)
   EVENTS_REQUIRING_APPLICATION = EVENTS.select(&:require_application?)
 
   VALID_OPTIONS = %i[initiator application application_id trailing_message ip_address user_agent_id user_agent_string].freeze
 
-  validates :uid, presence: true
+  validates_presence_of :uid, if: Proc.new { |event_log| EVENTS_REQUIRING_UID.include? event_log.entry }
   validates_presence_of :event_id
   validate :validate_event_mappable
   validates_presence_of :initiator_id,   if: Proc.new { |event_log| EVENTS_REQUIRING_INITIATOR.include? event_log.entry }
@@ -106,7 +107,7 @@ class EventLog < ActiveRecord::Base
       options[:ip_address] = convert_ip_address_to_integer(options[:ip_address])
     end
     attributes = {
-      uid: user.uid,
+      uid: user&.uid,
       event_id: event.id
     }.merge!(options.slice(*VALID_OPTIONS))
 
