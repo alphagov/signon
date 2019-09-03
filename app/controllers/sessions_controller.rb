@@ -29,7 +29,9 @@ private
     else
       # Call to_s to flatten out any unexpected params (eg a hash).
       user = User.find_by_email(params[:user][:email].to_s)
-      EventLog.record_event(user, EventLog::UNSUCCESSFUL_LOGIN, ip_address: user_ip_address) if user
+      EventLog.record_event(user, EventLog::UNSUCCESSFUL_LOGIN,
+                            ip_address: user_ip_address,
+                            user_agent_string: user_agent) if user
     end
   end
 

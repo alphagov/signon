@@ -37,7 +37,7 @@
               <%= log.ip_address_string %>
             <% end %>
             <% if log.user_agent_id %>
-                <% browser = Browser.new(log.user_agent_string) %>
+                <% browser = Browser.new(log.user_agent_as_string) %>
                 <%= browser.name + ' ' + browser.version %>
             <% end %>
           </td>

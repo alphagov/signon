@@ -50,7 +50,7 @@ class EventLog < ActiveRecord::Base
   EVENTS_REQUIRING_INITIATOR = EVENTS.select(&:require_initiator?)
   EVENTS_REQUIRING_APPLICATION = EVENTS.select(&:require_application?)
 
-  VALID_OPTIONS = %i[initiator application application_id trailing_message ip_address user_agent_id].freeze
+  VALID_OPTIONS = %i[initiator application application_id trailing_message ip_address user_agent_id user_agent_string].freeze
 
   validates :uid, presence: true
   validates_presence_of :event_id
@@ -62,7 +62,9 @@ class EventLog < ActiveRecord::Base
   belongs_to :application, class_name: "Doorkeeper::Application"
   belongs_to :user_agent
 
-  delegate :user_agent_string, to: :user_agent
+  def user_agent_as_string
+    self.user_agent&.user_agent_string || self.user_agent_string
+  end
 
   def event
     entry.description
@@ -88,7 +90,7 @@ class EventLog < ActiveRecord::Base
       src_ip: (self.ip_address_string if self.ip_address.present?),
       action: self.event,
       result: self.trailing_message,
-      http_user_agent: self.user_agent&.user_agent_string
+      http_user_agent: self.user_agent_as_string,
     }
 
     conn = Faraday.new(ENV['SPLUNK_EVENT_LOG_ENDPOINT_URL'])
