@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_03_085803) do
+ActiveRecord::Schema.define(version: 2019_09_03_120837) do
 
   create_table "batch_invitation_application_permissions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "batch_invitation_id", null: false
@@ -59,7 +59,7 @@ ActiveRecord::Schema.define(version: 2019_09_03_085803) do
   end
 
   create_table "event_logs", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "uid", null: false
+    t.string "uid"
     t.datetime "created_at", null: false
     t.integer "initiator_id"
     t.integer "application_id"
