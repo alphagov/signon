@@ -42,6 +42,7 @@ class EventLog < ActiveRecord::Base
     PERMISSIONS_ADDED = LogEntry.new(id: 35, description: "Permissions added", require_uid: true, require_initiator: true),
     PERMISSIONS_REMOVED = LogEntry.new(id: 36, description: "Permissions removed", require_uid: true, require_initiator: true),
     ACCOUNT_INVITED = LogEntry.new(id: 37, description: "Account was invited", require_uid: true, require_initiator: true),
+    NO_SUCH_ACCOUNT_LOGIN = LogEntry.new(id: 38, description: "Attempted login to nonexistent account"),
 
     # We no longer expire passwords, but we keep this event for history purposes
     PASSWORD_EXPIRED = LogEntry.new(id: 6, description: "Password expired"),
@@ -51,7 +52,7 @@ class EventLog < ActiveRecord::Base
   EVENTS_REQUIRING_INITIATOR = EVENTS.select(&:require_initiator?)
   EVENTS_REQUIRING_APPLICATION = EVENTS.select(&:require_application?)
 
-  VALID_OPTIONS = %i[initiator application application_id trailing_message ip_address user_agent_id user_agent_string].freeze
+  VALID_OPTIONS = %i[initiator application application_id trailing_message ip_address user_agent_id user_agent_string user_email_string].freeze
 
   validates_presence_of :uid, if: Proc.new { |event_log| EVENTS_REQUIRING_UID.include? event_log.entry }
   validates_presence_of :event_id
@@ -86,7 +87,7 @@ class EventLog < ActiveRecord::Base
       timestamp: self.created_at.utc,
       app: self.application&.name,
       object_id: self.id,
-      user: self.initiator&.name,
+      user: self.initiator&.name || self.user_email_string,
       user_uid: self.uid,
       src_ip: (self.ip_address_string if self.ip_address.present?),
       action: self.event,

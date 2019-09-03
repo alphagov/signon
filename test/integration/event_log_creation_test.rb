@@ -26,11 +26,12 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
       assert_equal EventLog::UNSUCCESSFUL_LOGIN, @user.event_logs.last.entry
     end
 
-    should "log nothing for an invalid email" do
+    should "record an invalid email" do
       visit root_path
       signin_with(email: "nonexistent@example.com", password: "anything")
 
-      assert_equal 0, EventLog.count
+      assert_equal 1, EventLog.count
+      assert_equal EventLog::NO_SUCH_ACCOUNT_LOGIN, EventLog.last.entry
     end
 
     should "raise an error when missing CSRF token" do
