@@ -28,8 +28,18 @@ private
                             user_agent_id: user_agent_record_id)
     else
       # Call to_s to flatten out any unexpected params (eg a hash).
-      user = User.find_by_email(params[:user][:email].to_s)
-      EventLog.record_event(user, EventLog::UNSUCCESSFUL_LOGIN, ip_address: user_ip_address) if user
+      email = params[:user][:email].to_s
+      user = User.find_by_email(email)
+      if user
+        EventLog.record_event(user, EventLog::UNSUCCESSFUL_LOGIN,
+                              ip_address: user_ip_address,
+                              user_agent_string: user_agent)
+      else
+        EventLog.record_event(nil, EventLog::NO_SUCH_ACCOUNT_LOGIN,
+                              ip_address: user_ip_address,
+                              user_agent_string: user_agent,
+                              user_email_string: email)
+      end
     end
   end
 

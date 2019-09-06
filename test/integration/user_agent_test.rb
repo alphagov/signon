@@ -15,7 +15,7 @@ class UserAgentIntegrationTest < ActionDispatch::IntegrationTest
     signin_with(@user)
 
     assert_equal user_agent_test, UserAgent.last.user_agent_string
-    user_agent = @user.event_logs.first.user_agent_string
+    user_agent = @user.event_logs.first.user_agent_as_string
     assert_equal user_agent_test, user_agent
   end
 end
