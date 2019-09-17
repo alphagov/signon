@@ -5,8 +5,13 @@ namespace :users do
     users = User.where(email: user_emails)
 
     users.each do |user|
-      puts "-- Adding 2i reviewer permission for #{user.name} in #{application.name}"
-      user.grant_application_permission(application, "2i reviewer")
+      if user.has_access_to?(application)
+        puts "-- Adding 2i reviewer permission for #{user.name} in #{application.name}"
+        user.grant_application_permission(application, "2i reviewer")
+      else
+        puts "-- Granting access for #{user.name} to #{application.name}"
+        user.grant_application_permissions(application, ["signin", "GDS Editor", "2i reviewer"])
+      end
 
       if application.supports_push_updates?
         PermissionUpdater.perform_later(user.uid, application.id)
