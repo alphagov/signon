@@ -1,22 +1,37 @@
 namespace :users do
   desc "Grant 2i reviewer permission in Collections Publisher"
-  task grant_2i_reviewer_permission: :environment do
+  task :grant_2i_reviewer_permission, %i[initiator_user_email] => :environment do |_, args|
     application = Doorkeeper::Application.find_by(name: "Collections Publisher")
     users = User.where(email: user_emails)
+    initiator_user = User.where(email: args[:initiator_user_email]).first
 
     users.each do |user|
       if user.has_access_to?(application)
         puts "-- Adding 2i reviewer permission for #{user.name} in #{application.name}"
-        user.grant_application_permission(application, "2i reviewer")
+        permissions = ['2i reviewer']
+        user.grant_application_permissions(application, permissions)
+        log_event(user, initiator_user, application.id, permissions)
       else
         puts "-- Granting access for #{user.name} to #{application.name}"
-        user.grant_application_permissions(application, ["signin", "GDS Editor", "2i reviewer"])
+        permissions = ["signin", "GDS Editor", "2i reviewer"]
+        user.grant_application_permissions(application, permissions)
+        log_event(user, initiator_user, application.id, permissions)
       end
 
       if application.supports_push_updates?
         PermissionUpdater.perform_later(user.uid, application.id)
       end
     end
+  end
+
+  def log_event(user, initiator_user, application_id, permissions)
+    EventLog.record_event(
+      user,
+      EventLog::PERMISSIONS_ADDED,
+      initiator: initiator_user,
+      application_id: application_id,
+      trailing_message: "(#{permissions.join(', ')}) - using Rake task grant_2i_reviewer_permission",
+    )
   end
 
   def user_emails
