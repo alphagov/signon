@@ -6,17 +6,12 @@ namespace :users do
     initiator_user = User.where(email: args[:initiator_user_email]).first
 
     users.each do |user|
-      if user.has_access_to?(application)
-        puts "-- Adding 2i reviewer permission for #{user.name} in #{application.name}"
-        permissions = ['2i reviewer']
-        user.grant_application_permissions(application, permissions)
-        log_event(user, initiator_user, application.id, permissions)
-      else
-        puts "-- Granting access for #{user.name} to #{application.name}"
-        permissions = ["signin", "GDS Editor", "2i reviewer"]
-        user.grant_application_permissions(application, permissions)
-        log_event(user, initiator_user, application.id, permissions)
-      end
+      permissions = ["signin", "GDS Editor", "2i reviewer"]
+      current_permissions = user.application_permissions.where(application_id: application.id).pluck(:supported_permission_id).map { |id| SupportedPermission.find(id).name }
+      permissions_to_grant = permissions - current_permissions
+      puts "-- Granting access for #{user.name} to #{application.name} with permissions #{permissions_to_grant.join(', ')}"
+      user.grant_application_permissions(application, permissions_to_grant)
+      log_event(user, initiator_user, application.id, permissions_to_grant)
 
       if application.supports_push_updates?
         PermissionUpdater.perform_later(user.uid, application.id)
