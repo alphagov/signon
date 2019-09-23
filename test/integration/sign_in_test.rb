@@ -1,8 +1,8 @@
-require 'test_helper'
+require "test_helper"
 
 class SignInTest < ActionDispatch::IntegrationTest
   setup do
-    @organisation = create(:organisation, name: 'Ministry of Lindy-hop', slug: 'ministry-of-lindy-hop')
+    @organisation = create(:organisation, name: "Ministry of Lindy-hop", slug: "ministry-of-lindy-hop")
     @user = create(:user_in_organisation, email: "email@example.com", password: "some password with various $ymb0l$", organisation: @organisation)
   end
 
@@ -18,8 +18,8 @@ class SignInTest < ActionDispatch::IntegrationTest
       visit root_path
       refute_dimension_is_set(8)
 
-      signin_with(email: 'email@example.com', password: "some password with various $ymb0l$")
-      assert_dimension_is_set(8, with_value: 'ministry-of-lindy-hop')
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
+      assert_dimension_is_set(8, with_value: "ministry-of-lindy-hop")
     end
   end
 
@@ -30,8 +30,8 @@ class SignInTest < ActionDispatch::IntegrationTest
       visit root_path
       refute_dimension_is_set(8)
 
-      signin_with(email: 'email@example.com', password: "some password with various $ymb0l$")
-      assert_dimension_is_set(8, with_value: '(not set)')
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
+      assert_dimension_is_set(8, with_value: "(not set)")
     end
   end
 
@@ -77,7 +77,7 @@ class SignInTest < ActionDispatch::IntegrationTest
   should "not accept the login with an invalid CSRF token" do
     visit root_path
 
-    find('#new_user input[name=authenticity_token]', visible: false).set('not_the_authenticity_token')
+    find("#new_user input[name=authenticity_token]", visible: false).set("not_the_authenticity_token")
 
     fill_in "Email", with: @user.email
     fill_in "Password", with: @user.password

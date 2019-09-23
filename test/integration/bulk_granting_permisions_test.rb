@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper
@@ -18,7 +18,7 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
 
     permissions = {
       @application_one => %w(signin editor),
-      @application_two => %w[reviewer]
+      @application_two => %w[reviewer],
     }
 
     perform_bulk_grant_as_user(user, permissions)
@@ -29,7 +29,7 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
 
     permissions = {
       @application_one => %w(signin editor),
-      @application_two => %w[reviewer]
+      @application_two => %w[reviewer],
     }
 
     perform_bulk_grant_as_user(user, permissions)
@@ -88,7 +88,7 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
 
       permissions.each do |application, app_permissions|
         app_permissions.each do |app_permission|
-          if app_permission == 'signin'
+          if app_permission == "signin"
             check "Has access to #{application.name}?"
           else
             select app_permission, from: "Permissions for #{application.name}"
@@ -105,10 +105,10 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
       permissions.each do |application, app_permissions|
         app_permissions_line = "#{application.name} "
         app_permissions_line <<
-          if app_permissions.include? 'signin'
-            'Yes '
+          if app_permissions.include? "signin"
+            "Yes "
           else
-            'No '
+            "No "
           end
         app_permissions_line << (app_permissions - %w[signin]).sort.to_sentence
         assert_response_contains app_permissions_line

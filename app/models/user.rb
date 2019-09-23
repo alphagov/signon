@@ -12,10 +12,10 @@ class User < ActiveRecord::Base
   MAX_2SV_DRIFT_SECONDS = 30
   REMEMBER_2SV_SESSION_FOR = 30.days
 
-  USER_STATUS_SUSPENDED = 'suspended'.freeze
-  USER_STATUS_INVITED = 'invited'.freeze
-  USER_STATUS_LOCKED = 'locked'.freeze
-  USER_STATUS_ACTIVE = 'active'.freeze
+  USER_STATUS_SUSPENDED = "suspended".freeze
+  USER_STATUS_INVITED = "invited".freeze
+  USER_STATUS_LOCKED = "locked".freeze
+  USER_STATUS_ACTIVE = "active".freeze
   USER_STATUSES = [USER_STATUS_SUSPENDED, USER_STATUS_INVITED,
                    USER_STATUS_LOCKED, USER_STATUS_ACTIVE].freeze
 
@@ -34,8 +34,8 @@ class User < ActiveRecord::Base
   validate :organisation_admin_belongs_to_organisation
   validate :email_is_ascii_only
 
-  has_many :authorisations, class_name: 'Doorkeeper::AccessToken', foreign_key: :resource_owner_id
-  has_many :application_permissions, class_name: 'UserApplicationPermission', inverse_of: :user
+  has_many :authorisations, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id
+  has_many :application_permissions, class_name: "UserApplicationPermission", inverse_of: :user
   has_many :supported_permissions, through: :application_permissions
   has_many :batch_invitations
   belongs_to :organisation
@@ -52,10 +52,10 @@ class User < ActiveRecord::Base
   scope :with_role, lambda { |role_name| where(role: role_name) }
   scope :with_organisation, lambda { |org_id| where(organisation_id: org_id) }
   scope :filter_by_name, lambda { |filter_param| where("users.email like ? OR users.name like ?", "%#{filter_param.strip}%", "%#{filter_param.strip}%") }
-  scope :last_signed_in_on, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) = date(?)', date) }
-  scope :last_signed_in_before, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) < date(?)', date) }
-  scope :last_signed_in_after, lambda { |date| web_users.not_suspended.where('date(current_sign_in_at) >= date(?)', date) }
-  scope :not_recently_unsuspended, lambda { where(['unsuspended_at IS NULL OR unsuspended_at < ?', UNSUSPENSION_GRACE_PERIOD.ago]) }
+  scope :last_signed_in_on, lambda { |date| web_users.not_suspended.where("date(current_sign_in_at) = date(?)", date) }
+  scope :last_signed_in_before, lambda { |date| web_users.not_suspended.where("date(current_sign_in_at) < date(?)", date) }
+  scope :last_signed_in_after, lambda { |date| web_users.not_suspended.where("date(current_sign_in_at) >= date(?)", date) }
+  scope :not_recently_unsuspended, lambda { where(["unsuspended_at IS NULL OR unsuspended_at < ?", UNSUSPENSION_GRACE_PERIOD.ago]) }
   scope :with_access_to_application, lambda { |application| UsersWithAccess.new(self, application).users }
   scope :with_2sv_enabled, lambda { |enabled|
     enabled = ActiveRecord::Type::Boolean.new.cast(enabled)
@@ -101,7 +101,7 @@ class User < ActiveRecord::Base
     application_permissions
       .joins(:supported_permission)
       .where(application_id: application.id)
-      .order('supported_permissions.name')
+      .order("supported_permissions.name")
       .pluck(:name)
   end
 
@@ -280,7 +280,7 @@ class User < ActiveRecord::Base
       EventLog.record_event(
         self,
         EventLog::TWO_STEP_RESET,
-        initiator: initiating_superadmin
+        initiator: initiating_superadmin,
       )
     end
   end
@@ -315,7 +315,7 @@ private
   end
 
   def fix_apostrophe_in_email
-    self.email.tr!('’', "'") if email.present? && email_changed?
+    self.email.tr!("’", "'") if email.present? && email_changed?
   end
 
   def update_password_changed

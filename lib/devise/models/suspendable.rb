@@ -9,9 +9,9 @@ module Devise
         # using User.not_suspended for now
         # TODO: work out why this scope is not working
         #       but the one in user model is.
-        scope :active, -> { where('suspended_at' => nil) }
-        scope :suspended, -> { where('suspended_at IS NOT NULL') }
-        scope(:current, proc { |current| current == 't' ? active : suspended })
+        scope :active, -> { where("suspended_at" => nil) }
+        scope :suspended, -> { where("suspended_at IS NOT NULL") }
+        scope(:current, proc { |current| current == "t" ? active : suspended })
       end
 
       def active_for_authentication?

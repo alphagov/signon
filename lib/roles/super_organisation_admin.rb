@@ -15,7 +15,7 @@ module Roles
     end
 
     def self.role_name
-      'super_organisation_admin'
+      "super_organisation_admin"
     end
 
     def self.level; 2; end

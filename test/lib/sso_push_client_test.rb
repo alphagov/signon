@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class SSOPushClientTest < ActiveSupport::TestCase
   def reauth_url(application)
@@ -28,9 +28,9 @@ class SSOPushClientTest < ActiveSupport::TestCase
     end
 
     should "send the bearer token in the request" do
-      SSOPushCredential.stubs(:credentials).with(@application).returns('foo')
+      SSOPushCredential.stubs(:credentials).with(@application).returns("foo")
 
-      request = stub_request(:put, users_url(@application)).with(headers: { 'Authorization' => 'Bearer foo' })
+      request = stub_request(:put, users_url(@application)).with(headers: { "Authorization" => "Bearer foo" })
       SSOPushClient.new(@application).update_user(@user.uid, @user_json)
 
       assert_requested request
@@ -53,9 +53,9 @@ class SSOPushClientTest < ActiveSupport::TestCase
     end
 
     should "send the bearer token in the request" do
-      SSOPushCredential.stubs(:credentials).with(@application).returns('foo')
+      SSOPushCredential.stubs(:credentials).with(@application).returns("foo")
 
-      request = stub_request(:post, reauth_url(@application)).with(headers: { 'Authorization' => 'Bearer foo' })
+      request = stub_request(:post, reauth_url(@application)).with(headers: { "Authorization" => "Bearer foo" })
       SSOPushClient.new(@application).reauth_user(@user.uid)
 
       assert_requested request

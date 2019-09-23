@@ -8,12 +8,12 @@ class ModelFsaOrgStructure < ActiveRecord::Migration
         "Advisory Committee on the Microbiological Safety of Food",
         "Committee on Toxicity of Chemicals in Food, Consumer Products and the Environment",
         "General Advisory Committee on Science",
-        "Social Science Research Committee"
+        "Social Science Research Committee",
     ]
 
     closed_child_org_names = [
         "British Potato Council",
-        "Meat Hygiene Service"
+        "Meat Hygiene Service",
     ]
 
     missing_orgs = []

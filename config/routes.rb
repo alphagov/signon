@@ -2,18 +2,18 @@ Rails.application.routes.draw do
   get "/healthcheck", to: GovukHealthcheck.rack_response(
     GovukHealthcheck::SidekiqRedis,
     GovukHealthcheck::ActiveRecord,
-    Healthcheck::ApiTokens
+    Healthcheck::ApiTokens,
   )
 
   use_doorkeeper do
-    controllers authorizations: 'signin_required_authorizations'
+    controllers authorizations: "signin_required_authorizations"
   end
 
   devise_for :users, controllers: {
-    invitations: 'invitations',
-    sessions: 'sessions',
-    passwords: 'passwords',
-    confirmations: 'confirmations'
+    invitations: "invitations",
+    sessions: "sessions",
+    passwords: "passwords",
+    confirmations: "confirmations",
   }
 
   devise_scope :user do
@@ -69,7 +69,7 @@ Rails.application.routes.draw do
   # compatibility with Sign-on-o-tron 1
   post "oauth/access_token" => "doorkeeper/tokens#create"
 
-  get '/signin-required' => 'root#signin_required'
+  get "/signin-required" => "root#signin_required"
 
-  root to: 'root#index'
+  root to: "root#index"
 end

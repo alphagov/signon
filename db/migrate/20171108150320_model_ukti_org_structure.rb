@@ -6,7 +6,7 @@ class ModelUktiOrgStructure < ActiveRecord::Migration
         "UKTI Life Sciences Organisation",
         "Regeneration Investment Organisation",
         "Financial Services Organisation",
-        "UKTI Education"
+        "UKTI Education",
     ]
 
     missing_orgs = []

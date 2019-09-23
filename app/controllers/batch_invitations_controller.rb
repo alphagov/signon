@@ -1,4 +1,4 @@
-require 'csv'
+require "csv"
 
 class BatchInvitationsController < ApplicationController
   include UserPermissionsControllerMethods
@@ -47,7 +47,7 @@ class BatchInvitationsController < ApplicationController
       batch_user_args = {
         batch_invitation: @batch_invitation,
         name: row["Name"],
-        email: row["Email"]
+        email: row["Email"],
       }
       if policy(@batch_invitation).assign_organisation_from_csv?
         batch_user_args[:organisation_slug] = row["Organisation"]

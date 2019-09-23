@@ -44,18 +44,18 @@ class ModelDefraOrgStructure < ActiveRecord::Migration
             "South Downs National Park Authority",
             "Yorkshire Dales National Park Authority",
             "Rural Development Programme for England Network",
-            "Veterinary Residues Committee"
+            "Veterinary Residues Committee",
         ],
         fera => [
-            "UK Government Decontamination Service"
+            "UK Government Decontamination Service",
         ],
         rpa => [
-            "British Cattle Movement Service"
+            "British Cattle Movement Service",
         ],
         fc => [
             "Forest Enterprise (England)",
-            "Forest Research"
-        ]
+            "Forest Research",
+        ],
     }
 
     missing_orgs = []

@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'gds_api/test_helpers/organisations'
+require "test_helper"
+require "gds_api/test_helpers/organisations"
 
 class OrganisationsFetcherTest < ActiveSupport::TestCase
   include GdsApi::TestHelpers::Organisations
@@ -15,17 +15,17 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
   end
 
   test "it updates an existing organisation when its data changes" do
-    slug = 'ministry-of-fun'
+    slug = "ministry-of-fun"
     organisation = create(
       :organisation,
-      name: 'Ministry Of Misery',
+      name: "Ministry Of Misery",
       slug: slug,
       closed: true,
     )
     assert_equal(1, Organisation.count)
 
     bodies = [
-      organisation_details_for_slug(slug, organisation.content_id)
+      organisation_details_for_slug(slug, organisation.content_id),
     ]
     organisations_api_has_organisations_with_bodies(bodies)
 
@@ -33,21 +33,21 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
 
     assert_equal(1, Organisation.count)
     organisation.reload
-    assert_equal('Ministry Of Fun', organisation.name)
+    assert_equal("Ministry Of Fun", organisation.name)
     assert_equal(false, organisation.closed)
   end
 
   test "it updates an existing organisation when its slug changes" do
-    slug = 'ministry-of-fun'
+    slug = "ministry-of-fun"
     organisation = create(
       :organisation,
-      name: 'Ministry Of Misery',
+      name: "Ministry Of Misery",
       slug: "old-slug",
     )
     assert_equal(1, Organisation.count)
 
     bodies = [
-      organisation_details_for_slug("new-slug", organisation.content_id)
+      organisation_details_for_slug("new-slug", organisation.content_id),
     ]
     organisations_api_has_organisations_with_bodies(bodies)
 
@@ -58,17 +58,17 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
   end
 
   test "it updates an existing organisation when its content id changes" do
-    content_id = 'abc-123'
-    slug = 'ministry-of-fun'
+    content_id = "abc-123"
+    slug = "ministry-of-fun"
     organisation = create(
       :organisation,
-      name: 'Ministry Of Misery',
-      slug: slug
+      name: "Ministry Of Misery",
+      slug: slug,
     )
     assert_equal(1, Organisation.count)
 
     bodies = [
-      organisation_details_for_slug(slug, content_id)
+      organisation_details_for_slug(slug, content_id),
     ]
     organisations_api_has_organisations_with_bodies(bodies)
 
@@ -76,18 +76,18 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
 
     assert_equal(1, Organisation.count)
     organisation.reload
-    assert_equal('Ministry Of Fun', organisation.name)
-    assert_equal('abc-123', organisation.content_id)
+    assert_equal("Ministry Of Fun", organisation.name)
+    assert_equal("abc-123", organisation.content_id)
   end
 
   test "it updates the child organisation with information about it's parent" do
-    slug = 'ministry-of-fun'
-    fun = create(:organisation, name: 'Ministry of Fun', slug: slug)
-    child_slug = 'ministry-of-fun-child-1' # hard-coded in gds_api_adapters
-    movies = create(:organisation, name: 'Ministry of Movies', slug: child_slug)
+    slug = "ministry-of-fun"
+    fun = create(:organisation, name: "Ministry of Fun", slug: slug)
+    child_slug = "ministry-of-fun-child-1" # hard-coded in gds_api_adapters
+    movies = create(:organisation, name: "Ministry of Movies", slug: child_slug)
 
     bodies = [
-      organisation_details_for_slug(slug, fun.content_id)
+      organisation_details_for_slug(slug, fun.content_id),
     ]
     organisations_api_has_organisations_with_bodies(bodies)
 
@@ -97,7 +97,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
   end
 
   test "it saves values which are not validated for presence, when they are present in the data" do
-    slug = 'ministry-of-fun'
+    slug = "ministry-of-fun"
     organisations_api_has_organisations([slug])
 
     OrganisationsFetcher.new.call

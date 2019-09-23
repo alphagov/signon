@@ -12,7 +12,7 @@ class BulkGrantPermissionSet < ActiveRecord::Base
   end
 
   def successful?
-    outcome == 'success'
+    outcome == "success"
   end
 
   def enqueue
@@ -26,7 +26,7 @@ class BulkGrantPermissionSet < ActiveRecord::Base
         granted_permission = user_to_change.application_permissions.where(supported_permission_id: permission.id).first_or_create!
         # if 'id' changed then it was a new permission, otherwise it
         # already existed
-        granted_permission.previous_changes.has_key? 'id'
+        granted_permission.previous_changes.has_key? "id"
       end
       permissions_granted.group_by(&:application_id).each do |application_id, permissions|
         EventLog.record_event(
@@ -48,6 +48,6 @@ class BulkGrantPermissionSet < ActiveRecord::Base
 private
 
   def must_have_at_least_one_supported_permission
-    errors.add(:supported_permissions, 'must not be blank. Choose at least one permission to grant to all users.') if bulk_grant_permission_set_application_permissions.size.zero?
+    errors.add(:supported_permissions, "must not be blank. Choose at least one permission to grant to all users.") if bulk_grant_permission_set_application_permissions.size.zero?
   end
 end

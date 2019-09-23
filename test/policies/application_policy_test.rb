@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'support/policy_helpers'
+require "test_helper"
+require "support/policy_helpers"
 
 class ApplicationPolicyTest < ActiveSupport::TestCase
   include PolicyHelpers

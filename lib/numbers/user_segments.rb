@@ -1,7 +1,7 @@
 class UserSegments
   module SegmentExtensions
     def licensing_user?
-      application_permissions.count == 1 && has_access_to?(Doorkeeper::Application.find_by_name('Licensing'))
+      application_permissions.count == 1 && has_access_to?(Doorkeeper::Application.find_by_name("Licensing"))
     end
 
     def active?

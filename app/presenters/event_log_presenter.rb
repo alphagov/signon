@@ -1,5 +1,5 @@
-require 'csv'
-require 'fileutils'
+require "csv"
+require "fileutils"
 
 class EventLogPresenter
   attr_reader :min_id, :max_id, :file_system, :file_utils
@@ -35,7 +35,7 @@ private
           entry.trailing_message,
           entry.event,
           (entry.ip_address_string unless entry.ip_address.nil?),
-          entry.user_agent&.user_agent_string
+          entry.user_agent&.user_agent_string,
         ]
       end
     end
@@ -43,15 +43,15 @@ private
 
   def header_row
     [
-      'Event ID',
-      'Event UID',
-      'Created at',
-      'Initiator',
-      'Application',
-      'Trailing message',
-      'Event',
-      'IP address',
-      'User agent'
+      "Event ID",
+      "Event UID",
+      "Created at",
+      "Initiator",
+      "Application",
+      "Trailing message",
+      "Event",
+      "IP address",
+      "User agent",
     ]
   end
 end

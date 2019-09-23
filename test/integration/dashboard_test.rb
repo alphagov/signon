@@ -1,6 +1,6 @@
 #encoding: utf-8
 
-require 'test_helper'
+require "test_helper"
 
 class DashboardTest < ActionDispatch::IntegrationTest
   should "notify the user if they've not been assigned any applications" do

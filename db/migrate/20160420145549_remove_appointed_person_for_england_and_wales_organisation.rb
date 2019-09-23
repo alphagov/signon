@@ -1,6 +1,6 @@
 class RemoveAppointedPersonForEnglandAndWalesOrganisation < ActiveRecord::Migration
   def up
-    organistion = Organisation.find_by(slug: '')
+    organistion = Organisation.find_by(slug: "")
     if organistion.present?
       raise "Unexpected users for #{organisation.title}" if organistion.users.count > 0
 

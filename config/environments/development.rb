@@ -15,12 +15,12 @@ Rails.application.configure do
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
-  config.action_mailer.default_url_options = { host: URI.parse(Plek.new.external_url_for('signon')).host }
+  config.action_mailer.default_url_options = { host: URI.parse(Plek.new.external_url_for("signon")).host }
 
   # Send emails to the local MailHog instance
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    port: 1025
+    port: 1025,
   }
 
   # Print deprecation notices to the Rails logger.

@@ -1,8 +1,8 @@
-require 'test_helper'
+require "test_helper"
 
 class SameSiteSecurityMiddlewareTest < ActiveSupport::TestCase
   setup do
-    headers = { 'Content-Type' => 'text/plain', 'Set-Cookie' => '_signonotron2_session=abcd' }
+    headers = { "Content-Type" => "text/plain", "Set-Cookie" => "_signonotron2_session=abcd" }
     @app = Proc.new { [200, headers, %w[OK]] }
   end
 
@@ -13,9 +13,9 @@ class SameSiteSecurityMiddlewareTest < ActiveSupport::TestCase
       env = Rack::MockRequest.env_for("/a-protected-url")
       status, headers = middleware.call(env)
 
-      cookies = headers['Set-Cookie']
-      assert_match '_signonotron2_session=abcd', cookies
-      assert_match 'SameSite=Lax', cookies
+      cookies = headers["Set-Cookie"]
+      assert_match "_signonotron2_session=abcd", cookies
+      assert_match "SameSite=Lax", cookies
     end
   end
 end

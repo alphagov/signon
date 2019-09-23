@@ -5,7 +5,7 @@ module Roles
     end
 
     def self.role_name
-      'normal'
+      "normal"
     end
 
     def self.level; 4; end

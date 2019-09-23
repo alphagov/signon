@@ -3,8 +3,8 @@ class ModelCabinetOfficeOrgSharedChildrenStructure < ActiveRecord::Migration
     cabinet_office = Organisation.find_by(name: "Cabinet Office")
 
     organisation_names = [
-      'Social Mobility and Child Poverty Commission',
-      'Social Mobility Commission'
+      "Social Mobility and Child Poverty Commission",
+      "Social Mobility Commission",
     ]
 
     missing_orgs = []

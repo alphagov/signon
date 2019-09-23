@@ -3,13 +3,13 @@ class ModelDfidOrgStructure < ActiveRecord::Migration
     dfid = Organisation.find_by(name: "Department for International Development")
 
     child_org_names = [
-      'Commonwealth Scholarship Commission in the UK',
-      'Independent Commission for Aid Impact',
+      "Commonwealth Scholarship Commission in the UK",
+      "Independent Commission for Aid Impact",
     ]
 
     closed_child_org_names = [
-      'Crown Agents Holding and Realisation Board',
-      'Natural Resources Institute',
+      "Crown Agents Holding and Realisation Board",
+      "Natural Resources Institute",
     ]
 
     missing_orgs = []

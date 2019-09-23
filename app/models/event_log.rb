@@ -81,7 +81,7 @@ class EventLog < ActiveRecord::Base
   end
 
   def send_to_splunk(*)
-    return unless ENV['SPLUNK_EVENT_LOG_ENDPOINT_URL'] && ENV['SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN']
+    return unless ENV["SPLUNK_EVENT_LOG_ENDPOINT_URL"] && ENV["SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN"]
 
     event = {
       timestamp: self.created_at.utc,
@@ -95,10 +95,10 @@ class EventLog < ActiveRecord::Base
       http_user_agent: self.user_agent_as_string,
     }
 
-    conn = Faraday.new(ENV['SPLUNK_EVENT_LOG_ENDPOINT_URL'])
+    conn = Faraday.new(ENV["SPLUNK_EVENT_LOG_ENDPOINT_URL"])
     conn.post do |request|
-      request.headers['Content-Type'] = 'application/json'
-      request.headers['Authorization'] = "Splunk #{ENV['SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN']}"
+      request.headers["Content-Type"] = "application/json"
+      request.headers["Authorization"] = "Splunk #{ENV['SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN']}"
       request.body = { event: event }.to_json
     end
   end
@@ -109,7 +109,7 @@ class EventLog < ActiveRecord::Base
     end
     attributes = {
       uid: user&.uid,
-      event_id: event.id
+      event_id: event.id,
     }.merge!(options.slice(*VALID_OPTIONS))
 
     event_log_entry = EventLog.create!(attributes)
@@ -133,7 +133,7 @@ class EventLog < ActiveRecord::Base
   end
 
   def self.for(user)
-    EventLog.order('created_at DESC').where(uid: user.uid)
+    EventLog.order("created_at DESC").where(uid: user.uid)
   end
 
   def self.convert_ip_address_to_integer(ip_address_string)

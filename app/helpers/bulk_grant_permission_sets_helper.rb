@@ -23,7 +23,7 @@ module BulkGrantPermissionSetsHelper
     bulk_grant_permission_set.
       supported_permissions.
       includes(:application).
-      order('oauth_applications.name, supported_permissions.name').
+      order("oauth_applications.name, supported_permissions.name").
       group_by(&:application)
   end
 end

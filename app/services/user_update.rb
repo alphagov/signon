@@ -48,7 +48,7 @@ private
         initiator: current_user,
         application_id: application_id,
         trailing_message: "(#{permissions.map(&:name).join(', ')})",
-        ip_address: user_ip
+        ip_address: user_ip,
       )
     end
 
@@ -59,7 +59,7 @@ private
         initiator: current_user,
         application_id: application_id,
         trailing_message: "(#{permissions.map(&:name).join(', ')})",
-        ip_address: user_ip
+        ip_address: user_ip,
       )
     end
   end
@@ -69,7 +69,7 @@ private
       user,
       EventLog::ACCOUNT_UPDATED,
       initiator: current_user,
-      ip_address: user_ip
+      ip_address: user_ip,
     )
   end
 

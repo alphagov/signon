@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class OrganisationPolicyScopeTest < ActiveSupport::TestCase
   setup do
@@ -10,8 +10,8 @@ class OrganisationPolicyScopeTest < ActiveSupport::TestCase
     @child_second_organisation = create(:organisation, parent: @second_parent_organisation)
   end
 
-  context 'resolve' do
-    should 'include all organisations for super admins' do
+  context "resolve" do
+    should "include all organisations for super admins" do
       user = create(:superadmin_user)
       resolved_scope = OrganisationPolicy::Scope.new(user, Organisation.all).resolve
       assert_includes resolved_scope, @parent_organisation
@@ -22,7 +22,7 @@ class OrganisationPolicyScopeTest < ActiveSupport::TestCase
       assert_includes resolved_scope, @child_second_organisation
     end
 
-    should 'include all organisations for admins' do
+    should "include all organisations for admins" do
       user = create(:admin_user)
       resolved_scope = OrganisationPolicy::Scope.new(user, Organisation.all).resolve
       assert_includes resolved_scope, @parent_organisation
@@ -33,19 +33,19 @@ class OrganisationPolicyScopeTest < ActiveSupport::TestCase
       assert_includes resolved_scope, @child_second_organisation
     end
 
-    should 'is empty for super organisation admins' do
+    should "is empty for super organisation admins" do
       user = create(:super_org_admin, organisation: @parent_organisation)
       resolved_scope = OrganisationPolicy::Scope.new(user, Organisation.all).resolve
       assert_empty resolved_scope
     end
 
-    should 'is empty for organisation admins' do
+    should "is empty for organisation admins" do
       user = create(:organisation_admin, organisation: @parent_organisation)
       resolved_scope = OrganisationPolicy::Scope.new(user, Organisation.all).resolve
       assert_empty resolved_scope
     end
 
-    should 'is empty for normal users' do
+    should "is empty for normal users" do
       user = create(:user)
       resolved_scope = OrganisationPolicy::Scope.new(user, Organisation.all).resolve
       assert_empty resolved_scope

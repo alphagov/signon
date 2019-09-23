@@ -1,4 +1,4 @@
-require 'capybara/email'
+require "capybara/email"
 
 module EmailHelpers
   include Capybara::Email::DSL

@@ -1,10 +1,10 @@
-require 'govuk_app_config'
-require_relative 'instance_name'
+require "govuk_app_config"
+require_relative "instance_name"
 
 devise_config = Rails.application.config_for(:devise).symbolize_keys
 
 if devise_config[:secret_key].blank? || devise_config[:pepper].blank?
-  raise 'Required Devise secrets are unset'
+  raise "Required Devise secrets are unset"
 end
 
 # Use this hook to configure devise mailer, warden hooks and so forth.
@@ -22,7 +22,7 @@ Devise.setup do |config|
   # Load and configure the ORM. Supports :active_record (default) and
   # :mongoid (bson_ext recommended) by default. Other ORMs may be
   # available as additional gems.
-  require 'devise/orm/active_record'
+  require "devise/orm/active_record"
 
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user. The default is
@@ -259,8 +259,8 @@ Devise.setup do |config|
   # end
 
   # ==> Custom Modules for Devise
-  require 'devise/models/suspendable'
-  require 'devise/models/password_archivable'
+  require "devise/models/suspendable"
+  require "devise/models/password_archivable"
 
   # ==> Password strength test
   # default devise_zxcvbn minimum password score

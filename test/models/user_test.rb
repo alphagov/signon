@@ -1,7 +1,7 @@
 # coding: utf-8
 
-require 'test_helper'
-require 'bcrypt'
+require "test_helper"
+require "bcrypt"
 
 class UserTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
@@ -61,14 +61,14 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context '#send_two_step_flag_notification?' do
-    context 'when not flagged' do
-      should 'return false' do
+  context "#send_two_step_flag_notification?" do
+    context "when not flagged" do
+      should "return false" do
         refute @user.send_two_step_flag_notification?
       end
 
-      context 'when flagging' do
-        should 'maintain after persisting' do
+      context "when flagging" do
+        should "maintain after persisting" do
           @user.update_attribute(:require_2sv, true)
 
           assert @user.send_two_step_flag_notification?
@@ -84,8 +84,8 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
-    context 'when already flagged' do
-      should 'return false' do
+    context "when already flagged" do
+      should "return false" do
         @user.toggle(:require_2sv)
 
         refute @user.reload.send_two_step_flag_notification?
@@ -93,33 +93,33 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context '#reset_2sv!' do
+  context "#reset_2sv!" do
     setup do
       @super_admin   = create(:superadmin_user)
       @two_step_user = create(:two_step_enabled_user)
       @two_step_user.reset_2sv!(@super_admin)
     end
 
-    should 'persist the required attributes' do
+    should "persist the required attributes" do
       @two_step_user.reload
 
       refute @two_step_user.has_2sv?
       assert @two_step_user.prompt_for_2sv?
     end
 
-    should 'record the event' do
+    should "record the event" do
       assert_equal 1, EventLog.where(
         event_id: EventLog::TWO_STEP_RESET.id,
         uid: @two_step_user.uid,
-        initiator: @super_admin
+        initiator: @super_admin,
       ).count
     end
   end
 
-  context '#prompt_for_2sv?' do
-    context 'when the user has already enrolled' do
-      should 'always be false' do
-        refute build(:two_step_flagged_user, otp_secret_key: 'welp').prompt_for_2sv?
+  context "#prompt_for_2sv?" do
+    context "when the user has already enrolled" do
+      should "always be false" do
+        refute build(:two_step_flagged_user, otp_secret_key: "welp").prompt_for_2sv?
       end
     end
   end
@@ -224,10 +224,10 @@ class UserTest < ActiveSupport::TestCase
     should "accept valid emails" do
       user = build(:user)
       [
-        'foo@example.com',
-        'foo_bar@example.COM',
-        'foo@example-domain.com',
-        'user-foo+bar@really.long.domain.co.uk',
+        "foo@example.com",
+        "foo_bar@example.COM",
+        "foo@example-domain.com",
+        "user-foo+bar@really.long.domain.co.uk",
       ].each do |email|
         user.email = email
 
@@ -238,9 +238,9 @@ class UserTest < ActiveSupport::TestCase
     should "reject emails with invalid domain parts" do
       user = build(:user)
       [
-        'foo@example.com,',
-        'foo@example_domain.com',
-        'foo@no-dot-domain',
+        "foo@example.com,",
+        "foo@example_domain.com",
+        "foo@no-dot-domain",
       ].each do |email|
         user.email = email
 
@@ -306,14 +306,14 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "organisation admin must belong to an organisation" do
-    user = build(:user, role: 'organisation_admin', organisation_id: nil)
+    user = build(:user, role: "organisation_admin", organisation_id: nil)
 
     refute user.valid?
     assert_equal "can't be 'None' for Organisation Admin", user.errors[:organisation_id].first
   end
 
   test "super organisation admin must belong to an organisation" do
-    user = build(:user, role: 'super_organisation_admin', organisation_id: nil)
+    user = build(:user, role: "super_organisation_admin", organisation_id: nil)
 
     refute user.valid?
     assert_equal "can't be 'None' for Super Organisation Admin", user.errors[:organisation_id].first
@@ -334,13 +334,13 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "can grant permissions to users and return the created permission" do
-    app = create(:application, name: "my_app", with_supported_permissions: ['Create publications', 'Delete publications'])
+    app = create(:application, name: "my_app", with_supported_permissions: ["Create publications", "Delete publications"])
     user = create(:user)
 
     permission = user.grant_application_permission(app, "Create publications")
 
     assert_equal permission, user.application_permissions.first
-    assert_user_has_permissions ['Create publications'], app, user
+    assert_user_has_permissions ["Create publications"], app, user
   end
 
   test "granting an already granted permission doesn't cause duplicates" do

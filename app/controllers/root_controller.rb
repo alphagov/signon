@@ -1,5 +1,5 @@
 class RootController < ApplicationController
-  layout 'admin_layout'
+  layout "admin_layout"
 
   include UserPermissionsControllerMethods
   before_action :authenticate_user!

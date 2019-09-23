@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class ApiUsersControllerTest < ActionController::TestCase
   context "as admin user" do
@@ -44,7 +44,7 @@ class ApiUsersControllerTest < ActionController::TestCase
 
     context "POST create" do
       should "create a new API user" do
-        assert_difference 'ApiUser.count', 1 do
+        assert_difference "ApiUser.count", 1 do
           post :create, params: { api_user: { name: "Content Store Application", email: "content.store@gov.uk" } }
         end
       end

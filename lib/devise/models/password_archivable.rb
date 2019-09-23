@@ -71,7 +71,7 @@ module Devise
       def old_password_params
         {
           encrypted_password: self.encrypted_password_change.first,
-          password_salt: self.password_salt_change.first
+          password_salt: self.password_salt_change.first,
         }
       end
 
@@ -82,4 +82,4 @@ module Devise
   end
 end
 
-Devise.add_module :password_archivable, model: 'devise/models/password_archivable'
+Devise.add_module :password_archivable, model: "devise/models/password_archivable"

@@ -14,13 +14,13 @@ class UserPolicy < BasePolicy
 
   def edit?
     case current_user.role
-    when 'superadmin'
+    when "superadmin"
       true
-    when 'admin'
+    when "admin"
       can_manage?
-    when 'super_organisation_admin'
+    when "super_organisation_admin"
       allow_self_only || (can_manage? && (record_in_own_organisation? || record_in_child_organisation?))
-    when 'organisation_admin'
+    when "organisation_admin"
       allow_self_only || (can_manage? && record_in_own_organisation?)
     else # 'normal'
       false

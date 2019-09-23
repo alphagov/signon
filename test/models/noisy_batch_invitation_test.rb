@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class NoisyBatchInvitationTest < ActionMailer::TestCase
   context "make_noise" do

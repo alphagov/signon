@@ -1,4 +1,4 @@
-require 'lhm'
+require "lhm"
 
 class AddIpAddressAndUserAgentIdToEventLogs < ActiveRecord::Migration
   def self.up

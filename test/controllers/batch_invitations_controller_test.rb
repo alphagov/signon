@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class BatchInvitationsControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
@@ -52,7 +52,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
       expected_names_and_emails = [["Arthur Dent", "a@hhg.com"], ["Tricia McMillan", "t@hhg.com"]]
       assert_equal(
         expected_names_and_emails,
-        bi.batch_invitation_users.map { |u| [u.name, u.email] }
+        bi.batch_invitation_users.map { |u| [u.name, u.email] },
       )
     end
 
@@ -67,31 +67,31 @@ class BatchInvitationsControllerTest < ActionController::TestCase
     end
 
     should "store organisation info from the uploaded CSV when logged in as an admin" do
-      @user.update_attributes(role: 'admin')
+      @user.update_attributes(role: "admin")
       post :create, params: { user: { supported_permission_ids: [] },
-        batch_invitation: { user_names_and_emails: users_csv('users_with_orgs.csv'), organisation_id: 3 } }
+        batch_invitation: { user_names_and_emails: users_csv("users_with_orgs.csv"), organisation_id: 3 } }
 
       bi = BatchInvitation.last
 
       assert_not_nil bi
       assert_equal 3, bi.organisation_id
-      assert_equal 'department-of-hats', bi.batch_invitation_users[0].organisation_slug
+      assert_equal "department-of-hats", bi.batch_invitation_users[0].organisation_slug
       assert_nil bi.batch_invitation_users[1].organisation_slug
-      assert_equal 'cabinet-office', bi.batch_invitation_users[2].organisation_slug
+      assert_equal "cabinet-office", bi.batch_invitation_users[2].organisation_slug
     end
 
     should "store organisation info from the uploaded CSV when logged in as a superadmin" do
-      @user.update_attributes(role: 'superadmin')
+      @user.update_attributes(role: "superadmin")
       post :create, params: { user: { supported_permission_ids: [] },
-        batch_invitation: { user_names_and_emails: users_csv('users_with_orgs.csv'), organisation_id: 3 } }
+        batch_invitation: { user_names_and_emails: users_csv("users_with_orgs.csv"), organisation_id: 3 } }
 
       bi = BatchInvitation.last
 
       assert_not_nil bi
       assert_equal 3, bi.organisation_id
-      assert_equal 'department-of-hats', bi.batch_invitation_users[0].organisation_slug
+      assert_equal "department-of-hats", bi.batch_invitation_users[0].organisation_slug
       assert_nil bi.batch_invitation_users[1].organisation_slug
-      assert_equal 'cabinet-office', bi.batch_invitation_users[2].organisation_slug
+      assert_equal "cabinet-office", bi.batch_invitation_users[2].organisation_slug
     end
 
     should "queue a job to do the processing" do

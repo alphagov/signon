@@ -7,9 +7,9 @@ class ModelNioOrgStructure < ActiveRecord::Migration
         nio => [
             "Boundary Commission for Northern Ireland",
             "Northern Ireland Human Rights Commission",
-            "Parades Commission for Northern Ireland"
+            "Parades Commission for Northern Ireland",
         ],
-        so => ["Boundary Commission for Scotland"]
+        so => ["Boundary Commission for Scotland"],
     }
 
     missing_orgs = []

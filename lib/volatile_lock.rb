@@ -1,4 +1,4 @@
-require 'redis_client'
+require "redis_client"
 
 class VolatileLock
   class FailedToSetExpiration < StandardError; end

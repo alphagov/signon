@@ -1,51 +1,51 @@
-require 'test_helper'
+require "test_helper"
 
 class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper
 
   setup do
-    @cabinet_office = create(:organisation, slug: 'cabinet-office', name: 'Cabinet Office')
-    @department_of_hats = create(:organisation, slug: 'department-of-hats', name: 'Department of Hats')
+    @cabinet_office = create(:organisation, slug: "cabinet-office", name: "Cabinet Office")
+    @department_of_hats = create(:organisation, slug: "department-of-hats", name: "Department of Hats")
     @application = create(:application)
   end
 
-  context 'for superadmin users' do
+  context "for superadmin users" do
     setup do
       @user = create(:superadmin_user)
     end
 
     should "allow creating users whose details are specified in a CSV file, assigning them all to one org" do
       perform_batch_invite_with_user(@user, @application, organisation: @cabinet_office)
-      assert_user_created_and_invited('fred@example.com', @application, organisation: @cabinet_office)
+      assert_user_created_and_invited("fred@example.com", @application, organisation: @cabinet_office)
     end
 
     should "allow creating users with org details specified in a CSV file, overriding the org selected in the form" do
-      perform_batch_invite_with_user(@user, @application, fixture_file: 'users_with_orgs.csv', user_count: 3, organisation: @cabinet_office)
-      assert_user_created_and_invited('fred@example.com', @application, organisation: @department_of_hats)
-      assert_user_created_and_invited('lara@example.com', @application, organisation: @cabinet_office)
-      assert_user_not_created('emma@example.com')
+      perform_batch_invite_with_user(@user, @application, fixture_file: "users_with_orgs.csv", user_count: 3, organisation: @cabinet_office)
+      assert_user_created_and_invited("fred@example.com", @application, organisation: @department_of_hats)
+      assert_user_created_and_invited("lara@example.com", @application, organisation: @cabinet_office)
+      assert_user_not_created("emma@example.com")
     end
   end
 
-  context 'for admin users' do
+  context "for admin users" do
     setup do
       @user = create(:admin_user)
     end
 
     should "allow creating users whose details are specified in a CSV file, assigning them all to one org" do
       perform_batch_invite_with_user(@user, @application, organisation: @cabinet_office)
-      assert_user_created_and_invited('fred@example.com', @application, organisation: @cabinet_office)
+      assert_user_created_and_invited("fred@example.com", @application, organisation: @cabinet_office)
     end
 
     should "allow creating users with org details specified in a CSV file, overriding the org selected in the form" do
-      perform_batch_invite_with_user(@user, @application, fixture_file: 'users_with_orgs.csv', user_count: 3, organisation: @cabinet_office)
-      assert_user_created_and_invited('fred@example.com', @application, organisation: @department_of_hats)
-      assert_user_created_and_invited('lara@example.com', @application, organisation: @cabinet_office)
-      assert_user_not_created('emma@example.com')
+      perform_batch_invite_with_user(@user, @application, fixture_file: "users_with_orgs.csv", user_count: 3, organisation: @cabinet_office)
+      assert_user_created_and_invited("fred@example.com", @application, organisation: @department_of_hats)
+      assert_user_created_and_invited("lara@example.com", @application, organisation: @cabinet_office)
+      assert_user_not_created("emma@example.com")
     end
   end
 
-  context 'for organisation admins' do
+  context "for organisation admins" do
     setup do
       @user = create(:organisation_admin)
       @user.grant_application_permission(@application, %w[signin])
@@ -60,7 +60,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
     end
   end
 
-  context 'for super organisation admins' do
+  context "for super organisation admins" do
     setup do
       @user = create(:super_org_admin)
       @user.grant_application_permission(@application, %w[signin])
@@ -76,8 +76,8 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
   end
 
   should "ensure that batch invited users get default permissions even when not checked in UI" do
-    create(:supported_permission, application: @application, name: 'reader', default: true)
-    support_app = create(:application, name: 'support', with_supported_permissions: %w[signin])
+    create(:supported_permission, application: @application, name: "reader", default: true)
+    support_app = create(:application, name: "support", with_supported_permissions: %w[signin])
     support_app.signin_permission.update_attributes(default: true)
     user = create(:admin_user)
 
@@ -90,16 +90,16 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
       attach_file("Choose a CSV file of users with names and email addresses", path)
       uncheck "Has access to #{support_app.name}?"
       check "Has access to #{@application.name}?"
-      unselect 'reader', from: "Permissions for #{@application.name}"
+      unselect "reader", from: "Permissions for #{@application.name}"
       click_button "Create users and send emails"
 
       invited_user = User.find_by_email("fred@example.com")
       assert invited_user.has_access_to?(support_app)
-      assert invited_user.permissions_for(@application).include? 'reader'
+      assert invited_user.permissions_for(@application).include? "reader"
     end
   end
 
-  def perform_batch_invite_with_user(user, application, fixture_file: 'users.csv', user_count: 1, organisation:)
+  def perform_batch_invite_with_user(user, application, fixture_file: "users.csv", user_count: 1, organisation:)
     perform_enqueued_jobs do
       visit root_path
       signin_with(user)
@@ -109,7 +109,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
       attach_file("Choose a CSV file of users with names and email addresses", path)
       check "Has access to #{application.name}?"
       if organisation
-        select organisation.name, from: 'Organisation'
+        select organisation.name, from: "Organisation"
       end
 
       click_button "Create users and send emails"
@@ -131,7 +131,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
     assert_equal "noreply-signon-development@digital.cabinet-office.gov.uk", invite_email.from[0]
     assert_nil invite_email.reply_to[0]
 
-    assert_match 'Please confirm your account', invite_email.subject
+    assert_match "Please confirm your account", invite_email.subject
   end
 
   def assert_user_not_created(email)

@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'support/token_auth_helpers'
+require "test_helper"
+require "support/token_auth_helpers"
 
 class ApiAuthenticationTest < ActionDispatch::IntegrationTest
   include TokenAuthHelpers
@@ -19,8 +19,8 @@ class ApiAuthenticationTest < ActionDispatch::IntegrationTest
     access_user_endpoint(get_valid_token.token, client_id: @app1.uid)
 
     parsed_response = JSON.parse(response.body)
-    assert parsed_response.has_key?('user')
-    assert parsed_response['user']['permissions'].is_a?(Array)
+    assert parsed_response.has_key?("user")
+    assert parsed_response["user"]["permissions"].is_a?(Array)
   end
 
   should "grant access to the user details with a valid token, and no client_id specified" do
@@ -30,8 +30,8 @@ class ApiAuthenticationTest < ActionDispatch::IntegrationTest
     access_user_endpoint(get_valid_token.token)
 
     parsed_response = JSON.parse(response.body)
-    assert parsed_response.has_key?('user')
-    assert parsed_response['user']['permissions'].is_a?(Array)
+    assert parsed_response.has_key?("user")
+    assert parsed_response["user"]["permissions"].is_a?(Array)
   end
 
   should "not grant access without 'signin' permission to the app" do

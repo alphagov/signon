@@ -26,7 +26,7 @@ class Devise::TwoStepVerificationController < DeviseController
   end
 
   def otp_secret_key_uri
-    issuer = I18n.t('devise.issuer')
+    issuer = I18n.t("devise.issuer")
     if Rails.application.config.instance_name
       issuer = "#{Rails.application.config.instance_name.titleize} #{issuer}"
     end

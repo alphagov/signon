@@ -32,10 +32,10 @@ class ModelCabinetOfficeOrgStructure < ActiveRecord::Migration
           "Office of the Registrar of Consultant Lobbyists",
           "Third Party Campaigning Review",
           "Cabinet Office Board",
-          "National School of Government"
+          "National School of Government",
         ],
         downing_street => [
-          "UK Holocaust Memorial Foundation"
+          "UK Holocaust Memorial Foundation",
         ],
         civil_service => [
           "Operational Delivery Profession",
@@ -67,12 +67,12 @@ class ModelCabinetOfficeOrgStructure < ActiveRecord::Migration
           "Civil Service Resourcing",
           "Government Commercial Function",
           "Digital, data and technology professions",
-          "Civil Service Board"
+          "Civil Service Board",
         ],
         civil_service_resourcing => [
           "Civil Service Fast Stream",
-          "Civil Service Fast Track Apprenticeship"
-        ]
+          "Civil Service Fast Track Apprenticeship",
+        ],
     }
 
     missing_orgs = []

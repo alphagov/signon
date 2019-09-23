@@ -1,6 +1,6 @@
 module UsersHelper
   def two_step_status(user)
-    user.has_2sv? ? 'Enabled' : 'Not set up'
+    user.has_2sv? ? "Enabled" : "Not set up"
   end
 
   def organisation_options(form_builder)
@@ -12,7 +12,7 @@ module UsersHelper
   end
 
   def organisation_select_options
-    { include_blank: is_org_admin? || is_super_org_admin? ? false : 'None' }
+    { include_blank: is_org_admin? || is_super_org_admin? ? false : "None" }
   end
 
   def user_email_tokens(user = current_user)

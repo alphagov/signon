@@ -1,5 +1,5 @@
-require 'date'
-require 'test_helper'
+require "date"
+require "test_helper"
 
 class UserSuspensionsExporterTest < ActionView::TestCase
   def setup

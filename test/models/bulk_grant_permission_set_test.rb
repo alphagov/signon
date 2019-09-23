@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class BulkGrantPermissionSetTest < ActiveSupport::TestCase
   setup do
@@ -28,19 +28,19 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
     end
 
     should "allow 'success'" do
-      permission_set = build(:bulk_grant_permission_set, outcome: 'success')
+      permission_set = build(:bulk_grant_permission_set, outcome: "success")
 
       assert permission_set.valid?
     end
 
     should "allow 'fail'" do
-      permission_set = build(:bulk_grant_permission_set, outcome: 'fail')
+      permission_set = build(:bulk_grant_permission_set, outcome: "fail")
 
       assert permission_set.valid?
     end
 
     should "reject other values" do
-      permission_set = build(:bulk_grant_permission_set, outcome: 'unsucessful')
+      permission_set = build(:bulk_grant_permission_set, outcome: "unsucessful")
 
       refute permission_set.valid?
       assert_equal ["is not included in the list"], permission_set.errors[:outcome]
@@ -95,7 +95,7 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
 
     should "not remove permissions a user has that are not part of the supplied ones for the bulk grant set" do
       other_app = create(:application, with_supported_permissions: %w(editor))
-      create(:supported_permission, application: @app, name: 'admin')
+      create(:supported_permission, application: @app, name: "admin")
       user = create(:user, with_permissions: { other_app => %w(editor), @app => %w(admin) })
 
       @permission_set.perform
@@ -123,14 +123,14 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
       assert_equal 2, @permission_set.reload.processed_users
     end
 
-    context 'recording events against users' do
+    context "recording events against users" do
       setup do
         @app2 = create(:application, with_supported_permissions: %w(signin editor))
         @permission_set.supported_permissions += @app2.supported_permissions
         @permission_set.save!
       end
 
-      should 'record a permissions added event for each app that we grant permissions for' do
+      should "record a permissions added event for each app that we grant permissions for" do
         user = create(:user)
         user.event_logs.destroy_all
         @permission_set.perform
@@ -140,14 +140,14 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
 
         assert_equal EventLog::PERMISSIONS_ADDED, recorded_events[0].entry
         assert_equal @app2, recorded_events[0].application
-        assert_equal '(editor, signin)', recorded_events[0].trailing_message
+        assert_equal "(editor, signin)", recorded_events[0].trailing_message
 
         assert_equal EventLog::PERMISSIONS_ADDED, recorded_events[1].entry
         assert_equal @app, recorded_events[1].application
-        assert_equal '(signin)', recorded_events[1].trailing_message
+        assert_equal "(signin)", recorded_events[1].trailing_message
       end
 
-      should 'not include a permission in the event if the user already has it' do
+      should "not include a permission in the event if the user already has it" do
         user = create(:user, with_permissions: { @app2 => %w(editor) })
         user.event_logs.destroy_all
         @permission_set.perform
@@ -157,10 +157,10 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
 
         assert_equal EventLog::PERMISSIONS_ADDED, recorded_events[0].entry
         assert_equal @app2, recorded_events[0].application
-        assert_equal '(signin)', recorded_events[0].trailing_message
+        assert_equal "(signin)", recorded_events[0].trailing_message
       end
 
-      should 'not create an event log for the app if the user already has all the permissions we are trying to grant for that app' do
+      should "not create an event log for the app if the user already has all the permissions we are trying to grant for that app" do
         user = create(:user, with_permissions: { @app => %w(signin) })
         user.event_logs.destroy_all
         @permission_set.perform
@@ -172,7 +172,7 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
         assert_equal @app2, recorded_events[0].application
       end
 
-      should 'not create any event logs if the user already has all the permissions we are trying to grant' do
+      should "not create any event logs if the user already has all the permissions we are trying to grant" do
         user = create(:user, with_permissions: { @app => %w(signin), @app2 => %w(signin editor) })
         user.event_logs.destroy_all
         @permission_set.perform

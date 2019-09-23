@@ -2,7 +2,7 @@ module UserFilterHelper
   def current_path_with_filter(filter_type, filter_value)
     query_parameters = (request.query_parameters.clone || {})
     filter_value.nil? ? query_parameters.delete(filter_type) : query_parameters[filter_type] = filter_value
-    request.path_info + '?' + query_parameters.map { |k, v| "#{k}=#{v}" }.join('&')
+    request.path_info + "?" + query_parameters.map { |k, v| "#{k}=#{v}" }.join("&")
   end
 
   def user_role_text
@@ -35,7 +35,7 @@ module UserFilterHelper
               end
             when :two_step_status
               # rubocop:disable Style/WordArray
-              [['true', 'Enabled'], ['false', 'Not set up']]
+              [["true", "Enabled"], ["false", "Not set up"]]
               # rubocop:enable Style/WordArray
             end
 
@@ -49,7 +49,7 @@ module UserFilterHelper
       end
       content_tag(:li,
                   link_to(item_name, current_path_with_filter(filter_type, item_id)),
-                  class: params[filter_type] == item_id ? 'active' : '')
+                  class: params[filter_type] == item_id ? "active" : "")
     end
 
     list_items << content_tag(:li,

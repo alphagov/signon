@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class InactiveUsersSuspensionReminderMailingListTest < ActiveSupport::TestCase
   def suspension_reminder_mailing_list

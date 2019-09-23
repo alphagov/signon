@@ -1,4 +1,4 @@
-require 'sso_push_error'
+require "sso_push_error"
 
 module Signon
   module ExceptionHandler

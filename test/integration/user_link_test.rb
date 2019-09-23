@@ -10,7 +10,7 @@ class UserLinkTest < ActionDispatch::IntegrationTest
 
     should "link to the current user's edit page" do
       click_on "Adam Adminson"
-      assert page.has_content?('Edit “Adam Adminson”')
+      assert page.has_content?("Edit “Adam Adminson”")
     end
   end
 end

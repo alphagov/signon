@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class UserSuspensionTest < ActionDispatch::IntegrationTest
   setup do
@@ -14,7 +14,7 @@ class UserSuspensionTest < ActionDispatch::IntegrationTest
   end
 
   should "show the suspension reason to admins" do
-    admin = create(:user, role: 'admin')
+    admin = create(:user, role: "admin")
     visit new_user_session_path
     signin_with(admin)
 

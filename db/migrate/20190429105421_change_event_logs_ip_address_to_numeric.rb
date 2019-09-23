@@ -1,4 +1,4 @@
-require 'lhm'
+require "lhm"
 
 class ChangeEventLogsIpAddressToNumeric < ActiveRecord::Migration[5.2]
   def self.up

@@ -20,7 +20,7 @@ class BatchInvitationUser < ActiveRecord::Base
 
     invite_user_with_attributes(sanitised_attributes, inviting_user)
   rescue InvalidOrganisationSlug
-    self.update_column(:outcome, 'failed')
+    self.update_column(:outcome, "failed")
   end
 
   def humanized_outcome
