@@ -53,7 +53,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'govuk-lint', '~> 3'
+  gem 'govuk-lint', '~> 4'
   gem 'jasmine', '~> 3'
   gem 'pry-byebug'
 end
