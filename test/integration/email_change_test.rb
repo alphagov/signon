@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'support/user_account_helpers'
+require "test_helper"
+require "support/user_account_helpers"
 
 class EmailChangeTest < ActionDispatch::IntegrationTest
   include UserAccountHelpers
@@ -26,7 +26,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
       should "log the event in the user's event log" do
         perform_enqueued_jobs do
-          user = create(:user, email: 'old@email.com')
+          user = create(:user, email: "old@email.com")
 
           visit new_user_session_path
           signin_with(@admin)
@@ -56,13 +56,13 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
           user = User.invite!(name: "Jim", email: "jim@web.com")
 
           open_email("jim@web.com")
-          assert_equal 'Please confirm your account', current_email.subject
+          assert_equal "Please confirm your account", current_email.subject
 
           visit new_user_session_path
           signin_with(@admin)
           admin_changes_email_address(user: user, new_email: "new@email.com")
 
-          email = emails_sent_to("new@email.com").detect { |mail| mail.subject == 'Please confirm your account' }
+          email = emails_sent_to("new@email.com").detect { |mail| mail.subject == "Please confirm your account" }
           assert email
           assert email.body.include?("Accept invitation")
           assert user.accept_invitation!
@@ -108,7 +108,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
         confirmation_email, notification_email = *ActionMailer::Base.deliveries[-2..-1]
         assert_equal "new@email.com", confirmation_email.to.first
-        assert_equal 'Confirm your email change', confirmation_email.subject
+        assert_equal "Confirm your email change", confirmation_email.subject
         assert_equal "original@email.com", notification_email.to.first
         assert_match /Your .* Signon development email address is being changed/, notification_email.subject
       end
@@ -196,12 +196,12 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       password = "L0ng S3cure P4ssw0rd"
       @user.update_attributes(
         unconfirmed_email: "new@email.com",
-        password: password
+        password: password,
       )
 
       confirm_email_change(
         password: password,
-        confirmation_token: token_sent_to(@user)
+        confirmation_token: token_sent_to(@user),
       )
       assert_equal "new@email.com", @user.reload.email
     end

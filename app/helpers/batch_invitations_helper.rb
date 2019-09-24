@@ -17,6 +17,6 @@ module BatchInvitationsHelper
   def batch_invite_organisation_for_user(batch_invitation_user)
     Organisation.find(batch_invitation_user.organisation_id).name
   rescue BatchInvitationUser::InvalidOrganisationSlug, ActiveRecord::RecordNotFound
-    ''
+    ""
   end
 end

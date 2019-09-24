@@ -1,4 +1,4 @@
-require 'sso_push_client'
+require "sso_push_client"
 
 class ReauthEnforcer < PushUserUpdatesJob
   def perform(uid, application_id)

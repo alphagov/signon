@@ -3,33 +3,33 @@ class ModelDwpOrgStructure < ActiveRecord::Migration
     dwp = Organisation.find_by(name: "Department for Work and Pensions")
 
     child_org_names = [
-      'Industrial Injuries Advisory Council',
-      'Social Security Advisory Committee',
-      'Health and Safety Executive',
-      'The Pensions Advisory Service',
-      'The Pensions Regulator',
-      'Pension Protection Fund Ombudsman',
-      'Pensions Ombudsman',
-      'National Employment Savings Trust (NEST) Corporation',
-      'Pension Protection Fund',
-      'Independent Case Examiner',
-      'Office for Nuclear Regulation',
-      'Office for Disability Issues'
+      "Industrial Injuries Advisory Council",
+      "Social Security Advisory Committee",
+      "Health and Safety Executive",
+      "The Pensions Advisory Service",
+      "The Pensions Regulator",
+      "Pension Protection Fund Ombudsman",
+      "Pensions Ombudsman",
+      "National Employment Savings Trust (NEST) Corporation",
+      "Pension Protection Fund",
+      "Independent Case Examiner",
+      "Office for Nuclear Regulation",
+      "Office for Disability Issues",
     ]
     closed_child_org_names = [
-      'Child Maintenance and Enforcement Commission',
-      'Disabled People’s Employment Corporation',
-      'Remploy Ltd',
-      'Independent Living Fund',
-      'Equality 2025',
-      'Children\'s Workforce Development Council',
-      'Department for Social Development',
-      'Department of Social Security',
-      'Disability and Carers Service',
-      'Parliamentary Contributory Pension Fund',
-      'Pension Service',
-      'Pension, Disability and Carers Service',
-      'Personal Accounts Delivery Authority'
+      "Child Maintenance and Enforcement Commission",
+      "Disabled People’s Employment Corporation",
+      "Remploy Ltd",
+      "Independent Living Fund",
+      "Equality 2025",
+      "Children's Workforce Development Council",
+      "Department for Social Development",
+      "Department of Social Security",
+      "Disability and Carers Service",
+      "Parliamentary Contributory Pension Fund",
+      "Pension Service",
+      "Pension, Disability and Carers Service",
+      "Personal Accounts Delivery Authority",
     ]
 
     missing_orgs = []

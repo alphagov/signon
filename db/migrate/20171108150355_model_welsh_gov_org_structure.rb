@@ -10,7 +10,7 @@ class ModelWelshGovOrgStructure < ActiveRecord::Migration
         "Sports Council for Wales",
         "Wales Audit Office",
         "Welsh Development Agency",
-        "Further and Higher Education Funding Councils for Wales"
+        "Further and Higher Education Funding Councils for Wales",
     ]
 
     missing_orgs = []

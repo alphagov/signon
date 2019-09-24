@@ -16,7 +16,7 @@ class ModelFcoOrgStructure < ActiveRecord::Migration
                 "Westminster Foundation for Democracy",
                 "Wilton Park"],
         gch => ["CESG",
-                "National Cyber Security Centre"]
+                "National Cyber Security Centre"],
     }
 
     missing_orgs = []

@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class PasswordsControllerTest < ActionController::TestCase
   setup do
@@ -8,10 +8,10 @@ class PasswordsControllerTest < ActionController::TestCase
   end
 
   test "GET /edit with a bad reset token shows an error page" do
-    get :edit, params: { id: @user.id, reset_password_token: 'not_a_real_token' }
+    get :edit, params: { id: @user.id, reset_password_token: "not_a_real_token" }
 
     assert_response :success
-    assert_template 'devise/passwords/reset_error'
+    assert_template "devise/passwords/reset_error"
   end
 
   test "GET /edit with an expired reset token shows an error page" do
@@ -20,6 +20,6 @@ class PasswordsControllerTest < ActionController::TestCase
     get :edit, params: { reset_password_token: @token_received_in_email }
 
     assert_response :success
-    assert_template 'devise/passwords/reset_error'
+    assert_template "devise/passwords/reset_error"
   end
 end

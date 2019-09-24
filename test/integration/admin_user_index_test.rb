@@ -20,7 +20,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       create(:user, name: "Ed", email: "ed@example.com", organisation: org1)
       create(:user, name: "Eddie", email: "eddie_bb@example.com")
       create(:user, name: "Ernie", email: "ernie@example.com", organisation: org2)
-      create(:suspended_user, name: 'Suspended McFee', email: 'suspenders@example.com')
+      create(:suspended_user, name: "Suspended McFee", email: "suspenders@example.com")
     end
 
     teardown do
@@ -41,7 +41,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       assert page.has_content?("Last sign-in")
 
-      actual_last_sign_in_strings = page.all('table tr td.last-sign-in').map(&:text).map(&:strip)[0..1]
+      actual_last_sign_in_strings = page.all("table tr td.last-sign-in").map(&:text).map(&:strip)[0..1]
       assert_equal ["5 minutes ago", "never signed in"], actual_last_sign_in_strings
     end
 
@@ -56,10 +56,10 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
         "Abbot mr_ab@example.com",
         "Admin User admin@example.com",
       ]
-      actual = page.all('table tr td.email').map(&:text).map(&:strip)
+      actual = page.all("table tr td.email").map(&:text).map(&:strip)
       assert_equal expected, actual
 
-      within first('.pagination') do
+      within first(".pagination") do
         click_on "E"
       end
 
@@ -68,7 +68,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
         "Eddie eddie_bb@example.com",
         "Ernie ernie@example.com",
       ]
-      actual = page.all('table tr td.email').map(&:text).map(&:strip)
+      actual = page.all("table tr td.email").map(&:text).map(&:strip)
       assert_equal expected, actual
     end
 
@@ -99,7 +99,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       select_role("Normal")
 
-      assert_equal User.with_role(:normal).count, page.all('table tbody tr').count
+      assert_equal User.with_role(:normal).count, page.all("table tbody tr").count
       assert ! page.has_content?("Admin User admin@example.com")
       User.with_role(:normal).each do |normal_user|
         assert page.has_content?(normal_user.email)
@@ -115,13 +115,13 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     should "filter users by status" do
       visit "/users"
 
-      select_status('Suspended')
+      select_status("Suspended")
 
-      assert_equal 1, page.all('table tbody tr').count
+      assert_equal 1, page.all("table tbody tr").count
       assert ! page.has_content?("Aardvark")
-      assert page.has_content?('Suspended McFee')
+      assert page.has_content?("Suspended McFee")
 
-      select_status('All Statuses')
+      select_status("All Statuses")
 
       %w(Aardvark Abbot Abbey Admin Suspended).each do |user_name|
         assert page.has_content?(user_name)
@@ -131,12 +131,12 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     should "filter users by organisation" do
       visit "/users"
 
-      select_organisation('Org 1')
-      assert_equal 1, page.all('table tbody tr').count
+      select_organisation("Org 1")
+      assert_equal 1, page.all("table tbody tr").count
       assert ! page.has_content?("Aardvark")
-      assert page.has_content?('Ed')
+      assert page.has_content?("Ed")
 
-      select_organisation('All Organisations')
+      select_organisation("All Organisations")
 
       %w(Aardvark Abbot Abbey Admin Suspended).each do |user_name|
         assert page.has_content?(user_name)

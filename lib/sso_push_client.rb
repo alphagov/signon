@@ -1,5 +1,5 @@
-require 'gds_api/base'
-require 'exception_handler'
+require "gds_api/base"
+require "exception_handler"
 
 class SSOPushClient < GdsApi::Base
   include Signon::ExceptionHandler

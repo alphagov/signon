@@ -1,6 +1,6 @@
 class Permission < ActiveRecord::Base
   belongs_to :user
-  belongs_to :application, class_name: 'Doorkeeper::Application'
+  belongs_to :application, class_name: "Doorkeeper::Application"
   serialize :permissions, Array
 end
 
@@ -26,10 +26,10 @@ class MigratePermissionsToUserApplicationPermissionsJoinTable < ActiveRecord::Mi
                                                    updated_at: permission.updated_at)
         permission.save if permission.valid? # doesn't save duplicate permissions
       end
-      print '.' if (index += 1) % 1000 == 0
+      print "." if (index += 1) % 1000 == 0
     end
-    puts ''
-    puts 'Done.'
+    puts ""
+    puts "Done."
   end
 
   # caching saves us about 30s

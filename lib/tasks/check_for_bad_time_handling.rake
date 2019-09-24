@@ -1,5 +1,5 @@
 task :check_for_bad_time_handling do
-  directories = Dir.glob(File.join(Rails.root, '**', '*.rb'))
+  directories = Dir.glob(File.join(Rails.root, "**", "*.rb"))
   matching_files = directories.select do |filename|
     match = false
     File.open(filename) do |file|

@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'gds_api/base'
+require "test_helper"
+require "gds_api/base"
 
 class SSOPushErrorTest < ActiveSupport::TestCase
   def setup

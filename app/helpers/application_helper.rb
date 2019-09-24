@@ -1,4 +1,4 @@
-require 'addressable/uri'
+require "addressable/uri"
 
 module ApplicationHelper
   def nav_link(text, link)

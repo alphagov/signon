@@ -1,4 +1,4 @@
-require 'csv'
+require "csv"
 
 class UserSuspensionsExporter
   def self.call(*args)
@@ -15,15 +15,15 @@ class UserSuspensionsExporter
   def export_suspensions
     event_ids = [EventLog::ACCOUNT_AUTOSUSPENDED, EventLog::ACCOUNT_UNSUSPENDED].map(&:id)
 
-    CSV.open(file_path, 'wb', headers: true) do |csv|
+    CSV.open(file_path, "wb", headers: true) do |csv|
       csv << ["Name", "Email", "Organisation", "Role", "Created at", "Auto-suspended at", "Unsuspended at", "Unsuspended by"]
-      User.where('created_at > ?', users_since_date).order(:name).find_each do |user|
+      User.where("created_at > ?", users_since_date).order(:name).find_each do |user|
         org_name = user.organisation ? user.organisation.name : ""
         # because the suspension and the unsuspension are separate
         # events, and the suspension comes first, we need to store it
         # and only emit the CSV line when we get to the unsuspension.
         suspended_at = nil
-        EventLog.order('created_at ASC').where(uid: user.uid, event_id: event_ids).where('created_at > ?', suspensions_since_date).find_each do |event|
+        EventLog.order("created_at ASC").where(uid: user.uid, event_id: event_ids).where("created_at > ?", suspensions_since_date).find_each do |event|
           case event.event_id
           when EventLog::ACCOUNT_AUTOSUSPENDED.id
             suspended_at = event.created_at

@@ -1,9 +1,9 @@
-require 'csv'
+require "csv"
 
 class UsersController < ApplicationController
   include UserPermissionsControllerMethods
 
-  layout 'admin_layout', only: %w(edit_email_or_password)
+  layout "admin_layout", only: %w(edit_email_or_password)
 
   before_action :authenticate_user!, except: :show
   before_action :load_and_authorize_user, except: %i[index show]
@@ -35,8 +35,8 @@ class UsersController < ApplicationController
         paginate_users
       end
       format.csv do
-        headers['Content-Disposition'] = 'attachment; filename="signon_users.csv"'
-        render plain: export, content_type: 'text/csv'
+        headers["Content-Disposition"] = 'attachment; filename="signon_users.csv"'
+        render plain: export, content_type: "text/csv"
       end
     end
   end
@@ -107,7 +107,7 @@ class UsersController < ApplicationController
   def update_password
     if @user.update_with_password(password_params)
       EventLog.record_event(@user, EventLog::SUCCESSFUL_PASSWORD_CHANGE, ip_address: user_ip_address)
-      flash[:notice] = t(:updated, scope: 'devise.passwords')
+      flash[:notice] = t(:updated, scope: "devise.passwords")
       bypass_sign_in(@user)
       redirect_to root_path
     else
@@ -144,7 +144,7 @@ private
   end
 
   def should_include_permissions?
-    params[:format] == 'csv'
+    params[:format] == "csv"
   end
 
   def paginate_users
@@ -156,7 +156,7 @@ private
                end
     else
       @users, @sorting_params = @users.alpha_paginate(
-        params.fetch(:letter, 'A'),
+        params.fetch(:letter, "A"),
         ALPHABETICAL_PAGINATE_CONFIG.dup,
         &:name
       )

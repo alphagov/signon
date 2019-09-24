@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class AuthorisationsControllerTest < ActionController::TestCase
   setup do
@@ -45,7 +45,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
 
     context "POST create" do
       should "create a new access token and populate flash with it" do
-        assert_difference 'Doorkeeper::AccessToken.count', 1 do
+        assert_difference "Doorkeeper::AccessToken.count", 1 do
           post :create, params: { api_user_id: @api_user.id, doorkeeper_access_token: { application_id: @application.id } }
         end
 
@@ -60,7 +60,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
       end
 
       should "not duplicate 'signin' permission for the authorised application if it already exists" do
-        @api_user.grant_application_permission(@application, 'signin')
+        @api_user.grant_application_permission(@application, "signin")
 
         post :create, params: { api_user_id: @api_user.id, doorkeeper_access_token: { application_id: @application.id } }
 

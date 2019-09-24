@@ -9,7 +9,7 @@ class ModelAgoOrgStructure < ActiveRecord::Migration
                 "Serious Fraud Office",
                 "HM Crown Prosecution Service Inspectorate",
                 "Government Legal Department"],
-        tsd => ["Bank of England"]
+        tsd => ["Bank of England"],
     }
 
     missing_orgs = []

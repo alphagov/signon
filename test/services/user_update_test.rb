@@ -1,11 +1,11 @@
-require 'test_helper'
-require 'ipaddr'
+require "test_helper"
+require "ipaddr"
 
 class UserUpdateTest < ActionView::TestCase
   should "record an event" do
     affected_user = create(:user)
     current_user = create(:superadmin_user)
-    ip_address = '1.2.3.4'
+    ip_address = "1.2.3.4"
 
     UserUpdate.new(affected_user, {}, current_user, ip_address).update
 
@@ -14,12 +14,12 @@ class UserUpdateTest < ActionView::TestCase
 
   should "records permission changes" do
     current_user = create(:superadmin_user)
-    ip_address = '1.2.3.4'
+    ip_address = "1.2.3.4"
     parsed_ip_address = IPAddr.new(ip_address, Socket::AF_INET).to_s
 
     affected_user = create(:user)
     app = create(:application, name: "App", with_supported_permissions: ["Editor", "signin", "Something Else"])
-    affected_user.grant_application_permission(app, 'Something Else')
+    affected_user.grant_application_permission(app, "Something Else")
 
     perms = app.supported_permissions.first(2).map(&:id)
     params = { supported_permission_ids: perms }

@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class UserPermissionsExporterTest < ActionView::TestCase
   def setup
@@ -6,7 +6,7 @@ class UserPermissionsExporterTest < ActionView::TestCase
     @ketchup_org = create(:organisation, name: "Ministry of ketchup")
     @brown_sauce_org = create(:organisation, name: "Ministry of brown sauce")
     @bill = create(:user, name: "Bill", email: "bill@bill.com", organisation: @chips_org,
-                               suspended_at: Date.parse('2000-01-01'), reason_for_suspension: "Left Chips.org")
+                               suspended_at: Date.parse("2000-01-01"), reason_for_suspension: "Left Chips.org")
     @anne = create(:user, name: "Anne", email: "anne@anne.com", role: "superadmin", organisation: @ketchup_org)
     @mary = create(:user, name: "Mary", email: "mary@mary.com", role: "admin", organisation: @brown_sauce_org)
 

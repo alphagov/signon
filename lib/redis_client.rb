@@ -1,4 +1,4 @@
-require 'redis'
+require "redis"
 
 class RedisClient
   include Singleton

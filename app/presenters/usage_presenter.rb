@@ -1,5 +1,5 @@
-require 'csv'
-require 'fileutils'
+require "csv"
+require "fileutils"
 
 class UsagePresenter
   include UsersHelper
@@ -52,10 +52,10 @@ private
 
   def header_row
     [
-      'Month',
-      'Organisation',
-      'Active Users',
-      'Suspended Users'
+      "Month",
+      "Organisation",
+      "Active Users",
+      "Suspended Users",
     ]
   end
 end

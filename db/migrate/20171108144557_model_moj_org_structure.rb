@@ -45,7 +45,7 @@ class ModelMojOrgStructure < ActiveRecord::Migration
             "Tribunal Procedure Committee",
             "Victims' Advisory Panel",
             "Victims' Commissioner",
-            "Youth Justice Board for England and Wales"
+            "Youth Justice Board for England and Wales",
         ],
         hmcts => [
             "Bankruptcy Court",
@@ -84,9 +84,9 @@ class ModelMojOrgStructure < ActiveRecord::Migration
             "Court of Appeal Criminal Division",
             "Queen's Bench Division of the High Court",
             "Administrative Court",
-            "Chancery Division of the High Court"
+            "Chancery Division of the High Court",
         ],
-        noms => ["National Probation Service"]
+        noms => ["National Probation Service"],
     }
 
     closed_child_org_names = [
@@ -102,7 +102,7 @@ class ModelMojOrgStructure < ActiveRecord::Migration
         "Office for Criminal Justice Reform",
         "Office of the Lay Observer",
         "Office of the Legal Services Complaints Commissioner",
-        "Office of the Legal Services Ombudsman"
+        "Office of the Legal Services Ombudsman",
     ]
 
     missing_orgs = []

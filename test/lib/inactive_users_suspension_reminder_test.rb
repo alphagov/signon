@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
   context "sending reminder emails" do

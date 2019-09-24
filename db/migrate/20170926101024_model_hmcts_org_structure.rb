@@ -59,7 +59,7 @@ class ModelHmctsOrgStructure < ActiveRecord::Migration
         "Queen's Bench Division of the High Court",
         "Administrative Court",
         "Chancery Division of the High Court",
-        "HM Courts Service"
+        "HM Courts Service",
     ]
 
     missing_orgs = []

@@ -3,17 +3,17 @@ require "doorkeeper/orm/active_record/application"
 class ::Doorkeeper::Application < ActiveRecord::Base
   has_many :supported_permissions, dependent: :destroy
 
-  default_scope { order('oauth_applications.name') }
+  default_scope { order("oauth_applications.name") }
   scope :support_push_updates, -> { where(supports_push_updates: true) }
   scope :can_signin, lambda { |user|
     joins(supported_permissions: :user_application_permissions)
-      .where('user_application_permissions.user_id' => user.id)
-      .where('supported_permissions.name' => 'signin')
+      .where("user_application_permissions.user_id" => user.id)
+      .where("supported_permissions.name" => "signin")
       .where(retired: false)
   }
   scope :with_signin_delegatable, -> {
     joins(:supported_permissions)
-      .where(supported_permissions: { name: 'signin', delegatable: true })
+      .where(supported_permissions: { name: "signin", delegatable: true })
   }
 
   after_create :create_signin_supported_permission
@@ -30,7 +30,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   end
 
   def signin_permission
-    supported_permissions.find_by(name: 'signin')
+    supported_permissions.find_by(name: "signin")
   end
 
   def sorted_supported_permissions_grantable_from_ui
@@ -46,17 +46,17 @@ class ::Doorkeeper::Application < ActiveRecord::Base
     [
       "Collections Publisher",
       "Publisher",
-      "Service Manual Publisher"
+      "Service Manual Publisher",
     ].include?(name)
   end
 
 private
 
   def create_signin_supported_permission
-    supported_permissions.create!(name: 'signin', delegatable: true)
+    supported_permissions.create!(name: "signin", delegatable: true)
   end
 
   def create_user_update_supported_permission
-    supported_permissions.where(name: 'user_update_permission', grantable_from_ui: false).first_or_create! if supports_push_updates?
+    supported_permissions.where(name: "user_update_permission", grantable_from_ui: false).first_or_create! if supports_push_updates?
   end
 end

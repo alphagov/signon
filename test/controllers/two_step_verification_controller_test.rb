@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class TwoStepVerificationControllerTest < ActionController::TestCase
   setup do
@@ -9,10 +9,10 @@ class TwoStepVerificationControllerTest < ActionController::TestCase
     sign_in @user
   end
 
-  context 'when unauthenticated' do
+  context "when unauthenticated" do
     setup { sign_out @user }
 
-    should 'redirect to login upon attempted prompt' do
+    should "redirect to login upon attempted prompt" do
       get :prompt
 
       assert_redirected_to new_user_session_path
@@ -53,7 +53,7 @@ class TwoStepVerificationControllerTest < ActionController::TestCase
 
     context "when different issuer name is provided within the localisation data" do
       should "use the value provided by i18n" do
-        I18n.stubs(t: 'issuer test')
+        I18n.stubs(t: "issuer test")
         assert_match %r{issuer=Development%20issuer%20test}, @controller.otp_secret_key_uri
       end
     end

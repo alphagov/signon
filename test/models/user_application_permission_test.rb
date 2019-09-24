@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class UserApplicationPermissionTest < ActiveSupport::TestCase
   context "validations" do
@@ -8,11 +8,11 @@ class UserApplicationPermissionTest < ActiveSupport::TestCase
       @supported_permission = @application.signin_permission
     end
 
-    should 'be invalid without user_id' do
+    should "be invalid without user_id" do
       assert UserApplicationPermission.new(user: nil, supported_permission: @supported_permission).invalid?
     end
 
-    should 'be invalid without supported_permission_id' do
+    should "be invalid without supported_permission_id" do
       assert UserApplicationPermission.new(supported_permission: nil, user: @user).invalid?
     end
 

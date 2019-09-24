@@ -18,15 +18,15 @@ class UserExportPresenter
 
   def header_row
     [
-      'Name',
-      'Email',
-      'Role',
-      'Organisation',
-      'Sign-in count',
-      'Last sign-in',
-      'Created',
-      'Status',
-      '2SV Status',
+      "Name",
+      "Email",
+      "Role",
+      "Organisation",
+      "Sign-in count",
+      "Last sign-in",
+      "Created",
+      "Status",
+      "2SV Status",
     ].concat applications.map(&:name)
   end
 
@@ -47,7 +47,7 @@ class UserExportPresenter
   def app_permissions_for(user)
     applications.map do |application|
       perms = app_permissions[user.id][application.id] if app_permissions[user.id]
-      perms.sort.join(', ') if perms
+      perms.sort.join(", ") if perms
     end
   end
 end

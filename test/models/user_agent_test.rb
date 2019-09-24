@@ -1,8 +1,8 @@
-require 'test_helper'
+require "test_helper"
 
 class UserAgentTest < ActiveSupport::TestCase
   setup do
-    @user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36'
+    @user_agent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.113 Safari/537.36"
   end
 
   test "can create a valid record" do

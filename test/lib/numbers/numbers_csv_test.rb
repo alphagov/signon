@@ -1,11 +1,11 @@
-require 'test_helper'
-require 'numbers/numbers_csv'
-require 'numbers/user_segments'
+require "test_helper"
+require "numbers/numbers_csv"
+require "numbers/user_segments"
 
 class NumbersCsvTest < ActiveSupport::TestCase
   def setup
     @licensing = create(:application, name: "Licensing", with_supported_permissions: ["another perm"])
-    create(:admin_user, email: 'admin_user@admin.example.com', name: "Winston")
+    create(:admin_user, email: "admin_user@admin.example.com", name: "Winston")
     create_list(:user, 3)
   end
 
@@ -14,7 +14,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   def numbers_csv
-    CSV.parse(File.read(Rails.root + 'numbers.csv'))
+    CSV.parse(File.read(Rails.root + "numbers.csv"))
   end
 
   test "csv contains accounts count" do
@@ -23,7 +23,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   test "csv contains counts by account state" do
-    User.last.suspend('test')
+    User.last.suspend("test")
 
     NumbersCsv.generate
 

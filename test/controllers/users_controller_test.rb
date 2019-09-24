@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class UsersControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
@@ -12,7 +12,7 @@ class UsersControllerTest < ActionController::TestCase
     post :update_password, params: { id: user.id, user: {
       current_password: original_password,
       password: new_password,
-      password_confirmation: new_password
+      password_confirmation: new_password,
     } }
 
     [user, original_password_hash]
@@ -20,7 +20,7 @@ class UsersControllerTest < ActionController::TestCase
 
   context "PUT update_password" do
     should "changing passwords to something strong should succeed" do
-      user, orig_password = change_user_password(:user, 'destabilizers842}orthophosphate')
+      user, orig_password = change_user_password(:user, "destabilizers842}orthophosphate")
 
       assert_equal "302", response.code
       assert_equal root_url, response.location
@@ -30,7 +30,7 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     should "changing password to something too short should fail" do
-      user, orig_password = change_user_password(:user, 'short')
+      user, orig_password = change_user_password(:user, "short")
 
       assert_equal "200", response.code
       assert_match "too short", response.body
@@ -40,7 +40,7 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     should "changing password to something too weak should fail" do
-      user, orig_password = change_user_password(:user, 'zymophosphate')
+      user, orig_password = change_user_password(:user, "zymophosphate")
 
       assert_equal "200", response.code
       assert_match "not strong enough", response.body
@@ -137,10 +137,10 @@ class UsersControllerTest < ActionController::TestCase
 
     should "fetching json profile with a valid oauth token should succeed" do
       user = create(:user)
-      user.grant_application_permission(@application, 'signin')
+      user.grant_application_permission(@application, "signin")
       token = create(:access_token, application: @application, resource_owner_id: user.id)
 
-      @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
+      @request.env["HTTP_AUTHORIZATION"] = "Bearer #{token.token}"
       get :show, params: { client_id: @application.uid, format: :json }
 
       assert_equal "200", response.code
@@ -152,10 +152,10 @@ class UsersControllerTest < ActionController::TestCase
       # For now.  Once gds-sso is updated everywhere, this will 401.
 
       user = create(:user)
-      user.grant_application_permission(@application, 'signin')
+      user.grant_application_permission(@application, "signin")
       token = create(:access_token, application: @application, resource_owner_id: user.id)
 
-      @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
+      @request.env["HTTP_AUTHORIZATION"] = "Bearer #{token.token}"
       get :show, params: { format: :json }
 
       assert_equal "200", response.code
@@ -167,7 +167,7 @@ class UsersControllerTest < ActionController::TestCase
       user = create(:user)
       token = create(:access_token, application: @application, resource_owner_id: user.id)
 
-      @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token.sub(/[0-9]/, 'x')}"
+      @request.env["HTTP_AUTHORIZATION"] = "Bearer #{token.token.sub(/[0-9]/, 'x')}"
       get :show, params: { client_id: @application.uid, format: :json }
 
       assert_equal "401", response.code
@@ -178,7 +178,7 @@ class UsersControllerTest < ActionController::TestCase
       user = create(:user)
       token = create(:access_token, application: other_application, resource_owner_id: user.id)
 
-      @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token.sub(/[0-9]/, 'x')}"
+      @request.env["HTTP_AUTHORIZATION"] = "Bearer #{token.token.sub(/[0-9]/, 'x')}"
       get :show, params: { client_id: @application.uid, format: :json }
 
       assert_equal "401", response.code
@@ -193,10 +193,10 @@ class UsersControllerTest < ActionController::TestCase
       user = create(:user, with_signin_permissions_for: [@application])
       token = create(:access_token, application: @application, resource_owner_id: user.id)
 
-      @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
+      @request.env["HTTP_AUTHORIZATION"] = "Bearer #{token.token}"
       get :show, params: { client_id: @application.uid, format: :json }
       json = JSON.parse(response.body)
-      assert_equal(%w[signin], json['user']['permissions'])
+      assert_equal(%w[signin], json["user"]["permissions"])
     end
 
     should "fetching json profile should include only permissions for the relevant app" do
@@ -205,18 +205,18 @@ class UsersControllerTest < ActionController::TestCase
 
       token = create(:access_token, application: @application, resource_owner_id: user.id)
 
-      @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
+      @request.env["HTTP_AUTHORIZATION"] = "Bearer #{token.token}"
       get :show, params: { client_id: @application.uid, format: :json }
       json = JSON.parse(response.body)
-      assert_equal(%w[signin], json['user']['permissions'])
+      assert_equal(%w[signin], json["user"]["permissions"])
     end
 
     should "fetching json profile should update last_synced_at for the relevant app" do
       user = create(:user)
-      user.grant_application_permission(@application, 'signin')
+      user.grant_application_permission(@application, "signin")
       token = create(:access_token, application: @application, resource_owner_id: user.id)
 
-      @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
+      @request.env["HTTP_AUTHORIZATION"] = "Bearer #{token.token}"
       get :show, params: { client_id: @application.uid, format: :json }
 
       assert_not_nil user.application_permissions.first.last_synced_at
@@ -226,7 +226,7 @@ class UsersControllerTest < ActionController::TestCase
       user = create(:user)
       token = create(:access_token, application: @application, resource_owner_id: user.id)
 
-      @request.env['HTTP_AUTHORIZATION'] = "Bearer #{token.token}"
+      @request.env["HTTP_AUTHORIZATION"] = "Bearer #{token.token}"
       get :show, params: { client_id: @application.uid, format: :json }
 
       assert_response :unauthorized
@@ -287,25 +287,25 @@ class UsersControllerTest < ActionController::TestCase
         should "respond to CSV format" do
           get :index, params: { format: :csv }
           assert_response :success
-          assert_equal @response.content_type, 'text/csv'
+          assert_equal @response.content_type, "text/csv"
         end
 
         should "export filtered users by role" do
           user = create(:user)
-          get :index, params: { role: 'normal', format: :csv }
+          get :index, params: { role: "normal", format: :csv }
           lines = @response.body.lines
           assert_equal(2, lines.length)
         end
 
         should "export filtered users by all fields" do
-          organisation = create(:organisation, name: "Cookies Of Other Lands", abbreviation: 'COOL')
+          organisation = create(:organisation, name: "Cookies Of Other Lands", abbreviation: "COOL")
 
-          create(:suspended_user, name: "Special cookie", email: "specialcookie@email.com", role: 'normal', organisation: organisation)
-          create(:suspended_user, name: "Normal cookie", email: "normalcookie@email.com", role: 'normal', organisation: organisation)
+          create(:suspended_user, name: "Special cookie", email: "specialcookie@email.com", role: "normal", organisation: organisation)
+          create(:suspended_user, name: "Normal cookie", email: "normalcookie@email.com", role: "normal", organisation: organisation)
 
           assert_equal(3, User.count)
 
-          get :index, params: { role: 'normal', status: 'suspended', organisation: organisation, two_step_status: false, filter: 'special', format: :csv }
+          get :index, params: { role: "normal", status: "suspended", organisation: organisation, two_step_status: false, filter: "special", format: :csv }
 
           lines = @response.body.lines
           assert_equal(2, lines.length)
@@ -365,17 +365,17 @@ class UsersControllerTest < ActionController::TestCase
       should "scope list of users by status" do
         create(:suspended_user, email: "suspended_user@gov.uk")
 
-        get :index, params: { status: 'suspended' }
+        get :index, params: { status: "suspended" }
 
         assert_select "tbody tr", count: 1
         assert_select "td.email", /suspended_user@gov.uk/
       end
 
       should "scope list of users by status and role" do
-        create(:suspended_user, email: "suspended_user@gov.uk", role: 'admin')
+        create(:suspended_user, email: "suspended_user@gov.uk", role: "admin")
         create(:suspended_user, email: "normal_suspended_user@gov.uk")
 
-        get :index, params: { status: 'suspended', role: 'admin' }
+        get :index, params: { status: "suspended", role: "admin" }
 
         assert_select "tbody tr", count: 1
         assert_select "td.email", /suspended_user@gov.uk/
@@ -418,7 +418,7 @@ class UsersControllerTest < ActionController::TestCase
       should "show the organisation to which the user belongs" do
         user_in_org = create(:user_in_organisation)
         org_with_user = user_in_org.organisation
-        other_organisation = create(:organisation, abbreviation: 'ABBR')
+        other_organisation = create(:organisation, abbreviation: "ABBR")
 
         get :edit, params: { id: user_in_org.id }
 
@@ -445,8 +445,8 @@ class UsersControllerTest < ActionController::TestCase
         delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: %w[signin])
         non_delegatable_no_access_to_app = create(:application, with_supported_permissions: %w[signin])
 
-        @user.grant_application_permission(delegatable_app, 'signin')
-        @user.grant_application_permission(non_delegatable_app, 'signin')
+        @user.grant_application_permission(delegatable_app, "signin")
+        @user.grant_application_permission(non_delegatable_app, "signin")
 
         user = create(:user_in_organisation)
 
@@ -506,9 +506,9 @@ class UsersControllerTest < ActionController::TestCase
 
         should "be able to see all permissions to applications for a user" do
           delegatable_app = create(:application, with_delegatable_supported_permissions: %w(signin Editor))
-          non_delegatable_app = create(:application, with_supported_permissions: ['signin', 'GDS Admin'])
-          delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ['signin', 'GDS Editor'])
-          non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ['signin', 'Import CSVs'])
+          non_delegatable_app = create(:application, with_supported_permissions: ["signin", "GDS Admin"])
+          delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ["signin", "GDS Editor"])
+          non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ["signin", "Import CSVs"])
 
           organisation_admin = create(:organisation_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
 
@@ -516,9 +516,9 @@ class UsersControllerTest < ActionController::TestCase
 
           user = create(:user_in_organisation, organisation: organisation_admin.organisation,
                         with_permissions: { delegatable_app => %w[Editor],
-                                            non_delegatable_app => ['signin', 'GDS Admin'],
-                                            delegatable_no_access_to_app => ['signin', 'GDS Editor'],
-                                            non_delegatable_no_access_to_app => ['signin', 'Import CSVs'] })
+                                            non_delegatable_app => ["signin", "GDS Admin"],
+                                            delegatable_no_access_to_app => ["signin", "GDS Editor"],
+                                            non_delegatable_no_access_to_app => ["signin", "Import CSVs"] })
 
           get :edit, params: { id: user.id }
 
@@ -586,9 +586,9 @@ class UsersControllerTest < ActionController::TestCase
 
         should "be able to see all permissions to applications for a user" do
           delegatable_app = create(:application, with_delegatable_supported_permissions: %w(signin Editor))
-          non_delegatable_app = create(:application, with_supported_permissions: ['signin', 'GDS Admin'])
-          delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ['signin', 'GDS Editor'])
-          non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ['signin', 'Import CSVs'])
+          non_delegatable_app = create(:application, with_supported_permissions: ["signin", "GDS Admin"])
+          delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ["signin", "GDS Editor"])
+          non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ["signin", "Import CSVs"])
 
           super_org_admin = create(:super_org_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
 
@@ -596,9 +596,9 @@ class UsersControllerTest < ActionController::TestCase
 
           user = create(:user_in_organisation, organisation: super_org_admin.organisation,
                         with_permissions: { delegatable_app => %w[Editor],
-                                            non_delegatable_app => ['signin', 'GDS Admin'],
-                                            delegatable_no_access_to_app => ['signin', 'GDS Editor'],
-                                            non_delegatable_no_access_to_app => ['signin', 'Import CSVs'] })
+                                            non_delegatable_app => ["signin", "GDS Admin"],
+                                            delegatable_no_access_to_app => ["signin", "GDS Editor"],
+                                            non_delegatable_no_access_to_app => ["signin", "Import CSVs"] })
 
           get :edit, params: { id: user.id }
 
@@ -627,9 +627,9 @@ class UsersControllerTest < ActionController::TestCase
       context "superadmin" do
         should "not be able to see all permissions to applications for a user" do
           delegatable_app = create(:application, with_delegatable_supported_permissions: %w(signin Editor))
-          non_delegatable_app = create(:application, with_supported_permissions: ['signin', 'GDS Admin'])
-          delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ['signin', 'GDS Editor'])
-          non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ['signin', 'Import CSVs'])
+          non_delegatable_app = create(:application, with_supported_permissions: ["signin", "GDS Admin"])
+          delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ["signin", "GDS Editor"])
+          non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ["signin", "Import CSVs"])
 
           superadmin = create(:superadmin_user, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
 
@@ -637,9 +637,9 @@ class UsersControllerTest < ActionController::TestCase
 
           user = create(:user_in_organisation, organisation: superadmin.organisation,
                         with_permissions: { delegatable_app => %w[Editor],
-                                            non_delegatable_app => ['signin', 'GDS Admin'],
-                                            delegatable_no_access_to_app => ['signin', 'GDS Editor'],
-                                            non_delegatable_no_access_to_app => ['signin', 'Import CSVs'] })
+                                            non_delegatable_app => ["signin", "GDS Admin"],
+                                            delegatable_no_access_to_app => ["signin", "GDS Editor"],
+                                            non_delegatable_no_access_to_app => ["signin", "Import CSVs"] })
 
           get :edit, params: { id: user.id }
 
@@ -662,7 +662,7 @@ class UsersControllerTest < ActionController::TestCase
       should "not be able to update superadmins" do
         superadmin = create(:superadmin_user)
 
-        put :edit, params: { id: superadmin.id, user: { email: 'normal_user@example.com' } }
+        put :edit, params: { id: superadmin.id, user: { email: "normal_user@example.com" } }
 
         assert_redirected_to root_path
         assert_match(/You do not have permission to perform this action./, flash[:alert])
@@ -785,7 +785,7 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "remove all applications access for a user" do
-          @another_user.grant_application_permission(@application, 'signin')
+          @another_user.grant_application_permission(@application, "signin")
 
           put :update, params: { id: @another_user.id, user: {} }
 
@@ -799,10 +799,10 @@ class UsersControllerTest < ActionController::TestCase
               id: @another_user.id,
               user: {
                 supported_permission_ids: [
-                  @application.supported_permissions.first.id
-                ]
-              }
-            }
+                  @application.supported_permissions.first.id,
+                ],
+              },
+            },
           )
 
           assert_equal 1, @another_user.reload.application_permissions.count
@@ -851,7 +851,7 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     should "disallow access to non-admins" do
-      @user.update_column(:role, 'normal')
+      @user.update_column(:role, "normal")
       get :index
       assert_redirected_to root_path
     end

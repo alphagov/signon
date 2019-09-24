@@ -1,6 +1,6 @@
-require_relative './metrics'
-require 'numbers/user_segments'
-require 'csv'
+require_relative "./metrics"
+require "numbers/user_segments"
+require "csv"
 
 class NumbersCsv
   def self.generate

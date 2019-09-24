@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'support/policy_helpers'
+require "test_helper"
+require "support/policy_helpers"
 
 class OrganisationPolicyTest < ActiveSupport::TestCase
   include PolicyHelpers
@@ -17,8 +17,8 @@ class OrganisationPolicyTest < ActiveSupport::TestCase
 
   context "can_assign" do
     should "allow superadmins and admins to assign a user to any organisation" do
-      assert permit?(create(:user_in_organisation, role: 'superadmin'), build(:organisation), :can_assign)
-      assert permit?(create(:user_in_organisation, role: 'admin'), build(:organisation), :can_assign)
+      assert permit?(create(:user_in_organisation, role: "superadmin"), build(:organisation), :can_assign)
+      assert permit?(create(:user_in_organisation, role: "admin"), build(:organisation), :can_assign)
     end
 
     should "forbid for super organisation admins" do

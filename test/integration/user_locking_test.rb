@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class UserLockingTest < ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper
@@ -41,7 +41,7 @@ class UserLockingTest < ActionDispatch::IntegrationTest
     signin_with(admin)
     first_letter_of_name = user.name[0]
     visit users_path(letter: first_letter_of_name)
-    click_button 'Unlock account'
+    click_button "Unlock account"
 
     user.reload
     assert ! user.access_locked?
@@ -56,7 +56,7 @@ class UserLockingTest < ActionDispatch::IntegrationTest
     signin_with(admin)
     visit edit_user_path(user)
 
-    click_button 'Unlock account'
+    click_button "Unlock account"
 
     user.reload
     assert ! user.access_locked?

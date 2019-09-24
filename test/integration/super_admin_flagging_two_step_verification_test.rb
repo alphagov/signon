@@ -1,10 +1,10 @@
-require 'test_helper'
+require "test_helper"
 
 class SuperAdminFlaggingTwoStepVerificationTest < ActionDispatch::IntegrationTest
   include EmailHelpers
   include ActiveJob::TestHelper
 
-  context 'updating a user' do
+  context "updating a user" do
     setup do
       super_admin = create(:superadmin_user)
       user = create(:user)
@@ -14,23 +14,23 @@ class SuperAdminFlaggingTwoStepVerificationTest < ActionDispatch::IntegrationTes
       visit edit_user_path(user)
     end
 
-    context 'when the user is flagged for 2SV' do
-      should 'notify the user by email' do
+    context "when the user is flagged for 2SV" do
+      should "notify the user by email" do
         perform_enqueued_jobs do
-          check 'Ask user to set up 2-step verification'
-          click_button 'Update User'
+          check "Ask user to set up 2-step verification"
+          click_button "Update User"
 
           assert last_email
-          assert_equal 'Make your Signon account more secure', last_email.subject
+          assert_equal "Make your Signon account more secure", last_email.subject
         end
       end
     end
 
-    context 'when the user is not flagged for 2SV' do
-      should 'not notify the user by email' do
+    context "when the user is not flagged for 2SV" do
+      should "not notify the user by email" do
         perform_enqueued_jobs do
-          uncheck 'Ask user to set up 2-step verification'
-          click_button 'Update User'
+          uncheck "Ask user to set up 2-step verification"
+          click_button "Update User"
 
           refute last_email
         end

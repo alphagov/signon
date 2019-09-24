@@ -29,7 +29,7 @@ FactoryBot.define do
               else
                 app_or_name
               end
-        user.grant_application_permission(app, 'signin')
+        user.grant_application_permission(app, "signin")
       end
     end
   end

@@ -18,10 +18,10 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
     should "be able to view a list of API users alongwith their authorised applications" do
       assert page.has_selector?("td.email", text: @api_user.name)
       assert page.has_selector?("td.email", text: @api_user.email)
-      assert page.has_selector?("td.role", text: 'Normal')
+      assert page.has_selector?("td.role", text: "Normal")
 
       assert page.has_selector?("abbr", text: @application.name)
-      assert page.has_selector?("td:last-child", text: 'No') # suspended?
+      assert page.has_selector?("td:last-child", text: "No") # suspended?
     end
 
     should "be able to create an API user" do

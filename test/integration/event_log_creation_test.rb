@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'support/password_helpers'
+require "test_helper"
+require "support/password_helpers"
 
 class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
   include PasswordHelpers
@@ -127,10 +127,10 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     signin_with(@admin)
     first_letter_of_name = @user.name[0]
     visit users_path(letter: first_letter_of_name)
-    click_on 'Unlock'
+    click_on "Unlock"
 
     visit event_logs_user_path(@user)
-    assert page.has_content?(EventLog::MANUAL_ACCOUNT_UNLOCK.description + ' by ' + @admin.name)
+    assert page.has_content?(EventLog::MANUAL_ACCOUNT_UNLOCK.description + " by " + @admin.name)
   end
 
   test "record user suspension along with event initiator" do
@@ -139,17 +139,17 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     first_letter_of_name = @user.name[0]
     visit users_path(letter: first_letter_of_name)
     click_on @user.name.to_s
-    click_on 'Suspend user'
-    check 'Suspended?'
-    fill_in 'Reason for suspension', with: 'Assaulting superior officer'
-    click_on 'Save'
+    click_on "Suspend user"
+    check "Suspended?"
+    fill_in "Reason for suspension", with: "Assaulting superior officer"
+    click_on "Save"
 
     visit event_logs_user_path(@user)
-    assert page.has_content?(EventLog::ACCOUNT_SUSPENDED.description + ' by ' + @admin.name)
+    assert page.has_content?(EventLog::ACCOUNT_SUSPENDED.description + " by " + @admin.name)
   end
 
   test "record suspended user's attempt to login with correct credentials" do
-    @user.suspend('Assaulting superior officer')
+    @user.suspend("Assaulting superior officer")
 
     visit root_path
     signin_with(@user)
@@ -158,47 +158,47 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "record user unsuspension along with event initiator" do
-    @user.suspend('Gross negligence')
+    @user.suspend("Gross negligence")
 
     visit root_path
     signin_with(@admin)
     first_letter_of_name = @user.name[0]
     visit users_path(letter: first_letter_of_name)
     click_on @user.name.to_s
-    click_on 'Unsuspend user'
-    uncheck 'Suspended?'
-    click_on 'Save'
+    click_on "Unsuspend user"
+    uncheck "Suspended?"
+    click_on "Save"
 
     visit event_logs_user_path(@user)
-    assert page.has_content?(EventLog::ACCOUNT_UNSUSPENDED.description + ' by ' + @admin.name)
+    assert page.has_content?(EventLog::ACCOUNT_UNSUSPENDED.description + " by " + @admin.name)
   end
 
   context "recording user's ip address" do
     should "record user's IPv4 address for successful login" do
-      page.driver.options[:headers] = { 'REMOTE_ADDR' => '1.2.3.4' }
+      page.driver.options[:headers] = { "REMOTE_ADDR" => "1.2.3.4" }
       visit root_path
       signin_with(@user)
 
       ip_address = @user.event_logs.first.ip_address_string
-      assert_equal '1.2.3.4', ip_address
+      assert_equal "1.2.3.4", ip_address
     end
 
     should "record user's IPv4 address for unsuccessful login" do
-      page.driver.options[:headers] = { 'REMOTE_ADDR' => '4.5.6.7' }
+      page.driver.options[:headers] = { "REMOTE_ADDR" => "4.5.6.7" }
       visit root_path
       signin_with(email: @user.email, password: :incorrect)
 
       ip_address = @user.event_logs.last.ip_address_string
-      assert_equal '4.5.6.7', ip_address
+      assert_equal "4.5.6.7", ip_address
     end
 
     should "record user's IPv6 address" do
-      page.driver.options[:headers] = { 'REMOTE_ADDR' => '2001:0db8:0000:0000:0008:0800:200c:417a' }
+      page.driver.options[:headers] = { "REMOTE_ADDR" => "2001:0db8:0000:0000:0008:0800:200c:417a" }
       visit root_path
       signin_with(@user)
 
       ip_address = @user.event_logs.first.ip_address_string
-      assert_equal '2001:db8::8:800:200c:417a', ip_address
+      assert_equal "2001:db8::8:800:200c:417a", ip_address
     end
   end
 
@@ -207,8 +207,8 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     signin_with(@admin)
     visit users_path
     click_on "Create user"
-    fill_in 'Name', with: 'New User'
-    fill_in 'Email', with: 'test@test.com'
+    fill_in "Name", with: "New User"
+    fill_in "Email", with: "test@test.com"
     click_on "Create user and send email"
 
     event_log = User.last.event_logs.first

@@ -1,4 +1,4 @@
-require 'devise/hooks/two_step_verification'
+require "devise/hooks/two_step_verification"
 
 class ApplicationController < ActionController::Base
   include Pundit
@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   after_action :verify_authorized, unless: :devise_controller?
 
   before_action do
-    headers['X-Frame-Options'] = 'SAMEORIGIN'
+    headers["X-Frame-Options"] = "SAMEORIGIN"
   end
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
@@ -62,6 +62,6 @@ private
   end
 
   def redirect_to_prior_flow(args = {})
-    redirect_to stored_location_for('2sv') || :root, args
+    redirect_to stored_location_for("2sv") || :root, args
   end
 end

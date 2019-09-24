@@ -10,7 +10,7 @@ class UsersWithAccess
     scope
       .where(id: authorized_users_user_ids)
       .includes(:organisation, application_permissions: :supported_permission)
-      .order('current_sign_in_at DESC')
+      .order("current_sign_in_at DESC")
   end
 
 private
@@ -18,7 +18,7 @@ private
   def authorized_users_user_ids
     UserApplicationPermission.where(
       supported_permission: application.signin_permission,
-      application: application
+      application: application,
     ).select(:user_id)
   end
 end

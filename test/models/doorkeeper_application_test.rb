@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
   should "have a signin supported permission on create" do
@@ -7,7 +7,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
 
   context "user_update_permission" do
     should "not be grantable from ui" do
-      user_update_permission = create(:application, supports_push_updates: true).supported_permissions.detect { |perm| perm.name == 'user_update_permission' }
+      user_update_permission = create(:application, supports_push_updates: true).supported_permissions.detect { |perm| perm.name == "user_update_permission" }
       refute user_update_permission.grantable_from_ui?
     end
 
@@ -16,11 +16,11 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       application.update_attributes(supports_push_updates: true)
 
       application.reload
-      assert_includes application.supported_permission_strings, 'user_update_permission'
+      assert_includes application.supported_permission_strings, "user_update_permission"
     end
 
     should "not be created after save if application doesn't support push updates" do
-      assert_not_includes create(:application, supports_push_updates: false).supported_permission_strings, 'user_update_permission'
+      assert_not_includes create(:application, supports_push_updates: false).supported_permission_strings, "user_update_permission"
     end
   end
 
@@ -67,7 +67,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     should "return applications that the user can signin into" do
       user = create(:user)
       application = create(:application)
-      user.grant_application_permission(application, 'signin')
+      user.grant_application_permission(application, "signin")
 
       assert_includes Doorkeeper::Application.can_signin(user), application
     end
@@ -75,7 +75,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     should "not return applications that are retired" do
       user = create(:user)
       application = create(:application, retired: true)
-      user.grant_application_permission(application, 'signin')
+      user.grant_application_permission(application, "signin")
 
       assert_empty Doorkeeper::Application.can_signin(user)
     end

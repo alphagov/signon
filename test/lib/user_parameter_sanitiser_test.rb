@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class UserParameterSanitiserTest < ActiveSupport::TestCase
   context "with Plain Old Ruby Hash for params" do

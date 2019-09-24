@@ -18,12 +18,12 @@ class ModelHmtOrgStructure < ActiveRecord::Migration
             "NS&I",
             "The Crown Estate",
             "UK Debt Management Office",
-            "UK Government Investments"
+            "UK Government Investments",
         ],
         ukgi => [
             "UK Financial Investments Limited",
-            "Government Corporate Finance Profession"
-        ]
+            "Government Corporate Finance Profession",
+        ],
     }
 
     closed_child_org_names = [
@@ -33,7 +33,7 @@ class ModelHmtOrgStructure < ActiveRecord::Migration
         "Royal Mail",
         "Royal Trustees' Office",
         "Exchequer and Audit Department",
-        "Public Accounts Commission"
+        "Public Accounts Commission",
     ]
 
     missing_orgs = []

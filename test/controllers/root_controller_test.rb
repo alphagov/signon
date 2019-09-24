@@ -1,8 +1,8 @@
-require 'test_helper'
+require "test_helper"
 
 class RootControllerTest < ActionController::TestCase
   def setup
-    create(:application, name: 'Support')
+    create(:application, name: "Support")
   end
 
   test "visiting root#index should require authentication" do
@@ -20,7 +20,7 @@ class RootControllerTest < ActionController::TestCase
   test "sets the X-Frame-Options header to SAMEORIGIN" do
     sign_in create(:user)
     get :index
-    assert_equal "SAMEORIGIN", response.header['X-Frame-Options']
+    assert_equal "SAMEORIGIN", response.header["X-Frame-Options"]
   end
 
   test "Your applications should include apps you have permission to signin to" do

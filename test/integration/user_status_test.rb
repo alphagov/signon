@@ -1,5 +1,5 @@
-require 'test_helper'
-require 'support/password_helpers'
+require "test_helper"
+require "support/password_helpers"
 
 class UserStatusTest < ActionDispatch::IntegrationTest
   include PasswordHelpers

@@ -1,10 +1,10 @@
 ENV["RAILS_ENV"] = "test"
-require File.expand_path('../config/environment', __dir__)
+require File.expand_path("../config/environment", __dir__)
 
-require 'rails/test_help'
-require 'shoulda/context'
-require 'webmock/minitest'
-require 'mocha/minitest'
+require "rails/test_help"
+require "shoulda/context"
+require "webmock/minitest"
+require "mocha/minitest"
 
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
@@ -18,7 +18,7 @@ end
 
 WebMock.disable_net_connect!(allow_localhost: true)
 
-require 'support/confirmation_token_helpers'
+require "support/confirmation_token_helpers"
 
 class ActionController::TestCase
   include Devise::Test::ControllerHelpers
@@ -37,7 +37,7 @@ end
 
 Capybara.server = :webrick
 
-require 'capybara/rails'
+require "capybara/rails"
 
 Capybara.register_driver :rack_test do |app|
   # capybara/rails sets up the rack-test driver to respect data-method attributes.
@@ -51,12 +51,12 @@ Capybara.register_driver :rack_test do |app|
   Capybara::RackTest::Driver.new(app)
 end
 
-require 'capybara/poltergeist'
+require "capybara/poltergeist"
 Capybara.javascript_driver = :poltergeist
 
-require 'support/user_helpers'
-require 'support/email_helpers'
-require 'support/analytics_helpers'
+require "support/user_helpers"
+require "support/email_helpers"
+require "support/analytics_helpers"
 
 class ActiveRecord::Base
   mattr_accessor :shared_connection

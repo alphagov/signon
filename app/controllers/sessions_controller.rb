@@ -1,5 +1,5 @@
 class SessionsController < Devise::SessionsController
-  layout 'admin_layout'
+  layout "admin_layout"
 
   skip_before_action :handle_two_step_verification
 
@@ -10,7 +10,7 @@ class SessionsController < Devise::SessionsController
 
   def create
     log_event
-    store_location_for('2sv', session[stored_location_key_for(:user)])
+    store_location_for("2sv", session[stored_location_key_for(:user)])
     super
   end
 
@@ -44,6 +44,6 @@ private
   end
 
   def user_agent
-    request.headers['user-agent']
+    request.headers["user-agent"]
   end
 end

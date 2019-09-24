@@ -12,7 +12,7 @@ UserOAuthPresenter = Struct.new(:user, :application) do
         organisation_slug: organisation_slug,
         organisation_content_id: organisation_content_id,
         disabled: user.suspended?,
-      }
+      },
     }
   end
 

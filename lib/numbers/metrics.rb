@@ -23,7 +23,7 @@ class Metrics
   end
 
   def active_accounts_count_by_organisation
-    count_values(all_active.group_by { |u| u.organisation ? u.organisation.name : 'None assigned' })
+    count_values(all_active.group_by { |u| u.organisation ? u.organisation.name : "None assigned" })
   end
 
   def active_admin_user_names

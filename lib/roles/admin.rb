@@ -15,7 +15,7 @@ module Roles
     end
 
     def self.role_name
-      'admin'
+      "admin"
     end
 
     def self.level; 1; end

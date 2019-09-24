@@ -1,4 +1,4 @@
-require 'csv'
+require "csv"
 
 class UserPermissionsExporter
   attr_reader :applications, :export_dir, :logger
@@ -9,7 +9,7 @@ class UserPermissionsExporter
   end
 
   def export_signon
-    CSV.open(signon_file_path, 'wb', headers: true) do |csv|
+    CSV.open(signon_file_path, "wb", headers: true) do |csv|
       csv << ["Name", "Email", "Organisation", "Role", "Suspended at"]
       User.order(:name).each do |user|
         org_name = user.organisation ? user.organisation.name : ""
@@ -22,11 +22,11 @@ class UserPermissionsExporter
   end
 
   def export(apps)
-    @applications = Doorkeeper::Application.where('name in (?)', apps)
+    @applications = Doorkeeper::Application.where("name in (?)", apps)
     users = User.order(:name).to_a
 
     # iterate over applications
-    CSV.open(file_path, 'wb', headers: true) do |csv|
+    CSV.open(file_path, "wb", headers: true) do |csv|
       csv << headers
 
       applications.each do |app|

@@ -1,4 +1,4 @@
-require 'test_helper'
+require "test_helper"
 
 class UserMailerTest < ActionMailer::TestCase
   def assert_body_includes(search_string, email = @email)
@@ -126,7 +126,7 @@ class UserMailerTest < ActionMailer::TestCase
 
   context "emailing a user to notify that reset password is dis-allowed" do
     should "mention that reset is disallowed because their account is suspended" do
-      stub_user = stub(name: 'User', email: 'user@example.com')
+      stub_user = stub(name: "User", email: "user@example.com")
       email = UserMailer.notify_reset_password_disallowed_due_to_suspension(stub_user)
 
       assert_body_includes "You can't request a password reset on a suspended account.", email
