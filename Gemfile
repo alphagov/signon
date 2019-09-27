@@ -4,11 +4,7 @@ gem 'rails', '~> 5'
 
 gem 'activejob-retry'
 gem 'addressable', '~> 2'
-gem(
-  'alphabetical_paginate',
-  git: 'https://github.com/lingz/alphabetical_paginate',
-  ref: 'b1a370d16acb9b9f0051ed8a2d325308da0d9af1'
-)
+gem 'alphabetical_paginate', '~> 2'
 gem 'ancestry', '~> 3'
 gem 'bootsnap'
 gem 'bootstrap-kaminari-views', '0.0.5'
