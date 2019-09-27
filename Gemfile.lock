@@ -1,7 +1,7 @@
 GIT
-  remote: https://github.com/cbaines/alphabetical_paginate
-  revision: 26015e94c64f4feaeac756ab7c3512b0707e96be
-  branch: wrap-sql-in-arel-sql
+  remote: https://github.com/lingz/alphabetical_paginate
+  revision: b1a370d16acb9b9f0051ed8a2d325308da0d9af1
+  ref: b1a370d16acb9b9f0051ed8a2d325308da0d9af1
   specs:
     alphabetical_paginate (2.3.3)
 

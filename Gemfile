@@ -6,8 +6,8 @@ gem 'activejob-retry'
 gem 'addressable', '~> 2'
 gem(
   'alphabetical_paginate',
-  git: 'https://github.com/cbaines/alphabetical_paginate',
-  branch: 'wrap-sql-in-arel-sql'
+  git: 'https://github.com/lingz/alphabetical_paginate',
+  ref: 'b1a370d16acb9b9f0051ed8a2d325308da0d9af1'
 )
 gem 'ancestry', '~> 3'
 gem 'bootsnap'
