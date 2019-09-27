@@ -26,6 +26,6 @@
   title: "Can’t get your verification code?"
 } do %>
   <p>If you can’t get your verification code, you’ll need to ask <%= link_to t('department.name'), t('department.url') %> to reset 2-step verification on your Signon account.</p>
-  <p>If you can’t do this yourself, you’ll need to contact a managing <%= link_to t('department.name'), t('department.url') %> editor in your organisation (or your parent organisation). They can raise a <%= link_to "support ticket", "#{t('department.url')}support/internal/" %> on your behalf.</p>
+  <p>If you can’t do this yourself, you’ll need to contact a managing <%= link_to t('department.name'), t('department.url') %> editor in your organisation (or your parent organisation). They can raise a <%= link_to 'support ticket', t('department.support_url') %> on your behalf.</p>
   <p><%= link_to t('department.name'), t('department.url') %> is only able to respond to these requests 9am to 5pm, Monday to Friday.</p>
 <% end %>

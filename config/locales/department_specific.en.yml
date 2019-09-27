@@ -3,6 +3,7 @@ en:
     name: 'GOV.UK'
     url: 'https://www.gov.uk/'
     full_name: 'Government Digital Service'
+    support_url: https://www.gov.uk/support/internal
   devise:
     issuer: "GOV.UK Signon"
   mailer:
