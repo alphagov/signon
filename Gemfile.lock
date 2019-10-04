@@ -147,13 +147,9 @@ GEM
       sentry-raven (>= 2.7.1, < 2.12.0)
       statsd-ruby (~> 1.4.0)
       unicorn (>= 5.4, < 5.6)
-    govuk_frontend_toolkit (8.2.0)
-      railties (>= 3.1.0)
-      sass (>= 3.2.0)
-    govuk_publishing_components (17.21.0)
+    govuk_publishing_components (21.3.0)
       gds-api-adapters
       govuk_app_config
-      govuk_frontend_toolkit
       kramdown
       plek
       rails (>= 5.0.0.1)
@@ -311,7 +307,7 @@ GEM
       netrc (~> 0.8)
     rotp (5.1.0)
       addressable (~> 2.5)
-    rouge (3.7.0)
+    rouge (3.11.0)
     rqrcode (1.1.1)
       chunky_png (~> 1.0)
       rqrcode_core (~> 0.1.0)
@@ -437,7 +433,7 @@ DEPENDENCIES
   govuk-lint (~> 4)
   govuk_admin_template (~> 6)
   govuk_app_config (~> 2)
-  govuk_publishing_components (~> 17)
+  govuk_publishing_components (~> 21)
   govuk_sidekiq (~> 3)
   jasmine (~> 3)
   json (~> 2)
