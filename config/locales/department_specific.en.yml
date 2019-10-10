@@ -14,3 +14,6 @@ en:
   noisy_batch_invitation_mailer:
     to: "signon-alerts@digital.cabinet-office.gov.uk"
 
+  support:
+    name: 'GOV.UK Support'
+    url: 'https://www.gov.uk/support/internal'
