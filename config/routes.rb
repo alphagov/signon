@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  use_doorkeeper
   get "/healthcheck", to: GovukHealthcheck.rack_response(
     GovukHealthcheck::SidekiqRedis,
     GovukHealthcheck::ActiveRecord,
