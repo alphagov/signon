@@ -9,9 +9,9 @@ class SameSiteSecurityMiddlewareTest < ActiveSupport::TestCase
   context "when called with a GET request" do
     should "set cookies attributes properly" do
       middleware = SameSiteSecurity::Middleware.new(@app)
-      request = Rack::MockRequest.new(middleware)
+      Rack::MockRequest.new(middleware)
       env = Rack::MockRequest.env_for("/a-protected-url")
-      status, headers = middleware.call(env)
+      _status, headers = middleware.call(env)
 
       cookies = headers["Set-Cookie"]
       assert_match "_signonotron2_session=abcd", cookies

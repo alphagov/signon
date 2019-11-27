@@ -5,9 +5,9 @@ module SameSiteSecurity
     end
 
     def call(env)
-      req = Rack::Request.new(env)
+      Rack::Request.new(env)
       status, headers, response = @app.call(env)
-      if cookies = headers["Set-Cookie"]
+      if (cookies = headers["Set-Cookie"])
         cookies = cookies.split("\n") unless cookies.is_a?(Array)
 
         headers["Set-Cookie"] = cookies.map { |cookie|

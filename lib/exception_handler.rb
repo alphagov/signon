@@ -6,7 +6,7 @@ module Signon
       yield
     rescue URI::InvalidURIError
       raise SSOPushError.new(@application, message: "Invalid URL for application.")
-    rescue GdsApi::EndpointNotFound, SocketError => e
+    rescue GdsApi::EndpointNotFound, SocketError
       raise SSOPushError.new(@application, message: "Couldn't find the application. Maybe the application is down?")
     rescue Errno::ETIMEDOUT, Timeout::Error, GdsApi::TimedOutException
       raise SSOPushError.new(@application, message: "Timeout connecting to application.")

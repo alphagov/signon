@@ -31,7 +31,7 @@ class BatchInvitation < ActiveRecord::Base
     end
     self.outcome = "success"
     self.save!
-  rescue StandardError => e
+  rescue StandardError
     self.update_column(:outcome, "fail")
     raise
   end

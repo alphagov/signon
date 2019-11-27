@@ -141,18 +141,18 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "fetches web users who signed_in X days ago" do
-    signed_in_8_days_ago = create(:user, current_sign_in_at: 8.days.ago)
+    create(:user, current_sign_in_at: 8.days.ago)
     signed_in_2_days_ago = create(:user, current_sign_in_at: 2.days.ago)
-    api_user = create(:api_user, current_sign_in_at: 2.days.ago)
+    create(:api_user, current_sign_in_at: 2.days.ago)
 
     assert_equal [signed_in_2_days_ago], User.last_signed_in_on(2.days.ago)
   end
 
   test "fetches web users who signed_in before X days ago" do
-    signed_in_6_days_ago = create(:user, current_sign_in_at: 6.days.ago)
+    create(:user, current_sign_in_at: 6.days.ago)
     signed_in_7_days_ago = create(:user, current_sign_in_at: 7.days.ago)
     signed_in_8_days_ago = create(:user, current_sign_in_at: 8.days.ago)
-    api_user = create(:api_user, current_sign_in_at: 8.days.ago)
+    create(:api_user, current_sign_in_at: 8.days.ago)
 
     assert_equal [signed_in_7_days_ago, signed_in_8_days_ago], User.last_signed_in_before(6.days.ago)
   end
@@ -160,7 +160,7 @@ class UserTest < ActiveSupport::TestCase
   test "fetches web users who signed_in after X days ago" do
     signed_in_0_days_ago = create(:user, current_sign_in_at: 0.days.ago)
     signed_in_1_day_ago  = create(:user, current_sign_in_at: 1.day.ago)
-    signed_in_2_days_ago = create(:user, current_sign_in_at: 2.days.ago)
+    create(:user, current_sign_in_at: 2.days.ago)
 
     assert_equal [signed_in_0_days_ago, signed_in_1_day_ago], User.last_signed_in_after(1.day.ago)
   end
@@ -364,7 +364,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "inviting a user sets confirmed_at" do
-    if user = User.find_by_email("j@1.com")
+    if (user = User.find_by_email("j@1.com"))
       user.delete
     end
     user = User.invite!(name: "John Smith", email: "j@1.com")

@@ -61,7 +61,7 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
     end
 
     should "create an authentication with an expiry of 10 years" do
-      bearer_token = SSOPushCredential.credentials(@application)
+      SSOPushCredential.credentials(@application)
 
       assert @user.authorisations.first.present?
       assert @user.authorisations.first.expires_in >= 315400000
