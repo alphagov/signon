@@ -68,7 +68,7 @@ private
         else
           self.update_column(:outcome, "failed")
         end
-      rescue StandardError => e
+      rescue StandardError
         self.update_column(:outcome, "failed")
       end
     end

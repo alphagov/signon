@@ -36,7 +36,7 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
   end
 
   test "doesn't suspend users who have recently been unsuspended" do
-    admin = create(:admin_user)
+    create(:admin_user)
     unsuspended_user = create(:suspended_user, current_sign_in_at: 46.days.ago)
     Timecop.travel(2.days.ago) do
       unsuspended_user.unsuspend

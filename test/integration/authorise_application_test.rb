@@ -82,8 +82,8 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
   end
 
   def assert_redirected_to_application(app)
-    assert_match /^#{app.redirect_uri}/, current_url
-    assert_match /\?code=/, current_url
+    assert_match(/^#{app.redirect_uri}/, current_url)
+    assert_match(/\?code=/, current_url)
   end
 
   def ignoring_spurious_error
@@ -92,9 +92,12 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     # The browser gets a redirect to url of the destination app.
     # This then gets routed to Signon but Signon doesn't know how to handle the route.
     # And so it raises the RoutingError
+
+    # rubocop:disable Lint/HandleExceptions
     begin
       yield
     rescue ActionController::RoutingError
     end
+    # rubocop:enable Lint/HandleExceptions
   end
 end

@@ -82,7 +82,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
 
     should "not return applications that the user can't signin into" do
       user = create(:user)
-      application = create(:application)
+      create(:application)
 
       assert_empty Doorkeeper::Application.can_signin(user)
     end

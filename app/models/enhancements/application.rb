@@ -39,7 +39,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
 
   def url_without_path
     parsed_url = URI.parse(redirect_uri)
-    url_without_path = "#{parsed_url.scheme}://#{parsed_url.host}:#{parsed_url.port}"
+    "#{parsed_url.scheme}://#{parsed_url.host}:#{parsed_url.port}"
   end
 
   def gds_only?

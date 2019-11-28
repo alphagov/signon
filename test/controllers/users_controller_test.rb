@@ -71,7 +71,7 @@ class UsersControllerTest < ActionController::TestCase
           assert_equal "new@email.com", confirmation_email.to.first
 
           email_changed_notification = ActionMailer::Base.deliveries.last
-          assert_match /Your .* Signon development email address is being changed/, email_changed_notification.subject
+          assert_match(/Your .* Signon development email address is being changed/, email_changed_notification.subject)
           assert_equal "old@email.com", email_changed_notification.to.first
         end
       end
@@ -291,7 +291,7 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "export filtered users by role" do
-          user = create(:user)
+          create(:user)
           get :index, params: { role: "normal", format: :csv }
           lines = @response.body.lines
           assert_equal(2, lines.length)
@@ -312,7 +312,7 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "export all users when no filter selected" do
-          user = create(:user)
+          create(:user)
           get :index, params: { format: :csv }
           lines = @response.body.lines
           assert_equal(3, lines.length)
@@ -468,7 +468,7 @@ class UsersControllerTest < ActionController::TestCase
       context "organisation admin" do
         should "not be able to assign organisations" do
           organisation_admin = create(:organisation_admin)
-          outside_organisation = create(:organisation)
+          create(:organisation)
           sign_in organisation_admin
 
           user = create(:user_in_organisation, organisation: organisation_admin.organisation)
@@ -739,7 +739,7 @@ class UsersControllerTest < ActionController::TestCase
 
             email_change_notifications = ActionMailer::Base.deliveries[-2..-1]
             assert_equal email_change_notifications.map(&:subject).uniq.count, 1
-            assert_match /Your .* Signon development email address has been updated/, email_change_notifications.map(&:subject).first
+            assert_match(/Your .* Signon development email address has been updated/, email_change_notifications.map(&:subject).first)
             assert_equal(%w(old@email.com new@email.com), email_change_notifications.map { |mail| mail.to.first })
           end
         end

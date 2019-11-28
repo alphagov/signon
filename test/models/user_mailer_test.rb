@@ -51,7 +51,7 @@ class UserMailerTest < ActionMailer::TestCase
       end
 
       should "not include the environment in the subject" do
-        refute_match /^\[/, @email.subject
+        refute_match(/^\[/, @email.subject)
       end
 
       should "not include the 'verify for production separately' warning" do
@@ -107,7 +107,7 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "include an instance name in the subject" do
-      assert_match /Your .* Signon development account/, @email.subject
+      assert_match(/Your .* Signon development account/, @email.subject)
     end
 
     should "include an instance name in the body" do
@@ -159,7 +159,7 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "include the instance name in the subject" do
-      assert_match /Your .* Signon test account/, @email.subject
+      assert_match(/Your .* Signon test account/, @email.subject)
     end
 
     should "include the instance name in the body" do

@@ -9,7 +9,7 @@ class PushUserUpdatesJobTest < ActiveSupport::TestCase
   context "perform_on" do
     should "perform_async updates on user's used applications" do
       user = create(:user)
-      foo_app, bar_app = *create_list(:application, 2, supports_push_updates: true)
+      foo_app, _bar_app = *create_list(:application, 2, supports_push_updates: true)
 
       # authenticate access
       ::Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: foo_app.id, token: "1234")

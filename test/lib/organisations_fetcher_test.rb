@@ -38,7 +38,6 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
   end
 
   test "it updates an existing organisation when its slug changes" do
-    slug = "ministry-of-fun"
     organisation = create(
       :organisation,
       name: "Ministry Of Misery",

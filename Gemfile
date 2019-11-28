@@ -49,7 +49,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'govuk-lint', '~> 4'
+  gem 'rubocop-govuk'
   gem 'jasmine', '~> 3'
   gem 'pry-byebug'
 end
