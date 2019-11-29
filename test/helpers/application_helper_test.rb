@@ -3,12 +3,12 @@ require "test_helper"
 class ApplicationHelperTest < ActionView::TestCase
   test "#sensitive_query_parameters? returns false when no parameters in the URL" do
     self.request = ActionDispatch::Request.new(Rack::MockRequest.env_for("/nothing-to-hide"))
-    refute sensitive_query_parameters?
+    assert_not sensitive_query_parameters?
   end
 
   test "#sensitive_query_parameters? returns false when no sensitive parameters in the URL" do
     self.request = ActionDispatch::Request.new(Rack::MockRequest.env_for("/nothing-to-hide?share=witheveryone"))
-    refute sensitive_query_parameters?
+    assert_not sensitive_query_parameters?
   end
 
   test "#sensitive_query_parameters? returns true when there is a reset_password_token in the URL" do

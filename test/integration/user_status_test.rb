@@ -6,7 +6,7 @@ class UserStatusTest < ActionDispatch::IntegrationTest
 
   setup do
     @admin = create(:admin_user)
-    @user = create(:user, suspended_at: 1.days.ago, reason_for_suspension: "Inactivity")
+    @user = create(:user, suspended_at: 1.day.ago, reason_for_suspension: "Inactivity")
   end
 
   test "User status appears on the edit user page" do

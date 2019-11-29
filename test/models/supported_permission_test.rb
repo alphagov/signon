@@ -5,7 +5,7 @@ class SupportedPermissionTest < ActiveSupport::TestCase
     application = create(:application)
 
     assert_raises ActiveRecord::RecordInvalid do
-      application.signin_permission.update_attributes!(name: "sign-in")
+      application.signin_permission.update!(name: "sign-in")
     end
   end
 
@@ -13,7 +13,7 @@ class SupportedPermissionTest < ActiveSupport::TestCase
     permission = create(:supported_permission, name: "writer")
 
     assert_nothing_raised do
-      permission.update_attributes!(name: "write")
+      permission.update!(name: "write")
     end
   end
 
@@ -35,7 +35,7 @@ class SupportedPermissionTest < ActiveSupport::TestCase
     permission_three = create(:supported_permission, application: application_one, name: "critic")
 
     application_two = create(:application)
-    application_two.signin_permission.update_attributes(default: true)
+    application_two.signin_permission.update(default: true)
     permission_four = create(:supported_permission, application: application_two, name: "ignorer", default: true)
 
     default_permissions = SupportedPermission.default
@@ -43,8 +43,8 @@ class SupportedPermissionTest < ActiveSupport::TestCase
     assert default_permissions.include? permission_four
     assert default_permissions.include? application_two.signin_permission
 
-    refute default_permissions.include? permission_one
-    refute default_permissions.include? permission_three
-    refute default_permissions.include? application_one.signin_permission
+    assert_not default_permissions.include? permission_one
+    assert_not default_permissions.include? permission_three
+    assert_not default_permissions.include? application_one.signin_permission
   end
 end

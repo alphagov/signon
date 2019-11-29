@@ -10,6 +10,6 @@ class UserAgentTest < ActiveSupport::TestCase
   end
 
   test "requires an user agent" do
-    refute UserAgent.new.valid?
+    assert_not UserAgent.new.valid?
   end
 end

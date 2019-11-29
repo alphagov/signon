@@ -12,7 +12,7 @@ class DoorkeeperApplicationsController < ApplicationController
   end
 
   def update
-    if @application.update_attributes(doorkeeper_application_params)
+    if @application.update(doorkeeper_application_params)
       redirect_to doorkeeper_applications_path, notice: "Successfully updated #{@application.name}"
     else
       respond_with @application

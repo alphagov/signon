@@ -30,7 +30,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
     should "create the users and assign them permissions" do
       @bi.reload.perform
 
-      user = User.find_by_email("a@m.com")
+      user = User.find_by(email: "a@m.com")
       assert_not_nil user
       assert_equal "A", user.name
       assert_equal %w[signin], user.permissions_for(@app)
@@ -59,7 +59,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
       end
 
       should "create the other users" do
-        assert_not_nil User.find_by_email("b@m.com")
+        assert_not_nil User.find_by(email: "b@m.com")
       end
 
       should "only send the invitation to the new user" do
@@ -99,8 +99,8 @@ class BatchInvitationTest < ActiveSupport::TestCase
       end
 
       should "create the other users" do
-        assert_nil User.find_by_email("a@m.com")
-        assert_not_nil User.find_by_email("b@m.com")
+        assert_nil User.find_by(email: "a@m.com")
+        assert_not_nil User.find_by(email: "b@m.com")
       end
     end
 

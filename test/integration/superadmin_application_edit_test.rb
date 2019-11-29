@@ -60,7 +60,7 @@ class SuperAdminApplicationEditTest < ActionDispatch::IntegrationTest
       @application.update_attribute :retired, false
       click_link @application.name
 
-      refute page.has_checked_field?("This application is retired")
+      assert_not page.has_checked_field?("This application is retired")
       check "This application is retired"
       click_button "Save"
 

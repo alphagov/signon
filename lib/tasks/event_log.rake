@@ -4,7 +4,8 @@ namespace :event_log do
     USAGE_MESSAGE = "usage: rake event_log:export[<min_id>, <max_id>]".freeze
     abort USAGE_MESSAGE unless args[:min_id] && args[:max_id]
 
-    path = "#{ENV['GOVUK_APP_ROOT'] || Rails.root}/reports"
+    ENV["GOVUK_APP_ROOT"] ||= Rails.root
+    path = File.join(ENV["GOVUK_APP_ROOT"], "reports")
     EventLogPresenter.new(min_id, max_id).write_csv(path)
 
     puts "Report successfully generated inside #{path}"

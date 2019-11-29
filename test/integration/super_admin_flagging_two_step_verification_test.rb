@@ -32,7 +32,7 @@ class SuperAdminFlaggingTwoStepVerificationTest < ActionDispatch::IntegrationTes
           uncheck "Ask user to set up 2-step verification"
           click_button "Update User"
 
-          refute last_email
+          assert_not last_email
         end
       end
     end

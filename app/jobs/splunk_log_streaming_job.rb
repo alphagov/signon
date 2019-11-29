@@ -1,4 +1,4 @@
-class SplunkLogStreamingJob < ActiveJob::Base
+class SplunkLogStreamingJob < ApplicationJob
   queue_as :logstream
 
   def perform(id, options = {})

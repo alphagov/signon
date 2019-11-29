@@ -37,7 +37,7 @@ namespace :users do
   task suspend: :environment do
     raise "Requires email specified in environment" unless ENV["email"]
 
-    user = User.find_by_email(ENV["email"])
+    user = User.find_by(email: ENV["email"])
     raise "Couldn't find user" unless user
 
     user.suspend
@@ -48,7 +48,7 @@ namespace :users do
   task unsuspend: :environment do
     raise "Requires email specified in environment" unless ENV["email"]
 
-    user = User.find_by_email(ENV["email"])
+    user = User.find_by(email: ENV["email"])
     raise "Couldn't find user" unless user
 
     user.unsuspend

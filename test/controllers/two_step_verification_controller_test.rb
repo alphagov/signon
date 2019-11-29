@@ -47,7 +47,7 @@ class TwoStepVerificationControllerTest < ActionController::TestCase
 
       should "not include the environment name" do
         assert_match %r{issuer=.*%20Signon}, @controller.otp_secret_key_uri
-        refute_match %r{issuer=Development%20.*%20Signon}, @controller.otp_secret_key_uri
+        assert_no_match %r{issuer=Development%20.*%20Signon}, @controller.otp_secret_key_uri
       end
     end
 

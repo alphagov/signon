@@ -23,7 +23,7 @@ class SupportedPermissionsController < ApplicationController
 
   def update
     @supported_permission = supported_permission
-    if @supported_permission.update_attributes(supported_permission_parameters)
+    if @supported_permission.update(supported_permission_parameters)
       redirect_to doorkeeper_application_supported_permissions_path,
                   notice: "Successfully updated permission #{@supported_permission.name}"
     else

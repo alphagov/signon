@@ -1,4 +1,4 @@
-class BulkGrantPermissionSet < ActiveRecord::Base
+class BulkGrantPermissionSet < ApplicationRecord
   belongs_to :user
   has_many :bulk_grant_permission_set_application_permissions, inverse_of: :bulk_grant_permission_set, dependent: :destroy
   has_many :supported_permissions, through: :bulk_grant_permission_set_application_permissions

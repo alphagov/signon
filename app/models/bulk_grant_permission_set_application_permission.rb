@@ -1,4 +1,4 @@
-class BulkGrantPermissionSetApplicationPermission < ActiveRecord::Base
+class BulkGrantPermissionSetApplicationPermission < ApplicationRecord
   belongs_to :bulk_grant_permission_set, inverse_of: :bulk_grant_permission_set_application_permissions
   belongs_to :supported_permission
 

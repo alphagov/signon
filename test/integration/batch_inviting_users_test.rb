@@ -78,7 +78,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
   should "ensure that batch invited users get default permissions even when not checked in UI" do
     create(:supported_permission, application: @application, name: "reader", default: true)
     support_app = create(:application, name: "support", with_supported_permissions: %w[signin])
-    support_app.signin_permission.update_attributes(default: true)
+    support_app.signin_permission.update(default: true)
     user = create(:admin_user)
 
     visit root_path
@@ -93,7 +93,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
       unselect "reader", from: "Permissions for #{@application.name}"
       click_button "Create users and send emails"
 
-      invited_user = User.find_by_email("fred@example.com")
+      invited_user = User.find_by(email: "fred@example.com")
       assert invited_user.has_access_to?(support_app)
       assert invited_user.permissions_for(@application).include? "reader"
     end
@@ -120,7 +120,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
   end
 
   def assert_user_created_and_invited(email, application, organisation: nil)
-    invited_user = User.find_by_email(email)
+    invited_user = User.find_by(email: email)
     assert_not_nil invited_user
     assert invited_user.has_access_to?(application)
     if organisation
@@ -135,7 +135,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
   end
 
   def assert_user_not_created(email)
-    invited_user = User.find_by_email(email)
+    invited_user = User.find_by(email: email)
     assert_nil invited_user
 
     invite_email = last_email_for(email)

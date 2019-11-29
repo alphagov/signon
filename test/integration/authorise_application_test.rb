@@ -22,7 +22,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
 
   should "not confirm the authorisation until the user signs in" do
     visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
-    refute Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
+    assert_not Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
 
     ignoring_spurious_error do
       signin_with(@user)
@@ -42,7 +42,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     end
     assert_response_contains("get your code")
-    refute Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
+    assert_not Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
   end
 
   should "not confirm the authorisation if the user does not have 'signin' permission for the application" do
@@ -54,7 +54,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     end
     assert_response_contains("You don’t have permission to sign in to #{@app.name}.")
-    refute Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
+    assert_not Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
   end
 
   should "confirm the authorisation for a signed-in user with 'signin' permission to the app" do

@@ -1,4 +1,4 @@
-class BatchInvitationUser < ActiveRecord::Base
+class BatchInvitationUser < ApplicationRecord
   belongs_to :batch_invitation
 
   validates :outcome, inclusion: { in: [nil, "success", "failed", "skipped"] }
@@ -58,7 +58,7 @@ class BatchInvitationUser < ActiveRecord::Base
 private
 
   def invite_user_with_attributes(sanitised_attributes, inviting_user)
-    if User.find_by_email(self.email)
+    if User.find_by(email: self.email)
       self.update_column(:outcome, "skipped")
     else
       begin

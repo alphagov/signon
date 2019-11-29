@@ -120,7 +120,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
     users.each { |u| u.extend(UserSegments::SegmentExtensions) }
 
     assert users[0].licensing_user?
-    assert !users[1].licensing_user?
-    assert !users[2].licensing_user?
+    assert_not users[1].licensing_user?
+    assert_not users[2].licensing_user?
   end
 end

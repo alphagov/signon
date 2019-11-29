@@ -19,7 +19,7 @@ class SuspensionsControllerTest < ActionController::TestCase
 
       put :update, params: { id: user.id, user: { suspended: "0" } }
 
-      refute user.reload.suspended?
+      assert_not user.reload.suspended?
     end
   end
 
@@ -41,7 +41,7 @@ class SuspensionsControllerTest < ActionController::TestCase
 
       put :update, params: { id: user.id, user: { suspended: "0" } }
 
-      refute user.reload.suspended?
+      assert_not user.reload.suspended?
     end
 
     should "be able to control suspension of a user within child organisations" do
@@ -53,7 +53,7 @@ class SuspensionsControllerTest < ActionController::TestCase
 
       put :update, params: { id: user.id, user: { suspended: "0" } }
 
-      refute user.reload.suspended?
+      assert_not user.reload.suspended?
     end
   end
 

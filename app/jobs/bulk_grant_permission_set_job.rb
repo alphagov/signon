@@ -1,4 +1,4 @@
-class BulkGrantPermissionSetJob < ActiveJob::Base
+class BulkGrantPermissionSetJob < ApplicationJob
   def perform(id, options = {})
     BulkGrantPermissionSet.find(id).perform(options)
   end

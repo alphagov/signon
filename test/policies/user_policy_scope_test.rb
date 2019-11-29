@@ -54,7 +54,7 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
     should "not include api users" do
       user = create(:superadmin_user)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
-      refute_includes resolved_scope, @api_user
+      assert_not_includes resolved_scope, @api_user
     end
   end
 
@@ -63,7 +63,7 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
       user = create(:admin_user)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
-      refute_includes resolved_scope, @super_admin_in_org
+      assert_not_includes resolved_scope, @super_admin_in_org
       assert_includes resolved_scope, @admin_in_org
       assert_includes resolved_scope, @super_org_admin_in_org
       assert_includes resolved_scope, @org_admin_in_org
@@ -74,7 +74,7 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
       user = create(:admin_user)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
-      refute_includes resolved_scope, @super_admin_in_child_org
+      assert_not_includes resolved_scope, @super_admin_in_child_org
       assert_includes resolved_scope, @admin_in_child_org
       assert_includes resolved_scope, @super_org_admin_in_child_org
       assert_includes resolved_scope, @org_admin_in_child_org
@@ -85,7 +85,7 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
       user = create(:admin_user)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
-      refute_includes resolved_scope, @super_admin_in_other_org
+      assert_not_includes resolved_scope, @super_admin_in_other_org
       assert_includes resolved_scope, @admin_in_other_org
       assert_includes resolved_scope, @super_org_admin_in_other_org
       assert_includes resolved_scope, @org_admin_in_other_org
@@ -95,7 +95,7 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
     should "does not include api users" do
       user = create(:admin_user)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
-      refute_includes resolved_scope, @api_user
+      assert_not_includes resolved_scope, @api_user
     end
   end
 
@@ -104,8 +104,8 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
       user = create(:super_org_admin, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
-      refute_includes resolved_scope, @super_admin_in_org
-      refute_includes resolved_scope, @admin_in_org
+      assert_not_includes resolved_scope, @super_admin_in_org
+      assert_not_includes resolved_scope, @admin_in_org
       assert_includes resolved_scope, @super_org_admin_in_org
       assert_includes resolved_scope, @org_admin_in_org
       assert_includes resolved_scope, @normal_user_in_org
@@ -115,8 +115,8 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
       user = create(:super_org_admin, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
-      refute_includes resolved_scope, @super_admin_in_child_org
-      refute_includes resolved_scope, @admin_in_child_org
+      assert_not_includes resolved_scope, @super_admin_in_child_org
+      assert_not_includes resolved_scope, @admin_in_child_org
       assert_includes resolved_scope, @super_org_admin_in_child_org
       assert_includes resolved_scope, @org_admin_in_child_org
       assert_includes resolved_scope, @normal_user_in_child_org
@@ -126,17 +126,17 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
       user = create(:super_org_admin, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
-      refute_includes resolved_scope, @super_admin_in_other_org
-      refute_includes resolved_scope, @admin_in_other_org
-      refute_includes resolved_scope, @super_org_admin_in_other_org
-      refute_includes resolved_scope, @org_admin_in_other_org
-      refute_includes resolved_scope, @normal_user_in_other_org
+      assert_not_includes resolved_scope, @super_admin_in_other_org
+      assert_not_includes resolved_scope, @admin_in_other_org
+      assert_not_includes resolved_scope, @super_org_admin_in_other_org
+      assert_not_includes resolved_scope, @org_admin_in_other_org
+      assert_not_includes resolved_scope, @normal_user_in_other_org
     end
 
     should "does not include api users" do
       user = create(:super_org_admin, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
-      refute_includes resolved_scope, @api_user
+      assert_not_includes resolved_scope, @api_user
     end
   end
 
@@ -145,9 +145,9 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
       user = create(:organisation_admin, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
-      refute_includes resolved_scope, @super_admin_in_org
-      refute_includes resolved_scope, @admin_in_org
-      refute_includes resolved_scope, @super_org_admin_in_org
+      assert_not_includes resolved_scope, @super_admin_in_org
+      assert_not_includes resolved_scope, @admin_in_org
+      assert_not_includes resolved_scope, @super_org_admin_in_org
       assert_includes resolved_scope, @org_admin_in_org
       assert_includes resolved_scope, @normal_user_in_org
     end
@@ -156,28 +156,28 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
       user = create(:organisation_admin, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
-      refute_includes resolved_scope, @super_admin_in_child_org
-      refute_includes resolved_scope, @admin_in_child_org
-      refute_includes resolved_scope, @super_org_admin_in_child_org
-      refute_includes resolved_scope, @org_admin_in_child_org
-      refute_includes resolved_scope, @normal_user_in_child_org
+      assert_not_includes resolved_scope, @super_admin_in_child_org
+      assert_not_includes resolved_scope, @admin_in_child_org
+      assert_not_includes resolved_scope, @super_org_admin_in_child_org
+      assert_not_includes resolved_scope, @org_admin_in_child_org
+      assert_not_includes resolved_scope, @normal_user_in_child_org
     end
 
     should "does not include users of similar permission or below belonging to another organisation" do
       user = create(:organisation_admin, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
-      refute_includes resolved_scope, @super_admin_in_other_org
-      refute_includes resolved_scope, @admin_in_other_org
-      refute_includes resolved_scope, @super_org_admin_in_other_org
-      refute_includes resolved_scope, @org_admin_in_other_org
-      refute_includes resolved_scope, @normal_user_in_other_org
+      assert_not_includes resolved_scope, @super_admin_in_other_org
+      assert_not_includes resolved_scope, @admin_in_other_org
+      assert_not_includes resolved_scope, @super_org_admin_in_other_org
+      assert_not_includes resolved_scope, @org_admin_in_other_org
+      assert_not_includes resolved_scope, @normal_user_in_other_org
     end
 
     should "does not include api users" do
       user = create(:organisation_admin, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
-      refute_includes resolved_scope, @api_user
+      assert_not_includes resolved_scope, @api_user
     end
   end
 
