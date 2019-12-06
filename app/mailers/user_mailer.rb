@@ -1,6 +1,6 @@
 class UserMailer < Devise::Mailer
   include MailerHelper
-  append_view_path Rails.root.join("app/views/devise/mailer")
+  append_view_path Rails.root.join("app", "views", "devise", "mailer")
 
   default from: Proc.new { email_from }
 

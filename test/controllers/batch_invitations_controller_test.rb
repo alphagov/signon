@@ -67,7 +67,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
     end
 
     should "store organisation info from the uploaded CSV when logged in as an admin" do
-      @user.update_attributes(role: "admin")
+      @user.update(role: "admin")
       post :create, params: { user: { supported_permission_ids: [] },
         batch_invitation: { user_names_and_emails: users_csv("users_with_orgs.csv"), organisation_id: 3 } }
 
@@ -81,7 +81,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
     end
 
     should "store organisation info from the uploaded CSV when logged in as a superadmin" do
-      @user.update_attributes(role: "superadmin")
+      @user.update(role: "superadmin")
       post :create, params: { user: { supported_permission_ids: [] },
         batch_invitation: { user_names_and_emails: users_csv("users_with_orgs.csv"), organisation_id: 3 } }
 
@@ -133,8 +133,8 @@ class BatchInvitationsControllerTest < ActionController::TestCase
         post :create, params: { batch_invitation: { user_names_and_emails: users_csv("reversed_users.csv") }, user: { supported_permission_ids: [] } }
 
         bi = BatchInvitation.last
-        assert_not_nil bi.batch_invitation_users.find_by_email("a@hhg.com")
-        assert_not_nil bi.batch_invitation_users.find_by_email("t@hhg.com")
+        assert_not_nil bi.batch_invitation_users.find_by(email: "a@hhg.com")
+        assert_not_nil bi.batch_invitation_users.find_by(email: "t@hhg.com")
       end
     end
 

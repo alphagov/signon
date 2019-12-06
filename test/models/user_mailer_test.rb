@@ -51,7 +51,7 @@ class UserMailerTest < ActionMailer::TestCase
       end
 
       should "not include the environment in the subject" do
-        refute_match(/^\[/, @email.subject)
+        assert_no_match(/^\[/, @email.subject)
       end
 
       should "not include the 'verify for production separately' warning" do

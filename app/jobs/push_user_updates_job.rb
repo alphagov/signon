@@ -1,4 +1,4 @@
-class PushUserUpdatesJob < ActiveJob::Base
+class PushUserUpdatesJob < ApplicationJob
   include ActiveJob::Retry.new(strategy: :exponential, limit: 6)
 
   def perform(*_args)

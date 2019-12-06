@@ -23,7 +23,7 @@ class VolatileLockTest < ActiveSupport::TestCase
     assert volatile_lock("foo").obtained?
 
     Socket.stubs(:gethostname).returns("mars")
-    refute volatile_lock("foo").obtained?
+    assert_not volatile_lock("foo").obtained?
   end
 
   test "allows multiple locks to be obtained if keys differ" do

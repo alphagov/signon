@@ -7,10 +7,10 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
     @app_three = create(:application, name: "App three")
     @app_four = create(:application, name: "App four")
 
-    @app_one_signin_permission = @app_one.signin_permission.tap { |s| s.update_attributes(delegatable: true) }
-    @app_two_signin_permission = @app_two.signin_permission.tap { |s| s.update_attributes(delegatable: false) }
-    @app_three_signin_permission = @app_three.signin_permission.tap { |s| s.update_attributes(delegatable: true) }
-    @app_four_signin_permission = @app_four.signin_permission.tap { |s| s.update_attributes(delegatable: false) }
+    @app_one_signin_permission = @app_one.signin_permission.tap { |s| s.update(delegatable: true) }
+    @app_two_signin_permission = @app_two.signin_permission.tap { |s| s.update(delegatable: false) }
+    @app_three_signin_permission = @app_three.signin_permission.tap { |s| s.update(delegatable: true) }
+    @app_four_signin_permission = @app_four.signin_permission.tap { |s| s.update(delegatable: false) }
 
     @app_one_hat_permission = create(:non_delegatable_supported_permission, application: @app_one, name: "hat")
     @app_one_cat_permission = create(:delegatable_supported_permission, application: @app_one, name: "cat")
@@ -85,19 +85,19 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
       end
 
       should "not contain any permissions for apps with non-delegatbale signin permission the super organisation admin has access to" do
-        refute_includes @resolved_scope, @app_two_signin_permission
-        refute_includes @resolved_scope, @app_two_rat_permission
-        refute_includes @resolved_scope, @app_two_bat_permission
+        assert_not_includes @resolved_scope, @app_two_signin_permission
+        assert_not_includes @resolved_scope, @app_two_rat_permission
+        assert_not_includes @resolved_scope, @app_two_bat_permission
       end
 
       should "not contain any permissions for apps the super organisation admin does not have access to" do
-        refute_includes @resolved_scope, @app_three_signin_permission
-        refute_includes @resolved_scope, @app_three_fat_permission
-        refute_includes @resolved_scope, @app_three_vat_permission
+        assert_not_includes @resolved_scope, @app_three_signin_permission
+        assert_not_includes @resolved_scope, @app_three_fat_permission
+        assert_not_includes @resolved_scope, @app_three_vat_permission
 
-        refute_includes @resolved_scope, @app_four_signin_permission
-        refute_includes @resolved_scope, @app_four_pat_permission
-        refute_includes @resolved_scope, @app_four_sat_permission
+        assert_not_includes @resolved_scope, @app_four_signin_permission
+        assert_not_includes @resolved_scope, @app_four_pat_permission
+        assert_not_includes @resolved_scope, @app_four_sat_permission
       end
     end
 
@@ -118,19 +118,19 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
       end
 
       should "not contain any permissions for apps with non-delegatbale signin permission the organisation admin has access to" do
-        refute_includes @resolved_scope, @app_two_signin_permission
-        refute_includes @resolved_scope, @app_two_rat_permission
-        refute_includes @resolved_scope, @app_two_bat_permission
+        assert_not_includes @resolved_scope, @app_two_signin_permission
+        assert_not_includes @resolved_scope, @app_two_rat_permission
+        assert_not_includes @resolved_scope, @app_two_bat_permission
       end
 
       should "not contain any permissions for apps the organisation admin does not have access to" do
-        refute_includes @resolved_scope, @app_three_signin_permission
-        refute_includes @resolved_scope, @app_three_fat_permission
-        refute_includes @resolved_scope, @app_three_vat_permission
+        assert_not_includes @resolved_scope, @app_three_signin_permission
+        assert_not_includes @resolved_scope, @app_three_fat_permission
+        assert_not_includes @resolved_scope, @app_three_vat_permission
 
-        refute_includes @resolved_scope, @app_four_signin_permission
-        refute_includes @resolved_scope, @app_four_pat_permission
-        refute_includes @resolved_scope, @app_four_sat_permission
+        assert_not_includes @resolved_scope, @app_four_signin_permission
+        assert_not_includes @resolved_scope, @app_four_pat_permission
+        assert_not_includes @resolved_scope, @app_four_sat_permission
       end
     end
 

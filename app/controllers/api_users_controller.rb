@@ -35,7 +35,7 @@ class ApiUsersController < ApplicationController
 
   def update
     @api_user.skip_reconfirmation!
-    if @api_user.update_attributes(api_user_params)
+    if @api_user.update(api_user_params)
       @api_user.application_permissions.reload
       PermissionUpdater.perform_on(@api_user)
 

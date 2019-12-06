@@ -194,7 +194,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
     should "prompt unauthenticated user for password when changing email" do
       password = "L0ng S3cure P4ssw0rd"
-      @user.update_attributes(
+      @user.update(
         unconfirmed_email: "new@email.com",
         password: password,
       )

@@ -1,4 +1,4 @@
-class BatchInvitation < ActiveRecord::Base
+class BatchInvitation < ApplicationRecord
   belongs_to :user
   belongs_to :organisation
   has_many :batch_invitation_users, -> { order(:name) }

@@ -8,12 +8,12 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
   context "user_update_permission" do
     should "not be grantable from ui" do
       user_update_permission = create(:application, supports_push_updates: true).supported_permissions.detect { |perm| perm.name == "user_update_permission" }
-      refute user_update_permission.grantable_from_ui?
+      assert_not user_update_permission.grantable_from_ui?
     end
 
     should "be created after save if application supports push updates" do
       application = create(:application, supports_push_updates: false)
-      application.update_attributes(supports_push_updates: true)
+      application.update(supports_push_updates: true)
 
       application.reload
       assert_includes application.supported_permission_strings, "user_update_permission"

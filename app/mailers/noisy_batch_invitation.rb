@@ -1,4 +1,4 @@
-class NoisyBatchInvitation < ActionMailer::Base
+class NoisyBatchInvitation < ApplicationMailer
   include MailerHelper
 
   default from: Proc.new { email_from }

@@ -2,7 +2,7 @@ module OrganisationMappings
   class ZendeskToSignon
     def self.apply
       OrganisationMappings.domain_names_to_organisations.each do |domain_names, organisation_name|
-        organisation = Organisation.find_by_name(organisation_name)
+        organisation = Organisation.find_by(name: organisation_name)
         if organisation
           User.
             where(organisation_id: nil).

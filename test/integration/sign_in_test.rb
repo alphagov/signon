@@ -25,7 +25,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
   should "send a GA event including '(not set)' for the org slug when the user has no org" do
     use_javascript_driver
-    @user.update_attributes(organisation: nil)
+    @user.update(organisation: nil)
     with_ga_enabled do
       visit root_path
       refute_dimension_is_set(8)

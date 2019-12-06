@@ -106,7 +106,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     should "not support granting signin permissions to non-delegatable apps that the super organisation admin has access to" do
       app = create(:application, name: "MyApp")
       signin_permission = app.signin_permission
-      signin_permission.update_attributes(delegatable: false)
+      signin_permission.update(delegatable: false)
       @super_org_admin.grant_application_permission(app, "signin")
 
       visit edit_user_path(@user)
@@ -132,7 +132,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
 
     should "not remove permissions the user has that the super organisation admin cannot delegate" do
       app = create(:application, name: "MyApp")
-      app.signin_permission.update_attributes(delegatable: false)
+      app.signin_permission.update(delegatable: false)
       @super_org_admin.grant_application_permission(app, "signin")
       @user.grant_application_permission(app, "signin")
 
@@ -189,7 +189,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     should "not support granting signin permissions to non-delegatable apps that the organisation admin has access to" do
       app = create(:application, name: "MyApp")
       signin_permission = app.signin_permission
-      signin_permission.update_attributes(delegatable: false)
+      signin_permission.update(delegatable: false)
       @organisation_admin.grant_application_permission(app, "signin")
 
       visit edit_user_path(@user)
@@ -215,7 +215,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
 
     should "not remove permissions the user has that the organisation admin cannot delegate" do
       app = create(:application, name: "MyApp")
-      app.signin_permission.update_attributes(delegatable: false)
+      app.signin_permission.update(delegatable: false)
       @organisation_admin.grant_application_permission(app, "signin")
       @user.grant_application_permission(app, "signin")
 

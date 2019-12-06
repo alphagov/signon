@@ -1,6 +1,6 @@
 # coding: utf-8
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include Roles
 
   self.include_root_in_json = true
@@ -133,7 +133,7 @@ class User < ActiveRecord::Base
 
   def grant_application_permissions(application, supported_permission_names)
     supported_permission_names.map do |supported_permission_name|
-      supported_permission = SupportedPermission.find_by_application_id_and_name(application.id, supported_permission_name)
+      supported_permission = SupportedPermission.find_by(application_id: application.id, name: supported_permission_name)
       grant_permission(supported_permission)
     end
   end
@@ -144,7 +144,7 @@ class User < ActiveRecord::Base
 
   # This overrides `Devise::Recoverable` behavior.
   def self.send_reset_password_instructions(attributes = {})
-    user = User.find_by_email(attributes[:email])
+    user = User.find_by(email: attributes[:email])
     if user.present? && user.suspended?
       UserMailer.notify_reset_password_disallowed_due_to_suspension(user).deliver_later
       user

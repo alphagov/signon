@@ -11,7 +11,7 @@ module AnalyticsHelpers
   end
 
   def refute_dimension_is_set(dimension)
-    refute_match(/#{Regexp.escape("GOVUKAdmin.setDimension(#{dimension}")}/, page.body)
+    assert_no_match(/#{Regexp.escape("GOVUKAdmin.setDimension(#{dimension}")}/, page.body)
   end
 
   def assert_dimension_is_set(dimension, with_value: nil)

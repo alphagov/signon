@@ -7,10 +7,10 @@ class UserPermissionManageableApplicationPolicyScopeTest < ActiveSupport::TestCa
     @app_three = create(:application, name: "App three")
     @app_four = create(:application, name: "App four")
 
-    @app_one_signin_permission = @app_one.signin_permission.tap { |s| s.update_attributes(delegatable: true) }
-    @app_two_signin_permission = @app_two.signin_permission.tap { |s| s.update_attributes(delegatable: false) }
-    @app_three_signin_permission = @app_three.signin_permission.tap { |s| s.update_attributes(delegatable: true) }
-    @app_four_signin_permission = @app_four.signin_permission.tap { |s| s.update_attributes(delegatable: false) }
+    @app_one_signin_permission = @app_one.signin_permission.tap { |s| s.update(delegatable: true) }
+    @app_two_signin_permission = @app_two.signin_permission.tap { |s| s.update(delegatable: false) }
+    @app_three_signin_permission = @app_three.signin_permission.tap { |s| s.update(delegatable: true) }
+    @app_four_signin_permission = @app_four.signin_permission.tap { |s| s.update(delegatable: false) }
   end
 
   context "resolve" do
@@ -47,12 +47,12 @@ class UserPermissionManageableApplicationPolicyScopeTest < ActiveSupport::TestCa
       end
 
       should "not include applications without delegatable signin that the super organisation admin does has access to" do
-        refute_includes @resolved_scope, @app_two
+        assert_not_includes @resolved_scope, @app_two
       end
 
       should "not include applications that the super organisation admin does not have access to" do
-        refute_includes @resolved_scope, @app_three
-        refute_includes @resolved_scope, @app_four
+        assert_not_includes @resolved_scope, @app_three
+        assert_not_includes @resolved_scope, @app_four
       end
     end
 
@@ -71,12 +71,12 @@ class UserPermissionManageableApplicationPolicyScopeTest < ActiveSupport::TestCa
       end
 
       should "not include applications without delegatable signin that the organisation admin does has access to" do
-        refute_includes @resolved_scope, @app_two
+        assert_not_includes @resolved_scope, @app_two
       end
 
       should "not include applications that the organisation admin does not have access to" do
-        refute_includes @resolved_scope, @app_three
-        refute_includes @resolved_scope, @app_four
+        assert_not_includes @resolved_scope, @app_three
+        assert_not_includes @resolved_scope, @app_four
       end
     end
 

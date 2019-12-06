@@ -17,9 +17,9 @@ class SSOPushCredential
     end
 
     def user
-      raise UserNotProvided unless user_email.present?
+      raise UserNotProvided if user_email.blank?
 
-      @user ||= User.find_by_email(user_email) || raise(UserNotFound)
+      @user ||= User.find_by(email: user_email) || raise(UserNotFound)
     end
   end
 end

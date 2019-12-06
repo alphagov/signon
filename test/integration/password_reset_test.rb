@@ -54,7 +54,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
   should "not give away whether an email exists in the system or not" do
     trigger_reset_for("non-existent-email@example.com")
 
-    assert !page.has_content?("Email not found"), page.body
+    assert_not page.has_content?("Email not found"), page.body
     assert_response_contains(BLANKET_RESET_MESSAGE)
   end
 

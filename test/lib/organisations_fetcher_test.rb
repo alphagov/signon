@@ -101,7 +101,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
 
     OrganisationsFetcher.new.call
 
-    organisation = Organisation.find_by_slug(slug)
+    organisation = Organisation.find_by(slug: slug)
     assert organisation.abbreviation.present?
   end
 

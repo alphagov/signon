@@ -1,4 +1,4 @@
-class SupportedPermission < ActiveRecord::Base
+class SupportedPermission < ApplicationRecord
   belongs_to :application, class_name: "Doorkeeper::Application"
   has_many :user_application_permissions, dependent: :destroy, inverse_of: :supported_permission
 

@@ -9,14 +9,14 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
   should "require a user" do
     permission_set = build(:bulk_grant_permission_set, user: nil)
 
-    refute permission_set.valid?
+    assert_not permission_set.valid?
     assert_equal ["can't be blank"], permission_set.errors[:user]
   end
 
   should "require at least one supported permission" do
     permission_set = build(:bulk_grant_permission_set, with_permissions: [])
 
-    refute permission_set.valid?
+    assert_not permission_set.valid?
     assert_equal ["must not be blank. Choose at least one permission to grant to all users."], permission_set.errors[:supported_permissions]
   end
 
@@ -42,7 +42,7 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
     should "reject other values" do
       permission_set = build(:bulk_grant_permission_set, outcome: "unsucessful")
 
-      refute permission_set.valid?
+      assert_not permission_set.valid?
       assert_equal ["is not included in the list"], permission_set.errors[:outcome]
     end
   end

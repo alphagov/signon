@@ -9,4 +9,4 @@ include VolatileLock::DSL
 
 Signon::Application.load_tasks
 
-task default: [:test, :check_for_bad_time_handling, 'jasmine:ci']
+task default: [:test, 'jasmine:ci']

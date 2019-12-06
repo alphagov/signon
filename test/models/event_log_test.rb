@@ -15,21 +15,21 @@ class EventLogTest < ActiveSupport::TestCase
   end
 
   test "requires a user uid" do
-    refute EventLog.new(event_id: EventLog::TWO_STEP_ENABLED.id).valid?
+    assert_not EventLog.new(event_id: EventLog::TWO_STEP_ENABLED.id).valid?
   end
 
   test "requires an event_id" do
-    refute EventLog.new(uid: :uid).valid?
+    assert_not EventLog.new(uid: :uid).valid?
   end
 
   test "requires a mappable event_id" do
-    refute EventLog.new(uid: :uid, event_id: 99999).valid?
+    assert_not EventLog.new(uid: :uid, event_id: 99999).valid?
   end
 
   EventLog::EVENTS_REQUIRING_INITIATOR.each do |event|
     test "for #{event.description} event is invalid without the initiator" do
       event_log = EventLog.new(uid: :uid, event_id: event.id)
-      refute event_log.valid?
+      assert_not event_log.valid?
       assert_includes event_log.errors.full_messages, "Initiator can't be blank"
     end
   end

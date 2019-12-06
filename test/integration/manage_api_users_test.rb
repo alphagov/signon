@@ -49,7 +49,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
 
       # shows truncated token
       assert page.has_selector?("code", text: (token[0..7]).to_s)
-      assert ! page.has_selector?("code", text: (token[9..-9]).to_s)
+      assert_not page.has_selector?("code", text: (token[9..-9]).to_s)
       assert page.has_selector?("code", text: (token[-8..-1]).to_s)
 
       select "Managing Editor", from: "Permissions for Whitehall"
@@ -76,7 +76,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       click_button "Revoke"
 
       assert page.has_text?("Access for #{@application.name} was revoked")
-      assert ! page.has_selector?("td:first-child", text: @application.name)
+      assert_not page.has_selector?("td:first-child", text: @application.name)
 
       click_link "Account access log"
       assert page.has_text?("Access token revoked for #{@application.name} by #{@superadmin.name}")

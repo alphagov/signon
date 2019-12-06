@@ -11,7 +11,8 @@ task :export_usage_stats, %i[start_date end_date] => :environment do |_, args|
     abort USAGE_MESSAGE
   end
 
-  path = "#{ENV['GOVUK_APP_ROOT'] || Rails.root}/reports"
+  ENV["GOVUK_APP_ROOT"] ||= Rails.root
+  path = File.join(ENV["GOVUK_APP_ROOT"], "reports")
   UsagePresenter.new(start_date, end_date).write_csv(path)
 
   puts "Report successfully generated inside #{path} !"
