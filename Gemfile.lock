@@ -69,7 +69,7 @@ GEM
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
       sassc (>= 2.0.0)
-    browser (3.0.0)
+    browser (3.0.2)
     builder (3.2.4)
     byebug (11.0.0)
     capybara (3.30.0)
