@@ -123,7 +123,7 @@ GEM
     faraday (0.17.3)
       multipart-post (>= 1.2, < 3)
     ffi (1.11.2)
-    gds-api-adapters (63.4.0)
+    gds-api-adapters (63.5.1)
       addressable
       link_header
       null_logger
