@@ -1,5 +1,8 @@
 require_relative "boot"
 
+require "rails"
+
+require "active_model/railtie"
 require "active_record/railtie"
 require "action_controller/railtie"
 require "action_view/railtie"
@@ -20,11 +23,14 @@ module Signon
   end
 
   class Application < Rails::Application
+    # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.1
+
     config.active_record.belongs_to_required_by_default = false
+
     # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration should go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded.
+    # Application configuration can go into files in config/initializers
+    # -- all .rb files in that directory are automatically loaded after loading
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
@@ -37,17 +43,6 @@ module Signon
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
-
-    # Configure sensitive parameters which will be filtered from the log file.
-    # Note: filter_parameters are treated as regexes, so :password also matches
-    # current_password, password_confirmation and password-strength-score
-    config.filter_parameters += [:password]
-
-    # Enable the asset pipeline
-    config.assets.enabled = true
-    config.assets.version = "1.0"
-
-    #config.middleware.insert_before Warden::Manager, Slimmer::App, config.slimmer.to_hash
 
     # Prevent ActionDispatch::RemoteIp::IpSpoofAttackError when the client set a Client-IP
     # header and the request IP was interrogated.
