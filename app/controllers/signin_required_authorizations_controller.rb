@@ -6,7 +6,7 @@ class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsControl
     if pre_authorizable?
       if skip_authorization? || matching_token?
         if user_has_signin_permission_to_application?
-          auth = authorization.authorize
+          auth = authorize_response
           redirect_to auth.redirect_uri
         else
           session[:signin_missing_for_application] = application.try(:id)
@@ -22,7 +22,7 @@ class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsControl
 
   def create
     if user_has_signin_permission_to_application?
-      redirect_or_render authorization.authorize
+      super
     else
       session[:signin_missing_for_application] = application.try(:id)
       redirect_to signin_required_path
