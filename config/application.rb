@@ -60,5 +60,7 @@ module Signon
     config.active_job.queue_adapter = :sidekiq
 
     config.middleware.insert_before 0, SameSiteSecurity::Middleware
+
+    config.action_dispatch.return_only_media_type_on_content_type = true
   end
 end
