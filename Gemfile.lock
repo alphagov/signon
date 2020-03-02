@@ -135,7 +135,7 @@ GEM
       railties (>= 4.2.0)
     faraday (0.17.3)
       multipart-post (>= 1.2, < 3)
-    ffi (1.11.2)
+    ffi (1.12.2)
     gds-api-adapters (63.5.1)
       addressable
       link_header
@@ -297,7 +297,7 @@ GEM
     raindrops (0.19.1)
     rake (13.0.1)
     rb-fsevent (0.10.3)
-    rb-inotify (0.10.0)
+    rb-inotify (0.10.1)
       ffi (~> 1.0)
     redis (4.1.3)
     redis-namespace (1.7.0)
@@ -345,8 +345,8 @@ GEM
     sass-listen (4.0.0)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
-    sass-rails (5.0.7)
-      railties (>= 4.0.0, < 6)
+    sass-rails (5.1.0)
+      railties (>= 5.2.0)
       sass (~> 3.1)
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
@@ -372,7 +372,7 @@ GEM
     sidekiq-statsd (2.1.0)
       activesupport
       sidekiq (>= 3.3.1)
-    sprockets (4.0.0)
+    sprockets (3.7.2)
       concurrent-ruby (~> 1.0)
       rack (> 1, < 3)
     sprockets-rails (3.2.1)
@@ -465,7 +465,7 @@ DEPENDENCIES
   rotp (~> 5)
   rqrcode
   rubocop-govuk
-  sass-rails (~> 5)
+  sass-rails (~> 5.1)
   shoulda-context (~> 1)
   sprockets-rails (~> 3)
   timecop (~> 0.9)
