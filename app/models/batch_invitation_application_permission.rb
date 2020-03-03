@@ -3,5 +3,5 @@ class BatchInvitationApplicationPermission < ApplicationRecord
   belongs_to :supported_permission
 
   validates_presence_of :batch_invitation, :supported_permission
-  validates_uniqueness_of :supported_permission_id, scope: :batch_invitation_id
+  validates_uniqueness_of :supported_permission_id, scope: :batch_invitation_id, case_sensitive: true
 end

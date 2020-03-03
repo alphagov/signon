@@ -4,7 +4,7 @@ class UserApplicationPermission < ApplicationRecord
   belongs_to :supported_permission
 
   validates_presence_of :user, :supported_permission, :application
-  validates_uniqueness_of :supported_permission_id, scope: %i[user_id application_id]
+  validates_uniqueness_of :supported_permission_id, scope: %i[user_id application_id], case_sensitive: true
 
   before_validation :assign_application_id
 
