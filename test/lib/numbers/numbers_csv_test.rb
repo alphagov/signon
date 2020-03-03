@@ -18,21 +18,21 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   test "csv contains accounts count" do
-    NumbersCsv.generate
+    Numbers::NumbersCsv.generate
     assert numbers_csv.include? ["Accounts count", "total", "4"]
   end
 
   test "csv contains counts by account state" do
     User.last.suspend("test")
 
-    NumbersCsv.generate
+    Numbers::NumbersCsv.generate
 
     assert numbers_csv.include? ["Accounts count by state", "active", "3"]
     assert numbers_csv.include? ["Accounts count by state", "suspended", "1"]
   end
 
   test "csv contains counts by role" do
-    NumbersCsv.generate
+    Numbers::NumbersCsv.generate
     assert numbers_csv.include? ["Active accounts count by role", "admin", "1"]
     assert numbers_csv.include? ["Active accounts count by role", "normal", "3"]
   end
@@ -41,7 +41,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
     create(:admin_user, email: "maggie@gov.uk", name: "Margaret", role: "superadmin")
     create(:admin_user, email: "dave@gov.uk", name: "David", role: "admin")
 
-    NumbersCsv.generate
+    Numbers::NumbersCsv.generate
 
     assert numbers_csv.include? ["Active admin user names", "admin", "David <dave@gov.uk>, Winston <admin_user@admin.example.com>"]
     assert numbers_csv.include? ["Active admin user names", "superadmin", "Margaret <maggie@gov.uk>"]
@@ -51,7 +51,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
     app = create(:application, name: "WhiteCloud")
     User.first.grant_application_permission(app, "signin")
 
-    NumbersCsv.generate
+    Numbers::NumbersCsv.generate
 
     assert numbers_csv.include? ["Active accounts count by application", "WhiteCloud", "1"]
   end
@@ -60,7 +60,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
     org = create(:organisation, name: "Ministry of Digital")
     org.users << User.first
 
-    NumbersCsv.generate
+    Numbers::NumbersCsv.generate
 
     assert numbers_csv.include? ["Active accounts count by organisation", "Ministry of Digital", "1"]
     assert numbers_csv.include? ["Active accounts count by organisation", "None assigned", "3"]
@@ -70,7 +70,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
     all_users = User.all
     [6.days.ago, 14.days.ago, 1.minute.ago].each_with_index { |time, i| all_users[i].update_attribute(:current_sign_in_at, time) }
 
-    NumbersCsv.generate
+    Numbers::NumbersCsv.generate
 
     assert numbers_csv.include? ["Accounts count by days since last sign in", "0 - 7", "2"]
     assert numbers_csv.include? ["Accounts count by days since last sign in", "7 - 15", "1"]
@@ -87,7 +87,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
     all_users = User.all
     [0, 1, 2, 123].each_with_index { |count, i| all_users[i].update_attribute(:sign_in_count, count) }
 
-    NumbersCsv.generate
+    Numbers::NumbersCsv.generate
 
     assert numbers_csv.include? ["Accounts count how often user has signed in", "0 time(s)", "1"]
     assert numbers_csv.include? ["Accounts count how often user has signed in", "1 time(s)", "1"]
@@ -101,7 +101,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   test "csv contains counts by email domain" do
-    NumbersCsv.generate
+    Numbers::NumbersCsv.generate
     assert numbers_csv.include? ["Active accounts count by email domain", "admin.example.com", "1"]
     assert numbers_csv.include? ["Active accounts count by email domain", "example.com", "3"]
   end
@@ -117,7 +117,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
 
     users[2].grant_application_permission(@licensing, "another perm")
 
-    users.each { |u| u.extend(UserSegments::SegmentExtensions) }
+    users.each { |u| u.extend(Numbers::UserSegments::SegmentExtensions) }
 
     assert users[0].licensing_user?
     assert_not users[1].licensing_user?
