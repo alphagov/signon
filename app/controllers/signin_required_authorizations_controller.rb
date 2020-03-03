@@ -1,12 +1,12 @@
 class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsController
   include Pundit
-  EXPECTED_DOORKEEPER_VERSION = "5.0.2".freeze
+  EXPECTED_DOORKEEPER_VERSION = "5.3.1".freeze
 
   def new
-    if pre_auth.authorizable?
+    if pre_authorizable?
       if skip_authorization? || matching_token?
         if user_has_signin_permission_to_application?
-          auth = authorization.authorize
+          auth = authorize_response
           redirect_to auth.redirect_uri
         else
           session[:signin_missing_for_application] = application.try(:id)
@@ -22,7 +22,7 @@ class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsControl
 
   def create
     if user_has_signin_permission_to_application?
-      redirect_or_render authorization.authorize
+      super
     else
       session[:signin_missing_for_application] = application.try(:id)
       redirect_to signin_required_path
@@ -30,6 +30,10 @@ class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsControl
   end
 
 private
+
+  def pre_authorizable?
+    @pre_authorizable ||= pre_auth.authorizable?
+  end
 
   def user_has_signin_permission_to_application?
     return false if application.nil?
@@ -39,6 +43,7 @@ private
   end
 
   def application
+    pre_authorizable? #Doorkeeper PreAuthorization controller must be validated in-order for the client to be instantiated.
     pre_auth.try(:client).try(:application)
   end
 end

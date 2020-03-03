@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_03_120837) do
+ActiveRecord::Schema.define(version: 2020_02_20_161244) do
 
   create_table "batch_invitation_application_permissions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "batch_invitation_id", null: false
@@ -94,7 +94,7 @@ ActiveRecord::Schema.define(version: 2019_09_03_120837) do
     t.string "redirect_uri", null: false
     t.datetime "created_at", null: false
     t.datetime "revoked_at"
-    t.string "scopes"
+    t.string "scopes", default: "", null: false
     t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
   end
 
