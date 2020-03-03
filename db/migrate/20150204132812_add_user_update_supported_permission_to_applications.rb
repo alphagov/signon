@@ -1,4 +1,4 @@
-require "enhancements/application"
+require "doorkeeper/application"
 
 class AddUserUpdateSupportedPermissionToApplications < ActiveRecord::Migration
   def change

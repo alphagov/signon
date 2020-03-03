@@ -1,4 +1,4 @@
-require "enhancements/application"
+require "doorkeeper/application"
 
 class AddDefaultPermissionsAndBulkGrantThemToAllUsers < ActiveRecord::Migration
   def up

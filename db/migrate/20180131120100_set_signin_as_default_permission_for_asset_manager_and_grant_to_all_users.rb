@@ -1,4 +1,4 @@
-require "enhancements/application"
+require "doorkeeper/application"
 
 class SetSigninAsDefaultPermissionForAssetManagerAndGrantToAllUsers < ActiveRecord::Migration[5.1]
   def up
