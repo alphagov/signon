@@ -1,1 +1,1 @@
-Dir[File.dirname(__FILE__) + "/abilities/*.rb"].each { |file| require file }
+Dir[File.dirname(__FILE__) + "/abilities/*.rb"].sort.each { |file| require file }
