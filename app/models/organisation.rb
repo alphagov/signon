@@ -7,7 +7,7 @@ class Organisation < ApplicationRecord
 
   has_many :users
 
-  validates :slug, presence: true, uniqueness: true
+  validates :slug, presence: true, uniqueness: { case_sensitive: true }
   validates :content_id, presence: true
   validates :name, presence: true
   validates :organisation_type, presence: true

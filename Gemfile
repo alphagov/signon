@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '~> 5'
+gem 'rails', '~> 6.0.2.1'
 
 gem 'activejob-retry'
 gem 'addressable', '~> 2'
@@ -27,7 +27,7 @@ gem 'rake', '~> 13'
 gem 'redis', '~> 4'
 gem 'rotp', '~> 5'
 gem 'rqrcode'
-gem 'sass-rails', '~> 5'
+gem 'sass-rails', '~> 5.1'
 gem 'sprockets-rails', '~> 3'
 gem 'uglifier', '~> 4'
 gem 'uuid'
@@ -46,6 +46,7 @@ gem 'plek', '~> 3'
 group :development do
   gem 'better_errors', '2.6.0'
   gem 'binding_of_caller', '0.8.0'
+  gem 'listen', '3.2'
 end
 
 group :development, :test do
