@@ -5,7 +5,7 @@
 require File.expand_path("config/application", __dir__)
 
 require_relative "lib/volatile_lock"
-include VolatileLock::DSL
+include VolatileLock::DSL # rubocop:disable Style/MixinUsage
 
 Signon::Application.load_tasks
 
