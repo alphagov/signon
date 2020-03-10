@@ -5,7 +5,7 @@ class SetSigninAsDefaultPermissionForAssetManagerAndGrantToAllUsers < ActiveReco
     asset_manager_app = Doorkeeper::Application.find_by!(name: "Asset Manager")
 
     say_with_time "Marking signin on Asset Manager as default permission" do
-      asset_manager_app.signin_permission.update_attributes(default: true)
+      asset_manager_app.signin_permission.update(default: true)
     end
 
     say_with_time "Enqueuing bulk grant permissions job as a super admin to make sure all existing users have the default permissions" do
@@ -25,7 +25,7 @@ class SetSigninAsDefaultPermissionForAssetManagerAndGrantToAllUsers < ActiveReco
     asset_manager_app = Doorkeeper::Application.find_by!(name: "Asset Manager")
 
     say_with_time "Removing default permission status from signin on Asset Manager" do
-      asset_manager_app.signin_permission.update_attributes(default: false)
+      asset_manager_app.signin_permission.update(default: false)
     end
   end
 end

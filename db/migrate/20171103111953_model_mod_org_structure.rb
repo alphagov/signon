@@ -100,7 +100,7 @@ class ModelModOrgStructure < ActiveRecord::Migration
         if org.closed?
           puts "#{child_name} already closed"
         else
-          org.update_attributes(closed: true)
+          org.update(closed: true)
           puts "Marking #{child_name} as closed"
         end
       end
@@ -118,10 +118,10 @@ class ModelModOrgStructure < ActiveRecord::Migration
       begin
         old_parent_name = org.parent.nil? ? "nil" : org.parent.name
         puts "Checking parent for #{org.name}. Old parent is #{old_parent_name}"
-        org.update_attributes!(parent: parent)
+        org.update!(parent: parent)
         puts "Updating parent for #{org.name} from #{old_parent_name} to #{parent.name}"
-      rescue StandardError => error
-        puts "Parent re-assignment failed for: #{org.name} with error '#{error.message}'"
+      rescue StandardError => e
+        puts "Parent re-assignment failed for: #{org.name} with error '#{e.message}'"
       end
     else
       puts "Parent for #{org.name} is correct"

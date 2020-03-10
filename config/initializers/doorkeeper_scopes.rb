@@ -7,6 +7,7 @@ Doorkeeper::OAuth::PreAuthorization.class_eval do
 
   def validate_scopes
     return true if scope.blank?
+
     old_validate_scopes
   end
 

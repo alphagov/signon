@@ -90,11 +90,11 @@ class ModelCabinetOfficeOrgStructure < ActiveRecord::Migration
 
               puts "Checking parent for #{child_name}. Old parent is #{old_parent_name}"
 
-              org.update_attributes!(parent: expected_parent)
+              org.update!(parent: expected_parent)
 
               puts "Updating parent for #{child_name} from #{old_parent_name} to #{expected_parent.name}"
-            rescue StandardError => error
-              puts "Parent re-assignment failed for: #{child_name} with error '#{error.message}'"
+            rescue StandardError => e
+              puts "Parent re-assignment failed for: #{child_name} with error '#{e.message}'"
             end
           else
             puts "Parent for #{child_name} is correct"

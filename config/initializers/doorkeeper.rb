@@ -29,7 +29,7 @@ Doorkeeper.configure do
   admin_authenticator do |_routes|
     # Prevent all access to admin web interface, only allow application management
     # from command line
-    render text: "Access denied", status: 403
+    render text: "Access denied", status: :forbidden
   end
 
   # If you are planning to use Doorkeeper in Rails 5 API-only application, then you might

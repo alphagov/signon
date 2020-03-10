@@ -7,7 +7,7 @@ class InsertPermissionsData < ActiveRecord::Migration
   end
 
   def down
-    ::Doorkeeper::Application.find_by_name("Everything").delete
+    ::Doorkeeper::Application.find_by(name: "Everything").delete
     Permission.delete_all
   end
 end

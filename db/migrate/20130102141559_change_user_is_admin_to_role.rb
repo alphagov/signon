@@ -1,5 +1,5 @@
 class ChangeUserIsAdminToRole < ActiveRecord::Migration
-  class User < ActiveRecord::Base; end
+  class User < ApplicationRecord; end
 
   def up
     add_column :users, :role, :string, default: "normal"

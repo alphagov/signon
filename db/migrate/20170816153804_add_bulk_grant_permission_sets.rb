@@ -15,7 +15,7 @@ class AddBulkGrantPermissionSets < ActiveRecord::Migration
     end
 
     add_index :bulk_grant_permission_set_application_permissions, %i[bulk_grant_permission_set_id supported_permission_id],
-                unique: true,
-                name: "index_app_permissions_on_bulk_grant_permission_set"
+              unique: true,
+              name: "index_app_permissions_on_bulk_grant_permission_set"
   end
 end

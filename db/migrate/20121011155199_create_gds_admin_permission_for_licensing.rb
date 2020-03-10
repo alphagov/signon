@@ -5,7 +5,7 @@ class CreateGdsAdminPermissionForLicensing < ActiveRecord::Migration
 
   def down; end
 
-  class ::Doorkeeper::Application < ActiveRecord::Base
+  class ::Doorkeeper::Application < ApplicationRecord
     has_many :permissions, dependent: :destroy
     has_many :supported_permissions, dependent: :destroy
 

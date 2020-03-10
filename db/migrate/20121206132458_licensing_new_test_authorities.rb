@@ -14,6 +14,6 @@ class LicensingNewTestAuthorities < ActiveRecord::Migration
   end
 
   def licensing
-    @licensing ||= Doorkeeper::Application.find_by_name("Licensify")
+    @licensing ||= Doorkeeper::Application.find_by(name: "Licensify")
   end
 end

@@ -1,11 +1,11 @@
 class CloneTradeTariffAdmin < ActiveRecord::Migration[5.2]
-  class SupportedPermission < ActiveRecord::Base
+  class SupportedPermission < ApplicationRecord
     belongs_to :application, class_name: "Doorkeeper::Application"
   end
 
   def up
     ActiveRecord::Base.transaction do
-      existing_trade_tariff_admin = ::Doorkeeper::Application.find_by_name("Trade Tariff Admin (PaaS)")
+      existing_trade_tariff_admin = ::Doorkeeper::Application.find_by(name: "Trade Tariff Admin (PaaS)")
       cloned_trade_tariff_admin = ::Doorkeeper::Application.new
       existing_trade_tariff_admin.attributes.each_pair do |key, value|
         if !%w(created_at updated_at id uid).include?(key)

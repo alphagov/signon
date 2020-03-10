@@ -6,12 +6,12 @@ def application_repo_name(application)
   when /Contacts/i
     "contacts-admin"
   else
-    application.name.downcase.gsub(/\s/, '-')
+    application.name.downcase.gsub(/\s/, "-")
   end
 end
 
 def env_var_directory_name(application)
-  application.name.downcase.gsub(/\s/, '-')
+  application.name.downcase.gsub(/\s/, "-")
 end
 
 def env_var_path_for_app(application)
@@ -90,13 +90,13 @@ applications.each do |application|
     # Get the OAuth credentials from the env vars
     local_config = env_var_values_for_app(
       oauth_id_file: oauth_id_file,
-      oauth_secret_file: oauth_secret_file
+      oauth_secret_file: oauth_secret_file,
     )
     update_application(
       application: application,
       oauth_id: local_config[:oauth_id],
       oauth_secret: local_config[:oauth_secret],
-      type: :env_var
+      type: :env_var,
     )
   elsif File.exist?(config_file)
     # Get the OAuth credentials from the gds-sso config file
@@ -105,7 +105,7 @@ applications.each do |application|
       application: application,
       oauth_id: local_config[:oauth_id],
       oauth_secret: local_config[:oauth_secret],
-      type: :config_file
+      type: :config_file,
     )
   else
     puts "INFO Skipping #{application.name}, as it doesn't use environment"\
