@@ -7,6 +7,10 @@ inherit_mode:
   merge:
     - Exclude
 
+AllCops:
+  Exclude:
+    - db/migrate/201*.rb
+
 Rails/OutputSafety:
   Enabled: false
 Rails/HelperInstanceVariable:
