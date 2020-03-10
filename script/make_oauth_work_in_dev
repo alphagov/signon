@@ -65,7 +65,7 @@ def update_application(application:, oauth_id:, oauth_secret:, type:)
                   "environment variables"
                 else
                   "gds-sso config file"
-  end
+                end
   puts "Updating application #{application.name} from #{update_type}"
   begin
     application.save!
