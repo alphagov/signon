@@ -22,6 +22,25 @@ def config_path_for_app(application)
   "../../#{application_repo_name(application)}/config/initializers/gds-sso.rb"
 end
 
+def values_for_app(application)
+  oauth_id_file = File.join(env_var_path_for_app(application), "OAUTH_ID")
+  oauth_secret_file = File.join(env_var_path_for_app(application), "OAUTH_SECRET")
+  local_config = nil
+  if File.exist?(oauth_id_file) && !File.zero?(oauth_id_file) &&
+      File.exist?(oauth_secret_file) && !File.zero?(oauth_secret_file)
+    # Get the OAuth credentials from the env vars
+    local_config = env_var_values_for_app(
+      oauth_id_file: oauth_id_file,
+      oauth_secret_file: oauth_secret_file,
+    ).merge(type: :env_var)
+  elsif File.exist?(config_path_for_app(application))
+    # Get the OAuth credentials from the gds-sso config file
+    local_config = config_values_for_app(config_file: config_path_for_app(application))
+                     .merge(type: :config_file)
+  end
+  local_config
+end
+
 def env_var_values_for_app(oauth_id_file:, oauth_secret_file:)
   oauth_id = File.read(oauth_id_file)
   oauth_secret = File.read(oauth_secret_file)
@@ -81,31 +100,13 @@ end
 puts "Updating SSO config so that it works in development..."
 applications = ::Doorkeeper::Application.where(retired: false)
 applications.each do |application|
-  env_var_path = env_var_path_for_app(application)
-  oauth_id_file = File.join(env_var_path, "OAUTH_ID")
-  oauth_secret_file = File.join(env_var_path, "OAUTH_SECRET")
-  config_file = config_path_for_app(application)
-  if File.exist?(oauth_id_file) && !File.zero?(oauth_id_file) &&
-      File.exist?(oauth_secret_file) && !File.zero?(oauth_secret_file)
-    # Get the OAuth credentials from the env vars
-    local_config = env_var_values_for_app(
-      oauth_id_file: oauth_id_file,
-      oauth_secret_file: oauth_secret_file,
-    )
+  local_config = values_for_app(application)
+  if local_config.present?
     update_application(
       application: application,
       oauth_id: local_config[:oauth_id],
       oauth_secret: local_config[:oauth_secret],
-      type: :env_var,
-    )
-  elsif File.exist?(config_file)
-    # Get the OAuth credentials from the gds-sso config file
-    local_config = config_values_for_app(config_file: config_file)
-    update_application(
-      application: application,
-      oauth_id: local_config[:oauth_id],
-      oauth_secret: local_config[:oauth_secret],
-      type: :config_file,
+      type: local_config[:type],
     )
   else
     puts "INFO Skipping #{application.name}, as it doesn't use environment"\
