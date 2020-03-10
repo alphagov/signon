@@ -7,6 +7,7 @@ Rails.application.config.assets.precompile += %w(
   legacy_layout.css
   legacy_layout.js
   password-strength-indicator.js
+  print.css
 )
 
 # Version of your assets, change this if you want to expire all your assets.
