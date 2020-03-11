@@ -1,5 +1,5 @@
 class FixupInvalidEmails < ActiveRecord::Migration
-  class TempUser < ActiveRecord::Base
+  class TempUser < ApplicationRecord
     self.table_name = "users"
   end
 

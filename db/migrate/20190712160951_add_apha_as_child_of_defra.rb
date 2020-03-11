@@ -1,13 +1,13 @@
 class AddAphaAsChildOfDefra < ActiveRecord::Migration[5.2]
   def up
-    defra = Organisation.find_by_abbreviation("Defra")
+    defra = Organisation.find_by(abbreviation: "Defra")
     puts "!! Couldn't find Defra" && return if defra.nil?
-    epha = Organisation.find_by_abbreviation("APHA")
+    epha = Organisation.find_by(abbreviation: "APHA")
     puts "!! Couldn't find APHA" && return if epha.nil?
-    epha.update_attributes!(parent: defra)
+    epha.update!(parent: defra)
     puts "Updated parent for #{epha.name} to #{defra.name}"
-  rescue => error
-    puts "Parent re-assignment failed for: #{epha.name} with error '#{error.message}'"
+  rescue StandardError => e
+    puts "Parent re-assignment failed for: #{epha.name} with error '#{e.message}'"
   end
 
   def down

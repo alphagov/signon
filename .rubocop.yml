@@ -7,6 +7,15 @@ inherit_mode:
   merge:
     - Exclude
 
+AllCops:
+  Exclude:
+    - db/migrate/201*.rb
+
+Metrics/BlockLength:
+  Exclude:
+    - 'config/**/*.rb'
+    - 'features/**/*.rb'
+
 Rails/OutputSafety:
   Enabled: false
 Rails/HelperInstanceVariable:

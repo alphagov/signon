@@ -1,14 +1,14 @@
 class RemoveSupportAppErtpPermission < ActiveRecord::Migration
-  class SupportedPermission < ActiveRecord::Base; end
-  class Permission < ActiveRecord::Base
+  class SupportedPermission < ApplicationRecord; end
+  class Permission < ApplicationRecord
     serialize :permissions, Array
   end
 
   def up
-    support = ::Doorkeeper::Application.find_by_name("Support")
+    support = ::Doorkeeper::Application.find_by(name: "Support")
 
     unless support.nil?
-      permission = SupportedPermission.find_by_application_id_and_name(support.id, "ertp")
+      permission = SupportedPermission.find_by(application_id: support.id, name: "ertp")
       permission.delete unless permission.nil?
 
       # remove user permissions

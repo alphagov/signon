@@ -6,9 +6,9 @@ class AddDefaultPermissionsAndBulkGrantThemToAllUsers < ActiveRecord::Migration
     content_preview_app = Doorkeeper::Application.find_by!(name: "Content Preview")
 
     say_with_time "Marking signin on support and content preview as default permissions" do
-      support_app.signin_permission.update_attributes(default: true)
+      support_app.signin_permission.update(default: true)
 
-      content_preview_app.signin_permission.update_attributes(default: true)
+      content_preview_app.signin_permission.update(default: true)
     end
 
     say_with_time "Enqueuing bulk grant permissions job as a super admin to make sure all existing users have the default permissions" do
@@ -27,10 +27,10 @@ class AddDefaultPermissionsAndBulkGrantThemToAllUsers < ActiveRecord::Migration
 
     say_with_time "Removing default permission status from signin on support and content preview" do
       content_preview_app = Doorkeeper::Application.find_by(name: "Content Preview")
-      content_preview_app.signin_permission.update_attributes(default: false)
+      content_preview_app.signin_permission.update(default: false)
 
       support_app = Doorkeeper::Application.find_by(name: "Support")
-      support_app.signin_permission.update_attributes(default: false)
+      support_app.signin_permission.update(default: false)
     end
   end
 end

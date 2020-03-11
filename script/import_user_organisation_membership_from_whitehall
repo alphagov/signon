@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
-require 'mysql2'
-require 'yaml'
-require 'pp'
+require "mysql2"
+require "yaml"
+require "pp"
 
 def usage(message = nil)
   puts "Usage: #{File.basename(__FILE__)} <path/to/signon/database.yml> <path/to/whitehall/database.yml>"
@@ -17,7 +17,7 @@ end
 def load_config_file(config_path)
   raise "File '#{config_path}' not found" unless File.exist?(config_path)
 
-  string_keys = YAML.load_file(config_path)[ENV['RAILS_ENV']].select { |k, _v| %w{host username password database}.include?(k) }
+  string_keys = YAML.load_file(config_path)[ENV["RAILS_ENV"]].select { |k, _v| %w{host username password database}.include?(k) }
   Hash[string_keys.map { |k, v| [k.to_sym, v] }]
 end
 
@@ -26,7 +26,7 @@ def connect_to_mysql(params)
   Mysql2::Client.new(params)
 end
 
-if ENV['RAILS_ENV'].to_s == ''
+if ENV["RAILS_ENV"].to_s == ""
   usage("ERROR: RAILS_ENV required")
 elsif ARGV.size != 2
   usage
@@ -37,17 +37,17 @@ end
 signon = connect_to_mysql(signon_config)
 whitehall = connect_to_mysql(whitehall_config)
 
-signon_organisations = signon.query('SELECT id, slug FROM organisations').map.with_object({}) do |row, lookup_table|
-  lookup_table[row['slug']] = row['id']
+signon_organisations = signon.query("SELECT id, slug FROM organisations").map.with_object({}) do |row, lookup_table|
+  lookup_table[row["slug"]] = row["id"]
 end
 
-puts 'Loading data from whitehall db'
-results = whitehall.query('SELECT users.uid, organisations.slug FROM users LEFT OUTER JOIN organisations ON users.organisation_id = organisations.id WHERE users.uid IS NOT NULL').map do |row|
-  [row['uid'], signon_organisations[row['slug']]]
+puts "Loading data from whitehall db"
+results = whitehall.query("SELECT users.uid, organisations.slug FROM users LEFT OUTER JOIN organisations ON users.organisation_id = organisations.id WHERE users.uid IS NOT NULL").map do |row|
+  [row["uid"], signon_organisations[row["slug"]]]
 end
 
-puts 'Updating user records in signon db'
+puts "Updating user records in signon db"
 results.each do |(uid, organisation_id)|
-  org_id = organisation_id.nil? ? 'NULL' : organisation_id.to_i
+  org_id = organisation_id.nil? ? "NULL" : organisation_id.to_i
   signon.query("UPDATE users SET organisation_id = #{org_id} WHERE uid = '#{signon.escape(uid)}'")
 end

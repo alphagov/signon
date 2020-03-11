@@ -1,11 +1,11 @@
-class Permission < ActiveRecord::Base
+class Permission < ApplicationRecord
   belongs_to :user
   belongs_to :application, class_name: "Doorkeeper::Application"
   serialize :permissions, Array
 end
 
 class MigratePermissionsToUserApplicationPermissionsJoinTable < ActiveRecord::Migration
-  class Permission < ActiveRecord::Base
+  class Permission < ApplicationRecord
   end
 
   def up

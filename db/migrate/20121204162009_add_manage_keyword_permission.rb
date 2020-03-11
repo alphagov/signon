@@ -12,6 +12,6 @@ class AddManageKeywordPermission < ActiveRecord::Migration
   end
 
   def panopticon
-    @panopticon ||= Doorkeeper::Application.find_by_name("Panopticon")
+    @panopticon ||= Doorkeeper::Application.find_by(name: "Panopticon")
   end
 end
