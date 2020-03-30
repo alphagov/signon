@@ -133,7 +133,7 @@ GEM
     factory_bot_rails (5.1.1)
       factory_bot (~> 5.1.0)
       railties (>= 4.2.0)
-    faraday (0.17.3)
+    faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.12.2)
     gds-api-adapters (63.5.1)
@@ -365,8 +365,8 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    sentry-raven (2.13.0)
-      faraday (>= 0.7.6, < 1.0)
+    sentry-raven (3.0.0)
+      faraday (>= 1.0)
     shoulda-context (1.2.2)
     sidekiq (5.2.7)
       connection_pool (~> 2.2, >= 2.2.2)
@@ -444,7 +444,7 @@ DEPENDENCIES
   devise_zxcvbn (~> 1)
   doorkeeper (~> 5.3.1)
   factory_bot_rails (~> 5)
-  faraday (~> 0.17)
+  faraday (~> 1.0)
   gds-api-adapters (~> 63)
   govuk_admin_template (~> 6)
   govuk_app_config (~> 2)
