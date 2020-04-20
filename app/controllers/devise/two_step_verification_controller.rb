@@ -53,6 +53,7 @@ private
 
   def prepare_and_validate
     redirect_to(:root) && return if current_user.nil?
+
     @limit = User::MAX_2SV_LOGIN_ATTEMPTS
     if current_user.max_2sv_login_attempts?
       sign_out(current_user)
