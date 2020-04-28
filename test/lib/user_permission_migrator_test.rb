@@ -22,7 +22,6 @@ class UserPermissionMigrationTest < ActiveSupport::TestCase
     @user_with_unrelated_access = create(:user, with_permissions: { "unrelated application" => %w(editor gds_editor signin) })
   end
 
-
   should "copy permissions over for all users of an application to another application" do
     UserPermissionMigrator.migrate(
       source: "Specialist Publisher",

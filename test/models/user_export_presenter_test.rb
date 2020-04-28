@@ -10,7 +10,6 @@ class UserExportPresenterTest < ActiveSupport::TestCase
     create(:supported_permission, application: @apps[2], name: "admin")
   end
 
-
   should "output header row including application names" do
     header_row = UserExportPresenter.new(@apps).header_row
 

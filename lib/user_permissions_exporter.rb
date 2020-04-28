@@ -56,7 +56,6 @@ class UserPermissionsExporter
     File.join(export_dir, file_name)
   end
 
-
 private
 
   def multiple_apps?
