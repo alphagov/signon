@@ -464,7 +464,6 @@ class UsersControllerTest < ActionController::TestCase
         end
       end
 
-
       context "organisation admin" do
         should "not be able to assign organisations" do
           organisation_admin = create(:organisation_admin)

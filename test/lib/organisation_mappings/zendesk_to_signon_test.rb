@@ -22,7 +22,6 @@ class OrganisationMappings::ZendeskToSignonTest < ActiveSupport::TestCase
     end
   end
 
-
   test "assigns organisation to users who have recognised domain names" do
     co = create(:organisation, name: "Cabinet Office")
     user = create(:user, email: "foo@digital.cabinet-office.gov.uk")
