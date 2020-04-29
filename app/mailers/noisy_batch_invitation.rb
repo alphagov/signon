@@ -1,7 +1,7 @@
 class NoisyBatchInvitation < ApplicationMailer
   include MailerHelper
 
-  default from: Proc.new { email_from }
+  default from: proc { email_from }
   default to: I18n.t("noisy_batch_invitation_mailer.to")
 
   def make_noise(batch_invitation)

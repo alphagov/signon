@@ -360,7 +360,7 @@ class UserTest < ActiveSupport::TestCase
     user.grant_application_permission(app, "signin")
     user.grant_application_permission(app, "edit")
 
-    assert_user_has_permissions %w(edit signin), app, user
+    assert_user_has_permissions %w[edit signin], app, user
   end
 
   test "inviting a user sets confirmed_at" do

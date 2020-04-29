@@ -5,7 +5,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
   include GdsApi::TestHelpers::Organisations
 
   test "it creates new organisations when none exist" do
-    organisation_slugs = %w(ministry-of-fun tea-agency)
+    organisation_slugs = %w[ministry-of-fun tea-agency]
     organisations_api_has_organisations(organisation_slugs)
     assert_equal(0, Organisation.count)
 

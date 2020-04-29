@@ -102,7 +102,7 @@ class ApiUsersControllerTest < ActionController::TestCase
 
         put :update, params: {
           "id" => api_user.id, "api_user" => { "name" => api_user.name, "email" => api_user.email,
-            "permissions_attributes" => { "0" => { "application_id" => application.id, "id" => "", "permissions" => %w[admin] } } }
+                                               "permissions_attributes" => { "0" => { "application_id" => application.id, "id" => "", "permissions" => %w[admin] } } }
 }
       end
     end

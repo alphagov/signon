@@ -2,7 +2,7 @@ class UserMailer < Devise::Mailer
   include MailerHelper
   append_view_path Rails.root.join("app/views/devise/mailer")
 
-  default from: Proc.new { email_from }
+  default from: proc { email_from }
 
   helper_method :suspension_time, :account_name, :instance_name, :locked_time, :unlock_time, :production?
 
@@ -95,7 +95,7 @@ private
 
   def subject_for(key)
     I18n.t(:"#{devise_mapping.name}_subject", scope: [:devise, :mailer, key],
-      default: [:subject, key.to_s.humanize], app_name: app_name)
+                                              default: [:subject, key.to_s.humanize], app_name: app_name)
   end
 
   def production?

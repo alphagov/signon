@@ -4,16 +4,14 @@ require Rails.root + "lib/organisation_mappings/zendesk_to_signon"
 class OrganisationMappings::ZendeskToSignonTest < ActiveSupport::TestCase
   # Reimplemtation of silence_stream as it was removed in Rails 5
   def silence_stream(stream, &_block)
-    begin
-      old_stream = stream.dup
-      stream.reopen(File::NULL)
-      stream.sync = true
+    old_stream = stream.dup
+    stream.reopen(File::NULL)
+    stream.sync = true
 
-      yield
-    ensure
-      stream.reopen(old_stream)
-      old_stream.close
-    end
+    yield
+  ensure
+    stream.reopen(old_stream)
+    old_stream.close
   end
 
   def apply_mappings

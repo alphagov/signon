@@ -1,7 +1,7 @@
 require "test_helper"
 class UserMailerContentTest < ActionMailer::TestCase
-  #Use sparingly to apply exemptions to the below due to awkward setups
-  #that work but do not fit the below patterns
+  # Use sparingly to apply exemptions to the below due to awkward setups
+  # that work but do not fit the below patterns
   exemptions = [
     "app/views/user_mailer/suspension_reminder.html.erb",
     "app/views/user_mailer/suspension_notification.html.erb",
@@ -9,7 +9,7 @@ class UserMailerContentTest < ActionMailer::TestCase
 
   context "considering all email content" do
     should "have no malformed links in html content files" do
-      found_errors = Array.new
+      found_errors = []
       file_list = Dir.glob("app/views/user_mailer/*.html.erb").to_a - exemptions
 
       file_list.each do |file_path|

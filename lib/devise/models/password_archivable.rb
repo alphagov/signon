@@ -19,7 +19,7 @@ module Devise
       end
 
       def validate_password_archive
-        self.errors.add(:password, :taken_in_past) if encrypted_password_changed? && password_archive_included?
+        errors.add(:password, :taken_in_past) if encrypted_password_changed? && password_archive_included?
       end
 
     private
@@ -33,14 +33,14 @@ module Devise
                                           end
         end
 
-        if self.class.deny_old_passwords.positive? && !self.password.nil?
-          old_passwords_including_cur_change = self.old_passwords.order(:id).reverse_order.limit(self.class.deny_old_passwords).to_a
+        if self.class.deny_old_passwords.positive? && !password.nil?
+          old_passwords_including_cur_change = old_passwords.order(:id).reverse_order.limit(self.class.deny_old_passwords).to_a
           old_passwords_including_cur_change << OldPassword.new(old_password_params) # include most recent change in list, but don't save it yet!
           old_passwords_including_cur_change.each_with_index do |old_password, _i|
             dummy                    = self.class.new
             dummy.encrypted_password = old_password.encrypted_password
             dummy.password_salt = old_password.password_salt
-            return true if dummy.valid_password?(self.password)
+            return true if dummy.valid_password?(password)
           end
         end
 
@@ -58,20 +58,20 @@ module Devise
 
       # archive the last password before save and delete all to old passwords from archive
       def archive_password
-        if self.encrypted_password_changed?
+        if encrypted_password_changed?
           if archive_count.to_i.positive?
-            self.old_passwords.create! old_password_params
-            self.old_passwords.order(:id).reverse_order.offset(archive_count).destroy_all
+            old_passwords.create! old_password_params
+            old_passwords.order(:id).reverse_order.offset(archive_count).destroy_all
           else
-            self.old_passwords.destroy_all
+            old_passwords.destroy_all
           end
         end
       end
 
       def old_password_params
         {
-          encrypted_password: self.encrypted_password_change.first,
-          password_salt: self.password_salt_change.first,
+          encrypted_password: encrypted_password_change.first,
+          password_salt: password_salt_change.first,
         }
       end
 

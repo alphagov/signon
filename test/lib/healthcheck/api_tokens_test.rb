@@ -42,7 +42,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
         user: user,
       )
 
-      message = "#{user.name} token for #{expiring_token.application.name} " +
+      message = "#{user.name} token for #{expiring_token.application.name} " \
         "expires in #{Healthcheck::ApiTokens::WARNING_THRESHOLD / 1.day.to_i} days"
 
       check = Healthcheck::ApiTokens.new

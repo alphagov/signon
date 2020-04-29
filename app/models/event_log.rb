@@ -54,18 +54,18 @@ class EventLog < ApplicationRecord
 
   VALID_OPTIONS = %i[initiator application application_id trailing_message ip_address user_agent_id user_agent_string user_email_string].freeze
 
-  validates_presence_of :uid, if: Proc.new { |event_log| EVENTS_REQUIRING_UID.include? event_log.entry }
-  validates_presence_of :event_id
+  validates :uid, presence: { if: proc { |event_log| EVENTS_REQUIRING_UID.include? event_log.entry } }
+  validates :event_id, presence: true
   validate :validate_event_mappable
-  validates_presence_of :initiator_id,   if: Proc.new { |event_log| EVENTS_REQUIRING_INITIATOR.include? event_log.entry }
-  validates_presence_of :application_id, if: Proc.new { |event_log| EVENTS_REQUIRING_APPLICATION.include? event_log.entry }
+  validates :initiator_id,   presence: { if: proc { |event_log| EVENTS_REQUIRING_INITIATOR.include? event_log.entry } }
+  validates :application_id, presence: { if: proc { |event_log| EVENTS_REQUIRING_APPLICATION.include? event_log.entry } }
 
   belongs_to :initiator, class_name: "User"
   belongs_to :application, class_name: "Doorkeeper::Application"
   belongs_to :user_agent
 
   def user_agent_as_string
-    self.user_agent&.user_agent_string || self.user_agent_string
+    user_agent&.user_agent_string || user_agent_string
   end
 
   def event
@@ -77,22 +77,22 @@ class EventLog < ApplicationRecord
   end
 
   def ip_address_string
-    self.class.convert_integer_to_ip_address(self.ip_address)
+    self.class.convert_integer_to_ip_address(ip_address)
   end
 
   def send_to_splunk(*)
     return unless ENV["SPLUNK_EVENT_LOG_ENDPOINT_URL"] && ENV["SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN"]
 
     event = {
-      timestamp: self.created_at.utc,
-      app: self.application&.name,
-      object_id: self.id,
-      user: self.initiator&.name || self.user_email_string,
-      user_uid: self.uid,
-      src_ip: (self.ip_address_string if self.ip_address.present?),
+      timestamp: created_at.utc,
+      app: application&.name,
+      object_id: id,
+      user: initiator&.name || user_email_string,
+      user_uid: uid,
+      src_ip: (ip_address_string if ip_address.present?),
       action: self.event,
-      result: self.trailing_message,
-      http_user_agent: self.user_agent_as_string,
+      result: trailing_message,
+      http_user_agent: user_agent_as_string,
     }
 
     conn = Faraday.new(ENV["SPLUNK_EVENT_LOG_ENDPOINT_URL"])

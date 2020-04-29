@@ -93,11 +93,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     # This then gets routed to Signon but Signon doesn't know how to handle the route.
     # And so it raises the RoutingError
 
-    # rubocop:disable Lint/SuppressedException
-    begin
-      yield
-    rescue ActionController::RoutingError
-    end
-    # rubocop:enable Lint/SuppressedException
+    yield
+  rescue ActionController::RoutingError
   end
 end

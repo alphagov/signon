@@ -1,3 +1,3 @@
 class UserAgent < ApplicationRecord
-  validates_presence_of :user_agent_string
+  validates :user_agent_string, presence: true
 end

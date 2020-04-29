@@ -45,7 +45,11 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
       should "not record the last_synced_at timestamp on the permissions" do
         stub_request(:put, users_url(@application)).to_timeout
 
-        PermissionUpdater.new.perform(@user.uid, @application.id) rescue SSOPushError
+        begin
+          PermissionUpdater.new.perform(@user.uid, @application.id)
+        rescue StandardError
+          SSOPushError
+        end
 
         assert_nil @signin_permission.reload.last_synced_at
         assert_nil @other_permission.reload.last_synced_at

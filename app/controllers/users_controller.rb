@@ -3,7 +3,7 @@ require "csv"
 class UsersController < ApplicationController
   include UserPermissionsControllerMethods
 
-  layout "admin_layout", only: %w(edit_email_or_password)
+  layout "admin_layout", only: %w[edit_email_or_password]
 
   before_action :authenticate_user!, except: :show
   before_action :load_and_authorize_user, except: %i[index show]

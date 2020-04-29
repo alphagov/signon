@@ -60,14 +60,14 @@ def config_values_for_app(config_file:)
 
     key = /config\.([^ ]+)/.match(line).to_a[1]
     value = if /ENV\['[a-z_]+'\]/i.match?(line)
-      # We've got a line like this:
-      #   config.oauth_id     = ENV['PUBLISHER_OAUTH_ID'] || "an_oauth_id"
-      # so extract "an_oauth_id":
+              # We've got a line like this:
+              #   config.oauth_id     = ENV['PUBLISHER_OAUTH_ID'] || "an_oauth_id"
+              # so extract "an_oauth_id":
               /\|\| ["|'](.+)["|']/.match(line).to_a[1]
             else
-      # We've got a line like this:
-      #   config.oauth_id     = "an_oauth_id"
-      # so extract "an_oauth_id":
+              # We've got a line like this:
+              #   config.oauth_id     = "an_oauth_id"
+              # so extract "an_oauth_id":
               /=[\s]+?['|"]([^'"]+)['|"]/.match(line).to_a[1]
             end
     config[key.to_sym] = value unless key.nil?

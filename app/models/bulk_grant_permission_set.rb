@@ -4,7 +4,7 @@ class BulkGrantPermissionSet < ApplicationRecord
   has_many :supported_permissions, through: :bulk_grant_permission_set_application_permissions
 
   validates :user, presence: true
-  validates :outcome, inclusion: { in: %w(success fail), allow_nil: true }
+  validates :outcome, inclusion: { in: %w[success fail], allow_nil: true }
   validate :must_have_at_least_one_supported_permission
 
   def in_progress?
@@ -16,11 +16,11 @@ class BulkGrantPermissionSet < ApplicationRecord
   end
 
   def enqueue
-    BulkGrantPermissionSetJob.perform_later(self.id)
+    BulkGrantPermissionSetJob.perform_later(id)
   end
 
   def perform(_options = {})
-    self.update_column(:total_users, User.count)
+    update_column(:total_users, User.count)
     User.find_each do |user_to_change|
       permissions_granted = supported_permissions.select do |permission|
         granted_permission = user_to_change.application_permissions.where(supported_permission_id: permission.id).first_or_create!
@@ -37,11 +37,11 @@ class BulkGrantPermissionSet < ApplicationRecord
           trailing_message: "(#{permissions.map(&:name).join(', ')})",
         )
       end
-      self.class.increment_counter(:processed_users, self.id)
+      self.class.increment_counter(:processed_users, id)
     end
-    self.update_column(:outcome, "success")
+    update_column(:outcome, "success")
   rescue StandardError
-    self.update_column(:outcome, "fail")
+    update_column(:outcome, "fail")
     raise
   end
 

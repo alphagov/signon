@@ -70,14 +70,14 @@ class BatchInvitationTest < ActiveSupport::TestCase
         app = create(:application)
         another_app = create(:application)
         create(:supported_permission, application_id: another_app.id, name: "foo")
-        @user.grant_application_permissions(another_app, %w(signin foo))
+        @user.grant_application_permissions(another_app, %w[signin foo])
 
         @bi.supported_permission_ids = [another_app.signin_permission.id]
         @bi.save
         @bi.perform
 
         assert_empty @user.permissions_for(app)
-        assert_same_elements %w(signin foo), @user.permissions_for(another_app)
+        assert_same_elements %w[signin foo], @user.permissions_for(another_app)
       end
     end
 
