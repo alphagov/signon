@@ -94,6 +94,6 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     # And so it raises the RoutingError
 
     yield
-  rescue ActionController::RoutingError
+  rescue ActionController::RoutingError # rubocop:disable Lint/SuppressedException
   end
 end
