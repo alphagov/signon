@@ -84,7 +84,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
         delegatable: true,
         default: true,
         created_at: 2.days.ago,
-)
+      )
 
       put :update, params: { doorkeeper_application_id: app.id, id: perm.id, supported_permission: { delegatable: "0", default: "0" } }
 

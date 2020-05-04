@@ -2,7 +2,7 @@ require "doorkeeper/orm/active_record/application"
 
 # rubocop:disable Rails/ApplicationRecord
 class ::Doorkeeper::Application < ActiveRecord::Base
-# rubocop:enable Rails/ApplicationRecord
+  # rubocop:enable Rails/ApplicationRecord
   has_many :supported_permissions, dependent: :destroy
 
   default_scope { order("oauth_applications.name") }
@@ -24,7 +24,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   def self.policy_class; ApplicationPolicy; end
 
   def supported_permission_strings(user = nil)
-    if user && %w(organisation_admin super_organisation_admin).include?(user.role)
+    if user && %w[organisation_admin super_organisation_admin].include?(user.role)
       supported_permissions.delegatable.pluck(:name) & user.permissions_for(self)
     else
       supported_permissions.pluck(:name)

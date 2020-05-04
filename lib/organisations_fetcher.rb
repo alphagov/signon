@@ -2,7 +2,7 @@ require "gds_api/organisations"
 
 # Whitehall is the canonical source for organisations, so Signon needs to keep
 # its organisations up-to-date in order to provide accurate information on user
-# membership of organisations.
+# membership of organisations.
 class OrganisationsFetcher
   def call
     organisation_relationships = {}
@@ -51,7 +51,7 @@ private
     organisation_relationships.each do |organisation_slug, child_organisation_slugs|
       parent = Organisation.find_by(slug: organisation_slug)
       Organisation.where(slug: child_organisation_slugs).map do |child_organisation|
-        # TODO this ignores that organisations can have multiple parents. I think organisations will
+        # TODO: this ignores that organisations can have multiple parents. I think organisations will
         # end up with the parent that appears last in the API response(s).
         #
         # Transition app implements this correctly.

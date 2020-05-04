@@ -107,7 +107,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       select_role("All Roles")
 
-      %w(Aardvark Abbot Abbey Admin).each do |user_name|
+      %w[Aardvark Abbot Abbey Admin].each do |user_name|
         assert page.has_content?(user_name)
       end
     end
@@ -123,7 +123,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       select_status("All Statuses")
 
-      %w(Aardvark Abbot Abbey Admin Suspended).each do |user_name|
+      %w[Aardvark Abbot Abbey Admin Suspended].each do |user_name|
         assert page.has_content?(user_name)
       end
     end
@@ -138,7 +138,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       select_organisation("All Organisations")
 
-      %w(Aardvark Abbot Abbey Admin Suspended).each do |user_name|
+      %w[Aardvark Abbot Abbey Admin Suspended].each do |user_name|
         assert page.has_content?(user_name)
       end
     end

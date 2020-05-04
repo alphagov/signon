@@ -18,7 +18,7 @@ class InactiveUsersSuspender
 private
 
   def reason
-    "User has not logged in for #{User::SUSPENSION_THRESHOLD_PERIOD.inspect} since" +
+    "User has not logged in for #{User::SUSPENSION_THRESHOLD_PERIOD.inspect} since" \
       " #{(User::SUSPENSION_THRESHOLD_PERIOD + 1.day).ago.strftime('%d %B %Y')}"
   end
 end

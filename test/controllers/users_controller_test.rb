@@ -425,8 +425,8 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "select[name='user[organisation_id]']" do
           assert_select "option", count: 3
           assert_select "option[selected=selected]", count: 1
-          assert_select %{option[value="#{org_with_user.id}"][selected=selected]}, text: org_with_user.name_with_abbreviation
-          assert_select %{option[value="#{other_organisation.id}"]}, text: other_organisation.name_with_abbreviation
+          assert_select %(option[value="#{org_with_user.id}"][selected=selected]), text: org_with_user.name_with_abbreviation
+          assert_select %(option[value="#{other_organisation.id}"]), text: other_organisation.name_with_abbreviation
         end
       end
 
@@ -504,7 +504,7 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "be able to see all permissions to applications for a user" do
-          delegatable_app = create(:application, with_delegatable_supported_permissions: %w(signin Editor))
+          delegatable_app = create(:application, with_delegatable_supported_permissions: %w[signin Editor])
           non_delegatable_app = create(:application, with_supported_permissions: ["signin", "GDS Admin"])
           delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ["signin", "GDS Editor"])
           non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ["signin", "Import CSVs"])
@@ -514,10 +514,10 @@ class UsersControllerTest < ActionController::TestCase
           sign_in organisation_admin
 
           user = create(:user_in_organisation, organisation: organisation_admin.organisation,
-                        with_permissions: { delegatable_app => %w[Editor],
-                                            non_delegatable_app => ["signin", "GDS Admin"],
-                                            delegatable_no_access_to_app => ["signin", "GDS Editor"],
-                                            non_delegatable_no_access_to_app => ["signin", "Import CSVs"] })
+                                               with_permissions: { delegatable_app => %w[Editor],
+                                                                   non_delegatable_app => ["signin", "GDS Admin"],
+                                                                   delegatable_no_access_to_app => ["signin", "GDS Editor"],
+                                                                   non_delegatable_no_access_to_app => ["signin", "Import CSVs"] })
 
           get :edit, params: { id: user.id }
 
@@ -584,7 +584,7 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "be able to see all permissions to applications for a user" do
-          delegatable_app = create(:application, with_delegatable_supported_permissions: %w(signin Editor))
+          delegatable_app = create(:application, with_delegatable_supported_permissions: %w[signin Editor])
           non_delegatable_app = create(:application, with_supported_permissions: ["signin", "GDS Admin"])
           delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ["signin", "GDS Editor"])
           non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ["signin", "Import CSVs"])
@@ -594,10 +594,10 @@ class UsersControllerTest < ActionController::TestCase
           sign_in super_org_admin
 
           user = create(:user_in_organisation, organisation: super_org_admin.organisation,
-                        with_permissions: { delegatable_app => %w[Editor],
-                                            non_delegatable_app => ["signin", "GDS Admin"],
-                                            delegatable_no_access_to_app => ["signin", "GDS Editor"],
-                                            non_delegatable_no_access_to_app => ["signin", "Import CSVs"] })
+                                               with_permissions: { delegatable_app => %w[Editor],
+                                                                   non_delegatable_app => ["signin", "GDS Admin"],
+                                                                   delegatable_no_access_to_app => ["signin", "GDS Editor"],
+                                                                   non_delegatable_no_access_to_app => ["signin", "Import CSVs"] })
 
           get :edit, params: { id: user.id }
 
@@ -625,7 +625,7 @@ class UsersControllerTest < ActionController::TestCase
 
       context "superadmin" do
         should "not be able to see all permissions to applications for a user" do
-          delegatable_app = create(:application, with_delegatable_supported_permissions: %w(signin Editor))
+          delegatable_app = create(:application, with_delegatable_supported_permissions: %w[signin Editor])
           non_delegatable_app = create(:application, with_supported_permissions: ["signin", "GDS Admin"])
           delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ["signin", "GDS Editor"])
           non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ["signin", "Import CSVs"])
@@ -635,10 +635,10 @@ class UsersControllerTest < ActionController::TestCase
           sign_in superadmin
 
           user = create(:user_in_organisation, organisation: superadmin.organisation,
-                        with_permissions: { delegatable_app => %w[Editor],
-                                            non_delegatable_app => ["signin", "GDS Admin"],
-                                            delegatable_no_access_to_app => ["signin", "GDS Editor"],
-                                            non_delegatable_no_access_to_app => ["signin", "Import CSVs"] })
+                                               with_permissions: { delegatable_app => %w[Editor],
+                                                                   non_delegatable_app => ["signin", "GDS Admin"],
+                                                                   delegatable_no_access_to_app => ["signin", "GDS Editor"],
+                                                                   non_delegatable_no_access_to_app => ["signin", "Import CSVs"] })
 
           get :edit, params: { id: user.id }
 
@@ -739,7 +739,7 @@ class UsersControllerTest < ActionController::TestCase
             email_change_notifications = ActionMailer::Base.deliveries[-2..-1]
             assert_equal email_change_notifications.map(&:subject).uniq.count, 1
             assert_match(/Your .* Signon development email address has been updated/, email_change_notifications.map(&:subject).first)
-            assert_equal(%w(old@email.com new@email.com), email_change_notifications.map { |mail| mail.to.first })
+            assert_equal(%w[old@email.com new@email.com], email_change_notifications.map { |mail| mail.to.first })
           end
         end
 

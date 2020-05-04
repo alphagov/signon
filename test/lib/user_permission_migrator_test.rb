@@ -15,11 +15,11 @@ class UserPermissionMigrationTest < ActiveSupport::TestCase
     create(:supported_permission, application: @unrelated_application, name: "gds_editor")
     create(:supported_permission, application: @unrelated_application, name: "editor")
 
-    @gds_editor = create(:user, with_permissions: { "Specialist Publisher" => %w(editor gds_editor signin) })
-    @editor = create(:user, with_permissions: { "Specialist Publisher" => %w(editor signin) })
-    @writer = create(:user, with_permissions: { "Specialist Publisher" => %w(signin) })
+    @gds_editor = create(:user, with_permissions: { "Specialist Publisher" => %w[editor gds_editor signin] })
+    @editor = create(:user, with_permissions: { "Specialist Publisher" => %w[editor signin] })
+    @writer = create(:user, with_permissions: { "Specialist Publisher" => %w[signin] })
     @user_without_access = create(:user)
-    @user_with_unrelated_access = create(:user, with_permissions: { "unrelated application" => %w(editor gds_editor signin) })
+    @user_with_unrelated_access = create(:user, with_permissions: { "unrelated application" => %w[editor gds_editor signin] })
   end
 
   should "copy permissions over for all users of an application to another application" do
@@ -28,16 +28,16 @@ class UserPermissionMigrationTest < ActiveSupport::TestCase
       target: "Manuals Publisher",
     )
 
-    assert_equal %w(editor gds_editor signin), @gds_editor.permissions_for(@manuals_publisher)
-    assert_equal %w(editor signin), @editor.permissions_for(@manuals_publisher)
-    assert_equal %w(signin), @writer.permissions_for(@manuals_publisher)
-    assert_equal %w(), @user_without_access.permissions_for(@manuals_publisher)
-    assert_equal %w(), @user_with_unrelated_access.permissions_for(@manuals_publisher)
+    assert_equal %w[editor gds_editor signin], @gds_editor.permissions_for(@manuals_publisher)
+    assert_equal %w[editor signin], @editor.permissions_for(@manuals_publisher)
+    assert_equal %w[signin], @writer.permissions_for(@manuals_publisher)
+    assert_equal %w[], @user_without_access.permissions_for(@manuals_publisher)
+    assert_equal %w[], @user_with_unrelated_access.permissions_for(@manuals_publisher)
 
-    assert_equal %w(editor gds_editor signin), @gds_editor.permissions_for(@specialist_publisher)
-    assert_equal %w(editor signin), @editor.permissions_for(@specialist_publisher)
-    assert_equal %w(signin), @writer.permissions_for(@specialist_publisher)
-    assert_equal %w(), @user_without_access.permissions_for(@specialist_publisher)
-    assert_equal %w(), @user_with_unrelated_access.permissions_for(@specialist_publisher)
+    assert_equal %w[editor gds_editor signin], @gds_editor.permissions_for(@specialist_publisher)
+    assert_equal %w[editor signin], @editor.permissions_for(@specialist_publisher)
+    assert_equal %w[signin], @writer.permissions_for(@specialist_publisher)
+    assert_equal %w[], @user_without_access.permissions_for(@specialist_publisher)
+    assert_equal %w[], @user_with_unrelated_access.permissions_for(@specialist_publisher)
   end
 end

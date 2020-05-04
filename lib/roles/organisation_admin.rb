@@ -21,7 +21,7 @@ module Roles
     def self.level; 3; end
 
     def self.manageable_roles
-      %w{normal organisation_admin}
+      %w[normal organisation_admin]
     end
   end
 end

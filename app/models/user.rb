@@ -71,9 +71,9 @@ class User < ApplicationRecord
     when USER_STATUS_LOCKED
       where.not(locked_at: nil)
     when USER_STATUS_ACTIVE
-      where(suspended_at: nil, locked_at: nil).
-        where(arel_table[:invitation_sent_at].eq(nil).
-          or(arel_table[:invitation_accepted_at].not_eq(nil)))
+      where(suspended_at: nil, locked_at: nil)
+        .where(arel_table[:invitation_sent_at].eq(nil)
+          .or(arel_table[:invitation_accepted_at].not_eq(nil)))
     else
       raise NotImplementedError.new("Filtering by status '#{status}' not implemented.")
     end
@@ -305,8 +305,8 @@ private
   end
 
   def organisation_admin_belongs_to_organisation
-    if %w(organisation_admin super_organisation_admin).include?(self.role) && self.organisation_id.blank?
-      errors.add(:organisation_id, "can't be 'None' for #{self.role.titleize}")
+    if %w[organisation_admin super_organisation_admin].include?(role) && organisation_id.blank?
+      errors.add(:organisation_id, "can't be 'None' for #{role.titleize}")
     end
   end
 
@@ -315,10 +315,10 @@ private
   end
 
   def fix_apostrophe_in_email
-    self.email.tr!("’", "'") if email.present? && email_changed?
+    email.tr!("’", "'") if email.present? && email_changed?
   end
 
   def update_password_changed
-    self.password_changed_at = Time.zone.now if (self.new_record? || self.encrypted_password_changed?) && !self.password_changed_at_changed?
+    self.password_changed_at = Time.zone.now if (new_record? || encrypted_password_changed?) && !password_changed_at_changed?
   end
 end

@@ -11,7 +11,7 @@ class ApiAuthenticationTest < ActionDispatch::IntegrationTest
 
   setup do
     @app1 = create(:application, name: "MyApp", with_supported_permissions: %w[write])
-    @user = create(:user, with_permissions: { @app1 => %w(signin write) })
+    @user = create(:user, with_permissions: { @app1 => %w[signin write] })
     @user.authorisations.create!(application_id: @app1.id)
   end
 

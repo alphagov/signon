@@ -23,7 +23,7 @@ class UserSuspensionsExporterTest < ActionView::TestCase
     create(:event_log, uid: @mary.uid, event_id: EventLog::ACCOUNT_AUTOSUSPENDED.id, created_at: Date.new(2018, 3, 1))
     create(:event_log, uid: @mary.uid, event_id: EventLog::ACCOUNT_AUTOSUSPENDED.id, created_at: Date.new(2018, 3, 5))
 
-    @tmpfile = Tempfile.new(%w(user_permissions_exporter_test_example csv))
+    @tmpfile = Tempfile.new(%w[user_permissions_exporter_test_example csv])
     UserSuspensionsExporter.any_instance.stubs(:file_path).returns(@tmpfile.path)
   end
 

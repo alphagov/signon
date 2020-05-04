@@ -56,10 +56,10 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
 
       @permission_set.perform
 
-      assert_equal %w(signin), user.permissions_for(@app)
-      assert_equal %w(signin), admin_user.permissions_for(@app)
-      assert_equal %w(signin), superadmin_user.permissions_for(@app)
-      assert_equal %w(signin), orgadmin_user.permissions_for(@app)
+      assert_equal %w[signin], user.permissions_for(@app)
+      assert_equal %w[signin], admin_user.permissions_for(@app)
+      assert_equal %w[signin], superadmin_user.permissions_for(@app)
+      assert_equal %w[signin], orgadmin_user.permissions_for(@app)
     end
 
     should "record the total number of users to be processed" do
@@ -86,22 +86,22 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
     end
 
     should "not fail if a user already has one of the supplied permissions" do
-      user = create(:user, with_permissions: { @app => %w(signin) })
+      user = create(:user, with_permissions: { @app => %w[signin] })
 
       @permission_set.perform
 
-      assert_equal %w(signin), user.permissions_for(@app)
+      assert_equal %w[signin], user.permissions_for(@app)
     end
 
     should "not remove permissions a user has that are not part of the supplied ones for the bulk grant set" do
-      other_app = create(:application, with_supported_permissions: %w(editor))
+      other_app = create(:application, with_supported_permissions: %w[editor])
       create(:supported_permission, application: @app, name: "admin")
-      user = create(:user, with_permissions: { other_app => %w(editor), @app => %w(admin) })
+      user = create(:user, with_permissions: { other_app => %w[editor], @app => %w[admin] })
 
       @permission_set.perform
 
-      assert_equal %w(editor), user.permissions_for(other_app)
-      assert_equal %w(signin admin).sort, user.permissions_for(@app).sort
+      assert_equal %w[editor], user.permissions_for(other_app)
+      assert_equal %w[signin admin].sort, user.permissions_for(@app).sort
     end
 
     should "mark it as failed if there is an error during processing and pass the error on for the worker to record the error details" do
@@ -125,7 +125,7 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
 
     context "recording events against users" do
       setup do
-        @app2 = create(:application, with_supported_permissions: %w(signin editor))
+        @app2 = create(:application, with_supported_permissions: %w[signin editor])
         @permission_set.supported_permissions += @app2.supported_permissions
         @permission_set.save!
       end
@@ -148,7 +148,7 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
       end
 
       should "not include a permission in the event if the user already has it" do
-        user = create(:user, with_permissions: { @app2 => %w(editor) })
+        user = create(:user, with_permissions: { @app2 => %w[editor] })
         user.event_logs.destroy_all
         @permission_set.perform
 
@@ -161,7 +161,7 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
       end
 
       should "not create an event log for the app if the user already has all the permissions we are trying to grant for that app" do
-        user = create(:user, with_permissions: { @app => %w(signin) })
+        user = create(:user, with_permissions: { @app => %w[signin] })
         user.event_logs.destroy_all
         @permission_set.perform
 
@@ -173,7 +173,7 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
       end
 
       should "not create any event logs if the user already has all the permissions we are trying to grant" do
-        user = create(:user, with_permissions: { @app => %w(signin), @app2 => %w(signin editor) })
+        user = create(:user, with_permissions: { @app => %w[signin], @app2 => %w[signin editor] })
         user.event_logs.destroy_all
         @permission_set.perform
 

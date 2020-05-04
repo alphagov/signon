@@ -3,7 +3,7 @@ require "test_helper"
 class SameSiteSecurityMiddlewareTest < ActiveSupport::TestCase
   setup do
     headers = { "Content-Type" => "text/plain", "Set-Cookie" => "_signonotron2_session=abcd" }
-    @app = Proc.new { [200, headers, %w[OK]] }
+    @app = proc { [200, headers, %w[OK]] }
   end
 
   context "when called with a GET request" do

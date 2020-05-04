@@ -63,7 +63,7 @@ private
   end
 
   def headers
-    headings = %w(Name Email Organisation Permissions)
+    headings = %w[Name Email Organisation Permissions]
     headings.unshift "Application" if multiple_apps?
     headings
   end

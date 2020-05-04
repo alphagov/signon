@@ -43,7 +43,7 @@ private
   end
 
   def application
-    pre_authorizable? #Doorkeeper PreAuthorization controller must be validated in-order for the client to be instantiated.
+    pre_authorizable? # Doorkeeper PreAuthorization controller must be validated in-order for the client to be instantiated.
     pre_auth.try(:client).try(:application)
   end
 end

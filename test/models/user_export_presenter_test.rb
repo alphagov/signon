@@ -22,7 +22,7 @@ class UserExportPresenterTest < ActiveSupport::TestCase
 
   should "include sorted permissions for each application" do
     @user.grant_application_permissions(@apps[0], %w[editor])
-    @user.grant_application_permissions(@apps[2], %w(editor admin))
+    @user.grant_application_permissions(@apps[2], %w[editor admin])
 
     perms = UserExportPresenter.new(@apps).app_permissions_for(@user)
 

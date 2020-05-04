@@ -9,15 +9,15 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
     @admins = create_list(:admin_user, 2)
     @superadmins = create_list(:superadmin_user, 2)
 
-    @application_one = create(:application, with_supported_permissions: %w(signin admin editor))
-    @application_two = create(:application, with_supported_permissions: %w(signin reviewer))
+    @application_one = create(:application, with_supported_permissions: %w[signin admin editor])
+    @application_two = create(:application, with_supported_permissions: %w[signin reviewer])
   end
 
   should "superadmin user can grant multiple permissions to all users in one go" do
     user = create(:superadmin_user)
 
     permissions = {
-      @application_one => %w(signin editor),
+      @application_one => %w[signin editor],
       @application_two => %w[reviewer],
     }
 
@@ -28,7 +28,7 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
     user = create(:admin_user)
 
     permissions = {
-      @application_one => %w(signin editor),
+      @application_one => %w[signin editor],
       @application_two => %w[reviewer],
     }
 

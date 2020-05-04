@@ -1,4 +1,4 @@
-#encoding: utf-8
+# encoding: utf-8
 
 require "test_helper"
 require "support/password_helpers"
