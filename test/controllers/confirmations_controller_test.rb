@@ -84,9 +84,9 @@ class ConfirmationsControllerTest < ActionController::TestCase
   context "PUT update" do
     should "authenticate with the correct token and password, and confirm the email change" do
       put :update, params: {
-            confirmation_token: @confirmation_token,
-            user: { password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z" },
-}
+        confirmation_token: @confirmation_token,
+        user: { password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z" },
+      }
       assert_redirected_to "/"
       assert @controller.user_signed_in?
       assert_equal @user.reload.email, "new@email.com"
@@ -94,35 +94,35 @@ class ConfirmationsControllerTest < ActionController::TestCase
 
     should "log an event upon confirmation" do
       put :update, params: {
-            confirmation_token: @confirmation_token,
-            user: { password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z" },
-}
+        confirmation_token: @confirmation_token,
+        user: { password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z" },
+      }
       assert_equal 1, EventLog.where(event_id: EventLog::EMAIL_CHANGE_CONFIRMED.id, uid: @user.uid).count
     end
 
     should "reject with an incorrect token" do
       put :update, params: {
-            confirmation_token: "fake",
-            user: { password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z" },
-}
+        confirmation_token: "fake",
+        user: { password: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z" },
+      }
       assert_equal false, @controller.user_signed_in?
       assert_equal @user.reload.email, "old@email.com"
     end
 
     should "reject with an incorrect password" do
       put :update, params: {
-            confirmation_token: @confirmation_token,
-            user: { password: "not the real password" },
-}
+        confirmation_token: @confirmation_token,
+        user: { password: "not the real password" },
+      }
       assert_equal false, @controller.user_signed_in?
       assert_equal @user.reload.email, "old@email.com"
     end
 
     should "redisplay the form on failure" do
       put :update, params: {
-            confirmation_token: @confirmation_token,
-            user: { password: "not the real password" },
-}
+        confirmation_token: @confirmation_token,
+        user: { password: "not the real password" },
+      }
       assert_template "devise/confirmations/show"
     end
   end

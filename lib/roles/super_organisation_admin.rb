@@ -2,15 +2,15 @@ module Roles
   class SuperOrganisationAdmin < Base
     def self.permitted_user_params
       [
-          :uid,
-          :name,
-          :email,
-          :password,
-          :password_confirmation,
-          :organisation_id,
-          :unconfirmed_email,
-          :confirmation_token,
-          { supported_permission_ids: [] },
+        :uid,
+        :name,
+        :email,
+        :password,
+        :password_confirmation,
+        :organisation_id,
+        :unconfirmed_email,
+        :confirmation_token,
+        { supported_permission_ids: [] },
       ]
     end
 
