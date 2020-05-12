@@ -63,11 +63,11 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
 
   test "records auto-suspension in event log" do
     users = create_list(:user, 2, current_sign_in_at: 46.days.ago)
-    users.each { |user|
+    users.each do |user|
       EventLog.expects(:record_event)
         .with(responds_with(:email, user.email), EventLog::ACCOUNT_AUTOSUSPENDED)
         .once
-    }
+    end
 
     InactiveUsersSuspender.new.suspend
   end
@@ -77,11 +77,11 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
 
     mailer = mock
     mailer.expects(:deliver_now).returns(true).twice
-    users.each { |user|
+    users.each do |user|
       UserMailer.expects(:suspension_notification)
         .with(responds_with(:email, user.email))
         .returns(mailer).once
-    }
+    end
 
     InactiveUsersSuspender.new.suspend
   end

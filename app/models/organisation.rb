@@ -1,5 +1,3 @@
-# encoding = utf-8
-
 class Organisation < ApplicationRecord
   GDS_ORG_CONTENT_ID = "af07d5a5-df63-4ddc-9383-6a666845ebe9".freeze
 

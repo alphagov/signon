@@ -81,9 +81,9 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
     should "raise BatchInvitationUser::InvalidOrganisationSlug if the slug is present but doesn't refer to a real org" do
       user = create(:batch_invitation_user, batch_invitation: @batch_invitation, organisation_slug: "doesnt-exist-does-it?-eh?")
 
-      assert_raises(BatchInvitationUser::InvalidOrganisationSlug) {
+      assert_raises(BatchInvitationUser::InvalidOrganisationSlug) do
         user.organisation_id
-      }
+      end
     end
 
     should "use the id of the organisation refered to by the slug if present" do

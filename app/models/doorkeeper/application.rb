@@ -13,7 +13,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
       .where("supported_permissions.name" => "signin")
       .where(retired: false)
   }
-  scope :with_signin_delegatable, -> {
+  scope :with_signin_delegatable, lambda {
     joins(:supported_permissions)
       .where(supported_permissions: { name: "signin", delegatable: true })
   }
@@ -21,7 +21,9 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   after_create :create_signin_supported_permission
   after_save :create_user_update_supported_permission
 
-  def self.policy_class; ApplicationPolicy; end
+  def self.policy_class
+    ApplicationPolicy
+  end
 
   def supported_permission_strings(user = nil)
     if user && %w[organisation_admin super_organisation_admin].include?(user.role)
