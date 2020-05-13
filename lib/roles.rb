@@ -17,7 +17,7 @@ module Roles
 
   module ClassMethods
     def role_classes
-      class_names = Roles.constants.select { |c| Class === Roles.const_get(c) && Roles.const_get(c) != Roles::Base }
+      class_names = Roles.constants.select { |c| Roles.const_get(c).is_a?(Class) && Roles.const_get(c) != Roles::Base }
 
       class_names.map do |role_class|
         "Roles::#{role_class}".constantize

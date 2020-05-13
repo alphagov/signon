@@ -40,7 +40,7 @@ class UserParameterSanitiserTest < ActiveSupport::TestCase
     end
 
     should "remove unpermitted params" do
-      assert_not @sanitised_params.has_key?(:birthday)
+      assert_not @sanitised_params.key?(:birthday)
     end
   end
 

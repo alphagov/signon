@@ -26,7 +26,7 @@ class BulkGrantPermissionSet < ApplicationRecord
         granted_permission = user_to_change.application_permissions.where(supported_permission_id: permission.id).first_or_create!
         # if 'id' changed then it was a new permission, otherwise it
         # already existed
-        granted_permission.previous_changes.has_key? "id"
+        granted_permission.previous_changes.key? "id"
       end
       permissions_granted.group_by(&:application_id).each do |application_id, permissions|
         EventLog.record_event(

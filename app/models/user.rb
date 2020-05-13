@@ -1,5 +1,3 @@
-# coding: utf-8
-
 class User < ApplicationRecord
   include Roles
 
@@ -49,14 +47,14 @@ class User < ApplicationRecord
 
   scope :web_users, -> { where(api_user: false) }
   scope :not_suspended, -> { where(suspended_at: nil) }
-  scope :with_role, lambda { |role_name| where(role: role_name) }
-  scope :with_organisation, lambda { |org_id| where(organisation_id: org_id) }
-  scope :filter_by_name, lambda { |filter_param| where("users.email like ? OR users.name like ?", "%#{filter_param.strip}%", "%#{filter_param.strip}%") }
-  scope :last_signed_in_on, lambda { |date| web_users.not_suspended.where("date(current_sign_in_at) = date(?)", date) }
-  scope :last_signed_in_before, lambda { |date| web_users.not_suspended.where("date(current_sign_in_at) < date(?)", date) }
-  scope :last_signed_in_after, lambda { |date| web_users.not_suspended.where("date(current_sign_in_at) >= date(?)", date) }
-  scope :not_recently_unsuspended, lambda { where(["unsuspended_at IS NULL OR unsuspended_at < ?", UNSUSPENSION_GRACE_PERIOD.ago]) }
-  scope :with_access_to_application, lambda { |application| UsersWithAccess.new(self, application).users }
+  scope :with_role, ->(role_name) { where(role: role_name) }
+  scope :with_organisation, ->(org_id) { where(organisation_id: org_id) }
+  scope :filter_by_name, ->(filter_param) { where("users.email like ? OR users.name like ?", "%#{filter_param.strip}%", "%#{filter_param.strip}%") }
+  scope :last_signed_in_on, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) = date(?)", date) }
+  scope :last_signed_in_before, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) < date(?)", date) }
+  scope :last_signed_in_after, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) >= date(?)", date) }
+  scope :not_recently_unsuspended, -> { where(["unsuspended_at IS NULL OR unsuspended_at < ?", UNSUSPENSION_GRACE_PERIOD.ago]) }
+  scope :with_access_to_application, ->(application) { UsersWithAccess.new(self, application).users }
   scope :with_2sv_enabled, lambda { |enabled|
     enabled = ActiveRecord::Type::Boolean.new.cast(enabled)
     where("otp_secret_key IS #{'NOT' if enabled} NULL")
