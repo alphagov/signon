@@ -47,14 +47,20 @@ module UserFilterHelper
         item_id = item[0].to_s
         item_name = item[1]
       end
-      content_tag(:li,
-                  link_to(item_name, current_path_with_filter(filter_type, item_id)),
-                  class: params[filter_type] == item_id ? "active" : "")
+      content_tag(
+        :li,
+        link_to(item_name, current_path_with_filter(filter_type, item_id)),
+        class: params[filter_type] == item_id ? "active" : "",
+      )
     end
 
-    list_items << content_tag(:li,
-                              link_to("All #{title_from(filter_type).pluralize}".html_safe,
-                                      current_path_with_filter(filter_type, nil)))
+    list_items << content_tag(
+      :li,
+      link_to(
+        "All #{title_from(filter_type).pluralize}".html_safe,
+        current_path_with_filter(filter_type, nil),
+      ),
+    )
 
     list_items.join("\n").html_safe
   end

@@ -93,9 +93,11 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     new_password = "correct horse battery daffodil"
     visit root_path
     signin_with(@user)
-    change_password(old: @user.password,
-                    new: new_password,
-                    new_confirmation: new_password)
+    change_password(
+      old: @user.password,
+      new: new_password,
+      new_confirmation: new_password,
+    )
 
     # multiple events are registered with the same time, order changes.
     assert_includes @user.event_logs.map(&:entry), EventLog::SUCCESSFUL_PASSWORD_CHANGE
@@ -104,9 +106,11 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
   test "record unsuccessful password change" do
     visit root_path
     signin_with(@user)
-    change_password(old: @user.password,
-                    new: @user.password,
-                    new_confirmation: @user.password)
+    change_password(
+      old: @user.password,
+      new: @user.password,
+      new_confirmation: @user.password,
+    )
 
     # multiple events are registered with the same time, order changes.
     assert_includes @user.event_logs.map(&:entry), EventLog::UNSUCCESSFUL_PASSWORD_CHANGE

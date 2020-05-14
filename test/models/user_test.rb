@@ -106,11 +106,12 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "record the event" do
-      assert_equal 1, EventLog.where(
-        event_id: EventLog::TWO_STEP_RESET.id,
-        uid: @two_step_user.uid,
-        initiator: @super_admin,
-      ).count
+      assert_equal 1,
+                   EventLog.where(
+                     event_id: EventLog::TWO_STEP_RESET.id,
+                     uid: @two_step_user.uid,
+                     initiator: @super_admin,
+                   ).count
     end
   end
 

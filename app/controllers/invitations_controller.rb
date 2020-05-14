@@ -82,11 +82,15 @@ private
   # for details :)
   def unsanitised_user_params
     params.require(:user).permit(
-      :name, :email, :organisation_id,
-      :invitation_token, :password,
-      :password_confirmation, :require_2sv,
+      :name,
+      :email,
+      :organisation_id,
+      :invitation_token,
+      :password,
+      :password_confirmation,
+      :require_2sv,
       :role,
-      supported_permission_ids: []
+      supported_permission_ids: [],
     ).to_h
   end
 
