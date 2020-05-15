@@ -28,8 +28,10 @@ class AuthorisationsController < ApplicationController
     authorisation = @api_user.authorisations.find(params[:id])
     if authorisation.revoke
       if params[:regenerate]
-        regenerated_authorisation = @api_user.authorisations.create!(expires_in: ApiUser::DEFAULT_TOKEN_LIFE,
-                                                                     application_id: authorisation.application_id)
+        regenerated_authorisation = @api_user.authorisations.create!(
+          expires_in: ApiUser::DEFAULT_TOKEN_LIFE,
+          application_id: authorisation.application_id,
+        )
 
         EventLog.record_event(@api_user, EventLog::ACCESS_TOKEN_REGENERATED, initiator: current_user, application: authorisation.application, ip_address: user_ip_address)
         flash[:authorisation] = { application_name: regenerated_authorisation.application.name,

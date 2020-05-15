@@ -9,11 +9,13 @@ class UsersControllerTest < ActionController::TestCase
     original_password_hash = user.encrypted_password
     sign_in user
 
-    post :update_password, params: { id: user.id, user: {
-      current_password: original_password,
-      password: new_password,
-      password_confirmation: new_password,
-    } }
+    post :update_password,
+         params: { id: user.id,
+                   user: {
+                     current_password: original_password,
+                     password: new_password,
+                     password_confirmation: new_password,
+                   } }
 
     [user, original_password_hash]
   end
@@ -97,9 +99,11 @@ class UsersControllerTest < ActionController::TestCase
 
     should "use a new token if it's expired" do
       perform_enqueued_jobs do
-        @user = create(:user_with_pending_email_change,
-                       confirmation_token: "old token",
-                       confirmation_sent_at: 15.days.ago)
+        @user = create(
+          :user_with_pending_email_change,
+          confirmation_token: "old token",
+          confirmation_sent_at: 15.days.ago,
+        )
         sign_in @user
 
         put :resend_email_change, params: { id: @user.id }
@@ -513,11 +517,14 @@ class UsersControllerTest < ActionController::TestCase
 
           sign_in organisation_admin
 
-          user = create(:user_in_organisation, organisation: organisation_admin.organisation,
-                                               with_permissions: { delegatable_app => %w[Editor],
-                                                                   non_delegatable_app => ["signin", "GDS Admin"],
-                                                                   delegatable_no_access_to_app => ["signin", "GDS Editor"],
-                                                                   non_delegatable_no_access_to_app => ["signin", "Import CSVs"] })
+          user = create(
+            :user_in_organisation,
+            organisation: organisation_admin.organisation,
+            with_permissions: { delegatable_app => %w[Editor],
+                                non_delegatable_app => ["signin", "GDS Admin"],
+                                delegatable_no_access_to_app => ["signin", "GDS Editor"],
+                                non_delegatable_no_access_to_app => ["signin", "Import CSVs"] },
+          )
 
           get :edit, params: { id: user.id }
 
@@ -593,11 +600,14 @@ class UsersControllerTest < ActionController::TestCase
 
           sign_in super_org_admin
 
-          user = create(:user_in_organisation, organisation: super_org_admin.organisation,
-                                               with_permissions: { delegatable_app => %w[Editor],
-                                                                   non_delegatable_app => ["signin", "GDS Admin"],
-                                                                   delegatable_no_access_to_app => ["signin", "GDS Editor"],
-                                                                   non_delegatable_no_access_to_app => ["signin", "Import CSVs"] })
+          user = create(
+            :user_in_organisation,
+            organisation: super_org_admin.organisation,
+            with_permissions: { delegatable_app => %w[Editor],
+                                non_delegatable_app => ["signin", "GDS Admin"],
+                                delegatable_no_access_to_app => ["signin", "GDS Editor"],
+                                non_delegatable_no_access_to_app => ["signin", "Import CSVs"] },
+          )
 
           get :edit, params: { id: user.id }
 
@@ -634,11 +644,14 @@ class UsersControllerTest < ActionController::TestCase
 
           sign_in superadmin
 
-          user = create(:user_in_organisation, organisation: superadmin.organisation,
-                                               with_permissions: { delegatable_app => %w[Editor],
-                                                                   non_delegatable_app => ["signin", "GDS Admin"],
-                                                                   delegatable_no_access_to_app => ["signin", "GDS Editor"],
-                                                                   non_delegatable_no_access_to_app => ["signin", "Import CSVs"] })
+          user = create(
+            :user_in_organisation,
+            organisation: superadmin.organisation,
+            with_permissions: { delegatable_app => %w[Editor],
+                                non_delegatable_app => ["signin", "GDS Admin"],
+                                delegatable_no_access_to_app => ["signin", "GDS Editor"],
+                                non_delegatable_no_access_to_app => ["signin", "Import CSVs"] },
+          )
 
           get :edit, params: { id: user.id }
 
@@ -820,9 +833,11 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "use a new token if it's expired" do
-        another_user = create(:user_with_pending_email_change,
-                              confirmation_token: "old token",
-                              confirmation_sent_at: 15.days.ago)
+        another_user = create(
+          :user_with_pending_email_change,
+          confirmation_token: "old token",
+          confirmation_sent_at: 15.days.ago,
+        )
         put :resend_email_change, params: { id: another_user.id }
 
         assert_not_equal "old token", another_user.reload.confirmation_token

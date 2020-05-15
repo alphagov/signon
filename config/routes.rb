@@ -1,27 +1,30 @@
 Rails.application.routes.draw do
-  get "/healthcheck", to: GovukHealthcheck.rack_response(
-    GovukHealthcheck::SidekiqRedis,
-    GovukHealthcheck::ActiveRecord,
-    Healthcheck::ApiTokens,
-  )
+  get "/healthcheck",
+      to: GovukHealthcheck.rack_response(
+        GovukHealthcheck::SidekiqRedis,
+        GovukHealthcheck::ActiveRecord,
+        Healthcheck::ApiTokens,
+      )
 
   use_doorkeeper do
     controllers authorizations: "signin_required_authorizations"
   end
 
-  devise_for :users, controllers: {
-    invitations: "invitations",
-    sessions: "sessions",
-    passwords: "passwords",
-    confirmations: "confirmations",
-  }
+  devise_for :users,
+             controllers: {
+               invitations: "invitations",
+               sessions: "sessions",
+               passwords: "passwords",
+               confirmations: "confirmations",
+             }
 
   devise_scope :user do
     post "/users/invitation/resend/:id" => "invitations#resend", :as => "resend_user_invitation"
     put "/users/confirmation" => "confirmations#update"
-    resource :two_step_verification, only: %i[show update],
-                                     path: "/users/two_step_verification",
-                                     controller: "devise/two_step_verification" do
+    resource :two_step_verification,
+             only: %i[show update],
+             path: "/users/two_step_verification",
+             controller: "devise/two_step_verification" do
       resource :session, only: %i[new create], controller: "devise/two_step_verification_session"
 
       member { get :prompt }

@@ -23,7 +23,7 @@ class EventLogTest < ActiveSupport::TestCase
   end
 
   test "requires a mappable event_id" do
-    assert_not EventLog.new(uid: :uid, event_id: 99999).valid?
+    assert_not EventLog.new(uid: :uid, event_id: 99_999).valid?
   end
 
   EventLog::EVENTS_REQUIRING_INITIATOR.each do |event|

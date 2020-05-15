@@ -64,7 +64,7 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
       SSOPushCredential.credentials(@application)
 
       assert @user.authorisations.first.present?
-      assert @user.authorisations.first.expires_in >= 315400000
+      assert @user.authorisations.first.expires_in >= 315_400_000
     end
   end
 

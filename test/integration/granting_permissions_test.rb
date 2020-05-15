@@ -21,8 +21,11 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "support granting app-specific permissions" do
-      app = create(:application, name: "MyApp",
-                                 with_supported_permissions: %w[pre-existing adding never])
+      app = create(
+        :application,
+        name: "MyApp",
+        with_supported_permissions: %w[pre-existing adding never],
+      )
       @user.grant_application_permission(app, "pre-existing")
 
       visit edit_user_path(@user)
@@ -62,8 +65,11 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "support granting app-specific permissions" do
-      app = create(:application, name: "MyApp",
-                                 with_supported_permissions: %w[pre-existing adding never])
+      app = create(
+        :application,
+        name: "MyApp",
+        with_supported_permissions: %w[pre-existing adding never],
+      )
       @user.grant_application_permission(app, "pre-existing")
 
       visit edit_user_path(@user)
@@ -143,8 +149,11 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "support granting app-specific permissions" do
-      app = create(:application, name: "MyApp",
-                                 with_supported_permissions: %w[pre-existing adding never])
+      app = create(
+        :application,
+        name: "MyApp",
+        with_supported_permissions: %w[pre-existing adding never],
+      )
       @super_org_admin.grant_application_permission(app, "signin")
       @user.grant_application_permission(app, "pre-existing")
 
@@ -226,8 +235,11 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "support granting app-specific permissions" do
-      app = create(:application, name: "MyApp",
-                                 with_supported_permissions: %w[pre-existing adding never])
+      app = create(
+        :application,
+        name: "MyApp",
+        with_supported_permissions: %w[pre-existing adding never],
+      )
       @organisation_admin.grant_application_permission(app, "signin")
       @user.grant_application_permission(app, "pre-existing")
 

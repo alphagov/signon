@@ -14,12 +14,17 @@ class User < ApplicationRecord
   USER_STATUS_INVITED = "invited".freeze
   USER_STATUS_LOCKED = "locked".freeze
   USER_STATUS_ACTIVE = "active".freeze
-  USER_STATUSES = [USER_STATUS_SUSPENDED, USER_STATUS_INVITED,
-                   USER_STATUS_LOCKED, USER_STATUS_ACTIVE].freeze
+  USER_STATUSES = [USER_STATUS_SUSPENDED,
+                   USER_STATUS_INVITED,
+                   USER_STATUS_LOCKED,
+                   USER_STATUS_ACTIVE].freeze
 
   devise :database_authenticatable,
-         :recoverable, :trackable,
-         :validatable, :timeoutable, :lockable, # devise core model extensions
+         :recoverable,
+         :trackable,
+         :validatable,
+         :timeoutable,
+         :lockable, # devise core model extensions
          :invitable,    # in devise_invitable gem
          :suspendable,  # in signon/lib/devise/models/suspendable.rb
          :zxcvbnable,
@@ -55,27 +60,29 @@ class User < ApplicationRecord
   scope :last_signed_in_after, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) >= date(?)", date) }
   scope :not_recently_unsuspended, -> { where(["unsuspended_at IS NULL OR unsuspended_at < ?", UNSUSPENSION_GRACE_PERIOD.ago]) }
   scope :with_access_to_application, ->(application) { UsersWithAccess.new(self, application).users }
-  scope :with_2sv_enabled, lambda { |enabled|
-    enabled = ActiveRecord::Type::Boolean.new.cast(enabled)
-    where("otp_secret_key IS #{'NOT' if enabled} NULL")
-  }
+  scope :with_2sv_enabled,
+        lambda { |enabled|
+          enabled = ActiveRecord::Type::Boolean.new.cast(enabled)
+          where("otp_secret_key IS #{'NOT' if enabled} NULL")
+        }
 
-  scope :with_status, lambda { |status|
-    case status
-    when USER_STATUS_SUSPENDED
-      where.not(suspended_at: nil)
-    when USER_STATUS_INVITED
-      where.not(invitation_sent_at: nil).where(invitation_accepted_at: nil)
-    when USER_STATUS_LOCKED
-      where.not(locked_at: nil)
-    when USER_STATUS_ACTIVE
-      where(suspended_at: nil, locked_at: nil)
-        .where(arel_table[:invitation_sent_at].eq(nil)
-          .or(arel_table[:invitation_accepted_at].not_eq(nil)))
-    else
-      raise NotImplementedError.new("Filtering by status '#{status}' not implemented.")
-    end
-  }
+  scope :with_status,
+        lambda { |status|
+          case status
+          when USER_STATUS_SUSPENDED
+            where.not(suspended_at: nil)
+          when USER_STATUS_INVITED
+            where.not(invitation_sent_at: nil).where(invitation_accepted_at: nil)
+          when USER_STATUS_LOCKED
+            where.not(locked_at: nil)
+          when USER_STATUS_ACTIVE
+            where(suspended_at: nil, locked_at: nil)
+              .where(arel_table[:invitation_sent_at].eq(nil)
+                .or(arel_table[:invitation_accepted_at].not_eq(nil)))
+          else
+            raise NotImplementedError, "Filtering by status '#{status}' not implemented."
+          end
+        }
 
   def prompt_for_2sv?
     return false if has_2sv?
@@ -194,7 +201,7 @@ class User < ApplicationRecord
   end
 
   # Override Devise::Model::Lockable#lock_access! to add event logging
-  def lock_access! opts = {}
+  def lock_access!(opts = {})
     event = locked_reason == :two_step ? EventLog::TWO_STEP_LOCKED : EventLog::ACCOUNT_LOCKED
     EventLog.record_event(self, event)
 
@@ -260,7 +267,7 @@ class User < ApplicationRecord
     second_factor_attempts_count.to_i >= MAX_2SV_LOGIN_ATTEMPTS.to_i
   end
 
-  def unlock_access! *args
+  def unlock_access!(*args)
     super
     update_attribute(:second_factor_attempts_count, 0)
   end
