@@ -69,7 +69,7 @@ private
     @otp_secret_key = params[:otp_secret_key]
     totp = ROTP::TOTP.new(@otp_secret_key)
     if totp.verify(params[:code], drift_behind: User::MAX_2SV_DRIFT_SECONDS)
-      current_user.update_attribute(:otp_secret_key, @otp_secret_key)
+      current_user.update(otp_secret_key: @otp_secret_key)
       true
     else
       false
