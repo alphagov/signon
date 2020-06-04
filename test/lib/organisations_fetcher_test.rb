@@ -6,7 +6,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
 
   test "it creates new organisations when none exist" do
     organisation_slugs = %w[ministry-of-fun tea-agency]
-    organisations_api_has_organisations(organisation_slugs)
+    stub_organisations_api_has_organisations(organisation_slugs)
     assert_equal(0, Organisation.count)
 
     OrganisationsFetcher.new.call
@@ -27,7 +27,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
     bodies = [
       organisation_details_for_slug(slug, organisation.content_id),
     ]
-    organisations_api_has_organisations_with_bodies(bodies)
+    stub_organisations_api_has_organisations_with_bodies(bodies)
 
     OrganisationsFetcher.new.call
 
@@ -48,7 +48,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
     bodies = [
       organisation_details_for_slug("new-slug", organisation.content_id),
     ]
-    organisations_api_has_organisations_with_bodies(bodies)
+    stub_organisations_api_has_organisations_with_bodies(bodies)
 
     OrganisationsFetcher.new.call
 
@@ -69,7 +69,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
     bodies = [
       organisation_details_for_slug(slug, content_id),
     ]
-    organisations_api_has_organisations_with_bodies(bodies)
+    stub_organisations_api_has_organisations_with_bodies(bodies)
 
     OrganisationsFetcher.new.call
 
@@ -88,7 +88,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
     bodies = [
       organisation_details_for_slug(slug, fun.content_id),
     ]
-    organisations_api_has_organisations_with_bodies(bodies)
+    stub_organisations_api_has_organisations_with_bodies(bodies)
 
     OrganisationsFetcher.new.call
 
@@ -97,7 +97,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
 
   test "it saves values which are not validated for presence, when they are present in the data" do
     slug = "ministry-of-fun"
-    organisations_api_has_organisations([slug])
+    stub_organisations_api_has_organisations([slug])
 
     OrganisationsFetcher.new.call
 
@@ -107,7 +107,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
 
   test "it raises an error when it receives invalid data" do
     organisation_slugs = [""]
-    organisations_api_has_organisations(organisation_slugs)
+    stub_organisations_api_has_organisations(organisation_slugs)
 
     assert_raises RuntimeError do
       OrganisationsFetcher.new.call
