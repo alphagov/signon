@@ -18,7 +18,7 @@ class SuperAdminApplicationEditTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to enable push updates to applications" do
-      @application.update_attribute :supports_push_updates, false
+      @application.update supports_push_updates: false
       click_link @application.name
 
       # edit application, enable sso push updates
@@ -38,7 +38,7 @@ class SuperAdminApplicationEditTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to disable push updates to applications" do
-      @application.update_attribute :supports_push_updates, true
+      @application.update supports_push_updates: true
       click_link @application.name
 
       # edit application, disable sso push updates
@@ -57,7 +57,7 @@ class SuperAdminApplicationEditTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to retire applications" do
-      @application.update_attribute :retired, false
+      @application.update retired: false
       click_link @application.name
 
       assert_not page.has_checked_field?("This application is retired")

@@ -8,7 +8,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
 
   context "when the user is flagged for 2SV" do
     setup do
-      @user.update_attribute(:require_2sv, true)
+      @user.update(require_2sv: true)
       ignoring_spurious_error do
         visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
       end
@@ -34,7 +34,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
   end
 
   should "not confirm the authorisation if the user has not passed 2-step verification" do
-    @user.update_attribute(:otp_secret_key, ROTP::Base32.random_base32)
+    @user.update(otp_secret_key: ROTP::Base32.random_base32)
 
     visit "/"
     signin_with(@user, second_step: false)
@@ -69,7 +69,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
   end
 
   should "confirm the authorisation for a fully authenticated 2SV user" do
-    @user.update_attribute(:otp_secret_key, ROTP::Base32.random_base32)
+    @user.update(otp_secret_key: ROTP::Base32.random_base32)
 
     visit "/"
     signin_with(@user)

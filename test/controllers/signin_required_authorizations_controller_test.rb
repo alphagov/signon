@@ -144,7 +144,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     setup do
       # technically redundant as this is our configuration anyway
       Doorkeeper.configuration.stubs(skip_authorization: ->(*_args) { true })
-      @application.update_attribute :redirect_uri, "urn:ietf:wg:oauth:2.0:oob"
+      @application.update redirect_uri: "urn:ietf:wg:oauth:2.0:oob"
       get :new, params: { client_id: @application.uid, response_type: "token", redirect_uri: @application.redirect_uri }
     end
 
@@ -167,7 +167,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
       auth_type_is_allowed "authorization_code"
       # technically redundant as this is our configuration anyway
       Doorkeeper.configuration.stubs(skip_authorization: ->(*_args) { true })
-      @application.update_attribute :redirect_uri, "urn:ietf:wg:oauth:2.0:oob"
+      @application.update redirect_uri: "urn:ietf:wg:oauth:2.0:oob"
       get :new, params: { client_id: @application.uid, response_type: "code", redirect_uri: @application.redirect_uri }
     end
 
