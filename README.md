@@ -14,7 +14,7 @@ password sign-in, and [Doorkeeper](https://github.com/applicake/doorkeeper/)
 as an OAuth 2 provider.
 
 Details of our interpretation of OAuth are provided in
-[an accompanying document](doc/oauth.md)
+[an accompanying document](docs/oauth.md)
 
 ## Dependencies
 
@@ -46,7 +46,7 @@ bundle exec rake
 
 ## Setup and usage
 
-See accompanying [Usage Documentation](doc/usage.md)
+See accompanying [Usage Documentation](docs/usage.md)
 
 ## License
 
