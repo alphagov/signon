@@ -10,7 +10,7 @@ module UserFilterHelper
   end
 
   def two_step_abbr_tag
-    content_tag(:abbr, "2SV", title: "Two step verification")
+    tag.abbr("2SV", title: "Two step verification")
   end
 
   def title_from(filter_type)
@@ -47,15 +47,13 @@ module UserFilterHelper
         item_id = item[0].to_s
         item_name = item[1]
       end
-      content_tag(
-        :li,
+      tag.li(
         link_to(item_name, current_path_with_filter(filter_type, item_id)),
         class: params[filter_type] == item_id ? "active" : "",
       )
     end
 
-    list_items << content_tag(
-      :li,
+    list_items << tag.li(
       link_to(
         "All #{title_from(filter_type).pluralize}".html_safe,
         current_path_with_filter(filter_type, nil),
@@ -77,7 +75,7 @@ module UserFilterHelper
     when :organisation
       org = Organisation.find(value)
       if org.abbreviation.presence
-        content_tag(:abbr, org.abbreviation, title: org.name)
+        tag.abbr(org.abbreviation, title: org.name)
       else
         org.name
       end
