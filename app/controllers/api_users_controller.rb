@@ -17,6 +17,8 @@ class ApiUsersController < ApplicationController
     @api_user = ApiUser.new
   end
 
+  def edit; end
+
   def create
     authorize ApiUser
 

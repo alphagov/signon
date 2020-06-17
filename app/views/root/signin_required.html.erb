@@ -1,8 +1,8 @@
-<% content_for :title, title %>
+<% content_for :title, signin_required_title(@application) %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <% unless gds_only_application_and_non_gds_user? %>
+    <% unless gds_only_application_and_non_gds_user?(@application) %>
       <p class="govuk-body">
         <% if current_user.belongs_to_gds? %>
           Ask your delivery manager if you need access.
