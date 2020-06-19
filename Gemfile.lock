@@ -136,7 +136,7 @@ GEM
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.12.2)
-    gds-api-adapters (63.6.0)
+    gds-api-adapters (67.0.0)
       addressable
       link_header
       null_logger
@@ -443,7 +443,7 @@ DEPENDENCIES
   doorkeeper (~> 5.3.2)
   factory_bot_rails (~> 5)
   faraday (~> 1.0)
-  gds-api-adapters (~> 63)
+  gds-api-adapters (~> 67)
   govuk_admin_template (~> 6)
   govuk_app_config (~> 2)
   govuk_publishing_components (~> 21)
