@@ -1,4 +1,4 @@
-class CreateErtpSupportAppPermission < ActiveRecord::Migration[6.0]
+class CreateErtpSupportAppPermission < ActiveRecord::Migration[3.2]
   class SupportedPermission < ApplicationRecord
     belongs_to :application, class_name: "Doorkeeper::Application"
   end

@@ -1,4 +1,4 @@
-class CreateGdsAdminPermissionForLicensing < ActiveRecord::Migration[6.0]
+class CreateGdsAdminPermissionForLicensing < ActiveRecord::Migration[3.2]
   def up
     create_permissions
   end

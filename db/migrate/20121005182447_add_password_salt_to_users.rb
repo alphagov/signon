@@ -1,4 +1,4 @@
-class AddPasswordSaltToUsers < ActiveRecord::Migration[6.0]
+class AddPasswordSaltToUsers < ActiveRecord::Migration[3.2]
   def change
     add_column :users, :password_salt, :string
     change_column :users, :encrypted_password, :string, limit: 255

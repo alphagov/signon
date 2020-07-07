@@ -1,4 +1,4 @@
-class EnableDeviseSecurityExtension < ActiveRecord::Migration[6.0]
+class EnableDeviseSecurityExtension < ActiveRecord::Migration[3.2]
   def self.up
     create_table :old_passwords do |t|
       t.string   :encrypted_password, null: false

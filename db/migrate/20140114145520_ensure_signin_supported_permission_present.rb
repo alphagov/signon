@@ -1,4 +1,4 @@
-class EnsureSigninSupportedPermissionPresent < ActiveRecord::Migration[6.0]
+class EnsureSigninSupportedPermissionPresent < ActiveRecord::Migration[3.2]
   def up
     require "doorkeeper/application.rb"
 

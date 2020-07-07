@@ -1,4 +1,4 @@
-class FixPasswordResetForSomeUsers < ActiveRecord::Migration[6.0]
+class FixPasswordResetForSomeUsers < ActiveRecord::Migration[3.2]
   def up
     # For us, a user is "confirmed" when they're created, even though this is
     # conceptually confusing.

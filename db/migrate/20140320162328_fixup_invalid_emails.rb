@@ -1,4 +1,4 @@
-class FixupInvalidEmails < ActiveRecord::Migration[6.0]
+class FixupInvalidEmails < ActiveRecord::Migration[3.2]
   class TempUser < ApplicationRecord
     self.table_name = "users"
   end

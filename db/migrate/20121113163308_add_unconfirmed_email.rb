@@ -1,4 +1,4 @@
-class AddUnconfirmedEmail < ActiveRecord::Migration[6.0]
+class AddUnconfirmedEmail < ActiveRecord::Migration[3.2]
   def up
     change_table(:users) do |t|
       t.string   :confirmation_token

@@ -1,4 +1,4 @@
-class CreateFeedexSupportAppPermission < ActiveRecord::Migration[6.0]
+class CreateFeedexSupportAppPermission < ActiveRecord::Migration[3.2]
   class SupportedPermission < ApplicationRecord
     belongs_to :application, class_name: "Doorkeeper::Application"
   end

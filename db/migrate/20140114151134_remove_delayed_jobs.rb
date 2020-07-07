@@ -1,4 +1,4 @@
-class RemoveDelayedJobs < ActiveRecord::Migration[6.0]
+class RemoveDelayedJobs < ActiveRecord::Migration[3.2]
   def up
     drop_table :delayed_jobs
   end

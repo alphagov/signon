@@ -1,4 +1,4 @@
-class RemoveClosedAtFromOrganisation < ActiveRecord::Migration[6.0]
+class RemoveClosedAtFromOrganisation < ActiveRecord::Migration[3.2]
   def up
     remove_column :organisations, :closed_at
   end

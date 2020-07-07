@@ -1,4 +1,4 @@
-class MostSigninPermissionsShouldNotBeDelegable < ActiveRecord::Migration[6.0]
+class MostSigninPermissionsShouldNotBeDelegable < ActiveRecord::Migration[3.2]
   def up
     require "doorkeeper/application.rb"
 

@@ -1,4 +1,4 @@
-class CreateAuthorityPermissionsForLicensing < ActiveRecord::Migration[6.0]
+class CreateAuthorityPermissionsForLicensing < ActiveRecord::Migration[3.2]
   def up
     create_permission("deni")
     create_permission("cefas")

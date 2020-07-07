@@ -1,4 +1,4 @@
-class CreateOrganisations < ActiveRecord::Migration[6.0]
+class CreateOrganisations < ActiveRecord::Migration[3.2]
   def change
     create_table :organisations do |t|
       t.string :slug, null: false

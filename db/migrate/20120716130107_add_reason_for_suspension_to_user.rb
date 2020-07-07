@@ -1,4 +1,4 @@
-class AddReasonForSuspensionToUser < ActiveRecord::Migration[6.0]
+class AddReasonForSuspensionToUser < ActiveRecord::Migration[3.2]
   def change
     add_column :users, :reason_for_suspension, :string
   end
