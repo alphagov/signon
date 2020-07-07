@@ -1,4 +1,4 @@
-class UniquePermissionConstraint < ActiveRecord::Migration
+class UniquePermissionConstraint < ActiveRecord::Migration[6.0]
   def up
     add_index :permissions, %i[application_id user_id], unique: true, name: "unique_permission_constraint"
   end

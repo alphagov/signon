@@ -1,4 +1,4 @@
-class ModelDcmsOrgStructure < ActiveRecord::Migration
+class ModelDcmsOrgStructure < ActiveRecord::Migration[6.0]
   def up
     dcms = Organisation.find_by(name: "Department for Digital, Culture, Media & Sport")
 

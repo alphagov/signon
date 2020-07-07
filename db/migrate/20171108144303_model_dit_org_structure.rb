@@ -1,4 +1,4 @@
-class ModelDitOrgStructure < ActiveRecord::Migration
+class ModelDitOrgStructure < ActiveRecord::Migration[6.0]
   def up
     dit = Organisation.find_by(name: "Department for International Trade")
 

@@ -4,7 +4,7 @@ class Permission < ApplicationRecord
   serialize :permissions, Array
 end
 
-class MigratePermissionsToUserApplicationPermissionsJoinTable < ActiveRecord::Migration
+class MigratePermissionsToUserApplicationPermissionsJoinTable < ActiveRecord::Migration[6.0]
   class Permission < ApplicationRecord
   end
 

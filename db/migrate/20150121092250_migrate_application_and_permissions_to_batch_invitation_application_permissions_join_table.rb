@@ -1,4 +1,4 @@
-class MigrateApplicationAndPermissionsToBatchInvitationApplicationPermissionsJoinTable < ActiveRecord::Migration
+class MigrateApplicationAndPermissionsToBatchInvitationApplicationPermissionsJoinTable < ActiveRecord::Migration[6.0]
   def up
     puts "Updating #{BatchInvitation.count} batch invitations"
 

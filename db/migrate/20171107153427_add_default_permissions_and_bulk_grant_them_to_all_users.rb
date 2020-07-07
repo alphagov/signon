@@ -1,6 +1,6 @@
 require "doorkeeper/application"
 
-class AddDefaultPermissionsAndBulkGrantThemToAllUsers < ActiveRecord::Migration
+class AddDefaultPermissionsAndBulkGrantThemToAllUsers < ActiveRecord::Migration[6.0]
   def up
     support_app = Doorkeeper::Application.find_by!(name: "Support")
     content_preview_app = Doorkeeper::Application.find_by!(name: "Content Preview")

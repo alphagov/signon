@@ -1,4 +1,4 @@
-class CreateUserAgents < ActiveRecord::Migration
+class CreateUserAgents < ActiveRecord::Migration[6.0]
   def change
     create_table :user_agents do |t|
       t.string :user_agent_string, null: false, limit: 1000

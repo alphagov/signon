@@ -1,6 +1,6 @@
 require "lhm"
 
-class AddIpAddressAndUserAgentIdToEventLogs < ActiveRecord::Migration
+class AddIpAddressAndUserAgentIdToEventLogs < ActiveRecord::Migration[6.0]
   def self.up
     Lhm.cleanup(:run)
     Lhm.change_table :event_logs do |m|

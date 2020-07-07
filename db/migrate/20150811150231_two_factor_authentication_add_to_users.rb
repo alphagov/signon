@@ -1,4 +1,4 @@
-class TwoFactorAuthenticationAddToUsers < ActiveRecord::Migration
+class TwoFactorAuthenticationAddToUsers < ActiveRecord::Migration[6.0]
   def up
     change_table :users do |t|
       t.string   :otp_secret_key

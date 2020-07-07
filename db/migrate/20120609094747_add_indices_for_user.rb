@@ -1,4 +1,4 @@
-class AddIndicesForUser < ActiveRecord::Migration
+class AddIndicesForUser < ActiveRecord::Migration[6.0]
   def try_to
     begin
       yield

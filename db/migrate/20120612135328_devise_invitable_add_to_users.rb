@@ -1,4 +1,4 @@
-class DeviseInvitableAddToUsers < ActiveRecord::Migration
+class DeviseInvitableAddToUsers < ActiveRecord::Migration[6.0]
   def up
     change_table :users do |t|
       t.string     :invitation_token, limit: 60

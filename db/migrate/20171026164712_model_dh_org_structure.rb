@@ -1,4 +1,4 @@
-class ModelDhOrgStructure < ActiveRecord::Migration
+class ModelDhOrgStructure < ActiveRecord::Migration[6.0]
   def up
     dh = Organisation.find_by(name: "Department of Health")
 

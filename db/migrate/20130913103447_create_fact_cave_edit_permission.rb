@@ -1,4 +1,4 @@
-class CreateFactCaveEditPermission < ActiveRecord::Migration
+class CreateFactCaveEditPermission < ActiveRecord::Migration[6.0]
   def up
     fact_cave = ::Doorkeeper::Application.find_by(name: "Fact Cave")
     if fact_cave

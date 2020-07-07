@@ -1,4 +1,4 @@
-class CreateWhitehallEditorSupportedPermission < ActiveRecord::Migration
+class CreateWhitehallEditorSupportedPermission < ActiveRecord::Migration[6.0]
   class SupportedPermission < ApplicationRecord
     belongs_to :application, class_name: "Doorkeeper::Application"
   end

@@ -1,4 +1,4 @@
-class CleanupLhmTables < ActiveRecord::Migration
+class CleanupLhmTables < ActiveRecord::Migration[6.0]
   def up
     Lhm.cleanup(:run)
   end

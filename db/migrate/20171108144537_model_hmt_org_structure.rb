@@ -1,4 +1,4 @@
-class ModelHmtOrgStructure < ActiveRecord::Migration
+class ModelHmtOrgStructure < ActiveRecord::Migration[6.0]
   def up
     hmt = Organisation.find_by(name: "HM Treasury")
     ukgi = Organisation.find_by(name: "UK Government Investments")

@@ -1,4 +1,4 @@
-class AddBatchInvitation < ActiveRecord::Migration
+class AddBatchInvitation < ActiveRecord::Migration[6.0]
   def up
     create_table :batch_invitations, force: true do |table|
       table.text :applications_and_permissions

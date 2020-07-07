@@ -1,4 +1,4 @@
-class ModelUktiOrgStructure < ActiveRecord::Migration
+class ModelUktiOrgStructure < ActiveRecord::Migration[6.0]
   def up
     ukti = Organisation.find_by(name: "UK Trade & Investment")
 

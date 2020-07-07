@@ -1,4 +1,4 @@
-class AddManageKeywordPermission < ActiveRecord::Migration
+class AddManageKeywordPermission < ActiveRecord::Migration[6.0]
   def up
     unless panopticon.nil?
       SupportedPermission.create(application: panopticon, name: "manage_keywords")

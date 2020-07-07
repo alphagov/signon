@@ -1,4 +1,4 @@
-class RemoveAppointedPersonForEnglandAndWalesOrganisation < ActiveRecord::Migration
+class RemoveAppointedPersonForEnglandAndWalesOrganisation < ActiveRecord::Migration[6.0]
   def up
     organistion = Organisation.find_by(slug: "")
     if organistion.present?
