@@ -9,4 +9,4 @@ include VolatileLock::DSL # rubocop:disable Style/MixinUsage
 
 Signon::Application.load_tasks
 
-task default: [:test, "jasmine:ci"]
+task default: [:test, "jasmine:ci", :lint]
