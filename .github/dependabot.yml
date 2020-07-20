@@ -1,0 +1,46 @@
+version: 2
+updates:
+  - package-ecosystem: bundler
+    directory: /
+    schedule:
+      interval: daily
+    allow:
+      # Security updates
+      - dependency-name: brakeman
+        dependency-type: direct
+      # Internal gems
+      - dependency-name: "govuk*"
+        dependency-type: direct
+      - dependency-name: deprecated_columns
+        dependency-type: direct
+      - dependency-name: gds-api-adapters
+        dependency-type: direct
+      - dependency-name: gds-sso
+        dependency-type: direct
+      - dependency-name: plek
+        dependency-type: direct
+      - dependency-name: rubocop-govuk
+        dependency-type: direct
+      # Framework gems
+      - dependency-name: factory_bot_rails
+        dependency-type: direct
+      - dependency-name: jasmine
+        dependency-type: direct
+      - dependency-name: minitest
+        dependency-type: direct
+      - dependency-name: pg
+        dependency-type: direct
+      - dependency-name: rails
+        dependency-type: direct
+
+  # Ruby needs to be upgraded manually in multiple places, so cannot
+  # be upgraded by Dependabot. That effectively makes the below
+  # config redundant, as ruby is the only updatable thing in the
+  # Dockerfile, although this may change in the future. We hope this
+  # config will save a dev from trying to upgrade ruby via Dependabot.
+  - package-ecosystem: docker
+    ignore:
+      - dependency-name: ruby
+    directory: /
+    schedule:
+      interval: weekly
