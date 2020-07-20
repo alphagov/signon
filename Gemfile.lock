@@ -237,7 +237,7 @@ GEM
     mysql2 (0.5.3)
     netrc (0.11.0)
     nio4r (2.5.2)
-    nokogiri (1.10.9)
+    nokogiri (1.10.10)
       mini_portile2 (~> 2.4.0)
     notifications-ruby-client (5.1.2)
       jwt (>= 1.5, < 3)
@@ -464,7 +464,7 @@ DEPENDENCIES
   poltergeist
   pry-byebug
   pundit
-  rails (~> 6.0.3.2)
+  rails (= 6.0.3.2)
   rails-controller-testing
   rails-html-sanitizer
   rake
