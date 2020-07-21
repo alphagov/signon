@@ -36,7 +36,7 @@ class UserCreatorTest < ActiveSupport::TestCase
     app_o_tron = FactoryBot.create(:application, name: "app-o-tron", with_supported_permissions: %w[signin])
     app_erator = FactoryBot.create(:application, name: "app-erator", with_supported_permissions: %w[signin fall])
     create(:supported_permission, application: app_o_tron, name: "bounce", default: true)
-    app_erator.signin_permission.update(default: true)
+    app_erator.signin_permission.update!(default: true)
     user_creator = UserCreator.new("Alicia", "alicia@example.com", "")
 
     user_creator.create_user!

@@ -91,7 +91,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       application_one = create(:application)
       create(:supported_permission, application: application_one, name: "editor", default: true)
       application_two = create(:application)
-      application_two.signin_permission.update(default: true)
+      application_two.signin_permission.update!(default: true)
 
       visit new_user_invitation_path
       fill_in "Name", with: "Alicia Smith"
@@ -176,7 +176,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       application_one = create(:application)
       create(:supported_permission, application: application_one, name: "editor", default: true)
       application_two = create(:application)
-      application_two.signin_permission.update(default: true)
+      application_two.signin_permission.update!(default: true)
 
       visit new_user_invitation_path
       fill_in "Name", with: "Alicia Smith"

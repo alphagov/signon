@@ -78,7 +78,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
   should "ensure that batch invited users get default permissions even when not checked in UI" do
     create(:supported_permission, application: @application, name: "reader", default: true)
     support_app = create(:application, name: "support", with_supported_permissions: %w[signin])
-    support_app.signin_permission.update(default: true)
+    support_app.signin_permission.update!(default: true)
     user = create(:admin_user)
 
     visit root_path

@@ -70,8 +70,8 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
       end
 
       should "not raise if the user has no permissions for the application" do
-        @signin_permission.destroy
-        @other_permission.destroy
+        @signin_permission.destroy!
+        @other_permission.destroy!
 
         expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
         http_request = stub_request(:put, users_url(@application)).with(body: expected_body)

@@ -25,7 +25,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
   should "send a GA event including '(not set)' for the org slug when the user has no org" do
     use_javascript_driver
-    @user.update(organisation: nil)
+    @user.update!(organisation: nil)
     with_ga_enabled do
       visit root_path
       refute_dimension_is_set(8)
@@ -211,7 +211,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
     should "not permit another user's cookie to be used to bypass 2SV" do
       attacker = create(:user, email: "attacker@example.com", password: "c0mpl£x $ymb0l$")
-      attacker.update(otp_secret_key: ROTP::Base32.random_base32)
+      attacker.update!(otp_secret_key: ROTP::Base32.random_base32)
 
       visit root_path
       signin_with(email: "attacker@example.com", password: "c0mpl£x $ymb0l$")
@@ -234,7 +234,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       signout
       visit root_path
 
-      @user.update(otp_secret_key: ROTP::Base32.random_base32)
+      @user.update!(otp_secret_key: ROTP::Base32.random_base32)
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
 
       assert_response_contains "get your code"
@@ -249,7 +249,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       signout
       visit root_path
 
-      @user.update(otp_secret_key: nil)
+      @user.update!(otp_secret_key: nil)
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
 
       assert_user_is_signed_in

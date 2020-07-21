@@ -13,7 +13,7 @@ class SSOPushCredential
 
       user.authorisations
         .create_with(expires_in: 10.years)
-        .find_or_create_by(application_id: application.id).token
+        .find_or_create_by!(application_id: application.id).token
     end
 
     def user

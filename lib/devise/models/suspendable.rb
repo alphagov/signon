@@ -32,7 +32,7 @@ module Devise
         self.reason_for_suspension = reason
         self.suspended_at = Time.zone.now
         GovukStatsd.increment("users.suspend")
-        save
+        save!
       end
 
       # un-suspends the user in the database.
@@ -41,7 +41,7 @@ module Devise
         self.suspended_at = nil
         self.unsuspended_at = Time.zone.now
         self.password = SecureRandom.hex
-        save
+        save!
       end
 
       def suspended?

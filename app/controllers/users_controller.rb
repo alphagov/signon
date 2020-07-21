@@ -80,7 +80,7 @@ class UsersController < ApplicationController
   def cancel_email_change
     @user.unconfirmed_email = nil
     @user.confirmation_token = nil
-    @user.save(validate: false)
+    @user.save!(validate: false)
     redirect_back(fallback_location: root_path)
   end
 
