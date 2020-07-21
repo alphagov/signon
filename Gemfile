@@ -44,8 +44,8 @@ gem "govuk_sidekiq", "~> 3"
 gem "plek", "~> 4"
 
 group :development do
-  gem "better_errors", "2.7.0"
-  gem "binding_of_caller", "0.8.0"
+  gem "better_errors", "~> 2.7.1"
+  gem "binding_of_caller", "~> 0.8.0"
   gem "listen", "3.2.1"
 end
 
