@@ -364,6 +364,17 @@ class UsersControllerTest < ActionController::TestCase
           assert_select "tbody tr", count: 1
           assert_select "td.email", /admin@gov.uk/
         end
+
+        should "scope list of users by permission" do
+          user_application_permissions = create_list(:user_application_permission, 2)
+
+          user_application_permissions.each do |uap|
+            get :index, params: { permission: uap.supported_permission_id }
+
+            assert_select "tbody tr", count: 1
+            assert_select "td.email", /#{uap.user.email}/
+          end
+        end
       end
 
       should "scope list of users by status" do
