@@ -2,7 +2,7 @@
   filter_title = title_from(filter_type)
   filter_value = value_from(filter_type)
 %>
-<li class="add-margin-right <%= "filter-by-#{filter_type.to_s}-menu"%> <% if params[filter_type] %>selected-and-available<% end %>" <% if filter_type == :organisation %>data-module="organisation-filter"<% end %>>
+<li class="add-margin-right <%= "filter-by-#{filter_type.to_s}-menu"%> <% if params[filter_type] %>selected-and-available<% end %>" <% if filter_type == :organisation %>data-module="dropdown-filter"<% end %>>
   <% if params[filter_type] %>
     <%= link_to current_path_with_filter(filter_type, nil),
           class: 'filter-option filter-selected',

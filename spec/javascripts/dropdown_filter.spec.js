@@ -1,8 +1,8 @@
-describe('An organisation filter module', function() {
+describe('A dropdown filter module', function() {
   "use strict";
 
   var root = window,
-      organisationFilter,
+      dropdownFilter,
       listElement;
 
   beforeEach(function() {
@@ -23,15 +23,15 @@ describe('An organisation filter module', function() {
     </div>');
 
     $('body').append(listElement);
-    organisationFilter = new GOVUKAdmin.Modules.OrganisationFilter();
-    organisationFilter.start(listElement);
+    dropdownFilter = new GOVUKAdmin.Modules.DropdownFilter();
+    dropdownFilter.start(listElement);
   });
 
   afterEach(function() {
     listElement.remove();
   });
 
-  it('filters the organisation list based on input', function() {
+  it('filters the dropdown list based on input', function() {
     filterBy('another');
     expect(listElement.find('.first').is(':visible')).toBe(false);
     expect(listElement.find('.second').is(':visible')).toBe(true);
