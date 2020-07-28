@@ -2,6 +2,8 @@ class SuspensionsController < ApplicationController
   before_action :authenticate_user!, :load_and_authorize_user
   respond_to :html
 
+  rescue_from ActiveRecord::RecordInvalid, with: :render_edit
+
   def update
     if params[:user][:suspended] == "1"
       succeeded = @user.suspend(params[:user][:reason_for_suspension])
@@ -20,8 +22,7 @@ class SuspensionsController < ApplicationController
 
       redirect_to @user.api_user? ? edit_api_user_path(@user) : edit_user_path(@user)
     else
-      flash[:alert] = "Failed"
-      render :edit
+      render_edit
     end
   end
 
@@ -30,5 +31,10 @@ private
   def load_and_authorize_user
     @user = User.find(params[:id])
     authorize @user, :suspension?
+  end
+
+  def render_edit
+    flash[:alert] = "Failed"
+    render :edit
   end
 end
