@@ -49,7 +49,7 @@ class UsersController < ApplicationController
     raise Pundit::NotAuthorizedError if params[:user][:organisation_id].present? && !policy(@user).assign_organisations?
 
     updater = UserUpdate.new(@user, user_params, current_user, user_ip_address)
-    if updater.update
+    if updater.call
       redirect_to users_path, notice: "Updated user #{@user.email} successfully"
     else
       render :edit
