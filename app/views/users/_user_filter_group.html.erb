@@ -2,7 +2,7 @@
   filter_title = title_from(filter_type)
   filter_value = value_from(filter_type)
 %>
-<li class="add-margin-right <%= "filter-by-#{filter_type.to_s}-menu"%> <% if params[filter_type] %>selected-and-available<% end %>" <% if filter_type == :organisation %>data-module="organisation-filter"<% end %>>
+<li class="add-margin-right <%= "filter-by-#{filter_type.to_s}-menu"%> <% if params[filter_type] %>selected-and-available<% end %>" <% if filter_type.in?([:organisation, :permission]) %>data-module="dropdown-filter"<% end %>>
   <% if params[filter_type] %>
     <%= link_to current_path_with_filter(filter_type, nil),
           class: 'filter-option filter-selected',
@@ -18,12 +18,20 @@
     <span class="if-js-hide"><%= filter_title %></span>
     <span class="if-no-js-hide glyphicon glyphicon-chevron-down"></span>
   <% end %>
-  <ul class="dropdown-menu <% if filter_type == :organisation %>js-filter-list<% end %>" role="menu">
+  <ul class="dropdown-menu <% if filter_type.in?([:organisation, :permission]) %>js-filter-list<% end %>" role="menu">
     <% if filter_type == :organisation %>
       <li class="list-filter">
         <form>
           <label for="organisation-list-filter" class="rm">Search organisations</label>
           <input id="organisation-list-filter" type="text" class="list-filter-input form-control js-filter-list-input" placeholder="Search organisations">
+        </form>
+      </li>
+    <% end %>
+    <% if filter_type == :permission %>
+      <li class="list-filter">
+        <form>
+          <label for="permission-list-filter" class="rm">Search permissions</label>
+          <input id="permission-list-filter" type="text" class="list-filter-input form-control js-filter-list-input" placeholder="Search permissions">
         </form>
       </li>
     <% end %>

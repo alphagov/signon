@@ -112,6 +112,27 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       end
     end
 
+    should "filter users by permission" do
+      uap = create(:user_application_permission, user: User.find_by(name: "Ernie"))
+      visit "/users"
+
+      select_permission("#{uap.application.name} #{uap.supported_permission.name}")
+
+      assert_equal 1, page.all("table tbody tr").count
+      within ".table" do
+        assert page.has_content?("Ernie")
+        (User.pluck(:name) - %w[Ernie]).each do |name|
+          assert_not page.has_content?(name)
+        end
+      end
+
+      select_permission("All Permissions")
+
+      %w[Aardvark Abbot Abbey Admin].each do |user_name|
+        assert page.has_content?(user_name)
+      end
+    end
+
     should "filter users by status" do
       visit "/users"
 
@@ -191,6 +212,12 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       within ".dropdown-menu" do
         click_on role_name
       end
+    end
+  end
+
+  def select_permission(permission_name)
+    within ".filter-by-permission-menu" do
+      click_on permission_name
     end
   end
 end

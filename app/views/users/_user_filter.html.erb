@@ -13,6 +13,7 @@
           <strong>Filter by</strong>
         </li>
         <%= render partial: 'user_filter_group', locals: {filter_type: :role} %>
+        <%= render partial: 'user_filter_group', locals: {filter_type: :permission} %>
         <%= render partial: 'user_filter_group', locals: {filter_type: :status} %>
         <% if is_org_admin? %>
           <li class="nav-pill-text text-muted"><%= current_user.organisation.name %></li>
@@ -23,6 +24,7 @@
         <li class="filter-by-name">
           <%= form_tag nil, method: "get", class: 'add-left-margin form-inline' do %>
           <%= hidden_field_tag :role, params[:role] if params[:role] %>
+          <%= hidden_field_tag :permission, params[:permission] if params[:permission] %>
           <%= hidden_field_tag :status, params[:status] if params[:status] %>
           <%= hidden_field_tag :organisation, params[:organisation] if params[:organisation] %>
           <%= hidden_field_tag :two_step_status, params[:two_step_status] if params[:two_step_status] %>
@@ -32,7 +34,7 @@
           <% end %>
         </li>
         <li class="<% if any_filter? %>add-right-margin <% end %>pull-right">
-          <% merged_params = params.permit(:filter, :role, :status, :organisation, :two_step_status).merge(format: "csv") %>
+          <% merged_params = params.permit(:filter, :role, :permission, :status, :organisation, :two_step_status).merge(format: "csv") %>
           <%= link_to "Export as CSV", merged_params, class: "btn btn-default" %>
         </li>
       </ul>
@@ -41,6 +43,7 @@
 </nav>
 
 <%= render partial: 'user_filter_group_no_js', locals: {filter_type: :role} %>
+<%= render partial: 'user_filter_group_no_js', locals: {filter_type: :permission} %>
 <%= render partial: 'user_filter_group_no_js', locals: {filter_type: :status} %>
 <%= render partial: 'user_filter_group_no_js', locals: {filter_type: :organisation} %>
 <%= render partial: 'user_filter_group_no_js', locals: {filter_type: :two_step_status} %>

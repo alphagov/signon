@@ -179,6 +179,22 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context ".with_permission" do
+    should "only return users with the specified permission" do
+      joe = create(:user)
+      amy = create(:user)
+      app = create(:application, with_supported_permissions: %w[manage])
+      signin_perm = app.signin_permission # created in a callback in the Application model
+      manage_perm = app.supported_permissions.find_by(name: "manage")
+      create(:user_application_permission, user: joe, application: app, supported_permission: signin_perm)
+      create(:user_application_permission, user: amy, application: app, supported_permission: signin_perm)
+      create(:user_application_permission, user: amy, application: app, supported_permission: manage_perm)
+
+      assert_equal User.with_permission(signin_perm.id), [joe, amy]
+      assert_equal User.with_permission(manage_perm.id), [amy]
+    end
+  end
+
   context ".not_recently_unsuspended" do
     should "return users who have never been unsuspended" do
       assert_includes User.not_recently_unsuspended, @user

@@ -25,6 +25,12 @@ module UserFilterHelper
     items = case filter_type
             when :role
               filtered_user_roles
+            when :permission
+              Doorkeeper::Application
+                .joins(:supported_permissions)
+                .order("oauth_applications.name", "supported_permissions.name")
+                .pluck("supported_permissions.id", "oauth_applications.name", "supported_permissions.name")
+                .map { |e| [e[0], "#{e[1]} #{e[2]}"] }
             when :status
               User::USER_STATUSES
             when :organisation
@@ -79,6 +85,12 @@ module UserFilterHelper
       else
         org.name
       end
+    when :permission
+      Doorkeeper::Application
+        .joins(:supported_permissions)
+        .where("supported_permissions.id = ?", value)
+        .pick("oauth_applications.name", "supported_permissions.name")
+        .join(" ")
     when :two_step_status
       if value == "true"
         "Enabled"
@@ -91,6 +103,10 @@ module UserFilterHelper
   end
 
   def any_filter?
-    params[:filter].present? || params[:role].present? || params[:status].present? || params[:organisation].present?
+    params[:filter].present? ||
+      params[:role].present? ||
+      params[:permission].present? ||
+      params[:status].present? ||
+      params[:organisation].present?
   end
 end

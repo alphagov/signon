@@ -74,10 +74,10 @@ Nav pills
 }
 
 /* ==========================================================================
-Organisation filter
+Dropdown filter for Organisation & Permission
 ========================================================================== */
 
-.filter-by-organisation-menu {
+.filter-by-organisation-menu, .filter-by-permission-menu {
   .dropdown-menu {
     max-height: 300px;
     overflow-y: scroll;

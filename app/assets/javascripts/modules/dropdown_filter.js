@@ -1,6 +1,6 @@
 (function(Modules) {
   "use strict";
-  Modules.OrganisationFilter = function() {
+  Modules.DropdownFilter = function() {
     var that = this;
     that.start = function(element) {
 
