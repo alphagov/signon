@@ -1,7 +1,0 @@
-<p>Your <%= link_to t('department.name'), t('department.url') %> Signon <%= account_name %>, for <%= @resource.email %>, was locked at <%= locked_time %> because the wrong sign on details were entered too many times.</p>
-
-<% if instance_name.present? %>
-<p><%= account_name.humanize %> locks do not lock production accounts.</p>
-<% end %>
-
-<p>Your account will be unlocked at <%= unlock_time %>. If you need your account unlocked sooner, please contact a managing <%= link_to t('department.name'), t('department.url') %> editor in your organisation (or your parent organisation). They can use the <%= link_to "support form", t('support.url') %> to get help from the <%= link_to t('department.name'), t('department.url') %> team.</p>

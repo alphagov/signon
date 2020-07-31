@@ -1,9 +1,0 @@
-<p>Hello,</p>
-
-<p>This is to let you know that <%= link_to(@user.name, edit_user_url(@user)) %> has uploaded a batch of <%= @batch_invitation.batch_invitation_users.count %> users that will be automatically created.</p>
-
-<p>If you are an admin (or a superadmin), you can <%= link_to "review what's in the batch", batch_invitation_url(@batch_invitation) %>.</p>
-
-<p>Kind regards,</p>
-
-<p><%= link_to t('department.name'), t('department.url') %> Signon</p>

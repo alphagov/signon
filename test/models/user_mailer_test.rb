@@ -2,27 +2,16 @@ require "test_helper"
 
 class UserMailerTest < ActionMailer::TestCase
   def assert_body_includes(search_string, email = @email)
-    email.body.parts.each do |part|
-      assert_includes part.body, search_string
-    end
+    assert_includes email.body, search_string
   end
 
   def assert_not_body_includes(search, email = @email)
-    email.body.parts.each do |part|
-      assert_not_includes part.body, search
-    end
+    assert_not_includes email.body, search
   end
 
   def assert_support_present_in_text(link_text, email = @email)
-    part = email.body.parts[0]
     text_string = link_text + " (https://www.gov.uk/support/internal)"
-    assert_includes part.body, text_string
-  end
-
-  def assert_support_present_in_html(link_text, email = @email)
-    part = email.body.parts[1]
-    html_string = "<a href=\"https://www.gov.uk/support/internal\">" + link_text + "</a>"
-    assert_includes part.body, html_string
+    assert_includes email.body, text_string
   end
 
   context "2-step verification set up" do
@@ -72,7 +61,6 @@ class UserMailerTest < ActionMailer::TestCase
 
     should "include correct support links" do
       assert_support_present_in_text "support ticket"
-      assert_support_present_in_html "support ticket"
     end
   end
 
@@ -88,7 +76,6 @@ class UserMailerTest < ActionMailer::TestCase
 
     should "include correct support links" do
       assert_support_present_in_text "support ticket"
-      assert_support_present_in_html "support ticket"
     end
   end
 
@@ -147,7 +134,6 @@ class UserMailerTest < ActionMailer::TestCase
 
     should "include support links" do
       assert_support_present_in_text "support form"
-      assert_support_present_in_html "support form"
     end
   end
 
@@ -190,7 +176,6 @@ class UserMailerTest < ActionMailer::TestCase
 
     should "include correct support links" do
       assert_support_present_in_text "support form"
-      assert_support_present_in_html "support form"
     end
   end
 
@@ -206,7 +191,6 @@ class UserMailerTest < ActionMailer::TestCase
 
     should "include correct support links" do
       assert_support_present_in_text "support form"
-      assert_support_present_in_html "support form"
     end
   end
 end
