@@ -40,7 +40,7 @@ gem "gds-api-adapters", "~> 67"
 gem "govuk_admin_template", "~> 6"
 gem "govuk_app_config", "~> 2"
 gem "govuk_publishing_components", "~> 21"
-gem "govuk_sidekiq", "~> 3"
+gem "govuk_sidekiq", "~> 4"
 gem "plek", "~> 4"
 
 group :development do
