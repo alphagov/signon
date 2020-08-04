@@ -168,7 +168,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
     end
 
     should "allow a signed in user to complete email change" do
-      @user.update(unconfirmed_email: "new@email.com")
+      @user.update!(unconfirmed_email: "new@email.com")
       confirmation_token = token_sent_to(@user)
 
       visit new_user_session_path
@@ -180,7 +180,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
     end
 
     should "disallow a signed in user completing an email change for another account" do
-      @user.update(unconfirmed_email: "new@email.com")
+      @user.update!(unconfirmed_email: "new@email.com")
       confirmation_token = token_sent_to(@user)
       @other_user = create(:user, email: "dave@email.com")
 
@@ -193,8 +193,8 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
     end
 
     should "prompt unauthenticated user for password when changing email" do
-      password = "L0ng S3cure P4ssw0rd"
-      @user.update(
+      password = "L0ng S3cure P4ssw0rd111"
+      @user.update!(
         unconfirmed_email: "new@email.com",
         password: password,
       )

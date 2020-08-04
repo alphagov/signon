@@ -29,32 +29,32 @@ class UserTest < ActiveSupport::TestCase
 
     should "default to true when a user is promoted to admin" do
       user = create(:user)
-      user.update(role: "admin")
+      user.update!(role: "admin")
       assert user.require_2sv?
     end
 
     should "default to true when a user is promoted to superadmin" do
       user = create(:user)
-      user.update(role: "superadmin")
+      user.update!(role: "superadmin")
       assert user.require_2sv?
     end
 
     should "default to true when an admin is promoted to superadmin" do
       user = create(:admin_user)
-      user.update(role: "superadmin")
+      user.update!(role: "superadmin")
       assert user.require_2sv?
     end
 
     should "remain true when an admin is demoted" do
       user = create(:admin_user)
-      user.update(role: "normal")
+      user.update!(role: "normal")
       assert user.require_2sv?
     end
 
     should "not change if other changes are made to an admin" do
       user = create(:admin_user)
-      user.update(require_2sv: false)
-      user.update(name: "Foo Bar")
+      user.update!(require_2sv: false)
+      user.update!(name: "Foo Bar")
       assert_not user.require_2sv?
     end
   end
@@ -67,7 +67,7 @@ class UserTest < ActiveSupport::TestCase
 
       context "when flagging" do
         should "maintain after persisting" do
-          @user.update(require_2sv: true)
+          @user.update!(require_2sv: true)
 
           assert @user.send_two_step_flag_notification?
         end
@@ -75,7 +75,7 @@ class UserTest < ActiveSupport::TestCase
 
       context "when promoting a user" do
         should "be true" do
-          @user.update(role: "admin")
+          @user.update!(role: "admin")
 
           assert @user.send_two_step_flag_notification?
         end
@@ -503,7 +503,7 @@ class UserTest < ActiveSupport::TestCase
       @app = create(:application)
 
       # authenticate access
-      ::Doorkeeper::AccessToken.create(resource_owner_id: @user.id, application_id: @app.id, token: "1234")
+      ::Doorkeeper::AccessToken.create!(resource_owner_id: @user.id, application_id: @app.id, token: "1234")
     end
 
     should "include applications the user is authorised for" do

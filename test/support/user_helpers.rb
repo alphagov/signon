@@ -5,7 +5,7 @@ module UserHelpers
     password ||= user.password
 
     if user && user.require_2sv? && user.otp_secret_key.blank? && set_up_2sv
-      user.update(otp_secret_key: ROTP::Base32.random_base32)
+      user.update!(otp_secret_key: ROTP::Base32.random_base32)
     end
 
     fill_in "Email", with: email

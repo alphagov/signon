@@ -245,7 +245,7 @@ class User < ApplicationRecord
     result = totp.verify(code, drift_behind: MAX_2SV_DRIFT_SECONDS)
 
     if result
-      update(second_factor_attempts_count: 0)
+      update!(second_factor_attempts_count: 0)
       EventLog.record_event(self, EventLog::TWO_STEP_VERIFIED)
     else
       increment!(:second_factor_attempts_count)
@@ -270,7 +270,7 @@ class User < ApplicationRecord
 
   def unlock_access!(*args)
     super
-    update(second_factor_attempts_count: 0)
+    update!(second_factor_attempts_count: 0)
   end
 
   def has_2sv?

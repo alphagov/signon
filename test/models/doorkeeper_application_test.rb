@@ -13,7 +13,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
 
     should "be created after save if application supports push updates" do
       application = create(:application, supports_push_updates: false)
-      application.update(supports_push_updates: true)
+      application.update!(supports_push_updates: true)
 
       application.reload
       assert_includes application.supported_permission_strings, "user_update_permission"

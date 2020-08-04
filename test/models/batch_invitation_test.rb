@@ -73,7 +73,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
         @user.grant_application_permissions(another_app, %w[signin foo])
 
         @bi.supported_permission_ids = [another_app.signin_permission.id]
-        @bi.save
+        @bi.save!
         @bi.perform
 
         assert_empty @user.permissions_for(app)

@@ -23,7 +23,7 @@ class SupportedPermissionTest < ActiveSupport::TestCase
     managing_editor_permission = application.supported_permissions.where(name: "managing_editor").first
 
     user.grant_application_permission(application, "managing_editor")
-    managing_editor_permission.destroy
+    managing_editor_permission.destroy!
 
     assert_empty user.reload.application_permissions
   end
@@ -35,7 +35,7 @@ class SupportedPermissionTest < ActiveSupport::TestCase
     permission_three = create(:supported_permission, application: application_one, name: "critic")
 
     application_two = create(:application)
-    application_two.signin_permission.update(default: true)
+    application_two.signin_permission.update!(default: true)
     permission_four = create(:supported_permission, application: application_two, name: "ignorer", default: true)
 
     default_permissions = SupportedPermission.default

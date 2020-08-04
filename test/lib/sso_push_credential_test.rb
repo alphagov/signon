@@ -22,7 +22,7 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
     context "given an already authorised application" do
       setup do
         authorisation = @user.authorisations.create!(application_id: @application.id)
-        authorisation.update(token: "foo")
+        authorisation.update!(token: "foo")
       end
 
       should "return the bearer token for an already-authorized application" do

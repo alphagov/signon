@@ -52,7 +52,7 @@ class BatchInvitationsController < ApplicationController
       if policy(@batch_invitation).assign_organisation_from_csv?
         batch_user_args[:organisation_slug] = row["Organisation"]
       end
-      BatchInvitationUser.create(batch_user_args)
+      BatchInvitationUser.create!(batch_user_args)
     end
     @batch_invitation.enqueue
     flash[:notice] = "Scheduled invitation of #{@batch_invitation.batch_invitation_users.count} users"

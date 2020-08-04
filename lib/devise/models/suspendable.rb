@@ -27,21 +27,21 @@ module Devise
         suspended? ? :suspended : super
       end
 
-      # Suspends the user in the database.
+      # Return value is checked, so don't raise
+      # error on validation failures
+      # rubocop:disable Rails/SaveBang
       def suspend(reason)
-        self.reason_for_suspension = reason
-        self.suspended_at = Time.zone.now
         GovukStatsd.increment("users.suspend")
-        save
+        update(reason_for_suspension: reason,
+               suspended_at: Time.zone.now)
       end
+      # rubocop:enable Rails/SaveBang
 
-      # un-suspends the user in the database.
       def unsuspend
-        self.reason_for_suspension = nil
-        self.suspended_at = nil
-        self.unsuspended_at = Time.zone.now
-        self.password = SecureRandom.hex
-        save
+        update(password: SecureRandom.hex,
+               unsuspended_at: Time.zone.now,
+               suspended_at: nil,
+               reason_for_suspension: nil)
       end
 
       def suspended?

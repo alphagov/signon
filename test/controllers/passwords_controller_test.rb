@@ -15,7 +15,7 @@ class PasswordsControllerTest < ActionController::TestCase
   end
 
   test "GET /edit with an expired reset token shows an error page" do
-    @user.update(reset_password_sent_at: 1.year.ago)
+    @user.update!(reset_password_sent_at: 1.year.ago)
 
     get :edit, params: { reset_password_token: @token_received_in_email }
 
