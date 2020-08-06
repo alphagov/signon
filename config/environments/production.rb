@@ -71,6 +71,8 @@ Rails.application.configure do
     protocol: "https",
   }
 
+  config.action_mailer.delivery_method = :notify
+
   # Use default logging formatter so that PID and timestamp are not suppressed.
   # config.log_formatter = ::Logger::Formatter.new
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
