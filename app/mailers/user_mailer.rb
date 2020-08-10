@@ -64,6 +64,12 @@ class UserMailer < Devise::Mailer
     view_mail(template_id, to: @user.email, subject: sprintf(t("devise.mailer.unlock_instructions.subject"), app_name: app_name))
   end
 
+  def reset_password_instructions(user, token, _opts = {})
+    @user = user
+    @token = token
+    view_mail(template_id, to: @user.email, subject: t("devise.mailer.reset_password_instructions.subject"))
+  end
+
 private
 
   def suspension_time
