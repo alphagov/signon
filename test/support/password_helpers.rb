@@ -16,7 +16,7 @@ module PasswordHelpers
   end
 
   def complete_password_reset(email, options)
-    email.click_link("Change my password")
+    email.find_link(href: false).click
     fill_in "New password", with: options[:new_password]
     fill_in "Confirm new password", with: options[:new_password]
     click_button "Save password"
