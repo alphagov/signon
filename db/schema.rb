@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_02_20_161244) do
+ActiveRecord::Schema.define(version: 2020_08_05_142418) do
 
   create_table "batch_invitation_application_permissions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "batch_invitation_id", null: false
