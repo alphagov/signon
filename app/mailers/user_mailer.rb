@@ -59,6 +59,11 @@ class UserMailer < Devise::Mailer
     view_mail(template_id, to: @user.email, subject: "Your #{app_name} email address is being changed")
   end
 
+  def unlock_instructions(user, _token, _opts = {})
+    @user = user
+    view_mail(template_id, to: @user.email, subject: sprintf(t("devise.mailer.unlock_instructions.subject"), app_name: app_name))
+  end
+
 private
 
   def suspension_time
