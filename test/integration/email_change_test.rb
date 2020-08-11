@@ -64,7 +64,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
           email = emails_sent_to("new@email.com").detect { |mail| mail.subject == "Please confirm your account" }
           assert email
-          assert email.body.include?("Accept invitation")
+          assert email.body.include?("/users/invitation/accept?invitation_token=")
           assert user.accept_invitation!
         end
       end
@@ -123,7 +123,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         fill_in "Email", with: "new@email.com"
         click_button "Change email"
 
-        first_email_sent_to("new@email.com").click_link("Confirm my account")
+        first_email_sent_to("new@email.com").find_link(href: false).click
 
         signout
         signin_with(create(:admin_user))

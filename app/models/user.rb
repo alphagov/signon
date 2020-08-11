@@ -157,10 +157,6 @@ class User < ApplicationRecord
     elsif user.present? && user.invited_but_not_yet_accepted?
       UserMailer.notify_reset_password_disallowed_due_to_unaccepted_invitation(user).deliver_later
       user
-    elsif user.present?
-      token = user.send(:set_reset_password_token)
-      UserMailer.reset_password_instructions(user, token).deliver_later
-      user
     else
       super
     end

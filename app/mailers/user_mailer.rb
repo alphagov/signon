@@ -70,6 +70,28 @@ class UserMailer < Devise::Mailer
     view_mail(template_id, to: @user.email, subject: t("devise.mailer.reset_password_instructions.subject"))
   end
 
+  def confirmation_instructions(user, token, _opts = {})
+    @user = user
+    @token = token
+    view_mail(template_id, to: @user.unconfirmed_email, subject: t("devise.mailer.confirmation_instructions.subject"))
+  end
+
+  def email_changed(user, _opts = {})
+    @user = user
+    view_mail(template_id, to: @user.email, subject: t("devise.mailer.email_changed.subject"))
+  end
+
+  def password_change(user, _opts = {})
+    @user = user
+    view_mail(template_id, to: @user.email, subject: t("devise.mailer.password_change.subject"))
+  end
+
+  def invitation_instructions(user, token, _opts = {})
+    @user = user
+    @token = token
+    view_mail(template_id, to: @user.email, subject: t("devise.mailer.invitation_instructions.subject"))
+  end
+
 private
 
   def suspension_time
