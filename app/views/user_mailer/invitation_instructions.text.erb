@@ -1,6 +1,6 @@
-Someone has invited you to <%= t('department.name') %> Signon, you can accept it copying-and-pasting the link below into your browser's URL bar:
+Someone has invited you to <%= t('department.name') %> Signon, you can accept it through the link below.
 
-<%= accept_invitation_url(@resource, :invitation_token => @token) %>
+<%= accept_invitation_url(@user, invitation_token: @token) %>
 
 If you don't want to accept the invitation, please ignore this email.
 
