@@ -66,5 +66,11 @@ module Signon
     config.middleware.insert_before 0, SameSiteSecurity::Middleware
 
     config.action_dispatch.return_only_media_type_on_content_type = true
+
+    # Using a sass css compressor causes a scss file to be processed twice
+    # (once to build, once to compress) which breaks the usage of "unquote"
+    # to use CSS that has same function names as SCSS such as max.
+    # https://github.com/alphagov/govuk-frontend/issues/1350
+    config.assets.css_compressor = nil
   end
 end
