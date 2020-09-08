@@ -7,9 +7,13 @@ module DataHygiene
     end
 
     def call
+      error_encountered = false
+
       CSV.foreach(filename, **CSV_OPTIONS) do |row|
-        process_row(row)
+        error_encountered = true unless process_row(row)
       end
+
+      !error_encountered
     end
 
     def self.call(*args)
@@ -26,14 +30,29 @@ module DataHygiene
 
     def process_row(row)
       user = find_user(row)
+
+      if user.nil?
+        if User.exists?(email: row.fetch("New email"))
+          puts "warning: #{row.fetch('Old email')} looks to have already been updated"
+
+          return true
+        else
+          puts "error: couldn't find user #{row.fetch('Old email')}"
+
+          return false
+        end
+      end
+
       new_email_address = find_new_email_address(row)
       new_organisation = find_new_organisation(row)
 
       update_user(user, new_email_address, new_organisation)
+
+      true
     end
 
     def find_user(row)
-      User.find_by!(email: row.fetch("Old email"))
+      User.find_by(email: row.fetch("Old email"))
     end
 
     def find_new_email_address(row)
