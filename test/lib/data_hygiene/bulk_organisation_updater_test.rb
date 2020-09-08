@@ -30,9 +30,7 @@ class DataHygiene::BulkOrganisationUpdaterTest < ActiveSupport::TestCase
       a@b.com,b@c.com,new-organisation
     CSV
 
-    assert_raises ActiveRecord::RecordNotFound do
-      process(csv_file)
-    end
+    assert_not process(csv_file)
   end
 
   test "it changes the email address" do
