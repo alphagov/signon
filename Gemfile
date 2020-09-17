@@ -52,6 +52,7 @@ end
 
 group :development, :test do
   gem "jasmine"
+  gem "phantomjs", require: "phantomjs/poltergeist"
   gem "pry-byebug"
   gem "rubocop-govuk"
 end

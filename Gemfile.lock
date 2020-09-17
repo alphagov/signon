@@ -457,6 +457,7 @@ DEPENDENCIES
   mysql2
   nokogiri
   pg
+  phantomjs
   plek
   poltergeist
   pry-byebug
