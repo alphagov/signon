@@ -66,6 +66,7 @@ group :test do
   gem "poltergeist"
   gem "rails-controller-testing"
   gem "shoulda-context", require: false
+  gem "simplecov"
   gem "timecop"
   gem "webmock"
 end
