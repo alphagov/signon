@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
   end
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  rescue_from Notifications::Client::BadRequestError, with: :notify_bad_request
 
   def after_sign_out_path_for(_resource_or_scope)
     new_user_session_path
@@ -59,6 +60,10 @@ private
   def user_not_authorized(_exception)
     flash[:alert] = "You do not have permission to perform this action."
     redirect_to root_path
+  end
+
+  def notify_bad_request(_exception)
+    render plain: "Error: One or more recipients not in GOV.UK Notify team (code: 400)", status: :bad_request
   end
 
   def redirect_to_prior_flow(args = {})
