@@ -8,6 +8,7 @@ require File.expand_path("../config/environment", __dir__)
 require "rails/test_help"
 require "shoulda/context"
 require "webmock/minitest"
+require "minitest/autorun"
 require "mocha/minitest"
 
 class ActiveSupport::TestCase
