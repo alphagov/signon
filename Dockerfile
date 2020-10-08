@@ -1,4 +1,4 @@
-FROM ruby:2.6.6
+FROM ruby:2.7.2
 
 RUN apt-get update -qq && apt-get upgrade -y
 RUN apt-get install -y build-essential nodejs && apt-get clean
