@@ -51,8 +51,9 @@ group :development do
 end
 
 group :development, :test do
+  gem "govuk_test"
   gem "jasmine"
-  gem "phantomjs", require: "phantomjs/poltergeist"
+  gem "jasmine_selenium_runner"
   gem "pry-byebug"
   gem "rubocop-govuk"
 end
