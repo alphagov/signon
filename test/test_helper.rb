@@ -11,6 +11,8 @@ require "webmock/minitest"
 require "minitest/autorun"
 require "mocha/minitest"
 
+GovukTest.configure
+
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
 
@@ -40,24 +42,24 @@ class ActionController::TestCase
   end
 end
 
-Capybara.server = :webrick
-
-require "capybara/rails"
-
-Capybara.register_driver :rack_test do |app|
-  # capybara/rails sets up the rack-test driver to respect data-method attributes.
-  # https://github.com/jnicklas/capybara/blob/2.2_stable/lib/capybara/rails.rb#L18-L20
-  #
-  # This is problematic because it's not a javascript driver, and therefore isn't running
-  # the javascript that would use these, and insert the CSRF token.
-  #
-  # It's better to not respect these attributes in this driver, because it then behaves like
-  # a normal browser with javascript disabled.
-  Capybara::RackTest::Driver.new(app)
-end
-
-require "capybara/poltergeist"
-Capybara.javascript_driver = :poltergeist
+# Capybara.server = :webrick
+#
+# require "capybara/rails"
+#
+# Capybara.register_driver :rack_test do |app|
+#   # capybara/rails sets up the rack-test driver to respect data-method attributes.
+#   # https://github.com/jnicklas/capybara/blob/2.2_stable/lib/capybara/rails.rb#L18-L20
+#   #
+#   # This is problematic because it's not a javascript driver, and therefore isn't running
+#   # the javascript that would use these, and insert the CSRF token.
+#   #
+#   # It's better to not respect these attributes in this driver, because it then behaves like
+#   # a normal browser with javascript disabled.
+#   Capybara::RackTest::Driver.new(app)
+# end
+#
+# require "capybara/poltergeist"
+# Capybara.javascript_driver = :poltergeist
 
 require "support/user_helpers"
 require "support/email_helpers"
@@ -70,6 +72,8 @@ class ActiveRecord::Base
     @@shared_connection || retrieve_connection
   end
 end
+
+require "capybara/rails"
 
 # Forces all threads to share the same connection. This works on
 # Capybara because it starts the web server in a thread.

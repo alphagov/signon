@@ -34,7 +34,9 @@ class SuperAdminResetTwoStepVerificationTest < ActionDispatch::IntegrationTest
       perform_enqueued_jobs do
         assert_response_contains "2-step verification enabled"
 
-        click_link "Reset 2-step verification"
+        accept_alert do
+          click_link "Reset 2-step verification"
+        end
 
         assert_response_contains "Reset 2-step verification for #{@user.email}"
 
