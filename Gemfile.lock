@@ -156,7 +156,7 @@ GEM
       sentry-raven (~> 3.1.1)
       statsd-ruby (~> 1.4.0)
       unicorn (>= 5.4, < 5.8)
-    govuk_publishing_components (23.2.0)
+    govuk_publishing_components (23.3.0)
       govuk_app_config
       kramdown
       plek
@@ -437,7 +437,7 @@ GEM
       chronic (>= 0.6.3)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.4.0)
+    zeitwerk (2.4.1)
     zeroclipboard-rails (0.1.2)
       railties (>= 3.1)
     zxcvbn-ruby (1.1.0)
