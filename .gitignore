@@ -23,3 +23,7 @@
 # Simplecov
 coverage/*
 test/reports/*
+
+# yarn
+node_modules
+yarn-error.log
