@@ -1,26 +1,25 @@
 describe('A dropdown filter module', function () {
   'use strict'
 
-  var root = window
   var dropdownFilter
   var listElement
 
   beforeEach(function () {
-    listElement = $('<div>\
-      <ul class="js-filter-list">\
-        <li>\
-          <form>\
-            <input type="text" class="js-filter-list-input">\
-          </form>\
-        </li>\
-        <li class="first">\
-          <a href="/first-link">something</a>\
-        </li>\
-        <li class="second">\
-          <a href="/second-link">another thing</a>\
-        </li>\
-      </ul>\
-    </div>')
+    listElement = $('<div>' +
+      '<ul class="js-filter-list">' +
+        '<li>' +
+          '<form>' +
+            '<input type="text" class="js-filter-list-input">' +
+          '</form>' +
+        '</li>' +
+        '<li class="first">' +
+          '<a href="/first-link">something</a>' +
+        '</li>' +
+        '<li class="second">' +
+          '<a href="/second-link">another thing</a>' +
+        '</li>' +
+      '</ul>' +
+    '</div>')
 
     $('body').append(listElement)
     dropdownFilter = new GOVUKAdmin.Modules.DropdownFilter()

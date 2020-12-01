@@ -10,13 +10,13 @@
   var PasswordStrengthIndicator = function (options) {
     var instance = this
 
-    $.each([options.password_field, options.password_confirmation_field], function (i, password_field) {
+    $.each([options.password_field, options.password_confirmation_field], function (i, passwordField) {
       var update = function () {
         var password = $(options.password_field).val()
         var passwordConfirmation = $(options.password_confirmation_field).val()
         instance.updateIndicator(password, passwordConfirmation, options)
       }
-      $(password_field).on('input', update)
+      $(passwordField).on('input', update)
     })
 
     $(options.password_strength_guidance).attr('aria-live', 'polite').attr('aria-atomic', 'true')
@@ -33,8 +33,8 @@
 
       var isPasswordNotStrongEnough = (result.score < options.strong_password_boundary)
 
-      var aWeakWordFoundInPassword = $(options.weak_words).is(function (i, weak_word) {
-        return (password.indexOf(weak_word) >= 0)
+      var aWeakWordFoundInPassword = $(options.weak_words).is(function (i, weakWord) {
+        return (password.indexOf(weakWord) >= 0)
       })
       if (isPasswordNotStrongEnough && aWeakWordFoundInPassword) {
         guidance.push('parts-of-email')
@@ -88,7 +88,7 @@ $(function () {
     var $passwordConfirmationField = $('form #password-confirmation-control-group input[type=password]')
     $passwordField.parent().parent().append('<input type="hidden" id="password-strength-score" name="password-strength-score" value=""/>')
 
-    new GOVUK.passwordStrengthIndicator({
+    new GOVUK.passwordStrengthIndicator({ // eslint-disable-line no-new, new-cap
       password_field: $passwordField,
       password_strength_guidance: $('#password-guidance'),
       password_confirmation_field: $passwordConfirmationField,

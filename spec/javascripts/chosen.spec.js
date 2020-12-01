@@ -1,7 +1,6 @@
 describe('A chosen module', function () {
   'use strict'
 
-  var root = window
   var chosen
   var element
 
