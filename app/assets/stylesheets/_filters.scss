@@ -1,3 +1,6 @@
+// stylelint-disable selector-no-qualifying-type -- There are a large number
+// of violations of this rule in this file that should be fixed.
+
 .filters .panel-heading {
   background: transparent;
 }
@@ -5,7 +8,7 @@
 a.filter-option,
 a.filter-option:visited,
 .filter-option {
-  color: inherit !important;
+  color: inherit !important; // stylelint-disable-line declaration-no-important
 
   .glyphicon {
     @extend %glyphicon-smaller-than-text;
@@ -47,17 +50,13 @@ a.filter-option:visited,
   width: 290px;
 }
 
-/* ==========================================================================
-Nav compact
-========================================================================== */
+// Nav compact
 
 .nav-compact > li > a {
   padding: 5px 10px;
 }
 
-/* ==========================================================================
-Nav pills
-========================================================================== */
+// Nav pills
 
 .nav-pill-text {
   position: relative;
@@ -73,9 +72,7 @@ Nav pills
   padding-left: 0;
 }
 
-/* ==========================================================================
-Dropdown filter for Organisation & Permission
-========================================================================== */
+// Dropdown filter for Organisation & Permission
 
 .filter-by-organisation-menu,
 .filter-by-permission-menu {
@@ -89,15 +86,13 @@ Dropdown filter for Organisation & Permission
   }
 }
 
-/* ==========================================================================
-List filter
-========================================================================== */
+// List filter
 
 .list-filter {
   background: #eeeeee;
   padding: 10px $default-horizontal-margin;
   margin-top: -5px;
-  margin-bottom: $default-vertical-margin/2;
+  margin-bottom: $default-vertical-margin / 2;
   border-radius: $border-radius-base $border-radius-base 0 0;
   border-bottom: 1px solid $dropdown-border;
 }
