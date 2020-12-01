@@ -8,4 +8,4 @@ include VolatileLock::DSL
 
 Signon::Application.load_tasks
 
-task default: [:test, "jasmine:ci", :lint]
+task default: %i[lint test jasmine:ci]
