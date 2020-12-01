@@ -13,12 +13,12 @@ a.filter-option:visited,
 
   &.filter-selected {
     font-weight: bold;
-    background: #eee;
+    background: #eeeeee;
 
     &:hover,
     &:focus,
     &:active {
-      background: #ddd;
+      background: #dddddd;
     }
   }
 
@@ -33,7 +33,7 @@ a.filter-option:visited,
     &:first-child + .filter-option {
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
-      border-left: 1px solid #ddd;
+      border-left: 1px solid #dddddd;
     }
   }
 }
@@ -77,7 +77,8 @@ Nav pills
 Dropdown filter for Organisation & Permission
 ========================================================================== */
 
-.filter-by-organisation-menu, .filter-by-permission-menu {
+.filter-by-organisation-menu,
+.filter-by-permission-menu {
   .dropdown-menu {
     max-height: 300px;
     overflow-y: scroll;
@@ -93,7 +94,7 @@ List filter
 ========================================================================== */
 
 .list-filter {
-  background: #eee;
+  background: #eeeeee;
   padding: 10px $default-horizontal-margin;
   margin-top: -5px;
   margin-bottom: $default-vertical-margin/2;
