@@ -6,7 +6,7 @@ class VolatileLockTest < ActiveSupport::TestCase
   end
 
   def redis
-    RedisClient.instance.connection
+    Redis.current
   end
 
   def volatile_lock(key, expiration_time = 1.second)
