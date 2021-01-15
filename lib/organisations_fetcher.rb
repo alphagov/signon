@@ -20,8 +20,7 @@ class OrganisationsFetcher
 private
 
   def organisations
-    base_uri = Plek.new.website_root
-    GdsApi::Organisations.new(base_uri).organisations.with_subsequent_pages
+    @organisations ||= GdsApi.organisations.organisations.with_subsequent_pages
   end
 
   def update_or_create_organisation(organisation_data)
