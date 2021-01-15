@@ -9,12 +9,17 @@ class OrganisationsFetcher
       update_or_create_organisation(organisation_data)
       memo[organisation_data["details"]["slug"]] = child_organisation_slugs(organisation_data)
     end
-    # Now that any new organisations have been created and any slug changes
-    # have been applied, we can safely tie together organisations
+
     update_ancestry(organisation_relationships)
+
+    fix_parents_manually
   rescue ActiveRecord::RecordInvalid => e
     raise "Couldn't save organisation #{e.record.slug} because: #{e.record.errors.full_messages.join(',')}"
   end
+
+  MANUAL_PARENT_FIXES = {
+    "animal-and-plant-health-agency" => "department-for-environment-food-rural-affairs",
+  }.freeze
 
 private
 
@@ -50,12 +55,23 @@ private
     organisation_relationships.each do |organisation_slug, child_organisation_slugs|
       parent = Organisation.find_by!(slug: organisation_slug)
       Organisation.where(slug: child_organisation_slugs).find_each do |child_organisation|
-        # TODO: this ignores that organisations can have multiple parents. I think organisations will
-        # end up with the parent that appears last in the API response(s).
-        #
-        # Transition app implements this correctly.
+        # TODO: This ignores that organisations can have multiple parents. Instead the
+        # chosen parent will be the last parent in Whitehall, ordered alphabetically.
         child_organisation.update!(parent: parent)
       end
+    end
+  end
+
+  def fix_parents_manually
+    # Signon doesn't support multiple parents. Most of the time this is fine, but for
+    # certain organisations this leads to a poor user experience and frequent support
+    # tickets.
+    MANUAL_PARENT_FIXES.each do |child_slug, parent_slug|
+      child = Organisation.find_by(slug: child_slug)
+      parent = Organisation.find_by(slug: parent_slug)
+      next unless child && parent
+
+      child.update!(parent: parent)
     end
   end
 end
