@@ -1,5 +1,3 @@
-require "redis_client"
-
 class VolatileLock
   class FailedToSetExpiration < StandardError; end
 
@@ -45,7 +43,7 @@ private
   end
 
   def redis
-    RedisClient.instance.connection
+    Redis.current
   end
 
   def hostname
