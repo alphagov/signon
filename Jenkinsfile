@@ -8,8 +8,6 @@ node {
   govuk.setEnvar("DEVISE_SECRET_KEY", UUID.randomUUID().toString())
 
   govuk.buildProject(
-    beforeTest: { sh("yarn install") },
     brakeman: true,
-    sassLint: false,
   )
 }
