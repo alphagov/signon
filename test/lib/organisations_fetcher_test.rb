@@ -113,4 +113,17 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
       OrganisationsFetcher.new.call
     end
   end
+
+  OrganisationsFetcher::MANUAL_PARENT_FIXES.each do |child_slug, parent_slug|
+    test "it manually fixes #{child_slug}" do
+      child = create(:organisation, name: "Child", slug: child_slug)
+      parent = create(:organisation, name: "Parent", slug: parent_slug)
+
+      stub_organisations_api_has_organisations([child.slug, parent.slug])
+
+      OrganisationsFetcher.new.call
+
+      assert_equal child.reload.parent, parent
+    end
+  end
 end
