@@ -102,7 +102,7 @@ GEM
     chunky_png (1.3.12)
     cliver (0.3.2)
     coderay (1.1.3)
-    concurrent-ruby (1.1.7)
+    concurrent-ruby (1.1.8)
     connection_pool (2.2.3)
     crack (0.4.4)
     crass (1.0.6)
@@ -156,7 +156,7 @@ GEM
       sentry-raven (~> 3.1.1)
       statsd-ruby (~> 1.5.0)
       unicorn (>= 5.4, < 5.9)
-    govuk_publishing_components (23.13.0)
+    govuk_publishing_components (23.14.0)
       govuk_app_config
       kramdown
       plek
@@ -180,7 +180,7 @@ GEM
     http-accept (1.7.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    i18n (1.8.7)
+    i18n (1.8.8)
       concurrent-ruby (~> 1.0)
     jasmine (3.6.0)
       jasmine-core (~> 3.6.0)
@@ -401,7 +401,7 @@ GEM
       sprockets (>= 3.0.0)
     statsd-ruby (1.5.0)
     systemu (2.6.5)
-    thor (1.0.1)
+    thor (1.1.0)
     thread_safe (0.3.6)
     tilt (2.0.10)
     timecop (0.9.1)
