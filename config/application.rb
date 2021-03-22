@@ -18,10 +18,6 @@ require_relative "../lib/same_site_security/middleware"
 Bundler.require(*Rails.groups)
 
 module Signon
-  def self.mysql?
-    ENV.fetch("SIGNONOTRON2_DB_ADAPTER", "mysql") == "mysql"
-  end
-
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0

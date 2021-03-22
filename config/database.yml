@@ -1,5 +1,4 @@
-<% adapter = ENV.fetch("SIGNONOTRON2_DB_ADAPTER", "mysql") %>
-mysql_default: &mysql_default
+default: &default
   adapter: mysql2
   encoding: utf8
   reconnect: true
@@ -7,24 +6,18 @@ mysql_default: &mysql_default
   password: signonotron2
   pool: 5
 
-postgresql_default: &postgresql_default
-  adapter: postgresql
-  encoding: unicode
-  template: template0
-  pool: 5
-
 development:
-  <<: *<%= adapter %>_default
+  <<: *default
   database: signonotron2_development
   url: <%= ENV["DATABASE_URL"] %>
 
 test: &test
-  <<: *<%= adapter %>_default
+  <<: *default
   database: signonotron2_test
   url: <%= ENV["TEST_DATABASE_URL"] %>
 
 production:
-  <<: *<%= adapter %>_default
+  <<: *default
   database: halberd_production
   username: halberd
   password:

@@ -20,7 +20,7 @@ Details of our interpretation of OAuth are provided in
 
 [Various Rubygems](Gemfile)
 
-MySQL or Postgres for main data storage. We use MySQL in GOV.UK Production
+MySQL for data storage.
 
 Redis/Sidekiq for ActiveJob asynchronous tasks
 

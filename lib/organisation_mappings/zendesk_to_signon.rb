@@ -6,19 +6,11 @@ module OrganisationMappings
         if organisation
           User
             .where(organisation_id: nil)
-            .where("#{substring_function} IN (?)", domain_names)
+            .where("substring_index(email, '@', -1) IN (?)", domain_names)
             .update_all(organisation_id: organisation.id)
         else
           puts "Could not find organisation matching name '#{organisation_name}'"
         end
-      end
-    end
-
-    def self.substring_function
-      if Signon.mysql?
-        "substring_index(email, '@', -1)"
-      else
-        "split_part(email, '@', 2)"
       end
     end
   end
