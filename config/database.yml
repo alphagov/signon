@@ -18,7 +18,4 @@ test: &test
 
 production:
   <<: *default
-  database: halberd_production
-  username: halberd
-  password:
   url: <%= ENV["DATABASE_URL"] %>
