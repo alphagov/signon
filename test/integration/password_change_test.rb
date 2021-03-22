@@ -97,6 +97,7 @@ class PasswordChangeTest < ActionDispatch::IntegrationTest
       fill_in "Confirm new password", with: "stronger password purple monkey dishwasher"
       refute_response_contains("The confirmation must match the new password")
 
+      scroll_to page.find("button", text: "Save password", visible: false)
       click_button "Save password"
 
       assert_response_contains("Your password was changed successfully")
