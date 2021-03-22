@@ -5,5 +5,5 @@ ALPHABETICAL_PAGINATE_CONFIG = {
   include_all: false,
   js: false,
   bootstrap3: true,
-  db_mode: Signon.mysql?,
+  db_mode: true,
 }.freeze
