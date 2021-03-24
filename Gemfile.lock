@@ -156,7 +156,7 @@ GEM
       sentry-raven (~> 3.1.1)
       statsd-ruby (~> 1.5.0)
       unicorn (>= 5.4, < 5.9)
-    govuk_publishing_components (24.6.1)
+    govuk_publishing_components (24.7.1)
       govuk_app_config
       kramdown
       plek
@@ -210,7 +210,7 @@ GEM
       kaminari-core (= 1.2.1)
     kaminari-core (1.2.1)
     kgio (2.11.3)
-    kramdown (2.3.0)
+    kramdown (2.3.1)
       rexml
     lhm (2.2.0)
     link_header (0.0.8)
