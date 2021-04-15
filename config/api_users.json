@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Content Store",
+    "slug": "content-store"
+  },
+  {
+    "name": "Draft Content Store",
+    "slug": "draft-content-store"
+  },
+  {
+    "name": "Frontend App",
+    "slug": "frontend"
+  },
+  {
+    "name": "Publisher App",
+    "slug": "publisher"
+  },
+  {
+    "name": "Publishing API",
+    "slug": "publishing-api"
+  },
+  {
+    "name": "Static",
+    "slug": "static"
+  }
+]
