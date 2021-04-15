@@ -65,6 +65,13 @@ Rails.application.routes.draw do
     end
   end
 
+  namespace :api do
+    namespace :v1 do
+      post "authorisations/test", to: "authorisations#test"
+      post "authorisations", to: "authorisations#create"
+    end
+  end
+
   # Gracefully handle GET on page (e.g. hit refresh) reached by a render to a POST
   match "/users/:id" => redirect("/users/%{id}/edit"), via: :get
   match "/suspensions/:id" => redirect("/users/%{id}/edit"), via: :get
