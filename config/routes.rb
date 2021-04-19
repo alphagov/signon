@@ -6,6 +6,8 @@ Rails.application.routes.draw do
         Healthcheck::ApiTokens,
       )
 
+  get "/healthcheck/api-tokens", to: "healthcheck#api_tokens"
+
   use_doorkeeper do
     controllers authorizations: "signin_required_authorizations"
   end

@@ -34,11 +34,18 @@ module Healthcheck
     end
 
     def status
-      return GovukHealthcheck::CRITICAL if expiring_tokens.any?(&:critical?)
+      return :critical if expiring_tokens.any?(&:critical?)
 
-      return GovukHealthcheck::WARNING if expiring_tokens.any?
+      return :warning if expiring_tokens.any?
 
-      GovukHealthcheck::OK
+      :ok
+    end
+
+    def to_hash
+      {
+        message: message,
+        status: status,
+      }
     end
 
   private
