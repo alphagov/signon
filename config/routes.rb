@@ -6,6 +6,14 @@ Rails.application.routes.draw do
         Healthcheck::ApiTokens,
       )
 
+  get "/healthcheck/live", to: proc { [200, {}, %w[OK]] }
+  get "/healthcheck/ready", to: GovukHealthcheck.rack_response(
+    GovukHealthcheck::ActiveRecord,
+    GovukHealthcheck::SidekiqRedis,
+  )
+
+  get "/healthcheck/api-tokens", to: "healthcheck#api_tokens"
+
   use_doorkeeper do
     controllers authorizations: "signin_required_authorizations"
   end
