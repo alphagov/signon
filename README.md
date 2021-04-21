@@ -1,55 +1,40 @@
 # Signon
 
-Signon is a centralised OAuth2 based single sign-on provider for GDS services
-that provides username/password and 2-Factor authentication.
-
-## Live example
-
-[Integration Environment Signon](https://signon.integration.publishing.service.gov.uk)
+Signon is a centralised OAuth2 based single sign-on provider for GDS services that provides username/password and 2-Factor authentication.
 
 ## Technical documentation
 
-[Devise](https://github.com/plataformatec/devise) is used to provide username 
-password sign-in, and [Doorkeeper](https://github.com/applicake/doorkeeper/)
-as an OAuth 2 provider.
+[Devise] is used to provide username password sign-in, and [Doorkeeper] as an OAuth 2 provider. Details of our interpretation of OAuth are provided in [an accompanying document][auth].
 
-Details of our interpretation of OAuth are provided in
-[an accompanying document](docs/oauth.md)
+This is a Ruby on Rails app, and should follow [our Rails app conventions][conventions].
 
-## Dependencies
+You can use the [GOV.UK Docker environment][govuk-docker] to run the application and its tests with all the necessary dependencies. Follow the [usage instructions][docker-usage] to get started.
 
-[Various Rubygems](Gemfile)
+**Use GOV.UK Docker to run any commands that follow.**
 
-MySQL for data storage.
-
-Redis/Sidekiq for ActiveJob asynchronous tasks
-
-## Running the application
-
-The web application itself is run like any other Rails app, for example:
-
-```sh
-script/rails s
-```
-
-In development, you can run sidekiq to process background jobs:
-
-```sh
-bundle exec sidekiq -C config/sidekiq.yml
-```
-
-## Running the test suite
+### Running the test suite
 
 ```sh
 bundle exec rake
 ```
 
-## Setup and usage
+## Further documentation
 
-See accompanying [Usage Documentation](docs/usage.md)
+- [Usage documentation]
+- [Mass password reset]
+- [Troubleshooting]
 
 ## License
 
 [MIT License](LICENCE)
 
-
+[integration]: https://signon.integration.publishing.service.gov.uk
+[conventions]: https://docs.publishing.service.gov.uk/manual/conventions-for-rails-applications.html
+[govuk-docker]: https://github.com/alphagov/govuk-docker
+[docker-usage]: https://github.com/alphagov/govuk-docker#usage
+[Devise]: https://github.com/plataformatec/devise
+[Doorkeeper]: https://github.com/applicake/doorkeeper
+[auth]: docs/oauth.md
+[Usage documentation]: docs/usage.md
+[Mass password reset]: docs/mass_password_reset.md
+[Troubleshooting]: docs/troubleshooting.md
