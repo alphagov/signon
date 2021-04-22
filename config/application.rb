@@ -63,6 +63,12 @@ module Signon
 
     config.action_dispatch.return_only_media_type_on_content_type = true
 
+    # allows another assets location to be specified if assets are stored in non-default path
+    config.assets.prefix = ENV.fetch("ASSETS_PREFIX", "/assets")
+
+    # allows another asset host to be specified if different from app host
+    config.asset_host = ENV.fetch("ASSET_HOST", nil)
+
     # Using a sass css compressor causes a scss file to be processed twice
     # (once to build, once to compress) which breaks the usage of "unquote"
     # to use CSS that has same function names as SCSS such as max.
