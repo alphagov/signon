@@ -12,6 +12,7 @@ ENV DATABASE_URL mysql2://root:root@mysql/signon
 ENV GOVUK_APP_NAME signon
 ENV PORT 3016
 ENV TEST_DATABASE_URL mysql2://root:root@mysql/signon_test
+ENV ASSETS_PREFIX /assets/signon
 
 RUN mkdir $APP_HOME
 
