@@ -1,0 +1,66 @@
+[
+  {
+    "name": "Content Store",
+    "description": "Central store for current live content on GOV.UK",
+    "permissions": [
+      "signin",
+      "user_update_permission"
+    ],
+    "redirect_path": "/auth/gds/callback",
+    "subdomain_name": "content-store"
+  },
+  {
+    "name": "Draft Content Store",
+    "description": "Central store for current draft content on GOV.UK",
+    "permissions": [
+      "signin",
+      "user_update_permission"
+    ],
+    "redirect_path": "/auth/gds/callback",
+    "subdomain_name": "draft-content-store"
+  },
+  {
+    "name": "Draft Router API",
+    "description": "Manages the draft router database",
+    "permissions": [
+      "signin",
+      "user_update_permission"
+    ],
+    "redirect_path": "/auth/gds/callback",
+    "subdomain_name": "draft-router-api"
+  },
+  {
+    "name": "Publisher",
+    "description": "Publish mainstream content",
+    "permissions": [
+      "govuk_editor",
+      "signin",
+      "skip_review",
+      "user_update_permission",
+      "welsh_editor"
+    ],
+    "redirect_path": "/auth/gds/callback",
+    "subdomain_name": "publisher"
+  },
+  {
+    "name": "Publishing API",
+    "description": "Central store for all publishing content on GOV.UK",
+    "permissions": [
+      "signin",
+      "user_update_permission",
+      "view_all"
+    ],
+    "redirect_path": "/auth/gds/callback",
+    "subdomain_name": "publishing-api"
+  },
+  {
+    "name": "Router API",
+    "description": "Manages the router database",
+    "permissions": [
+      "signin",
+      "user_update_permission"
+    ],
+    "redirect_path": "/auth/gds/callback",
+    "subdomain_name": "router-api"
+  }
+]
