@@ -16,6 +16,7 @@ namespace :bootstrap do
       resource_name_prefix: resource_name_prefix(args.resource_prefix),
     ).configure!(applications)
     Configure::ApiUsers.new(
+      public_domain: public_domain,
       namespace: args.resource_prefix,
       resource_name_prefix: resource_name_prefix(args.resource_prefix),
     ).configure!(api_users)
