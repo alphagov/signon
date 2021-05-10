@@ -1,14 +1,18 @@
 require "test_helper"
 
 class ConfigureApiUsersTest < ActiveSupport::TestCase
+  public_domain = "example.gov.uk"
+
   test "creates required api users" do
     Configure::ApiUsers.new(
-      namespace: nil, resource_name_prefix: nil,
+      namespace: nil,
+      resource_name_prefix: nil,
+      public_domain: public_domain,
     ).configure!(api_users)
 
     api_users.each do |api_user|
       assert ApiUser.exists?(
-        email: "#{api_user.fetch('slug')}@digital.cabinet-office.gov.uk",
+        email: "#{api_user.fetch('slug')}@#{public_domain}",
         name: api_user.fetch("name"),
       )
     end
@@ -18,23 +22,26 @@ class ConfigureApiUsersTest < ActiveSupport::TestCase
     namespace = "test"
     prefix = "[Test!] "
     Configure::ApiUsers.new(
-      namespace: namespace, resource_name_prefix: prefix,
+      namespace: namespace,
+      public_domain: public_domain,
+      resource_name_prefix: prefix,
     ).configure!(api_users)
 
     api_users.each do |api_user|
       assert ApiUser.exists?(
-        email: "#{namespace}-#{api_user.fetch('slug')}@digital.cabinet-office.gov.uk",
+        email: "#{namespace}-#{api_user.fetch('slug')}@#{public_domain}",
         name: prefix + api_user.fetch("name"),
       )
     end
   end
 
   test "#configure! is idempotent and non-destructive" do
-    email = "#{api_users.first.fetch('slug')}@digital.cabinet-office.gov.uk"
+    email = "#{api_users.first.fetch('slug')}@#{public_domain}"
     name = "Pre-existing api_user"
     create(:api_user, email: email, name: name)
 
     Configure::ApiUsers.new(
+      public_domain: public_domain,
       namespace: nil,
       resource_name_prefix: nil,
     ).configure!(api_users)
@@ -44,7 +51,7 @@ class ConfigureApiUsersTest < ActiveSupport::TestCase
 
     api_users[1..].each do |api_user|
       assert ApiUser.exists?(
-        email: "#{api_user.fetch('slug')}@digital.cabinet-office.gov.uk",
+        email: "#{api_user.fetch('slug')}@#{public_domain}",
         name: api_user.fetch("name"),
       )
     end
