@@ -1,4 +1,6 @@
 class Api::V1::AuthorisationsController < ApplicationController
+  include AdminApiHelper
+
   before_action :authenticate
   before_action :validate_create_params, only: %w[create]
   before_action :validate_test_params, only: %w[test]
@@ -41,16 +43,6 @@ class Api::V1::AuthorisationsController < ApplicationController
 
 private
 
-  BEARER_TOKEN_VAR = "SIGNON_ADMIN_PASSWORD".freeze
-
-  def authenticate
-    authenticate_or_request_with_http_token do |token, _options|
-      if ENV.key? BEARER_TOKEN_VAR
-        ActiveSupport::SecurityUtils.secure_compare(token, ENV.fetch(BEARER_TOKEN_VAR))
-      end
-    end
-  end
-
   def api_user
     @api_user ||= begin
       ApiUser.find_by!(email: params.require(:api_user_email))
@@ -64,25 +56,6 @@ private
   def grant_app_permissions!(authorisation, permissions)
     all_permissions = %w[signin] + permissions
     @api_user.grant_application_permissions(authorisation.application, all_permissions)
-  end
-
-  def missing_params_error(exception)
-    render json: { error: exception.message }, status: :bad_request
-  end
-
-  def not_found_error(_exception)
-    render json: { error: "Not found" }, status: :not_found
-  end
-
-  def assert_no_missing_params(required_params)
-    missing = required_params
-                .index_with { |key| params[key] }
-                .select { |_k, v| v.blank? }
-                .keys
-
-    return if missing.empty?
-
-    raise ActionController::ParameterMissing, missing.to_sentence
   end
 
   def validate_create_params
