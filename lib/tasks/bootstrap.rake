@@ -1,4 +1,5 @@
 namespace :bootstrap do
+  # TODO: Replace this with an API.
   desc "Create all resources for bootrapping an environment
     Usage:
       boostrap:all[my-test.publishing.service.gov.uk,my-test-env]
@@ -8,13 +9,8 @@ namespace :bootstrap do
     public_domain = args.public_domain
     raise ArgumentError, "Provide a public_domain!" if public_domain.blank?
 
-    applications = JSON.parse(File.read("config/applications.json"))
     api_users = JSON.parse(File.read("config/api_users.json"))
 
-    Configure::Applications.new(
-      public_domain: public_domain,
-      resource_name_prefix: resource_name_prefix(args.resource_prefix),
-    ).configure!(applications)
     Configure::ApiUsers.new(
       public_domain: public_domain,
       namespace: args.resource_prefix,
