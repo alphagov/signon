@@ -62,7 +62,7 @@ class AuthorisationsTest < ActionDispatch::IntegrationTest
     body = JSON.parse(response.body)
     assert_equal @application.name, body.fetch("application_name")
     assert_equal body.fetch("token").length, 43
-    assert_match(/[a-zA-Z0-9\-_]/, body.fetch("token"))
+    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("token"))
   end
 
   test "#test confirms that a token has been created" do
