@@ -70,6 +70,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       post "authorisations/test", to: "authorisations#test"
       post "authorisations", to: "authorisations#create"
+      get "applications", to: "applications#show"
       post "applications", to: "applications#create"
     end
   end
