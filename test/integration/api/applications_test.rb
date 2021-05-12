@@ -46,9 +46,9 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     assert_equal 200, response.status
     body = JSON.parse(response.body)
     assert_equal 43, body.fetch("oauth_id").length
-    assert_match(/[a-zA-Z0-9\-_]/, body.fetch("oauth_id"))
+    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_id"))
     assert_equal 43, body.fetch("oauth_secret").length
-    assert_match(/[a-zA-Z0-9\-_]/, body.fetch("oauth_secret"))
+    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_secret"))
   end
 
   test "#create responds with a 401 error when an invalid token is given" do
@@ -87,9 +87,9 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     assert_equal 200, response.status
     body = JSON.parse(response.body)
     assert_equal 43, body.fetch("oauth_id").length
-    assert_match(/[a-zA-Z0-9\-_]/, body.fetch("oauth_id"))
+    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_id"))
     assert_equal 43, body.fetch("oauth_secret").length
-    assert_match(/[a-zA-Z0-9\-_]/, body.fetch("oauth_secret"))
+    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_secret"))
   end
 
   test "#create with no permissions is successful" do
@@ -97,9 +97,9 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     assert_equal 200, response.status
     body = JSON.parse(response.body)
     assert_equal 43, body.fetch("oauth_id").length
-    assert_match(/[a-zA-Z0-9\-_]/, body.fetch("oauth_id"))
+    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_id"))
     assert_equal 43, body.fetch("oauth_secret").length
-    assert_match(/[a-zA-Z0-9\-_]/, body.fetch("oauth_secret"))
+    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_secret"))
   end
 
   #
