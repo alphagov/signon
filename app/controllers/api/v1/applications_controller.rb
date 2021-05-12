@@ -2,7 +2,8 @@ class Api::V1::ApplicationsController < ApplicationController
   include AdminApiHelper
 
   before_action :authenticate
-  before_action :validate_params
+  before_action :validate_create_params, only: %w[create]
+  before_action :validate_show_params, only: %w[show]
 
   skip_after_action :verify_authorized
   protect_from_forgery with: :null_session
@@ -10,6 +11,7 @@ class Api::V1::ApplicationsController < ApplicationController
   rescue_from ActionController::ParameterMissing, with: :missing_params_error
   rescue_from ActiveRecord::RecordInvalid, with: :not_valid_error
   rescue_from ActiveRecord::RecordNotUnique, with: :already_exists_error
+  rescue_from ActiveRecord::RecordNotFound, with: :not_found_error
 
   respond_to :json
 
@@ -21,6 +23,11 @@ class Api::V1::ApplicationsController < ApplicationController
       home_uri: params.fetch(:home_uri),
       permissions: params.fetch(:permissions, []),
     )
+    render json: { oauth_id: application.uid, oauth_secret: application.secret }
+  end
+
+  def show
+    application = Doorkeeper::Application.find_by!(name: params.fetch(:name))
     render json: { oauth_id: application.uid, oauth_secret: application.secret }
   end
 
@@ -44,9 +51,13 @@ private
     end
   end
 
-  def validate_params
+  def validate_create_params
     assert_no_missing_params(%i[
       name description redirect_uri home_uri permissions
     ])
+  end
+
+  def validate_show_params
+    assert_no_missing_params(%i[name])
   end
 end
