@@ -46,9 +46,9 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     assert_equal 200, response.status
     body = JSON.parse(response.body)
     assert_equal 43, body.fetch("oauth_id").length
-    assert_match(/[A-Za-z0-9]\w+/, body.fetch("oauth_id"))
+    assert_match(/[a-zA-Z0-9\-_]/, body.fetch("oauth_id"))
     assert_equal 43, body.fetch("oauth_secret").length
-    assert_match(/[A-Za-z0-9]\w+/, body.fetch("oauth_secret"))
+    assert_match(/[a-zA-Z0-9\-_]/, body.fetch("oauth_secret"))
   end
 
   test "#create responds with a 401 error when an invalid token is given" do
@@ -87,9 +87,19 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     assert_equal 200, response.status
     body = JSON.parse(response.body)
     assert_equal 43, body.fetch("oauth_id").length
-    assert_match(/[A-Za-z0-9]\w+/, body.fetch("oauth_id"))
+    assert_match(/[a-zA-Z0-9\-_]/, body.fetch("oauth_id"))
     assert_equal 43, body.fetch("oauth_secret").length
-    assert_match(/[A-Za-z0-9]\w+/, body.fetch("oauth_secret"))
+    assert_match(/[a-zA-Z0-9\-_]/, body.fetch("oauth_secret"))
+  end
+
+  test "#create with no permissions is successful" do
+    post_req(endpoint, params: create_params.merge("permissions" => []))
+    assert_equal 200, response.status
+    body = JSON.parse(response.body)
+    assert_equal 43, body.fetch("oauth_id").length
+    assert_match(/[a-zA-Z0-9\-_]/, body.fetch("oauth_id"))
+    assert_equal 43, body.fetch("oauth_secret").length
+    assert_match(/[a-zA-Z0-9\-_]/, body.fetch("oauth_secret"))
   end
 
   #
@@ -102,16 +112,16 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   end
 
   def get_req(endpoint, params: {})
-    get endpoint, params: params, headers: auth_header
+    get endpoint, params: params, headers: headers
   end
 
   def post_req(endpoint, params: {})
-    post endpoint, params: params, headers: auth_header
+    post endpoint, params: params.to_json, headers: headers
   end
 
-  def auth_header
+  def headers
     token = SecureRandom.uuid
     ENV["SIGNON_ADMIN_PASSWORD"] = token
-    { "HTTP_AUTHORIZATION" => "Bearer #{token}" }
+    { "HTTP_AUTHORIZATION" => "Bearer #{token}", "CONTENT_TYPE" => "application/json" }
   end
 end

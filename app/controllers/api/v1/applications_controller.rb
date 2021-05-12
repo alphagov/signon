@@ -53,7 +53,7 @@ private
 
   def validate_create_params
     assert_no_missing_params(%i[
-      name description redirect_uri home_uri permissions
+      name description redirect_uri home_uri
     ])
   end
 
