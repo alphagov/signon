@@ -78,8 +78,8 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   test "#create when application already exists" do
     create(:application, name: name)
     post_req(endpoint, params: create_params.merge("name" => name))
-    assert_equal 400, response.status
-    assert_equal JSON.generate({ error: "Record already exists" }), response.body
+    assert_equal 409, response.status
+    assert_equal JSON.generate({ error: "ApplicationAlreadyCreated" }), response.body
   end
 
   test "#create adds an application" do

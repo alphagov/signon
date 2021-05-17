@@ -10,7 +10,6 @@ class Api::V1::ApplicationsController < ApplicationController
 
   rescue_from ActionController::ParameterMissing, with: :missing_params_error
   rescue_from ActiveRecord::RecordInvalid, with: :not_valid_error
-  rescue_from ActiveRecord::RecordNotUnique, with: :already_exists_error
   rescue_from ActiveRecord::RecordNotFound, with: :not_found_error
 
   respond_to :json
@@ -24,6 +23,8 @@ class Api::V1::ApplicationsController < ApplicationController
       permissions: params.fetch(:permissions, []),
     )
     render json: { oauth_id: application.uid, oauth_secret: application.secret }
+  rescue ActiveRecord::RecordNotUnique
+    render json: { error: "ApplicationAlreadyCreated" }, status: :conflict
   end
 
   def show
