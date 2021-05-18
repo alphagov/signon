@@ -15,7 +15,7 @@ class Api::V1::AuthorisationsController < ApplicationController
   respond_to :json
 
   def create
-    authorisation = api_user.authorisations.build(expires_in: ApiUser::DEFAULT_TOKEN_LIFE)
+    authorisation = api_user.authorisations.build(expires_in: ApiUser::AUTOROTATABLE_TOKEN_LIFE)
     authorisation.application_id = application.id
     ActiveRecord::Base.transaction do
       authorisation.save!
