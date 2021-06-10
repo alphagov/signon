@@ -1,7 +1,26 @@
 {
   "ignored_warnings": [
-
+    {
+      "warning_type": "Remote Code Execution",
+      "warning_code": 24,
+      "fingerprint": "4cd2ed8b5c42364bd8833951a3362765136652a03c91a4c12115eb6563446c9c",
+      "check_name": "UnsafeReflection",
+      "message": "Unsafe reflection method `const_get` called with model attribute",
+      "file": "app/policies/user_policy.rb",
+      "line": 71,
+      "link": "https://brakemanscanner.org/docs/warning_types/remote_code_execution/",
+      "code": "Roles.const_get(current_user.role.classify)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "UserPolicy",
+        "method": "can_manage?"
+      },
+      "user_input": "current_user.role.classify",
+      "confidence": "Medium",
+      "note": "This is safe because the User model has a validation that the role is in a known set."
+    }
   ],
-  "updated": "2021-03-22 14:35:17 +0000",
-  "brakeman_version": "5.0.0"
+  "updated": "2021-06-10 09:26:12 +0000",
+  "brakeman_version": "5.0.4"
 }
