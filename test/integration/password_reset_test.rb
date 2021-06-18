@@ -119,4 +119,15 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
       assert_response_contains("Password confirmation doesn't match")
     end
   end
+
+  should "return a 429 response if too many requests are made" do
+    Rack::Attack.enabled = true
+    Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
+
+    user = create(:user)
+    100.times { trigger_reset_for(user.email) }
+    assert_response_contains("Too many requests.")
+
+    Rack::Attack.enabled = false
+  end
 end

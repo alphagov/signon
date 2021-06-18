@@ -62,5 +62,8 @@ Rails.application.configure do
   # routes, locales, etc. This feature depends on the listen gem.
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
+  # disable throttling by default
+  Rack::Attack.enabled = false
+
   config.hosts << "signon.dev.gov.uk"
 end
