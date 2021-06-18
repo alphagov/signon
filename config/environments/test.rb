@@ -47,4 +47,7 @@ Rails.application.configure do
   config.active_support.test_order = :random
 
   config.active_job.queue_adapter = :test
+
+  # disable throttling by default
+  Rack::Attack.enabled = false
 end
