@@ -1,16 +1,19 @@
 require_relative "boot"
 
 require "rails"
-
+# Pick the frameworks you want:
 require "active_model/railtie"
-require "active_record/railtie"
-require "action_controller/railtie"
-require "action_view/railtie"
-require "action_mailer/railtie"
 require "active_job/railtie"
-require "rails/test_unit/railtie"
+require "active_record/railtie"
+# require "active_storage/engine"
+require "action_controller/railtie"
+require "action_mailer/railtie"
+# require "action_mailbox/engine"
+# require "action_text/engine"
+require "action_view/railtie"
+# require "action_cable/engine"
 require "sprockets/railtie"
-
+require "rails/test_unit/railtie"
 require_relative "../lib/same_site_security/middleware"
 
 # Require the gems listed in Gemfile, including any gems
@@ -20,7 +23,7 @@ Bundler.require(*Rails.groups)
 module Signon
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 6.0
+    config.load_defaults 6.1
 
     config.active_record.belongs_to_required_by_default = false
 
