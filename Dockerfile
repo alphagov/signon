@@ -1,4 +1,4 @@
-FROM ruby:2.7.2
+FROM 172025368201.dkr.ecr.eu-west-1.amazonaws.com/ruby:2.7.2
 
 RUN apt-get update -qq && apt-get upgrade -y
 RUN apt-get install -y build-essential nodejs && apt-get clean
