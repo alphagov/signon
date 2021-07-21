@@ -14,7 +14,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   def numbers_csv
-    CSV.parse(File.read("#{Rails.root}numbers.csv"))
+    CSV.parse(File.read(Rails.root.join("numbers.csv")))
   end
 
   test "csv contains accounts count" do
