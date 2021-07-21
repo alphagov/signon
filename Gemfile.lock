@@ -186,12 +186,13 @@ GEM
       domain_name (~> 0.5)
     i18n (1.8.10)
       concurrent-ruby (~> 1.0)
-    jasmine (3.7.0)
-      jasmine-core (~> 3.7.0)
+    jasmine (3.8.0)
+      jasmine-core (~> 3.8.0)
       phantomjs
       rack (>= 1.2.1)
       rake
-    jasmine-core (3.7.1)
+      webrick
+    jasmine-core (3.8.0)
     jasmine_selenium_runner (3.0.0)
       jasmine (~> 3.0)
       selenium-webdriver (~> 3.8)
@@ -434,6 +435,7 @@ GEM
       addressable (>= 2.3.6)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
+    webrick (1.7.0)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
