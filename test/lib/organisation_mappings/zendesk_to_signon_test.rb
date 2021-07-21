@@ -1,5 +1,4 @@
 require "test_helper"
-require "#{Rails.root}lib/organisation_mappings/zendesk_to_signon"
 
 class OrganisationMappings::ZendeskToSignonTest < ActiveSupport::TestCase
   # Reimplemtation of silence_stream as it was removed in Rails 5
