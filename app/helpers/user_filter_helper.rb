@@ -16,7 +16,7 @@ module UserFilterHelper
 
   def title_from(filter_type)
     if filter_type == :two_step_status
-      "#{two_step_abbr_tag} Status"
+      safe_join([two_step_abbr_tag, "Status"], " ")
     else
       filter_type.to_s.humanize.capitalize
     end
