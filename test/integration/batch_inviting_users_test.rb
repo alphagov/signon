@@ -99,7 +99,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
     end
   end
 
-  def perform_batch_invite_with_user(user, application, fixture_file: "users.csv", user_count: 1, organisation:)
+  def perform_batch_invite_with_user(user, application, organisation:, fixture_file: "users.csv", user_count: 1)
     perform_enqueued_jobs do
       visit root_path
       signin_with(user)

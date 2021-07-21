@@ -25,7 +25,7 @@ class UserMailerContentTest < ActionMailer::TestCase
         found_examples += content.scan(/<%= link_to t\('[^']*'\), t\('[^']*.url'\) %>/)
 
         # Sometimes we have this specific pattern, we should check for it too
-        found_examples += content.scan(/<%= link_to 'sign in', new_user_session_url\(protocol\: 'https'\) %>/)
+        found_examples += content.scan(/<%= link_to 'sign in', new_user_session_url\(protocol: 'https'\) %>/)
 
         if found_examples.size != base_size
           found_errors.push(file_path)

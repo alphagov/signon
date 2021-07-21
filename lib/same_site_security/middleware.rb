@@ -11,7 +11,7 @@ module SameSiteSecurity
         cookies = cookies.split("\n") unless cookies.is_a?(Array)
 
         headers["Set-Cookie"] = cookies.map { |cookie|
-          cookie.to_s + "; SameSite=Lax"
+          "#{cookie}; SameSite=Lax"
         }.join("\n")
       end
       [status, headers, response]

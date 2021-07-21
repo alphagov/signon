@@ -1,5 +1,6 @@
 class SupportedPermissionParameterFilter
   attr_reader :current_user, :user, :param_set
+
   def initialize(current_user, user, param_set)
     @current_user = current_user
     @user = user

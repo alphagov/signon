@@ -1,4 +1,4 @@
-require Rails.root + "lib/organisation_mappings/zendesk_to_signon"
+require "#{Rails.root}lib/organisation_mappings/zendesk_to_signon"
 
 namespace :organisation_mappings do
   desc "Apply organisation mappings from Zendesk to signon users"

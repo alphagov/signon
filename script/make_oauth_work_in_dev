@@ -68,7 +68,7 @@ def config_values_for_app(config_file:)
               # We've got a line like this:
               #   config.oauth_id     = "an_oauth_id"
               # so extract "an_oauth_id":
-              /=[\s]+?['|"]([^'"]+)['|"]/.match(line).to_a[1]
+              /=\s+?['|"]([^'"]+)['|"]/.match(line).to_a[1]
             end
     config[key.to_sym] = value unless key.nil?
   end
