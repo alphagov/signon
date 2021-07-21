@@ -76,16 +76,16 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "accept a valid code, persist the secret, log an event and notify by email" do
-        SUCCESS = "2-step verification set up".freeze
+        success = "2-step verification set up".freeze
         perform_enqueued_jobs do
           enter_2sv_code(@new_secret)
 
-          assert_response_contains SUCCESS
+          assert_response_contains success
           assert_equal @new_secret, @user.reload.otp_secret_key
           assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_ENABLED.id, uid: @user.uid).count
 
           assert last_email
-          assert SUCCESS, last_email.subject
+          assert success, last_email.subject
         end
       end
 
