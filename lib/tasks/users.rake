@@ -16,6 +16,8 @@ namespace :users do
 
   desc "Remind users that their account will get suspended"
   task send_suspension_reminders: :environment do
+    include VolatileLock::DSL
+
     with_lock("signon:users:send_suspension_reminders") do
       suspension_reminder_mailing_list = InactiveUsersSuspensionReminderMailingList.new(User::SUSPENSION_THRESHOLD_PERIOD).generate
       suspension_reminder_mailing_list.each do |days_to_suspension, users|
@@ -27,6 +29,8 @@ namespace :users do
 
   desc "Suspend users who have not signed-in for 45 days"
   task suspend_inactive: :environment do
+    include VolatileLock::DSL
+
     with_lock("signon:users:suspend_inactive") do
       count = InactiveUsersSuspender.new.suspend
       puts "#{count} users were suspended because they had not logged in since #{User::SUSPENSION_THRESHOLD_PERIOD.inspect}"

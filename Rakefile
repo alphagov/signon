@@ -3,9 +3,6 @@
 
 require File.expand_path("config/application", __dir__)
 
-require_relative "lib/volatile_lock"
-include VolatileLock::DSL
-
 Signon::Application.load_tasks
 
 task default: %i[lint test jasmine:ci]
