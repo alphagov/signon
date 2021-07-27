@@ -10,7 +10,7 @@ class UserMailerTest < ActionMailer::TestCase
   end
 
   def assert_support_present_in_text(link_text, email = @email)
-    text_string = link_text + " (https://www.gov.uk/support/internal)"
+    text_string = "#{link_text} (https://www.gov.uk/support/internal)"
     assert_includes email.body, text_string
   end
 

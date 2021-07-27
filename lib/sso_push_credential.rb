@@ -2,6 +2,7 @@ class SSOPushCredential
   PERMISSIONS = %w[signin user_update_permission].freeze
 
   class UserNotFound < StandardError; end
+
   class UserNotProvided < StandardError; end
 
   class << self

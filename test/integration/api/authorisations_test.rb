@@ -13,7 +13,7 @@ class AuthorisationsTest < ActionDispatch::IntegrationTest
     %w[application_name api_user_email token],
   ])
 
-  endpoints_with_params.each do |endpoint, _required_params|
+  endpoints_with_params.each do |endpoint, required_params|
     test "endpoint #{endpoint} responds with a 401 error when an invalid token is given" do
       ENV["SIGNON_ADMIN_PASSWORD"] = SecureRandom.uuid
       post endpoint, headers: { "HTTP_AUTHORIZATION" => "Bearer invalid-token" }
@@ -25,9 +25,7 @@ class AuthorisationsTest < ActionDispatch::IntegrationTest
       post endpoint
       assert_unauthorized(response)
     end
-  end
 
-  endpoints_with_params.each do |endpoint, required_params|
     test "endpoint #{endpoint} responds with a 400 when required params are missing" do
       request(endpoint)
       assert_equal 400, response.status

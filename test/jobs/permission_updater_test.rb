@@ -60,7 +60,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
       should "not attempt to update if the User doesn't exist" do
         SSOPushClient.expects(:new).never
 
-        PermissionUpdater.new.perform(@user.uid + "foo", @application.id)
+        PermissionUpdater.new.perform("#{@user.uid}foo", @application.id)
       end
 
       should "do nothing if the application doesn't exist" do

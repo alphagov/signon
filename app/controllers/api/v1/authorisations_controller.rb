@@ -44,9 +44,7 @@ class Api::V1::AuthorisationsController < ApplicationController
 private
 
   def api_user
-    @api_user ||= begin
-      ApiUser.find_by!(email: params.require(:api_user_email))
-    end
+    @api_user ||= ApiUser.find_by!(email: params.require(:api_user_email))
   end
 
   def application

@@ -1,8 +1,8 @@
 namespace :event_log do
   desc "Export the event log as a CSV"
   task :export, %i[min_id max_id] => :environment do |_, args|
-    USAGE_MESSAGE = "usage: rake event_log:export[<min_id>, <max_id>]".freeze
-    abort USAGE_MESSAGE unless args[:min_id] && args[:max_id]
+    usage_message = "usage: rake event_log:export[<min_id>, <max_id>]".freeze
+    abort usage_message unless args[:min_id] && args[:max_id]
 
     ENV["GOVUK_APP_ROOT"] ||= Rails.root
     path = File.join(ENV["GOVUK_APP_ROOT"], "reports")

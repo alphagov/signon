@@ -2,7 +2,8 @@ module UserFilterHelper
   def current_path_with_filter(filter_type, filter_value)
     query_parameters = (request.query_parameters.clone || {})
     filter_value.nil? ? query_parameters.delete(filter_type) : query_parameters[filter_type] = filter_value
-    request.path_info + "?" + query_parameters.map { |k, v| "#{k}=#{v}" }.join("&")
+    query_string = query_parameters.map { |k, v| "#{k}=#{v}" }.join("&")
+    "#{request.path_info}?#{query_string}"
   end
 
   def user_role_text
@@ -15,7 +16,7 @@ module UserFilterHelper
 
   def title_from(filter_type)
     if filter_type == :two_step_status
-      two_step_abbr_tag + " Status"
+      safe_join([two_step_abbr_tag, "Status"], " ")
     else
       filter_type.to_s.humanize.capitalize
     end

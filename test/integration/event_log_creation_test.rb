@@ -134,7 +134,7 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     click_on "Unlock"
 
     visit event_logs_user_path(@user)
-    assert page.has_content?(EventLog::MANUAL_ACCOUNT_UNLOCK.description + " by " + @admin.name)
+    assert page.has_content?("#{EventLog::MANUAL_ACCOUNT_UNLOCK.description} by #{@admin.name}")
   end
 
   test "record user suspension along with event initiator" do
@@ -149,7 +149,7 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     click_on "Save"
 
     visit event_logs_user_path(@user)
-    assert page.has_content?(EventLog::ACCOUNT_SUSPENDED.description + " by " + @admin.name)
+    assert page.has_content?("#{EventLog::ACCOUNT_SUSPENDED.description} by #{@admin.name}")
   end
 
   test "record suspended user's attempt to login with correct credentials" do
@@ -174,7 +174,7 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     click_on "Save"
 
     visit event_logs_user_path(@user)
-    assert page.has_content?(EventLog::ACCOUNT_UNSUSPENDED.description + " by " + @admin.name)
+    assert page.has_content?("#{EventLog::ACCOUNT_UNSUSPENDED.description} by #{@admin.name}")
   end
 
   context "recording user's ip address" do

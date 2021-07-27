@@ -106,7 +106,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         fill_in "Email", with: "new@email.com"
         click_button "Change email"
 
-        confirmation_email, notification_email = *ActionMailer::Base.deliveries[-2..-1]
+        confirmation_email, notification_email = *ActionMailer::Base.deliveries[-2..]
         assert_equal "new@email.com", confirmation_email.to.first
         assert_equal "Confirm your email change", confirmation_email.subject
         assert_equal "original@email.com", notification_email.to.first

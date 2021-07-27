@@ -1,7 +1,7 @@
 # https://raw.github.com/scambra/devise_invitable/master/app/controllers/devise/invitations_controller.rb
 class InvitationsController < Devise::InvitationsController
   before_action :authenticate_user!
-  after_action :verify_authorized, except: %i[edit update]
+  after_action :verify_authorized, except: %i[edit update] # rubocop:disable Rails/LexicallyScopedActionFilter
   layout "admin_layout", only: %i[edit update]
 
   include UserPermissionsControllerMethods
@@ -9,14 +9,6 @@ class InvitationsController < Devise::InvitationsController
 
   def new
     authorize User
-    super
-  end
-
-  def edit
-    super
-  end
-
-  def update
     super
   end
 

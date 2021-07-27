@@ -1,4 +1,4 @@
-Dir[File.dirname(__FILE__) + "/roles/*.rb"].sort.each { |file| require file }
+Dir["#{File.dirname(__FILE__)}/roles/*.rb"].sort.each { |file| require file }
 
 module Roles
   def self.included(base)

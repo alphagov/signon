@@ -212,8 +212,8 @@ class User < ApplicationRecord
   def status
     return USER_STATUS_SUSPENDED if suspended?
 
-    unless api_user?
-      return USER_STATUS_INVITED if invited_but_not_yet_accepted?
+    if !api_user? && invited_but_not_yet_accepted?
+      return USER_STATUS_INVITED
     end
 
     return USER_STATUS_LOCKED if access_locked?
