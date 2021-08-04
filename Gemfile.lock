@@ -148,8 +148,8 @@ GEM
       null_logger
       plek (>= 1.9.0)
       rest-client (~> 2.0)
-    globalid (0.4.2)
-      activesupport (>= 4.2.0)
+    globalid (0.5.2)
+      activesupport (>= 5.0)
     govuk_admin_template (6.7.0)
       bootstrap-sass (= 3.4.1)
       jquery-rails (~> 4.3.1)
@@ -160,7 +160,7 @@ GEM
       sentry-raven (~> 3.1.1)
       statsd-ruby (~> 1.5.0)
       unicorn (>= 5.4, < 5.9)
-    govuk_publishing_components (24.21.0)
+    govuk_publishing_components (25.1.0)
       govuk_app_config
       kramdown
       plek
@@ -225,7 +225,7 @@ GEM
     logstasher (2.1.5)
       activesupport (>= 5.2)
       request_store
-    loofah (2.10.0)
+    loofah (2.11.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
     macaddr (1.7.2)
@@ -252,7 +252,7 @@ GEM
     multipart-post (2.1.1)
     mysql2 (0.5.3)
     netrc (0.11.0)
-    nio4r (2.5.7)
+    nio4r (2.5.8)
     nokogiri (1.11.4)
       mini_portile2 (~> 2.5.0)
       racc (~> 1.4)
