@@ -7,6 +7,17 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
       assert_equal :ok, check.status
     end
 
+    should "return 'OK' when tokens for @<env>.publishing.service.gov.uk are expiring" do
+      user = create(:api_user, email: "#{random_str}@#{ENV['GOVUK_ENVIRONMENT_NAME']}.publishing.service.gov.uk")
+
+      make_api_user_token(
+        expires_in: Healthcheck::ApiTokens::WARNING_THRESHOLD,
+        user: user,
+      )
+      check = Healthcheck::ApiTokens.new
+      assert_equal :ok, check.status
+    end
+
     should "return 'WARNING' when a token is getting old" do
       make_api_user_token(expires_in: Healthcheck::ApiTokens::WARNING_THRESHOLD)
       check = Healthcheck::ApiTokens.new
@@ -35,7 +46,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
 
   context "details" do
     should "return which tokens are causing the check to fail" do
-      user = create :api_user
+      user = create :api_user, email: "#{random_str}@alphagov.co.uk"
 
       expiring_token = make_api_user_token(
         expires_in: Healthcheck::ApiTokens::WARNING_THRESHOLD,
@@ -62,8 +73,12 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
     end
   end
 
+  def random_str
+    SecureRandom.hex(5)
+  end
+
   def make_api_user_token(expires_in:, user: nil)
-    user ||= create :api_user
+    user ||= create :api_user, email: "#{random_str}@alphagov.co.uk"
     create :access_token, resource_owner_id: user.id, expires_in: expires_in - 1
   end
 
