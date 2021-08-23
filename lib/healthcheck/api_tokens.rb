@@ -19,6 +19,7 @@ module Healthcheck
         ) tokens
       INNER JOIN users ON users.id = tokens.resource_owner_id
       WHERE tokens.revoked_at IS NULL
+      AND users.email NOT LIKE '%@#{ENV['GOVUK_ENVIRONMENT_NAME']}.publishing.service.gov.uk'
       AND users.api_user = TRUE
       AND tokens.expires_in < #{WARNING_THRESHOLD}
     SQL
