@@ -31,10 +31,10 @@ class UserPermissionsExporterTest < ActionView::TestCase
 
     csv_data = CSV.read(@tmpfile.path)
 
-    assert_equal %w[Name Email Organisation Permissions],                                     csv_data[0]
-    assert_equal %w[Anne anne@anne.com Ministry\ of\ ketchup add_vinegar,administer,signin],  csv_data[1]
-    assert_equal %w[Bill bill@bill.com Ministry\ of\ chips cook,signin],                      csv_data[2]
-    assert_equal %w[Mary mary@mary.com Ministry\ of\ brown\ sauce do_some_stuff,signin],      csv_data[3]
+    assert_equal %w[Name Email Organisation Permissions], csv_data[0]
+    assert_equal ["Anne", "anne@anne.com", "Ministry of ketchup", "add_vinegar,administer,signin"],  csv_data[1]
+    assert_equal ["Bill", "bill@bill.com", "Ministry of chips", "cook,signin"],                      csv_data[2]
+    assert_equal ["Mary", "mary@mary.com", "Ministry of brown sauce", "do_some_stuff,signin"], csv_data[3]
   end
 
   def test_export_multiple_applications
@@ -53,12 +53,12 @@ class UserPermissionsExporterTest < ActionView::TestCase
 
     csv_data = CSV.read(@tmpfile.path)
 
-    assert_equal %w[Application Name Email Organisation Permissions],                             csv_data[0]
-    assert_equal %w[Bar Anne anne@anne.com Ministry\ of\ ketchup administer,signin],              csv_data[1]
-    assert_equal %w[Bar Mary mary@mary.com Ministry\ of\ brown\ sauce administer,signin],         csv_data[2]
-    assert_equal %w[Foo Anne anne@anne.com Ministry\ of\ ketchup add_vinegar,administer,signin],  csv_data[3]
-    assert_equal %w[Foo Bill bill@bill.com Ministry\ of\ chips cook,signin],                      csv_data[4]
-    assert_equal %w[Foo Mary mary@mary.com Ministry\ of\ brown\ sauce do_some_stuff,signin],      csv_data[5]
+    assert_equal %w[Application Name Email Organisation Permissions], csv_data[0]
+    assert_equal ["Bar", "Anne", "anne@anne.com", "Ministry of ketchup", "administer,signin"], csv_data[1]
+    assert_equal ["Bar", "Mary", "mary@mary.com", "Ministry of brown sauce", "administer,signin"], csv_data[2]
+    assert_equal ["Foo", "Anne", "anne@anne.com", "Ministry of ketchup", "add_vinegar,administer,signin"],  csv_data[3]
+    assert_equal ["Foo", "Bill", "bill@bill.com", "Ministry of chips", "cook,signin"],                      csv_data[4]
+    assert_equal ["Foo", "Mary", "mary@mary.com", "Ministry of brown sauce", "do_some_stuff,signin"], csv_data[5]
   end
 
   def test_export_signon
