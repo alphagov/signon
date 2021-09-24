@@ -142,7 +142,7 @@ GEM
     faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.13.1)
-    gds-api-adapters (73.1.0)
+    gds-api-adapters (74.0.0)
       addressable
       link_header
       null_logger
@@ -432,7 +432,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.7)
+    unf_ext (0.0.8)
     unicode-display_width (2.1.0)
     unicorn (5.8.0)
       kgio (~> 2.6)
