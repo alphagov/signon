@@ -32,13 +32,19 @@ class ActionController::TestCase
   include Devise::Test::ControllerHelpers
   include ConfirmationTokenHelpers
 
-  def sign_in(user)
+  def sign_in(user, passed_mfa: true)
     warden.stubs(authenticate!: user)
+    unless passed_mfa
+      user.update!(otp_secret_key: ROTP::Base32.random_base32)
+      warden.stubs(session: ->(_user) { { "need_two_step_verification" => true } })
+      @controller.stubs(signed_in?: true)
+    end
     @controller.stubs(current_user: user)
   end
 
   def sign_out(_user)
     warden.unstub(:authenticate!)
+    warden.unstub(:session)
     @controller.unstub(:current_user)
   end
 end

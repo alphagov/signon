@@ -3,7 +3,9 @@ require "test_helper"
 class SignInTest < ActionDispatch::IntegrationTest
   setup do
     @organisation = create(:organisation, name: "Ministry of Lindy-hop", slug: "ministry-of-lindy-hop")
-    @user = create(:user_in_organisation, email: "email@example.com", password: "some password with various $ymb0l$", organisation: @organisation)
+    @email = "email@example.com"
+    @password = "some password with various $ymb0l$"
+    @user = create(:user_in_organisation, email: @email, password: @password, organisation: @organisation)
   end
 
   should "display a confirmation for successful sign-ins" do
@@ -261,6 +263,39 @@ class SignInTest < ActionDispatch::IntegrationTest
       click_link "Sign out"
 
       assert_text "Sign in to GOV.UK"
+    end
+
+    should "not be able to access restricted paths before completing 2SV" do
+      visit root_path
+      signin_with(email: @email, password: @password, second_step: false)
+      assert_equal new_two_step_verification_session_path, page.current_path
+
+      # TODO: This list should be complete
+      restricted_paths = [
+        oauth_authorization_path,
+        new_user_password_path,
+        edit_user_password_path,
+        new_user_confirmation_path,
+        user_confirmation_path,
+        new_user_unlock_path,
+        user_unlock_path,
+        accept_user_invitation_path,
+        remove_user_invitation_path,
+        new_user_invitation_path,
+        new_two_step_verification_session_path,
+        prompt_two_step_verification_path,
+        two_step_verification_path,
+        users_path,
+        organisations_path,
+        doorkeeper_applications_path,
+        api_users_path,
+        api_v1_applications_path,
+      ]
+
+      restricted_paths.each do |path|
+        visit path
+        assert_equal new_two_step_verification_session_path, page.current_path
+      end
     end
   end
 

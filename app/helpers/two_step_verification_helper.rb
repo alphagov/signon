@@ -2,12 +2,14 @@ module TwoStepVerificationHelper
 private
 
   def handle_two_step_verification
-    if signed_in?(:user)
-      if warden.session(:user)["need_two_step_verification"]
-        handle_failed_second_step
-      elsif current_user.prompt_for_2sv?
-        redirect_to prompt_two_step_verification_path
-      end
+    # TODO: Should raise error if this helper is reached and not already signed in.
+    return unless signed_in?(:user)
+
+    if warden.session(:user)["need_two_step_verification"]
+      handle_failed_second_step
+    elsif current_user.prompt_for_2sv? && !on_2sv_setup_journey
+      # NOTE: 'Prompt' means prompt the user to _set up_ 2SV.
+      redirect_to prompt_two_step_verification_path
     end
   end
 
@@ -18,5 +20,9 @@ private
     else
       render nothing: true, status: :unauthorized
     end
+  end
+
+  def on_2sv_setup_journey
+    controller_path == Devise::TwoStepVerificationController.controller_path
   end
 end
