@@ -3,7 +3,6 @@ FROM ${base_image}
 
 RUN apt-get update -qq && apt-get upgrade -y
 RUN apt-get install -y build-essential nodejs && apt-get clean
-RUN gem install foreman
 
 # This image is only intended to be able to run this app in a production RAILS_ENV
 ENV RAILS_ENV production
@@ -33,4 +32,4 @@ RUN GOVUK_APP_DOMAIN=www.gov.uk \
 
 HEALTHCHECK CMD curl --silent --fail localhost:$PORT || exit 1
 
-CMD foreman run web
+CMD bundle exec puma
