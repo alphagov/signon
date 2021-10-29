@@ -179,10 +179,10 @@ GEM
       sentry-ruby (~> 4.5.0)
       statsd-ruby (~> 1.5.0)
       unicorn (>= 5.4, < 5.9)
-    govuk_personalisation (0.9.0)
+    govuk_personalisation (0.10.0)
       plek (>= 1.9.0)
       rails (~> 6)
-    govuk_publishing_components (27.8.0)
+    govuk_publishing_components (27.9.2)
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
@@ -299,7 +299,7 @@ GEM
       byebug (~> 11.0)
       pry (~> 0.13.0)
     public_suffix (4.0.6)
-    puma (5.3.2)
+    puma (5.5.2)
       nio4r (~> 2.0)
     pundit (2.1.0)
       activesupport (>= 3.0.0)
