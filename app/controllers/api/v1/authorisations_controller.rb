@@ -1,19 +1,8 @@
-class Api::V1::AuthorisationsController < ApplicationController
-  include AdminApiHelper
-
-  before_action :authenticate
+class Api::V1::AuthorisationsController < Api::V1::ApiController
   before_action :validate_create_params, only: %w[create]
   before_action :validate_application, only: %w[create]
   before_action :validate_test_params, only: %w[test]
   before_action :api_user
-
-  skip_after_action :verify_authorized
-  protect_from_forgery with: :null_session
-
-  rescue_from ActionController::ParameterMissing, with: :missing_params_error
-  rescue_from ActiveRecord::RecordNotFound, with: :not_found_error
-
-  respond_to :json
 
   def create
     authorisation = api_user.authorisations.build(
