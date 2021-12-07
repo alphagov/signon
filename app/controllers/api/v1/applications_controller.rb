@@ -22,14 +22,14 @@ class Api::V1::ApplicationsController < ApplicationController
       home_uri: params.fetch(:home_uri),
       permissions: params.fetch(:permissions, []),
     )
-    render json: { oauth_id: application.uid, oauth_secret: application.secret }
+    render json: { id: application.id, oauth_id: application.uid, oauth_secret: application.secret }
   rescue ActiveRecord::RecordNotUnique
     render json: { error: "ApplicationAlreadyCreated" }, status: :conflict
   end
 
   def show
     application = Doorkeeper::Application.find_by!(name: params.fetch(:name))
-    render json: { oauth_id: application.uid, oauth_secret: application.secret }
+    render json: { id: application.id, oauth_id: application.uid, oauth_secret: application.secret }
   end
 
 private

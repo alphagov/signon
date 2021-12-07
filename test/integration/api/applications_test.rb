@@ -44,11 +44,7 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     create(:application, name: name)
     get_req(endpoint, params: { "name" => name })
     assert_equal 200, response.status
-    body = JSON.parse(response.body)
-    assert_equal 43, body.fetch("oauth_id").length
-    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_id"))
-    assert_equal 43, body.fetch("oauth_secret").length
-    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_secret"))
+    assert_success_body(response)
   end
 
   test "#create responds with a 401 error when an invalid token is given" do
@@ -85,26 +81,27 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   test "#create adds an application" do
     post_req(endpoint, params: create_params)
     assert_equal 200, response.status
-    body = JSON.parse(response.body)
-    assert_equal 43, body.fetch("oauth_id").length
-    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_id"))
-    assert_equal 43, body.fetch("oauth_secret").length
-    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_secret"))
+    assert_success_body(response)
   end
 
   test "#create with no permissions is successful" do
     post_req(endpoint, params: create_params.merge("permissions" => []))
     assert_equal 200, response.status
-    body = JSON.parse(response.body)
-    assert_equal 43, body.fetch("oauth_id").length
-    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_id"))
-    assert_equal 43, body.fetch("oauth_secret").length
-    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_secret"))
+    assert_success_body(response)
   end
 
   #
   # Helpers
   #
+
+  def assert_success_body(response)
+    body = JSON.parse(response.body)
+    assert_equal Integer, body.fetch("id").class
+    assert_equal 43, body.fetch("oauth_id").length
+    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_id"))
+    assert_equal 43, body.fetch("oauth_secret").length
+    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_secret"))
+  end
 
   def assert_unauthorized(response)
     assert_equal "HTTP Token: Access denied.\n", response.body
