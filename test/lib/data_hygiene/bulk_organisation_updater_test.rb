@@ -7,7 +7,7 @@ class DataHygiene::BulkOrganisationUpdaterTest < ActiveSupport::TestCase
     file.close
 
     begin
-      DataHygiene::BulkOrganisationUpdater.call(file.path)
+      DataHygiene::BulkOrganisationUpdater.call(file.path, logger: Rails.logger)
     ensure
       file.unlink
     end
