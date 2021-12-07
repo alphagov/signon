@@ -3,6 +3,7 @@ class Api::V1::AuthorisationsController < ApplicationController
 
   before_action :authenticate
   before_action :validate_create_params, only: %w[create]
+  before_action :validate_application, only: %w[create]
   before_action :validate_test_params, only: %w[test]
   before_action :api_user
 
@@ -15,8 +16,10 @@ class Api::V1::AuthorisationsController < ApplicationController
   respond_to :json
 
   def create
-    authorisation = api_user.authorisations.build(expires_in: ApiUser::AUTOROTATABLE_TOKEN_LIFE)
-    authorisation.application_id = application.id
+    authorisation = api_user.authorisations.build(
+      expires_in: ApiUser::AUTOROTATABLE_TOKEN_LIFE,
+      application_id: params.fetch(:application_id),
+    )
     ActiveRecord::Base.transaction do
       authorisation.save!
       grant_app_permissions!(authorisation, params.fetch(:permissions, []))
@@ -34,7 +37,7 @@ class Api::V1::AuthorisationsController < ApplicationController
   def test
     authorisation = api_user.authorisations
       .find_by!(
-        application: application,
+        application_id: params.require(:application_id),
         token: params.require(:token),
       )
 
@@ -44,23 +47,26 @@ class Api::V1::AuthorisationsController < ApplicationController
 private
 
   def api_user
-    @api_user ||= ApiUser.find_by!(email: params.require(:api_user_email))
+    @api_user ||= ApiUser.find(params.require(:id))
   end
 
-  def application
-    @application ||= Doorkeeper::Application.find_by!(name: params.require(:application_name))
+  def validate_application
+    # Doorkeeper doesn't validate application_ids, so we must
+    unless Doorkeeper::Application.exists?(params.fetch(:application_id))
+      raise ActiveRecord::RecordNotFound
+    end
   end
 
   def grant_app_permissions!(authorisation, permissions)
     all_permissions = %w[signin] + permissions
-    @api_user.grant_application_permissions(authorisation.application, all_permissions)
+    api_user.grant_application_permissions(authorisation.application, all_permissions)
   end
 
   def validate_create_params
-    assert_no_missing_params(%i[application_name api_user_email])
+    assert_no_missing_params(%i[application_id])
   end
 
   def validate_test_params
-    assert_no_missing_params(%i[application_name api_user_email token])
+    assert_no_missing_params(%i[application_id token])
   end
 end
