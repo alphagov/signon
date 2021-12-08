@@ -68,7 +68,7 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   test "#create provided redirect_uri is invalid" do
     post_req(endpoint, params: create_params.merge("redirect_uri" => "a bad redirect_uri!!!!!"))
     assert_equal 400, response.status
-    assert_equal JSON.generate({ error: "Not valid" }), response.body
+    assert_equal JSON.generate({ error: "Validation failed: Redirect URI must be an absolute URI." }), response.body
   end
 
   test "#create when application already exists" do
