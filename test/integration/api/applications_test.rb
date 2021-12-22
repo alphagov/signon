@@ -37,7 +37,7 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     create(:application, name: name)
     get_req(endpoint, params: { "name" => "doesnt exist" })
     assert_equal 404, response.status
-    assert_equal JSON.generate({ error: "Not found" }), response.body
+    assert_equal JSON.generate({ error: "Record not found" }), response.body
   end
 
   test "#show returns an application" do
@@ -75,7 +75,7 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     create(:application, name: name)
     post_req(endpoint, params: create_params.merge("name" => name))
     assert_equal 409, response.status
-    assert_equal JSON.generate({ error: "ApplicationAlreadyCreated" }), response.body
+    assert_equal JSON.generate({ error: "Record not unique" }), response.body
   end
 
   test "#create adds an application" do

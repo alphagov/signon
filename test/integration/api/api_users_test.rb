@@ -27,7 +27,7 @@ class ApiUsersTest < ActionDispatch::IntegrationTest
   test "#show responds with a 404 when the api user doesn't exist" do
     create(:api_user, name: name, email: email)
     get_req(endpoint, params: { email: "invalid@example.org" })
-    assert_equal JSON.generate({ error: "Not found" }), response.body
+    assert_equal JSON.generate({ error: "Record not found" }), response.body
     assert_equal 404, response.status
   end
 
@@ -67,8 +67,8 @@ class ApiUsersTest < ActionDispatch::IntegrationTest
   test "#create when api_user email is already taken" do
     create(:api_user, email: email, name: name)
     post_req(endpoint, params: create_params)
-    assert_equal JSON.generate({ error: "Validation failed: Email has already been taken" }), response.body
-    assert_equal 400, response.status
+    assert_equal JSON.generate({ error: "Record not unique" }), response.body
+    assert_equal 409, response.status
   end
 
   test "#create adds an api user" do

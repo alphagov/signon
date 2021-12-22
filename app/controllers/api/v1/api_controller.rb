@@ -9,6 +9,7 @@ class Api::V1::ApiController < ApplicationController
   rescue_from ActionController::ParameterMissing, with: :missing_params_error
   rescue_from ActiveRecord::RecordInvalid, with: :not_valid_error
   rescue_from ActiveRecord::RecordNotFound, with: :not_found_error
+  rescue_from ActiveRecord::RecordNotUnique, with: :already_created_error
 
   respond_to :json
 end

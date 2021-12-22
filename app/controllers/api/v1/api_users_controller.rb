@@ -20,6 +20,11 @@ private
                            password: password, password_confirmation: password)
     api_user.skip_confirmation!
     api_user.api_user = true
+
+    if api_user.invalid? && api_user.errors.where(:email, :taken).any?
+      raise ActiveRecord::RecordNotUnique
+    end
+
     api_user.save!
     api_user
   end

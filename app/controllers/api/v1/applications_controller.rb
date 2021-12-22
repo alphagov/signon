@@ -11,8 +11,6 @@ class Api::V1::ApplicationsController < Api::V1::ApiController
       permissions: params.fetch(:permissions, []),
     )
     render json: { id: application.id, oauth_id: application.uid, oauth_secret: application.secret }
-  rescue ActiveRecord::RecordNotUnique
-    render json: { error: "ApplicationAlreadyCreated" }, status: :conflict
   end
 
   def show

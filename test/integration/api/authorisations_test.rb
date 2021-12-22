@@ -40,14 +40,14 @@ class AuthorisationsTest < ActionDispatch::IntegrationTest
       application_id: @application.id,
     })
     assert_equal 404, response.status
-    assert_equal JSON.generate({ error: "Not found" }), response.body
+    assert_equal JSON.generate({ error: "Record not found" }), response.body
   end
 
   test "#create provided application_id is invalid" do
     request(create_endpoint, params: {
       application_id: "Invalid ID",
     })
-    assert_equal JSON.generate({ error: "Not found" }), response.body
+    assert_equal JSON.generate({ error: "Record not found" }), response.body
     assert_equal 404, response.status
   end
 
@@ -88,7 +88,7 @@ class AuthorisationsTest < ActionDispatch::IntegrationTest
       token: token,
     })
     assert_equal 404, response.status
-    assert_equal JSON.generate({ error: "Not found" }), response.body
+    assert_equal JSON.generate({ error: "Record not found" }), response.body
   end
 
   #
