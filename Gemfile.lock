@@ -209,13 +209,13 @@ GEM
       domain_name (~> 0.5)
     i18n (1.8.11)
       concurrent-ruby (~> 1.0)
-    jasmine (3.10.0)
-      jasmine-core (~> 3.10.0)
+    jasmine (3.99.0)
+      jasmine-core (= 3.99.0)
       phantomjs
       rack (>= 2.1.4)
       rake
       webrick
-    jasmine-core (3.10.0)
+    jasmine-core (3.99.0)
     jasmine_selenium_runner (3.0.0)
       jasmine (~> 3.0)
       selenium-webdriver (~> 3.8)
