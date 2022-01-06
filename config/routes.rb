@@ -68,10 +68,12 @@ Rails.application.routes.draw do
 
   namespace :api do
     namespace :v1 do
-      post "authorisations/test", to: "authorisations#test"
-      post "authorisations", to: "authorisations#create"
       get "applications", to: "applications#show"
       post "applications", to: "applications#create"
+      get "api-users", to: "api_users#show"
+      post "api-users", to: "api_users#create"
+      post "api-users/:id/authorisations", to: "authorisations#create"
+      post "api-users/:id/authorisations/test", to: "authorisations#test"
     end
   end
 

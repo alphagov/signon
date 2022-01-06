@@ -11,16 +11,20 @@ private
     end
   end
 
+  def already_created_error(_exception)
+    render json: { error: "Record not unique" }, status: :conflict
+  end
+
   def missing_params_error(exception)
     render json: { error: exception.message }, status: :bad_request
   end
 
   def not_found_error(_exception)
-    render json: { error: "Not found" }, status: :not_found
+    render json: { error: "Record not found" }, status: :not_found
   end
 
-  def not_valid_error(_exception)
-    render json: { error: "Not valid" }, status: :bad_request
+  def not_valid_error(exception)
+    render json: { error: exception.message }, status: :bad_request
   end
 
   def already_exists_error(_exception)

@@ -2,8 +2,9 @@ require "csv"
 
 module DataHygiene
   class BulkOrganisationUpdater
-    def initialize(filename)
+    def initialize(filename, logger: Rails.logger)
       @filename = filename
+      @logger = logger
     end
 
     def call
@@ -22,7 +23,7 @@ module DataHygiene
 
   private
 
-    attr_reader :filename
+    attr_reader :filename, :logger
 
     CSV_OPTIONS = {
       headers: true,
@@ -33,11 +34,11 @@ module DataHygiene
 
       if user.nil?
         if User.exists?(email: row.fetch("New email"))
-          puts "warning: #{row.fetch('Old email')} looks to have already been updated"
+          logger.warn "#{row.fetch('Old email')} looks to have already been updated"
 
           return true
         else
-          puts "error: couldn't find user #{row.fetch('Old email')}"
+          logger.error "couldn't find user #{row.fetch('Old email')}"
 
           return false
         end
@@ -64,7 +65,7 @@ module DataHygiene
     end
 
     def update_user(user, new_email_address, new_organisation)
-      puts "#{user.email}: #{new_email_address} #{new_organisation.slug}"
+      logger.info "#{user.email}: #{new_email_address} #{new_organisation.slug}"
 
       current_email_address = user.email
 

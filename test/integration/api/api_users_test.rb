@@ -1,19 +1,10 @@
 require "test_helper"
 
-class ApplicationsTest < ActionDispatch::IntegrationTest
-  name = "Cat herder"
-  home_uri = "https://cats.example.org"
-  redirect_uri = "https://cats.example.org/redirect"
-  description = "Herds cats"
-  permissions = %w[cat_herder herder_of_cats]
-  endpoint = "/api/v1/applications"
-  create_params = {
-    "name" => name,
-    "home_uri" => home_uri,
-    "redirect_uri" => redirect_uri,
-    "description" => description,
-    "permissions" => permissions,
-  }
+class ApiUsersTest < ActionDispatch::IntegrationTest
+  name = "example-name"
+  email = "example-name@example.org"
+  endpoint = "/api/v1/api-users"
+  create_params = { "name" => name, "email" => email }
 
   test "#show responds with a 401 error when an invalid token is given" do
     ENV["SIGNON_ADMIN_PASSWORD"] = SecureRandom.uuid
@@ -29,22 +20,24 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
 
   test "#show responds with a 400 when required params are missing" do
     get_req(endpoint, params: {})
+    assert_equal JSON.generate({ error: "param is missing or the value is empty: email" }), response.body
     assert_equal 400, response.status
-    assert_equal JSON.generate({ error: "param is missing or the value is empty: name" }), response.body
   end
 
-  test "#show responds with a 404 when the application doesn't exist" do
-    create(:application, name: name)
-    get_req(endpoint, params: { "name" => "doesnt exist" })
-    assert_equal 404, response.status
+  test "#show responds with a 404 when the api user doesn't exist" do
+    create(:api_user, name: name, email: email)
+    get_req(endpoint, params: { email: "invalid@example.org" })
     assert_equal JSON.generate({ error: "Record not found" }), response.body
+    assert_equal 404, response.status
   end
 
-  test "#show returns an application" do
-    create(:application, name: name)
-    get_req(endpoint, params: { "name" => name })
-    assert_equal 200, response.status
+  test "#show returns the api_user" do
+    create(:api_user, name: "Alternate 1", email: "alt-1@example.org")
+    create(:api_user, name: name, email: email)
+    create(:api_user, name: "Alternate 2", email: "alt-2@example.org")
+    get_req(endpoint, params: { email: email })
     assert_success_body(response)
+    assert_equal 200, response.status
   end
 
   test "#create responds with a 401 error when an invalid token is given" do
@@ -60,32 +53,26 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   end
 
   test "#create responds with a 400 when required params are missing" do
-    post_req(endpoint, params: create_params.except("home_uri", "description"))
+    post_req(endpoint, params: create_params.except("name", "email"))
+    assert_equal JSON.generate({ error: "param is missing or the value is empty: name and email" }), response.body
     assert_equal 400, response.status
-    assert_equal JSON.generate({ error: "param is missing or the value is empty: description and home_uri" }), response.body
   end
 
-  test "#create provided redirect_uri is invalid" do
-    post_req(endpoint, params: create_params.merge("redirect_uri" => "a bad redirect_uri!!!!!"))
+  test "#create provided email is invalid" do
+    post_req(endpoint, params: { "name" => name, "email" => "an invalid email address" })
+    assert_equal JSON.generate({ error: "Validation failed: Email is invalid" }), response.body
     assert_equal 400, response.status
-    assert_equal JSON.generate({ error: "Validation failed: Redirect URI must be an absolute URI." }), response.body
   end
 
-  test "#create when application already exists" do
-    create(:application, name: name)
-    post_req(endpoint, params: create_params.merge("name" => name))
-    assert_equal 409, response.status
-    assert_equal JSON.generate({ error: "Record not unique" }), response.body
-  end
-
-  test "#create adds an application" do
+  test "#create when api_user email is already taken" do
+    create(:api_user, email: email, name: name)
     post_req(endpoint, params: create_params)
-    assert_equal 200, response.status
-    assert_success_body(response)
+    assert_equal JSON.generate({ error: "Record not unique" }), response.body
+    assert_equal 409, response.status
   end
 
-  test "#create with no permissions is successful" do
-    post_req(endpoint, params: create_params.merge("permissions" => []))
+  test "#create adds an api user" do
+    post_req(endpoint, params: create_params)
     assert_equal 200, response.status
     assert_success_body(response)
   end
@@ -97,10 +84,6 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   def assert_success_body(response)
     body = JSON.parse(response.body)
     assert_equal Integer, body.fetch("id").class
-    assert_equal 43, body.fetch("oauth_id").length
-    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_id"))
-    assert_equal 43, body.fetch("oauth_secret").length
-    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_secret"))
   end
 
   def assert_unauthorized(response)

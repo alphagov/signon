@@ -1,18 +1,6 @@
-class Api::V1::ApplicationsController < ApplicationController
-  include AdminApiHelper
-
-  before_action :authenticate
+class Api::V1::ApplicationsController < Api::V1::ApiController
   before_action :validate_create_params, only: %w[create]
   before_action :validate_show_params, only: %w[show]
-
-  skip_after_action :verify_authorized
-  protect_from_forgery with: :null_session
-
-  rescue_from ActionController::ParameterMissing, with: :missing_params_error
-  rescue_from ActiveRecord::RecordInvalid, with: :not_valid_error
-  rescue_from ActiveRecord::RecordNotFound, with: :not_found_error
-
-  respond_to :json
 
   def create
     application = create_application(
@@ -22,14 +10,12 @@ class Api::V1::ApplicationsController < ApplicationController
       home_uri: params.fetch(:home_uri),
       permissions: params.fetch(:permissions, []),
     )
-    render json: { oauth_id: application.uid, oauth_secret: application.secret }
-  rescue ActiveRecord::RecordNotUnique
-    render json: { error: "ApplicationAlreadyCreated" }, status: :conflict
+    render json: { id: application.id, oauth_id: application.uid, oauth_secret: application.secret }
   end
 
   def show
     application = Doorkeeper::Application.find_by!(name: params.fetch(:name))
-    render json: { oauth_id: application.uid, oauth_secret: application.secret }
+    render json: { id: application.id, oauth_id: application.uid, oauth_secret: application.secret }
   end
 
 private
