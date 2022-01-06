@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_08_05_142418) do
+ActiveRecord::Schema.define(version: 2022_01_06_144058) do
 
   create_table "batch_invitation_application_permissions", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "batch_invitation_id", null: false
@@ -69,19 +69,6 @@ ActiveRecord::Schema.define(version: 2020_08_05_142418) do
     t.integer "user_agent_id"
     t.string "user_agent_string"
     t.string "user_email_string"
-    t.index ["uid", "created_at"], name: "index_event_logs_on_uid_and_created_at"
-    t.index ["user_agent_id"], name: "event_logs_user_agent_id_fk"
-  end
-
-  create_table "lhma_2019_04_29_13_15_20_064_event_logs", id: :integer, charset: "utf8mb3", force: :cascade do |t|
-    t.string "uid", null: false
-    t.datetime "created_at", null: false
-    t.integer "initiator_id"
-    t.integer "application_id"
-    t.string "trailing_message"
-    t.integer "event_id"
-    t.bigint "ip_address"
-    t.integer "user_agent_id"
     t.index ["uid", "created_at"], name: "index_event_logs_on_uid_and_created_at"
     t.index ["user_agent_id"], name: "event_logs_user_agent_id_fk"
   end
