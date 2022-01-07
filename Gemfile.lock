@@ -182,7 +182,7 @@ GEM
     govuk_personalisation (0.11.0)
       plek (>= 1.9.0)
       rails (~> 6)
-    govuk_publishing_components (27.20.0)
+    govuk_publishing_components (28.0.0)
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
@@ -441,7 +441,7 @@ GEM
       sprockets (>= 3.0.0)
     statsd-ruby (1.5.0)
     systemu (2.6.5)
-    thor (1.1.0)
+    thor (1.2.1)
     tilt (2.0.10)
     timecop (0.9.1)
     tzinfo (2.0.4)
@@ -475,7 +475,7 @@ GEM
       chronic (>= 0.6.3)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.5.1)
+    zeitwerk (2.5.3)
     zeroclipboard-rails (0.1.2)
       railties (>= 3.1)
     zxcvbn-ruby (1.1.0)
