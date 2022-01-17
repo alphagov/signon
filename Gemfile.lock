@@ -217,7 +217,6 @@ GEM
     kgio (2.11.4)
     kramdown (2.3.1)
       rexml
-    lhm (2.2.0)
     link_header (0.0.8)
     listen (3.2.1)
       rb-fsevent (~> 0.10, >= 0.10.3)
@@ -482,7 +481,6 @@ DEPENDENCIES
   jasmine_selenium_runner
   json
   kaminari
-  lhm
   listen
   mail-notify
   minitest
