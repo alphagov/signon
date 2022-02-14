@@ -10,14 +10,14 @@
           Ask your organisation’s main GOV.UK contact if you need access.
         <% end %>
       </p>
-      <p class="govuk-body">If you think something is wrong, try <%= link_to "signing out", destroy_user_session_path %> and then
+      <p class="govuk-body">
+        If you think something is wrong, try <%= link_to "signing out", destroy_user_session_path, class: "govuk-link" %> and then
         <%- if @application.present? -%>
-          <%= link_to 'back in', @application.home_uri -%>
+          <%= link_to "back in", @application.home_uri, class: "govuk-link" -%>
         <%- else -%>
           back in
         <%- end %>.
       </p>
     <% end %>
-
-    </div>
+  </div>
 </div>
