@@ -269,6 +269,7 @@ GEM
     mini_mime (1.1.2)
     mini_portile2 (2.6.1)
     minitest (5.15.0)
+    minitest-emoji (2.0.0)
     mocha (1.11.2)
     msgpack (1.3.3)
     multipart-post (2.1.1)
@@ -515,6 +516,7 @@ DEPENDENCIES
   listen
   mail-notify
   minitest
+  minitest-emoji (~> 2.0)
   mocha
   mysql2
   nokogiri

@@ -69,3 +69,5 @@ group :test do
   gem "timecop"
   gem "webmock"
 end
+
+gem "minitest-emoji", "~> 2.0"

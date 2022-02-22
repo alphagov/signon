@@ -10,6 +10,7 @@ require "rails/test_help"
 require "shoulda/context"
 require "webmock/minitest"
 require "minitest/autorun"
+require "minitest/emoji"
 require "mocha/minitest"
 
 GovukTest.configure
