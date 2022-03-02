@@ -3,7 +3,7 @@ require "test_helper"
 class AuthorisationsTest < ActionDispatch::IntegrationTest
   setup do
     @api_user = create(:api_user, id: 123)
-    @application = create(:application, id: 456)
+    @application = create(:application, id: 456, with_supported_permissions: %w[perm1 perm2])
   end
 
   create_endpoint = "/api/v1/api-users/123/authorisations"
@@ -62,9 +62,23 @@ class AuthorisationsTest < ActionDispatch::IntegrationTest
     assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("token"))
   end
 
-  test "#test confirms that a token has been created" do
+  test "#create grants application permissions to an api_user" do
+    permissions = %w[perm1 perm2 signin]
     request(create_endpoint, params: {
       application_id: @application.id,
+      permissions: permissions,
+    })
+    assert_equal 200, response.status
+    body = JSON.parse(response.body)
+    assert_equal @application.name, body.fetch("application_name")
+    assert_equal @api_user.permissions_for(@application), permissions
+  end
+
+  test "#test confirms that a token has been created" do
+    permissions = %w[perm1 perm2 signin]
+    request(create_endpoint, params: {
+      application_id: @application.id,
+      permissions: permissions,
     })
 
     assert_equal 200, response.status
@@ -74,7 +88,10 @@ class AuthorisationsTest < ActionDispatch::IntegrationTest
       token: token,
     })
     assert_equal 200, response.status
-    assert_equal JSON.generate(application_name: @application.name), response.body
+    assert_equal JSON.generate(
+      application_name: @application.name,
+      permissions: permissions,
+    ), response.body
   end
 
   test "#test provided api user id is invalid" do
