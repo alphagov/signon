@@ -2,6 +2,8 @@ class Api::V1::ApplicationsController < Api::V1::ApiController
   before_action :validate_create_params, only: %w[create]
   before_action :validate_show_params, only: %w[show]
 
+  DEFAULT_PERMISSIONS = %w[signin user_update_permission].freeze
+
   def create
     application = create_application(
       name: params.fetch(:name),
@@ -10,12 +12,12 @@ class Api::V1::ApplicationsController < Api::V1::ApiController
       home_uri: params.fetch(:home_uri),
       permissions: params.fetch(:permissions, []),
     )
-    render json: { id: application.id, oauth_id: application.uid, oauth_secret: application.secret }
+    render json: generate_response(application.reload)
   end
 
   def show
     application = Doorkeeper::Application.find_by!(name: params.fetch(:name))
-    render json: { id: application.id, oauth_id: application.uid, oauth_secret: application.secret }
+    render json: generate_response(application)
   end
 
 private
@@ -46,5 +48,14 @@ private
 
   def validate_show_params
     assert_no_missing_params(%i[name])
+  end
+
+  def generate_response(application)
+    {
+      id: application.id,
+      oauth_id: application.uid,
+      oauth_secret: application.secret,
+      permissions: application.reload.supported_permission_strings - DEFAULT_PERMISSIONS,
+    }
   end
 end

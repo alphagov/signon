@@ -34,17 +34,18 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   end
 
   test "#show responds with a 404 when the application doesn't exist" do
-    create(:application, name: name)
+    create(:application, name: name, supports_push_updates: true)
     get_req(endpoint, params: { "name" => "doesnt exist" })
     assert_equal 404, response.status
     assert_equal JSON.generate({ error: "Record not found" }), response.body
   end
 
   test "#show returns an application" do
-    create(:application, name: name)
+    create(:application, name: name, supports_push_updates: true, with_supported_permissions: %w[perm1])
     get_req(endpoint, params: { "name" => name })
     assert_equal 200, response.status
     assert_success_body(response)
+    assert_permissions(response, %w[perm1])
   end
 
   test "#create responds with a 401 error when an invalid token is given" do
@@ -82,12 +83,14 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     post_req(endpoint, params: create_params)
     assert_equal 200, response.status
     assert_success_body(response)
+    assert_permissions(response, permissions)
   end
 
   test "#create with no permissions is successful" do
     post_req(endpoint, params: create_params.merge("permissions" => []))
     assert_equal 200, response.status
     assert_success_body(response)
+    assert_permissions(response, [])
   end
 
   #
@@ -101,6 +104,10 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_id"))
     assert_equal 43, body.fetch("oauth_secret").length
     assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_secret"))
+  end
+
+  def assert_permissions(response, permissions)
+    assert_equal permissions, JSON.parse(response.body).fetch("permissions")
   end
 
   def assert_unauthorized(response)
