@@ -70,6 +70,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       get "applications", to: "applications#show"
       post "applications", to: "applications#create"
+      patch "applications/:id", to: "applications#update"
       get "api-users", to: "api_users#show"
       post "api-users", to: "api_users#create"
       post "api-users/:id/authorisations", to: "authorisations#create"

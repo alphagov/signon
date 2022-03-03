@@ -34,17 +34,18 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   end
 
   test "#show responds with a 404 when the application doesn't exist" do
-    create(:application, name: name)
+    create(:application, name: name, supports_push_updates: true)
     get_req(endpoint, params: { "name" => "doesnt exist" })
     assert_equal 404, response.status
     assert_equal JSON.generate({ error: "Record not found" }), response.body
   end
 
   test "#show returns an application" do
-    create(:application, name: name)
+    create(:application, name: name, supports_push_updates: true, with_supported_permissions: %w[perm1])
     get_req(endpoint, params: { "name" => name })
     assert_equal 200, response.status
     assert_success_body(response)
+    assert_permissions(response, %w[perm1])
   end
 
   test "#create responds with a 401 error when an invalid token is given" do
@@ -82,12 +83,97 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     post_req(endpoint, params: create_params)
     assert_equal 200, response.status
     assert_success_body(response)
+    assert_permissions(response, permissions)
   end
 
   test "#create with no permissions is successful" do
     post_req(endpoint, params: create_params.merge("permissions" => []))
     assert_equal 200, response.status
     assert_success_body(response)
+    assert_permissions(response, [])
+  end
+
+  test "#update responds with a 401 error when an invalid token is given" do
+    ENV["SIGNON_ADMIN_PASSWORD"] = SecureRandom.uuid
+    application = create(:application, name: name)
+    patch "#{endpoint}/#{application.id}", headers: { "HTTP_AUTHORIZATION" => "Bearer invalid-token" }
+    assert_unauthorized(response)
+  end
+
+  test "#update responds with a 401 error when SIGNON_ADMIN_PASSWORD env var is unset" do
+    ENV["SIGNON_ADMIN_PASSWORD"] = nil
+    application = create(:application, name: name)
+    patch "#{endpoint}/#{application.id}"
+    assert_unauthorized(response)
+  end
+
+  test "#update when app doesnt exist" do
+    patch "#{endpoint}/12345678", headers: headers
+    assert_equal 404, response.status
+  end
+
+  test "#update with no params" do
+    application = create(:application, name: name)
+    patch "#{endpoint}/#{application.id}", params: {}.to_json, headers: headers
+    assert_equal 200, response.status
+    assert_success_body(response)
+    assert_permissions(response, [])
+  end
+
+  test "#update with modifying application fields" do
+    desired_name = "My new named app"
+    desired_desc = "New Description"
+    application = create(:application)
+    patch "#{endpoint}/#{application.id}", params: {
+      name: desired_name,
+      description: desired_desc,
+    }.to_json, headers: headers
+    assert_equal 200, response.status
+    assert_success_body(response)
+    data = JSON.parse(response.body)
+    application.reload
+    assert_equal desired_name, data.fetch("name")
+    assert_equal desired_name, application.name
+    assert_equal desired_desc, data.fetch("description")
+    assert_equal desired_desc, application.description
+  end
+
+  test "#update with adding permissions" do
+    desired_permissions = %w[1 2 3]
+    application = create(:application, name: name, with_supported_permissions: %w[1 2])
+    patch "#{endpoint}/#{application.id}", params: {
+      permissions: desired_permissions,
+    }.to_json, headers: headers
+    assert_equal 200, response.status
+    assert_success_body(response)
+    assert_permissions(response, desired_permissions)
+    application.reload
+    assert_equal desired_permissions, application.supported_permission_strings - Api::V1::ApplicationsController::DEFAULT_PERMISSIONS
+  end
+
+  test "#update with deleting permissions" do
+    desired_permissions = %w[1]
+    application = create(:application, name: name, with_supported_permissions: %w[1 2])
+    patch "#{endpoint}/#{application.id}", params: {
+      permissions: desired_permissions,
+    }.to_json, headers: headers
+    assert_equal 200, response.status
+    assert_success_body(response)
+    assert_permissions(response, desired_permissions)
+    application.reload
+    assert_equal desired_permissions, application.supported_permission_strings - Api::V1::ApplicationsController::DEFAULT_PERMISSIONS
+  end
+
+  test "#update with ignored params" do
+    desired_redirect_uri = "https://malicious.example.org"
+    application = create(:application, name: name, with_supported_permissions: %w[1 2])
+    patch "#{endpoint}/#{application.id}", params: {
+      redirect_uri: desired_redirect_uri,
+    }.to_json, headers: headers
+    assert_equal 200, response.status
+    assert_success_body(response)
+    application.reload
+    assert_not_equal desired_redirect_uri, application.redirect_uri
   end
 
   #
@@ -101,6 +187,10 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_id"))
     assert_equal 43, body.fetch("oauth_secret").length
     assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_secret"))
+  end
+
+  def assert_permissions(response, permissions)
+    assert_equal permissions, JSON.parse(response.body).fetch("permissions")
   end
 
   def assert_unauthorized(response)

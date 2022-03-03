@@ -30,7 +30,10 @@ class Api::V1::AuthorisationsController < Api::V1::ApiController
         token: params.require(:token),
       )
 
-    render json: { application_name: authorisation.application.name }
+    render json: {
+      application_name: authorisation.application.name,
+      permissions: api_user.permissions_for(authorisation.application),
+    }
   end
 
 private
