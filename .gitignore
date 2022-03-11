@@ -27,3 +27,6 @@ test/reports/*
 # yarn
 node_modules
 yarn-error.log
+
+# Ignore compiled Rails assets
+/public/assets

@@ -5,4 +5,4 @@ require File.expand_path("config/application", __dir__)
 
 Signon::Application.load_tasks
 
-task default: %i[lint test jasmine:ci]
+task default: %i[lint test jasmine]

@@ -50,8 +50,6 @@ end
 
 group :development, :test do
   gem "govuk_test"
-  gem "jasmine"
-  gem "jasmine_selenium_runner"
   gem "pry-byebug"
   gem "rubocop-govuk"
 end
@@ -62,7 +60,6 @@ group :test do
   gem "factory_bot_rails"
   gem "minitest"
   gem "mocha", require: false
-  gem "poltergeist"
   gem "rails-controller-testing"
   gem "shoulda-context", require: false
   gem "simplecov"

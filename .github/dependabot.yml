@@ -24,8 +24,6 @@ updates:
       # Framework gems
       - dependency-name: factory_bot_rails
         dependency-type: direct
-      - dependency-name: jasmine
-        dependency-type: direct
       - dependency-name: minitest
         dependency-type: direct
       - dependency-name: pg
@@ -47,6 +45,10 @@ updates:
       - dependency-name: standardx
         dependency-type: direct
       - dependency-name: stylelint
+        dependency-type: direct
+      - dependency-name: jasmine-browser-runner
+        dependency-type: direct
+      - dependency-name: jasmine-core
         dependency-type: direct
 
   # Ruby needs to be upgraded manually in multiple places, so cannot
