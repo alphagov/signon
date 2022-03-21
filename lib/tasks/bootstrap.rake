@@ -1,9 +1,9 @@
 namespace :bootstrap do
   # TODO: Replace this with an API.
-  desc "Create all resources for bootrapping an environment
+  desc "Create all resources for bootstrapping an environment
     Usage:
-      boostrap:all[my-test.publishing.service.gov.uk,my-test-env]
-      boostrap:all[integration.publishing.service.gov.uk]
+      bootstrap:all[my-test.publishing.service.gov.uk,my-test-env]
+      bootstrap:all[integration.publishing.service.gov.uk]
   "
   task :all, %i[public_domain resource_prefix] => :environment do |_, args|
     public_domain = args.public_domain
