@@ -1,8 +1,12 @@
 ARG base_image=ruby:2.7.5
 FROM ${base_image}
 
+# Add yarn to apt sources
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
 RUN apt-get update -qq && apt-get upgrade -y
-RUN apt-get install -y build-essential nodejs && apt-get clean
+RUN apt-get install -y build-essential nodejs yarn && apt-get clean
 
 # This image is only intended to be able to run this app in a production RAILS_ENV
 ENV RAILS_ENV production
