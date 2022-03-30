@@ -1,112 +1,113 @@
 //= require zxcvbn
 
-(function () {
+window.GOVUK = window.GOVUK || {}
+window.GOVUK.Modules = window.GOVUK.Modules || {};
+
+(function (Modules) {
   'use strict'
-  var root = this
-  var $ = root.jQuery
 
-  if (typeof root.GOVUK === 'undefined') { root.GOVUK = {} }
-
-  var PasswordStrengthIndicator = function (options) {
-    var instance = this
-
-    $.each([options.password_field, options.password_confirmation_field], function (i, passwordField) {
-      var update = function () {
-        var password = $(options.password_field).val()
-        var passwordConfirmation = $(options.password_confirmation_field).val()
-        instance.updateIndicator(password, passwordConfirmation, options)
-      }
-      $(passwordField).on('input', update)
-    })
-
-    $(options.password_strength_guidance).attr('aria-live', 'polite').attr('aria-atomic', 'true')
+  function PasswordStrengthIndicator (module) {
+    this.module = module
+    this.passwordInput = this.module.querySelector('.password-control-group input')
+    this.passwordConfirmationInput = this.module.querySelector('.password-confirmation-control-group input')
+    this.strongPasswordBoundary = 4
+    this.emailParts = this.passwordInput.getAttribute('data-email-parts').split(',')
+    this.minimumPasswordLength = parseInt(this.passwordInput.getAttribute('data-min-password-length'))
+    this.errorMessages = {
+      'password-too-short': 'Your password must be at least ' + this.minimumPasswordLength + ' characters',
+      'parts-of-email': 'Your password shouldn’t include part or all of your email address',
+      'password-entropy': 'Your password must be more complex',
+      'confirmation-not-matching': 'The confirmation must match the new password'
+    }
   }
 
-  PasswordStrengthIndicator.prototype.updateIndicator = function (password, passwordConfirmation, options) {
-    var guidance = []
+  PasswordStrengthIndicator.prototype.init = function () {
+    this.passwordErrorContainer = this.createErrorContainer(
+      this.module.querySelector('.password-control-group')
+    )
+    this.passwordConfirmationErrorContainer = this.createErrorContainer(
+      this.module.querySelector('.password-confirmation-control-group')
+    )
 
-    var result = zxcvbn(password, options.weak_words)
-    if (password.length > 0) {
-      if (options.min_password_length && password.length < parseInt(options.min_password_length)) {
-        guidance.push('password-too-short')
+    this.passwordInput.addEventListener('input', this.checkInput.bind(this))
+    this.passwordConfirmationInput.addEventListener('input', this.checkInput.bind(this))
+  }
+
+  PasswordStrengthIndicator.prototype.createErrorContainer = function (group) {
+    var ul = document.createElement('ul')
+    ul.className = 'govuk-error-message govuk-list'
+    ul.setAttribute('aria-live', 'polite')
+    ul.setAttribute('aria-atomic', 'true')
+    ul.errors = []
+    var label = group.querySelector('label')
+    label.insertAdjacentElement('afterend', ul)
+    return ul
+  }
+
+  PasswordStrengthIndicator.prototype.checkInput = function () {
+    var passwordErrors = []
+    var passwordConfirmationErrors = []
+
+    if (this.passwordInput.value.length > 0) {
+      if (this.passwordInput.value.length < this.minimumPasswordLength) {
+        passwordErrors.push('password-too-short')
       }
 
-      var isPasswordNotStrongEnough = (result.score < options.strong_password_boundary)
+      var notStrongEnough = this.passwordNotStrongEnough()
 
-      var aWeakWordFoundInPassword = $(options.weak_words).is(function (i, weakWord) {
-        return (password.indexOf(weakWord) >= 0)
-      })
-      if (isPasswordNotStrongEnough && aWeakWordFoundInPassword) {
-        guidance.push('parts-of-email')
+      if (notStrongEnough && this.passwordContainsEmailParts()) {
+        passwordErrors.push('parts-of-email')
       }
 
-      if (isPasswordNotStrongEnough) {
-        guidance.push('not-strong-enough')
-      } else {
-        guidance.push('good-password')
+      if (notStrongEnough) {
+        passwordErrors.push('password-entropy')
       }
     }
 
-    if (passwordConfirmation.length > 0) {
-      if (password === passwordConfirmation) {
-        guidance.push('confirmation-matching')
-      } else {
-        guidance.push('confirmation-not-matching')
+    if (this.passwordConfirmationInput.value.length > 0) {
+      if (this.passwordInput.value !== this.passwordConfirmationInput.value) {
+        passwordConfirmationErrors.push('confirmation-not-matching')
       }
-    } else {
-      guidance.push('no-password-confirmation-provided')
     }
 
-    options.update_indicator(guidance, result.score)
+    this.updateErrors(this.passwordErrorContainer, passwordErrors)
+    this.updateErrors(this.passwordConfirmationErrorContainer, passwordConfirmationErrors)
   }
 
-  GOVUK.passwordStrengthPossibleGuidance = [
-    'password-too-short',
-    'parts-of-email',
-    'not-strong-enough',
-    'good-password'
-  ]
-
-  GOVUK.passwordConfirmationPossibleGuidance = [
-    'confirmation-matching',
-    'confirmation-not-matching',
-    'no-password-confirmation-provided'
-  ]
-
-  GOVUK.passwordStrengthIndicator = PasswordStrengthIndicator
-}).call(this)
-
-$(function () {
-  // Reposition the error messages between the label and input
-  $('#password-guidance').detach().insertAfter('#password-control-group label')
-  $('#password-confirmation-guidance').detach().insertAfter('#password-confirmation-control-group label')
-
-  $('form #password-control-group input[type=password]').each(function () {
-    var $passwordChangePanel = $('#password-change-panel')
-
-    var $passwordField = $(this)
-    var $passwordConfirmationField = $('form #password-confirmation-control-group input[type=password]')
-    $passwordField.parent().parent().append('<input type="hidden" id="password-strength-score" name="password-strength-score" value=""/>')
-
-    new GOVUK.passwordStrengthIndicator({ // eslint-disable-line no-new, new-cap
-      password_field: $passwordField,
-      password_strength_guidance: $('#password-guidance'),
-      password_confirmation_field: $passwordConfirmationField,
-      password_confirmation_guidance: $('#password-confirmation-guidance'),
-
-      weak_words: $passwordField.data('weak-words').split(','),
-      strong_password_boundary: 4,
-      min_password_length: $passwordField.data('min-password-length'),
-
-      update_indicator: function (guidance, strengthScore) {
-        $('#password-strength-score').val(strengthScore)
-
-        $passwordChangePanel.removeClass(GOVUK.passwordStrengthPossibleGuidance.join(' '))
-        $passwordChangePanel.addClass(guidance.join(' '))
-
-        $passwordChangePanel.removeClass(GOVUK.passwordConfirmationPossibleGuidance.join(' '))
-        $passwordChangePanel.addClass(guidance.join(' '))
+  PasswordStrengthIndicator.prototype.passwordContainsEmailParts = function () {
+    for (var i = 0; i < this.emailParts.length; i++) {
+      if (this.emailParts[i] === '') continue
+      if (this.passwordInput.value.indexOf(this.emailParts[i]) >= 0) {
+        return true
       }
-    })
-  })
-})
+    }
+
+    return false
+  }
+
+  PasswordStrengthIndicator.prototype.passwordNotStrongEnough = function () {
+    var result = window.zxcvbn(this.passwordInput.value, this.emailParts)
+
+    return result.score < this.strongPasswordBoundary
+  }
+
+  PasswordStrengthIndicator.prototype.updateErrors = function (errorContainer, errors) {
+    // crude array comparison
+    if (errorContainer.errors.join(',') === errors.join(',')) return
+
+    // remove existing errors
+    while (errorContainer.firstChild) {
+      errorContainer.removeChild(errorContainer.firstChild)
+    }
+
+    for (var i = 0; i < errors.length; i++) {
+      var li = document.createElement('li')
+      li.textContent = this.errorMessages[errors[i]]
+      errorContainer.appendChild(li)
+    }
+
+    errorContainer.errors = errors
+  }
+
+  Modules.PasswordStrengthIndicator = PasswordStrengthIndicator
+})(window.GOVUK.Modules)
