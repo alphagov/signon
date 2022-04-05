@@ -8,6 +8,11 @@ class SignInTest < ActionDispatch::IntegrationTest
     @user = create(:user_in_organisation, email: @email, password: @password, organisation: @organisation)
   end
 
+  should "not include a link to request support" do
+    visit root_path
+    refute_response_contains("Raise a support request")
+  end
+
   should "display a confirmation for successful sign-ins" do
     visit root_path
     signin_with(email: "email@example.com", password: "some password with various $ymb0l$")

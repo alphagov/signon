@@ -23,6 +23,15 @@ class DashboardTest < ActionDispatch::IntegrationTest
     assert page.has_css?("a[href='#{app.home_uri}']")
   end
 
+  should "include a link to request support" do
+    user = create(:user)
+
+    visit root_path
+    signin_with(user)
+
+    assert_response_contains("Raise a support request")
+  end
+
   context "when the user has enrolled in 2SV" do
     should "display the 'change' link" do
       user = create(:two_step_enabled_user)
