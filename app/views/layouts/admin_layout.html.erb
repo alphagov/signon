@@ -44,15 +44,17 @@
       {
         title: "Support and feedback",
         items: [
-          {
-            href: Plek.new.external_url_for("support"),
-            text: "Raise a support request"
-          },
+          (
+            {
+              href: Plek.new.external_url_for("support"),
+              text: "Raise a support request"
+            } if user_signed_in?
+          ),
           {
             href: "https://www.gov.uk/government/content-publishing",
-            text: "How to write, publish, and improve content"
+            text: "How to write, publish, and improve content",
           }
-        ]
+        ].compact
       }
     ]
   } %>
