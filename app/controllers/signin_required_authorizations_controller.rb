@@ -7,7 +7,7 @@ class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsControl
       if skip_authorization? || matching_token?
         if user_has_signin_permission_to_application?
           auth = authorize_response
-          redirect_to auth.redirect_uri
+          redirect_to auth.redirect_uri, allow_other_host: true
         else
           session[:signin_missing_for_application] = application.try(:id)
           redirect_to signin_required_path
