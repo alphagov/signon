@@ -167,11 +167,11 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "state when the account was locked" do
-      assert_body_includes "was locked at #{@the_time.to_s(:govuk_date)}"
+      assert_body_includes "was locked at #{@the_time.to_fs(:govuk_date)}"
     end
 
     should "state when the account will be unlocked" do
-      assert_body_includes "Your account will be unlocked at #{(@the_time + 1.hour).to_s(:govuk_date)}"
+      assert_body_includes "Your account will be unlocked at #{(@the_time + 1.hour).to_fs(:govuk_date)}"
     end
 
     should "include correct support links" do

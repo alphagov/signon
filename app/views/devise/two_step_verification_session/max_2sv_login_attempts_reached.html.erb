@@ -9,7 +9,7 @@
   <p class="lead">
     Your account has been locked because an incorrect 2-step verification code was entered too many times.
   </p>
-  <p>Your account will be unlocked at <%= Devise.unlock_in.from_now.to_s(:govuk_time)%></p>
+  <p>Your account will be unlocked at <%= Devise.unlock_in.from_now.to_fs(:govuk_time)%></p>
   <p>
     If you need your account unlocked sooner, please contact a managing <%= t('department.name') %> editor in your organisation
     (or your parent organisation). They can use the support form to get help from the <%= t('department.name') %> team.

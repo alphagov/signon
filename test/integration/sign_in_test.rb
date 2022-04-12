@@ -192,7 +192,7 @@ class SignInTest < ActionDispatch::IntegrationTest
           click_button "Sign in"
         end
 
-        assert_response_contains 1.hour.from_now.to_s(:govuk_time)
+        assert_response_contains 1.hour.from_now.to_fs(:govuk_time)
       end
       assert_response_contains "entered too many times"
       assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_LOCKED.id, uid: @user.uid).count

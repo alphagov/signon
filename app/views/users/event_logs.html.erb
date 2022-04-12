@@ -23,7 +23,7 @@
     <tbody>
       <% @logs.each do |log| %>
         <tr>
-          <td><%= log.created_at.to_s(:govuk_date_short) %></td>
+          <td><%= log.created_at.to_fs(:govuk_date_short) %></td>
           <td>
             <%= log.event %>
             <% if log.application %>

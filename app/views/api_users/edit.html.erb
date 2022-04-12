@@ -55,10 +55,10 @@
         <td><%= authorisation.application.name %></td>
         <td><code><%= truncate_access_token(authorisation.token) %></code></td>
         <td>
-          <%= Time.at(authorisation.created_at).to_date.to_s(:govuk_date) %>
+          <%= Time.at(authorisation.created_at).to_date.to_fs(:govuk_date) %>
         </td>
         <td>
-          <%= Time.at(authorisation.created_at.to_f + authorisation.expires_in).to_date.to_s(:govuk_date) %>
+          <%= Time.at(authorisation.created_at.to_f + authorisation.expires_in).to_date.to_fs(:govuk_date) %>
         </td>
         <td>
           <div class="btn-group">

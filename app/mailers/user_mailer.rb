@@ -111,11 +111,11 @@ private
   end
 
   def locked_time
-    @user.locked_at.to_s(:govuk_date)
+    @user.locked_at.to_fs(:govuk_date)
   end
 
   def unlock_time
-    (@user.locked_at + 1.hour).to_s(:govuk_date)
+    (@user.locked_at + 1.hour).to_fs(:govuk_date)
   end
 
   def account_name
