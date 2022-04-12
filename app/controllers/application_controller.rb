@@ -1,7 +1,7 @@
 require "devise/hooks/two_step_verification"
 
 class ApplicationController < ActionController::Base
-  include Pundit
+  include Pundit::Authorization
   protect_from_forgery with: :exception
 
   include TwoStepVerificationHelper

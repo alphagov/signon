@@ -1,5 +1,5 @@
 class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsController
-  include Pundit
+  include Pundit::Authorization
   EXPECTED_DOORKEEPER_VERSION = "5.5.4".freeze
 
   def new
