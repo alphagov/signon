@@ -18,7 +18,8 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     Doorkeeper.configuration.stubs(grant_flows: grant_flows)
     # for some reason this value isn't being recalculated between tests
     # so we stub it too
-    Doorkeeper.configuration.stubs(authorization_response_types: Doorkeeper.configuration.send(:calculate_authorization_response_types))
+    Doorkeeper.configuration.stubs(authorization_response_flows: Doorkeeper.configuration.grant_flows.map { |name| Doorkeeper::GrantFlow.get(name) })
+    Doorkeeper.configuration.stubs(authorization_response_types: Doorkeeper.configuration.grant_flows.map { |name| Doorkeeper::GrantFlow.get(name).response_type_matches })
   end
 
   setup do
