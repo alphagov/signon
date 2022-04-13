@@ -4,6 +4,6 @@ Rack::Attack.throttle("limit 'POST /users/password' attempts per IP", limit: 20,
   end
 end
 
-Rack::Attack.throttled_response = lambda do |_request|
+Rack::Attack.throttled_responder = lambda do |_request|
   [429, { "Content-Type" => "text/plain" }, ["Too many requests."]]
 end
