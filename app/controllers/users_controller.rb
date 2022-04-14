@@ -60,7 +60,12 @@ class UsersController < ApplicationController
     EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK, initiator: current_user, ip_address: user_ip_address)
     @user.unlock_access!
     flash[:notice] = "Unlocked #{@user.email}"
-    redirect_back(fallback_location: root_path)
+    # TODO: replace this conditional with `redirect_back_or_to` once https://github.com/rails/rails/pull/44650 is included in a Rails release
+    if request.referer
+      redirect_to(request.referer)
+    else
+      redirect_to(root_path)
+    end
   end
 
   def resend_email_change
@@ -81,7 +86,12 @@ class UsersController < ApplicationController
     @user.unconfirmed_email = nil
     @user.confirmation_token = nil
     @user.save!(validate: false)
-    redirect_back(fallback_location: root_path)
+    # TODO: replace this conditional with `redirect_back_or_to` once https://github.com/rails/rails/pull/44650 is included in a Rails release
+    if request.referer
+      redirect_to(request.referer)
+    else
+      redirect_to(root_path)
+    end
   end
 
   def event_logs

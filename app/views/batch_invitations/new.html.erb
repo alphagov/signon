@@ -18,7 +18,7 @@
         <tr>
           <td>
             <%= link_to(batch_invitation_path(batch_invitation), alt: "View this batch") do %>
-              <%= batch_invitation.batch_invitation_users.count %> users by <%= batch_invitation.user.name %> at <%= batch_invitation.created_at.to_s(:govuk_date) %>
+              <%= batch_invitation.batch_invitation_users.count %> users by <%= batch_invitation.user.name %> at <%= batch_invitation.created_at.to_fs(:govuk_date) %>
             <% end %>
           </td>
           <td><%= batch_invite_status_message(batch_invitation) %></td>

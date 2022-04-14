@@ -41,7 +41,7 @@
           <%= link_to supported_permission.name, edit_doorkeeper_application_supported_permission_path(@application, supported_permission) %>
         </td>
         <td>
-          <%= supported_permission.created_at.to_date.to_s(:govuk_date) %>
+          <%= supported_permission.created_at.to_date.to_fs(:govuk_date) %>
         </td>
         <td class="delegatable">
           <%= supported_permission.delegatable? ? 'Yes' : 'No' %>

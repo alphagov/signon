@@ -1,13 +1,13 @@
 class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsController
-  include Pundit
-  EXPECTED_DOORKEEPER_VERSION = "5.3.2".freeze
+  include Pundit::Authorization
+  EXPECTED_DOORKEEPER_VERSION = "5.5.4".freeze
 
   def new
     if pre_authorizable?
       if skip_authorization? || matching_token?
         if user_has_signin_permission_to_application?
           auth = authorize_response
-          redirect_to auth.redirect_uri
+          redirect_to auth.redirect_uri, allow_other_host: true
         else
           session[:signin_missing_for_application] = application.try(:id)
           redirect_to signin_required_path
