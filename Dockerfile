@@ -1,4 +1,4 @@
-ARG base_image=ruby:2.7.5
+ARG base_image=ruby:2.7.6
 FROM ${base_image}
 
 # Add yarn to apt sources
