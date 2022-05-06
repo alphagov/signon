@@ -1,0 +1,13 @@
+*/log
+.dockerignore
+.git
+.gitignore
+CONTRIBUTING.md
+Dockerfile
+Jenkinsfile
+Procfile
+README.md
+docs
+spec
+test
+tmp
