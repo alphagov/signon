@@ -1,10 +1,11 @@
-# Sample configuration file for Sidekiq.
+# Configuration file for Sidekiq.
 # Options here can still be overridden by cmd line args.
-#   sidekiq -C config.yml
 ---
 :verbose: true
-:concurrency:  2
-:logfile: ./log/sidekiq.log
+:concurrency: 2
+<% if ENV.key?('SIDEKIQ_LOGFILE') %>
+:logfile: <%= ENV['SIDEKIQ_LOGFILE'] %>
+<% end %>
 :queues:
   - default
   - mailers

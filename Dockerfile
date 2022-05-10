@@ -1,39 +1,55 @@
-ARG base_image=ruby:2.7.6
-FROM ${base_image}
+ARG base_image=ruby:2.7.6-slim-bullseye
 
-# Add yarn to apt sources
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+FROM $base_image AS builder
+ENV RAILS_ENV=production \
+    NODE_ENV=production \
+    GOVUK_APP_DOMAIN=www.gov.uk \
+    GOVUK_WEBSITE_ROOT=https://www.gov.uk \
+    ASSETS_PREFIX=/assets/signon \
+    BOOTSNAP_CACHE_DIR=/var/cache/bootsnap
+# TODO: have a separate build image which already contains the build-only deps.
+RUN apt-get update -qy && \
+    apt-get upgrade -y && \
+    apt-get clean
+RUN apt-get install -y build-essential nodejs gnupg2 curl libmariadb-dev-compat
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list && \
+    apt-get install -y yarn
 
-RUN apt-get update -qq && apt-get upgrade -y
-RUN apt-get install -y build-essential nodejs yarn && apt-get clean
+RUN mkdir /app
+WORKDIR /app
+COPY Gemfile Gemfile.lock .ruby-version /app/
+RUN bundle config set without 'development test' && \
+    bundle install -j8 --retry=2
 
-# This image is only intended to be able to run this app in a production RAILS_ENV
-ENV RAILS_ENV production
+COPY . /app
 
-ENV APP_HOME /app
-ENV DATABASE_URL mysql2://root:root@mysql/signon
-ENV GOVUK_APP_NAME signon
-ENV PORT 3016
-ENV TEST_DATABASE_URL mysql2://root:root@mysql/signon_test
-ENV ASSETS_PREFIX /assets/signon
+RUN bundle exec bootsnap precompile --gemfile -v .
+RUN DEVISE_PEPPER=unused DEVISE_SECRET_KEY=unused bundle exec rails assets:precompile
 
-RUN mkdir $APP_HOME
 
-WORKDIR $APP_HOME
-ADD Gemfile* .ruby-version $APP_HOME/
-RUN bundle config set deployment 'true'
-RUN bundle config set without 'development test'
-RUN bundle install --jobs 4
+FROM $base_image
+ENV RAILS_ENV=production \
+    NODE_ENV=production \
+    GOVUK_APP_NAME=signon \
+    ASSETS_PREFIX=/assets/signon \
+    BOOTSNAP_CACHE_DIR=/var/cache/bootsnap
+WORKDIR /app
 
-ADD . $APP_HOME
+# TODO: have an up-to-date base image and stop running apt-get upgrade here.
+RUN apt-get update -qy && \
+    apt-get upgrade -y && \
+    apt-get clean
+RUN apt-get install -y libmariadb3
 
-RUN GOVUK_APP_DOMAIN=www.gov.uk \
-  DEVISE_PEPPER=`openssl rand -base64 40` \
-  DEVISE_SECRET_KEY=`openssl rand -base64 40` \
-  GOVUK_WEBSITE_ROOT=https://www.gov.uk \
-  bundle exec rails assets:clean assets:precompile
+RUN echo 'IRB.conf[:HISTORY_FILE] = "/tmp/irb_history"' > irb.rc
+COPY --from=builder /usr/bin/node* /usr/bin/
+COPY --from=builder /usr/share/nodejs/ /usr/share/nodejs/
+COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
+COPY --from=builder /var/cache/bootsnap/ /var/cache/
+COPY --from=builder /app ./
 
-HEALTHCHECK CMD curl --silent --fail localhost:$PORT || exit 1
-
+RUN groupadd -g 1001 app && \
+    useradd -u 1001 -g app app
+USER 1001
 CMD bundle exec puma
