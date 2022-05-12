@@ -1,50 +1,65 @@
-ARG base_image=ruby:2.7.6-slim-bullseye
+ARG ruby_version=2.7.6
+ARG base_image=bitnami/ruby:$ruby_version
 
 FROM $base_image AS builder
-ENV RAILS_ENV=production \
-    NODE_ENV=production \
-    GOVUK_APP_DOMAIN=www.gov.uk \
-    GOVUK_WEBSITE_ROOT=https://www.gov.uk \
-    ASSETS_PREFIX=/assets/signon \
-    BOOTSNAP_CACHE_DIR=/var/cache/bootsnap
-# TODO: have a separate build image which already contains the build-only deps.
-RUN apt-get update -qy && \
-    apt-get upgrade -y && \
-    apt-get clean
-RUN apt-get install -y build-essential nodejs gnupg2 curl libmariadb-dev-compat
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" > /etc/apt/sources.list.d/yarn.list && \
-    apt-get install -y yarn
 
-RUN mkdir /app
+# TODO: remove these once they're set in the base image.
+ENV RAILS_ENV=production
+ENV NODE_ENV=production
+ENV GEM_HOME=/usr/local/bundle
+ENV BUNDLE_PATH=$GEM_HOME
+ENV BUNDLE_BIN=$GEM_HOME/bin
+ENV PATH=$BUNDLE_BIN/bin:$PATH
+ENV BUNDLE_WITHOUT="development test"
+
+# TODO: set these in the builder image.
+ENV BUNDLE_IGNORE_MESSAGES=1
+ENV BUNDLE_SILENCE_ROOT_WARNING=1
+ENV BUNDLE_JOBS=12
+ENV MAKEFLAGS=-j12
+
+ENV ASSETS_PREFIX=/assets/signon
+ENV BOOTSNAP_CACHE_DIR=/var/cache/bootsnap
+ENV GOVUK_APP_DOMAIN=unused
+ENV GOVUK_WEBSITE_ROOT=unused
+
+# TODO: have a separate builder image which already contains the build-only deps.
+RUN apt-get update -qy
+RUN apt-get install -y --no-install-suggests --no-install-recommends \
+    nodejs libmariadb-dev-compat
+
 WORKDIR /app
 COPY Gemfile Gemfile.lock .ruby-version /app/
-RUN bundle config set without 'development test' && \
-    bundle install -j8 --retry=2
-
+RUN echo 'install: --no-document' >> /etc/gemrc && bundle install
 COPY . /app
-
-RUN bundle exec bootsnap precompile --gemfile -v .
+RUN bundle exec bootsnap precompile --gemfile .
 RUN DEVISE_PEPPER=unused DEVISE_SECRET_KEY=unused bundle exec rails assets:precompile
 
 
 FROM $base_image
-ENV RAILS_ENV=production \
-    NODE_ENV=production \
-    GOVUK_APP_NAME=signon \
-    ASSETS_PREFIX=/assets/signon \
-    BOOTSNAP_CACHE_DIR=/var/cache/bootsnap
+
+# TODO: set these in the base image.
+ENV RAILS_ENV=production
+ENV NODE_ENV=production
+ENV GEM_HOME=/usr/local/bundle
+ENV BUNDLE_PATH=$GEM_HOME
+ENV BUNDLE_BIN=$GEM_HOME/bin
+ENV PATH=$GEM_HOME/bin:$PATH
+ENV BUNDLE_WITHOUT="development test"
+
+ENV GOVUK_APP_NAME=signon
+ENV ASSETS_PREFIX=/assets/signon
+ENV BOOTSNAP_CACHE_DIR=/var/cache/bootsnap
+
 WORKDIR /app
 
-# TODO: have an up-to-date base image and stop running apt-get upgrade here.
-RUN apt-get update -qy && \
-    apt-get upgrade -y && \
-    apt-get clean
-RUN apt-get install -y libmariadb3
-
 RUN echo 'IRB.conf[:HISTORY_FILE] = "/tmp/irb_history"' > irb.rc
+
+# TODO: include libmariadb3 in the base image and stop running apt-get install here.
+COPY --from=builder /var/lib/apt/lists/ /var/lib/apt/lists/
+RUN apt-get install -y --no-install-suggests --no-install-recommends libmariadb3
+
 COPY --from=builder /usr/bin/node* /usr/bin/
-COPY --from=builder /usr/share/nodejs/ /usr/share/nodejs/
 COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
 COPY --from=builder /var/cache/bootsnap/ /var/cache/
 COPY --from=builder /app ./
