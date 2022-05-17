@@ -28,6 +28,7 @@ RUN apt-get update -qy
 RUN apt-get install -y --no-install-suggests --no-install-recommends \
     nodejs libmariadb-dev-compat
 
+RUN ln -fs /tmp /app/tmp
 WORKDIR /app
 COPY Gemfile Gemfile.lock .ruby-version /app/
 RUN echo 'install: --no-document' >> /etc/gemrc && bundle install
@@ -54,6 +55,7 @@ ENV BOOTSNAP_CACHE_DIR=/var/cache/bootsnap
 WORKDIR /app
 
 RUN echo 'IRB.conf[:HISTORY_FILE] = "/tmp/irb_history"' > irb.rc
+RUN ln -fs /tmp /app/tmp
 
 # TODO: include libmariadb3 in the base image and stop running apt-get install here.
 COPY --from=builder /var/lib/apt/lists/ /var/lib/apt/lists/
