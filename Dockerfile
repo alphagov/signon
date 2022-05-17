@@ -51,6 +51,7 @@ ENV BUNDLE_WITHOUT="development test"
 ENV GOVUK_APP_NAME=signon
 ENV ASSETS_PREFIX=/assets/signon
 ENV BOOTSNAP_CACHE_DIR=/var/cache/bootsnap
+ENV GOVUK_PROMETHEUS_EXPORTER=true
 
 WORKDIR /app
 
