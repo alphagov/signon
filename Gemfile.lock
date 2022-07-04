@@ -152,7 +152,7 @@ GEM
       ruby2_keywords (>= 0.0.4)
     faraday-net_http (2.0.2)
     ffi (1.15.5)
-    gds-api-adapters (80.0.0)
+    gds-api-adapters (80.0.1)
       addressable
       link_header
       null_logger
