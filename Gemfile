@@ -35,7 +35,6 @@ gem "whenever"
 gem "zeroclipboard-rails"
 
 # GDS Gems
-gem "deprecated_columns"
 gem "gds-api-adapters"
 gem "govuk_admin_template"
 gem "govuk_app_config"
