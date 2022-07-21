@@ -6,6 +6,7 @@ require "gds_api/organisations"
 class OrganisationsFetcher
   def call
     organisation_relationships = organisations.each_with_object({}) do |organisation_data, memo|
+      puts organisation_data["details"]["slug"]
       update_or_create_organisation(organisation_data)
       memo[organisation_data["details"]["slug"]] = child_organisation_slugs(organisation_data)
     end
