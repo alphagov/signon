@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+Rails.configuration.oauth_apps_uri_sub_pattern = ENV["SIGNON_APPS_URI_SUB_PATTERN"]
+Rails.configuration.oauth_apps_uri_sub_replacement = ENV["SIGNON_APPS_URI_SUB_REPLACEMENT"]
+
 Doorkeeper.configure do
   # Change the ORM that doorkeeper will use (requires ORM extensions installed).
   # Check the list of supported ORMs here: https://github.com/doorkeeper-gem/doorkeeper#orms
