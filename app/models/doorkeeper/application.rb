@@ -56,7 +56,26 @@ class ::Doorkeeper::Application < ActiveRecord::Base
     ].include?(name)
   end
 
+  def redirect_uri
+    substituted_uri(self[:redirect_uri])
+  end
+
+  def home_uri
+    substituted_uri(self[:home_uri])
+  end
+
 private
+
+  def substituted_uri(uri)
+    uri_pattern = Rails.configuration.oauth_apps_uri_sub_pattern
+    uri_sub = Rails.configuration.oauth_apps_uri_sub_replacement
+
+    if uri_pattern.present? && uri_sub.present?
+      uri.sub(uri_pattern, uri_sub)
+    else
+      uri
+    end
+  end
 
   def create_signin_supported_permission
     supported_permissions.create!(name: "signin", delegatable: true)
