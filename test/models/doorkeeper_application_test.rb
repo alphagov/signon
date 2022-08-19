@@ -63,6 +63,58 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
   end
 
+  context "redirect_uri" do
+    should "return application redirect uri" do
+      application = create(:application)
+
+      assert_equal "https://app.com/callback", application.redirect_uri
+    end
+
+    should "return application substituted redirect uri if match" do
+      Rails.application.config.stubs(oauth_apps_uri_sub_pattern: "replace.me")
+      Rails.application.config.stubs(oauth_apps_uri_sub_replacement: "new.domain")
+
+      application = create(:application, redirect_uri: "https://app.replace.me/callback")
+
+      assert_equal "https://app.new.domain/callback", application.redirect_uri
+    end
+
+    should "return application original redirect uri if not matched" do
+      Rails.application.config.stubs(oauth_apps_uri_sub_pattern: "replace.me")
+      Rails.application.config.stubs(oauth_apps_uri_sub_replacement: "new.domain")
+
+      application = create(:application, redirect_uri: "https://app.keep.me/callback")
+
+      assert_equal "https://app.keep.me/callback", application.redirect_uri
+    end
+  end
+
+  context "home_uri" do
+    should "return application home uri" do
+      application = create(:application)
+
+      assert_equal "https://app.com/", application.home_uri
+    end
+
+    should "return application substituted home uri if match" do
+      Rails.application.config.stubs(oauth_apps_uri_sub_pattern: "replace.me")
+      Rails.application.config.stubs(oauth_apps_uri_sub_replacement: "new.domain")
+
+      application = create(:application, home_uri: "https://app.replace.me/")
+
+      assert_equal "https://app.new.domain/", application.home_uri
+    end
+
+    should "return application original home uri if not matched" do
+      Rails.application.config.stubs(oauth_apps_uri_sub_pattern: "replace.me")
+      Rails.application.config.stubs(oauth_apps_uri_sub_replacement: "new.domain")
+
+      application = create(:application, home_uri: "https://app.keep.me/")
+
+      assert_equal "https://app.keep.me/", application.home_uri
+    end
+  end
+
   context "scopes" do
     should "return applications that the user can signin into" do
       user = create(:user)
