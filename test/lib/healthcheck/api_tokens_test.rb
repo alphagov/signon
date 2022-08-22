@@ -18,6 +18,17 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
       assert_equal :ok, check.status
     end
 
+    should "return 'OK' when EKS tokens are expiring" do
+      user = create(:api_user, name: "Publisher [EKS]")
+
+      make_api_user_token(
+        expires_in: Healthcheck::ApiTokens::WARNING_THRESHOLD,
+        user: user,
+      )
+      check = Healthcheck::ApiTokens.new
+      assert_equal :ok, check.status
+    end
+
     should "return 'WARNING' when a token is getting old" do
       make_api_user_token(expires_in: Healthcheck::ApiTokens::WARNING_THRESHOLD)
       check = Healthcheck::ApiTokens.new
