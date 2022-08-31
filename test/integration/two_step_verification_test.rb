@@ -19,7 +19,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "show the TOTP secret and a warning" do
-        assert_response_contains "Enter the code manually: #{@new_secret}"
+        assert_response_contains "Enter this code when asked: #{@new_secret}"
         assert_response_contains "Setting up a new phone will replace your existing one. You will only be able to sign in with your new phone."
       end
 
@@ -28,7 +28,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         click_button "submit_code"
 
         assert_response_contains "Sorry that code didn’t work. Please try again."
-        assert_response_contains "Enter the code manually: #{@new_secret}"
+        assert_response_contains "Enter this code when asked: #{@new_secret}"
         assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_CHANGE_FAILED.id, uid: @user.uid).count
       end
 
@@ -63,7 +63,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "show the TOTP secret" do
-        assert_response_contains "Enter the code manually: #{@new_secret}"
+        assert_response_contains "Enter this code when asked: #{@new_secret}"
       end
 
       should "reject an invalid code, reuse the secret and log the rejection" do
@@ -71,7 +71,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         click_button "submit_code"
 
         assert_response_contains "Sorry that code didn’t work. Please try again."
-        assert_response_contains "Enter the code manually: #{@new_secret}"
+        assert_response_contains "Enter this code when asked: #{@new_secret}"
         assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_ENABLE_FAILED.id, uid: @user.uid).count
       end
 
