@@ -4,52 +4,11 @@ updates:
     directory: /
     schedule:
       interval: daily
-    allow:
-      # Security updates
-      - dependency-name: brakeman
-        dependency-type: direct
-      # Internal gems
-      - dependency-name: "govuk*"
-        dependency-type: direct
-      - dependency-name: deprecated_columns
-        dependency-type: direct
-      - dependency-name: gds-api-adapters
-        dependency-type: direct
-      - dependency-name: gds-sso
-        dependency-type: direct
-      - dependency-name: plek
-        dependency-type: direct
-      - dependency-name: rubocop-govuk
-        dependency-type: direct
-      # Framework gems
-      - dependency-name: factory_bot_rails
-        dependency-type: direct
-      - dependency-name: minitest
-        dependency-type: direct
-      - dependency-name: pg
-        dependency-type: direct
-      - dependency-name: rails
-        dependency-type: direct
-      - dependency-name: sassc-rails
-        dependency-type: direct
 
   - package-ecosystem: npm
     directory: /
     schedule:
       interval: daily
-    allow:
-      # Internal packages
-      - dependency-name: stylelint-config-gds
-        dependency-type: direct
-      # Framework packages
-      - dependency-name: standardx
-        dependency-type: direct
-      - dependency-name: stylelint
-        dependency-type: direct
-      - dependency-name: jasmine-browser-runner
-        dependency-type: direct
-      - dependency-name: jasmine-core
-        dependency-type: direct
 
   # Ruby needs to be upgraded manually in multiple places, so cannot
   # be upgraded by Dependabot. That effectively makes the below
