@@ -77,7 +77,7 @@ GEM
     ast (2.4.2)
     autoprefixer-rails (10.4.7.0)
       execjs (~> 2)
-    bcrypt (3.1.17)
+    bcrypt (3.1.18)
     better_errors (2.9.1)
       coderay (>= 1.0.0)
       erubi (>= 1.0.0)
@@ -129,9 +129,9 @@ GEM
     devise_invitable (2.0.6)
       actionmailer (>= 5.0)
       devise (>= 4.6)
-    devise_zxcvbn (1.1.2)
+    devise_zxcvbn (6.0.0)
       devise
-      zxcvbn-ruby (>= 0.0.2)
+      zxcvbn (~> 0.1.7)
     digest (3.1.0)
     docile (1.4.0)
     domain_name (0.5.20190701)
@@ -469,7 +469,7 @@ GEM
     zeitwerk (2.6.0)
     zeroclipboard-rails (0.1.2)
       railties (>= 3.1)
-    zxcvbn-ruby (1.1.0)
+    zxcvbn (0.1.7)
 
 PLATFORMS
   ruby
