@@ -69,8 +69,8 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    addressable (2.8.0)
-      public_suffix (>= 2.0.2, < 5.0)
+    addressable (2.8.1)
+      public_suffix (>= 2.0.2, < 6.0)
     alphabetical_paginate (2.3.4)
     ancestry (4.1.0)
       activerecord (>= 5.2.6)
@@ -253,7 +253,7 @@ GEM
     minitest (5.16.3)
     mocha (1.13.0)
     msgpack (1.5.1)
-    mysql2 (0.5.3)
+    mysql2 (0.5.4)
     net-imap (0.2.3)
       digest
       net-protocol
@@ -289,7 +289,7 @@ GEM
     pry-byebug (3.9.0)
       byebug (~> 11.0)
       pry (~> 0.13.0)
-    public_suffix (4.0.7)
+    public_suffix (5.0.0)
     puma (5.6.4)
       nio4r (~> 2.0)
     pundit (2.2.0)
