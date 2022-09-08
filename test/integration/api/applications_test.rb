@@ -45,7 +45,6 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     get_req(endpoint, params: { "name" => name })
     assert_equal 200, response.status
     assert_success_body(response)
-    assert_permissions(response, %w[perm1])
   end
 
   test "#create responds with a 401 error when an invalid token is given" do
@@ -83,14 +82,12 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     post_req(endpoint, params: create_params)
     assert_equal 200, response.status
     assert_success_body(response)
-    assert_permissions(response, permissions)
   end
 
   test "#create with no permissions is successful" do
     post_req(endpoint, params: create_params.merge("permissions" => []))
     assert_equal 200, response.status
     assert_success_body(response)
-    assert_permissions(response, [])
   end
 
   test "#update responds with a 401 error when an invalid token is given" do
@@ -117,25 +114,20 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     patch "#{endpoint}/#{application.id}", params: {}.to_json, headers: headers
     assert_equal 200, response.status
     assert_success_body(response)
-    assert_permissions(response, [])
   end
 
   test "#update with modifying application fields" do
     desired_name = "My new named app"
-    desired_desc = "New Description"
     application = create(:application)
     patch "#{endpoint}/#{application.id}", params: {
       name: desired_name,
-      description: desired_desc,
     }.to_json, headers: headers
     assert_equal 200, response.status
     assert_success_body(response)
-    data = JSON.parse(response.body)
+    data = JSON.parse(response.body).fetch("application")
     application.reload
     assert_equal desired_name, data.fetch("name")
     assert_equal desired_name, application.name
-    assert_equal desired_desc, data.fetch("description")
-    assert_equal desired_desc, application.description
   end
 
   test "#update with adding permissions" do
@@ -146,7 +138,6 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     }.to_json, headers: headers
     assert_equal 200, response.status
     assert_success_body(response)
-    assert_permissions(response, desired_permissions)
     application.reload
     assert_equal desired_permissions, application.supported_permission_strings - Api::V1::ApplicationsController::DEFAULT_PERMISSIONS
   end
@@ -159,7 +150,6 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     }.to_json, headers: headers
     assert_equal 200, response.status
     assert_success_body(response)
-    assert_permissions(response, desired_permissions)
     application.reload
     assert_equal desired_permissions, application.supported_permission_strings - Api::V1::ApplicationsController::DEFAULT_PERMISSIONS
   end
@@ -182,15 +172,10 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
 
   def assert_success_body(response)
     body = JSON.parse(response.body)
-    assert_equal Integer, body.fetch("id").class
-    assert_equal 43, body.fetch("oauth_id").length
-    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_id"))
-    assert_equal 43, body.fetch("oauth_secret").length
-    assert_match(/^[A-Za-z0-9_-]+$/, body.fetch("oauth_secret"))
-  end
-
-  def assert_permissions(response, permissions)
-    assert_equal permissions, JSON.parse(response.body).fetch("permissions")
+    app = body.fetch("application")
+    assert_equal String, app.fetch("id").class
+    assert_match(/^[A-Za-z0-9_-]{43}$/, app.fetch("oauth_id"))
+    assert_match(/^[A-Za-z0-9_-]{43}$/, app.fetch("oauth_secret"))
   end
 
   def assert_unauthorized(response)

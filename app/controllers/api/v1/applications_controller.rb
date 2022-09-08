@@ -81,13 +81,11 @@ private
   end
 
   def generate_response(application)
-    {
-      id: application.id,
+    { application: {
+      id: application.id.to_s,
       name: application.name,
-      description: application.description,
       oauth_id: application.uid,
       oauth_secret: application.secret,
-      permissions: application.reload.supported_permission_strings - DEFAULT_PERMISSIONS,
-    }
+    } }
   end
 end
