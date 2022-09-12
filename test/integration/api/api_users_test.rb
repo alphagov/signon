@@ -36,7 +36,10 @@ class ApiUsersTest < ActionDispatch::IntegrationTest
     create(:api_user, name: name, email: email)
     create(:api_user, name: "Alternate 2", email: "alt-2@example.org")
     get_req(endpoint, params: { email: email })
-    assert_success_body(response)
+
+    user = JSON.parse(response.body).fetch("api_user")
+    assert_equal String, user.fetch("id").class
+    assert_equal [], user.fetch("tokens")
     assert_equal 200, response.status
   end
 
@@ -74,17 +77,14 @@ class ApiUsersTest < ActionDispatch::IntegrationTest
   test "#create adds an api user" do
     post_req(endpoint, params: create_params)
     assert_equal 200, response.status
-    assert_success_body(response)
+    user = JSON.parse(response.body).fetch("api_user")
+    assert_equal String, user.fetch("id").class
+    assert_equal [], user.fetch("tokens")
   end
 
   #
   # Helpers
   #
-
-  def assert_success_body(response)
-    body = JSON.parse(response.body)
-    assert_equal Integer, body.fetch("id").class
-  end
 
   def assert_unauthorized(response)
     assert_equal "HTTP Token: Access denied.\n", response.body

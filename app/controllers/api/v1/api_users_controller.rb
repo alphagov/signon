@@ -4,12 +4,12 @@ class Api::V1::ApiUsersController < Api::V1::ApiController
 
   def create
     api_user = create_api_user(name: params.fetch(:name), email: params.fetch(:email))
-    render json: { id: api_user.id }
+    render json: generate_response(api_user)
   end
 
   def show
     api_user = ApiUser.find_by!(email: params.fetch(:email))
-    render json: { id: api_user.id }
+    render json: generate_response(api_user)
   end
 
 private
@@ -37,5 +37,14 @@ private
 
   def validate_show_params
     assert_no_missing_params(%i[email])
+  end
+
+  def generate_response(api_user)
+    { api_user: { id: api_user.id.to_s, tokens: tokens(api_user) } }
+  end
+
+  def tokens(api_user)
+    tokens = api_user.authorisations.joins(:application)
+    tokens.map { |t| { token: t.token, application: t.application.name } }
   end
 end
