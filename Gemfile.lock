@@ -493,7 +493,7 @@ DEPENDENCIES
   devise
   devise-encryptable
   devise_invitable
-  devise_zxcvbn
+  devise_zxcvbn (~> 1.1)
   doorkeeper
   factory_bot_rails
   faraday
