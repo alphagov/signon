@@ -1,18 +1,10 @@
 namespace :kubernetes do
   desc "Synchronise OAuth Token secrets in Kubernetes"
-  task :sync_token_secrets, %i[config_map_name environment_name] => :environment do |_, args|
+  task :sync_token_secrets, %i[config_map_name] => :environment do |_, args|
     client = Kubernetes::Client.new
     config_map = client.get_config_map(args[:config_map_name])
 
-    env_name = args[:environment_name]
-    env_data_json = config_map.data[env_name]
-
-    if env_data_json.nil?
-      raise StandardError, "Could not find configuration for enviroment: #{env_name}"
-    end
-
-    env_data = JSON.parse(env_data_json)
-    emails = env_data["api_user_emails"]
+    emails = JSON.parse(config_map.data["api_user_emails"])
 
     api_users = ApiUser.where(email: emails)
     missing_users = emails - api_users.map(&:email)

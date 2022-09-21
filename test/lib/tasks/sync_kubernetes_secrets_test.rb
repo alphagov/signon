@@ -20,7 +20,6 @@ class KubernetesTaskTest < ActiveSupport::TestCase
 
       Rake::Task["kubernetes:sync_token_secrets"].execute({
         config_map_name: "config_map_name",
-        environment_name: "test",
       })
     end
 
@@ -32,7 +31,6 @@ class KubernetesTaskTest < ActiveSupport::TestCase
 
       Rake::Task["kubernetes:sync_token_secrets"].execute({
         config_map_name: "config_map_name",
-        environment_name: "test",
       })
     end
 
@@ -45,24 +43,10 @@ class KubernetesTaskTest < ActiveSupport::TestCase
       err = assert_raises StandardError do
         Rake::Task["kubernetes:sync_token_secrets"].execute({
           config_map_name: "config_map_name",
-          environment_name: "test",
         })
       end
 
       assert_match(/do-not-exist@example.com/, err.message)
-    end
-
-    should "raise an exception if environment doesn't exist" do
-      stub_user_config_map(@client, ["test@example.com"])
-
-      err = assert_raises StandardError do
-        Rake::Task["kubernetes:sync_token_secrets"].execute({
-          config_map_name: "config_map_name",
-          environment_name: "doesnotexist",
-        })
-      end
-
-      assert_match(/doesnotexist/, err.message)
     end
   end
 
@@ -82,7 +66,7 @@ class KubernetesTaskTest < ActiveSupport::TestCase
 
     client.stubs(:get_config_map).with("config_map_name").returns(
       Kubeclient::Resource.new({
-        data: { "test" => "{\"api_user_emails\": [#{email_list}]}" },
+        data: { "api_user_emails" => "[#{email_list}]" },
       }),
     ).once
   end
