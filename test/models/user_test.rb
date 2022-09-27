@@ -226,6 +226,11 @@ class UserTest < ActiveSupport::TestCase
       assert_equal 1, disabled_users.count
       assert_equal @user, disabled_users.first
     end
+
+    should "encrypt otp_secret_key" do
+      enabled_user = create(:two_step_enabled_user)
+      assert enabled_user.encrypted_attribute?(:otp_secret_key)
+    end
   end
 
   context "email validation" do

@@ -26,6 +26,12 @@ module Signon
 
     config.active_record.belongs_to_required_by_default = false
 
+    # TODO: remove this config once all otp_secret_keys have been encrypted
+    config.active_record.encryption.support_unencrypted_data = true
+
+    config.active_record.encryption.key_derivation_salt = Rails.application.secrets.active_record_encryption[:key_derivation_salt]
+    config.active_record.encryption.primary_key = Rails.application.secrets.active_record_encryption[:primary_key]
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
