@@ -19,8 +19,6 @@ class EventLogPresenter
     end
   end
 
-private
-
   def build_csv(csv)
     csv << header_row
 
@@ -40,6 +38,8 @@ private
       end
     end
   end
+
+private
 
   def header_row
     [
