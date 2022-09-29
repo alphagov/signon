@@ -6,7 +6,7 @@ class ApiAuthenticationTest < ActionDispatch::IntegrationTest
 
   def access_user_endpoint(token = nil, params = {})
     headers = token.nil? ? {} : { "HTTP_AUTHORIZATION" => "Bearer #{token}" }
-    get "/user.json", params: params, headers: headers
+    get "/user.json", params:, headers:
   end
 
   setup do

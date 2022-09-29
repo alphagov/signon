@@ -46,7 +46,7 @@ private
         user,
         EventLog::PERMISSIONS_ADDED,
         initiator: current_user,
-        application_id: application_id,
+        application_id:,
         trailing_message: "(#{permissions.map(&:name).join(', ')})",
         ip_address: user_ip,
       )
@@ -57,7 +57,7 @@ private
         user,
         EventLog::PERMISSIONS_REMOVED,
         initiator: current_user,
-        application_id: application_id,
+        application_id:,
         trailing_message: "(#{permissions.map(&:name).join(', ')})",
         ip_address: user_ip,
       )

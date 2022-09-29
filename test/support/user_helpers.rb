@@ -1,6 +1,6 @@
 module UserHelpers
   def signin_with(user = nil, email: nil, password: nil, second_step: true, set_up_2sv: true)
-    user ||= User.find_by(email: email)
+    user ||= User.find_by(email:)
     email ||= user.email
     password ||= user.password
 

@@ -11,7 +11,7 @@ module Configure
         email = [namespace, "#{api_user.fetch('slug')}@#{public_domain}"].compact.join("-")
         find_or_create_api_user(
           name: [name_prefix, api_user.fetch("name")].join,
-          email: email,
+          email:,
         )
       end
     end
@@ -21,11 +21,11 @@ module Configure
     attr_reader :namespace, :name_prefix, :public_domain
 
     def find_or_create_api_user(name:, email:)
-      return if ApiUser.exists?(email: email)
+      return if ApiUser.exists?(email:)
 
       password = SecureRandom.urlsafe_base64
-      api_user = ApiUser.new(name: name, email: email,
-                             password: password, password_confirmation: password)
+      api_user = ApiUser.new(name:, email:,
+                             password:, password_confirmation: password)
       api_user.skip_confirmation!
       api_user.api_user = true
       api_user.save!

@@ -15,7 +15,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
 
   should "can belong to an organisation" do
     organisation = create(:organisation)
-    bi = create(:batch_invitation, organisation: organisation)
+    bi = create(:batch_invitation, organisation:)
 
     assert_equal bi.organisation, organisation
   end

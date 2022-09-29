@@ -16,8 +16,8 @@ private
 
   def create_api_user(name:, email:)
     password = SecureRandom.urlsafe_base64
-    api_user = ApiUser.new(name: name, email: email,
-                           password: password, password_confirmation: password)
+    api_user = ApiUser.new(name:, email:,
+                           password:, password_confirmation: password)
     api_user.skip_confirmation!
     api_user.api_user = true
 

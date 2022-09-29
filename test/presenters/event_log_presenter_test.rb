@@ -3,7 +3,7 @@ require "test_helper"
 class EventLogPresenterTest < ActiveSupport::TestCase
   should "correctly generates log lines for ids falling within the requested range (inclusive)" do
     created_at = Date.new(2018, 1, 1)
-    (1..5).each { |i| create(:event_log, id: i, uid: "uid", event_id: EventLog::ACCOUNT_AUTOSUSPENDED.id, created_at: created_at) }
+    (1..5).each { |i| create(:event_log, id: i, uid: "uid", event_id: EventLog::ACCOUNT_AUTOSUSPENDED.id, created_at:) }
 
     presenter = EventLogPresenter.new(2, 4)
     csv_array = []

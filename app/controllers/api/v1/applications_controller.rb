@@ -33,10 +33,10 @@ private
   def create_application(name:, redirect_uri:, description:, home_uri:, permissions:)
     Doorkeeper::Application.transaction do
       application = Doorkeeper::Application.create!(
-        name: name,
-        redirect_uri: redirect_uri,
-        description: description,
-        home_uri: home_uri,
+        name:,
+        redirect_uri:,
+        description:,
+        home_uri:,
       )
       create_permissions(application, permissions)
       application

@@ -62,11 +62,11 @@ private
   def resource_params
     sanitised_params = UserParameterSanitiser.new(
       user_params: unsanitised_user_params,
-      current_user_role: current_user_role,
+      current_user_role:,
     ).sanitise
 
     if params[:action] == "update"
-      sanitised_params.to_h.merge(invitation_token: invitation_token)
+      sanitised_params.to_h.merge(invitation_token:)
     else
       sanitised_params.to_h
     end

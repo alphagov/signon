@@ -12,7 +12,7 @@ namespace :bootstrap do
     api_users = JSON.parse(File.read("config/api_users.json"))
 
     Configure::ApiUsers.new(
-      public_domain: public_domain,
+      public_domain:,
       namespace: args.resource_prefix,
       resource_name_prefix: resource_name_prefix(args.resource_prefix),
     ).configure!(api_users)

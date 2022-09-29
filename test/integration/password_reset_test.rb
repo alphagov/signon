@@ -19,7 +19,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
       assert current_email
       assert_equal "Reset password instructions", current_email.subject
 
-      complete_password_reset(current_email, new_password: new_password)
+      complete_password_reset(current_email, new_password:)
       assert_response_contains("Your password was changed successfully")
 
       user.reload
@@ -69,7 +69,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
       assert current_email
       assert_equal "Reset password instructions", current_email.subject
 
-      complete_password_reset(current_email, new_password: new_password)
+      complete_password_reset(current_email, new_password:)
       assert_response_contains("Your password was changed successfully")
 
       signout
@@ -99,7 +99,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
       # simulate something following the link in the email.
       current_email.find_link(href: false).click
 
-      complete_password_reset(current_email, new_password: new_password)
+      complete_password_reset(current_email, new_password:)
       assert_response_contains("Your password was changed successfully")
     end
   end

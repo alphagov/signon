@@ -12,7 +12,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
 
       make_api_user_token(
         expires_in: Healthcheck::ApiTokens::WARNING_THRESHOLD,
-        user: user,
+        user:,
       )
       check = Healthcheck::ApiTokens.new
       assert_equal :ok, check.status
@@ -23,7 +23,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
 
       make_api_user_token(
         expires_in: Healthcheck::ApiTokens::WARNING_THRESHOLD,
-        user: user,
+        user:,
       )
       check = Healthcheck::ApiTokens.new
       assert_equal :ok, check.status
@@ -61,7 +61,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
 
       expiring_token = make_api_user_token(
         expires_in: Healthcheck::ApiTokens::WARNING_THRESHOLD,
-        user: user,
+        user:,
       )
 
       message = "#{user.name} token for #{expiring_token.application.name} " \

@@ -120,7 +120,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
   end
 
   def assert_user_created_and_invited(email, application, organisation: nil)
-    invited_user = User.find_by(email: email)
+    invited_user = User.find_by(email:)
     assert_not_nil invited_user
     assert invited_user.has_access_to?(application)
     if organisation
@@ -135,7 +135,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
   end
 
   def assert_user_not_created(email)
-    invited_user = User.find_by(email: email)
+    invited_user = User.find_by(email:)
     assert_nil invited_user
 
     invite_email = last_email_for(email)

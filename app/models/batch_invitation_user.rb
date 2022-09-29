@@ -10,10 +10,10 @@ class BatchInvitationUser < ApplicationRecord
   def invite(inviting_user, supported_permission_ids)
     sanitised_attributes = sanitise_attributes_for_inviting_user_role(
       {
-        name: name,
-        email: email,
-        organisation_id: organisation_id,
-        supported_permission_ids: supported_permission_ids,
+        name:,
+        email:,
+        organisation_id:,
+        supported_permission_ids:,
       },
       inviting_user,
     )
@@ -58,7 +58,7 @@ class BatchInvitationUser < ApplicationRecord
 private
 
   def invite_user_with_attributes(sanitised_attributes, inviting_user)
-    if User.find_by(email: email)
+    if User.find_by(email:)
       update_column(:outcome, "skipped")
     else
       begin

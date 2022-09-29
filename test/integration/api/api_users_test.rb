@@ -25,7 +25,7 @@ class ApiUsersTest < ActionDispatch::IntegrationTest
   end
 
   test "#show responds with a 404 when the api user doesn't exist" do
-    create(:api_user, name: name, email: email)
+    create(:api_user, name:, email:)
     get_req(endpoint, params: { email: "invalid@example.org" })
     assert_equal JSON.generate({ error: "Record not found" }), response.body
     assert_equal 404, response.status
@@ -33,9 +33,9 @@ class ApiUsersTest < ActionDispatch::IntegrationTest
 
   test "#show returns the api_user" do
     create(:api_user, name: "Alternate 1", email: "alt-1@example.org")
-    create(:api_user, name: name, email: email)
+    create(:api_user, name:, email:)
     create(:api_user, name: "Alternate 2", email: "alt-2@example.org")
-    get_req(endpoint, params: { email: email })
+    get_req(endpoint, params: { email: })
     assert_success_body(response)
     assert_equal 200, response.status
   end
@@ -65,7 +65,7 @@ class ApiUsersTest < ActionDispatch::IntegrationTest
   end
 
   test "#create when api_user email is already taken" do
-    create(:api_user, email: email, name: name)
+    create(:api_user, email:, name:)
     post_req(endpoint, params: create_params)
     assert_equal JSON.generate({ error: "Record not unique" }), response.body
     assert_equal 409, response.status
@@ -92,11 +92,11 @@ class ApiUsersTest < ActionDispatch::IntegrationTest
   end
 
   def get_req(endpoint, params: {})
-    get endpoint, params: params, headers: headers
+    get endpoint, params:, headers:
   end
 
   def post_req(endpoint, params: {})
-    post endpoint, params: params.to_json, headers: headers
+    post endpoint, params: params.to_json, headers:
   end
 
   def headers

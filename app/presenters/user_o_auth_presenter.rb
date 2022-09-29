@@ -8,9 +8,9 @@ UserOAuthPresenter = Struct.new(:user, :application) do
         uid: user.uid,
         name: user.name,
         email: user.email,
-        permissions: permissions,
-        organisation_slug: organisation_slug,
-        organisation_content_id: organisation_content_id,
+        permissions:,
+        organisation_slug:,
+        organisation_content_id:,
         disabled: user.suspended?,
       },
     }
