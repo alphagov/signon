@@ -1,4 +1,4 @@
-ARG ruby_version=2.7.6
+ARG ruby_version=3.1.2
 ARG base_image=bitnami/ruby:$ruby_version
 
 FROM $base_image AS builder
