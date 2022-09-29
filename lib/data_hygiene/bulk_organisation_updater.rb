@@ -17,8 +17,8 @@ module DataHygiene
       !error_encountered
     end
 
-    def self.call(*args)
-      new(*args).call
+    def self.call(filename, logger: Rails.logger)
+      new(filename, logger:).call
     end
 
   private
