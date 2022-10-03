@@ -17,7 +17,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
           visit new_user_session_path
           signin_with(@admin)
-          admin_changes_email_address(user: user, new_email: "new@email.com")
+          admin_changes_email_address(user:, new_email: "new@email.com")
 
           assert_equal "new@email.com", last_email.to[0]
           assert_match(/Your .* Signon development email address has been updated/, last_email.subject)
@@ -30,7 +30,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
           visit new_user_session_path
           signin_with(@admin)
-          admin_changes_email_address(user: user, new_email: "new@email.com")
+          admin_changes_email_address(user:, new_email: "new@email.com")
 
           visit event_logs_user_path(user)
           assert_response_contains "Email changed by #{@admin.name} from old@email.com to new@email.com"
@@ -42,7 +42,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
         visit new_user_session_path
         signin_with(@admin)
-        admin_changes_email_address(user: user, new_email: "")
+        admin_changes_email_address(user:, new_email: "")
 
         assert_response_contains("Email can't be blank")
         assert_nil last_email
@@ -60,7 +60,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
           visit new_user_session_path
           signin_with(@admin)
-          admin_changes_email_address(user: user, new_email: "new@email.com")
+          admin_changes_email_address(user:, new_email: "new@email.com")
 
           email = emails_sent_to("new@email.com").detect { |mail| mail.subject == "Please confirm your account" }
           assert email
@@ -85,7 +85,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         click_link "Cancel change"
         signout
 
-        visit user_confirmation_path(confirmation_token: confirmation_token)
+        visit user_confirmation_path(confirmation_token:)
         assert_response_contains("Couldn't confirm email change. Please contact support to request a new confirmation email.")
         assert_equal original_email, user.reload.email
       end
@@ -162,7 +162,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       click_link "Cancel change"
       signout
 
-      visit user_confirmation_path(confirmation_token: confirmation_token)
+      visit user_confirmation_path(confirmation_token:)
       assert_response_contains("Couldn't confirm email change. Please contact support to request a new confirmation email.")
       assert_equal "original@email.com", @user.reload.email
     end
@@ -174,7 +174,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin_with(@user)
 
-      visit user_confirmation_path(confirmation_token: confirmation_token)
+      visit user_confirmation_path(confirmation_token:)
       assert_response_contains("Your account was successfully confirmed. You are now signed in.")
       assert_equal "new@email.com", @user.reload.email
     end
@@ -187,7 +187,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin_with(@other_user)
 
-      visit user_confirmation_path(confirmation_token: confirmation_token)
+      visit user_confirmation_path(confirmation_token:)
       assert_response_contains("It appears you followed a link meant for another user.")
       assert_equal "original@email.com", @user.reload.email
     end
@@ -196,11 +196,11 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       password = "L0ng S3cure P4ssw0rd111"
       @user.update!(
         unconfirmed_email: "new@email.com",
-        password: password,
+        password:,
       )
 
       confirm_email_change(
-        password: password,
+        password:,
         confirmation_token: token_sent_to(@user),
       )
       assert_equal "new@email.com", @user.reload.email

@@ -40,7 +40,7 @@ class DataHygiene::BulkOrganisationUpdaterTest < ActiveSupport::TestCase
     CSV
 
     organisation = create(:organisation, slug: "organisation")
-    user = create(:user, email: "a@b.com", organisation: organisation)
+    user = create(:user, email: "a@b.com", organisation:)
 
     process(csv_file)
 

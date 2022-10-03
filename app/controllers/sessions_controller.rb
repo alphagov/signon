@@ -32,7 +32,7 @@ private
     else
       # Call to_s to flatten out any unexpected params (eg a hash).
       email = params[:user][:email].to_s
-      user = User.find_by(email: email)
+      user = User.find_by(email:)
       if user
         EventLog.record_event(
           user,

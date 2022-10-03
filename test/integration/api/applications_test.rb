@@ -34,14 +34,14 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   end
 
   test "#show responds with a 404 when the application doesn't exist" do
-    create(:application, name: name, supports_push_updates: true)
+    create(:application, name:, supports_push_updates: true)
     get_req(endpoint, params: { "name" => "doesnt exist" })
     assert_equal 404, response.status
     assert_equal JSON.generate({ error: "Record not found" }), response.body
   end
 
   test "#show returns an application" do
-    create(:application, name: name, supports_push_updates: true, with_supported_permissions: %w[perm1])
+    create(:application, name:, supports_push_updates: true, with_supported_permissions: %w[perm1])
     get_req(endpoint, params: { "name" => name })
     assert_equal 200, response.status
     assert_success_body(response)
@@ -73,7 +73,7 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   end
 
   test "#create when application already exists" do
-    create(:application, name: name)
+    create(:application, name:)
     post_req(endpoint, params: create_params.merge("name" => name))
     assert_equal 409, response.status
     assert_equal JSON.generate({ error: "Record not unique" }), response.body
@@ -95,14 +95,14 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
 
   test "#update responds with a 401 error when an invalid token is given" do
     ENV["SIGNON_ADMIN_PASSWORD"] = SecureRandom.uuid
-    application = create(:application, name: name)
+    application = create(:application, name:)
     patch "#{endpoint}/#{application.id}", headers: { "HTTP_AUTHORIZATION" => "Bearer invalid-token" }
     assert_unauthorized(response)
   end
 
   test "#update responds with a 401 error when SIGNON_ADMIN_PASSWORD env var is unset" do
     ENV["SIGNON_ADMIN_PASSWORD"] = nil
-    application = create(:application, name: name)
+    application = create(:application, name:)
     patch "#{endpoint}/#{application.id}"
     assert_unauthorized(response)
   end
@@ -113,7 +113,7 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   end
 
   test "#update with no params" do
-    application = create(:application, name: name)
+    application = create(:application, name:)
     patch "#{endpoint}/#{application.id}", params: {}.to_json, headers: headers
     assert_equal 200, response.status
     assert_success_body(response)
@@ -140,7 +140,7 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
 
   test "#update with adding permissions" do
     desired_permissions = %w[1 2 3]
-    application = create(:application, name: name, with_supported_permissions: %w[1 2])
+    application = create(:application, name:, with_supported_permissions: %w[1 2])
     patch "#{endpoint}/#{application.id}", params: {
       permissions: desired_permissions,
     }.to_json, headers: headers
@@ -153,7 +153,7 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
 
   test "#update with deleting permissions" do
     desired_permissions = %w[1]
-    application = create(:application, name: name, with_supported_permissions: %w[1 2])
+    application = create(:application, name:, with_supported_permissions: %w[1 2])
     patch "#{endpoint}/#{application.id}", params: {
       permissions: desired_permissions,
     }.to_json, headers: headers
@@ -166,7 +166,7 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
 
   test "#update with ignored params" do
     desired_redirect_uri = "https://malicious.example.org"
-    application = create(:application, name: name, with_supported_permissions: %w[1 2])
+    application = create(:application, name:, with_supported_permissions: %w[1 2])
     patch "#{endpoint}/#{application.id}", params: {
       redirect_uri: desired_redirect_uri,
     }.to_json, headers: headers
@@ -199,11 +199,11 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   end
 
   def get_req(endpoint, params: {})
-    get endpoint, params: params, headers: headers
+    get endpoint, params:, headers:
   end
 
   def post_req(endpoint, params: {})
-    post endpoint, params: params.to_json, headers: headers
+    post endpoint, params: params.to_json, headers:
   end
 
   def headers

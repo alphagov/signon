@@ -66,7 +66,7 @@ class AuthorisationsTest < ActionDispatch::IntegrationTest
     permissions = %w[perm1 perm2 signin]
     request(create_endpoint, params: {
       application_id: @application.id,
-      permissions: permissions,
+      permissions:,
     })
     assert_equal 200, response.status
     body = JSON.parse(response.body)
@@ -78,19 +78,19 @@ class AuthorisationsTest < ActionDispatch::IntegrationTest
     permissions = %w[perm1 perm2 signin]
     request(create_endpoint, params: {
       application_id: @application.id,
-      permissions: permissions,
+      permissions:,
     })
 
     assert_equal 200, response.status
     token = JSON.parse(response.body).fetch("token")
     request(test_endpoint, params: {
       application_id: @application.id,
-      token: token,
+      token:,
     })
     assert_equal 200, response.status
     assert_equal JSON.generate(
       application_name: @application.name,
-      permissions: permissions,
+      permissions:,
     ), response.body
   end
 
@@ -102,7 +102,7 @@ class AuthorisationsTest < ActionDispatch::IntegrationTest
 
     request(invalid_test_endpoint, params: {
       application_id: @application.id,
-      token: token,
+      token:,
     })
     assert_equal 404, response.status
     assert_equal JSON.generate({ error: "Record not found" }), response.body
@@ -121,6 +121,6 @@ class AuthorisationsTest < ActionDispatch::IntegrationTest
     token = SecureRandom.uuid
     ENV["SIGNON_ADMIN_PASSWORD"] = token
     auth_header = { "HTTP_AUTHORIZATION" => "Bearer #{token}" }
-    post endpoint, params: params, headers: auth_header
+    post endpoint, params:, headers: auth_header
   end
 end

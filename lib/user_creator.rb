@@ -14,7 +14,7 @@ class UserCreator
   end
 
   def create_user!
-    @user = User.invite!(name: name, email: email)
+    @user = User.invite!(name:, email:)
     grant_requested_signin_permissions
     grant_default_permissions
   end

@@ -20,7 +20,7 @@ module Kubernetes
           auth_options: {
             bearer_token_file: BEARER_TOKEN_FILE,
           },
-          ssl_options: ssl_options,
+          ssl_options:,
         }
       )
     end
@@ -38,8 +38,8 @@ module Kubernetes
         apiVersion: API_VERSION,
         kind: "Secret",
         metadata: {
-          name: name,
-          namespace: namespace,
+          name:,
+          namespace:,
         },
         type: "Opaque",
         data: data.transform_values { |v| Base64.encode64(v.to_s) },

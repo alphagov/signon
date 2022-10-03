@@ -18,7 +18,7 @@ private
   def authorized_users_user_ids
     UserApplicationPermission.where(
       supported_permission: application.signin_permission,
-      application: application,
+      application:,
     ).select(:user_id)
   end
 end

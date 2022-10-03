@@ -31,13 +31,13 @@ private
     content_id = organisation_data["details"]["content_id"]
     slug = organisation_data["details"]["slug"]
 
-    organisation = Organisation.find_by(content_id: content_id) ||
-      Organisation.find_by(slug: slug) ||
-      Organisation.new(content_id: content_id)
+    organisation = Organisation.find_by(content_id:) ||
+      Organisation.find_by(slug:) ||
+      Organisation.new(content_id:)
 
     update_data = {
-      content_id: content_id,
-      slug: slug,
+      content_id:,
+      slug:,
       name: organisation_data["title"],
       organisation_type: organisation_data["format"],
       abbreviation: organisation_data["details"]["abbreviation"],
@@ -57,7 +57,7 @@ private
       Organisation.where(slug: child_organisation_slugs).find_each do |child_organisation|
         # TODO: This ignores that organisations can have multiple parents. Instead the
         # chosen parent will be the last parent in Whitehall, ordered alphabetically.
-        child_organisation.update!(parent: parent)
+        child_organisation.update!(parent:)
       end
     end
   end
@@ -71,7 +71,7 @@ private
       parent = Organisation.find_by(slug: parent_slug)
       next unless child && parent
 
-      child.update!(parent: parent)
+      child.update!(parent:)
     end
   end
 end

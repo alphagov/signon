@@ -23,7 +23,7 @@ class ApiUsersController < ApplicationController
     authorize ApiUser
 
     password = SecureRandom.urlsafe_base64
-    @api_user = ApiUser.new(api_user_params.merge(password: password, password_confirmation: password))
+    @api_user = ApiUser.new(api_user_params.merge(password:, password_confirmation: password))
     @api_user.skip_confirmation!
     @api_user.api_user = true
 

@@ -33,7 +33,7 @@ class BulkGrantPermissionSet < ApplicationRecord
           user_to_change,
           EventLog::PERMISSIONS_ADDED,
           initiator: user,
-          application_id: application_id,
+          application_id:,
           trailing_message: "(#{permissions.map(&:name).join(', ')})",
         )
       end

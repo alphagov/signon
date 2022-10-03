@@ -111,7 +111,7 @@ namespace :users do
 
     SigninPermissionGranter.call(
       users: User.web_users.not_suspended.find_each,
-      application: application,
+      application:,
     )
   end
 
@@ -121,7 +121,7 @@ namespace :users do
 
     raise "Couldn't find application: '#{args.application}'" unless application
 
-    UserApplicationPermission.where(application: application).destroy_all
+    UserApplicationPermission.where(application:).destroy_all
   end
 
   desc "Grant all active users in an organisation access to an application"
@@ -134,7 +134,7 @@ namespace :users do
 
     SigninPermissionGranter.call(
       users: organisation.users.web_users.find_each,
-      application: application,
+      application:,
     )
   end
 

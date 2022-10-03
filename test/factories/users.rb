@@ -104,7 +104,7 @@ FactoryBot.define do
 end
 
 def api_user_with_token(name, token_count: 2)
-  FactoryBot.create(:api_user, name: name) do |api_user|
+  FactoryBot.create(:api_user, name:) do |api_user|
     token_count.times do
       app = FactoryBot.create(:application)
       FactoryBot.create(

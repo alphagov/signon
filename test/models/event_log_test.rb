@@ -77,7 +77,7 @@ class EventLogTest < ActiveSupport::TestCase
 
   test "records the initiator of the event passed as an option" do
     initiator = create(:admin_user)
-    EventLog.record_event(create(:user), EventLog::EMAIL_CHANGED, initiator: initiator)
+    EventLog.record_event(create(:user), EventLog::EMAIL_CHANGED, initiator:)
 
     assert_equal initiator, EventLog.last.initiator
   end
@@ -100,7 +100,7 @@ class EventLogTest < ActiveSupport::TestCase
 
   test "records the application associated with the event passed as an option" do
     application = create(:application)
-    EventLog.record_event(create(:user), EventLog::ACCESS_TOKEN_REGENERATED, application: application)
+    EventLog.record_event(create(:user), EventLog::ACCESS_TOKEN_REGENERATED, application:)
 
     assert_equal application, EventLog.last.application
   end

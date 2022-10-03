@@ -19,7 +19,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
     organisation = create(
       :organisation,
       name: "Ministry Of Misery",
-      slug: slug,
+      slug:,
       closed: true,
     )
     assert_equal(1, Organisation.count)
@@ -62,7 +62,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
     organisation = create(
       :organisation,
       name: "Ministry Of Misery",
-      slug: slug,
+      slug:,
     )
     assert_equal(1, Organisation.count)
 
@@ -81,7 +81,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
 
   test "it updates the child organisation with information about it's parent" do
     slug = "ministry-of-fun"
-    fun = create(:organisation, name: "Ministry of Fun", slug: slug)
+    fun = create(:organisation, name: "Ministry of Fun", slug:)
     child_slug = "ministry-of-fun-child-1" # hard-coded in gds_api_adapters
     movies = create(:organisation, name: "Ministry of Movies", slug: child_slug)
 
@@ -101,7 +101,7 @@ class OrganisationsFetcherTest < ActiveSupport::TestCase
 
     OrganisationsFetcher.new.call
 
-    organisation = Organisation.find_by(slug: slug)
+    organisation = Organisation.find_by(slug:)
     assert organisation.abbreviation.present?
   end
 

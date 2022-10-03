@@ -71,7 +71,7 @@ class UsersController < ApplicationController
                else
                  "Successfully resent email change email to #{@user.unconfirmed_email}"
                end
-      redirect_to root_path, notice: notice
+      redirect_to root_path, notice:
     else
       redirect_to edit_user_path(@user), alert: "Failed to send email change email"
     end

@@ -4,7 +4,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
   context "make_noise" do
     setup do
       user = create(:user, name: "Bob Loblaw")
-      @batch_invitation = create(:batch_invitation, user: user)
+      @batch_invitation = create(:batch_invitation, user:)
       create(:batch_invitation_user, batch_invitation: @batch_invitation)
       @email = NoisyBatchInvitation.make_noise(@batch_invitation).deliver_now
     end
@@ -39,7 +39,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
       Rails.application.config.stubs(:instance_name).returns("Test Fools")
 
       user = create(:user, name: "Bob Loblaw")
-      @batch_invitation = create(:batch_invitation, user: user)
+      @batch_invitation = create(:batch_invitation, user:)
       create(:batch_invitation_user, batch_invitation: @batch_invitation)
       @email = NoisyBatchInvitation.make_noise(@batch_invitation).deliver_now
     end
@@ -54,7 +54,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
       Rails.application.config.stubs(:instance_name).returns(nil)
 
       user = create(:user, name: "Bob Loblaw")
-      @batch_invitation = create(:batch_invitation, user: user)
+      @batch_invitation = create(:batch_invitation, user:)
       create(:batch_invitation_user, batch_invitation: @batch_invitation)
       @email = NoisyBatchInvitation.make_noise(@batch_invitation).deliver_now
     end

@@ -30,8 +30,8 @@ def values_for_app(application)
       File.exist?(oauth_secret_file) && !File.zero?(oauth_secret_file)
     # Get the OAuth credentials from the env vars
     local_config = env_var_values_for_app(
-      oauth_id_file: oauth_id_file,
-      oauth_secret_file: oauth_secret_file,
+      oauth_id_file:,
+      oauth_secret_file:,
     ).merge(type: :env_var)
   elsif File.exist?(config_path_for_app(application))
     # Get the OAuth credentials from the gds-sso config file
@@ -45,8 +45,8 @@ def env_var_values_for_app(oauth_id_file:, oauth_secret_file:)
   oauth_id = File.read(oauth_id_file)
   oauth_secret = File.read(oauth_secret_file)
   {
-    oauth_id: oauth_id,
-    oauth_secret: oauth_secret,
+    oauth_id:,
+    oauth_secret:,
   }
 end
 
@@ -103,7 +103,7 @@ applications.each do |application|
   local_config = values_for_app(application)
   if local_config.present?
     update_application(
-      application: application,
+      application:,
       oauth_id: local_config[:oauth_id],
       oauth_secret: local_config[:oauth_secret],
       type: local_config[:type],

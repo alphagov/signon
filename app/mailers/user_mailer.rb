@@ -61,7 +61,7 @@ class UserMailer < Devise::Mailer
 
   def unlock_instructions(user, _token, _opts = {})
     @user = user
-    view_mail(template_id, to: @user.email, subject: sprintf(t("devise.mailer.unlock_instructions.subject"), app_name: app_name))
+    view_mail(template_id, to: @user.email, subject: sprintf(t("devise.mailer.unlock_instructions.subject"), app_name:))
   end
 
   def reset_password_instructions(user, token, _opts = {})
@@ -131,7 +131,7 @@ private
       :"#{devise_mapping.name}_subject",
       scope: [:devise, :mailer, key],
       default: [:subject, key.to_s.humanize],
-      app_name: app_name,
+      app_name:,
     )
   end
 

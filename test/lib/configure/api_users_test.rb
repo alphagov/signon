@@ -7,7 +7,7 @@ class ConfigureApiUsersTest < ActiveSupport::TestCase
     Configure::ApiUsers.new(
       namespace: nil,
       resource_name_prefix: nil,
-      public_domain: public_domain,
+      public_domain:,
     ).configure!(api_users)
 
     api_users.each do |api_user|
@@ -22,8 +22,8 @@ class ConfigureApiUsersTest < ActiveSupport::TestCase
     namespace = "test"
     prefix = "[Test!] "
     Configure::ApiUsers.new(
-      namespace: namespace,
-      public_domain: public_domain,
+      namespace:,
+      public_domain:,
       resource_name_prefix: prefix,
     ).configure!(api_users)
 
@@ -38,16 +38,16 @@ class ConfigureApiUsersTest < ActiveSupport::TestCase
   test "#configure! is idempotent and non-destructive" do
     email = "#{api_users.first.fetch('slug')}@#{public_domain}"
     name = "Pre-existing api_user"
-    create(:api_user, email: email, name: name)
+    create(:api_user, email:, name:)
 
     Configure::ApiUsers.new(
-      public_domain: public_domain,
+      public_domain:,
       namespace: nil,
       resource_name_prefix: nil,
     ).configure!(api_users)
 
-    assert ApiUser.exists?(email: email, name: name)
-    assert_not ApiUser.exists?(email: email, name: api_users.first.fetch("name"))
+    assert ApiUser.exists?(email:, name:)
+    assert_not ApiUser.exists?(email:, name: api_users.first.fetch("name"))
 
     api_users[1..].each do |api_user|
       assert ApiUser.exists?(
