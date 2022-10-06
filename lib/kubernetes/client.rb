@@ -16,12 +16,8 @@ module Kubernetes
 
       @client = Kubeclient::Client.new(
         API_SERVER, API_VERSION,
-        {
-          auth_options: {
-            bearer_token_file: BEARER_TOKEN_FILE,
-          },
-          ssl_options:,
-        }
+        auth_options: { bearer_token_file: BEARER_TOKEN_FILE },
+        ssl_options:
       )
     end
 

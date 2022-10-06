@@ -9,12 +9,8 @@ class Kubernetes::ClientTest < ActiveSupport::TestCase
       Kubeclient::Client.stubs(:new).with(
         Kubernetes::Client::API_SERVER,
         Kubernetes::Client::API_VERSION,
-        {
-          auth_options: {
-            bearer_token_file: Kubernetes::Client::BEARER_TOKEN_FILE,
-          },
-          ssl_options: {},
-        },
+        auth_options: { bearer_token_file: Kubernetes::Client::BEARER_TOKEN_FILE },
+        ssl_options: {},
       ).once
 
       Kubernetes::Client.new
@@ -27,12 +23,8 @@ class Kubernetes::ClientTest < ActiveSupport::TestCase
       Kubeclient::Client.stubs(:new).with(
         Kubernetes::Client::API_SERVER,
         Kubernetes::Client::API_VERSION,
-        {
-          auth_options: {
-            bearer_token_file: Kubernetes::Client::BEARER_TOKEN_FILE,
-          },
-          ssl_options: { ca_file: Kubernetes::Client::CA_FILE },
-        },
+        auth_options: { bearer_token_file: Kubernetes::Client::BEARER_TOKEN_FILE },
+        ssl_options: { ca_file: Kubernetes::Client::CA_FILE },
       ).once
 
       Kubernetes::Client.new
