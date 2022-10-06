@@ -43,7 +43,7 @@ private
   end
 
   def redis
-    Redis.current
+    Redis.new
   end
 
   def hostname
