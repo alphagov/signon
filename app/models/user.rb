@@ -32,6 +32,8 @@ class User < ApplicationRecord
          :confirmable,
          :password_archivable # in signon/lib/devise/models/password_archivable.rb
 
+  encrypts :otp_secret_key
+
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
   validate :organisation_admin_belongs_to_organisation
