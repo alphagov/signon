@@ -149,11 +149,4 @@ namespace :users do
 
     UserPermissionMigrator.migrate(source: source_application, target: target_application)
   end
-
-  desc "Encrypts user OTP keys, temporary task to migrate away from unencrypted keys"
-  task encrypt_otp_keys: :environment do
-    two_factor_users = User.where.not(otp_secret_key: nil)
-
-    two_factor_users.find_each(&:encrypt)
-  end
 end
