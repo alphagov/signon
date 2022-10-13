@@ -57,7 +57,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
 
   context "details" do
     should "return which tokens are causing the check to fail" do
-      user = create :api_user, email: "#{random_str}@alphagov.co.uk"
+      user = create :api_user, email: "#{random_str}@digital.cabinet-office.gov.uk"
 
       expiring_token = make_api_user_token(
         expires_in: Healthcheck::ApiTokens::WARNING_THRESHOLD,
@@ -89,7 +89,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
   end
 
   def make_api_user_token(expires_in:, user: nil)
-    user ||= create :api_user, email: "#{random_str}@alphagov.co.uk"
+    user ||= create :api_user, email: "#{random_str}@digital.cabinet-office.gov.uk"
     create :access_token, resource_owner_id: user.id, expires_in: expires_in - 1
   end
 
