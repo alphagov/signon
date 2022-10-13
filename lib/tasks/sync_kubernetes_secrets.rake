@@ -14,6 +14,7 @@ namespace :kubernetes do
         name = "signon-token-#{api_user.name}-#{token.application.name}".parameterize
         data = { bearer_token: token.token }
 
+        Rails.logger.info(name)
         client.apply_secret(name, data)
       end
     end
@@ -37,6 +38,7 @@ namespace :kubernetes do
       name = "signon-app-#{app.name}".parameterize
       data = { oauth_id: app.uid, oauth_secret: app.secret }
 
+      Rails.logger.info(name)
       client.apply_secret(name, data)
     end
 
