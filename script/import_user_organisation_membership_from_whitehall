@@ -2,8 +2,6 @@
 
 require "mysql2"
 require "yaml"
-require "pp"
-
 def usage(message = nil)
   puts "Usage: #{File.basename(__FILE__)} <path/to/signon/database.yml> <path/to/whitehall/database.yml>"
   puts
