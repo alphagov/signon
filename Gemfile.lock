@@ -377,7 +377,7 @@ GEM
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
     rexml (3.2.5)
-    rotp (6.2.0)
+    rotp (6.2.1)
     rouge (4.0.0)
     rqrcode (2.1.2)
       chunky_png (~> 1.0)
