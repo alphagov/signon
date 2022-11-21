@@ -74,7 +74,7 @@ Rails.application.configure do
   config.i18n.fallbacks = true
 
   config.action_mailer.default_url_options = {
-    host: URI.parse(Plek.new.external_url_for("signon")).host,
+    host: URI(Plek.external_url_for("signon")).host,
     protocol: "https",
   }
   config.action_mailer.delivery_method = :notify
