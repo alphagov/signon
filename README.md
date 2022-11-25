@@ -24,7 +24,7 @@ bundle exec rake
 - [Mass password reset]
 - [Troubleshooting]
 
-## License
+## Licence
 
 [MIT License](LICENCE)
 
