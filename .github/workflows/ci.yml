@@ -1,0 +1,76 @@
+name: CI
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "Jenkinsfile"
+      - ".git**"
+  pull_request:
+
+jobs:
+  security-analysis:
+    name: Security Analysis
+    uses: alphagov/govuk-infrastructure/.github/workflows/brakeman.yml@main
+
+  lint-scss:
+    name: Lint SCSS
+    uses: alphagov/govuk-infrastructure/.github/workflows/stylelint.yml@main
+    with:
+      files: "app/assets/stylesheets/"
+
+  lint-javascript:
+    name: Lint JavaScript
+    uses: alphagov/govuk-infrastructure/.github/workflows/standardx.yml@main
+    with:
+      files: "'app/assets/javascripts/**/*.js' 'spec/javascripts/**/*.js'"
+
+  lint-ruby:
+    name: Lint Ruby
+    uses: alphagov/govuk-infrastructure/.github/workflows/rubocop.yml@main
+
+  test-javascript:
+    name: Test JavaScript
+    uses: alphagov/govuk-infrastructure/.github/workflows/jasmine.yml@main
+    with:
+      useWithRails: true
+
+  test-ruby:
+    name: Test Ruby
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup MySQL
+        id: setup-mysql
+        uses: alphagov/govuk-infrastructure/.github/actions/setup-mysql@main
+
+      - name: Setup Redis
+        uses: alphagov/govuk-infrastructure/.github/actions/setup-redis@main
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Setup Node
+        uses: alphagov/govuk-infrastructure/.github/actions/setup-node@main
+
+      - name: Precompile assets
+        uses: alphagov/govuk-infrastructure/.github/actions/precompile-rails-assets@main
+
+      - name: Initialize database
+        env:
+          RAILS_ENV: test
+          TEST_DATABASE_URL: ${{ steps.setup-mysql.outputs.db-url }}
+        run: bundle exec rails db:setup
+
+      - name: Run Minitest
+        env:
+          RAILS_ENV: test
+          TEST_DATABASE_URL: ${{ steps.setup-mysql.outputs.db-url }}
+        run: bundle exec rake test
+
