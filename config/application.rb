@@ -68,8 +68,9 @@ module Signon
 
     config.action_dispatch.return_only_media_type_on_content_type = true
 
-    # allows another assets location to be specified if assets are stored in non-default path
-    config.assets.prefix = ENV.fetch("ASSETS_PREFIX", "/assets")
+    # Set asset path to be application specific so that we can put all GOV.UK
+    # assets into an S3 bucket and distinguish app by path.
+    config.assets.prefix = "/assets/signon"
 
     # allows another asset host to be specified if different from app host
     config.asset_host = ENV.fetch("ASSET_HOST", nil)
