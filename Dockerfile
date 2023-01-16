@@ -5,31 +5,25 @@ ARG builder_image=ghcr.io/alphagov/govuk-ruby-builder:$ruby_version
 
 FROM $builder_image AS builder
 
-ENV ASSETS_PREFIX=/assets/signon
+ENV DEVISE_PEPPER=unused \
+    DEVISE_SECRET_KEY=unused
 
-WORKDIR /app
-
-COPY Gemfile Gemfile.lock .ruby-version /app/
+WORKDIR $APP_HOME
+COPY Gemfile* .ruby-version ./
 RUN bundle install
-
-COPY . /app
-RUN bundle exec bootsnap precompile --gemfile .
-RUN DEVISE_PEPPER=unused DEVISE_SECRET_KEY=unused \
-        bundle exec rails assets:precompile && \
-    rm -fr /app/log
+COPY . .
+RUN bootsnap precompile --gemfile .
+RUN rails assets:precompile && rm -fr log
 
 
 FROM $base_image
 
-ENV ASSETS_PREFIX=/assets/signon
 ENV GOVUK_APP_NAME=signon
 
-WORKDIR /app
-
-COPY --from=builder /usr/bin/node* /usr/bin/
-COPY --from=builder /usr/local/bundle/ /usr/local/bundle/
-COPY --from=builder /var/cache/bootsnap/ /var/cache/
-COPY --from=builder /app ./
+WORKDIR $APP_HOME
+COPY --from=builder $BUNDLE_PATH $BUNDLE_PATH
+COPY --from=builder $BOOTSNAP_CACHE_DIR $BOOTSNAP_CACHE_DIR
+COPY --from=builder $APP_HOME .
 
 USER app
-CMD ["bundle", "exec", "puma"]
+CMD ["puma"]

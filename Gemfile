@@ -6,7 +6,7 @@ gem "activejob-retry"
 gem "addressable"
 gem "alphabetical_paginate"
 gem "ancestry"
-gem "bootsnap"
+gem "bootsnap", require: false
 gem "bootstrap-kaminari-views"
 gem "browser"
 gem "devise"
