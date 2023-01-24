@@ -12,9 +12,9 @@ class UserPolicyTest < ActiveSupport::TestCase
   end
 
   primary_management_actions = %i[new assign_organisations]
-  user_management_actions = %i[edit create update unlock suspension cancel_email_change resend_email_change event_logs]
+  user_management_actions = %i[edit create update unlock suspension cancel_email_change resend_email_change event_logs reset_2sv flag_2sv]
   self_management_actions = %i[edit_email_or_password update_email update_password cancel_email_change resend_email_change]
-  superadmin_actions = %i[assign_role flag_2sv reset_2sv]
+  superadmin_actions = %i[assign_role]
 
   org_admin_actions = user_management_actions - %i[create]
   super_org_admin_actions = user_management_actions - %i[create]

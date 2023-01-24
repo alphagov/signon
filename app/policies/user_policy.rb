@@ -28,6 +28,7 @@ class UserPolicy < BasePolicy
       false
     end
   end
+
   alias_method :update?, :edit?
   alias_method :unlock?, :edit?
   alias_method :suspension?, :edit?
@@ -39,6 +40,9 @@ class UserPolicy < BasePolicy
   end
   alias_method :update_email?, :edit_email_or_password?
   alias_method :update_password?, :edit_email_or_password?
+  alias_method :flag_2sv?, :edit?
+  alias_method :reset_2sv?, :edit?
+  alias_method :reset_two_step_verification?, :edit?
 
   def cancel_email_change?
     allow_self_only || edit?
@@ -51,15 +55,6 @@ class UserPolicy < BasePolicy
   def assign_role?
     current_user.superadmin?
   end
-
-  def flag_2sv?
-    current_user.superadmin?
-  end
-
-  def reset_2sv?
-    current_user.superadmin?
-  end
-  alias_method :reset_two_step_verification?, :reset_2sv?
 
 private
 

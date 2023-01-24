@@ -38,7 +38,7 @@
   </p>
 <% end %>
 
-<% if policy(User).flag_2sv? %>
+<% if policy(current_user).flag_2sv? %>
   <dl>
     <dt>Account security</dt>
     <dd>
