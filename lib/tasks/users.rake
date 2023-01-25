@@ -149,4 +149,25 @@ namespace :users do
 
     UserPermissionMigrator.migrate(source: source_application, target: target_application)
   end
+
+  desc "Sets 2sv on all users by organisation"
+  task :set_2sv_by_org, [:org] => :environment do |_t, args|
+    organisation = Organisation.find_by(name: args.org)
+    raise "Couldn't find organisation: '#{args.org}'" unless organisation
+
+    users_to_update = User.where(organisation_id: organisation.id, require_2sv: false)
+
+    puts "found #{users_to_update.size} users without 2sv in organsation #{args.org} to set require 2sv flag on"
+
+    users_to_update.each { |user| user.update(require_2sv: true) }
+  end
+
+  desc "Sets 2sv on all users by email domain"
+  task :set_2sv_by_email_domain, [:domain] => :environment do |_t, args|
+    users_to_update = User.where("email LIKE ?", "%#{args.domain}").where(require_2sv: false)
+
+    puts "found #{users_to_update.size} users without 2sv with email domain #{args.domain} to set require 2sv flag on"
+
+    users_to_update.each { |user| user.update(require_2sv: true) }
+  end
 end
