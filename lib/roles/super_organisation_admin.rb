@@ -10,6 +10,7 @@ module Roles
         :organisation_id,
         :unconfirmed_email,
         :confirmation_token,
+        :require_2sv,
         { supported_permission_ids: [] },
       ]
     end
