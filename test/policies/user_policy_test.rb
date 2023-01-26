@@ -9,12 +9,14 @@ class UserPolicyTest < ActiveSupport::TestCase
     @child_organisation = create(:organisation, parent: @parent_organisation)
     @super_org_admin = create(:super_org_admin, organisation: @parent_organisation)
     @organisation_admin = create(:organisation_admin, organisation: @parent_organisation)
+    @gds = create(:organisation, name: "Government Digital Services", content_id: Organisation::GDS_ORG_CONTENT_ID)
   end
 
   primary_management_actions = %i[new assign_organisations]
   user_management_actions = %i[edit create update unlock suspension cancel_email_change resend_email_change event_logs reset_2sv mandate_2sv]
   self_management_actions = %i[edit_email_or_password update_email update_password cancel_email_change resend_email_change]
   superadmin_actions = %i[assign_role]
+  gds_admin_and_superadmin_actions = %i[exempt_from_two_step_verification]
 
   org_admin_actions = user_management_actions - %i[create]
   super_org_admin_actions = user_management_actions - %i[create]
@@ -48,6 +50,16 @@ class UserPolicyTest < ActiveSupport::TestCase
         assert permit?(create(:superadmin_user), User, permission)
       end
     end
+
+    gds_admin_and_superadmin_actions.each do |permission|
+      should "allow for #{permission} if the superadmin belongs to gds" do
+        assert permit?(create(:superadmin_user, organisation: @gds), User, permission)
+      end
+
+      should "not allow for #{permission} if the superadmin does not belong to gds" do
+        assert forbid?(create(:superadmin_user, organisation: @organisation), User, :exempt_from_2sv)
+      end
+    end
   end
 
   context "admins" do
@@ -76,6 +88,16 @@ class UserPolicyTest < ActiveSupport::TestCase
     superadmin_actions.each do |permission|
       should "not allow for #{permission}" do
         assert forbid?(create(:admin_user), User, permission)
+      end
+    end
+
+    gds_admin_and_superadmin_actions.each do |permission|
+      should "allow for #{permission} if the admin belongs to gds" do
+        assert permit?(create(:admin_user, organisation: @gds), User, permission)
+      end
+
+      should "not allow for #{permission} if the admin does not belong to gds" do
+        assert forbid?(create(:admin_user, organisation: @organisation), User, :exempt_from_2sv)
       end
     end
   end
@@ -123,7 +145,7 @@ class UserPolicyTest < ActiveSupport::TestCase
       end
     end
 
-    superadmin_actions.each do |permission|
+    (superadmin_actions + gds_admin_and_superadmin_actions).each do |permission|
       should "not allow for #{permission}" do
         assert forbid?(create(:super_org_admin), User, permission)
       end
@@ -172,7 +194,7 @@ class UserPolicyTest < ActiveSupport::TestCase
       end
     end
 
-    superadmin_actions.each do |permission|
+    (superadmin_actions + gds_admin_and_superadmin_actions).each do |permission|
       should "not allow for #{permission}" do
         assert forbid?(create(:organisation_admin), User, permission)
       end
@@ -208,7 +230,7 @@ class UserPolicyTest < ActiveSupport::TestCase
       end
     end
 
-    superadmin_actions.each do |permission|
+    (superadmin_actions + gds_admin_and_superadmin_actions).each do |permission|
       should "not allow for #{permission}" do
         assert forbid?(create(:user), User, permission)
       end
