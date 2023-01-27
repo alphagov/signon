@@ -52,6 +52,19 @@ class TwoStepVerificationExemptionsControllerTest < ActionController::TestCase
         assert_user_has_not_been_exempted_from_2sv(user)
       end
     end
+
+    should "not update exemption when a reason is not provided" do
+      user = create(:two_step_mandated_user, organisation: create(:organisation))
+      super_admin = create(:superadmin_user, organisation: @gds)
+      sign_in super_admin
+      put :update, params: { id: user.id, user: { reason_for_2sv_exemption: "" } }
+
+      user.reload
+
+      assert_redirected_to edit_two_step_verification_exemption_path(user)
+      assert user.require_2sv?
+      assert_nil user.reason_for_2sv_exemption
+    end
   end
 
   context "non-gds users" do
