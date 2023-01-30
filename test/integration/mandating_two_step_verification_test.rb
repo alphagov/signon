@@ -1,6 +1,6 @@
 require "test_helper"
 
-class FlaggingTwoStepVerificationTest < ActionDispatch::IntegrationTest
+class MandatingTwoStepVerificationTest < ActionDispatch::IntegrationTest
   include EmailHelpers
   include ActiveJob::TestHelper
 

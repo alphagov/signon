@@ -18,7 +18,7 @@ class UserUpdate
     record_update
     record_permission_changes(old_permissions)
     record_role_change
-    send_two_step_flag_notification
+    send_two_step_mandated_notification
     perform_permissions_update
     record_email_change_and_notify
     true
@@ -89,9 +89,9 @@ private
     PermissionUpdater.perform_on(user)
   end
 
-  def send_two_step_flag_notification
-    if user.send_two_step_flag_notification?
-      UserMailer.two_step_flagged(user).deliver_later
+  def send_two_step_mandated_notification
+    if user.send_two_step_mandated_notification?
+      UserMailer.two_step_mandated(user).deliver_later
     end
   end
 
