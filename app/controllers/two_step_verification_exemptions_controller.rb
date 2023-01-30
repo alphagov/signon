@@ -9,7 +9,7 @@ class TwoStepVerificationExemptionsController < ApplicationController
 
       redirect_to edit_two_step_verification_exemption_path(@user)
     else
-      @user.exempt_from_2sv(params[:user][:reason_for_2sv_exemption])
+      @user.exempt_from_2sv(params[:user][:reason_for_2sv_exemption], current_user)
 
       flash[:notice] = "User exempted from 2SV"
 

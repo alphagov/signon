@@ -41,6 +41,7 @@ class EventLog < ApplicationRecord
     PERMISSIONS_REMOVED = LogEntry.new(id: 36, description: "Permissions removed", require_uid: true, require_initiator: true),
     ACCOUNT_INVITED = LogEntry.new(id: 37, description: "Account was invited", require_uid: true, require_initiator: true),
     NO_SUCH_ACCOUNT_LOGIN = LogEntry.new(id: 38, description: "Attempted login to nonexistent account"),
+    TWO_STEP_EXEMPTED = LogEntry.new(id: 39, description: "Exempted from 2-step verification", require_uid: true, require_initiator: true),
 
     # We no longer expire passwords, but we keep this event for history purposes
     PASSWORD_EXPIRED = LogEntry.new(id: 6, description: "Password expired"),

@@ -124,12 +124,20 @@ class UserTest < ActiveSupport::TestCase
   end
 
   context "exempt from 2sv" do
+    setup do
+      @user = create(:two_step_enabled_user)
+      @initiator = create(:superadmin_user)
+      @user.exempt_from_2sv("accessibility reasons", @initiator)
+    end
+
     should "set require 2sv to false and store the reason" do
-      user = create(:two_step_enabled_user)
-      user.exempt_from_2sv("accessibility reasons")
-      assert_not user.require_2sv?
-      assert_equal "accessibility reasons", user.reason_for_2sv_exemption
-      assert_nil user.otp_secret_key
+      assert_not @user.require_2sv?
+      assert_equal "accessibility reasons", @user.reason_for_2sv_exemption
+      assert_nil @user.otp_secret_key
+    end
+
+    should "record the event" do
+      assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_EXEMPTED.id, uid: @user.uid, initiator: @initiator).count
     end
   end
 

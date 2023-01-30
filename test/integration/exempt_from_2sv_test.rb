@@ -10,6 +10,12 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
     visit edit_user_path(user_to_edit)
   end
 
+  def assert_access_log_updated_with_exemption(initiator_name, reason)
+    click_link "Account access log"
+
+    assert page.has_text? "Exempted from 2-step verification by #{initiator_name} for reason: #{reason}"
+  end
+
   context "when logged in as a gds super admin" do
     setup do
       @gds = create(:organisation, content_id: Organisation::GDS_ORG_CONTENT_ID)
@@ -32,6 +38,8 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
       assert_equal @reason_for_exemption, user_requiring_2sv.reason_for_2sv_exemption
 
       assert page.has_text? "User exempted from 2SV"
+
+      assert_access_log_updated_with_exemption(@super_admin.name, @reason_for_exemption)
     end
 
     should "be able to see a link to exempt a user who does not yet require 2sv but is not exempt" do
@@ -49,6 +57,8 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
       assert_equal @reason_for_exemption, user_not_requiring_2sv.reason_for_2sv_exemption
 
       assert page.has_text? "User exempted from 2SV"
+
+      assert_access_log_updated_with_exemption(@super_admin.name, @reason_for_exemption)
     end
 
     should "not be able to see a link to exempt a user who already has an exemption reason" do
