@@ -280,9 +280,14 @@ class User < ApplicationRecord
   end
 
   def exempt_from_2sv(reason, initiating_user)
+    initial_reason = reason_for_2sv_exemption
     update!(require_2sv: false, reason_for_2sv_exemption: reason, otp_secret_key: nil)
 
-    EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTED, initiator: initiating_user, trailing_message: "for reason: #{reason}")
+    if initial_reason.blank?
+      EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTED, initiator: initiating_user, trailing_message: "for reason: #{reason}")
+    else
+      EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTION_REASON_UPDATED, initiator: initiating_user, trailing_message: "to: #{reason}")
+    end
   end
 
   def reset_2sv!(initiating_superadmin)

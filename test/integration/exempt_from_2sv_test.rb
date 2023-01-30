@@ -69,6 +69,30 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
       sign_in_as_and_edit_user(@super_admin, exempted_user)
       assert page.has_no_link? "Exempt user from 2-step verification"
     end
+
+    context "when a exemption reason already exists" do
+      should "be able to see a link to edit exemption reason" do
+        user_requiring_2sv = create(:two_step_mandated_user, organisation: @organisation, reason_for_2sv_exemption: "old reason")
+
+        sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
+        click_link("Edit reason for 2-step verification exemption")
+
+        fill_in "Reason for 2sv exemption", with: @reason_for_exemption
+        click_button "Save"
+
+        user_requiring_2sv.reload
+
+        assert_not user_requiring_2sv.require_2sv?
+        assert_equal @reason_for_exemption, user_requiring_2sv.reason_for_2sv_exemption
+
+        assert page.has_text? "User exempted from 2SV"
+        assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{@reason_for_exemption}"
+
+        click_link "Account access log"
+
+        assert page.has_text? "Reason for 2-step verification exemption updated by #{@super_admin.name} to: #{@reason_for_exemption}"
+      end
+    end
   end
 
   context "when logged in as a non-gds super admin" do
@@ -82,6 +106,18 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
       sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
 
       assert page.has_no_link? "Exempt user from 2-step verification"
+    end
+
+    context "when a exemption reason already exists" do
+      should "can see exemption reason but is not able to edit it" do
+        reason = "user is exempt"
+        user_requiring_2sv = create(:two_step_mandated_user, organisation: @organisation, reason_for_2sv_exemption: reason)
+
+        sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
+
+        assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{@reason}"
+        assert page.has_no_link? "Edit reason for 2-step verification exemption"
+      end
     end
   end
 end
