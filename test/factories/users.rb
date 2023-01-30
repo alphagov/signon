@@ -35,6 +35,7 @@ FactoryBot.define do
   end
 
   factory :two_step_enabled_user, parent: :user do
+    require_2sv { true }
     otp_secret_key { "Sssshh" }
   end
 
@@ -44,6 +45,11 @@ FactoryBot.define do
 
   factory :two_step_mandated_user, parent: :user do
     require_2sv { true }
+  end
+
+  factory :two_step_exempted_user, parent: :user do
+    require_2sv { false }
+    reason_for_2sv_exemption { "accessibility reasons" }
   end
 
   factory :user_with_pending_email_change, parent: :user do

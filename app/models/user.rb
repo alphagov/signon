@@ -279,6 +279,10 @@ class User < ApplicationRecord
     otp_secret_key.present?
   end
 
+  def exempt_from_2sv(reason)
+    update!(require_2sv: false, reason_for_2sv_exemption: reason, otp_secret_key: nil)
+  end
+
   def reset_2sv!(initiating_superadmin)
     transaction do
       self.otp_secret_key = nil

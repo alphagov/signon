@@ -123,6 +123,16 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "exempt from 2sv" do
+    should "set require 2sv to false and store the reason" do
+      user = create(:two_step_enabled_user)
+      user.exempt_from_2sv("accessibility reasons")
+      assert_not user.require_2sv?
+      assert_equal "accessibility reasons", user.reason_for_2sv_exemption
+      assert_nil user.otp_secret_key
+    end
+  end
+
   test "email change tokens should expire" do
     @user = create(:user_with_pending_email_change, confirmation_sent_at: 15.days.ago)
     @user.confirm
