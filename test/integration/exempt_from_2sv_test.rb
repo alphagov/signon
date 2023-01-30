@@ -38,6 +38,7 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
       assert_equal @reason_for_exemption, user_requiring_2sv.reason_for_2sv_exemption
 
       assert page.has_text? "User exempted from 2SV"
+      assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{@reason_for_exemption}"
 
       assert_access_log_updated_with_exemption(@super_admin.name, @reason_for_exemption)
     end
@@ -57,6 +58,7 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
       assert_equal @reason_for_exemption, user_not_requiring_2sv.reason_for_2sv_exemption
 
       assert page.has_text? "User exempted from 2SV"
+      assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{@reason_for_exemption}"
 
       assert_access_log_updated_with_exemption(@super_admin.name, @reason_for_exemption)
     end
