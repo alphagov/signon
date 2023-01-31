@@ -49,7 +49,7 @@ class User < ApplicationRecord
   after_initialize :generate_uid
   after_create :update_stats
   before_save :set_2sv_for_admin_roles
-  before_save :mark_two_step_flag_changed
+  before_save :mark_two_step_mandated_changed
   before_save :update_password_changed
 
   scope :web_users, -> { where(api_user: false) }
@@ -293,8 +293,8 @@ class User < ApplicationRecord
     end
   end
 
-  def send_two_step_flag_notification?
-    require_2sv? && two_step_flag_changed?
+  def send_two_step_mandated_notification?
+    require_2sv? && two_step_mandated_changed?
   end
 
   def belongs_to_gds?
@@ -303,12 +303,12 @@ class User < ApplicationRecord
 
 private
 
-  def two_step_flag_changed?
-    @two_step_flag_changed
+  def two_step_mandated_changed?
+    @two_step_mandated_changed
   end
 
-  def mark_two_step_flag_changed
-    @two_step_flag_changed = require_2sv_changed?
+  def mark_two_step_mandated_changed
+    @two_step_mandated_changed = require_2sv_changed?
     true
   end
 

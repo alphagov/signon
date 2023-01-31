@@ -22,7 +22,7 @@ class UserMailer < Devise::Mailer
     view_mail(template_id, to: @user.email, subject: "#{prefix}2-step verification set up")
   end
 
-  def two_step_flagged(user)
+  def two_step_mandated(user)
     @user = user
     view_mail(template_id, to: @user.email, subject: "Make your Signon account more secure")
   end

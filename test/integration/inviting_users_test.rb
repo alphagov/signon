@@ -27,7 +27,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       assert has_no_select?("Role")
     end
 
-    should "displays the 2SV flagging checkbox" do
+    should "displays the 2SV mandating checkbox" do
       visit new_user_invitation_path
       assert has_field?("Ask user to set up 2-step verification")
     end
@@ -124,7 +124,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       assert has_select?("Role")
     end
 
-    should "display the 2SV flagging checkbox" do
+    should "display the 2SV mandating checkbox" do
       visit new_user_invitation_path
       assert has_field?("Ask user to set up 2-step verification")
     end

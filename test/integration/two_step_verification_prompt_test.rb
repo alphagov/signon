@@ -1,9 +1,9 @@
 require "test_helper"
 
 class TwoStepVerificationPromptTest < ActionDispatch::IntegrationTest
-  context "when the user has been flagged for 2-step verification" do
+  context "when the user has had 2-step verification mandated" do
     setup do
-      @user = create(:two_step_flagged_user)
+      @user = create(:two_step_mandated_superadmin_user)
       visit users_path
       signin_with(@user, set_up_2sv: false)
     end

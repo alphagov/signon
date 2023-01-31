@@ -59,17 +59,17 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context "#send_two_step_flag_notification?" do
-    context "when not flagged" do
+  context "#send_two_step_mandated_notification?" do
+    context "when not mandated" do
       should "return false" do
-        assert_not @user.send_two_step_flag_notification?
+        assert_not @user.send_two_step_mandated_notification?
       end
 
-      context "when flagging" do
+      context "when mandating" do
         should "maintain after persisting" do
           @user.update!(require_2sv: true)
 
-          assert @user.send_two_step_flag_notification?
+          assert @user.send_two_step_mandated_notification?
         end
       end
 
@@ -77,16 +77,16 @@ class UserTest < ActiveSupport::TestCase
         should "be true" do
           @user.update!(role: "admin")
 
-          assert @user.send_two_step_flag_notification?
+          assert @user.send_two_step_mandated_notification?
         end
       end
     end
 
-    context "when already flagged" do
+    context "when already mandated" do
       should "return false" do
         @user.toggle(:require_2sv)
 
-        assert_not @user.reload.send_two_step_flag_notification?
+        assert_not @user.reload.send_two_step_mandated_notification?
       end
     end
   end
@@ -118,7 +118,7 @@ class UserTest < ActiveSupport::TestCase
   context "#prompt_for_2sv?" do
     context "when the user has already enrolled" do
       should "always be false" do
-        assert_not build(:two_step_flagged_user, otp_secret_key: "welp").prompt_for_2sv?
+        assert_not build(:two_step_mandated_user, otp_secret_key: "welp").prompt_for_2sv?
       end
     end
   end

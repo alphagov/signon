@@ -38,23 +38,23 @@
   </p>
 <% end %>
 
-<% if policy(current_user).flag_2sv? %>
+<% if policy(current_user).mandate_2sv? %>
   <dl>
     <dt>Account security</dt>
     <dd>
       <% if f.object.has_2sv? %>
         <p>2-step verification enabled</p>
-        <ul>
-          <li>
-            <%= link_to 'Reset 2-step verification',
-              reset_two_step_verification_user_path(@user),
-              data: { confirm: 'Are you sure?' },
-              method: :patch
-              %><br/>
-            Allows user to sign in without a verification code.<br/>
-            User will be prompted to set up 2-step verification again the next time they sign in.
-          </li>
-        </ul>
+        <p>
+          <%= link_to 'Reset 2-step verification',
+            reset_two_step_verification_user_path(@user),
+            data: { confirm: 'Are you sure?' },
+            method: :patch
+            %><br/>
+          Allows user to sign in without a verification code.<br/>
+          User will be prompted to set up 2-step verification again the next time they sign in.
+        </p>
+      <% elsif f.object.require_2sv? %>
+        <p>2-step verification required but not set up</p>
       <% else %>
         <p>2-step verification not set up</p>
         <p class="checkbox">

@@ -6,7 +6,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     @user = create(:user, with_signin_permissions_for: [@app])
   end
 
-  context "when the user is flagged for 2SV" do
+  context "when the user has had 2SV mandated" do
     setup do
       @user.update!(require_2sv: true)
       ignoring_spurious_error do
