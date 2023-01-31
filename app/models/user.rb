@@ -36,6 +36,7 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
+  validate :user_can_be_exempted_from_2sv
   validate :organisation_admin_belongs_to_organisation
   validate :email_is_ascii_only
 
@@ -321,6 +322,10 @@ private
   def mark_two_step_mandated_changed
     @two_step_mandated_changed = require_2sv_changed?
     true
+  end
+
+  def user_can_be_exempted_from_2sv
+    errors.add(:reason_for_2sv_exemption, "#{role} users cannot be exempted from 2SV. Remove the user's exemption to change their role.") if reason_for_2sv_exemption.present? && !normal?
   end
 
   def organisation_admin_belongs_to_organisation

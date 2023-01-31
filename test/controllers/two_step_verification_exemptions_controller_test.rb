@@ -65,6 +65,18 @@ class TwoStepVerificationExemptionsControllerTest < ActionController::TestCase
       assert user.require_2sv?
       assert_nil user.reason_for_2sv_exemption
     end
+
+    should "not be able to exempt an admin user" do
+      user = create(:organisation_admin, organisation: create(:organisation))
+      admin = create(:superadmin_user, organisation: @gds)
+      sign_in admin
+      reason_for_exemption = "accessibility reasons"
+
+      put :update, params: { id: user.id, user: { reason_for_2sv_exemption: reason_for_exemption } }
+
+      assert_equal "You do not have permission to perform this action.", flash[:alert]
+      assert_nil user.reason_for_2sv_exemption
+    end
   end
 
   context "non-gds users" do

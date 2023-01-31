@@ -139,6 +139,14 @@ class UserTest < ActiveSupport::TestCase
     should "record the event" do
       assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_EXEMPTED.id, uid: @user.uid, initiator: @initiator).count
     end
+
+    context "for a admin user" do
+      should "prevent them being exempted from 2SV" do
+        user = build(:admin_user, reason_for_2sv_exemption: "reason")
+
+        assert_not user.valid?
+      end
+    end
   end
 
   test "email change tokens should expire" do

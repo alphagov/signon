@@ -23,59 +23,12 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
       @reason_for_exemption = "accessibility reasons"
     end
 
-    should "be able to see a link to exempt a user requiring 2sv from 2sv" do
-      user_requiring_2sv = create(:two_step_mandated_user, organisation: @organisation)
-
-      sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
-      click_link("Exempt user from 2-step verification")
-
-      fill_in "Reason for 2sv exemption", with: @reason_for_exemption
-      click_button "Save"
-
-      user_requiring_2sv.reload
-
-      assert_not user_requiring_2sv.require_2sv?
-      assert_equal @reason_for_exemption, user_requiring_2sv.reason_for_2sv_exemption
-
-      assert page.has_text? "User exempted from 2SV"
-      assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{@reason_for_exemption}"
-
-      assert_access_log_updated_with_exemption(@super_admin.name, @reason_for_exemption)
-    end
-
-    should "be able to see a link to exempt a user who does not yet require 2sv but is not exempt" do
-      user_not_requiring_2sv = create(:user, organisation: @organisation)
-
-      sign_in_as_and_edit_user(@super_admin, user_not_requiring_2sv)
-      click_link("Exempt user from 2-step verification")
-
-      fill_in "Reason for 2sv exemption", with: @reason_for_exemption
-      click_button "Save"
-
-      user_not_requiring_2sv.reload
-
-      assert_not user_not_requiring_2sv.require_2sv?
-      assert_equal @reason_for_exemption, user_not_requiring_2sv.reason_for_2sv_exemption
-
-      assert page.has_text? "User exempted from 2SV"
-      assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{@reason_for_exemption}"
-
-      assert_access_log_updated_with_exemption(@super_admin.name, @reason_for_exemption)
-    end
-
-    should "not be able to see a link to exempt a user who already has an exemption reason" do
-      exempted_user = create(:two_step_exempted_user, organisation: @organisation)
-
-      sign_in_as_and_edit_user(@super_admin, exempted_user)
-      assert page.has_no_link? "Exempt user from 2-step verification"
-    end
-
-    context "when a exemption reason already exists" do
-      should "be able to see a link to edit exemption reason" do
-        user_requiring_2sv = create(:two_step_mandated_user, organisation: @organisation, reason_for_2sv_exemption: "old reason")
+    context "when the user being edited is not an admin or superadmin" do
+      should "be able to see a link to exempt a user requiring 2sv from 2sv" do
+        user_requiring_2sv = create(:two_step_mandated_user, organisation: @organisation)
 
         sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
-        click_link("Edit reason for 2-step verification exemption")
+        click_link("Exempt user from 2-step verification")
 
         fill_in "Reason for 2sv exemption", with: @reason_for_exemption
         click_button "Save"
@@ -88,9 +41,67 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
         assert page.has_text? "User exempted from 2SV"
         assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{@reason_for_exemption}"
 
-        click_link "Account access log"
+        assert_access_log_updated_with_exemption(@super_admin.name, @reason_for_exemption)
+      end
 
-        assert page.has_text? "Reason for 2-step verification exemption updated by #{@super_admin.name} to: #{@reason_for_exemption}"
+      should "be able to see a link to exempt a user who does not yet require 2sv but is not exempt" do
+        user_not_requiring_2sv = create(:user, organisation: @organisation)
+
+        sign_in_as_and_edit_user(@super_admin, user_not_requiring_2sv)
+        click_link("Exempt user from 2-step verification")
+
+        fill_in "Reason for 2sv exemption", with: @reason_for_exemption
+        click_button "Save"
+
+        user_not_requiring_2sv.reload
+
+        assert_not user_not_requiring_2sv.require_2sv?
+        assert_equal @reason_for_exemption, user_not_requiring_2sv.reason_for_2sv_exemption
+
+        assert page.has_text? "User exempted from 2SV"
+        assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{@reason_for_exemption}"
+
+        assert_access_log_updated_with_exemption(@super_admin.name, @reason_for_exemption)
+      end
+
+      should "not be able to see a link to exempt a user who already has an exemption reason" do
+        exempted_user = create(:two_step_exempted_user, organisation: @organisation)
+
+        sign_in_as_and_edit_user(@super_admin, exempted_user)
+        assert page.has_no_link? "Exempt user from 2-step verification"
+      end
+
+      context "when a exemption reason already exists" do
+        should "be able to see a link to edit exemption reason" do
+          user_requiring_2sv = create(:two_step_mandated_user, organisation: @organisation, reason_for_2sv_exemption: "user is exempt")
+
+          sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
+          click_link("Edit reason for 2-step verification exemption")
+
+          fill_in "Reason for 2sv exemption", with: @reason_for_exemption
+          click_button "Save"
+
+          user_requiring_2sv.reload
+
+          assert_not user_requiring_2sv.require_2sv?
+          assert_equal @reason_for_exemption, user_requiring_2sv.reason_for_2sv_exemption
+
+          assert page.has_text? "User exempted from 2SV"
+          assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{@reason_for_exemption}"
+
+          click_link "Account access log"
+
+          assert page.has_text? "Reason for 2-step verification exemption updated by #{@super_admin.name} to: #{@reason_for_exemption}"
+        end
+      end
+    end
+
+    context "when the user being edited is an admin" do
+      should "not be able to see a link to exempt the user" do
+        exempted_user = create(:superadmin_user, organisation: @organisation)
+
+        sign_in_as_and_edit_user(@super_admin, exempted_user)
+        assert page.has_no_link? "Exempt user from 2-step verification"
       end
     end
   end
