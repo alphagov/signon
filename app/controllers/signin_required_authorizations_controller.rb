@@ -1,6 +1,11 @@
 class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsController
   include Pundit::Authorization
-  EXPECTED_DOORKEEPER_VERSION = "5.6.4".freeze
+  # This controller was based on (and inherits from)
+  # https://github.com/doorkeeper-gem/doorkeeper/blob/main/app/controllers/doorkeeper/authorizations_controller.rb
+  #
+  # Future doorkeeper changes may result in test failures in this controller.
+  # If you see a failure after upgrading the Doorkeeper gem, then check the
+  # doorkeeper version of this controller for any changes that may need to be ported here.
 
   def new
     if pre_authorizable?
