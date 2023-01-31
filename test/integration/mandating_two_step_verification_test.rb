@@ -13,6 +13,8 @@ class MandatingTwoStepVerificationTest < ActionDispatch::IntegrationTest
   def assert_admin_can_send_2fa_email(admin, user)
     sign_in_as_and_edit_user(admin, user)
 
+    assert page.has_text? "2-step verification not set up"
+
     perform_enqueued_jobs do
       check "Ask user to set up 2-step verification"
       click_button "Update User"
@@ -113,6 +115,28 @@ class MandatingTwoStepVerificationTest < ActionDispatch::IntegrationTest
       non_admin_user = create(:user, organisation: @user.organisation)
       sign_in_as_and_edit_user(non_admin_user, @user)
 
+      assert page.has_no_text? "Ask user to set up 2-step verification"
+    end
+  end
+
+  context "when a user has already had 2sv mandated" do
+    setup do
+      @org_admin = create(:organisation_admin, organisation: @organisation)
+    end
+
+    should "be able to see an appropriate message reflecting the user's 2sv status when enabled but not set up" do
+      user = create(:two_step_enabled_user, organisation: @organisation)
+      sign_in_as_and_edit_user(@org_admin, user)
+
+      assert page.has_text? "2-step verification enabled"
+      assert page.has_no_text? "Ask user to set up 2-step verification"
+    end
+
+    should "be able to see an appropriate message reflecting the user's 2sv status when 2sv set up" do
+      user = create(:two_step_mandated_user, organisation: @organisation)
+      sign_in_as_and_edit_user(@org_admin, user)
+
+      assert page.has_text? "2-step verification required but not set up"
       assert page.has_no_text? "Ask user to set up 2-step verification"
     end
   end
