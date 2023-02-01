@@ -108,13 +108,13 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   end
 
   test "#update when app doesnt exist" do
-    patch "#{endpoint}/12345678", headers: headers
+    patch("#{endpoint}/12345678", headers:)
     assert_equal 404, response.status
   end
 
   test "#update with no params" do
     application = create(:application, name:)
-    patch "#{endpoint}/#{application.id}", params: {}.to_json, headers: headers
+    patch("#{endpoint}/#{application.id}", params: {}.to_json, headers:)
     assert_equal 200, response.status
     assert_success_body(response)
     assert_permissions(response, [])
@@ -124,10 +124,10 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
     desired_name = "My new named app"
     desired_desc = "New Description"
     application = create(:application)
-    patch "#{endpoint}/#{application.id}", params: {
+    patch("#{endpoint}/#{application.id}", params: {
       name: desired_name,
       description: desired_desc,
-    }.to_json, headers: headers
+    }.to_json, headers:)
     assert_equal 200, response.status
     assert_success_body(response)
     data = JSON.parse(response.body)
@@ -141,9 +141,9 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   test "#update with adding permissions" do
     desired_permissions = %w[1 2 3]
     application = create(:application, name:, with_supported_permissions: %w[1 2])
-    patch "#{endpoint}/#{application.id}", params: {
+    patch("#{endpoint}/#{application.id}", params: {
       permissions: desired_permissions,
-    }.to_json, headers: headers
+    }.to_json, headers:)
     assert_equal 200, response.status
     assert_success_body(response)
     assert_permissions(response, desired_permissions)
@@ -154,9 +154,9 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   test "#update with deleting permissions" do
     desired_permissions = %w[1]
     application = create(:application, name:, with_supported_permissions: %w[1 2])
-    patch "#{endpoint}/#{application.id}", params: {
+    patch("#{endpoint}/#{application.id}", params: {
       permissions: desired_permissions,
-    }.to_json, headers: headers
+    }.to_json, headers:)
     assert_equal 200, response.status
     assert_success_body(response)
     assert_permissions(response, desired_permissions)
@@ -167,9 +167,9 @@ class ApplicationsTest < ActionDispatch::IntegrationTest
   test "#update with ignored params" do
     desired_redirect_uri = "https://malicious.example.org"
     application = create(:application, name:, with_supported_permissions: %w[1 2])
-    patch "#{endpoint}/#{application.id}", params: {
+    patch("#{endpoint}/#{application.id}", params: {
       redirect_uri: desired_redirect_uri,
-    }.to_json, headers: headers
+    }.to_json, headers:)
     assert_equal 200, response.status
     assert_success_body(response)
     application.reload
