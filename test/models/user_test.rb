@@ -57,6 +57,12 @@ class UserTest < ActiveSupport::TestCase
       user.update!(name: "Foo Bar")
       assert_not user.require_2sv?
     end
+
+    should "remove reason for 2SV exemption when 2SV required" do
+      user = create(:two_step_exempted_user)
+      user.update!(require_2sv: true)
+      assert_nil user.reason_for_2sv_exemption
+    end
   end
 
   context "#send_two_step_mandated_notification?" do

@@ -50,6 +50,7 @@ class User < ApplicationRecord
   after_initialize :generate_uid
   after_create :update_stats
   before_save :set_2sv_for_admin_roles
+  before_save :reset_2sv_exemption_reason
   before_save :mark_two_step_mandated_changed
   before_save :update_password_changed
 
@@ -247,6 +248,10 @@ class User < ApplicationRecord
     return if Rails.application.config.instance_name.present?
 
     self.require_2sv = true if role_changed? && (admin? || superadmin?)
+  end
+
+  def reset_2sv_exemption_reason
+    self.reason_for_2sv_exemption = nil if require_2sv.present?
   end
 
   def authenticate_otp(code)

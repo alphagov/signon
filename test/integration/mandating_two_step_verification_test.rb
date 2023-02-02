@@ -58,6 +58,17 @@ class MandatingTwoStepVerificationTest < ActionDispatch::IntegrationTest
     should "be able to unset the requirement for 2fa" do
       assert_admin_can_remove_2sv_requirement_without_notifying_user(@super_admin, @user)
     end
+
+    should "remove the user's exemption reason when 2SV is mandated" do
+      user = create(:two_step_exempted_user)
+
+      sign_in_as_and_edit_user(@super_admin, user)
+
+      check "Ask user to set up 2-step verification"
+      click_button "Update User"
+
+      assert_nil user.reload.reason_for_2sv_exemption
+    end
   end
 
   context "when logged in as an admin" do

@@ -67,7 +67,7 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
       context "when a exemption reason already exists" do
         should "be able to see a link to edit exemption reason" do
-          user_requiring_2sv = create(:two_step_mandated_user, organisation: @organisation, reason_for_2sv_exemption: "user is exempt")
+          user_requiring_2sv = create(:user, organisation: @organisation, reason_for_2sv_exemption: "user is exempt")
 
           sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
           click_link("Edit reason for 2-step verification exemption")
@@ -110,7 +110,7 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
     context "when a exemption reason already exists" do
       should "can see exemption reason but is not able to edit it" do
         reason = "user is exempt"
-        user_requiring_2sv = create(:two_step_mandated_user, organisation: @organisation, reason_for_2sv_exemption: reason)
+        user_requiring_2sv = create(:user, organisation: @organisation, reason_for_2sv_exemption: reason)
 
         sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
 
