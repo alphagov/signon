@@ -68,6 +68,11 @@ class MandatingTwoStepVerificationTest < ActionDispatch::IntegrationTest
       click_button "Update User"
 
       assert_nil user.reload.reason_for_2sv_exemption
+
+      visit edit_user_path(user)
+      click_link "Account access log"
+
+      assert page.has_text? "Exemption from 2-step verification removed by #{@super_admin.name}"
     end
   end
 

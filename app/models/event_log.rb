@@ -43,6 +43,7 @@ class EventLog < ApplicationRecord
     NO_SUCH_ACCOUNT_LOGIN = LogEntry.new(id: 38, description: "Attempted login to nonexistent account"),
     TWO_STEP_EXEMPTED = LogEntry.new(id: 39, description: "Exempted from 2-step verification", require_uid: true, require_initiator: true),
     TWO_STEP_EXEMPTION_REASON_UPDATED = LogEntry.new(id: 40, description: "Reason for 2-step verification exemption updated", require_uid: true, require_initiator: true),
+    TWO_STEP_EXEMPTION_REMOVED = LogEntry.new(id: 41, description: "Exemption from 2-step verification removed", require_uid: true, require_initiator: true),
 
     # We no longer expire passwords, but we keep this event for history purposes
     PASSWORD_EXPIRED = LogEntry.new(id: 6, description: "Password expired"),
