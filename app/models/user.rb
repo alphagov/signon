@@ -66,8 +66,14 @@ class User < ApplicationRecord
   scope :with_access_to_application, ->(application) { UsersWithAccess.new(self, application).users }
   scope :with_2sv_enabled,
         lambda { |enabled|
-          enabled = ActiveRecord::Type::Boolean.new.cast(enabled)
-          where("otp_secret_key IS #{'NOT' if enabled} NULL")
+          case enabled
+          when "exempt"
+            where("reason_for_2sv_exemption IS NOT NULL")
+          when "true"
+            where("otp_secret_key IS NOT NULL")
+          else
+            where("otp_secret_key IS NULL AND reason_for_2sv_exemption IS NULL")
+          end
         }
 
   scope :with_status,

@@ -242,15 +242,21 @@ class UserTest < ActiveSupport::TestCase
   end
 
   context ".with_2sv_enabled" do
-    should "return users with 2SV enabled" do
+    should "return users with 2SV enabled when true" do
       enabled_user = create(:two_step_enabled_user)
-      enabled_users = User.with_2sv_enabled(true)
+      exempt_user = create(:two_step_exempted_user)
+
+      enabled_users = User.with_2sv_enabled("true")
       assert_equal 1, enabled_users.count
       assert_equal enabled_user, enabled_users.first
 
       disabled_users = User.with_2sv_enabled("false")
       assert_equal 1, disabled_users.count
       assert_equal @user, disabled_users.first
+
+      exempt_users = User.with_2sv_enabled("exempt")
+      assert_equal 1, exempt_users.count
+      assert_equal exempt_user, exempt_users.first
     end
 
     should "encrypt otp_secret_key" do
