@@ -16,6 +16,26 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
     assert page.has_text? "Exempted from 2-step verification by #{initiator_name} for reason: #{reason}"
   end
 
+  def assert_user_can_be_exempted_from_2sv(signed_in_as, user_being_exempted, reason)
+    sign_in_as_and_edit_user(signed_in_as, user_being_exempted)
+    click_link("Exempt user from 2-step verification")
+
+    fill_in "Reason for 2sv exemption", with: reason
+    click_button "Save"
+
+    assert_user_has_been_exempted_from_2sv(user_being_exempted, reason)
+  end
+
+  def assert_user_has_been_exempted_from_2sv(user, reason)
+    user.reload
+
+    assert_not user.require_2sv?
+    assert_equal reason, user.reason_for_2sv_exemption
+
+    assert page.has_text? "User exempted from 2SV"
+    assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{reason}"
+  end
+
   context "when logged in as a gds super admin" do
     setup do
       @gds = create(:organisation, content_id: Organisation::GDS_ORG_CONTENT_ID)
@@ -27,40 +47,14 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
       should "be able to see a link to exempt a user requiring 2sv from 2sv" do
         user_requiring_2sv = create(:two_step_mandated_user, organisation: @organisation)
 
-        sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
-        click_link("Exempt user from 2-step verification")
-
-        fill_in "Reason for 2sv exemption", with: @reason_for_exemption
-        click_button "Save"
-
-        user_requiring_2sv.reload
-
-        assert_not user_requiring_2sv.require_2sv?
-        assert_equal @reason_for_exemption, user_requiring_2sv.reason_for_2sv_exemption
-
-        assert page.has_text? "User exempted from 2SV"
-        assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{@reason_for_exemption}"
-
+        assert_user_can_be_exempted_from_2sv(@super_admin, user_requiring_2sv, @reason_for_exemption)
         assert_access_log_updated_with_exemption(@super_admin.name, @reason_for_exemption)
       end
 
       should "be able to see a link to exempt a user who does not yet require 2sv but is not exempt" do
         user_not_requiring_2sv = create(:user, organisation: @organisation)
 
-        sign_in_as_and_edit_user(@super_admin, user_not_requiring_2sv)
-        click_link("Exempt user from 2-step verification")
-
-        fill_in "Reason for 2sv exemption", with: @reason_for_exemption
-        click_button "Save"
-
-        user_not_requiring_2sv.reload
-
-        assert_not user_not_requiring_2sv.require_2sv?
-        assert_equal @reason_for_exemption, user_not_requiring_2sv.reason_for_2sv_exemption
-
-        assert page.has_text? "User exempted from 2SV"
-        assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{@reason_for_exemption}"
-
+        assert_user_can_be_exempted_from_2sv(@super_admin, user_not_requiring_2sv, @reason_for_exemption)
         assert_access_log_updated_with_exemption(@super_admin.name, @reason_for_exemption)
       end
 
@@ -81,13 +75,7 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
           fill_in "Reason for 2sv exemption", with: @reason_for_exemption
           click_button "Save"
 
-          user_requiring_2sv.reload
-
-          assert_not user_requiring_2sv.require_2sv?
-          assert_equal @reason_for_exemption, user_requiring_2sv.reason_for_2sv_exemption
-
-          assert page.has_text? "User exempted from 2SV"
-          assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{@reason_for_exemption}"
+          assert_user_has_been_exempted_from_2sv(user_requiring_2sv, @reason_for_exemption)
 
           click_link "Account access log"
 
