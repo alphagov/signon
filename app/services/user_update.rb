@@ -19,6 +19,7 @@ class UserUpdate
     record_permission_changes(old_permissions)
     record_role_change
     record_2sv_exemption_removed
+    record_2sv_mandated
     send_two_step_mandated_notification
     perform_permissions_update
     record_email_change_and_notify
@@ -92,6 +93,17 @@ private
     EventLog.record_event(
       user,
       EventLog::TWO_STEP_EXEMPTION_REMOVED,
+      initiator: current_user,
+      ip_address: user_ip,
+    )
+  end
+
+  def record_2sv_mandated
+    return unless user.require_2sv && user.previous_changes[:require_2sv]
+
+    EventLog.record_event(
+      user,
+      EventLog::TWO_STEP_MANDATED,
       initiator: current_user,
       ip_address: user_ip,
     )

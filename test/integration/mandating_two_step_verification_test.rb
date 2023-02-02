@@ -73,6 +73,7 @@ class MandatingTwoStepVerificationTest < ActionDispatch::IntegrationTest
       click_link "Account access log"
 
       assert page.has_text? "Exemption from 2-step verification removed by #{@super_admin.name}"
+      assert page.has_text? "2-step verification setup mandated at next login by #{@super_admin.name}"
     end
   end
 

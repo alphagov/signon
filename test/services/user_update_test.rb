@@ -49,4 +49,16 @@ class UserUpdateTest < ActionView::TestCase
 
     assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_EXEMPTION_REMOVED.id).count
   end
+
+  should "record when 2SV has been mandated" do
+    current_user = create(:superadmin_user)
+    ip_address = "1.2.3.4"
+
+    affected_user = create(:user)
+
+    params = { require_2sv: "1" }
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+
+    assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_MANDATED.id).count
+  end
 end
