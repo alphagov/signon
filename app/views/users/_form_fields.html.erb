@@ -44,14 +44,22 @@
   <dl>
     <dt>Account security</dt>
     <dd>
-      <% if f.object.has_2sv? %>
+      <% if @user.reason_for_2sv_exemption.present? %>
+        <p>
+          The user has been made exempt from 2-step verification for the following reason: <%= @user.reason_for_2sv_exemption %>
+        <% if Pundit.policy(current_user, @user).exempt_from_two_step_verification? %>
+          <br>
+          <%= link_to 'Edit reason for 2-step verification exemption', edit_two_step_verification_exemption_path(@user) %>
+        <% end %>
+        </p>
+      <% elsif f.object.has_2sv? %>
         <p>2-step verification enabled</p>
         <p>
           <%= link_to 'Reset 2-step verification',
             reset_two_step_verification_user_path(@user),
             data: { confirm: 'Are you sure?' },
             method: :patch
-            %><br/>
+          %><br/>
           Allows user to sign in without a verification code.<br/>
           User will be prompted to set up 2-step verification again the next time they sign in.
         </p>
@@ -59,29 +67,23 @@
         <p>2-step verification required but not set up</p>
       <% else %>
         <p>2-step verification not set up</p>
+      <% end %>
+
+      <% unless @user.require_2sv? %>
         <p class="checkbox">
           <%= f.label :require_2sv do %>
-            <%= f.check_box :require_2sv %> Ask user to set up 2-step verification
+            <%= f.check_box :require_2sv %> Mandate 2-step verification for this user <%= "(this will remove their exemption)" if @user.reason_for_2sv_exemption.present? %>
           <% end %>
-        </p>
+        <br/>
+        User will be prompted to set up 2-step verification again the next time they sign in.</p>
       <% end %>
-      <% if @user.persisted? %>
-        <% if Pundit.policy(current_user, @user).exempt_from_two_step_verification? && @user.reason_for_2sv_exemption.nil? %>
+      <% if @user.persisted? && Pundit.policy(current_user, @user).exempt_from_two_step_verification? && @user.reason_for_2sv_exemption.nil? %>
           <p>
             <%= link_to 'Exempt user from 2-step verification', edit_two_step_verification_exemption_path(@user) %>
             <br/>
             Exempt a user from 2-step verification (requires a reason to be supplied).
           </p>
-        <% elsif @user.reason_for_2sv_exemption.present? %>
-          <p>
-            The user has been made exempt from 2-step verification for the following reason: <%= @user.reason_for_2sv_exemption %>
-          </p>
-            <% if Pundit.policy(current_user, @user).exempt_from_two_step_verification? %>
-              <br>
-              <%= link_to 'Edit reason for 2-step verification exemption', edit_two_step_verification_exemption_path(@user) %>
-            <% end %>
-        <% end %>
-      <% end %>
+      <%end %>
     </dd>
   </dl>
 <% end %>
