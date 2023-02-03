@@ -47,4 +47,33 @@ module ManagingTwoSvHelpers
 
     assert_not user.reload.require_2sv
   end
+
+  def assert_2sv_can_be_reset(logged_in_as, user_to_be_reset)
+    use_javascript_driver
+
+    visit edit_user_path(user_to_be_reset)
+    signin_with(logged_in_as)
+
+    perform_enqueued_jobs do
+      assert_response_contains "2-step verification enabled"
+
+      accept_alert do
+        click_link "Reset 2-step verification"
+      end
+
+      assert_response_contains "Reset 2-step verification for #{user_to_be_reset.email}"
+
+      assert last_email
+      assert_equal "2-step verification has been reset", last_email.subject
+    end
+  end
+
+  def assert_2sv_cannot_be_reset(logged_in_as, user_to_be_reset)
+    use_javascript_driver
+
+    visit edit_user_path(user_to_be_reset)
+    signin_with(logged_in_as)
+
+    assert page.has_no_link? "Reset 2-step verification"
+  end
 end
