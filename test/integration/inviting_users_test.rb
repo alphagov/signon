@@ -29,7 +29,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
     should "displays the 2SV mandating checkbox" do
       visit new_user_invitation_path
-      assert has_field?("Ask user to set up 2-step verification")
+      assert has_field?("Mandate 2-step verification for this user")
     end
 
     should "create and notify the user" do
@@ -126,7 +126,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
     should "display the 2SV mandating checkbox" do
       visit new_user_invitation_path
-      assert has_field?("Ask user to set up 2-step verification")
+      assert has_field?("Mandate 2-step verification for this user")
     end
 
     should "create and notify the user" do
@@ -135,7 +135,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
         fill_in "Name", with: "Fred Bloggs"
         select "Admin", from: "Role"
         fill_in "Email", with: "fred_admin@example.com"
-        check "Ask user to set up 2-step verification"
+        check "Mandate 2-step verification for this user"
         click_button "Create user and send email"
 
         assert_not_nil User.find_by(

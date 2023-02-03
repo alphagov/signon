@@ -50,6 +50,7 @@ Rails.application.routes.draw do
   resources :bulk_grant_permission_sets, only: %i[new create show]
   resources :organisations, only: [:index]
   resources :suspensions, only: %i[edit update]
+  resources :two_step_verification_exemptions, only: %i[edit update]
 
   resources :doorkeeper_applications, only: %i[index edit update] do
     member do

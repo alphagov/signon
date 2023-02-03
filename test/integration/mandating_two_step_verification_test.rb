@@ -16,7 +16,7 @@ class MandatingTwoStepVerificationTest < ActionDispatch::IntegrationTest
     assert page.has_text? "2-step verification not set up"
 
     perform_enqueued_jobs do
-      check "Ask user to set up 2-step verification"
+      check "Mandate 2-step verification for this user"
       click_button "Update User"
 
       assert last_email
@@ -30,7 +30,7 @@ class MandatingTwoStepVerificationTest < ActionDispatch::IntegrationTest
     sign_in_as_and_edit_user(admin, user)
 
     perform_enqueued_jobs do
-      uncheck "Ask user to set up 2-step verification"
+      uncheck "Mandate 2-step verification for this user"
       click_button "Update User"
 
       assert_not last_email
@@ -57,6 +57,23 @@ class MandatingTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
     should "be able to unset the requirement for 2fa" do
       assert_admin_can_remove_2sv_requirement_without_notifying_user(@super_admin, @user)
+    end
+
+    should "remove the user's exemption reason when 2SV is mandated" do
+      user = create(:two_step_exempted_user)
+
+      sign_in_as_and_edit_user(@super_admin, user)
+
+      check "Mandate 2-step verification for this user (this will remove their exemption)"
+      click_button "Update User"
+
+      assert_nil user.reload.reason_for_2sv_exemption
+
+      visit edit_user_path(user)
+      click_link "Account access log"
+
+      assert page.has_text? "Exemption from 2-step verification removed by #{@super_admin.name}"
+      assert page.has_text? "2-step verification setup mandated at next login by #{@super_admin.name}"
     end
   end
 
@@ -115,7 +132,7 @@ class MandatingTwoStepVerificationTest < ActionDispatch::IntegrationTest
       non_admin_user = create(:user, organisation: @user.organisation)
       sign_in_as_and_edit_user(non_admin_user, @user)
 
-      assert page.has_no_text? "Ask user to set up 2-step verification"
+      assert page.has_no_text? "Mandate 2-step verification for this user"
     end
   end
 
@@ -129,7 +146,7 @@ class MandatingTwoStepVerificationTest < ActionDispatch::IntegrationTest
       sign_in_as_and_edit_user(@org_admin, user)
 
       assert page.has_text? "2-step verification enabled"
-      assert page.has_no_text? "Ask user to set up 2-step verification"
+      assert page.has_no_text? "Mandate 2-step verification for this user"
     end
 
     should "be able to see an appropriate message reflecting the user's 2sv status when 2sv set up" do
@@ -137,7 +154,7 @@ class MandatingTwoStepVerificationTest < ActionDispatch::IntegrationTest
       sign_in_as_and_edit_user(@org_admin, user)
 
       assert page.has_text? "2-step verification required but not set up"
-      assert page.has_no_text? "Ask user to set up 2-step verification"
+      assert page.has_no_text? "Mandate 2-step verification for this user"
     end
   end
 end

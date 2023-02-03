@@ -1,6 +1,12 @@
 module UsersHelper
   def two_step_status(user)
-    user.has_2sv? ? "Enabled" : "Not set up"
+    if user.has_2sv?
+      "Enabled"
+    elsif user.reason_for_2sv_exemption.present?
+      "Exempted"
+    else
+      "Not set up"
+    end
   end
 
   def organisation_options(form_builder)

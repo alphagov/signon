@@ -57,6 +57,12 @@ class UserTest < ActiveSupport::TestCase
       user.update!(name: "Foo Bar")
       assert_not user.require_2sv?
     end
+
+    should "remove reason for 2SV exemption when 2SV required" do
+      user = create(:two_step_exempted_user)
+      user.update!(require_2sv: true)
+      assert_nil user.reason_for_2sv_exemption
+    end
   end
 
   context "#send_two_step_mandated_notification?" do
@@ -119,6 +125,32 @@ class UserTest < ActiveSupport::TestCase
     context "when the user has already enrolled" do
       should "always be false" do
         assert_not build(:two_step_mandated_user, otp_secret_key: "welp").prompt_for_2sv?
+      end
+    end
+  end
+
+  context "exempt from 2sv" do
+    setup do
+      @user = create(:two_step_enabled_user)
+      @initiator = create(:superadmin_user)
+      @user.exempt_from_2sv("accessibility reasons", @initiator)
+    end
+
+    should "set require 2sv to false and store the reason" do
+      assert_not @user.require_2sv?
+      assert_equal "accessibility reasons", @user.reason_for_2sv_exemption
+      assert_nil @user.otp_secret_key
+    end
+
+    should "record the event" do
+      assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_EXEMPTED.id, uid: @user.uid, initiator: @initiator).count
+    end
+
+    context "for a admin user" do
+      should "prevent them being exempted from 2SV" do
+        user = build(:admin_user, reason_for_2sv_exemption: "reason")
+
+        assert_not user.valid?
       end
     end
   end
@@ -216,15 +248,21 @@ class UserTest < ActiveSupport::TestCase
   end
 
   context ".with_2sv_enabled" do
-    should "return users with 2SV enabled" do
+    should "return users with 2SV enabled when true" do
       enabled_user = create(:two_step_enabled_user)
-      enabled_users = User.with_2sv_enabled(true)
+      exempt_user = create(:two_step_exempted_user)
+
+      enabled_users = User.with_2sv_enabled("true")
       assert_equal 1, enabled_users.count
       assert_equal enabled_user, enabled_users.first
 
       disabled_users = User.with_2sv_enabled("false")
       assert_equal 1, disabled_users.count
       assert_equal @user, disabled_users.first
+
+      exempt_users = User.with_2sv_enabled("exempt")
+      assert_equal 1, exempt_users.count
+      assert_equal exempt_user, exempt_users.first
     end
 
     should "encrypt otp_secret_key" do

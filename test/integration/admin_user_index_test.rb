@@ -19,7 +19,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       create(:user, name: "Bert", email: "bbbert@example.com")
       create(:user, name: "Ed", email: "ed@example.com", organisation: org1)
       create(:user, name: "Eddie", email: "eddie_bb@example.com")
-      create(:user, name: "Ernie", email: "ernie@example.com", organisation: org2)
+      create(:two_step_exempted_user, name: "Ernie", email: "ernie@example.com", organisation: org2)
       create(:suspended_user, name: "Suspended McFee", email: "suspenders@example.com")
     end
 
@@ -167,7 +167,8 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     should "filter users by 2SV status" do
       visit "/users"
       total_enabled = 1
-      total_disabled = 8
+      total_disabled = 7
+      total_exempted = 1
 
       within ".filter-by-two_step_status-menu .dropdown-menu" do
         click_on "Enabled"
@@ -175,6 +176,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       assert has_css?("td", text: "Enabled", count: total_enabled)
       assert has_no_css?("td", text: "Not set up")
+      assert has_no_css?("td", text: "Exempted")
 
       within ".filter-by-two_step_status-menu .dropdown-menu" do
         click_on "Not set up"
@@ -182,6 +184,15 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       assert has_no_css?("td", text: "Enabled")
       assert has_css?("td", text: "Not set up", count: total_disabled)
+      assert has_no_css?("td", text: "Exempted")
+
+      within ".filter-by-two_step_status-menu .dropdown-menu" do
+        click_on "Exempted"
+      end
+
+      assert has_css?("td", text: "Exempted", count: total_exempted)
+      assert has_no_css?("td", text: "Not set up")
+      assert has_no_css?("td", text: "Enabled")
     end
   end
 

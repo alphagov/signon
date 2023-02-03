@@ -9,12 +9,14 @@ class UserPolicyTest < ActiveSupport::TestCase
     @child_organisation = create(:organisation, parent: @parent_organisation)
     @super_org_admin = create(:super_org_admin, organisation: @parent_organisation)
     @organisation_admin = create(:organisation_admin, organisation: @parent_organisation)
+    @gds = create(:organisation, name: "Government Digital Services", content_id: Organisation::GDS_ORG_CONTENT_ID)
   end
 
   primary_management_actions = %i[new assign_organisations]
   user_management_actions = %i[edit create update unlock suspension cancel_email_change resend_email_change event_logs reset_2sv mandate_2sv]
   self_management_actions = %i[edit_email_or_password update_email update_password cancel_email_change resend_email_change]
   superadmin_actions = %i[assign_role]
+  two_step_verification_exemption_actions = %i[exempt_from_two_step_verification]
 
   org_admin_actions = user_management_actions - %i[create]
   super_org_admin_actions = user_management_actions - %i[create]
@@ -48,6 +50,30 @@ class UserPolicyTest < ActiveSupport::TestCase
         assert permit?(create(:superadmin_user), User, permission)
       end
     end
+
+    two_step_verification_exemption_actions.each do |permission|
+      should "allow for #{permission} if the superadmin belongs to gds and user being edited is a normal user" do
+        user = create(:user)
+        assert permit?(create(:superadmin_user, organisation: @gds), user, permission)
+      end
+
+      should "not allow for #{permission} if the superadmin does not belong to gds and user being edited is a normal user" do
+        user = create(:user)
+        assert forbid?(create(:superadmin_user, organisation: @organisation), user, permission)
+      end
+
+      should "not allow for #{permission} if the superadmin belongs to gds and user being edited is an admin user" do
+        user = create(:superadmin_user)
+        assert forbid?(create(:superadmin_user, organisation: @gds), user, permission)
+      end
+
+      should "not allow for #{permission} if the PERMIT_2SV_EXEMPTION environment variable is not set" do
+        ClimateControl.modify(PERMIT_2SV_EXEMPTION: nil) do
+          user = create(:user)
+          assert forbid?(create(:superadmin_user, organisation: @gds), user, permission)
+        end
+      end
+    end
   end
 
   context "admins" do
@@ -76,6 +102,23 @@ class UserPolicyTest < ActiveSupport::TestCase
     superadmin_actions.each do |permission|
       should "not allow for #{permission}" do
         assert forbid?(create(:admin_user), User, permission)
+      end
+    end
+
+    two_step_verification_exemption_actions.each do |permission|
+      should "allow for #{permission} if the admin belongs to gds and user being edited is a normal user" do
+        user = create(:user)
+        assert permit?(create(:admin_user, organisation: @gds), user, permission)
+      end
+
+      should "not allow for #{permission} if the admin does not belong to gds and user being edited is a normal user" do
+        user = create(:user)
+        assert forbid?(create(:admin_user, organisation: @organisation), user, permission)
+      end
+
+      should "not allow for #{permission} if the admin belongs to gds and user being edited is an admin user" do
+        user = create(:admin_user)
+        assert forbid?(create(:admin_user, organisation: @gds), user, permission)
       end
     end
   end
@@ -128,6 +171,13 @@ class UserPolicyTest < ActiveSupport::TestCase
         assert forbid?(create(:super_org_admin), User, permission)
       end
     end
+
+    two_step_verification_exemption_actions.each do |permission|
+      should "not allow for #{permission}" do
+        user = create(:super_org_admin)
+        assert forbid?(create(:super_org_admin), user, permission)
+      end
+    end
   end
 
   context "organisation admins" do
@@ -177,6 +227,13 @@ class UserPolicyTest < ActiveSupport::TestCase
         assert forbid?(create(:organisation_admin), User, permission)
       end
     end
+
+    two_step_verification_exemption_actions.each do |permission|
+      should "not allow for #{permission}" do
+        user = create(:organisation_admin)
+        assert forbid?(create(:organisation_admin), user, permission)
+      end
+    end
   end
 
   context "normal users" do
@@ -211,6 +268,13 @@ class UserPolicyTest < ActiveSupport::TestCase
     superadmin_actions.each do |permission|
       should "not allow for #{permission}" do
         assert forbid?(create(:user), User, permission)
+      end
+    end
+
+    two_step_verification_exemption_actions.each do |permission|
+      should "not allow for #{permission}" do
+        user = create(:user)
+        assert forbid?(create(:user), user, permission)
       end
     end
 

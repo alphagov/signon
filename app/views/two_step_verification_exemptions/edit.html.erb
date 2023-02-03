@@ -1,0 +1,20 @@
+<% content_for :title, "Exempt user from 2-step verification - [#{@user.name}]" %>
+
+<ol class="breadcrumb">
+  <li><%= link_to @user.name, user_path(@user) %></li>
+  <li class="active">Exempt user from 2-step verification</li>
+</ol>
+
+<h1 class="page-title">Exempt &ldquo;<%= @user.name %>&rdquo; from 2-step verification</h1>
+
+<%= form_tag two_step_verification_exemption_path(@user), method: "patch", :class => 'well remove-top-padding' do %>
+  <div class="form-group add-top-margin">
+    <label for="user_reason_for_2sv_exemption">Reason for 2sv exemption</label>
+    <%= text_field_tag "user[reason_for_2sv_exemption]", @user.reason_for_2sv_exemption, class: 'form-control input-md-6' %>
+  </div>
+  <hr />
+  <p>Add a reason to exempt the user from 2-step verification. This will remove any existing requirement to log in with, or set up, 2-step verification.</p>
+  <p>This reason will be visible to the user, and to any admins who have the ability to edit this user.</p>
+  <%= submit_tag "Save", class: "btn btn-primary add-right-margin" %>
+  <%= link_to "Cancel", user_path(@user), class: "btn btn-default" %>
+<% end %>

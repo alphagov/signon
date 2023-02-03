@@ -36,6 +36,7 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
+  validate :user_can_be_exempted_from_2sv
   validate :organisation_admin_belongs_to_organisation
   validate :email_is_ascii_only
 
@@ -49,6 +50,7 @@ class User < ApplicationRecord
   after_initialize :generate_uid
   after_create :update_stats
   before_save :set_2sv_for_admin_roles
+  before_save :reset_2sv_exemption_reason
   before_save :mark_two_step_mandated_changed
   before_save :update_password_changed
 
@@ -65,8 +67,14 @@ class User < ApplicationRecord
   scope :with_access_to_application, ->(application) { UsersWithAccess.new(self, application).users }
   scope :with_2sv_enabled,
         lambda { |enabled|
-          enabled = ActiveRecord::Type::Boolean.new.cast(enabled)
-          where("otp_secret_key IS #{'NOT' if enabled} NULL")
+          case enabled
+          when "exempt"
+            where("reason_for_2sv_exemption IS NOT NULL")
+          when "true"
+            where("otp_secret_key IS NOT NULL")
+          else
+            where("otp_secret_key IS NULL AND reason_for_2sv_exemption IS NULL")
+          end
         }
 
   scope :with_status,
@@ -242,6 +250,10 @@ class User < ApplicationRecord
     self.require_2sv = true if role_changed? && (admin? || superadmin?)
   end
 
+  def reset_2sv_exemption_reason
+    self.reason_for_2sv_exemption = nil if require_2sv.present?
+  end
+
   def authenticate_otp(code)
     totp = ROTP::TOTP.new(otp_secret_key)
     result = totp.verify(code, drift_behind: MAX_2SV_DRIFT_SECONDS)
@@ -279,6 +291,17 @@ class User < ApplicationRecord
     otp_secret_key.present?
   end
 
+  def exempt_from_2sv(reason, initiating_user)
+    initial_reason = reason_for_2sv_exemption
+    update!(require_2sv: false, reason_for_2sv_exemption: reason, otp_secret_key: nil)
+
+    if initial_reason.blank?
+      EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTED, initiator: initiating_user, trailing_message: "for reason: #{reason}")
+    else
+      EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTION_REASON_UPDATED, initiator: initiating_user, trailing_message: "to: #{reason}")
+    end
+  end
+
   def reset_2sv!(initiating_superadmin)
     transaction do
       self.otp_secret_key = nil
@@ -310,6 +333,10 @@ private
   def mark_two_step_mandated_changed
     @two_step_mandated_changed = require_2sv_changed?
     true
+  end
+
+  def user_can_be_exempted_from_2sv
+    errors.add(:reason_for_2sv_exemption, "#{role} users cannot be exempted from 2SV. Remove the user's exemption to change their role.") if reason_for_2sv_exemption.present? && !normal?
   end
 
   def organisation_admin_belongs_to_organisation
