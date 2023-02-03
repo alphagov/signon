@@ -58,6 +58,7 @@ end
 group :test do
   gem "capybara"
   gem "capybara-email"
+  gem "climate_control"
   gem "factory_bot_rails"
   gem "minitest"
   gem "mocha", require: false

@@ -57,7 +57,7 @@ class UserPolicy < BasePolicy
   end
 
   def exempt_from_two_step_verification?
-    current_user.belongs_to_gds? && (current_user.superadmin? || current_user.admin?) && record.normal?
+    current_user.belongs_to_gds? && (current_user.superadmin? || current_user.admin?) && record.normal? && ENV["PERMIT_2SV_EXEMPTION"]
   end
 
 private

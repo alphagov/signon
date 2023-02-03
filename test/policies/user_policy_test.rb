@@ -66,6 +66,13 @@ class UserPolicyTest < ActiveSupport::TestCase
         user = create(:superadmin_user)
         assert forbid?(create(:superadmin_user, organisation: @gds), user, permission)
       end
+
+      should "not allow for #{permission} if the PERMIT_2SV_EXEMPTION environment variable is not set" do
+        ClimateControl.modify(PERMIT_2SV_EXEMPTION: nil) do
+          user = create(:user)
+          assert forbid?(create(:superadmin_user, organisation: @gds), user, permission)
+        end
+      end
     end
   end
 
