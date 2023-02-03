@@ -92,6 +92,32 @@ class ExemptFromTwoStepVerificationTest < ActionDispatch::IntegrationTest
         assert page.has_no_link? "Exempt user from 2-step verification"
       end
     end
+
+    context "when the user being edited is an api user" do
+      setup do
+        @api_user = create(:api_user)
+      end
+
+      should "not be able to see a link to exempt the user when accessing via the edit user path" do
+        sign_in_as_and_edit_user(@super_admin, @api_user)
+        assert page.has_no_link? "Exempt user from 2-step verification"
+      end
+
+      should "not be able to see a link to exempt the user when accessing via the edit api user path" do
+        sign_in_as_and_edit_user(@super_admin, @api_user)
+        visit edit_api_user_path(@api_user)
+
+        assert page.has_no_link? "Exempt user from 2-step verification"
+      end
+
+      should "not be able to exempt an api user when accessing the edit exemption reason path directly" do
+        sign_in_as_and_edit_user(@super_admin, @api_user)
+        visit edit_two_step_verification_exemption_path(@api_user)
+
+        assert page.has_text?("You do not have permission to perform this action.")
+        assert_equal "/", current_path
+      end
+    end
   end
 
   context "when logged in as a non-gds super admin" do
