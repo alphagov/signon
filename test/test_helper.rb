@@ -72,6 +72,7 @@ end
 
 require "support/user_helpers"
 require "support/email_helpers"
+require "support/managing_two_sv_helpers"
 require "support/analytics_helpers"
 
 class ActiveRecord::Base
