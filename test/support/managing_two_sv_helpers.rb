@@ -76,4 +76,24 @@ module ManagingTwoSvHelpers
 
     assert page.has_no_link? "Reset 2-step verification"
   end
+
+  def assert_user_can_be_exempted_from_2sv(signed_in_as, user_being_exempted, reason)
+    sign_in_as_and_edit_user(signed_in_as, user_being_exempted)
+    click_link("Exempt user from 2-step verification")
+
+    fill_in "Reason for 2sv exemption", with: reason
+    click_button "Save"
+
+    assert_user_has_been_exempted_from_2sv(user_being_exempted, reason)
+  end
+
+  def assert_user_has_been_exempted_from_2sv(user, reason)
+    user.reload
+
+    assert_not user.require_2sv?
+    assert_equal reason, user.reason_for_2sv_exemption
+
+    assert page.has_text? "User exempted from 2SV"
+    assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{reason}"
+  end
 end
