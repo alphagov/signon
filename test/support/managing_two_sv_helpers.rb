@@ -19,7 +19,7 @@ module ManagingTwoSvHelpers
     click_button "Update User"
   end
 
-  def assert_admin_can_send_2fa_email(admin, user)
+  def admin_can_send_2fa_email(admin, user)
     sign_in_as_and_edit_user(admin, user)
 
     assert page.has_text? "2-step verification not set up"
@@ -35,7 +35,7 @@ module ManagingTwoSvHelpers
     assert user.reload.require_2sv
   end
 
-  def assert_admin_can_remove_2sv_requirement_without_notifying_user(admin, user)
+  def admin_can_remove_2sv_requirement_without_notifying_user(admin, user)
     sign_in_as_and_edit_user(admin, user)
 
     perform_enqueued_jobs do
@@ -48,7 +48,7 @@ module ManagingTwoSvHelpers
     assert_not user.reload.require_2sv
   end
 
-  def assert_2sv_can_be_reset(logged_in_as, user_to_be_reset)
+  def admin_can_reset_2sv_on_user(logged_in_as, user_to_be_reset)
     use_javascript_driver
 
     visit edit_user_path(user_to_be_reset)
@@ -68,7 +68,7 @@ module ManagingTwoSvHelpers
     end
   end
 
-  def assert_2sv_cannot_be_reset(logged_in_as, user_to_be_reset)
+  def user_cannot_reset_2sv(logged_in_as, user_to_be_reset)
     use_javascript_driver
 
     visit edit_user_path(user_to_be_reset)
@@ -77,7 +77,7 @@ module ManagingTwoSvHelpers
     assert page.has_no_link? "Reset 2-step verification"
   end
 
-  def assert_user_can_be_exempted_from_2sv(signed_in_as, user_being_exempted, reason)
+  def user_can_be_exempted_from_2sv(signed_in_as, user_being_exempted, reason)
     sign_in_as_and_edit_user(signed_in_as, user_being_exempted)
     click_link("Exempt user from 2-step verification")
 

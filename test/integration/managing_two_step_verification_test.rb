@@ -24,11 +24,11 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "be able to send a notification to a user to set up 2fa" do
-        assert_admin_can_send_2fa_email(@super_admin, @user)
+        admin_can_send_2fa_email(@super_admin, @user)
       end
 
       should "be able to unset the requirement for 2fa" do
-        assert_admin_can_remove_2sv_requirement_without_notifying_user(@super_admin, @user)
+        admin_can_remove_2sv_requirement_without_notifying_user(@super_admin, @user)
       end
 
       should "remove the user's exemption reason when 2SV is mandated" do
@@ -47,7 +47,7 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "reset 2-step verification and notify the chosen user by email for users in any organisation" do
-        assert_2sv_can_be_reset(@super_admin, @user_requring_2sv)
+        admin_can_reset_2sv_on_user(@super_admin, @user_requring_2sv)
       end
     end
 
@@ -57,15 +57,15 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "be able to send a notification to a user to set up 2fa" do
-        assert_admin_can_send_2fa_email(@admin, @user)
+        admin_can_send_2fa_email(@admin, @user)
       end
 
       should "be able to unset the requirement for 2fa" do
-        assert_admin_can_remove_2sv_requirement_without_notifying_user(@admin, @user)
+        admin_can_remove_2sv_requirement_without_notifying_user(@admin, @user)
       end
 
       should "reset 2-step verification and notify the chosen user by email for users in any organisation" do
-        assert_2sv_can_be_reset(@admin, @user_requring_2sv)
+        admin_can_reset_2sv_on_user(@admin, @user_requring_2sv)
       end
     end
 
@@ -75,31 +75,31 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "be able to send a notification to a user to set up 2fa" do
-        assert_admin_can_send_2fa_email(@super_org_admin, @user)
+        admin_can_send_2fa_email(@super_org_admin, @user)
       end
 
       should "be able to unset the requirement for 2fa" do
-        assert_admin_can_remove_2sv_requirement_without_notifying_user(@super_org_admin, @user)
+        admin_can_remove_2sv_requirement_without_notifying_user(@super_org_admin, @user)
       end
 
       should "be able to send a notification to a user in a child organisation to set up 2fa" do
-        assert_admin_can_send_2fa_email(@super_org_admin, @user_in_child_organisation)
+        admin_can_send_2fa_email(@super_org_admin, @user_in_child_organisation)
       end
 
       should "be able to unset the requirement for 2fa for a user in a child organisation" do
-        assert_admin_can_remove_2sv_requirement_without_notifying_user(@super_org_admin, @user_in_child_organisation)
+        admin_can_remove_2sv_requirement_without_notifying_user(@super_org_admin, @user_in_child_organisation)
       end
 
       should "be able to reset 2-step verification and notify the chosen user by email if they belong to the same org as the user" do
-        assert_2sv_can_be_reset(@super_org_admin, @user_requring_2sv)
+        admin_can_reset_2sv_on_user(@super_org_admin, @user_requring_2sv)
       end
 
       should "be able to reset 2-step verification and notify the chosen user by email if the user is in a child organisation" do
-        assert_2sv_can_be_reset(@super_org_admin, @user_requring_2sv_in_child_organisation)
+        admin_can_reset_2sv_on_user(@super_org_admin, @user_requring_2sv_in_child_organisation)
       end
 
       should "not be able to reset 2-step verification and notify the chosen user by email if the user is in a different organisation" do
-        assert_2sv_cannot_be_reset(@super_org_admin, @user_in_different_organisation)
+        user_cannot_reset_2sv(@super_org_admin, @user_in_different_organisation)
       end
     end
 
@@ -109,23 +109,23 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
       end
 
       should "be able to send a notification to a user to set up 2fa" do
-        assert_admin_can_send_2fa_email(@org_admin, @user)
+        admin_can_send_2fa_email(@org_admin, @user)
       end
 
       should "be able to unset the requirement for 2fa" do
-        assert_admin_can_remove_2sv_requirement_without_notifying_user(@org_admin, @user)
+        admin_can_remove_2sv_requirement_without_notifying_user(@org_admin, @user)
       end
 
       should "be able to reset 2-step verification and notify the chosen user by email if they belong to the same org as the user" do
-        assert_2sv_can_be_reset(@org_admin, @user_requring_2sv)
+        admin_can_reset_2sv_on_user(@org_admin, @user_requring_2sv)
       end
 
       should "not be able to reset 2-step verification and notify the chosen user by email if the user is in a child organisation" do
-        assert_2sv_cannot_be_reset(@org_admin, @user_requring_2sv_in_child_organisation)
+        user_cannot_reset_2sv(@org_admin, @user_requring_2sv_in_child_organisation)
       end
 
       should "not be able to reset 2-step verification and notify the chosen user by email if the user is in a different organisation" do
-        assert_2sv_cannot_be_reset(@org_admin, @user_in_different_organisation)
+        user_cannot_reset_2sv(@org_admin, @user_in_different_organisation)
       end
     end
 
@@ -178,14 +178,14 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         should "be able to see a link to exempt a user requiring 2sv from 2sv" do
           user_requiring_2sv = create(:two_step_mandated_user, organisation: @organisation)
 
-          assert_user_can_be_exempted_from_2sv(@super_admin, user_requiring_2sv, @reason_for_exemption)
+          user_can_be_exempted_from_2sv(@super_admin, user_requiring_2sv, @reason_for_exemption)
           assert_user_access_log_contains_messages(user_requiring_2sv, ["Exempted from 2-step verification by #{@super_admin.name} for reason: #{@reason_for_exemption}"])
         end
 
         should "be able to see a link to exempt a user who does not yet require 2sv but is not exempt" do
           user_not_requiring_2sv = create(:user, organisation: @organisation)
 
-          assert_user_can_be_exempted_from_2sv(@super_admin, user_not_requiring_2sv, @reason_for_exemption)
+          user_can_be_exempted_from_2sv(@super_admin, user_not_requiring_2sv, @reason_for_exemption)
           assert_user_access_log_contains_messages(user_not_requiring_2sv, ["Exempted from 2-step verification by #{@super_admin.name} for reason: #{@reason_for_exemption}"])
         end
 
