@@ -73,6 +73,11 @@ class UserPolicyTest < ActiveSupport::TestCase
           assert forbid?(create(:superadmin_user, organisation: @gds), user, permission)
         end
       end
+
+      should "not allow for #{permission} if the user is an api user" do
+        user = create(:api_user)
+        assert forbid?(create(:superadmin_user, organisation: @gds), user, permission)
+      end
     end
   end
 

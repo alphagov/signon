@@ -69,3 +69,13 @@ User.create!(
   require_2sv: true,
   otp_secret_key: "I5X6Y3VN3CAATYQRBPAZ7KMFLK2RWYJ5",
 )
+
+User.create!(
+  name: "Test Api User",
+  api_user: true,
+  email: "test.apiuser@gov.uk",
+  password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
+  role: :normal,
+  confirmed_at: Time.zone.now,
+  require_2sv: false,
+)
