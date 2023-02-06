@@ -5,6 +5,7 @@
     <%= t.header "Name" %>
     <%= t.header "Organisation Type" %>
     <%= t.header "Slug" %>
+    <%= t.header "2-step verification mandated?"%>
   <% end %>
 
   <%= t.body do %>
@@ -13,6 +14,7 @@
         <%= t.cell "#{organisation.name} (#{organisation.abbreviation})" %>
         <%= t.cell organisation.organisation_type %>
         <%= t.cell organisation.slug %>
+        <%= t.cell organisation.require_2sv %>
       <% end %>
     <% end %>
   <% end %>
