@@ -156,6 +156,7 @@ namespace :users do
     raise "Couldn't find organisation: '#{args.org}'" unless organisation
 
     users_to_update = User.where(organisation_id: organisation.id, require_2sv: false)
+                          .where(reason_for_2sv_exemption: nil)
 
     puts "found #{users_to_update.size} users without 2sv in organsation #{args.org} to set require 2sv flag on"
 
@@ -164,7 +165,9 @@ namespace :users do
 
   desc "Sets 2sv on all users by email domain"
   task :set_2sv_by_email_domain, [:domain] => :environment do |_t, args|
-    users_to_update = User.where("email LIKE ?", "%#{args.domain}").where(require_2sv: false)
+    users_to_update = User.where("email LIKE ?", "%#{args.domain}")
+                          .where(require_2sv: false)
+                          .where(reason_for_2sv_exemption: nil)
 
     puts "found #{users_to_update.size} users without 2sv with email domain #{args.domain} to set require 2sv flag on"
 
