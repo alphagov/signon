@@ -42,13 +42,26 @@ class DashboardTest < ActionDispatch::IntegrationTest
     end
   end
 
-  context "when the user is not enrolled in 2SV" do
+  context "when the user is not enrolled in 2SV and is not exempted" do
     should "display the 'set up' link" do
       user = create(:user)
       visit root_path
       signin_with(user)
 
       assert_response_contains("Make your account more secure")
+      assert has_link?("Start set up")
+      assert has_link?("Set up 2-step verification")
+    end
+  end
+
+  context "when the user is not enrolled in 2sv but has an exemption reason" do
+    should "not display the main 'make your account secure' 2sv banner, but should still contain a link to set up" do
+      user = create(:two_step_exempted_user)
+      visit root_path
+      signin_with(user)
+
+      refute_response_contains("Make your account more secure")
+      assert has_no_link?("Start set up")
       assert has_link?("Set up 2-step verification")
     end
   end
