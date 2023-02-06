@@ -74,6 +74,7 @@ require "support/user_helpers"
 require "support/email_helpers"
 require "support/managing_two_sv_helpers"
 require "support/analytics_helpers"
+require "support/html_table_helpers"
 
 class ActiveRecord::Base
   mattr_accessor :shared_connection

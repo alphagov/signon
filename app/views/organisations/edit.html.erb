@@ -1,0 +1,21 @@
+<% content_for :title, "Require 2sv for #{@organisation.name}" %>
+
+<ol class="breadcrumb">
+  <li><%= link_to "Organisations", organisations_path %></li>
+  <li class="active">Require 2sv</li>
+</ol>
+
+<h1 class="page-title">Require 2sv for &ldquo;<%= @organisation.name %>&rdquo;</h1>
+
+<%= form_tag organisation_path(@organisation), method: "put", :class => 'well remove-top-padding' do %>
+  <div class="checkbox add-top-margin">
+    <label>
+      <%= check_box_tag "organisation[require_2sv]", "1", @organisation.require_2sv? %>
+      Mandate 2-step verification for <%= @organisation.name  %>
+    </label>
+  </div>
+  <p>This will ensure that all users in an organisation who are not exempted from 2sv must set up 2sv on their next login.</p>
+  <p>They will not be able to perform any actions in signon before this is set up.</p>
+  <%= submit_tag "Update Organisation", class: "btn btn-primary add-right-margin" %>
+  <%= link_to "Cancel", organisations_path, class: "btn btn-default" %>
+<% end %>
