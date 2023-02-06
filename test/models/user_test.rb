@@ -82,6 +82,12 @@ class UserTest < ActiveSupport::TestCase
       organisation.update!(require_2sv: true)
       assert_not user.require_2sv?
     end
+
+    should "be invalid if a new user from an organisation with mandatory 2SV but 2SV is not selected" do
+      organisation = create(:organisation, require_2sv: true)
+      user = build(:user, organisation:)
+      assert_not user.valid?
+    end
   end
 
   context "#send_two_step_mandated_notification?" do
