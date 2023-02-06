@@ -15,6 +15,17 @@ class OrganisationPolicyTest < ActiveSupport::TestCase
     end
   end
 
+  context "edit" do
+    should "allow only for superadmins" do
+      assert permit?(create(:superadmin_user), User, :edit)
+
+      assert forbid?(create(:admin_user), User, :edit)
+      assert forbid?(create(:super_org_admin), User, :edit)
+      assert forbid?(create(:organisation_admin), User, :edit)
+      assert forbid?(create(:user), User, :edit)
+    end
+  end
+
   context "can_assign" do
     should "allow superadmins and admins to assign a user to any organisation" do
       assert permit?(create(:user_in_organisation, role: "superadmin"), build(:organisation), :can_assign)

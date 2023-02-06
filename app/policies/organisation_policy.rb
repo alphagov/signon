@@ -9,6 +9,10 @@ class OrganisationPolicy < BasePolicy
     false
   end
 
+  def edit?
+    current_user.superadmin?
+  end
+
   class Scope < ::BasePolicy::Scope
     def resolve
       if current_user.admin? || current_user.superadmin?
