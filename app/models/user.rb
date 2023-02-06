@@ -96,6 +96,12 @@ class User < ApplicationRecord
           end
         }
 
+  def require_2sv?
+    return require_2sv unless organisation
+
+    (organisation.require_2sv? && !exempt_from_2sv?) || require_2sv
+  end
+
   def prompt_for_2sv?
     return false if has_2sv?
 
