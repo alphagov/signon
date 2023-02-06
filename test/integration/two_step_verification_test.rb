@@ -100,5 +100,41 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         assert_response_contains "2-step verification set up"
       end
     end
+
+    context "for a user with a 2sv exemption reason" do
+      setup do
+        @user = create(:two_step_exempted_user, email: "jane.user@example.com")
+        visit root_path
+        signin_with(@user)
+        visit two_step_verification_path
+      end
+
+      should "show the TOTP secret" do
+        assert_response_contains "Enter this code when asked: #{@new_secret}"
+      end
+
+      should "accept a valid code, persist the secret, log an event and notify by email, and remove the exemption reason" do
+        success = "2-step verification set up".freeze
+        perform_enqueued_jobs do
+          enter_2sv_code(@new_secret)
+
+          assert_response_contains success
+          assert_nil @user.reload.reason_for_2sv_exemption
+          assert_equal @new_secret, @user.reload.otp_secret_key
+          assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_ENABLED.id, uid: @user.uid).count
+
+          assert last_email
+          assert success, last_email.subject
+        end
+      end
+
+      should "require the code again on next login" do
+        enter_2sv_code(@new_secret)
+
+        click_link "Sign out"
+
+        signin_with(@user)
+      end
+    end
   end
 end
