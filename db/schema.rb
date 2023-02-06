@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_26_115902) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_06_131707) do
   create_table "batch_invitation_application_permissions", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "batch_invitation_id", null: false
     t.integer "supported_permission_id", null: false
@@ -134,6 +134,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_26_115902) do
     t.string "ancestry"
     t.string "content_id", null: false
     t.boolean "closed", default: false
+    t.boolean "require_2sv", default: false, null: false
     t.index ["ancestry"], name: "index_organisations_on_ancestry"
     t.index ["content_id"], name: "index_organisations_on_content_id", unique: true
     t.index ["slug"], name: "index_organisations_on_slug", unique: true
