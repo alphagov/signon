@@ -22,7 +22,7 @@ class Mandate2svForOrganisationTest < ActionDispatch::IntegrationTest
         end
 
         should "be able to edit organisation 2sv status" do
-          visit edit_organisation_path(@organisation)
+          click_edit_2sv_button_for(@organisation)
           check "Mandate 2-step verification for #{@organisation.name}"
           click_button "Update Organisation"
           assert page.has_text? "true"
@@ -40,7 +40,7 @@ class Mandate2svForOrganisationTest < ActionDispatch::IntegrationTest
         end
 
         should "be able to edit organisation 2sv status" do
-          visit edit_organisation_path(@organisation)
+          click_edit_2sv_button_for(@organisation)
           uncheck "Mandate 2-step verification for #{@organisation.name}"
           click_button "Update Organisation"
           assert page.has_text? "false"
@@ -61,6 +61,10 @@ class Mandate2svForOrganisationTest < ActionDispatch::IntegrationTest
         assert_displayed_organisation_has_2sv_status(@organisation, "false")
       end
 
+      should "not be able to see the edit link" do
+        assert page.has_no_link? "Edit"
+      end
+
       should "not be able to edit organisation 2sv status" do
         visit edit_organisation_path(@organisation)
         assert page.has_text?("You do not have permission to perform this action.")
@@ -73,5 +77,12 @@ class Mandate2svForOrganisationTest < ActionDispatch::IntegrationTest
     organisation_row = find_row_by_column_contents("Slug", organisation.slug)
     two_step_verification_column = index_of_column_with_header("2-step verification mandated?")
     assert organisation_row && organisation_row[two_step_verification_column].text.include?(expected)
+  end
+
+  def click_edit_2sv_button_for(organisation)
+    organisation_row = find_row_by_column_contents("Slug", organisation.slug)
+    two_step_verification_column = index_of_column_with_header("2-step verification mandated?")
+    edit_link = organisation_row[two_step_verification_column].find_link(text: "Edit")
+    edit_link.click
   end
 end

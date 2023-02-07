@@ -14,7 +14,13 @@
         <%= t.cell "#{organisation.name} (#{organisation.abbreviation})" %>
         <%= t.cell organisation.organisation_type %>
         <%= t.cell organisation.slug %>
-        <%= t.cell "#{organisation.require_2sv}" %>
+        <td class="govuk-table__cell">
+          <%= organisation.require_2sv %>
+          <% if policy(Organisation).edit? %>
+            <br>
+            <%= link_to("Edit", edit_organisation_path(organisation)) %>
+          <% end %>
+        </td>
       <% end %>
     <% end %>
   <% end %>
