@@ -1,5 +1,5 @@
 class OrganisationsController < ApplicationController
-  layout "admin_layout"
+  layout "admin_layout", only: %w[index]
 
   before_action :authenticate_user!
 
