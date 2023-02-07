@@ -2,7 +2,7 @@ module UsersHelper
   def two_step_status(user)
     if user.has_2sv?
       "Enabled"
-    elsif user.reason_for_2sv_exemption.present?
+    elsif user.exempt_from_2sv?
       "Exempted"
     else
       "Not set up"

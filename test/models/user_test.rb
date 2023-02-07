@@ -65,6 +65,23 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#exempt_from_2sv??" do
+    should "be true if exemption reason is present" do
+      user = create(:two_step_exempted_user)
+      assert user.exempt_from_2sv?
+    end
+
+    should "be false if exemption reason is nil" do
+      user = create(:user)
+      assert_not user.exempt_from_2sv?
+    end
+
+    should "be false if exemption reason is an empty string" do
+      user = create(:user, reason_for_2sv_exemption: "")
+      assert_not user.exempt_from_2sv?
+    end
+  end
+
   context "#send_two_step_mandated_notification?" do
     context "when not mandated" do
       should "return false" do
