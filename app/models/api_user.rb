@@ -13,6 +13,6 @@ private
   end
 
   def reason_for_2sv_exemption_blank
-    errors.add(:reason_for_2sv_exemption, "can't be present for api user") if reason_for_2sv_exemption.present?
+    errors.add(:reason_for_2sv_exemption, "can't be present for api user") if exempt_from_2sv?
   end
 end

@@ -101,6 +101,10 @@ class User < ApplicationRecord
     require_2sv?
   end
 
+  def exempt_from_2sv?
+    reason_for_2sv_exemption.present?
+  end
+
   def event_logs
     EventLog.where(uid:).order(created_at: :desc).includes(:user_agent)
   end
@@ -336,7 +340,7 @@ private
   end
 
   def user_can_be_exempted_from_2sv
-    errors.add(:reason_for_2sv_exemption, "#{role} users cannot be exempted from 2SV. Remove the user's exemption to change their role.") if reason_for_2sv_exemption.present? && !normal?
+    errors.add(:reason_for_2sv_exemption, "#{role} users cannot be exempted from 2SV. Remove the user's exemption to change their role.") if exempt_from_2sv? && !normal?
   end
 
   def organisation_admin_belongs_to_organisation
