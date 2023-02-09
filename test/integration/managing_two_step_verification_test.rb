@@ -37,7 +37,10 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         sign_in_as_and_edit_user(@super_admin, user)
         mandate_2sv_for_exempted_user
 
-        assert_nil user.reload.reason_for_2sv_exemption
+        user.reload
+
+        assert_nil user.reason_for_2sv_exemption
+        assert_nil user.expiry_date_for_2sv_exemption
 
         expected_account_logs = [
           "Exemption from 2-step verification removed by #{@super_admin.name}",

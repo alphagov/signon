@@ -58,10 +58,11 @@ class UserTest < ActiveSupport::TestCase
       assert_not user.require_2sv?
     end
 
-    should "remove reason for 2SV exemption when 2SV required" do
+    should "remove reason and expiry date for 2SV exemption when 2SV required" do
       user = create(:two_step_exempted_user)
       user.update!(require_2sv: true)
       assert_nil user.reason_for_2sv_exemption
+      assert_nil user.expiry_date_for_2sv_exemption
     end
   end
 

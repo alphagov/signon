@@ -255,7 +255,10 @@ class User < ApplicationRecord
   end
 
   def reset_2sv_exemption_reason
-    self.reason_for_2sv_exemption = nil if require_2sv.present?
+    if require_2sv.present?
+      self.reason_for_2sv_exemption =  nil
+      self.expiry_date_for_2sv_exemption = nil
+    end
   end
 
   def authenticate_otp(code)
