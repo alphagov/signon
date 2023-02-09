@@ -295,7 +295,7 @@ class User < ApplicationRecord
     otp_secret_key.present?
   end
 
-  def exempt_from_2sv(reason, initiating_user, expiry_date = nil)
+  def exempt_from_2sv(reason, initiating_user, expiry_date)
     initial_reason = reason_for_2sv_exemption
     update!(require_2sv: false, reason_for_2sv_exemption: reason, otp_secret_key: nil, expiry_date_for_2sv_exemption: expiry_date)
 

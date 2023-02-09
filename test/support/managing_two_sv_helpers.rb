@@ -77,21 +77,33 @@ module ManagingTwoSvHelpers
     assert page.has_no_link? "Reset 2-step verification"
   end
 
-  def user_can_be_exempted_from_2sv(signed_in_as, user_being_exempted, reason)
+  def user_can_be_exempted_from_2sv(signed_in_as, user_being_exempted, reason, expiry_date)
     sign_in_as_and_edit_user(signed_in_as, user_being_exempted)
     click_link("Exempt user from 2-step verification")
+    fill_in_exemption_form(reason, expiry_date)
 
-    fill_in "Reason for 2sv exemption", with: reason
-    click_button "Save"
-
-    assert_user_has_been_exempted_from_2sv(user_being_exempted, reason)
+    assert_user_has_been_exempted_from_2sv(user_being_exempted, reason, expiry_date)
   end
 
-  def assert_user_has_been_exempted_from_2sv(user, reason)
+  def fill_in_exemption_form(reason, expiry_date)
+    fill_in "Reason for 2sv exemption", with: reason
+    fill_in_expiry_date(expiry_date)
+    click_button "Save"
+  end
+
+  def fill_in_expiry_date(date)
+    element = "user_expiry_date_for_2sv_exemption"
+    select date.year.to_s, from: "#{element}_1i"
+    select date.strftime("%B"), from: "#{element}_2i"
+    select date.day.to_s, from: "#{element}_3i"
+  end
+
+  def assert_user_has_been_exempted_from_2sv(user, reason, expiry_date)
     user.reload
 
     assert_not user.require_2sv?
     assert_equal reason, user.reason_for_2sv_exemption
+    assert_equal expiry_date, user.expiry_date_for_2sv_exemption
 
     assert page.has_text? "User exempted from 2SV"
     assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{reason}"
