@@ -3,7 +3,7 @@ require "test_helper"
 class InvitationsControllerTest < ActionController::TestCase
   setup do
     request.env["devise.mapping"] = Devise.mappings[:user]
-    @user = create(:admin_user)
+    @user = create(:superadmin_user)
     sign_in @user
   end
 
@@ -74,6 +74,24 @@ class InvitationsControllerTest < ActionController::TestCase
       organisation = create(:organisation, require_2sv: true)
 
       post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id } }
+
+      assert_redirected_to users_path
+      assert_equal "User Name", User.last.name
+    end
+
+    should "not render 2SV form and saves user when user is a superadmin" do
+      organisation = create(:organisation, require_2sv: false)
+
+      post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id, role: "superadmin" } }
+
+      assert_redirected_to users_path
+      assert_equal "User Name", User.last.name
+    end
+
+    should "not render 2SV form and saves user when user is an admin" do
+      organisation = create(:organisation, require_2sv: false)
+
+      post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id, role: "admin" } }
 
       assert_redirected_to users_path
       assert_equal "User Name", User.last.name
