@@ -33,6 +33,7 @@ class ActionController::TestCase
   include ConfirmationTokenHelpers
 
   ENV["PERMIT_2SV_EXEMPTION"] = "true"
+  ENV["MANDATE_2SV_FOR_ORGANISATION"] = "true"
 
   def sign_in(user, passed_mfa: true)
     warden.stubs(authenticate!: user)
@@ -74,6 +75,7 @@ require "support/user_helpers"
 require "support/email_helpers"
 require "support/managing_two_sv_helpers"
 require "support/analytics_helpers"
+require "support/html_table_helpers"
 
 class ActiveRecord::Base
   mattr_accessor :shared_connection
