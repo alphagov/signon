@@ -108,4 +108,13 @@ module ManagingTwoSvHelpers
     assert page.has_text? "User exempted from 2SV"
     assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{reason}"
   end
+
+  def assert_user_has_not_been_exempted_from_2sv(user)
+    currently_requires_2sv = user.require_2sv
+
+    user.reload
+    assert_equal currently_requires_2sv, user.require_2sv
+    assert_nil user.reason_for_2sv_exemption
+    assert_nil user.expiry_date_for_2sv_exemption
+  end
 end

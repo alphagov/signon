@@ -8,15 +8,19 @@ class TwoStepVerificationExemptionsController < ApplicationController
       flash[:alert] = "Reason for exemption must be provided"
 
       redirect_to edit_two_step_verification_exemption_path(@user)
-    else
-      if params[:user]["expiry_date_for_2sv_exemption(1i)"]
-        expiry_date = parse_date_from_user_params(params[:user])
+    elsif params[:user]["expiry_date_for_2sv_exemption(1i)"]
+      expiry_date = parse_date_from_user_params(params[:user])
+      if Time.zone.today >= expiry_date
+        flash[:alert] = "Expiry date must be in the future"
+
+        redirect_to edit_two_step_verification_exemption_path(@user)
+      else
+        @user.exempt_from_2sv(params[:user][:reason_for_2sv_exemption], current_user, expiry_date)
+
+        flash[:notice] = "User exempted from 2SV"
+
+        redirect_to edit_user_path(@user)
       end
-      @user.exempt_from_2sv(params[:user][:reason_for_2sv_exemption], current_user, expiry_date)
-
-      flash[:notice] = "User exempted from 2SV"
-
-      redirect_to edit_user_path(@user)
     end
   end
 

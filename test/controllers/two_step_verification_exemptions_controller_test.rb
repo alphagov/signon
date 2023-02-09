@@ -16,11 +16,16 @@ class TwoStepVerificationExemptionsControllerTest < ActionController::TestCase
   end
 
   def assert_user_has_not_been_exempted_from_2sv(user)
+    previous_require_2sv = user.require_2sv?
+    previous_secret_key = user.otp_secret_key
+
     user.reload
 
-    assert user.require_2sv?
+    assert_equal previous_require_2sv, user.require_2sv?
     assert_nil user.reason_for_2sv_exemption
-    assert user.otp_secret_key.present?
+    assert_nil user.expiry_date_for_2sv_exemption
+    # Annoyingly, we can't use assert_equals here as it throws a deprecation warning to use assert_nil when previous_secret_key is nil
+    assert previous_secret_key == user.otp_secret_key
   end
 
   def exemption_expiry_date_params(date)
@@ -65,18 +70,32 @@ class TwoStepVerificationExemptionsControllerTest < ActionController::TestCase
       end
     end
 
-    should "not update exemption when a reason is not provided" do
-      user = create(:two_step_mandated_user, organisation: create(:organisation))
-      super_admin = create(:superadmin_user, organisation: @gds)
-      sign_in super_admin
-      expiry_date_params = exemption_expiry_date_params(Time.zone.today + 10)
-      put :update, params: { id: user.id, user: { reason_for_2sv_exemption: "" }.merge(expiry_date_params) }
+    context "when user parameters are invalid" do
+      setup do
+        super_admin = create(:superadmin_user, organisation: @gds)
+        sign_in super_admin
+      end
 
-      user.reload
+      should "not update exemption when a reason is not provided" do
+        user = create(:two_step_mandated_user, organisation: create(:organisation))
+        expiry_date_params = exemption_expiry_date_params(Time.zone.today + 10)
+        put :update, params: { id: user.id, user: { reason_for_2sv_exemption: "" }.merge(expiry_date_params) }
 
-      assert_redirected_to edit_two_step_verification_exemption_path(user)
-      assert user.require_2sv?
-      assert_nil user.reason_for_2sv_exemption
+        assert_redirected_to edit_two_step_verification_exemption_path(user)
+        assert_equal "Reason for exemption must be provided", flash[:alert]
+        assert_user_has_not_been_exempted_from_2sv(user)
+      end
+
+      should "not be able to exempt a user if the date is not in the future" do
+        user = create(:two_step_mandated_user, organisation: create(:organisation))
+        expiry_date_params = exemption_expiry_date_params(Time.zone.today - 1)
+
+        put :update, params: { id: user.id, user: { reason_for_2sv_exemption: "accessibility reasons" }.merge(expiry_date_params) }
+
+        assert_redirected_to edit_two_step_verification_exemption_path(user)
+        assert_equal "Expiry date must be in the future", flash[:alert]
+        assert_user_has_not_been_exempted_from_2sv(user)
+      end
     end
 
     should "not be able to exempt an admin user" do

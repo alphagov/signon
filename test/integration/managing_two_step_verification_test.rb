@@ -197,6 +197,18 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
           assert page.has_no_link? "Exempt user from 2-step verification"
         end
 
+        should "not be able to exempt a user with an expiry date that is not in the future" do
+          user_requiring_2sv = create(:two_step_mandated_user, organisation: @organisation)
+
+          sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
+          click_link("Exempt user from 2-step verification")
+          fill_in_exemption_form(@reason_for_exemption, Time.zone.today.to_date)
+
+          assert_user_has_not_been_exempted_from_2sv(user_requiring_2sv)
+          assert page.has_text?("Expiry date must be in the future")
+          assert_equal edit_two_step_verification_exemption_path(user_requiring_2sv), current_path
+        end
+
         context "when a exemption reason already exists" do
           should "be able to edit exemption reason and date" do
             user_requiring_2sv = create(:user, organisation: @organisation, reason_for_2sv_exemption: "user is exempt", expiry_date_for_2sv_exemption: @expiry_date)
