@@ -300,9 +300,9 @@ class User < ApplicationRecord
     update!(require_2sv: false, reason_for_2sv_exemption: reason, otp_secret_key: nil, expiry_date_for_2sv_exemption: expiry_date)
 
     if initial_reason.blank?
-      EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTED, initiator: initiating_user, trailing_message: "for reason: #{reason}")
+      EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTED, initiator: initiating_user, trailing_message: "for reason: #{reason} expiring on date: #{expiry_date}")
     else
-      EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTION_REASON_UPDATED, initiator: initiating_user, trailing_message: "to: #{reason}")
+      EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTION_UPDATED, initiator: initiating_user, trailing_message: "to: #{reason} expiring on date: #{expiry_date}")
     end
   end
 

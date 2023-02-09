@@ -171,23 +171,19 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         @expiry_date = 5.days.from_now.to_date
       end
 
-      def exemption_message(initiator_name, reason)
-        "Exempted from 2-step verification by #{initiator_name} for reason: #{reason}"
-      end
-
       context "when the user being edited is not an admin or superadmin" do
         should "be able to exempt a user requiring 2sv from 2sv" do
           user_requiring_2sv = create(:two_step_mandated_user, organisation: @organisation)
 
           user_can_be_exempted_from_2sv(@super_admin, user_requiring_2sv, @reason_for_exemption, @expiry_date)
-          assert_user_access_log_contains_messages(user_requiring_2sv, ["Exempted from 2-step verification by #{@super_admin.name} for reason: #{@reason_for_exemption}"])
+          assert_user_access_log_contains_messages(user_requiring_2sv, [exemption_message(@super_admin, @reason_for_exemption, @expiry_date)])
         end
 
         should "be able to exempt a user who does not yet require 2sv but is not exempt" do
           user_not_requiring_2sv = create(:user, organisation: @organisation)
 
           user_can_be_exempted_from_2sv(@super_admin, user_not_requiring_2sv, @reason_for_exemption, @expiry_date)
-          assert_user_access_log_contains_messages(user_not_requiring_2sv, ["Exempted from 2-step verification by #{@super_admin.name} for reason: #{@reason_for_exemption}"])
+          assert_user_access_log_contains_messages(user_not_requiring_2sv, [exemption_message(@super_admin, @reason_for_exemption, @expiry_date)])
         end
 
         should "not be able to see a link to exempt a user who already has an exemption reason" do
@@ -220,7 +216,7 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
             assert_user_has_been_exempted_from_2sv(user_requiring_2sv, @reason_for_exemption, new_expiry_date)
 
-            assert_user_access_log_contains_messages(user_requiring_2sv, ["Reason for 2-step verification exemption updated by #{@super_admin.name} to: #{@reason_for_exemption}"])
+            assert_user_access_log_contains_messages(user_requiring_2sv, ["2-step verification exemption updated by #{@super_admin.name} to: #{@reason_for_exemption} expiring on date: #{new_expiry_date}"])
           end
         end
       end

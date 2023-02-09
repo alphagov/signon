@@ -7,6 +7,10 @@ module ManagingTwoSvHelpers
     visit edit_user_path(user_to_edit)
   end
 
+  def exemption_message(initiator, reason, expiry_date)
+    "Exempted from 2-step verification by #{initiator.name} for reason: #{reason} expiring on date: #{expiry_date}"
+  end
+
   def assert_user_access_log_contains_messages(user, messages)
     visit edit_user_path(user)
     click_link "Account access log"
