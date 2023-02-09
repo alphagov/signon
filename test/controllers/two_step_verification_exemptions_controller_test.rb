@@ -96,6 +96,43 @@ class TwoStepVerificationExemptionsControllerTest < ActionController::TestCase
         assert_equal "Expiry date must be in the future", flash[:alert]
         assert_user_has_not_been_exempted_from_2sv(user)
       end
+
+      should "not be able to exempt a user if the date is not valid" do
+        user = create(:two_step_enabled_user, organisation: create(:organisation))
+
+        expiry_date_params = {
+          "expiry_date_for_2sv_exemption(1i)" => (Time.zone.today.year + 1).to_s,
+          "expiry_date_for_2sv_exemption(2i)" => "2",
+          "expiry_date_for_2sv_exemption(3i)" => "31",
+        }
+
+        put :update, params: { id: user.id, user: { reason_for_2sv_exemption: "accessibility reasons" }.merge(expiry_date_params) }
+
+        assert_redirected_to edit_two_step_verification_exemption_path(user)
+        assert_equal "Expiry date is not a valid date", flash[:alert]
+        assert_user_has_not_been_exempted_from_2sv(user)
+      end
+
+      should "not be able to exempt a user if any of the date params are missing" do
+        user = create(:two_step_enabled_user, organisation: create(:organisation))
+
+        expiry_date_params = {
+          "expiry_date_for_2sv_exemption(1i)" => (Time.zone.today.year + 1).to_s,
+          "expiry_date_for_2sv_exemption(2i)" => "2",
+          "expiry_date_for_2sv_exemption(3i)" => "31",
+        }
+
+        %w[(1i) (2i) (3i)].each do |param_suffix_to_exclude|
+          param_to_exclude = "expiry_date_for_2sv_exemption#{param_suffix_to_exclude}"
+          date_params = expiry_date_params.except(param_to_exclude)
+
+          put :update, params: { id: user.id, user: { reason_for_2sv_exemption: "accessibility reasons" }.merge(date_params) }
+
+          assert_redirected_to edit_two_step_verification_exemption_path(user)
+          assert_equal "Expiry date is not a valid date", flash[:alert]
+          assert_user_has_not_been_exempted_from_2sv(user)
+        end
+      end
     end
 
     should "not be able to exempt an admin user" do
