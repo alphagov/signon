@@ -33,6 +33,7 @@ class ActionController::TestCase
   include ConfirmationTokenHelpers
 
   ENV["PERMIT_2SV_EXEMPTION"] = "true"
+  ENV["MANDATE_2SV_FOR_ORGANISATION"] = "true"
 
   def sign_in(user, passed_mfa: true)
     warden.stubs(authenticate!: user)
