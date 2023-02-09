@@ -18,14 +18,17 @@ class InvitationsController < Devise::InvitationsController
     if (self.resource = User.find_by(email: params[:user][:email]))
       authorize resource
       flash[:alert] = "User already invited. If you want to, you can click 'Resend signup email'."
-      respond_with resource, location: after_invite_path_for(resource)
+      respond_with resource, location: users_path
     else
       # workaround for invitatable not providing a build_invitation which could be authorised before saving
-      user = User.new(resource_params)
-      user.organisation_id = resource_params[:organisation_id]
+      all_params = resource_params
+      all_params[:require_2sv] = new_user_requires_2sv(all_params.symbolize_keys)
+
+      user = User.new(all_params)
+      user.organisation_id = all_params[:organisation_id]
       authorize user
 
-      self.resource = resource_class.invite!(resource_params, current_inviter)
+      self.resource = resource_class.invite!(all_params, current_inviter)
       if resource.errors.empty?
         grant_default_permissions(resource)
         set_flash_message :notice, :send_instructions, email: resource.email
@@ -50,7 +53,11 @@ class InvitationsController < Devise::InvitationsController
 private
 
   def after_invite_path_for(_resource)
-    users_path
+    if new_user_requires_2sv(resource)
+      users_path
+    else
+      require_2sv_user_path(resource)
+    end
   end
 
   # TODO: remove this method when we're on a version of devise_invitable which
@@ -121,5 +128,9 @@ private
     SupportedPermission.default.each do |default_permission|
       user.grant_permission(default_permission)
     end
+  end
+
+  def new_user_requires_2sv(params)
+    params[:organisation_id].present? && Organisation.find(params[:organisation_id]).require_2sv?
   end
 end

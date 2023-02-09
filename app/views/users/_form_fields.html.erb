@@ -40,7 +40,7 @@
   <p>This user's role is set to <%= @user.role %>. They are currently exempted from 2sv, meaning that their role cannot be changed as admins are required to have 2sv.</p>
 <% end %>
 
-<% if policy(current_user).mandate_2sv? %>
+<% if policy(current_user).mandate_2sv? && @user.persisted? %>
   <dl>
     <dt>Account security</dt>
     <dd>

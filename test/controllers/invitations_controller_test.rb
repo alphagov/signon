@@ -60,6 +60,24 @@ class InvitationsControllerTest < ActionController::TestCase
       post :create, params: { user: { name: "Testing Org Admins", email: "testing_org_admins@example.com" } }
       assert_redirected_to root_path
     end
+
+    should "save user and render 2SV form when user assigned to organisation that does not require 2SV" do
+      organisation = create(:organisation, require_2sv: false)
+
+      post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id } }
+
+      assert_redirected_to require_2sv_user_path(User.last)
+      assert_equal "User Name", User.last.name
+    end
+
+    should "save user and not render 2SV form when user assigned to organisation that requires 2SV" do
+      organisation = create(:organisation, require_2sv: true)
+
+      post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id } }
+
+      assert_redirected_to users_path
+      assert_equal "User Name", User.last.name
+    end
   end
 
   context "POST resend" do
