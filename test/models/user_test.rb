@@ -150,12 +150,14 @@ class UserTest < ActiveSupport::TestCase
     setup do
       @user = create(:two_step_enabled_user)
       @initiator = create(:superadmin_user)
-      @user.exempt_from_2sv("accessibility reasons", @initiator)
+      @expiry_date = Time.zone.today + 10
+      @user.exempt_from_2sv("accessibility reasons", @initiator, @expiry_date)
     end
 
-    should "set require 2sv to false and store the reason" do
+    should "set require 2sv to false and store the reason and expiry date" do
       assert_not @user.require_2sv?
       assert_equal "accessibility reasons", @user.reason_for_2sv_exemption
+      assert_equal @expiry_date, @user.expiry_date_for_2sv_exemption
       assert_nil @user.otp_secret_key
     end
 

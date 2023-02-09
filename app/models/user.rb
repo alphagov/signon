@@ -295,9 +295,9 @@ class User < ApplicationRecord
     otp_secret_key.present?
   end
 
-  def exempt_from_2sv(reason, initiating_user)
+  def exempt_from_2sv(reason, initiating_user, expiry_date = nil)
     initial_reason = reason_for_2sv_exemption
-    update!(require_2sv: false, reason_for_2sv_exemption: reason, otp_secret_key: nil)
+    update!(require_2sv: false, reason_for_2sv_exemption: reason, otp_secret_key: nil, expiry_date_for_2sv_exemption: expiry_date)
 
     if initial_reason.blank?
       EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTED, initiator: initiating_user, trailing_message: "for reason: #{reason}")
