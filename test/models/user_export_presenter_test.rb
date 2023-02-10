@@ -23,6 +23,7 @@ class UserExportPresenterTest < ActiveSupport::TestCase
       "Created",
       "Status",
       "2SV Status",
+      "2SV Exemption Expiry Date",
       "App 0",
       "App 1",
       "App 2",
@@ -45,7 +46,17 @@ class UserExportPresenterTest < ActiveSupport::TestCase
   should "output user details" do
     row = UserExportPresenter.new([]).row(@user)
     expected = [
-      "Test User", "test@dept.gov.uk", "Normal", nil, 0, nil, "2015-01-15 09:00:00", "Active", "Enabled"
+      "Test User", "test@dept.gov.uk", "Normal", nil, 0, nil, "2015-01-15 09:00:00", "Active", "Enabled", nil
+    ]
+    assert_equal(expected, row)
+  end
+
+  should "include exemption date for an exempted user" do
+    exemption_date = (Time.zone.today + 1).to_date
+    user = create(:two_step_exempted_user, name: "Exempted User", email: "exempted@dept.gov.uk", expiry_date_for_2sv_exemption: exemption_date)
+    row = UserExportPresenter.new([]).row(user)
+    expected = [
+      "Exempted User", "exempted@dept.gov.uk", "Normal", nil, 0, nil, "2015-01-15 09:00:00", "Active", "Exempted", exemption_date.strftime("%d/%m/%Y")
     ]
     assert_equal(expected, row)
   end

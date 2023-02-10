@@ -27,6 +27,7 @@ class UserExportPresenter
       "Created",
       "Status",
       "2SV Status",
+      "2SV Exemption Expiry Date",
     ].concat applications.map(&:name)
   end
 
@@ -41,6 +42,7 @@ class UserExportPresenter
       user.created_at.try(:to_formatted_s, :db),
       user.status.humanize,
       two_step_status(user),
+      user.expiry_date_for_2sv_exemption.try(:strftime, "%d/%m/%Y"),
     ].concat(app_permissions_for(user))
   end
 
