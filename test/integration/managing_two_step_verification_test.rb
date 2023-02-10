@@ -275,12 +275,11 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
       context "when a exemption reason already exists" do
         should "can see exemption reason but is not able to edit it" do
-          reason = "user is exempt"
-          user_requiring_2sv = create(:user, organisation: @organisation, reason_for_2sv_exemption: reason)
+          user_requiring_2sv = create(:two_step_exempted_user, organisation: @organisation)
 
           sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
 
-          assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{@reason}"
+          assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{user_requiring_2sv.reason_for_2sv_exemption}"
           assert page.has_no_link? "Edit reason or expiry date for 2-step verification exemption"
         end
       end

@@ -39,6 +39,7 @@ class User < ApplicationRecord
   validate :user_can_be_exempted_from_2sv
   validate :organisation_admin_belongs_to_organisation
   validate :email_is_ascii_only
+  validate :exemption_from_2sv_data_is_complete
 
   has_many :authorisations, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id
   has_many :application_permissions, class_name: "UserApplicationPermission", inverse_of: :user
@@ -354,6 +355,11 @@ private
 
   def email_is_ascii_only
     errors.add(:email, "can't contain non-ASCII characters") unless email.blank? || email.ascii_only?
+  end
+
+  def exemption_from_2sv_data_is_complete
+    errors.add(:expiry_date_for_2sv_exemption, "must be present if exemption reason is present") if reason_for_2sv_exemption.present? && expiry_date_for_2sv_exemption.nil?
+    errors.add(:reason_for_2sv_exemption, "must be present if exemption expiry date is present") if expiry_date_for_2sv_exemption.present? && reason_for_2sv_exemption.nil?
   end
 
   def fix_apostrophe_in_email
