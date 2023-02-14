@@ -16,11 +16,20 @@ User.create!(
   organisation: gds,
 )
 
-test_organisation = Organisation.create!(
-  name: "Test Organisation",
+test_organisation_without_2sv = Organisation.create!(
+  name: "Test Organisation without mandatory 2SV",
   content_id: SecureRandom.uuid,
   organisation_type: :ministerial_department,
   slug: "test-organisation",
+  require_2sv: false,
+)
+
+test_organisation_with_2sv = Organisation.create!(
+  name: "Test Organisation with mandatory 2SV",
+  content_id: SecureRandom.uuid,
+  organisation_type: :ministerial_department,
+  slug: "test-organisation-with-2sv",
+  require_2sv: true,
 )
 
 User.create!(
@@ -29,7 +38,7 @@ User.create!(
   password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
   role: :normal,
   confirmed_at: Time.zone.now,
-  organisation: test_organisation,
+  organisation: test_organisation_without_2sv,
 )
 
 # The following user has 2SV enabled by default. Scan the QR code with your authenticator app to generate a code to login.
@@ -65,7 +74,18 @@ User.create!(
   password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
   role: :normal,
   confirmed_at: Time.zone.now,
-  organisation: test_organisation,
+  organisation: test_organisation_without_2sv,
+  require_2sv: true,
+  otp_secret_key: "I5X6Y3VN3CAATYQRBPAZ7KMFLK2RWYJ5",
+)
+
+User.create!(
+  name: "Test User from organisation with mandatory 2SV",
+  email: "test.user.2sv.organisation@gov.uk",
+  password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
+  role: :normal,
+  confirmed_at: Time.zone.now,
+  organisation: test_organisation_with_2sv,
   require_2sv: true,
   otp_secret_key: "I5X6Y3VN3CAATYQRBPAZ7KMFLK2RWYJ5",
 )
@@ -78,4 +98,14 @@ User.create!(
   role: :normal,
   confirmed_at: Time.zone.now,
   require_2sv: false,
+)
+
+application = Doorkeeper::Application.create!(
+  name: "Test Application 1",
+  redirect_uri: "https://www.gov.uk",
+)
+
+SupportedPermission.create!(
+  name: "Editor",
+  application:,
 )
