@@ -37,7 +37,10 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         sign_in_as_and_edit_user(@super_admin, user)
         mandate_2sv_for_exempted_user
 
-        assert_nil user.reload.reason_for_2sv_exemption
+        user.reload
+
+        assert_nil user.reason_for_2sv_exemption
+        assert_nil user.expiry_date_for_2sv_exemption
 
         expected_account_logs = [
           "Exemption from 2-step verification removed by #{@super_admin.name}",
@@ -168,25 +171,22 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         @gds = create(:organisation, content_id: Organisation::GDS_ORG_CONTENT_ID)
         @super_admin = create(:superadmin_user, organisation: @gds)
         @reason_for_exemption = "accessibility reasons"
-      end
-
-      def exemption_message(initiator_name, reason)
-        "Exempted from 2-step verification by #{initiator_name} for reason: #{reason}"
+        @expiry_date = 5.days.from_now.to_date
       end
 
       context "when the user being edited is not an admin or superadmin" do
-        should "be able to see a link to exempt a user requiring 2sv from 2sv" do
+        should "be able to exempt a user requiring 2sv from 2sv" do
           user_requiring_2sv = create(:two_step_mandated_user, organisation: @organisation)
 
-          user_can_be_exempted_from_2sv(@super_admin, user_requiring_2sv, @reason_for_exemption)
-          assert_user_access_log_contains_messages(user_requiring_2sv, ["Exempted from 2-step verification by #{@super_admin.name} for reason: #{@reason_for_exemption}"])
+          user_can_be_exempted_from_2sv(@super_admin, user_requiring_2sv, @reason_for_exemption, @expiry_date)
+          assert_user_access_log_contains_messages(user_requiring_2sv, [exemption_message(@super_admin, @reason_for_exemption, @expiry_date)])
         end
 
-        should "be able to see a link to exempt a user who does not yet require 2sv but is not exempt" do
+        should "be able to exempt a user who does not yet require 2sv but is not exempt" do
           user_not_requiring_2sv = create(:user, organisation: @organisation)
 
-          user_can_be_exempted_from_2sv(@super_admin, user_not_requiring_2sv, @reason_for_exemption)
-          assert_user_access_log_contains_messages(user_not_requiring_2sv, ["Exempted from 2-step verification by #{@super_admin.name} for reason: #{@reason_for_exemption}"])
+          user_can_be_exempted_from_2sv(@super_admin, user_not_requiring_2sv, @reason_for_exemption, @expiry_date)
+          assert_user_access_log_contains_messages(user_not_requiring_2sv, [exemption_message(@super_admin, @reason_for_exemption, @expiry_date)])
         end
 
         should "not be able to see a link to exempt a user who already has an exemption reason" do
@@ -196,19 +196,30 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
           assert page.has_no_link? "Exempt user from 2-step verification"
         end
 
+        should "not be able to exempt a user with an expiry date that is not in the future" do
+          user_requiring_2sv = create(:two_step_mandated_user, organisation: @organisation)
+
+          sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
+          click_link("Exempt user from 2-step verification")
+          fill_in_exemption_form(@reason_for_exemption, Time.zone.today.to_date)
+
+          assert_user_has_not_been_exempted_from_2sv(user_requiring_2sv)
+          assert page.has_text?("Expiry date must be in the future")
+          assert_equal edit_two_step_verification_exemption_path(user_requiring_2sv), current_path
+        end
+
         context "when a exemption reason already exists" do
-          should "be able to see a link to edit exemption reason" do
-            user_requiring_2sv = create(:user, organisation: @organisation, reason_for_2sv_exemption: "user is exempt")
+          should "be able to edit exemption reason and date" do
+            user_requiring_2sv = create(:user, organisation: @organisation, reason_for_2sv_exemption: "user is exempt", expiry_date_for_2sv_exemption: @expiry_date)
 
             sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
-            click_link("Edit reason for 2-step verification exemption")
+            click_link("Edit reason or expiry date for 2-step verification exemption")
+            new_expiry_date = 1.month.from_now.to_date
+            fill_in_exemption_form(@reason_for_exemption, new_expiry_date)
 
-            fill_in "Reason for 2sv exemption", with: @reason_for_exemption
-            click_button "Save"
+            assert_user_has_been_exempted_from_2sv(user_requiring_2sv, @reason_for_exemption, new_expiry_date)
 
-            assert_user_has_been_exempted_from_2sv(user_requiring_2sv, @reason_for_exemption)
-
-            assert_user_access_log_contains_messages(user_requiring_2sv, ["Reason for 2-step verification exemption updated by #{@super_admin.name} to: #{@reason_for_exemption}"])
+            assert_user_access_log_contains_messages(user_requiring_2sv, ["2-step verification exemption updated by #{@super_admin.name} to: #{@reason_for_exemption} expiring on date: #{new_expiry_date}"])
           end
         end
       end
@@ -264,13 +275,12 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
       context "when a exemption reason already exists" do
         should "can see exemption reason but is not able to edit it" do
-          reason = "user is exempt"
-          user_requiring_2sv = create(:user, organisation: @organisation, reason_for_2sv_exemption: reason)
+          user_requiring_2sv = create(:two_step_exempted_user, organisation: @organisation)
 
           sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
 
-          assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{@reason}"
-          assert page.has_no_link? "Edit reason for 2-step verification exemption"
+          assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{user_requiring_2sv.reason_for_2sv_exemption}"
+          assert page.has_no_link? "Edit reason or expiry date for 2-step verification exemption"
         end
       end
     end

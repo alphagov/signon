@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_06_131707) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_09_131935) do
   create_table "batch_invitation_application_permissions", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "batch_invitation_id", null: false
     t.integer "supported_permission_id", null: false
@@ -207,6 +207,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_06_131707) do
     t.string "unlock_token"
     t.boolean "require_2sv", default: false, null: false
     t.string "reason_for_2sv_exemption"
+    t.date "expiry_date_for_2sv_exemption"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"

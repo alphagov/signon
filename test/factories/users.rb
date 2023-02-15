@@ -50,6 +50,7 @@ FactoryBot.define do
   factory :two_step_exempted_user, parent: :user do
     require_2sv { false }
     reason_for_2sv_exemption { "accessibility reasons" }
+    expiry_date_for_2sv_exemption { (Time.zone.today + 1).to_date }
   end
 
   factory :user_with_pending_email_change, parent: :user do

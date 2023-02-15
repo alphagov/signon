@@ -49,7 +49,7 @@
           The user has been made exempt from 2-step verification for the following reason: <%= @user.reason_for_2sv_exemption %>
         <% if Pundit.policy(current_user, @user).exempt_from_two_step_verification? %>
           <br>
-          <%= link_to 'Edit reason for 2-step verification exemption', edit_two_step_verification_exemption_path(@user) %>
+          <%= link_to 'Edit reason or expiry date for 2-step verification exemption', edit_two_step_verification_exemption_path(@user) %>
         <% end %>
         </p>
       <% elsif f.object.has_2sv? %>

@@ -113,13 +113,14 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         assert_response_contains "Enter this code when asked: #{@new_secret}"
       end
 
-      should "accept a valid code, persist the secret, log an event and notify by email, and remove the exemption reason" do
+      should "accept a valid code, persist the secret, log an event and notify by email, and remove the exemption reason and expiry date" do
         success = "2-step verification set up".freeze
         perform_enqueued_jobs do
           enter_2sv_code(@new_secret)
 
           assert_response_contains success
           assert_nil @user.reload.reason_for_2sv_exemption
+          assert_nil @user.reload.expiry_date_for_2sv_exemption
           assert_equal @new_secret, @user.reload.otp_secret_key
           assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_ENABLED.id, uid: @user.uid).count
 

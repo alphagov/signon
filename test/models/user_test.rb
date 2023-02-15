@@ -58,27 +58,11 @@ class UserTest < ActiveSupport::TestCase
       assert_not user.require_2sv?
     end
 
-    should "remove reason for 2SV exemption when 2SV required" do
+    should "remove reason and expiry date for 2SV exemption when 2SV required" do
       user = create(:two_step_exempted_user)
       user.update!(require_2sv: true)
       assert_nil user.reason_for_2sv_exemption
-    end
-  end
-
-  context "#exempt_from_2sv??" do
-    should "be true if exemption reason is present" do
-      user = create(:two_step_exempted_user)
-      assert user.exempt_from_2sv?
-    end
-
-    should "be false if exemption reason is nil" do
-      user = create(:user)
-      assert_not user.exempt_from_2sv?
-    end
-
-    should "be false if exemption reason is an empty string" do
-      user = create(:user, reason_for_2sv_exemption: "")
-      assert_not user.exempt_from_2sv?
+      assert_nil user.expiry_date_for_2sv_exemption
     end
   end
 
@@ -142,32 +126,6 @@ class UserTest < ActiveSupport::TestCase
     context "when the user has already enrolled" do
       should "always be false" do
         assert_not build(:two_step_mandated_user, otp_secret_key: "welp").prompt_for_2sv?
-      end
-    end
-  end
-
-  context "exempt from 2sv" do
-    setup do
-      @user = create(:two_step_enabled_user)
-      @initiator = create(:superadmin_user)
-      @user.exempt_from_2sv("accessibility reasons", @initiator)
-    end
-
-    should "set require 2sv to false and store the reason" do
-      assert_not @user.require_2sv?
-      assert_equal "accessibility reasons", @user.reason_for_2sv_exemption
-      assert_nil @user.otp_secret_key
-    end
-
-    should "record the event" do
-      assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_EXEMPTED.id, uid: @user.uid, initiator: @initiator).count
-    end
-
-    context "for a admin user" do
-      should "prevent them being exempted from 2SV" do
-        user = build(:admin_user, reason_for_2sv_exemption: "reason")
-
-        assert_not user.valid?
       end
     end
   end
@@ -336,6 +294,70 @@ class UserTest < ActiveSupport::TestCase
 
       assert_not user.valid?
       assert_equal ["can't contain non-ASCII characters"], user.errors[:email]
+    end
+  end
+
+  context "2sv exemptions" do
+    context "exempt from 2sv" do
+      setup do
+        @user = create(:two_step_enabled_user)
+        @initiator = create(:superadmin_user)
+        @expiry_date = Time.zone.today + 10
+        @user.exempt_from_2sv("accessibility reasons", @initiator, @expiry_date)
+      end
+
+      should "set require 2sv to false and store the reason and expiry date" do
+        assert_not @user.require_2sv?
+        assert_equal "accessibility reasons", @user.reason_for_2sv_exemption
+        assert_equal @expiry_date, @user.expiry_date_for_2sv_exemption
+        assert_nil @user.otp_secret_key
+      end
+
+      should "record the event" do
+        assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_EXEMPTED.id, uid: @user.uid, initiator: @initiator).count
+      end
+
+      context "for a admin user" do
+        should "prevent them being exempted from 2SV" do
+          user = build(:admin_user, reason_for_2sv_exemption: "reason")
+
+          assert_not user.valid?
+        end
+      end
+    end
+
+    context "#exempt_from_2sv??" do
+      should "be true if exemption reason is present" do
+        user = create(:two_step_exempted_user)
+        assert user.exempt_from_2sv?
+      end
+
+      should "be false if exemption reason is nil" do
+        user = create(:user)
+        assert_not user.exempt_from_2sv?
+      end
+
+      should "be false if exemption reason is an empty string" do
+        user = create(:user, reason_for_2sv_exemption: "")
+        assert_not user.exempt_from_2sv?
+      end
+    end
+
+    context "user model validity and 2sv exemptions" do
+      should "be valid if 2sv exemption reason and expiry date exists" do
+        user = build(:two_step_exempted_user)
+        assert user.valid?
+      end
+
+      should "not be valid if 2sv exemption reason exists without expiry date" do
+        user = build(:two_step_exempted_user, expiry_date_for_2sv_exemption: nil)
+        assert_not user.valid?
+      end
+
+      should "not be valid if 2sv exemption expiry exists without an exemption reason" do
+        user = build(:two_step_exempted_user, reason_for_2sv_exemption: nil)
+        assert_not user.valid?
+      end
     end
   end
 

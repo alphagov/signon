@@ -39,6 +39,7 @@ class User < ApplicationRecord
   validate :user_can_be_exempted_from_2sv
   validate :organisation_admin_belongs_to_organisation
   validate :email_is_ascii_only
+  validate :exemption_from_2sv_data_is_complete
 
   has_many :authorisations, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id
   has_many :application_permissions, class_name: "UserApplicationPermission", inverse_of: :user
@@ -255,7 +256,10 @@ class User < ApplicationRecord
   end
 
   def reset_2sv_exemption_reason
-    self.reason_for_2sv_exemption = nil if require_2sv.present?
+    if require_2sv.present?
+      self.reason_for_2sv_exemption =  nil
+      self.expiry_date_for_2sv_exemption = nil
+    end
   end
 
   def authenticate_otp(code)
@@ -295,14 +299,14 @@ class User < ApplicationRecord
     otp_secret_key.present?
   end
 
-  def exempt_from_2sv(reason, initiating_user)
+  def exempt_from_2sv(reason, initiating_user, expiry_date)
     initial_reason = reason_for_2sv_exemption
-    update!(require_2sv: false, reason_for_2sv_exemption: reason, otp_secret_key: nil)
+    update!(require_2sv: false, reason_for_2sv_exemption: reason, otp_secret_key: nil, expiry_date_for_2sv_exemption: expiry_date)
 
     if initial_reason.blank?
-      EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTED, initiator: initiating_user, trailing_message: "for reason: #{reason}")
+      EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTED, initiator: initiating_user, trailing_message: "for reason: #{reason} expiring on date: #{expiry_date}")
     else
-      EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTION_REASON_UPDATED, initiator: initiating_user, trailing_message: "to: #{reason}")
+      EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTION_UPDATED, initiator: initiating_user, trailing_message: "to: #{reason} expiring on date: #{expiry_date}")
     end
   end
 
@@ -351,6 +355,11 @@ private
 
   def email_is_ascii_only
     errors.add(:email, "can't contain non-ASCII characters") unless email.blank? || email.ascii_only?
+  end
+
+  def exemption_from_2sv_data_is_complete
+    errors.add(:expiry_date_for_2sv_exemption, "must be present if exemption reason is present") if reason_for_2sv_exemption.present? && expiry_date_for_2sv_exemption.nil?
+    errors.add(:reason_for_2sv_exemption, "must be present if exemption expiry date is present") if expiry_date_for_2sv_exemption.present? && reason_for_2sv_exemption.nil?
   end
 
   def fix_apostrophe_in_email
