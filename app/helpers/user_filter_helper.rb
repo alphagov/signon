@@ -91,8 +91,11 @@ module UserFilterHelper
         .pick("oauth_applications.name", "supported_permissions.name")
         .join(" ")
     when :two_step_status
-      if value == "true"
+      case value
+      when "true"
         "Enabled"
+      when "exempt"
+        "Exempted"
       else
         "Not set up"
       end
