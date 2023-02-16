@@ -90,7 +90,7 @@ module ManagingTwoSvHelpers
   end
 
   def fill_in_exemption_form(reason, expiry_date)
-    fill_in "Reason for 2sv exemption", with: reason
+    fill_in "Reason for 2-step verification exemption", with: reason
     fill_in_expiry_date(expiry_date)
     click_button "Save"
   end
@@ -109,7 +109,7 @@ module ManagingTwoSvHelpers
     assert_equal reason, user.reason_for_2sv_exemption
     assert_equal expiry_date, user.expiry_date_for_2sv_exemption
 
-    assert page.has_text? "User exempted from 2SV"
+    assert page.has_text? "User exempted from 2-step verification"
     assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{reason}"
   end
 
