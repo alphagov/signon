@@ -123,6 +123,8 @@ class UsersController < ApplicationController
     redirect_to :root, notice: "Reset 2-step verification for #{@user.email}"
   end
 
+  def require_2sv; end
+
 private
 
   def load_and_authorize_user
@@ -200,6 +202,10 @@ private
   end
 
   def user_params
+    if permitted_user_params[:skip_update_user_permissions]
+      permitted_user_params[:supported_permission_ids] = @user.supported_permission_ids
+    end
+
     UserParameterSanitiser.new(
       user_params: permitted_user_params,
       current_user_role: current_user.role.to_sym,
@@ -207,7 +213,7 @@ private
   end
 
   def permitted_user_params
-    params.require(:user).permit(:user, :name, :email, :organisation_id, :require_2sv, :role, supported_permission_ids: []).to_h
+    @permitted_user_params ||= params.require(:user).permit(:user, :name, :email, :organisation_id, :require_2sv, :role, :skip_update_user_permissions, supported_permission_ids: []).to_h
   end
 
   def password_params

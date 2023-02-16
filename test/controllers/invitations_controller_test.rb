@@ -3,7 +3,7 @@ require "test_helper"
 class InvitationsControllerTest < ActionController::TestCase
   setup do
     request.env["devise.mapping"] = Devise.mappings[:user]
-    @user = create(:admin_user)
+    @user = create(:superadmin_user)
     sign_in @user
   end
 
@@ -59,6 +59,42 @@ class InvitationsControllerTest < ActionController::TestCase
       @user.update!(role: "super_organisation_admin", organisation_id: create(:organisation).id)
       post :create, params: { user: { name: "Testing Org Admins", email: "testing_org_admins@example.com" } }
       assert_redirected_to root_path
+    end
+
+    should "save user and render 2SV form when user assigned to organisation that does not require 2SV" do
+      organisation = create(:organisation, require_2sv: false)
+
+      post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id } }
+
+      assert_redirected_to require_2sv_user_path(User.last)
+      assert_equal "User Name", User.last.name
+    end
+
+    should "save user and not render 2SV form when user assigned to organisation that requires 2SV" do
+      organisation = create(:organisation, require_2sv: true)
+
+      post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id } }
+
+      assert_redirected_to users_path
+      assert_equal "User Name", User.last.name
+    end
+
+    should "not render 2SV form and saves user when user is a superadmin" do
+      organisation = create(:organisation, require_2sv: false)
+
+      post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id, role: "superadmin" } }
+
+      assert_redirected_to users_path
+      assert_equal "User Name", User.last.name
+    end
+
+    should "not render 2SV form and saves user when user is an admin" do
+      organisation = create(:organisation, require_2sv: false)
+
+      post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id, role: "admin" } }
+
+      assert_redirected_to users_path
+      assert_equal "User Name", User.last.name
     end
   end
 

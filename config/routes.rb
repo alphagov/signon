@@ -42,6 +42,7 @@ Rails.application.routes.draw do
       delete :cancel_email_change
       get :event_logs
       patch :reset_two_step_verification
+      get :require_2sv
     end
   end
   resource :user, only: [:show]

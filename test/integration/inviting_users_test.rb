@@ -27,21 +27,70 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       assert has_no_select?("Role")
     end
 
-    should "displays the 2SV mandating checkbox" do
-      visit new_user_invitation_path
-      assert has_field?("Mandate 2-step verification for this user")
-    end
+    context "for an organisation without mandatory 2SV" do
+      setup do
+        create(:organisation, name: "Test Organisation without 2SV", require_2sv: false)
+      end
 
-    should "create and notify the user" do
-      perform_enqueued_jobs do
-        visit new_user_invitation_path
-        fill_in "Name", with: "Fred Bloggs"
-        fill_in "Email", with: "fred@example.com"
-        click_button "Create user and send email"
+      should "create and notify the user with 2SV selected" do
+        perform_enqueued_jobs do
+          visit new_user_invitation_path
+          fill_in "Name", with: "Fred Bloggs"
+          fill_in "Email", with: "fred@example.com"
+          select "Test Organisation without 2SV", from: "Organisation"
+          click_button "Create user and send email"
 
-        assert_not_nil User.where(email: "fred@example.com", role: "normal").first
-        assert_equal "fred@example.com", last_email.to[0]
-        assert_match "Please confirm your account", last_email.subject
+          assert_equal "fred@example.com", last_email.to[0]
+          assert_match "Please confirm your account", last_email.subject
+
+          assert has_field?("Mandate 2-step verification for this user")
+          check "Mandate 2-step verification for this user"
+          click_button "Update user"
+
+          assert_not_nil User.where(email: "fred@example.com", role: "normal").last
+          assert_equal "fred@example.com", last_email.to[0]
+          assert_match "Make your Signon account more secure", last_email.subject
+          assert User.where(email: "fred@example.com", role: "normal").last.require_2sv?
+        end
+      end
+
+      should "create and notify the user without 2SV selected" do
+        perform_enqueued_jobs do
+          visit new_user_invitation_path
+          fill_in "Name", with: "Fred Bloggs"
+          fill_in "Email", with: "fred@example.com"
+          select "Test Organisation without 2SV", from: "Organisation"
+          click_button "Create user and send email"
+
+          assert has_field?("Mandate 2-step verification for this user")
+          click_button "Update user"
+
+          assert_not_nil User.where(email: "fred@example.com", role: "normal").last
+          assert_equal "fred@example.com", last_email.to[0]
+          assert_match "Please confirm your account", last_email.subject
+          assert_equal false, User.where(email: "fred@example.com", role: "normal").last.require_2sv?
+        end
+      end
+
+      context "for an organisation with mandatory 2SV" do
+        setup do
+          create(:organisation, name: "Test Organisation with 2SV", require_2sv: true)
+        end
+
+        should "create and notify the user" do
+          perform_enqueued_jobs do
+            visit new_user_invitation_path
+            fill_in "Name", with: "Fred Bloggs"
+            fill_in "Email", with: "fred@example.com"
+            select "Test Organisation with 2SV", from: "Organisation"
+            click_button "Create user and send email"
+
+            assert_not_nil User.where(email: "fred@example.com", role: "normal").last
+            assert_equal "fred@example.com", last_email.to[0]
+            assert_match "Please confirm your account", last_email.subject
+            assert User.where(email: "fred@example.com", role: "normal").last.require_2sv?
+          end
+        end
       end
     end
 
@@ -51,6 +100,8 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
         fill_in "Name", with: "Fred Bloggs"
         fill_in "Email", with: "fred@example.com"
         click_button "Create user and send email"
+
+        click_button "Update user"
 
         user = User.find_by(email: "fred@example.com")
         visit edit_user_path(user)
@@ -80,6 +131,8 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
       click_button "Create user and send email"
 
+      click_button "Update user"
+
       u = User.find_by(email: "alicia@example.com")
       assert_not u.has_access_to? application_one
       assert_includes u.permissions_for(application_one), "editor"
@@ -97,6 +150,8 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       fill_in "Name", with: "Alicia Smith"
       fill_in "Email", with: "alicia@example.com"
       click_button "Create user and send email"
+
+      click_button "Update user"
 
       u = User.find_by(email: "alicia@example.com")
       assert u.has_access_to? application_two
@@ -124,27 +179,105 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       assert has_select?("Role")
     end
 
-    should "display the 2SV mandating checkbox" do
-      visit new_user_invitation_path
-      assert has_field?("Mandate 2-step verification for this user")
+    context "for roles that do not have mandatory 2SV" do
+      should "create and notify the user" do
+        perform_enqueued_jobs do
+          visit new_user_invitation_path
+          fill_in "Name", with: "Fred Bloggs"
+          fill_in "Email", with: "fred_admin@example.com"
+          click_button "Create user and send email"
+
+          assert_equal "fred_admin@example.com", last_email.to[0]
+          assert_match "Please confirm your account", last_email.subject
+
+          assert has_field?("Mandate 2-step verification for this user")
+          check "Mandate 2-step verification for this user"
+          click_button "Update user"
+
+          assert_not_nil User.find_by(
+            email: "fred_admin@example.com",
+            role: "normal",
+            require_2sv: true,
+          )
+          assert_equal "fred_admin@example.com", last_email.to[0]
+          assert_match "Make your Signon account more secure", last_email.subject
+        end
+      end
     end
 
-    should "create and notify the user" do
-      perform_enqueued_jobs do
-        visit new_user_invitation_path
-        fill_in "Name", with: "Fred Bloggs"
-        select "Admin", from: "Role"
-        fill_in "Email", with: "fred_admin@example.com"
-        check "Mandate 2-step verification for this user"
-        click_button "Create user and send email"
+    context "for user roles that have mandatory 2SV" do
+      setup do
+        create(:organisation, name: "Test Organisation without 2SV", require_2sv: false)
+      end
 
-        assert_not_nil User.find_by(
-          email: "fred_admin@example.com",
-          role: "admin",
-          require_2sv: true,
-        )
-        assert_equal "fred_admin@example.com", last_email.to[0]
-        assert_match "Please confirm your account", last_email.subject
+      should "create and notify the user for a superadmin" do
+        perform_enqueued_jobs do
+          visit new_user_invitation_path
+          fill_in "Name", with: "Fred Bloggs"
+          fill_in "Email", with: "fred@example.com"
+          select "Superadmin", from: "Role"
+          select "Test Organisation without 2SV", from: "Organisation"
+          click_button "Create user and send email"
+
+          assert_not_nil User.where(email: "fred@example.com", role: "superadmin").last
+          assert_equal "fred@example.com", last_email.to[0]
+          assert_match "Please confirm your account", last_email.subject
+          assert User.where(email: "fred@example.com", role: "superadmin").last.require_2sv?
+        end
+      end
+
+      should "create and notify the user for an admin" do
+        perform_enqueued_jobs do
+          visit new_user_invitation_path
+          fill_in "Name", with: "Fred Bloggs"
+          fill_in "Email", with: "fred@example.com"
+          select "Admin", from: "Role"
+          select "Test Organisation without 2SV", from: "Organisation"
+          click_button "Create user and send email"
+
+          assert_not_nil User.where(email: "fred@example.com", role: "admin").last
+          assert_equal "fred@example.com", last_email.to[0]
+          assert_match "Please confirm your account", last_email.subject
+          assert User.where(email: "fred@example.com", role: "admin").last.require_2sv?
+        end
+      end
+    end
+
+    context "for user roles that have mandatory 2SV" do
+      setup do
+        create(:organisation, name: "Test Organisation without 2SV", require_2sv: false)
+      end
+
+      should "create and notify the user for a superadmin" do
+        perform_enqueued_jobs do
+          visit new_user_invitation_path
+          fill_in "Name", with: "Fred Bloggs"
+          fill_in "Email", with: "fred@example.com"
+          select "Superadmin", from: "Role"
+          select "Test Organisation without 2SV", from: "Organisation"
+          click_button "Create user and send email"
+
+          assert_not_nil User.where(email: "fred@example.com", role: "superadmin").last
+          assert_equal "fred@example.com", last_email.to[0]
+          assert_match "Please confirm your account", last_email.subject
+          assert User.where(email: "fred@example.com", role: "superadmin").last.require_2sv?
+        end
+      end
+
+      should "create and notify the user for an admin" do
+        perform_enqueued_jobs do
+          visit new_user_invitation_path
+          fill_in "Name", with: "Fred Bloggs"
+          fill_in "Email", with: "fred@example.com"
+          select "Admin", from: "Role"
+          select "Test Organisation without 2SV", from: "Organisation"
+          click_button "Create user and send email"
+
+          assert_not_nil User.where(email: "fred@example.com", role: "admin").last
+          assert_equal "fred@example.com", last_email.to[0]
+          assert_match "Please confirm your account", last_email.subject
+          assert User.where(email: "fred@example.com", role: "admin").last.require_2sv?
+        end
       end
     end
 
@@ -165,6 +298,8 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
       click_button "Create user and send email"
 
+      click_button "Update user"
+
       u = User.find_by(email: "alicia@example.com")
       assert_not u.has_access_to? application_one
       assert_includes u.permissions_for(application_one), "editor"
@@ -182,6 +317,9 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       fill_in "Name", with: "Alicia Smith"
       fill_in "Email", with: "alicia@example.com"
       click_button "Create user and send email"
+
+      check "Mandate 2-step verification for this user"
+      click_button "Update user"
 
       u = User.find_by(email: "alicia@example.com")
       assert u.has_access_to? application_two

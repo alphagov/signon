@@ -41,6 +41,7 @@ class UserPolicy < BasePolicy
   alias_method :update_email?, :edit_email_or_password?
   alias_method :update_password?, :edit_email_or_password?
   alias_method :mandate_2sv?, :edit?
+  alias_method :require_2sv?, :edit?
   alias_method :reset_2sv?, :edit?
   alias_method :reset_two_step_verification?, :edit?
 

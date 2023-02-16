@@ -64,6 +64,30 @@ class UserTest < ActiveSupport::TestCase
       assert_nil user.reason_for_2sv_exemption
       assert_nil user.expiry_date_for_2sv_exemption
     end
+
+    should "require 2SV for the user when it is switched on for their organisation and they are not exempt" do
+      organisation = create(:organisation, require_2sv: false)
+      user = create(:user, organisation:)
+      assert_not user.require_2sv?
+
+      organisation.update!(require_2sv: true)
+      assert user.require_2sv?
+    end
+
+    should "not require 2SV for the user when it is switched on for their organisation and they are exempt" do
+      organisation = create(:organisation, require_2sv: false)
+      user = create(:two_step_exempted_user, organisation:)
+      assert_not user.require_2sv?
+
+      organisation.update!(require_2sv: true)
+      assert_not user.require_2sv?
+    end
+
+    should "be invalid if a new user from an organisation with mandatory 2SV but 2SV is not selected" do
+      organisation = create(:organisation, require_2sv: true)
+      user = build(:user, organisation:)
+      assert_not user.valid?
+    end
   end
 
   context "#send_two_step_mandated_notification?" do

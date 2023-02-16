@@ -40,6 +40,7 @@ class User < ApplicationRecord
   validate :organisation_admin_belongs_to_organisation
   validate :email_is_ascii_only
   validate :exemption_from_2sv_data_is_complete
+  validate :organisation_has_mandatory_2sv, on: :create
 
   has_many :authorisations, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id
   has_many :application_permissions, class_name: "UserApplicationPermission", inverse_of: :user
@@ -95,6 +96,12 @@ class User < ApplicationRecord
             raise NotImplementedError, "Filtering by status '#{status}' not implemented."
           end
         }
+
+  def require_2sv?
+    return require_2sv unless organisation
+
+    (organisation.require_2sv? && !exempt_from_2sv?) || require_2sv
+  end
 
   def prompt_for_2sv?
     return false if has_2sv?
@@ -360,6 +367,10 @@ private
   def exemption_from_2sv_data_is_complete
     errors.add(:expiry_date_for_2sv_exemption, "must be present if exemption reason is present") if reason_for_2sv_exemption.present? && expiry_date_for_2sv_exemption.nil?
     errors.add(:reason_for_2sv_exemption, "must be present if exemption expiry date is present") if expiry_date_for_2sv_exemption.present? && reason_for_2sv_exemption.nil?
+  end
+
+  def organisation_has_mandatory_2sv
+    errors.add(:require_2sv, "2-step verification is mandatory for all users from this organisation") if organisation && organisation.require_2sv? && !require_2sv
   end
 
   def fix_apostrophe_in_email
