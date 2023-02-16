@@ -365,6 +365,11 @@ class UserTest < ActiveSupport::TestCase
         user = create(:user, reason_for_2sv_exemption: "")
         assert_not user.exempt_from_2sv?
       end
+
+      should "be false if exemption reason is a string of spaces" do
+        user = create(:user, reason_for_2sv_exemption: "   ")
+        assert_not user.exempt_from_2sv?
+      end
     end
 
     context "user model validity and 2sv exemptions" do
@@ -380,6 +385,11 @@ class UserTest < ActiveSupport::TestCase
 
       should "not be valid if 2sv exemption expiry exists without an exemption reason" do
         user = build(:two_step_exempted_user, reason_for_2sv_exemption: nil)
+        assert_not user.valid?
+      end
+
+      should "not be valid if 2sv exemption expiry exists with a blank exemption reason" do
+        user = build(:two_step_exempted_user, reason_for_2sv_exemption: "   ")
         assert_not user.valid?
       end
     end
