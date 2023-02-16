@@ -23,11 +23,11 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         @super_admin = create(:superadmin_user)
       end
 
-      should "be able to send a notification to a user to set up 2fa" do
-        admin_can_send_2fa_email(@super_admin, @user)
+      should "be able to send a notification to a user to set up 2SV" do
+        admin_can_send_2sv_email(@super_admin, @user)
       end
 
-      should "be able to unset the requirement for 2fa" do
+      should "be able to unset the requirement for 2SV" do
         admin_can_remove_2sv_requirement_without_notifying_user(@super_admin, @user)
       end
 
@@ -59,11 +59,11 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         @admin = create(:admin_user)
       end
 
-      should "be able to send a notification to a user to set up 2fa" do
-        admin_can_send_2fa_email(@admin, @user)
+      should "be able to send a notification to a user to set up 2SV" do
+        admin_can_send_2sv_email(@admin, @user)
       end
 
-      should "be able to unset the requirement for 2fa" do
+      should "be able to unset the requirement for 2SV" do
         admin_can_remove_2sv_requirement_without_notifying_user(@admin, @user)
       end
 
@@ -77,19 +77,19 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         @super_org_admin = create(:super_org_admin, organisation: @user.organisation)
       end
 
-      should "be able to send a notification to a user to set up 2fa" do
-        admin_can_send_2fa_email(@super_org_admin, @user)
+      should "be able to send a notification to a user to set up 2SV" do
+        admin_can_send_2sv_email(@super_org_admin, @user)
       end
 
-      should "be able to unset the requirement for 2fa" do
+      should "be able to unset the requirement for 2SV" do
         admin_can_remove_2sv_requirement_without_notifying_user(@super_org_admin, @user)
       end
 
-      should "be able to send a notification to a user in a child organisation to set up 2fa" do
-        admin_can_send_2fa_email(@super_org_admin, @user_in_child_organisation)
+      should "be able to send a notification to a user in a child organisation to set up 2SV" do
+        admin_can_send_2sv_email(@super_org_admin, @user_in_child_organisation)
       end
 
-      should "be able to unset the requirement for 2fa for a user in a child organisation" do
+      should "be able to unset the requirement for 2SV for a user in a child organisation" do
         admin_can_remove_2sv_requirement_without_notifying_user(@super_org_admin, @user_in_child_organisation)
       end
 
@@ -111,11 +111,11 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         @org_admin = create(:organisation_admin, organisation: @user.organisation)
       end
 
-      should "be able to send a notification to a user to set up 2fa" do
-        admin_can_send_2fa_email(@org_admin, @user)
+      should "be able to send a notification to a user to set up 2SV" do
+        admin_can_send_2sv_email(@org_admin, @user)
       end
 
-      should "be able to unset the requirement for 2fa" do
+      should "be able to unset the requirement for 2SV" do
         admin_can_remove_2sv_requirement_without_notifying_user(@org_admin, @user)
       end
 
@@ -133,7 +133,7 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
     end
 
     context "when logged in as a normal user" do
-      should "not be able to view any 2fa actions" do
+      should "not be able to view any 2SV actions" do
         non_admin_user = create(:user, organisation: @user.organisation)
         sign_in_as_and_edit_user(non_admin_user, @user)
 
@@ -214,6 +214,12 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
             sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
             click_link("Edit reason or expiry date for 2-step verification exemption")
+
+            assert page.has_field?("Reason for 2-step verification exemption", with: "user is exempt")
+            assert page.has_field?("user_expiry_date_for_2sv_exemption_1i", with: @expiry_date.year)
+            assert page.has_field?("user_expiry_date_for_2sv_exemption_2i", with: @expiry_date.month)
+            assert page.has_field?("user_expiry_date_for_2sv_exemption_3i", with: @expiry_date.day)
+
             new_expiry_date = 1.month.from_now.to_date
             fill_in_exemption_form(@reason_for_exemption, new_expiry_date)
 

@@ -9,20 +9,20 @@
 
 <%= form_tag two_step_verification_exemption_path(@user), method: "patch", :class => 'well remove-top-padding' do %>
   <div class="add-top-margin">
-    <p>You are about to exempt this user from having 2 step verification on their account. This will remove any existing
-      requirement to log in with, or set up 2 step verification.</p>
+    <p>You are about to exempt this user from having 2-step verification on their account. This will remove any existing
+      requirement to log in with, or set up 2-step verification.</p>
   </div>
   <div class="form-group">
-    <label for="user_reason_for_2sv_exemption">Reason for 2sv exemption</label>
+    <label for="user_reason_for_2sv_exemption">Reason for 2-step verification exemption</label>
     <%= text_field_tag "user[reason_for_2sv_exemption]", @user.reason_for_2sv_exemption, class: 'form-control input-md-6' %>
   </div>
   <p>Please provide a reason for granting this exemption above.</p>
-  <p>Please note - the reason you enter above will be visible to the user, and any admin who have the ability to edit
+  <p>Please note - the reason you enter above will be visible to the user, and any admins who have the ability to edit
     the user.</p>
   <div class="form-group add-top-margin">
     <label for="user_expiry_date_for_2sv_exemption">Expiry date for exemption</label>
     <div class="form-inline">
-      <%= date_select :user, :expiry_date_for_2sv_exemption, {start_year: Time.zone.today.year, selected: Time.zone.today + 1} %>
+      <%= date_select :user, :expiry_date_for_2sv_exemption, {start_year: Time.zone.today.year, default: Time.zone.today + 1, selected: @user.expiry_date_for_2sv_exemption} %>
     </div>
   </div>
   <p>All exemptions must have an expiry date. As this date approaches, this exemption will need to be reviewed.</p>

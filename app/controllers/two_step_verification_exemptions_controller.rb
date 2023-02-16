@@ -12,7 +12,7 @@ class TwoStepVerificationExemptionsController < ApplicationController
     else
       reason_for_2sv_exemption, valid_expiry_date = error_string_or_parsed_params
       @user.exempt_from_2sv(reason_for_2sv_exemption, current_user, valid_expiry_date)
-      flash[:notice] = "User exempted from 2SV"
+      flash[:notice] = "User exempted from 2-step verification"
       redirect_to edit_user_path(@user)
     end
   end

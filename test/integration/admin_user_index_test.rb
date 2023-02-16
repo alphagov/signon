@@ -175,6 +175,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       end
 
       assert has_css?("td", text: "Enabled", count: total_enabled)
+      assert has_css?(".filter-by-two_step_status-menu .filter-selected span", text: "Enabled")
       assert has_no_css?("td", text: "Not set up")
       assert has_no_css?("td", text: "Exempted")
 
@@ -184,6 +185,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       assert has_no_css?("td", text: "Enabled")
       assert has_css?("td", text: "Not set up", count: total_disabled)
+      assert has_css?(".filter-by-two_step_status-menu .filter-selected span", text: "Not set up")
       assert has_no_css?("td", text: "Exempted")
 
       within ".filter-by-two_step_status-menu .dropdown-menu" do
@@ -191,6 +193,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       end
 
       assert has_css?("td", text: "Exempted", count: total_exempted)
+      assert has_css?(".filter-by-two_step_status-menu .filter-selected span", text: "Exempted")
       assert has_no_css?("td", text: "Not set up")
       assert has_no_css?("td", text: "Enabled")
     end
