@@ -13,7 +13,7 @@ class ChangeUserRoleTest < ActionDispatch::IntegrationTest
   end
 
   context "when logged in as a super admin" do
-    should "be able to change the role of a user who has no 2fa exemption reason" do
+    should "be able to change the role of a user who has no 2SV exemption reason" do
       user = create(:user)
       sign_in_as_and_edit_user(@super_admin, user)
 
@@ -23,7 +23,7 @@ class ChangeUserRoleTest < ActionDispatch::IntegrationTest
       assert user.reload.admin?
     end
 
-    should "not be able to change the role of a user who has a 2fa exemption reason" do
+    should "not be able to change the role of a user who has a 2SV exemption reason" do
       user = create(:two_step_exempted_user)
       sign_in_as_and_edit_user(@super_admin, user)
 

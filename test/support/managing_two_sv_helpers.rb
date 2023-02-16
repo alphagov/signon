@@ -23,7 +23,7 @@ module ManagingTwoSvHelpers
     click_button "Update User"
   end
 
-  def admin_can_send_2fa_email(admin, user)
+  def admin_can_send_2sv_email(admin, user)
     sign_in_as_and_edit_user(admin, user)
 
     assert page.has_text? "2-step verification not set up"
