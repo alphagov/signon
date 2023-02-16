@@ -214,6 +214,12 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
             sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
             click_link("Edit reason or expiry date for 2-step verification exemption")
+
+            assert page.has_field?("Reason for 2-step verification exemption", with: "user is exempt")
+            assert page.has_field?("user_expiry_date_for_2sv_exemption_1i", with: @expiry_date.year)
+            assert page.has_field?("user_expiry_date_for_2sv_exemption_2i", with: @expiry_date.month)
+            assert page.has_field?("user_expiry_date_for_2sv_exemption_3i", with: @expiry_date.day)
+
             new_expiry_date = 1.month.from_now.to_date
             fill_in_exemption_form(@reason_for_exemption, new_expiry_date)
 
