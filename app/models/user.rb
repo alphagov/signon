@@ -259,7 +259,7 @@ class User < ApplicationRecord
   def set_2sv_for_admin_roles
     return if Rails.application.config.instance_name.present?
 
-    self.require_2sv = true if role_changed? && (admin? || superadmin?)
+    self.require_2sv = true if role_changed? && (admin? || superadmin? || organisation_admin? || super_organisation_admin?)
   end
 
   def reset_2sv_exemption_reason
