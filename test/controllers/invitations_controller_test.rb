@@ -86,6 +86,7 @@ class InvitationsControllerTest < ActionController::TestCase
 
       assert_redirected_to users_path
       assert_equal "User Name", User.last.name
+      assert User.last.require_2sv
     end
 
     should "not render 2SV form and saves user when user is an admin" do
@@ -95,6 +96,27 @@ class InvitationsControllerTest < ActionController::TestCase
 
       assert_redirected_to users_path
       assert_equal "User Name", User.last.name
+      assert User.last.require_2sv
+    end
+
+    should "not render 2SV form and saves user when user is an organisation admin" do
+      organisation = create(:organisation, require_2sv: false)
+
+      post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id, role: "organisation_admin" } }
+
+      assert_redirected_to users_path
+      assert_equal "User Name", User.last.name
+      assert User.last.require_2sv
+    end
+
+    should "not render 2SV form and saves user when user is an super organisation admin" do
+      organisation = create(:organisation, require_2sv: false)
+
+      post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id, role: "super_organisation_admin" } }
+
+      assert_redirected_to users_path
+      assert_equal "User Name", User.last.name
+      assert User.last.require_2sv
     end
   end
 

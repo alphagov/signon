@@ -51,6 +51,18 @@ class UserTest < ActiveSupport::TestCase
       assert user.require_2sv?
     end
 
+    should "default to true when a user is promoted to organisation admin" do
+      user = create(:user_in_organisation)
+      user.update!(role: "organisation_admin")
+      assert user.require_2sv?
+    end
+
+    should "default to true when a user is promoted to super organisation admin" do
+      user = create(:user_in_organisation)
+      user.update!(role: "super_organisation_admin")
+      assert user.require_2sv?
+    end
+
     should "not change if other changes are made to an admin" do
       user = create(:admin_user)
       user.update!(require_2sv: false)
