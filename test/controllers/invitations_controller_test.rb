@@ -86,6 +86,7 @@ class InvitationsControllerTest < ActionController::TestCase
 
       assert_redirected_to users_path
       assert_equal "User Name", User.last.name
+      assert User.last.require_2sv
     end
 
     should "not render 2SV form and saves user when user is an admin" do
@@ -95,6 +96,7 @@ class InvitationsControllerTest < ActionController::TestCase
 
       assert_redirected_to users_path
       assert_equal "User Name", User.last.name
+      assert User.last.require_2sv
     end
 
     should "not render 2SV form and saves user when user is an organisation admin" do
