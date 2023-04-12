@@ -131,6 +131,7 @@ private
   end
 
   def new_user_requires_2sv(params)
-    (params[:organisation_id].present? && Organisation.find(params[:organisation_id]).require_2sv?) || %w[superadmin admin].include?(params[:role])
+    (params[:organisation_id].present? && Organisation.find(params[:organisation_id]).require_2sv?) ||
+      %w[superadmin admin organisation_admin super_organisation_admin].include?(params[:role])
   end
 end
