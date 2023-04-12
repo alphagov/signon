@@ -38,4 +38,48 @@ class UsersTaskTest < ActiveSupport::TestCase
       assert(users_in_other_domain.each(&:reload).all? { |user| !user.require_2sv })
     end
   end
+
+  context "#set_2sv_for_org_admins" do
+    setup do
+      @task = Rake::Task["users:set_2sv_for_org_admins"]
+    end
+
+    teardown do
+      @task.reenable # without this, calling `invoke` does nothing after first test
+    end
+
+    should "require 2SV for an organisation admin" do
+      user = create(:organisation_admin)
+
+      @task.invoke
+
+      assert user.reload.require_2sv
+    end
+
+    should "require 2SV for an super organisation admin" do
+      user = create(:super_org_admin)
+
+      @task.invoke
+
+      assert user.reload.require_2sv
+    end
+
+    should "not require 2SV for normal user" do
+      user = create(:user, role: "normal")
+
+      @task.invoke
+
+      assert_not user.reload.require_2sv
+    end
+
+    should "not reset the existing 2SV key for an organisation admin who already has 2SV enabled" do
+      user = create(:two_step_enabled_organisation_admin)
+      current_otp_secret_key = user.otp_secret_key
+
+      @task.invoke
+
+      assert user.reload.require_2sv
+      assert_equal current_otp_secret_key, user.reload.otp_secret_key
+    end
+  end
 end

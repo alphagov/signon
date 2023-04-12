@@ -39,6 +39,11 @@ FactoryBot.define do
     otp_secret_key { "Sssshh" }
   end
 
+  factory :two_step_enabled_organisation_admin, parent: :organisation_admin do
+    require_2sv { true }
+    otp_secret_key { "Sssshh" }
+  end
+
   factory :two_step_mandated_superadmin_user, parent: :superadmin_user do
     require_2sv { true }
   end

@@ -173,4 +173,14 @@ namespace :users do
 
     users_to_update.each { |user| user.update(require_2sv: true) }
   end
+
+  desc "Sets 2sv on all organisation admin and organisation superadmin users"
+  task set_2sv_for_org_admins: :environment do
+    org_admin_users = User.where(role: "organisation_admin")
+    super_org_admin_users = User.where(role: "super_organisation_admin")
+
+    users_to_update = org_admin_users + super_org_admin_users
+
+    users_to_update.each { |user| user.update(require_2sv: true) }
+  end
 end
