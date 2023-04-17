@@ -10,7 +10,7 @@ class OrganisationPolicy < BasePolicy
   end
 
   def edit?
-    current_user.superadmin? && ENV["MANDATE_2SV_FOR_ORGANISATION"]
+    current_user.superadmin?
   end
 
   class Scope < ::BasePolicy::Scope

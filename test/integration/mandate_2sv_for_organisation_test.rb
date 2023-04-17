@@ -27,13 +27,6 @@ class Mandate2svForOrganisationTest < ActionDispatch::IntegrationTest
           click_button "Update Organisation"
           assert page.has_text? "true"
         end
-
-        should "not be able to see the edit link when the MANDATE_2SV_FOR_ORGANISATION env variable is nil" do
-          ClimateControl.modify(MANDATE_2SV_FOR_ORGANISATION: nil) do
-            visit organisations_path
-            assert page.has_no_link? "Edit"
-          end
-        end
       end
 
       context "organisation mandates 2sv" do
