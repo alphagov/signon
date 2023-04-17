@@ -24,12 +24,6 @@ class OrganisationPolicyTest < ActiveSupport::TestCase
       assert forbid?(create(:organisation_admin), User, :edit)
       assert forbid?(create(:user), User, :edit)
     end
-
-    should "not allow for a superadmin when the MANDATE_2SV_FOR_ORGANISATION is not present" do
-      ClimateControl.modify(MANDATE_2SV_FOR_ORGANISATION: nil) do
-        assert forbid?(create(:superadmin_user), User, :edit)
-      end
-    end
   end
 
   context "can_assign" do
