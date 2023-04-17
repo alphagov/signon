@@ -61,8 +61,7 @@ class UserPolicy < BasePolicy
     current_user.belongs_to_gds? &&
       (current_user.superadmin? || current_user.admin?) &&
       record.normal? &&
-      !record.api_user &&
-      ENV["PERMIT_2SV_EXEMPTION"]
+      !record.api_user
   end
 
 private
