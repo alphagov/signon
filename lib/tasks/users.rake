@@ -152,7 +152,7 @@ namespace :users do
 
   desc "Sets 2sv on all users by organisation"
   task :set_2sv_by_org, [:org] => :environment do |_t, args|
-    organisation = Organisation.find_by(name: args.org)
+    organisation = Organisation.find_by(slug: args.org)
     raise "Couldn't find organisation: '#{args.org}'" unless organisation
 
     users_to_update = User.where(organisation_id: organisation.id, require_2sv: false)
