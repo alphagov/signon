@@ -10,12 +10,12 @@ class UsersTaskTest < ActiveSupport::TestCase
 
   context "#set_2sv_by_org" do
     should "sets 2sv for all users within the specified org" do
-      organisation = create(:organisation, name: "Department of Health")
+      organisation = create(:organisation, slug: "department-of-health")
       users_in_organisation = @user_types.map { |user_type| create(user_type, organisation:) }
       exempted_user_in_organisation = create(:two_step_exempted_user, organisation:)
       users_in_different_organisation = @user_types.map { |user_type| create(user_type, organisation: create(:organisation)) }
 
-      Rake::Task["users:set_2sv_by_org"].invoke(organisation.name)
+      Rake::Task["users:set_2sv_by_org"].invoke(organisation.slug)
 
       assert users_in_organisation.each(&:reload).all?(&:require_2sv)
       assert_not exempted_user_in_organisation.reload.require_2sv
