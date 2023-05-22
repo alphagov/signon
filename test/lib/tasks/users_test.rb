@@ -23,6 +23,16 @@ class UsersTaskTest < ActiveSupport::TestCase
     end
   end
 
+  context "#set_2sv_for_org" do
+    should "sets 2sv for the specified org" do
+      organisation = create(:organisation, slug: "department-of-health")
+
+      Rake::Task["users:set_2sv_for_org"].invoke(organisation.slug)
+
+      assert organisation.reload.require_2sv?
+    end
+  end
+
   context "#set_2sv_by_email_domain" do
     should "sets 2sv for all users within the specified email domain" do
       targeted_domain = "@some.domain.gov.uk"
