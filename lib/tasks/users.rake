@@ -150,7 +150,7 @@ namespace :users do
     UserPermissionMigrator.migrate(source: source_application, target: target_application)
   end
 
-  desc "Sets 2sv on all users by organisation"
+  desc "Sets 2sv on all existing users by organisation"
   task :set_2sv_by_org, [:org] => :environment do |_t, args|
     organisation = Organisation.find_by(slug: args.org)
     raise "Couldn't find organisation: '#{args.org}'" unless organisation
@@ -161,6 +161,16 @@ namespace :users do
     puts "found #{users_to_update.size} users without 2sv in organsation #{args.org} to set require 2sv flag on"
 
     users_to_update.each { |user| user.update(require_2sv: true) }
+  end
+
+  desc "Sets 2sv on an organisation"
+  task :set_2sv_for_org, [:org] => :environment do |_t, args|
+    organisation = Organisation.find_by(slug: args.org)
+    raise "Couldn't find organisation: '#{args.org}'" unless organisation
+
+    organisation.update!(require_2sv: true)
+
+    puts "mandated 2sv for organsation #{args.org}"
   end
 
   desc "Sets 2sv on all users by email domain"
