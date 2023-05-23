@@ -1,97 +1,67 @@
-<% title = current_user.has_2sv? ? "Use a new phone" : "Set up 2-step verification" %>
-<% content_for :title, title %>
-<% invalid_code_entered = flash[:invalid_code] %>
+<% content_for :title, current_user.has_2sv? ? "Use a new phone" : "Set up 2-step verification" %>
 
-<h1><%= title %></h1>
-<div class="row">
-  <div class="col-md-8">
-    <% if current_user.has_2sv? %>
-      <div class="alert alert-warning">
-        <p>Setting up a new phone will replace your existing one. You will only be able to sign in with your new phone.</p>
-      </div>
-    <% end %>
-    <p class="lead">Make your Signon account more secure by setting up 2-step verification. You’ll need to install an app on your phone which will generate a verification code to enter when you sign in.</p>
+<% if flash[:invalid_code].present? %>
+  <% content_for :error_summary do %>
+    <%= render "govuk_publishing_components/components/error_summary", {
+      title: "There is a problem",
+      items: [{ text: flash[:invalid_code], href: "#enter-code" }],
+    } %>
+  <% end %>
+<% end %>
 
-    <div class="panel-group" id="setup-steps" role="tablist" aria-multiselectable="true">
-      <div class="panel panel-part">
-        <div class="panel-heading" role="tab" id="step-one-heading">
-          <h4 class="panel-title">
-            <a role="button" data-toggle="collapse" data-parent="#setup-steps" href="#step-one" aria-expanded="true" aria-controls="step-one">
-              1. Install a verification app on your phone
-            </a>
-          </h4>
-        </div>
-        <div id="step-one" class="panel-collapse collapse <% unless invalid_code_entered %>in<% end %>" role="tabpanel" aria-labelledby="step-one-heading">
-          <div class="panel-body">
-            <p class="lead">Install a verification app from the app store on your phone - for example, Google Authenticator or Microsoft Authenticator.</p>
-            <a class="collapsed btn btn-lg btn-success" role="button" data-toggle="collapse" data-parent="#setup-steps" href="#step-two" aria-expanded="false" aria-controls="step-two">
-              Next
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="panel panel-part">
-        <div class="panel-heading" role="tab" id="step-two-heading">
-          <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#setup-steps" href="#step-two" aria-expanded="false" aria-controls="step-two">
-              2. Scan the barcode using your app
-            </a>
-          </h4>
-        </div>
-        <div id="step-two" class="panel-collapse collapse" role="tabpanel" aria-labelledby="step-two-heading">
-          <div class="panel-body">
-            <p class="lead">In your app add a new account and scan the barcode:</p>
-            <ul class="list-group">
-              <li class="list-group-item">
-                <%= image_tag(qr_code_data_uri(user: current_user, otp_secret_key: @otp_secret_key), width: 180) %>
-              </li>
-            </ul>
-            <p class="add-bottom-margin">If you cannot use a barcode, you can enter a code instead. This is sometimes called a set-up key, a secret key, or an activation key. Enter this code when asked: <%= @otp_secret_key%></p>
-            <a class="collapsed btn btn-lg btn-success" role="button" data-toggle="collapse" data-parent="#setup-steps" href="#step-three" aria-expanded="false" aria-controls="step-three">
-              Next
-            </a>
-          </div>
-        </div>
-      </div>
-      <div class="panel panel-part">
-        <div class="panel-heading" role="tab" id="step-three-heading">
-          <h4 class="panel-title">
-            <a class="collapsed" role="button" data-toggle="collapse" data-parent="#setup-steps" href="#step-three" aria-expanded="false" aria-controls="step-three">
-              3. Enter the verification code shown in the app
-            </a>
-          </h4>
-        </div>
-        <div id="step-three" class="panel-collapse collapse <% if invalid_code_entered %>in<% end %>" role="tabpanel" aria-labelledby="step-three-heading">
-          <div class="panel-body" data-module="track-click">
-              <% if invalid_code_entered %>
-                <%= content_tag :div,
-                  invalid_code_entered,
-                  class: 'alert alert-danger',
-                  data: track_analytics_data(:danger, invalid_code_entered) %>
-              <% end %>
-              <%= form_tag two_step_verification_path, method: :put do %>
-                <%= hidden_field_tag :otp_secret_key, @otp_secret_key%>
-                <div class="form-group <% if invalid_code_entered %>has-error text-danger<% end %>">
-                  <%= label_tag :code, 'Code from app' %>
-                  <%= text_field_tag :code, nil,
-                    class: 'form-control input-md-4 input-lg',
-                    placeholder: 'Enter 6-digit code',
-                    autocomplete: 'off' %>
-                </div>
-                <button name="submit" id="submit_code" class="btn btn-lg btn-success js-track">
-                  <% if current_user.has_2sv? %>
-                    Finish replacing your phone
-                  <% else %>
-                    Finish set up
-                  <% end %>
-                </button>
-                <% unless current_user.has_2sv? %>
-                  <a href="/" class="btn btn-lg btn-default add-left-margin js-track">Cancel</a>
-                <% end %>
-              <% end %>
-          </div>
-        </div>
-      </div>
-    </div>
+<% if current_user.has_2sv? %>
+  <%= render "govuk_publishing_components/components/warning_text", {
+    text: "Setting up a new phone will replace your existing one. You will only be able to sign in with your new phone."
+  } %>
+<% end %>
+
+<%= render "govuk_publishing_components/components/lead_paragraph", {
+  text: "Make your Signon account more secure by setting up 2-step verification. You’ll need to install an app on your phone which will generate a verification code to enter when you sign in."
+} %>
+
+<h2 class="govuk-heading-m">1. Install a verification app on your phone</h2>
+
+<p class="govuk-body">
+    Install a verification app from the app store on your phone - for
+    example, Google Authenticator or Microsoft Authenticator.
+</p>
+
+<h2 class="govuk-heading-m">2. Scan the barcode using your app</h2>
+
+<p class="govuk-body">In your app add a new account and scan the barcode:</p>
+
+<%= image_tag(qr_code_data_uri(user: current_user, otp_secret_key: @otp_secret_key), width: 180) %>
+
+<details class="govuk-details" data-module="govuk-details">
+  <summary class="govuk-details__summary">
+    <span class="govuk-details__summary-text">
+      If you cannot use a barcode
+    </span>
+  </summary>
+  <div class="govuk-details__text">
+    You can enter a code instead. This is sometimes called a set-up key, a secret key, or an activation key. Enter this code when asked: <%= @otp_secret_key%>
   </div>
-</div>
+</details>
+
+<h2 id="enter-code" class="govuk-heading-m">3. Enter the verification code shown in the app</h2>
+
+<%= form_tag two_step_verification_path, method: :put do %>
+  <%= hidden_field_tag :otp_secret_key, @otp_secret_key%>
+
+  <%= render "govuk_publishing_components/components/input", {
+    label: { text: "Code from app" },
+    name: "code",
+    type: "text",
+    error_message: flash[:invalid_code]
+  } %>
+
+  <div class="govuk-button-group">
+    <%= render "govuk_publishing_components/components/button", {
+      text: current_user.has_2sv? ? "Finish replacing your phone" : "Finish set up",
+    } %>
+
+    <% unless current_user.has_2sv? %>
+      <%= link_to "Cancel", root_path, class: "govuk-link govuk-link--no-visited-state" %>
+    <% end %>
+  </div>
+<% end %>

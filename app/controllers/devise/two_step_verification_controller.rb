@@ -1,7 +1,7 @@
 class Devise::TwoStepVerificationController < DeviseController
   before_action -> { authenticate_user!(force: true) }, only: :prompt
   before_action :prepare_and_validate, except: :prompt
-  layout "admin_layout", only: %w[prompt]
+  layout "admin_layout", only: %w[show update prompt]
 
   attr_reader :otp_secret_key
 
