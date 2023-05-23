@@ -40,8 +40,8 @@
           </td>
           <td>
             <% visible_applications(user).each do |application| %>
-              <% if permissions_for_application = user.permissions_for(application) %>
-                <abbr title="Permissions: <%= permissions_for_application.to_sentence %>" data-toggle="tooltip" data-placement="right"><%= application.name %></abbr><br />
+              <% if user.permissions_for(application).any? %>
+                <abbr title="Permissions: <%= user.permissions_for(application).to_sentence %>" data-toggle="tooltip" data-placement="right"><%= application.name %></abbr><br />
               <% end %>
             <% end %>
           </td>
