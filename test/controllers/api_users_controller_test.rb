@@ -32,13 +32,13 @@ class ApiUsersControllerTest < ActionController::TestCase
       should "list api users" do
         create(:api_user, email: "api_user@email.com")
         get :index
-        assert_select "td.email", /api_user@email.com/
+        assert_select "td", "api_user@email.com"
       end
 
       should "not list web users" do
         create(:user, email: "web_user@email.com")
         get :index
-        assert_select "td.email", count: 0, text: /web_user@email.com/
+        assert_select "td", count: 0, text: "web_user@email.com"
       end
     end
 
