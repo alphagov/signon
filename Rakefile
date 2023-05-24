@@ -5,4 +5,9 @@ require File.expand_path("config/application", __dir__)
 
 Signon::Application.load_tasks
 
+require "sprockets/rails/task"
+Sprockets::Rails::Task.new(Rails.application) do |t|
+  t.log_level = Logger::WARN
+end
+
 task default: %i[lint test jasmine]
