@@ -1,6 +1,8 @@
 class ApiUsersController < ApplicationController
   include UserPermissionsControllerMethods
 
+  layout "admin_layout", only: %w[index]
+
   before_action :authenticate_user!
   before_action :load_and_authorize_api_user, only: %i[edit update]
   helper_method :applications_and_permissions, :visible_applications
