@@ -35,4 +35,10 @@ private
     issuer = ERB::Util.url_encode(issuer)
     "otpauth://totp/#{issuer}:#{user.email}?secret=#{otp_secret_key.upcase}&issuer=#{issuer}"
   end
+
+  def qr_code_data_uri(user:, otp_secret_key:)
+    uri = otp_secret_key_uri(user:, otp_secret_key:)
+    qr_code = RQRCode::QRCode.new(uri, level: :m)
+    qr_code.as_png(size: 180, fill: ChunkyPNG::Color::TRANSPARENT).to_data_url
+  end
 end

@@ -34,13 +34,6 @@ private
     end
   end
 
-  def qr_code_data_uri
-    uri = otp_secret_key_uri(user: current_user, otp_secret_key: @otp_secret_key)
-    qr_code = RQRCode::QRCode.new(uri, level: :m)
-    qr_code.as_png(size: 180, fill: ChunkyPNG::Color::TRANSPARENT).to_data_url
-  end
-  helper_method :qr_code_data_uri
-
   def prepare_and_validate
     redirect_to(:root) && return if current_user.nil?
 
