@@ -24,16 +24,6 @@ class Devise::TwoStepVerificationController < DeviseController
     end
   end
 
-  def otp_secret_key_uri
-    issuer = I18n.t("devise.issuer")
-    if Rails.application.config.instance_name
-      issuer = "#{Rails.application.config.instance_name.titleize} #{issuer}"
-    end
-
-    issuer = ERB::Util.url_encode(issuer)
-    "otpauth://totp/#{issuer}:#{current_user.email}?secret=#{@otp_secret_key.upcase}&issuer=#{issuer}"
-  end
-
 private
 
   def send_notification(_user, mode)
@@ -43,12 +33,6 @@ private
       UserMailer.two_step_changed(current_user).deliver_later
     end
   end
-
-  def qr_code_data_uri
-    qr_code = RQRCode::QRCode.new(otp_secret_key_uri, level: :m)
-    qr_code.as_png(size: 180, fill: ChunkyPNG::Color::TRANSPARENT).to_data_url
-  end
-  helper_method :qr_code_data_uri
 
   def prepare_and_validate
     redirect_to(:root) && return if current_user.nil?

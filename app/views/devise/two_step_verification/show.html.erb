@@ -43,7 +43,7 @@
             <p class="lead">In your app add a new account and scan the barcode:</p>
             <ul class="list-group">
               <li class="list-group-item">
-                <%= image_tag(qr_code_data_uri, width: 180) %>
+                <%= image_tag(qr_code_data_uri(user: current_user, otp_secret_key: @otp_secret_key), width: 180) %>
               </li>
             </ul>
             <p class="add-bottom-margin">If you cannot use a barcode, you can enter a code instead. This is sometimes called a set-up key, a secret key, or an activation key. Enter this code when asked: <%= @otp_secret_key%></p>
