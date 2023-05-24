@@ -25,4 +25,14 @@ private
   def on_2sv_setup_journey
     controller_path == Devise::TwoStepVerificationController.controller_path
   end
+
+  def otp_secret_key_uri(user:, otp_secret_key:)
+    issuer = I18n.t("devise.issuer")
+    if Rails.application.config.instance_name
+      issuer = "#{Rails.application.config.instance_name.titleize} #{issuer}"
+    end
+
+    issuer = ERB::Util.url_encode(issuer)
+    "otpauth://totp/#{issuer}:#{user.email}?secret=#{otp_secret_key.upcase}&issuer=#{issuer}"
+  end
 end
