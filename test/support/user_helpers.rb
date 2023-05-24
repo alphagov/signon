@@ -34,7 +34,6 @@ module UserHelpers
   def enter_2sv_code(secret)
     Timecop.freeze do
       fill_in "code", with: ROTP::TOTP.new(secret).now
-      click_button "submit_code"
     end
   end
 end

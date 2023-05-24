@@ -25,7 +25,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
       should "reject an invalid code, reuse the secret and log the rejection" do
         fill_in "code", with: "abcdef"
-        click_button "submit_code"
+        click_button "Finish replacing your phone"
 
         assert_response_contains "Sorry that code didn’t work. Please try again."
         assert_response_contains "Enter this code when asked: #{@new_secret}"
@@ -35,6 +35,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
       should "accept a valid code, persist the secret and log the event" do
         perform_enqueued_jobs do
           enter_2sv_code(@new_secret)
+          click_button "Finish replacing your phone"
 
           assert_response_contains "2-step verification phone changed successfully"
           assert_equal @new_secret, @user.reload.otp_secret_key
@@ -47,6 +48,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
       should "require the code again on next login" do
         enter_2sv_code(@new_secret)
+        click_button "Finish replacing your phone"
 
         click_link "Sign out"
 
@@ -68,7 +70,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
       should "reject an invalid code, reuse the secret and log the rejection" do
         fill_in "code", with: "abcdef"
-        click_button "submit_code"
+        click_button "Finish set up"
 
         assert_response_contains "Sorry that code didn’t work. Please try again."
         assert_response_contains "Enter this code when asked: #{@new_secret}"
@@ -79,6 +81,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         success = "2-step verification set up".freeze
         perform_enqueued_jobs do
           enter_2sv_code(@new_secret)
+          click_button "Finish set up"
 
           assert_response_contains success
           assert_equal @new_secret, @user.reload.otp_secret_key
@@ -94,7 +97,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
         Timecop.freeze do
           fill_in "code", with: old_code
-          click_button "submit_code"
+          click_button "Finish set up"
         end
 
         assert_response_contains "2-step verification set up"
@@ -117,6 +120,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         success = "2-step verification set up".freeze
         perform_enqueued_jobs do
           enter_2sv_code(@new_secret)
+          click_button "Finish set up"
 
           assert_response_contains success
           assert_nil @user.reload.reason_for_2sv_exemption
@@ -131,6 +135,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
       should "require the code again on next login" do
         enter_2sv_code(@new_secret)
+        click_button "Finish set up"
 
         click_link "Sign out"
 

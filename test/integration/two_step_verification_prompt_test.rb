@@ -30,6 +30,7 @@ class TwoStepVerificationPromptTest < ActionDispatch::IntegrationTest
         assert page.has_text?("Set up 2-step verification")
 
         enter_2sv_code(secret)
+        click_button "Finish set up"
 
         assert_equal users_path, current_path
       end
