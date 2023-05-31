@@ -1,4 +1,5 @@
 <% content_for :title, current_user.has_2sv? ? "Use a new phone" : "Set up 2-step verification" %>
+<% content_for :back_link, root_path %>
 
 <% if flash[:invalid_code].present? %>
   <% content_for :error_summary do %>
