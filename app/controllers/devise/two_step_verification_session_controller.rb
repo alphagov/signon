@@ -27,7 +27,7 @@ class Devise::TwoStepVerificationSessionController < DeviseController
       redirect_to_prior_flow
       current_user.update!(second_factor_attempts_count: 0)
     else
-      flash[:alert] = find_message(:attempt_failed)
+      flash.now[:alert] = find_message(:attempt_failed)
       if current_user.max_2sv_login_attempts?
         sign_out(current_user)
         render :max_2sv_login_attempts_reached
