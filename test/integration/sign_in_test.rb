@@ -182,6 +182,21 @@ class SignInTest < ActionDispatch::IntegrationTest
       assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_VERIFICATION_FAILED.id, uid: @user.uid).count
     end
 
+    should "not display attempt failed message on success even after failure" do
+      attempt_failed = I18n.t("devise.two_step_verification_session.attempt_failed")
+
+      visit root_path
+
+      signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: "invalid")
+      assert_response_contains attempt_failed
+
+      code = ROTP::TOTP.new(@user.otp_secret_key).now
+      fill_in :code, with: code
+      click_button "Sign in"
+
+      refute_response_contains attempt_failed
+    end
+
     should "prevent access if max attempts reached" do
       visit root_path
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
