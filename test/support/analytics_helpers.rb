@@ -10,12 +10,12 @@ module AnalyticsHelpers
 
   def refute_dimension_is_set(dimension)
     js_code = dimension_set_js_code(dimension)
-    assert_no_match(/#{Regexp.escape(js_code)}/, page.body)
+    assert_not page.has_text?(:all, js_code)
   end
 
   def assert_dimension_is_set(dimension, with_value: nil)
     js_code = dimension_set_js_code(dimension, with_value:)
-    assert_match(/#{Regexp.escape(js_code)}/, page.body)
+    assert page.has_text?(:all, js_code)
   end
 
 private
