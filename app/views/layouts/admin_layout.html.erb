@@ -73,6 +73,10 @@
       ga('set', 'dimension8', "<%= current_user.organisation ? current_user.organisation.slug : '(not set)' %>");
     <% end %>
 
-    ga('send', 'pageview');
+    <% if sensitive_query_parameters? %>
+      ga('send', 'pageview', { page: '<%= sanitised_fullpath %>' });
+    <% else %>
+      ga('send', 'pageview');
+    <% end %>
   </script>
 <% end %>
