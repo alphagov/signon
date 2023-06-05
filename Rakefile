@@ -10,4 +10,5 @@ Sprockets::Rails::Task.new(Rails.application) do |t|
   t.log_level = Logger::WARN
 end
 
-task default: %i[lint test jasmine]
+Rake::Task[:default].clear_prerequisites
+task default: %i[lint jasmine test]
