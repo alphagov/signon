@@ -9,12 +9,19 @@ module AnalyticsHelpers
   end
 
   def refute_dimension_is_set(dimension)
-    assert_no_match(/#{Regexp.escape("GOVUKAdmin.setDimension(#{dimension}")}/, page.body)
+    js_code = dimension_set_js_code(dimension)
+    assert_no_match(/#{Regexp.escape(js_code)}/, page.body)
   end
 
   def assert_dimension_is_set(dimension, with_value: nil)
-    dimension_set_js_code = "ga('set', 'dimension#{dimension}"
-    dimension_set_js_code += "', \"#{with_value}\")" if with_value.present?
-    assert_match(/#{Regexp.escape(dimension_set_js_code)}/, page.body)
+    js_code = dimension_set_js_code(dimension, with_value:)
+    assert_match(/#{Regexp.escape(js_code)}/, page.body)
+  end
+
+private
+
+  def dimension_set_js_code(dimension, with_value: nil)
+    code = "ga('set', 'dimension#{dimension}"
+    with_value.present? ? code + "', \"#{with_value}\")" : code
   end
 end
