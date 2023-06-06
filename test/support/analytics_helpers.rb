@@ -17,4 +17,15 @@ module AnalyticsHelpers
     dimension_set_js_code += "', \"#{with_value}\")" if with_value.present?
     assert_match(/#{Regexp.escape(dimension_set_js_code)}/, page.body)
   end
+
+  def google_analytics_page_view_path
+    case page.body
+    when Regexp.new("ga\\('send', 'pageview', { page: '(?<explicit_path>[^']*)' }\\)")
+      Regexp.last_match[:explicit_path]
+    when Regexp.new("ga\\('send', 'pageview'\\)")
+      page.current_path
+    else
+      flunk "Google Analytics page view not sent"
+    end
+  end
 end
