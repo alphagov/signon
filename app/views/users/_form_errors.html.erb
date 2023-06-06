@@ -3,7 +3,7 @@
   <div class="govuk-error-summary__body">
     <ul class="govuk-list govuk-error-summary__list">
       <% @user.errors.full_messages.each do |message| %>
-        <%= content_tag :li, message, data: track_analytics_data(:danger, message) %>
+        <%= content_tag :li, message %>
       <% end %>
     </ul>
   </div>

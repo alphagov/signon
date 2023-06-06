@@ -12,7 +12,7 @@
       <div class="alert alert-danger">
         <ul>
           <% @bulk_grant_permission_set.errors.full_messages.each do |message| %>
-            <%= content_tag :li, message, data: track_analytics_data(:danger, message) %>
+            <%= content_tag :li, message %>
           <% end %>
         </ul>
       </div>
