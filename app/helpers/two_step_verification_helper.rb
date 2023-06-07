@@ -36,9 +36,12 @@ private
     "otpauth://totp/#{issuer}:#{user.email}?secret=#{otp_secret_key.upcase}&issuer=#{issuer}"
   end
 
-  def qr_code_data_uri(user:, otp_secret_key:)
+  def qr_code_svg(user:, otp_secret_key:)
     uri = otp_secret_key_uri(user:, otp_secret_key:)
     qr_code = RQRCode::QRCode.new(uri, level: :m)
-    qr_code.as_png(size: 180, fill: ChunkyPNG::Color::TRANSPARENT).to_data_url
+    qr_code.as_svg(
+      use_path: true,
+      viewbox: true,
+    ).html_safe
   end
 end

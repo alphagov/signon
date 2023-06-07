@@ -48,3 +48,12 @@
     font-weight: bold;
   }
 }
+
+.qr-code-container {
+  @include govuk-responsive-margin(3, "bottom");
+
+  svg {
+    @include govuk-responsive-margin(2, "left");
+    @include govuk-responsive-margin(2, "right");
+  }
+}
