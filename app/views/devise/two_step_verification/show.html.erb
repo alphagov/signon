@@ -27,16 +27,16 @@
     example, Google Authenticator or Microsoft Authenticator.
 </p>
 
-<h2 class="govuk-heading-m">2. Scan the barcode using your app</h2>
+<h2 class="govuk-heading-m">2. Scan the QR code using your app</h2>
 
-<p class="govuk-body">In your app add a new account and scan the barcode:</p>
+<p class="govuk-body">In your app add a new account and scan the QR code:</p>
 
 <%= image_tag(qr_code_data_uri(user: current_user, otp_secret_key: @otp_secret_key), width: 180) %>
 
 <details class="govuk-details" data-module="govuk-details">
   <summary class="govuk-details__summary">
     <span class="govuk-details__summary-text">
-      If you cannot use a barcode
+      If you cannot use a QR code
     </span>
   </summary>
   <div class="govuk-details__text">
