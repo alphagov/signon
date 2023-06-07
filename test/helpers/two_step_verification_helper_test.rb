@@ -1,13 +1,13 @@
 require "test_helper"
 
 class TwoStepVerificationHelperTest < ActionView::TestCase
-  context "otp_secret_key_uri(user: @user, otp_secret_key: @secret)" do
-    setup do
-      @user = build(:user)
-      @secret = ROTP::Base32.random_base32
-      ROTP::Base32.stubs(random_base32: @secret)
-    end
+  setup do
+    @user = build(:user)
+    @secret = ROTP::Base32.random_base32
+    ROTP::Base32.stubs(random_base32: @secret)
+  end
 
+  context "otp_secret_key_uri(user: @user, otp_secret_key: @secret)" do
     should "include the secret key uppercased" do
       assert_match %r{#{@secret.upcase}}, otp_secret_key_uri(user: @user, otp_secret_key: @secret)
     end
@@ -41,6 +41,12 @@ class TwoStepVerificationHelperTest < ActionView::TestCase
 
     should "include the user's email" do
       assert_match %r{#{@user.email}}, otp_secret_key_uri(user: @user, otp_secret_key: @secret)
+    end
+  end
+
+  context "qr_code_svg(user:, otp_secret_key:)" do
+    should "should return an svg" do
+      assert_match %r{<svg.*>.*</svg>}, qr_code_svg(user: @user, otp_secret_key: @secret)
     end
   end
 end
