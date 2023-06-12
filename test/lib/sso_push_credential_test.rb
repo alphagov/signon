@@ -4,19 +4,16 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
   setup do
     @application = create(:application, with_supported_permissions: %w[user_update_permission])
 
-    SSOPushCredential.user_email = nil
     SSOPushCredential.user = nil
   end
 
   teardown do
-    SSOPushCredential.user_email = nil
     SSOPushCredential.user = nil
   end
 
   context "given an existing user" do
     setup do
-      @user = create(:user, email: "sso-push-user@gov.uk")
-      SSOPushCredential.user_email = "sso-push-user@gov.uk"
+      @user = create(:user, email: SSOPushCredential::USER_EMAIL)
     end
 
     context "given an already authorised application" do
@@ -68,25 +65,9 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
     end
   end
 
-  context "given an email which does not exist" do
-    setup do
-      SSOPushCredential.user_email = "does-not-exist@gov.uk"
-    end
-
+  context "given no user exists with matching email" do
     should "raise an exception on an authentication attempt" do
       assert_raise SSOPushCredential::UserNotFound do
-        SSOPushCredential.credentials(@application)
-      end
-    end
-  end
-
-  context "given no user email" do
-    setup do
-      SSOPushCredential.user_email = nil
-    end
-
-    should "raise an exception on an authentication attempt" do
-      assert_raise SSOPushCredential::UserNotProvided do
         SSOPushCredential.credentials(@application)
       end
     end

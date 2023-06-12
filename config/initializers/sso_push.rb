@@ -11,5 +11,4 @@
 #
 
 Rails.application.config.to_prepare do
-  SSOPushCredential.user_email = "signon+permissions@alphagov.co.uk"
 end

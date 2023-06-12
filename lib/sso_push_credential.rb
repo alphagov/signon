@@ -1,12 +1,10 @@
 class SSOPushCredential
   PERMISSIONS = %w[signin user_update_permission].freeze
+  USER_EMAIL = "signon+permissions@alphagov.co.uk".freeze
 
   class UserNotFound < StandardError; end
 
-  class UserNotProvided < StandardError; end
-
   class << self
-    attr_accessor :user_email
     attr_writer :user
 
     def credentials(application)
@@ -18,9 +16,7 @@ class SSOPushCredential
     end
 
     def user
-      raise UserNotProvided if user_email.blank?
-
-      @user ||= User.find_by(email: user_email) || raise(UserNotFound)
+      @user ||= User.find_by(email: USER_EMAIL) || raise(UserNotFound)
     end
   end
 end
