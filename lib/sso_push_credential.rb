@@ -1,5 +1,6 @@
 class SSOPushCredential
   PERMISSIONS = %w[signin user_update_permission].freeze
+  USER_NAME = "Signonotron API Client (permission and suspension updater)".freeze
   USER_EMAIL = "signon+permissions@alphagov.co.uk".freeze
 
   class << self
@@ -12,7 +13,13 @@ class SSOPushCredential
     end
 
     def user
-      User.find_by!(email: USER_EMAIL)
+      User.find_by(email: USER_EMAIL) || create_user!
+    end
+
+  private
+
+    def create_user!
+      ApiUser.build(name: USER_NAME, email: USER_EMAIL).tap(&:save!)
     end
   end
 end

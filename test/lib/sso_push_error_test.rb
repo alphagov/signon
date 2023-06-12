@@ -3,8 +3,6 @@ require "gds_api/base"
 
 class SSOPushErrorTest < ActiveSupport::TestCase
   def setup
-    @sso_push_user = create(:user, name: "SSO Push User", email: SSOPushCredential::USER_EMAIL)
-
     @user = create(:user)
     @application = create(:application, redirect_uri: "https://app.com/callback", with_supported_permissions: %w[user_update_permission])
   end

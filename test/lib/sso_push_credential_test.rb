@@ -7,7 +7,7 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
 
   context "given an existing user" do
     setup do
-      @user = create(:user, email: SSOPushCredential::USER_EMAIL)
+      @user = SSOPushCredential.user
     end
 
     context "given an already authorised application" do
@@ -56,14 +56,6 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
 
       assert @user.authorisations.first.present?
       assert @user.authorisations.first.expires_in >= 315_400_000
-    end
-  end
-
-  context "given no user exists with matching email" do
-    should "raise an exception on an authentication attempt" do
-      assert_raise ActiveRecord::RecordNotFound do
-        SSOPushCredential.credentials(@application)
-      end
     end
   end
 end

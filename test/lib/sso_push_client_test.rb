@@ -13,8 +13,6 @@ class SSOPushClientTest < ActiveSupport::TestCase
 
   context "update_user" do
     setup do
-      @sso_push_user = create(:user, name: "SSO Push User", email: SSOPushCredential::USER_EMAIL)
-
       @user = create(:user)
       @application = create(:application, redirect_uri: "https://app.com/callback", with_supported_permissions: %w[user_update_permission])
       @user_hash = UserOAuthPresenter.new(@user, @application).as_hash
@@ -38,8 +36,6 @@ class SSOPushClientTest < ActiveSupport::TestCase
 
   context "reauth" do
     setup do
-      @sso_push_user = create(:user, name: "SSO Push User", email: SSOPushCredential::USER_EMAIL)
-
       @user = create(:user)
       @application = create(:application, redirect_uri: "https://app.com/callback", with_supported_permissions: %w[user_update_permission])
     end

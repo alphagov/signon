@@ -7,8 +7,6 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
   end
 
   setup do
-    @sso_push_user = create(:user, name: "SSO Push User", email: SSOPushCredential::USER_EMAIL)
-
     @user = create(:user)
     @application = create(:application, redirect_uri: "https://app.com/callback", with_supported_permissions: %w[user_update_permission])
     @signin_permission = @user.grant_application_permission(@application, "signin")
