@@ -15,10 +15,6 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
     @other_permission = @user.grant_application_permission(@application, "user_update_permission")
   end
 
-  teardown do
-    SSOPushCredential.user = nil
-  end
-
   context "perform" do
     should "update the application with users information" do
       expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json

@@ -5,8 +5,6 @@ class SSOPushCredential
   class UserNotFound < StandardError; end
 
   class << self
-    attr_writer :user
-
     def credentials(application)
       user.grant_application_permissions(application, PERMISSIONS)
 
@@ -16,7 +14,7 @@ class SSOPushCredential
     end
 
     def user
-      @user ||= User.find_by(email: USER_EMAIL) || raise(UserNotFound)
+      User.find_by(email: USER_EMAIL) || raise(UserNotFound)
     end
   end
 end

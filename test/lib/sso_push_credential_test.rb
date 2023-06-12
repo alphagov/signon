@@ -3,12 +3,6 @@ require "test_helper"
 class SSOPushCredentialTest < ActiveSupport::TestCase
   setup do
     @application = create(:application, with_supported_permissions: %w[user_update_permission])
-
-    SSOPushCredential.user = nil
-  end
-
-  teardown do
-    SSOPushCredential.user = nil
   end
 
   context "given an existing user" do
