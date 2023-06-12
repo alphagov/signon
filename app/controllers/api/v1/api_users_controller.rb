@@ -15,11 +15,7 @@ class Api::V1::ApiUsersController < Api::V1::ApiController
 private
 
   def create_api_user(name:, email:)
-    password = SecureRandom.urlsafe_base64
-    api_user = ApiUser.new(name:, email:,
-                           password:, password_confirmation: password)
-    api_user.skip_confirmation!
-    api_user.api_user = true
+    api_user = ApiUser.build(name:, email:)
 
     if api_user.invalid? && api_user.errors.where(:email, :taken).any?
       raise ActiveRecord::RecordNotUnique

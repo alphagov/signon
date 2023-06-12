@@ -23,11 +23,7 @@ module Configure
     def find_or_create_api_user(name:, email:)
       return if ApiUser.exists?(email:)
 
-      password = SecureRandom.urlsafe_base64
-      api_user = ApiUser.new(name:, email:,
-                             password:, password_confirmation: password)
-      api_user.skip_confirmation!
-      api_user.api_user = true
+      api_user = ApiUser.build(name:, email:)
       api_user.save!
     end
   end

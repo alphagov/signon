@@ -6,6 +6,14 @@ class ApiUser < User
   DEFAULT_TOKEN_LIFE = 2.years.to_i
   AUTOROTATABLE_TOKEN_LIFE = 60.days.to_i
 
+  def self.build(attributes = {})
+    password = SecureRandom.urlsafe_base64
+    new(attributes.merge(password:, password_confirmation: password)).tap do |u|
+      u.skip_confirmation!
+      u.api_user = true
+    end
+  end
+
 private
 
   def require_2sv_is_false
