@@ -61,7 +61,7 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
 
   context "given no user exists with matching email" do
     should "raise an exception on an authentication attempt" do
-      assert_raise SSOPushCredential::UserNotFound do
+      assert_raise ActiveRecord::RecordNotFound do
         SSOPushCredential.credentials(@application)
       end
     end

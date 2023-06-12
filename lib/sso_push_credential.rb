@@ -2,8 +2,6 @@ class SSOPushCredential
   PERMISSIONS = %w[signin user_update_permission].freeze
   USER_EMAIL = "signon+permissions@alphagov.co.uk".freeze
 
-  class UserNotFound < StandardError; end
-
   class << self
     def credentials(application)
       user.grant_application_permissions(application, PERMISSIONS)
@@ -14,7 +12,7 @@ class SSOPushCredential
     end
 
     def user
-      User.find_by(email: USER_EMAIL) || raise(UserNotFound)
+      User.find_by!(email: USER_EMAIL)
     end
   end
 end
