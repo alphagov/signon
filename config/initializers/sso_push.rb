@@ -1,6 +1,9 @@
-# If you would like to use the SSO syncing functionality
-# to push updated permissions and suspensions to apps,
-# create a user in Signon and add their email address here.
+# Create a user in Signon with the following email address:
+#
+#   signon+permissions@alphagov.co.uk
+#
+# Signon will use this user for the SSO syncing functionality
+# to push updated permissions and suspensions to apps.
 #
 # Signon will make sure the user has the neccessary permissions
 # and authorisations to access the applications it needs
@@ -8,5 +11,5 @@
 #
 
 Rails.application.config.to_prepare do
-  SSOPushCredential.user_email = ENV["SSO_PUSH_USER_EMAIL"] || "replace.with.user.for.sso.push@digital.cabinet-office.gov.uk"
+  SSOPushCredential.user_email = "signon+permissions@alphagov.co.uk"
 end
