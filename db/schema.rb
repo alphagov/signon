@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_09_131935) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_13_153019) do
   create_table "batch_invitation_application_permissions", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "batch_invitation_id", null: false
     t.integer "supported_permission_id", null: false
@@ -218,4 +218,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_09_131935) do
   end
 
   add_foreign_key "event_logs", "user_agents", name: "event_logs_user_agent_id_fk"
+  add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
 end
