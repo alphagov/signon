@@ -24,10 +24,7 @@ class ApiUsersController < ApplicationController
   def create
     authorize ApiUser
 
-    password = SecureRandom.urlsafe_base64
-    @api_user = ApiUser.new(api_user_params.merge(password:, password_confirmation: password))
-    @api_user.skip_confirmation!
-    @api_user.api_user = true
+    @api_user = ApiUser.build(api_user_params)
 
     if @api_user.save
       EventLog.record_event(@api_user, EventLog::API_USER_CREATED, initiator: current_user, ip_address: user_ip_address)

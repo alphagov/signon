@@ -1,14 +1,9 @@
 class SSOPushCredential
   PERMISSIONS = %w[signin user_update_permission].freeze
-
-  class UserNotFound < StandardError; end
-
-  class UserNotProvided < StandardError; end
+  USER_NAME = "Signonotron API Client (permission and suspension updater)".freeze
+  USER_EMAIL = "signon+permissions@alphagov.co.uk".freeze
 
   class << self
-    attr_accessor :user_email
-    attr_writer :user
-
     def credentials(application)
       user.grant_application_permissions(application, PERMISSIONS)
 
@@ -18,9 +13,13 @@ class SSOPushCredential
     end
 
     def user
-      raise UserNotProvided if user_email.blank?
+      User.find_by(email: USER_EMAIL) || create_user!
+    end
 
-      @user ||= User.find_by(email: user_email) || raise(UserNotFound)
+  private
+
+    def create_user!
+      ApiUser.build(name: USER_NAME, email: USER_EMAIL).tap(&:save!)
     end
   end
 end
