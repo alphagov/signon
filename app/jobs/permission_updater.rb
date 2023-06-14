@@ -6,6 +6,7 @@ class PermissionUpdater < PushUserUpdatesJob
     application = ::Doorkeeper::Application.find_by(id: application_id)
     # It's possible they've been deleted between when the job was scheduled and run.
     return if user.nil? || application.nil?
+    return unless application.supports_push_updates?
 
     api = SSOPushClient.new(application)
     presenter = UserOAuthPresenter.new(user, application)

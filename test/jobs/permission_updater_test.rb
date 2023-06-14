@@ -11,7 +11,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
     SSOPushCredential.user_email = @sso_push_user.email
 
     @user = create(:user)
-    @application = create(:application, redirect_uri: "https://app.com/callback", with_supported_permissions: %w[user_update_permission])
+    @application = create(:application, redirect_uri: "https://app.com/callback", supports_push_updates: true)
     @signin_permission = @user.grant_application_permission(@application, "signin")
     @other_permission = @user.grant_application_permission(@application, "user_update_permission")
   end
@@ -67,6 +67,14 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
         SSOPushClient.expects(:new).never
 
         PermissionUpdater.new.perform(@user.uid, @application.id + 42)
+      end
+
+      should "do nothing if the application doesn't support push updates" do
+        @application = create(:application, supports_push_updates: false)
+
+        SSOPushClient.expects(:new).never
+
+        PermissionUpdater.new.perform(@user.uid, @application.id)
       end
 
       should "not raise if the user has no permissions for the application" do
