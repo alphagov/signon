@@ -14,6 +14,8 @@
   <div class="govuk-width-container">
     <% if yield(:back_link).present? %>
       <%= render "govuk_publishing_components/components/back_link", href: yield(:back_link) %>
+    <% elsif yield(:breadcrumbs).present? %>
+      <%= yield(:breadcrumbs) %>
     <% end %>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">

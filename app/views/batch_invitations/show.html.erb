@@ -1,4 +1,26 @@
 <% content_for :title, "Creating a batch of users" %>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Home",
+         url: root_path,
+       },
+       {
+         title: "Users",
+         url: users_path,
+       },
+       {
+         title: "Upload a batch of users",
+         url: new_batch_invitation_path,
+       },
+       {
+         title: "Creating a batch of users",
+       }
+     ]
+   })
+%>
 
 <% if @batch_invitation.in_progress? %>
   <% content_for(:head) do %>
