@@ -9,6 +9,10 @@ class RootHelperTest < ActionView::TestCase
   end
 
   context "#gds_only_application_and_non_gds_user?" do
+    should "returns false if application is nil" do
+      assert_not gds_only_application_and_non_gds_user?(nil)
+    end
+
     should "returns false if application is not GDS-only and user belongs to GDS" do
       application.stubs(:gds_only?).returns(false)
       current_user.stubs(:belongs_to_gds?).returns(true)
