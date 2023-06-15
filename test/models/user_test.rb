@@ -629,9 +629,7 @@ class UserTest < ActiveSupport::TestCase
     setup do
       @user = create(:user)
       @app = create(:application)
-
-      # authenticate access
-      ::Doorkeeper::AccessToken.create!(resource_owner_id: @user.id, application_id: @app.id, token: "1234")
+      authenticate_access(@user, @app)
     end
 
     should "include applications the user is authorised for" do
@@ -659,6 +657,10 @@ class UserTest < ActiveSupport::TestCase
         end
       end
     end
+  end
+
+  def authenticate_access(user, app)
+    ::Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end
 
   def assert_user_has_permissions(expected_permissions, application, user)
