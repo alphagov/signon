@@ -1,6 +1,6 @@
 module RootHelper
   def gds_only_application_and_non_gds_user?(application)
-    application.gds_only? && !current_user.belongs_to_gds?
+    application.present? && application.gds_only? && !current_user.belongs_to_gds?
   end
 
   def signin_required_title(application)
