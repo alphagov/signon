@@ -1,50 +1,56 @@
 <% content_for :title, "Creating a batch of users" %>
 
 <% if @batch_invitation.in_progress? %>
-  <% content_for(:content_for_head) do %>
+  <% content_for(:head) do %>
     <meta http-equiv="refresh" content="3">
   <% end %>
 <% end %>
 
-<div class="page-title">
-  <h1>Creating a batch of users</h1>
-</div>
-
 <% if @batch_invitation.in_progress? %>
-  <div class="alert alert-info">
-    <%= batch_invite_status_message(@batch_invitation) %>
-  </div>
+  <%= render "govuk_publishing_components/components/notice", {
+    title: batch_invite_status_message(@batch_invitation)
+  } %>
 <% elsif @batch_invitation.all_successful? %>
-  <div class="alert alert-success">
-    <%= batch_invite_status_message(@batch_invitation) %>
-  </div>
+  <%= render "govuk_publishing_components/components/success_alert", {
+    message: batch_invite_status_message(@batch_invitation)
+  } %>
 <% else %>
-  <div class="alert alert-danger">
-    <%= batch_invite_status_message(@batch_invitation) %>
-  </div>
+  <%= render "govuk_publishing_components/components/error_alert", {
+    message: batch_invite_status_message(@batch_invitation)
+  } %>
 <% end %>
 
-<table class="batch-invitation-users table table-bordered">
-  <thead>
-    <tr class="table-header">
-      <th>Name</th>
-      <th>Email</th>
-      <th>Organisation</th>
-      <th>Outcome</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @batch_invitation.batch_invitation_users.each do |user| %>
-      <tr class="<%= user.outcome == "failed" ? "error" : "" %>">
-        <td><%= user.name %></td>
-        <td><%= user.email %></td>
-        <td><%= batch_invite_organisation_for_user(user) %></td>
-        <td><%= user.humanized_outcome %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<div class="well">
-  <%= link_to "All users", users_path, class: "btn btn-primary" %>
-</div>
+<%= render "govuk_publishing_components/components/table", {
+  caption: "Users processed in this batch",
+  caption_classes: "govuk-visually-hidden",
+  head: [
+    {
+      text: "Name"
+    },
+    {
+      text: "Email",
+    },
+    {
+      text: "Organisation",
+    },
+    {
+      text: "Outcome",
+    },
+  ],
+  rows: @batch_invitation.batch_invitation_users.map do |user|
+  [
+    {
+      text: user.name
+    },
+    {
+      text: user.email,
+    },
+    {
+      text: batch_invite_organisation_for_user(user),
+    },
+    {
+      text: user.humanized_outcome,
+    },
+  ]
+  end,
+  } %>
