@@ -2,6 +2,8 @@ class Devise::TwoStepVerificationSessionController < DeviseController
   layout "admin_layout"
 
   before_action { |c| c.authenticate_user! force: true }
+  before_action :ensure_user_has_2sv_setup
+
   skip_before_action :handle_two_step_verification
 
   def new; end
@@ -35,5 +37,11 @@ class Devise::TwoStepVerificationSessionController < DeviseController
         render :new
       end
     end
+  end
+
+private
+
+  def ensure_user_has_2sv_setup
+    redirect_to root_path unless current_user.has_2sv?
   end
 end

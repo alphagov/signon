@@ -107,6 +107,16 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
           assert_response_contains "2-step verification set up"
         end
       end
+
+      context "when visiting the 2SV sign-in page" do
+        setup do
+          visit new_two_step_verification_session_path
+        end
+
+        should "redirect to home page" do
+          assert_response_contains "Make your account more secure"
+        end
+      end
     end
 
     context "for a user with a 2sv exemption reason" do
