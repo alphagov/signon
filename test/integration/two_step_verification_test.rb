@@ -10,7 +10,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
       ROTP::Base32.stubs(random_base32: @new_secret)
     end
 
-    context "with an existing 2SV setup" do
+    context "signed in with an existing 2SV setup" do
       setup do
         @user = create(:user, email: "jane.user@example.com", otp_secret_key: @original_secret)
         visit new_user_session_path
@@ -61,46 +61,61 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         @user = create(:user, email: "jane.user@example.com")
         visit root_path
         signin_with(@user)
-        visit two_step_verification_path
       end
 
-      should "show the TOTP secret" do
-        assert_response_contains "Enter this code when asked: #{@new_secret}"
-      end
+      context "when visiting the 2SV setup page" do
+        setup do
+          visit two_step_verification_path
+        end
 
-      should "reject an invalid code, reuse the secret and log the rejection" do
-        fill_in "code", with: "abcdef"
-        click_button "Finish set up"
+        should "show the TOTP secret" do
+          assert_response_contains "Enter this code when asked: #{@new_secret}"
+        end
 
-        assert_response_contains "Sorry that code didn’t work. Please try again."
-        assert_response_contains "Enter this code when asked: #{@new_secret}"
-        assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_ENABLE_FAILED.id, uid: @user.uid).count
-      end
-
-      should "accept a valid code, persist the secret, log an event and notify by email" do
-        success = "2-step verification set up".freeze
-        perform_enqueued_jobs do
-          enter_2sv_code(@new_secret)
+        should "reject an invalid code, reuse the secret and log the rejection" do
+          fill_in "code", with: "abcdef"
           click_button "Finish set up"
 
-          assert_response_contains success
-          assert_equal @new_secret, @user.reload.otp_secret_key
-          assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_ENABLED.id, uid: @user.uid).count
+          assert_response_contains "Sorry that code didn’t work. Please try again."
+          assert_response_contains "Enter this code when asked: #{@new_secret}"
+          assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_ENABLE_FAILED.id, uid: @user.uid).count
+        end
 
-          assert last_email
-          assert success, last_email.subject
+        should "accept a valid code, persist the secret, log an event and notify by email" do
+          success = "2-step verification set up".freeze
+          perform_enqueued_jobs do
+            enter_2sv_code(@new_secret)
+            click_button "Finish set up"
+
+            assert_response_contains success
+            assert_equal @new_secret, @user.reload.otp_secret_key
+            assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_ENABLED.id, uid: @user.uid).count
+
+            assert last_email
+            assert success, last_email.subject
+          end
+        end
+
+        should "accept a valid code from a device which has a small time lag" do
+          old_code = Timecop.freeze(29.seconds.ago) { ROTP::TOTP.new(@new_secret).now }
+
+          Timecop.freeze do
+            fill_in "code", with: old_code
+            click_button "Finish set up"
+          end
+
+          assert_response_contains "2-step verification set up"
         end
       end
 
-      should "accept a valid code from a device which has a small time lag" do
-        old_code = Timecop.freeze(29.seconds.ago) { ROTP::TOTP.new(@new_secret).now }
-
-        Timecop.freeze do
-          fill_in "code", with: old_code
-          click_button "Finish set up"
+      context "when visiting the 2SV sign-in page" do
+        setup do
+          visit new_two_step_verification_session_path
         end
 
-        assert_response_contains "2-step verification set up"
+        should "redirect to home page" do
+          assert_response_contains "Make your account more secure"
+        end
       end
     end
 
