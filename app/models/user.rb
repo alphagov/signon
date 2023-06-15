@@ -151,7 +151,7 @@ class User < ApplicationRecord
   end
 
   def authorised_applications
-    authorisations.group_by(&:application).map(&:first)
+    authorisations.group_by(&:application).keys
   end
   alias_method :applications_used, :authorised_applications
 
