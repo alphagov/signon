@@ -640,6 +640,11 @@ class UserTest < ActiveSupport::TestCase
       unused_app = create(:application)
       assert_not_includes @user.authorised_applications, unused_app
     end
+
+    should "only include each application once" do
+      authenticate_access(@user, @app)
+      assert_equal 1, @user.authorised_applications.count(@app)
+    end
   end
 
   context ".send_reset_password_instructions" do
