@@ -93,6 +93,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_13_153019) do
     t.datetime "revoked_at", precision: nil
     t.datetime "created_at", precision: nil, null: false
     t.string "scopes"
+    t.index ["application_id"], name: "fk_rails_732cb83ab7"
     t.index ["refresh_token"], name: "index_oauth_access_tokens_on_refresh_token", unique: true
     t.index ["resource_owner_id"], name: "index_oauth_access_tokens_on_resource_owner_id"
     t.index ["token"], name: "index_oauth_access_tokens_on_token", unique: true
