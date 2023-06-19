@@ -1,9 +1,45 @@
 <% content_for :title, "Create new API user" %>
 
-<h1>Create new API user</h1>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @api_user do |f| %>
+      <% if @api_user.errors.present? %>
+        <%= render "govuk_publishing_components/components/error_summary", {
+          id: "error-summary",
+          title: "There was a problem with your new API user",
+          items: @api_user.errors.map do |error|
+          {
+            text: error.full_message,
+            href: "#api_user_#{error.attribute}",
+          }
+          end
+          } %>
+      <% end %>
 
-<%= form_for @api_user, html: { class: 'well add-top-margin' } do |f| %>
-  <%= render partial: "form_fields", locals: { f: f } %>
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Name"
+        },
+        name: "api_user[name]",
+        id: "api_user_name",
+        error_items: @api_user.errors.full_messages_for(:name).map {|message| { text: message } },
+        value: @api_user.name,
+        } %>
 
-  <%= f.submit "Create API user", :class => 'btn btn-success add-top-margin' %>
-<% end %>
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Email"
+        },
+        name: "api_user[email]",
+        id: "api_user_email",
+        type: "email",
+        error_items: @api_user.errors.full_messages_for(:email).map {|message| { text: message } },
+        value: @api_user.email,
+        } %>
+
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Create API user"
+        } %>
+    <% end %>
+  </div>
+</div>
