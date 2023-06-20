@@ -19,8 +19,9 @@ class BatchInvitationUser < ApplicationRecord
     )
 
     invite_user_with_attributes(sanitised_attributes, inviting_user)
-  rescue InvalidOrganisationSlug
+  rescue InvalidOrganisationSlug => e
     update_column(:outcome, "failed")
+    GovukError.notify(e)
   end
 
   def humanized_outcome
@@ -67,9 +68,11 @@ private
           update_column(:outcome, "success")
         else
           update_column(:outcome, "failed")
+          GovukError.notify("User not persisted", extras: sanitised_attributes.to_h)
         end
-      rescue StandardError
+      rescue StandardError => e
         update_column(:outcome, "failed")
+        GovukError.notify(e, extras: sanitised_attributes.to_h)
       end
     end
   end

@@ -42,12 +42,39 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
       end
     end
 
+    context "inviting the user raises an exception" do
+      setup do
+        User.expects(:invite!).raises(StandardError)
+      end
+
+      should "record a failure outcome" do
+        user = create(:batch_invitation_user, batch_invitation: @batch_invitation)
+        user.invite(@inviting_user, [])
+
+        assert_equal "failed", user.reload.outcome
+      end
+
+      should "log the error" do
+        GovukError.expects(:notify).once
+
+        user = create(:batch_invitation_user, batch_invitation: @batch_invitation)
+        user.invite(@inviting_user, [])
+      end
+    end
+
     context "the user could not be saved (eg email is blank)" do
       should "record it as a failure" do
         user = create(:batch_invitation_user, batch_invitation: @batch_invitation, email: nil)
         user.invite(@inviting_user, [])
 
         assert_equal "failed", user.reload.outcome
+      end
+
+      should "log the error" do
+        GovukError.expects(:notify).once
+
+        user = create(:batch_invitation_user, batch_invitation: @batch_invitation, email: nil)
+        user.invite(@inviting_user, [])
       end
     end
 
@@ -57,6 +84,13 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
         user.invite(@inviting_user, [])
 
         assert_equal "failed", user.reload.outcome
+      end
+
+      should "log the error" do
+        GovukError.expects(:notify).once
+
+        user = create(:batch_invitation_user, batch_invitation: @batch_invitation, email: "foo@example.com", organisation_slug: "not-a-real-slug")
+        user.invite(@inviting_user, [])
       end
     end
   end
