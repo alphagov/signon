@@ -59,7 +59,7 @@ class ApiUsersControllerTest < ActionController::TestCase
         post :create, params: { api_user: { name: "Content Store Application", email: "content.store at gov uk" } }
 
         assert_template :new
-        assert_select "div.alert ul li", "Email is invalid"
+        assert_select "div.govuk-error-summary", /Email is invalid/
       end
     end
 
