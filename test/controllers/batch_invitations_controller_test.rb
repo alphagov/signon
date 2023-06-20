@@ -178,9 +178,9 @@ class BatchInvitationsControllerTest < ActionController::TestCase
 
     should "list the users being created" do
       get :show, params: { id: @bi.id }
-      assert_select "table.batch-invitation-users tbody tr", 2
-      assert_select "table.batch-invitation-users td", "a@m.com"
-      assert_select "table.batch-invitation-users td", "b@m.com"
+      assert_select "table tbody tr", 2
+      assert_select "table td", "a@m.com"
+      assert_select "table td", "b@m.com"
     end
 
     should "include a meta refresh" do
@@ -191,8 +191,8 @@ class BatchInvitationsControllerTest < ActionController::TestCase
     should "show the state of the processing" do
       @user1.update_column(:outcome, "failed")
       get :show, params: { id: @bi.id }
-      assert_select "div.alert", /In progress/i
-      assert_select "div.alert", /1 of 2 users processed/i
+      assert_select "section.gem-c-notice", /In progress/i
+      assert_select "section.gem-c-notice", /1 of 2 users processed/i
     end
 
     should "show the outcome for each user" do
@@ -208,7 +208,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
       end
 
       should "show the state of the processing" do
-        assert_select "div.alert", "2 users processed."
+        assert_select "div.gem-c-success-alert", /2 users processed/
       end
 
       should "no longer include the meta refresh" do

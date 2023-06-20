@@ -7,6 +7,8 @@ class BatchInvitationsController < ApplicationController
   helper_method :applications_and_permissions
   helper_method :recent_batch_invitations
 
+  layout "admin_layout", only: %w[show]
+
   def new
     @batch_invitation = BatchInvitation.new(organisation_id: current_user.organisation_id)
     authorize @batch_invitation
