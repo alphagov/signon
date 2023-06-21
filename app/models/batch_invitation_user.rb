@@ -68,11 +68,11 @@ private
           update_column(:outcome, "success")
         else
           update_column(:outcome, "failed")
-          GovukError.notify("User not persisted", extras: sanitised_attributes.to_h)
+          GovukError.notify("User not persisted", extra: sanitised_attributes.to_h)
         end
       rescue StandardError => e
         update_column(:outcome, "failed")
-        GovukError.notify(e, extras: sanitised_attributes.to_h)
+        GovukError.notify(e, extra: sanitised_attributes.to_h)
       end
     end
   end
