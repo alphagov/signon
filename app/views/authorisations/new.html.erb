@@ -1,13 +1,36 @@
-<% content_for :title, "Create new access token" %>
+<% content_for :title, "Create new access token for \"#{@api_user.name}\"" %>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Home",
+         url: root_path,
+       },
+       {
+         title: "API users",
+         url: api_users_path,
+       },
+       {
+         title: "Edit API user",
+         url: edit_api_user_path(@api_user),
+       },
+       {
+         title: "Create new access token",
+       }
+     ]
+   })
+%>
 
-<h1>Create new access token for "<%= @api_user.name %>"</h1>
+<%= form_for @authorisation, url: [:api_user, :authorisations] do |_| %>
+  <%= render "govuk_publishing_components/components/select", {
+    id: "doorkeeper_access_token_application_id",
+    label: "Application",
+    name: "doorkeeper_access_token[application_id]",
+    options: Doorkeeper::Application.all.map { |application| { text: application.name, value: application.id } }
+    } %>
 
-<%= form_for @authorisation, url: [:api_user, :authorisations], html: { class: 'well add-top-margin' } do |f| %>
-
-  <p class="form-group">
-    <%= f.label :application_id %><br />
-    <%= f.select :application_id, options_from_collection_for_select(Doorkeeper::Application.all, 'id', 'name'), {}, class: "chosen-select form-control" %>
-  </p>
-
-  <%= f.submit "Create access token", :class => 'btn btn-success add-top-margin' %>
+  <%= render "govuk_publishing_components/components/button", {
+    text: "Create access token"
+    } %>
 <% end %>
