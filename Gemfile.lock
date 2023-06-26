@@ -187,7 +187,7 @@ GEM
       rails (>= 6)
       rouge
       sprockets (>= 3)
-    govuk_sidekiq (7.1.0)
+    govuk_sidekiq (7.1.1)
       gds-api-adapters (>= 19.1.0)
       govuk_app_config (>= 1.1)
       redis-namespace (~> 1.6)
