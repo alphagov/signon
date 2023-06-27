@@ -1,6 +1,7 @@
 module BulkGrantPermissionSetsHelper
   def bulk_grant_permission_set_applications
     Pundit.policy_scope(current_user, :user_permission_manageable_application)
+      .reject(&:retired?)
   end
 
   def bulk_grant_permission_set_status_message(bulk_grant_permission_set)

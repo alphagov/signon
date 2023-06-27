@@ -7,6 +7,7 @@ class BulkGrantPermissionSetsHelperTest < ActionView::TestCase
     setup do
       @first_application = create(:application, name: "Application A")
       @second_application = create(:application, name: "Application B")
+      @retired_application = create(:application, retired: true)
     end
 
     context "for a superadmin" do
@@ -14,7 +15,7 @@ class BulkGrantPermissionSetsHelperTest < ActionView::TestCase
         @current_user = create(:user, role: "superadmin")
       end
 
-      should "return all applications in alphabetical order" do
+      should "return all non-retired applications in alphabetical order" do
         assert_equal [@first_application, @second_application], bulk_grant_permission_set_applications
       end
     end
@@ -24,7 +25,7 @@ class BulkGrantPermissionSetsHelperTest < ActionView::TestCase
         @current_user = create(:user, role: "admin")
       end
 
-      should "return all applications in alphabetical order" do
+      should "return all non-retired applications in alphabetical order" do
         assert_equal [@first_application, @second_application], bulk_grant_permission_set_applications
       end
     end
