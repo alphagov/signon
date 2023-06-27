@@ -14,6 +14,7 @@ class BatchInvitationUser < ApplicationRecord
         email:,
         organisation_id:,
         supported_permission_ids:,
+        require_2sv:,
       },
       inviting_user,
     )
@@ -52,6 +53,12 @@ class BatchInvitationUser < ApplicationRecord
     else
       @organisation_from_slug = nil
     end
+  end
+
+  def require_2sv
+    Organisation.find(organisation_id).require_2sv?
+  rescue ActiveRecord::RecordNotFound
+    true
   end
 
   class InvalidOrganisationSlug < StandardError; end
