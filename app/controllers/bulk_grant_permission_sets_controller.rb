@@ -1,11 +1,7 @@
 class BulkGrantPermissionSetsController < ApplicationController
-  include UserPermissionsControllerMethods
-
   layout "admin_layout", only: %w[new create]
 
   before_action :authenticate_user!
-
-  helper_method :applications_and_permissions
 
   def new
     @bulk_grant_permission_set = BulkGrantPermissionSet.new
