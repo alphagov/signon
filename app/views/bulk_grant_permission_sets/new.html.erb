@@ -5,7 +5,7 @@
     id: "application_id",
     label: "Application",
     name: "application_id",
-    options: Doorkeeper::Application.all.map { |application| { text: application.name, value: application.id } }
+    options: bulk_grant_permission_set_applications.map { |application| { text: application.name, value: application.id } }
     } %>
 
   <%= render "govuk_publishing_components/components/button", {
