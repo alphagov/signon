@@ -124,7 +124,7 @@ namespace :users do
     UserApplicationPermission.where(application:).destroy_all
   end
 
-  desc "Grant all active users in an organisation access to an application"
+  desc "Grant all users in an organisation access to an application"
   task :grant_application_access_for_org, %i[application org] => :environment do |_t, args|
     application = Doorkeeper::Application.find_by(name: args.application)
     raise "Couldn't find application: '#{args.application}'" unless application
