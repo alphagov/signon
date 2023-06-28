@@ -17,6 +17,7 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
         email: user.email,
         organisation_id: user.organisation_id,
         supported_permission_ids: [1, 2, 3],
+        require_2sv: false,
       )
       User.expects(:invite!).with(invitation_attributes, @inviting_user)
 
@@ -126,6 +127,47 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
       user = create(:batch_invitation_user, batch_invitation: @batch_invitation, organisation_slug: local_organisation.slug)
 
       assert_equal local_organisation.id, user.organisation_id
+    end
+  end
+
+  context "#require_2sv" do
+    should "be true when the organisation provided to the batch requires 2sv" do
+      organisation = create(:organisation, require_2sv: true)
+      batch_invitation = create(:batch_invitation, organisation:)
+      user = create(:batch_invitation_user, batch_invitation:)
+
+      assert user.require_2sv
+    end
+
+    should "be false when the organisation provided to the batch does not require 2sv" do
+      organisation = create(:organisation, require_2sv: false)
+      batch_invitation = create(:batch_invitation, organisation:)
+      user = create(:batch_invitation_user, batch_invitation:)
+
+      assert_not user.require_2sv
+    end
+
+    should "be true when the organisation provided to the user requires 2sv" do
+      user_organisation = create(:organisation, require_2sv: true)
+      batch_invitation = create(:batch_invitation)
+      user = create(:batch_invitation_user, batch_invitation:, organisation_slug: user_organisation.slug)
+
+      assert user.require_2sv
+    end
+
+    should "be false when the organisation provided to the user does not require 2sv" do
+      user_organisation = create(:organisation, require_2sv: false)
+      batch_invitation = create(:batch_invitation)
+      user = create(:batch_invitation_user, batch_invitation:, organisation_slug: user_organisation.slug)
+
+      assert_not user.require_2sv
+    end
+
+    should "be true if no organisation available" do
+      batch_invitation = create(:batch_invitation)
+      user = create(:batch_invitation_user, batch_invitation:)
+
+      assert user.require_2sv
     end
   end
 end

@@ -99,6 +99,23 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
     end
   end
 
+  context "when the organisation mandates 2sv" do
+    setup do
+      @user = create(:superadmin_user)
+      @department_of_security = create(
+        :organisation,
+        slug: "department-of-security",
+        name: "Department of Security",
+        require_2sv: true,
+      )
+    end
+
+    should "allow creating users whose details are specified in a CSV file, assigning them all to one org" do
+      perform_batch_invite_with_user(@user, @application, organisation: @department_of_security)
+      assert_user_created_and_invited("fred@example.com", @application, organisation: @department_of_security)
+    end
+  end
+
   def perform_batch_invite_with_user(user, application, organisation:, fixture_file: "users.csv", user_count: 1)
     perform_enqueued_jobs do
       visit root_path
