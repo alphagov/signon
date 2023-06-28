@@ -2,7 +2,7 @@ class SigninPermissionGranter
   def self.call(users:, application:)
     users.each do |user|
       puts "Checking user ##{user.id}: #{user.name}"
-      next if user.application_permissions.map(&:application).include?(application)
+      next if user.has_access_to?(application)
 
       puts "-- Adding signin permission for #{application.name}"
       user.grant_application_permission(application, "signin")
