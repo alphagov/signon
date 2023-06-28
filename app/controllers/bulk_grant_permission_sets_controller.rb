@@ -1,8 +1,7 @@
 class BulkGrantPermissionSetsController < ApplicationController
-  include UserPermissionsControllerMethods
-  before_action :authenticate_user!
+  layout "admin_layout", only: %w[new create]
 
-  helper_method :applications_and_permissions
+  before_action :authenticate_user!
 
   def new
     @bulk_grant_permission_set = BulkGrantPermissionSet.new
@@ -11,7 +10,8 @@ class BulkGrantPermissionSetsController < ApplicationController
 
   def create
     @bulk_grant_permission_set = BulkGrantPermissionSet.new(user: current_user)
-    @bulk_grant_permission_set.supported_permission_ids = params[:user][:supported_permission_ids] if params[:user]
+    application = Doorkeeper::Application.find_by(id: params[:application_id])
+    @bulk_grant_permission_set.supported_permission_ids = [application.signin_permission.id]
     authorize @bulk_grant_permission_set
 
     if @bulk_grant_permission_set.save
