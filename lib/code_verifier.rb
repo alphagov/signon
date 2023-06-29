@@ -11,6 +11,12 @@ class CodeVerifier
   def verify
     totp = ROTP::TOTP.new(otp_secret_key)
 
-    totp.verify(code, drift_behind: MAX_2SV_DRIFT_SECONDS)
+    totp.verify(clean_code, drift_behind: MAX_2SV_DRIFT_SECONDS)
+  end
+
+private
+
+  def clean_code
+    code.gsub(/[ -]/, "")
   end
 end
