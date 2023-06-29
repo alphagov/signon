@@ -84,7 +84,7 @@ Rails.application.routes.draw do
   match "/users/:id" => redirect("/users/%{id}/edit"), via: :get
   match "/suspensions/:id" => redirect("/users/%{id}/edit"), via: :get
 
-  # compatibility with Sign-on-o-tron 1
+  # compatibility with Signon 1
   post "oauth/access_token" => "doorkeeper/tokens#create"
 
   get "/signin-required" => "root#signin_required"
