@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_29_083629) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_29_103443) do
   create_table "batch_invitation_application_permissions", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "batch_invitation_id", null: false
     t.integer "supported_permission_id", null: false
@@ -19,7 +19,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_29_083629) do
     t.index ["batch_invitation_id", "supported_permission_id"], name: "index_batch_invite_app_perms_on_batch_invite_and_supported_perm", unique: true
   end
 
-  create_table "batch_invitation_users", id: :integer, charset: "latin1", force: :cascade do |t|
+  create_table "batch_invitation_users", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "batch_invitation_id"
     t.string "name"
     t.string "email"
