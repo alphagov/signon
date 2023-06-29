@@ -4,7 +4,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
 
   def users_csv(filename = "users.csv")
-    Rack::Test::UploadedFile.new("#{Rails.root}/test/controllers/fixtures/#{filename}")
+    Rack::Test::UploadedFile.new(Rails.root.join("test/controllers/fixtures/#{filename}"))
   end
 
   setup do
