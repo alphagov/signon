@@ -116,7 +116,7 @@ class SignInTest < ActionDispatch::IntegrationTest
     should "prompt for a verification code" do
       visit root_path
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
-      assert_response_contains "get your 6-digit verification code"
+      assert_response_contains "Enter 6-digit code"
       assert_selector "input[name=code]"
     end
 
@@ -145,7 +145,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       visit root_path
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
       visit root_path
-      assert_response_contains "get your 6-digit verification code"
+      assert_response_contains "Enter 6-digit code"
       assert_selector "input[name=code]"
     end
 
@@ -160,7 +160,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       visit root_path
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: "")
 
-      assert_response_contains "get your 6-digit verification code"
+      assert_response_contains "Enter 6-digit code"
       assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_VERIFICATION_FAILED.id, uid: @user.uid).count
     end
 
@@ -170,7 +170,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       visit root_path
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: old_code)
 
-      assert_response_contains "get your 6-digit verification code"
+      assert_response_contains "Enter 6-digit code"
       assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_VERIFICATION_FAILED.id, uid: @user.uid).count
     end
 
@@ -178,7 +178,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       visit root_path
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: "abcdef")
 
-      assert_response_contains "get your 6-digit verification code"
+      assert_response_contains "Enter 6-digit code"
       assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_VERIFICATION_FAILED.id, uid: @user.uid).count
     end
 
@@ -226,7 +226,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
         visit root_path
         signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
-        assert_response_contains "get your 6-digit verification code"
+        assert_response_contains "Enter 6-digit code"
         assert_selector "input[name=code]"
       end
     end
@@ -244,7 +244,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
       Capybara.current_session.driver.request.cookies["remember_2sv_session"] = remember_2sv_session
       visit root_path
-      assert_response_contains "get your 6-digit verification code"
+      assert_response_contains "Enter 6-digit code"
       assert_selector "input[name=code]"
     end
 
@@ -259,7 +259,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       @user.update!(otp_secret_key: ROTP::Base32.random_base32)
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
 
-      assert_response_contains "get your 6-digit verification code"
+      assert_response_contains "Enter 6-digit code"
       assert_selector "input[name=code]"
     end
 

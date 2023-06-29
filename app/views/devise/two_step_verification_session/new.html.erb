@@ -5,15 +5,16 @@
   <div class="govuk-grid-column-one-half">
     <%= form_tag(two_step_verification_session_path, method: :post) do %>
       <%= render "govuk_publishing_components/components/input", {
-        label: {
-          text: "Your verification code"
-        },
+        label: { text: "Code from app" },
+        hint: "Enter 6-digit code",
         name: "code",
+        type: "text",
+        autocomplete: "one-time-code",
+        inputmode: "numeric",
+        width: 10,
         autofocus: true,
         tabindex: 0,
-        autocomplete: "off",
-        hint: "Use the app on your phone to get your 6-digit verification code. You will not need to do this again for 30 days."
-      } %>
+        } %>
 
       <%= render "govuk_publishing_components/components/button", {
         text: "Sign in"

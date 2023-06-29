@@ -56,9 +56,11 @@
     hint: "Enter 6-digit code",
     name: "code",
     type: "text",
+    autocomplete: "one-time-code",
+    inputmode: "numeric",
     width: 10,
     error_message: flash[:invalid_code]
-  } %>
+    } %>
 
   <div class="govuk-button-group">
     <%= render "govuk_publishing_components/components/button", {
