@@ -49,4 +49,28 @@ class TwoStepVerificationHelperTest < ActionView::TestCase
       assert_match %r{<svg.*>.*</svg>}, qr_code_svg(user: @user, otp_secret_key: @secret)
     end
   end
+
+  context "two_factor_code_input" do
+    attr_reader :component_name
+
+    setup do
+      @component_name = "govuk_publishing_components/components/input"
+    end
+
+    should "render the input component" do
+      GovukPublishingComponents
+        .expects(:render)
+        .with(component_name, anything)
+
+      two_factor_code_input
+    end
+
+    should "pass additional arguments to the component renderer" do
+      GovukPublishingComponents
+        .expects(:render)
+        .with(component_name, has_entry(additional: "argument"))
+
+      two_factor_code_input(additional: "argument")
+    end
+  end
 end
