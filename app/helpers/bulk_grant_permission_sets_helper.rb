@@ -27,4 +27,8 @@ module BulkGrantPermissionSetsHelper
       "No"
     end
   end
+
+  def formatted_other_permissions(application, permissions)
+    (permissions - [application.signin_permission]).map(&:name).to_sentence
+  end
 end

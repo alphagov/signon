@@ -37,9 +37,7 @@
       <tr>
         <td><%= formatted_application_name(application) %></td>
         <td><%= formatted_application_access(application, permissions) %></td>
-        <td>
-          <%= (permissions - [application.signin_permission]).map { |p| p.name }.to_sentence %>
-        </td>
+        <td><%= formatted_other_permissions(application, permissions) %></td>
       </tr>
     <% end %>
   </tbody>
