@@ -44,4 +44,18 @@ private
       viewbox: true,
     ).html_safe
   end
+
+  def two_factor_code_input(**args)
+    options = {
+      label: { text: "Code from app" },
+      hint: "Enter 6-digit code",
+      name: "code",
+      type: "text",
+      autocomplete: "one-time-code",
+      inputmode: "numeric",
+      width: 10,
+    }.merge(args)
+
+    GovukPublishingComponents.render("govuk_publishing_components/components/input", options)
+  end
 end

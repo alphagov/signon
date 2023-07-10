@@ -7,7 +7,6 @@ class User < ApplicationRecord
   UNSUSPENSION_GRACE_PERIOD = 7.days
 
   MAX_2SV_LOGIN_ATTEMPTS = 10
-  MAX_2SV_DRIFT_SECONDS = 30
   REMEMBER_2SV_SESSION_FOR = 30.days
 
   USER_STATUS_SUSPENDED = "suspended".freeze
@@ -270,8 +269,7 @@ class User < ApplicationRecord
   end
 
   def authenticate_otp(code)
-    totp = ROTP::TOTP.new(otp_secret_key)
-    result = totp.verify(code, drift_behind: MAX_2SV_DRIFT_SECONDS)
+    result = CodeVerifier.new(code, otp_secret_key).verify
 
     if result
       update!(second_factor_attempts_count: 0)

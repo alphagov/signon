@@ -51,14 +51,7 @@
 <%= form_tag two_step_verification_path, method: :put do %>
   <%= hidden_field_tag :otp_secret_key, @otp_secret_key%>
 
-  <%= render "govuk_publishing_components/components/input", {
-    label: { text: "Code from app" },
-    hint: "Enter 6-digit code",
-    name: "code",
-    type: "text",
-    width: 10,
-    error_message: flash[:invalid_code]
-  } %>
+  <%= two_factor_code_input(error_message: flash[:invalid_code]) %>
 
   <div class="govuk-button-group">
     <%= render "govuk_publishing_components/components/button", {
