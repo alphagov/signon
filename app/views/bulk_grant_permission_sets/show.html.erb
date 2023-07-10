@@ -34,11 +34,7 @@
   </thead>
   <tbody>
     <% bulk_grant_permissions_by_application(@bulk_grant_permission_set).each do |(application, permissions)| %>
-      <tr>
-        <td><%= formatted_application_name(application) %></td>
-        <td><%= formatted_application_access(application, permissions) %></td>
-        <td><%= formatted_other_permissions(application, permissions) %></td>
-      </tr>
+      <%= formatted_row(application, permissions) %>
     <% end %>
   </tbody>
 </table>

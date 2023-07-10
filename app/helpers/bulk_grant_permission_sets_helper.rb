@@ -12,6 +12,14 @@ module BulkGrantPermissionSetsHelper
       .group_by(&:application)
   end
 
+  def formatted_row(application, permissions)
+    content_tag(:tr) do
+      content_tag(:td, formatted_application_name(application)) +
+        content_tag(:td, formatted_application_access(application, permissions)) +
+        content_tag(:td, formatted_other_permissions(application, permissions))
+    end
+  end
+
   def formatted_application_name(application)
     if application.retired?
       content_tag(:del, application.name)
