@@ -10,9 +10,19 @@
   <h1>Granting permissions to all users</h1>
 </div>
 
-<div class="alert <%= bulk_grant_permission_set_status_class(@bulk_grant_permission_set) %>">
-  <%= bulk_grant_permission_set_status_message(@bulk_grant_permission_set) %>
-</div>
+<% if @bulk_grant_permission_set.in_progress? %>
+  <div class="alert alert-info">
+    In progress. <%= @bulk_grant_permission_set.processed_users %>} of <%= @bulk_grant_permission_set.total_users %> users processed.
+  </div>
+<% elsif @bulk_grant_permission_set.successful? %>
+  <div class="alert alert-success">
+    All <%= @bulk_grant_permission_set.processed_users %> users processed.
+  </div>
+<% else %>
+  <div class="alert alert-danger">
+    Only <%= @bulk_grant_permission_set.processed_users %> of <%= @bulk_grant_permission_set.total_users %> users processed.
+  </div>
+<% end %>
 
 <table class="table table-bordered table-striped table-on-white">
   <thead>
