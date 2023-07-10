@@ -1,45 +1,32 @@
 <% content_for :title, "Granting permissions to all users" %>
 
 <% if @bulk_grant_permission_set.in_progress? %>
-  <% content_for(:content_for_head) do %>
+  <% content_for(:head) do %>
     <meta http-equiv="refresh" content="3">
   <% end %>
 <% end %>
 
-<div class="page-title">
-  <h1>Granting permissions to all users</h1>
-</div>
-
 <% if @bulk_grant_permission_set.in_progress? %>
-  <div class="alert alert-info">
-    In progress. <%= @bulk_grant_permission_set.processed_users %>} of <%= @bulk_grant_permission_set.total_users %> users processed.
-  </div>
+  <%= render "govuk_publishing_components/components/notice", {
+    title: "In progress. #{@bulk_grant_permission_set.processed_users} of #{@bulk_grant_permission_set.total_users} users processed."
+    } %>
 <% elsif @bulk_grant_permission_set.successful? %>
-  <div class="alert alert-success">
-    All <%= @bulk_grant_permission_set.processed_users %> users processed.
-  </div>
+  <%= render "govuk_publishing_components/components/success_alert", {
+    message: "All #{@bulk_grant_permission_set.processed_users} users processed."
+    } %>
 <% else %>
-  <div class="alert alert-danger">
-    Only <%= @bulk_grant_permission_set.processed_users %> of <%= @bulk_grant_permission_set.total_users %> users processed.
-  </div>
+  <%= render "govuk_publishing_components/components/error_alert", {
+    message: "Only #{@bulk_grant_permission_set.processed_users} of #{@bulk_grant_permission_set.total_users} users processed."
+    } %>
 <% end %>
 
-<table class="table table-bordered table-striped table-on-white">
-  <thead>
-    <tr class="table-header">
-      <th>Application</th>
-      <th>Has access to?</th>
-      <th>Other Permissions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% bulk_grant_permissions_by_application(@bulk_grant_permission_set).each do |(application, permissions)| %>
-      <%= formatted_row(application, permissions) %>
-    <% end %>
-  </tbody>
-</table>
-
-
-<div class="well">
-  <%= link_to "All users", users_path, class: "btn btn-primary" %>
-</div>
+<%= render "govuk_publishing_components/components/table", {
+  head: [
+    { text: "Application" },
+    { text: "Has access to?" },
+    { text: "Other Permissions" },
+  ],
+  rows: bulk_grant_permissions_by_application(@bulk_grant_permission_set).map { |(application, permissions)|
+    formatted_row(application, permissions)
+  },
+} %>
