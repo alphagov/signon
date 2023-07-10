@@ -24,6 +24,11 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
       user.invite(@inviting_user, [1, 2, 3])
     end
 
+    should "be able to store user names which include unicode characters" do
+      user = build(:batch_invitation_user, name: "čččč")
+      assert user.save
+    end
+
     context "success" do
       should "record the outcome against the user" do
         user = create(:batch_invitation_user, batch_invitation: @batch_invitation)
