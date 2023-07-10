@@ -36,13 +36,7 @@
     <% bulk_grant_permissions_by_application(@bulk_grant_permission_set).each do |(application, permissions)| %>
       <tr>
         <td><%= formatted_application_name(application) %></td>
-        <td>
-          <% if permissions.include? application.signin_permission %>
-            Yes
-          <% else %>
-            No
-          <% end %>
-        </td>
+        <td><%= formatted_application_access(application, permissions) %></td>
         <td>
           <%= (permissions - [application.signin_permission]).map { |p| p.name }.to_sentence %>
         </td>

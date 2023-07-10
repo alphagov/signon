@@ -19,4 +19,12 @@ module BulkGrantPermissionSetsHelper
       application.name
     end
   end
+
+  def formatted_application_access(application, permissions)
+    if permissions.include?(application.signin_permission)
+      "Yes"
+    else
+      "No"
+    end
+  end
 end
