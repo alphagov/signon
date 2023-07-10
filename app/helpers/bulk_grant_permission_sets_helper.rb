@@ -11,4 +11,12 @@ module BulkGrantPermissionSetsHelper
       .order("oauth_applications.name, supported_permissions.name")
       .group_by(&:application)
   end
+
+  def formatted_application_name(application)
+    if application.retired?
+      content_tag(:del, application.name)
+    else
+      application.name
+    end
+  end
 end

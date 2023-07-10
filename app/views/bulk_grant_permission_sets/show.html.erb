@@ -35,13 +35,7 @@
   <tbody>
     <% bulk_grant_permissions_by_application(@bulk_grant_permission_set).each do |(application, permissions)| %>
       <tr>
-        <td>
-          <% if application.retired? %>
-            <del><%= application.name %></del>
-          <% else %>
-            <%= application.name %>
-          <% end %>
-        </td>
+        <td><%= formatted_application_name(application) %></td>
         <td>
           <% if permissions.include? application.signin_permission %>
             Yes
