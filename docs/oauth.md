@@ -1,7 +1,7 @@
-# Sign-On-O-Tron and OAuth2
+# Signon and OAuth2
 
 The GOV.UK admin and editorial systems share a single sign-on system. User
-accounts are created and managed in the sign-on-o-tron application. Users
+accounts are created and managed in the Signon application. Users
 are then authorized to access any given app by use of the OAuth2 protocol.
 
 The OAuth2 provider functionality is provided by the
@@ -36,7 +36,7 @@ account, which are the resource to be shared with the client.
 
 ### Resource server
 
-The resource server is the sign-on-o-tron application, where the resource
+The resource server is the Signon application, where the resource
 is a set of us user permissions.
 
 ### Client
@@ -45,7 +45,7 @@ The clients are the various admin and editorial applications.
 
 ### Authorization server
 
-The sign-on-o-tron application.
+The Signon application.
 
 ## Client Registration
 
@@ -110,7 +110,7 @@ mitigate the risk of cross-site request forgery.
 
 While OAuth itself is an authorization protocol we are using it to authorize
 an application’s permission to retrieve details of a given user. The
-sign-on-o-tron application will return details of a user and the client
+Signon application will return details of a user and the client
 applications are responsible for interpreting those to provide authorization
 *within* that application.
 
@@ -124,7 +124,7 @@ will return something a JSON response such as:
         "name": "Fake User",
         "email": "fake.user@digital.cabinet-office.gov.uk",
         "permissions": {
-          "Need-o-Tron": ["signin","admin"],
+          "Maslow": ["signin","admin"],
           "Publisher": ["signin"],
           "Whitehall": ["signin"],
           "Panopticon": ["signin"],
@@ -155,7 +155,7 @@ application an HTTP PUT to /users/{user.uid} with the full user object in
 JSON (as above). The application MUST then update its record of that user's
 permissions and change its behaviour accordingly.
 
-Where a user has been suspended sign-on-o-tron will send each application
+Where a user has been suspended Signon will send each application
 an HTTP POST to /users/{user.uid}/reauth. The application MUST then invalidate
 the user’s current session and redirect them to the authorization server.
 
