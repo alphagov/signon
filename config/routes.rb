@@ -9,7 +9,7 @@ Rails.application.routes.draw do
 
   use_doorkeeper do
     controllers authorizations: "signin_required_authorizations"
-    skip_controllers :applications
+    skip_controllers :applications, :authorized_applications
   end
 
   devise_for :users,
