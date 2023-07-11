@@ -52,6 +52,7 @@ class UsersController < ApplicationController
     if updater.call
       redirect_to users_path, notice: "Updated user #{@user.email} successfully"
     else
+      @application_permissions = all_applications_and_permissions_for(@user)
       render :edit
     end
   end
