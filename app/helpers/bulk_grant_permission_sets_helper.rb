@@ -4,31 +4,39 @@ module BulkGrantPermissionSetsHelper
       .reject(&:retired?)
   end
 
-  def bulk_grant_permission_set_status_message(bulk_grant_permission_set)
-    if bulk_grant_permission_set.in_progress?
-      "In progress. #{bulk_grant_permission_set.processed_users} of #{bulk_grant_permission_set.total_users} users processed."
-    elsif bulk_grant_permission_set.successful?
-      "All #{bulk_grant_permission_set.processed_users} users processed."
-    else
-      "Only #{bulk_grant_permission_set.processed_users} of #{bulk_grant_permission_set.total_users} users processed."
-    end
-  end
-
-  def bulk_grant_permission_set_status_class(bulk_grant_permission_set)
-    if bulk_grant_permission_set.in_progress?
-      "alert-info"
-    elsif bulk_grant_permission_set.successful?
-      "alert-success"
-    else
-      "alert-danger"
-    end
-  end
-
   def bulk_grant_permissions_by_application(bulk_grant_permission_set)
     bulk_grant_permission_set
       .supported_permissions
       .includes(:application)
       .order("oauth_applications.name, supported_permissions.name")
       .group_by(&:application)
+  end
+
+  def formatted_row(application, permissions)
+    [
+      { text: formatted_application_name(application) },
+      { text: formatted_application_access(application, permissions) },
+      { text: formatted_other_permissions(application, permissions) },
+    ]
+  end
+
+  def formatted_application_name(application)
+    if application.retired?
+      "#{application.name} (retired)"
+    else
+      application.name
+    end
+  end
+
+  def formatted_application_access(application, permissions)
+    if permissions.include?(application.signin_permission)
+      "Yes"
+    else
+      "No"
+    end
+  end
+
+  def formatted_other_permissions(application, permissions)
+    (permissions - [application.signin_permission]).map(&:name).to_sentence
   end
 end

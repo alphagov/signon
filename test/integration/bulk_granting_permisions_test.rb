@@ -66,7 +66,7 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
       click_button "Grant access to all users"
 
       assert_response_contains("Scheduled grant of 1 permissions to all users")
-      assert_response_contains("Granting permissions to all users")
+      assert_response_contains("Result")
       assert_response_contains("All #{User.all.count} users processed")
 
       app_permissions_line = "#{application.name} Yes"

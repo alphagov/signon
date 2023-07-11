@@ -1,53 +1,54 @@
-<% content_for :title, "Granting permissions to all users" %>
+<% content_for :title, "Result" %>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Home",
+         url: root_path,
+       },
+       {
+         title: "Users",
+         url: users_path,
+       },
+       {
+         title: "Grant access to all users",
+         url: new_bulk_grant_permission_set_path,
+       },
+       {
+         title: "Result",
+       }
+     ]
+   })
+%>
 
 <% if @bulk_grant_permission_set.in_progress? %>
-  <% content_for(:content_for_head) do %>
+  <% content_for(:head) do %>
     <meta http-equiv="refresh" content="3">
   <% end %>
 <% end %>
 
-<div class="page-title">
-  <h1>Granting permissions to all users</h1>
-</div>
+<% if @bulk_grant_permission_set.in_progress? %>
+  <%= render "govuk_publishing_components/components/notice", {
+    title: "In progress. #{@bulk_grant_permission_set.processed_users} of #{@bulk_grant_permission_set.total_users} users processed."
+    } %>
+<% elsif @bulk_grant_permission_set.successful? %>
+  <%= render "govuk_publishing_components/components/success_alert", {
+    message: "All #{@bulk_grant_permission_set.processed_users} users processed."
+    } %>
+<% else %>
+  <%= render "govuk_publishing_components/components/error_alert", {
+    message: "Only #{@bulk_grant_permission_set.processed_users} of #{@bulk_grant_permission_set.total_users} users processed."
+    } %>
+<% end %>
 
-<div class="alert <%= bulk_grant_permission_set_status_class(@bulk_grant_permission_set) %>">
-  <%= bulk_grant_permission_set_status_message(@bulk_grant_permission_set) %>
-</div>
-
-<table class="table table-bordered table-striped table-on-white">
-  <thead>
-    <tr class="table-header">
-      <th>Application</th>
-      <th>Has access to?</th>
-      <th>Other Permissions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% bulk_grant_permissions_by_application(@bulk_grant_permission_set).each do |(application, permissions)| %>
-      <tr>
-        <td>
-          <% if application.retired? %>
-            <del><%= application.name %></del>
-          <% else %>
-            <%= application.name %>
-          <% end %>
-        </td>
-        <td>
-          <% if permissions.include? application.signin_permission %>
-            Yes
-          <% else %>
-            No
-          <% end %>
-        </td>
-        <td>
-          <%= (permissions - [application.signin_permission]).map { |p| p.name }.to_sentence %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-
-<div class="well">
-  <%= link_to "All users", users_path, class: "btn btn-primary" %>
-</div>
+<%= render "govuk_publishing_components/components/table", {
+  head: [
+    { text: "Application" },
+    { text: "Has access to?" },
+    { text: "Other Permissions" },
+  ],
+  rows: bulk_grant_permissions_by_application(@bulk_grant_permission_set).map { |(application, permissions)|
+    formatted_row(application, permissions)
+  },
+} %>

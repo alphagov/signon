@@ -1,5 +1,5 @@
 class BulkGrantPermissionSetsController < ApplicationController
-  layout "admin_layout", only: %w[new create]
+  layout "admin_layout"
 
   before_action :authenticate_user!
 
