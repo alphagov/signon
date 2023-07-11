@@ -24,7 +24,7 @@ class Mandate2svForOrganisationTest < ActionDispatch::IntegrationTest
         should "be able to edit organisation 2sv status" do
           click_edit_2sv_button_for(@organisation)
           check "Mandate 2-step verification for #{@organisation.name}"
-          click_button "Update Organisation"
+          click_button "Update organisation"
           assert page.has_text? "true"
         end
       end
@@ -42,7 +42,7 @@ class Mandate2svForOrganisationTest < ActionDispatch::IntegrationTest
         should "be able to edit organisation 2sv status" do
           click_edit_2sv_button_for(@organisation)
           uncheck "Mandate 2-step verification for #{@organisation.name}"
-          click_button "Update Organisation"
+          click_button "Update organisation"
           assert page.has_text? "false"
         end
       end
