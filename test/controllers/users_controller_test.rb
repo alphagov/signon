@@ -713,6 +713,26 @@ class UsersControllerTest < ActionController::TestCase
           assert_redirected_to root_path
           assert_match(/You do not have permission to perform this action./, flash[:alert])
         end
+
+        should "redisplay the form if save fails" do
+          admin = create(:organisation_admin)
+          sign_in admin
+
+          put :update, params: { id: admin.id, user: { name: "" } }
+
+          assert_select "form#edit_user_#{admin.id}"
+        end
+      end
+
+      context "super organisation admin" do
+        should "redisplay the form if save fails" do
+          admin = create(:super_org_admin)
+          sign_in admin
+
+          put :update, params: { id: admin.id, user: { name: "" } }
+
+          assert_select "form#edit_user_#{admin.id}"
+        end
       end
 
       should "redisplay the form if save fails" do
