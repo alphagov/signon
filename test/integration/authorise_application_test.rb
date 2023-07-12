@@ -22,7 +22,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     assert_not Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
 
-    ignoring_spurious_error do
+    ignoring_requests_to_redirect_uri do
       signin_with(@user)
     end
 
@@ -56,7 +56,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
   should "confirm the authorisation for a signed-in user with 'signin' permission to the app" do
     visit "/"
     signin_with(@user)
-    ignoring_spurious_error do
+    ignoring_requests_to_redirect_uri do
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     end
 
@@ -69,7 +69,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
 
     visit "/"
     signin_with(@user)
-    ignoring_spurious_error do
+    ignoring_requests_to_redirect_uri do
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     end
 
@@ -82,7 +82,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     assert_match(/\?code=/, current_url)
   end
 
-  def ignoring_spurious_error
+  def ignoring_requests_to_redirect_uri
     # During testing, requests for all domains get routed to Signon;
     # including the capybara browser being redirected to other apps.
     # The browser gets a redirect to url of the destination app.
