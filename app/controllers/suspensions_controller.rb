@@ -2,6 +2,8 @@ class SuspensionsController < ApplicationController
   before_action :authenticate_user!, :load_and_authorize_user
   respond_to :html
 
+  layout "admin_layout"
+
   rescue_from ActiveRecord::RecordInvalid, with: :render_edit
 
   def update
