@@ -84,10 +84,10 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
 
   def ignoring_requests_to_redirect_uri(app)
     # During testing, requests for all domains get routed to Signon;
-    # including the capybara browser being redirected to other apps.
-    # The browser gets a redirect to url of the destination app.
-    # This then gets routed to Signon but Signon doesn't know how to handle the route.
-    # And so it raises the RoutingError
+    # including the request for the redirect_uri of the oauth application.
+    # The path of this redirect_uri doesn't exist in the Signon app
+    # so we catch and swallow the exception raised when this request is
+    # made.
 
     yield
   rescue ActionController::RoutingError => e
