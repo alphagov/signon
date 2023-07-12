@@ -15,13 +15,13 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
 
     should "not confirm the authorisation" do
       assert_response_contains("Make your account more secure")
-      refute_access_granted @user
+      refute_access_granted @user, @app
     end
   end
 
   should "not confirm the authorisation until the user signs in" do
     visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
-    refute_access_granted @user
+    refute_access_granted @user, @app
 
     ignoring_requests_to_redirect_uri(@app) do
       signin_with(@user)
@@ -39,7 +39,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
 
     assert_response_contains("Enter 6-digit code")
-    refute_access_granted @user
+    refute_access_granted @user, @app
   end
 
   should "not confirm the authorisation if the user does not have 'signin' permission for the application" do
@@ -50,7 +50,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
 
     assert_response_contains("You don’t have permission to sign in to #{@app.name}.")
-    refute_access_granted @user
+    refute_access_granted @user, @app
   end
 
   should "confirm the authorisation for a signed-in user with 'signin' permission to the app" do
@@ -86,8 +86,8 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     assert_kind_of Doorkeeper::AccessGrant, Doorkeeper::AccessGrant.find_by(resource_owner_id: user.id, application: app)
   end
 
-  def refute_access_granted(user)
-    assert_not Doorkeeper::AccessGrant.find_by(resource_owner_id: user.id)
+  def refute_access_granted(user, app)
+    assert_not Doorkeeper::AccessGrant.find_by(resource_owner_id: user.id, application_id: app.id)
   end
 
   def ignoring_requests_to_redirect_uri(app)
