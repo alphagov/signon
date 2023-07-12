@@ -27,8 +27,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to_application @app
-    # check the access grant has really been created
-    assert_access_granted @user
+    assert_access_granted @user, @app
   end
 
   should "not confirm the authorisation if the user has not passed 2-step verification" do
@@ -61,7 +60,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to_application @app
-    assert_access_granted @user
+    assert_access_granted @user, @app
   end
 
   should "confirm the authorisation for a fully authenticated 2SV user" do
@@ -74,7 +73,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to_application @app
-    assert_access_granted @user
+    assert_access_granted @user, @app
   end
 
   def assert_redirected_to_application(app)
@@ -82,8 +81,8 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     assert_match(/\?code=/, current_url)
   end
 
-  def assert_access_granted(user)
-    assert_kind_of Doorkeeper::AccessGrant, Doorkeeper::AccessGrant.find_by(resource_owner_id: user.id)
+  def assert_access_granted(user, app)
+    assert_kind_of Doorkeeper::AccessGrant, Doorkeeper::AccessGrant.find_by(resource_owner_id: user.id, application: app)
   end
 
   def ignoring_requests_to_redirect_uri(app)
