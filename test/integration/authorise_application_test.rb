@@ -9,9 +9,7 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
   context "when the user has had 2SV mandated" do
     setup do
       @user.update!(require_2sv: true)
-      ignoring_spurious_error do
-        visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
-      end
+      visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
       signin_with(@user, set_up_2sv: false)
     end
 
@@ -38,9 +36,8 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
 
     visit "/"
     signin_with(@user, second_step: false)
-    ignoring_spurious_error do
-      visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
-    end
+    visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
+
     assert_response_contains("Enter 6-digit code")
     assert_not Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
   end
@@ -50,9 +47,8 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
 
     visit "/"
     signin_with(@user)
-    ignoring_spurious_error do
-      visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
-    end
+    visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
+
     assert_response_contains("You don’t have permission to sign in to #{@app.name}.")
     assert_not Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
   end
