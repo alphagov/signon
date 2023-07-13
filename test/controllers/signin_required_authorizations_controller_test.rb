@@ -132,10 +132,8 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     end
   end
 
-  context "GET #new token request with native url and skip_authorization true" do
+  context "GET #new token request with native url" do
     setup do
-      # technically redundant as this is our configuration anyway
-      Doorkeeper.configuration.stubs(skip_authorization: ->(*_args) { true })
       @application.update! redirect_uri: "urn:ietf:wg:oauth:2.0:oob"
       get :new, params: { client_id: @application.uid, response_type: "token", redirect_uri: @application.redirect_uri }
     end
@@ -154,11 +152,9 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     end
   end
 
-  context "GET #new code request with native url and skip_authorization true" do
+  context "GET #new code request with native url" do
     setup do
       auth_type_is_allowed "authorization_code"
-      # technically redundant as this is our configuration anyway
-      Doorkeeper.configuration.stubs(skip_authorization: ->(*_args) { true })
       @application.update! redirect_uri: "urn:ietf:wg:oauth:2.0:oob"
       get :new, params: { client_id: @application.uid, response_type: "code", redirect_uri: @application.redirect_uri }
     end
@@ -177,10 +173,8 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     end
   end
 
-  context "GET #new with skip_authorization true" do
+  context "GET #new" do
     setup do
-      # technically redundant as this is our configuration anyway
-      Doorkeeper.configuration.stubs(skip_authorization: ->(*_args) { true })
       get :new, params: { client_id: @application.uid, response_type: "token", redirect_uri: @application.redirect_uri }
     end
 
@@ -227,12 +221,10 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     end
   end
 
-  context "GET #new with skip_authorization true when the user does not have signin permission for the app" do
+  context "GET #new when the user does not have signin permission for the app" do
     setup do
       @user.application_permissions.where(supported_permission_id: @application.signin_permission).destroy_all
       @user.application_permissions.reload
-      # technically redundant as this is our configuration anyway
-      Doorkeeper.configuration.stubs(skip_authorization: ->(*_args) { true })
       get :new, params: { client_id: @application.uid, response_type: "token", redirect_uri: @application.redirect_uri }
     end
 
