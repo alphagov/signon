@@ -25,21 +25,12 @@
         <tr>
           <td><%= formatted_date(log) %></td>
           <td>
-            <%= log.event %>
-            <% if log.application %>
-              for <strong><%= log.application.name %></strong>
-            <% end %>
-            <% if log.initiator %>
-              by <strong><%= link_to log.initiator.name, users_path(filter: log.initiator.email), title: log.initiator.email %></strong>
-            <% end %>
-            <%= log.trailing_message %>
-            <% if log.ip_address %>
-              <%= log.ip_address_string %>
-            <% end %>
-            <% if log.user_agent_id %>
-                <% browser = Browser.new(log.user_agent_as_string) %>
-                <%= browser.name + ' ' + browser.version %>
-            <% end %>
+            <%= formatted_event(log) %>
+            <%= formatted_application(log) %>
+            <%= formatted_initiator(log) %>
+            <%= formatted_trailing_message(log) %>
+            <%= formatted_ip_address(log) %>
+            <%= formatted_user_agent(log) %>
           </td>
         </tr>
       <% end %>
