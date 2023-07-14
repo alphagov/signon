@@ -22,6 +22,20 @@
    })
 %>
 
+<% if @suspension.errors.present? %>
+  <%= render "govuk_publishing_components/components/error_summary", {
+    id: "error-summary",
+    title: "There was a problem with your suspension",
+    items: @suspension.errors.map do |error|
+    {
+      text: error.full_message,
+      href: "#user_#{error.attribute}",
+    }
+    end
+} %>
+
+<% end %>
+
 <%= form_tag suspension_path(@user), method: "put" do %>
   <%= render "govuk_publishing_components/components/hint", {
     text: "After the user has been unsuspended, they will need to reset their password."
@@ -33,7 +47,7 @@
       {
         label: "Suspended?",
         value: 1,
-        checked: @user.suspended?,
+        checked: @suspension.suspended?,
       }
     ]
   } %>
@@ -43,7 +57,8 @@
       text: "Reason for suspension"
     },
     name: "user[reason_for_suspension]",
-    value: @user.reason_for_suspension,
+    value: @suspension.reason_for_suspension,
+    error_items: @suspension.errors.full_messages_for(:reason_for_suspension).map {|message| { text: message } },
   } %>
 
   <%= render "govuk_publishing_components/components/button", {
