@@ -3,6 +3,17 @@ module EventLogHelper
     log.created_at.to_fs(:govuk_date_short)
   end
 
+  def formatted_message(log)
+    [
+      formatted_event(log),
+      formatted_application(log),
+      formatted_initiator(log),
+      formatted_trailing_message(log),
+      formatted_ip_address(log),
+      formatted_user_agent(log),
+    ].join(" ").html_safe
+  end
+
   def formatted_event(log)
     log.event
   end

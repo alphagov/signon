@@ -24,14 +24,7 @@
       <% @logs.each do |log| %>
         <tr>
           <td><%= formatted_date(log) %></td>
-          <td>
-            <%= formatted_event(log) %>
-            <%= formatted_application(log) %>
-            <%= formatted_initiator(log) %>
-            <%= formatted_trailing_message(log) %>
-            <%= formatted_ip_address(log) %>
-            <%= formatted_user_agent(log) %>
-          </td>
+          <td><%= formatted_message(log) %></td>
         </tr>
       <% end %>
     </tbody>
