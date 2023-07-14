@@ -1,35 +1,42 @@
 <% content_for :title, "Account access log" %>
-
-<ol class="breadcrumb">
-  <li><%= link_to @user.name, edit_user_path_by_user_type(@user) %></li>
-  <li class="active">Account access log</li>
-</ol>
-
-<div class="page-title">
-  <h1>Account access log</h1>
-</div>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Home",
+         url: root_path,
+       },
+       {
+         title: "Users",
+         url: users_path,
+       },
+       {
+         title: @user.name,
+         url: edit_user_path_by_user_type(@user)
+       },
+       {
+         title: "Account access log",
+       },
+     ]
+   })
+%>
 
 <% if @logs.any? %>
-  <h2 class="text-muted remove-top-margin"><%= pluralize(number_with_delimiter(@logs.total_count), 'event') %></h2>
-
-  <table class="table table-bordered table-striped">
-    <thead>
-      <tr class="table-header">
-        <th style="width: 200px">Time</th>
-        <th>Event</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @logs.each do |log| %>
-        <tr>
-          <td><%= formatted_date(log) %></td>
-          <td><%= formatted_message(log) %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <%= render "govuk_publishing_components/components/table", {
+    caption: pluralize(number_with_delimiter(@logs.total_count), 'event'),
+    caption_classes: "govuk-heading-m",
+    head: [
+      { text: "Time" },
+      { text: "Event" },
+    ],
+    rows: @logs.map do |log|
+    [ { text: formatted_date(log) },
+      { text: formatted_message(log) } ]
+    end
+  } %>
 <% else %>
-  <div class="no-content no-content-bordered">
-    No activity logged
-  </div>
+  <%= render "govuk_publishing_components/components/notice", {
+    title: "No activity logged"
+  } %>
 <% end %>
