@@ -11,7 +11,6 @@
 
 <% if @logs.any? %>
   <h2 class="text-muted remove-top-margin"><%= pluralize(number_with_delimiter(@logs.total_count), 'event') %></h2>
-  <%= paginate(@logs, theme: 'twitter-bootstrap-3', pagination_class: 'remove-top-margin') %>
 
   <table class="table table-bordered table-striped">
     <thead>
@@ -29,8 +28,6 @@
       <% end %>
     </tbody>
   </table>
-
-  <%= paginate(@logs, theme: 'twitter-bootstrap-3', pagination_class: 'remove-top-margin') %>
 <% else %>
   <div class="no-content no-content-bordered">
     No activity logged
