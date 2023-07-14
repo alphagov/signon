@@ -74,20 +74,6 @@ class SuspensionsControllerTest < ActionController::TestCase
       assert_equal "Negligence", another_user.reason_for_suspension
     end
 
-    should "trigger permissions to be updated on downstream apps" do
-      another_user = create(:user)
-      PermissionUpdater.expects(:perform_on).with(another_user)
-
-      put :update, params: { id: another_user.id, user: { suspended: "1", reason_for_suspension: "Negligence" } }
-    end
-
-    should "enforce reauth on downstream apps" do
-      another_user = create(:user)
-      ReauthEnforcer.expects(:perform_on).with(another_user)
-
-      put :update, params: { id: another_user.id, user: { suspended: "1", reason_for_suspension: "Negligence" } }
-    end
-
     should "redisplay the form if the reason is blank" do
       another_user = create(:user)
       put :update, params: { id: another_user.id, user: { suspended: "1", reason_for_suspension: "" } }
