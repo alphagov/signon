@@ -20,13 +20,13 @@ module EventLogHelper
 
   def formatted_application(log)
     if log.application
-      "for <strong>#{log.application.name}</strong>".html_safe
+      "for #{content_tag(:strong, log.application.name)}"
     end
   end
 
   def formatted_initiator(log)
     if log.initiator
-      "by <strong>#{link_to log.initiator.name, users_path(filter: log.initiator.email), title: log.initiator.email}</strong>".html_safe
+      "by #{content_tag(:strong, link_to(log.initiator.name, users_path(filter: log.initiator.email), title: log.initiator.email))}"
     end
   end
 
