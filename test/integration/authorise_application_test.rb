@@ -83,11 +83,11 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
   end
 
   def assert_access_granted(user, app)
-    assert access_grant_for(user, app)
+    assert access_grant_for(user, app), "Expected #{user.email} (ID #{user.id}) to have been granted access to #{app.name} (ID #{app.id}) but no matching AccessGrant found."
   end
 
   def assert_not_access_granted(user, app)
-    assert_not access_grant_for(user, app)
+    assert_not access_grant_for(user, app), "Expected #{user.email} (ID #{user.id}) not to have been granted access to #{app.name} (ID #{app.id}) but a matching AccessGrant was found."
   end
 
   def access_grant_for(user, app)
