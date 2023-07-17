@@ -9,28 +9,26 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
   context "when the user has had 2SV mandated" do
     setup do
       @user.update!(require_2sv: true)
-      ignoring_spurious_error do
-        visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
-      end
+      visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
       signin_with(@user, set_up_2sv: false)
     end
 
     should "not confirm the authorisation" do
       assert_response_contains("Make your account more secure")
+      assert_not_access_granted @user, @app
     end
   end
 
   should "not confirm the authorisation until the user signs in" do
     visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
-    assert_not Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
+    assert_not_access_granted @user, @app
 
-    ignoring_spurious_error do
+    ignoring_requests_to_redirect_uri(@app) do
       signin_with(@user)
     end
 
     assert_redirected_to_application @app
-    # check the access grant has really been created
-    assert_kind_of Doorkeeper::AccessGrant, Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
+    assert_access_granted @user, @app
   end
 
   should "not confirm the authorisation if the user has not passed 2-step verification" do
@@ -38,11 +36,10 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
 
     visit "/"
     signin_with(@user, second_step: false)
-    ignoring_spurious_error do
-      visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
-    end
+    visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
+
     assert_response_contains("Enter 6-digit code")
-    assert_not Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
+    assert_not_access_granted @user, @app
   end
 
   should "not confirm the authorisation if the user does not have 'signin' permission for the application" do
@@ -50,22 +47,21 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
 
     visit "/"
     signin_with(@user)
-    ignoring_spurious_error do
-      visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
-    end
+    visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
+
     assert_response_contains("You don’t have permission to sign in to #{@app.name}.")
-    assert_not Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
+    assert_not_access_granted @user, @app
   end
 
   should "confirm the authorisation for a signed-in user with 'signin' permission to the app" do
     visit "/"
     signin_with(@user)
-    ignoring_spurious_error do
+    ignoring_requests_to_redirect_uri(@app) do
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     end
 
     assert_redirected_to_application @app
-    assert_kind_of Doorkeeper::AccessGrant, Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
+    assert_access_granted @user, @app
   end
 
   should "confirm the authorisation for a fully authenticated 2SV user" do
@@ -73,12 +69,12 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
 
     visit "/"
     signin_with(@user)
-    ignoring_spurious_error do
+    ignoring_requests_to_redirect_uri(@app) do
       visit "/oauth/authorize?response_type=code&client_id=#{@app.uid}&redirect_uri=#{@app.redirect_uri}"
     end
 
     assert_redirected_to_application @app
-    assert_kind_of Doorkeeper::AccessGrant, Doorkeeper::AccessGrant.find_by(resource_owner_id: @user.id)
+    assert_access_granted @user, @app
   end
 
   def assert_redirected_to_application(app)
@@ -86,14 +82,28 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
     assert_match(/\?code=/, current_url)
   end
 
-  def ignoring_spurious_error
+  def assert_access_granted(user, app)
+    assert access_grant_for(user, app), "Expected #{user.email} (ID #{user.id}) to have been granted access to #{app.name} (ID #{app.id}) but no matching AccessGrant found."
+  end
+
+  def assert_not_access_granted(user, app)
+    assert_not access_grant_for(user, app), "Expected #{user.email} (ID #{user.id}) not to have been granted access to #{app.name} (ID #{app.id}) but a matching AccessGrant was found."
+  end
+
+  def access_grant_for(user, app)
+    Doorkeeper::AccessGrant.find_by(resource_owner_id: user, application: app)
+  end
+
+  def ignoring_requests_to_redirect_uri(app)
     # During testing, requests for all domains get routed to Signon;
-    # including the capybara browser being redirected to other apps.
-    # The browser gets a redirect to url of the destination app.
-    # This then gets routed to Signon but Signon doesn't know how to handle the route.
-    # And so it raises the RoutingError
+    # including the request for the redirect_uri of the oauth application.
+    # The path of this redirect_uri doesn't exist in the Signon app
+    # so we catch and swallow the exception raised when this request is
+    # made.
 
     yield
-  rescue ActionController::RoutingError # rubocop:disable Lint/SuppressedException
+  rescue ActionController::RoutingError => e
+    redirect_uri_path = URI.parse(app.redirect_uri).path
+    raise e unless e.message == "No route matches [GET] \"#{redirect_uri_path}\""
   end
 end
