@@ -57,3 +57,7 @@
     @include govuk-responsive-margin(2, "right");
   }
 }
+
+.govuk-table__cell--event-log-date {
+  white-space: nowrap;
+}
