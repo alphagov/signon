@@ -83,11 +83,11 @@ class AuthoriseApplicationTest < ActionDispatch::IntegrationTest
   end
 
   def assert_access_granted(user, app)
-    assert_kind_of Doorkeeper::AccessGrant, Doorkeeper::AccessGrant.find_by(resource_owner_id: user.id, application: app)
+    assert_kind_of Doorkeeper::AccessGrant, Doorkeeper::AccessGrant.find_by(resource_owner_id: user, application: app)
   end
 
   def assert_not_access_granted(user, app)
-    assert_not Doorkeeper::AccessGrant.find_by(resource_owner_id: user.id, application_id: app.id)
+    assert_not Doorkeeper::AccessGrant.find_by(resource_owner_id: user, application: app)
   end
 
   def ignoring_requests_to_redirect_uri(app)
