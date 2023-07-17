@@ -22,12 +22,7 @@ class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsControl
   end
 
   def create
-    if user_has_signin_permission_to_application?
-      super
-    else
-      session[:signin_missing_for_application] = application.try(:id)
-      redirect_to signin_required_path
-    end
+    render plain: "Not found", status: :not_found
   end
 
 private
