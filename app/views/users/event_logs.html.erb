@@ -31,7 +31,7 @@
       { text: "Event" },
     ],
     rows: @logs.map do |log|
-    [ { text: formatted_date(log) },
+    [ { text: formatted_date(log), format: 'event-log-date' },
       { text: formatted_message(log) } ]
     end
   } %>
