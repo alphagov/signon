@@ -35,6 +35,8 @@
       { text: formatted_message(log) } ]
     end
   } %>
+
+  <%= paginate(@logs, theme: 'gds') %>
 <% else %>
   <%= render "govuk_publishing_components/components/notice", {
     title: "No activity logged"
