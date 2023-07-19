@@ -1,11 +1,23 @@
 module UsersWithAccessHelper
   def formatted_user_name(user)
-    link = link_to(user.name, edit_user_path(user))
+    status = if user.invited_but_not_yet_accepted?
+               " (invited)"
+             elsif user.suspended?
+               " (suspended)"
+             elsif user.access_locked?
+               " (access locked)"
+             else
+               ""
+             end
 
+    "#{link_to(user.name, edit_user_path(user))}#{status}".html_safe
+  end
+
+  def formatted_user_name_class(user)
     if user.unusable_account?
-      content_tag(:del, link)
+      "line-through"
     else
-      link
+      ""
     end
   end
 

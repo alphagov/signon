@@ -8,11 +8,39 @@ class UsersWithAccessHelperTest < ActionView::TestCase
     assert_equal '<a href="/users/1/edit">User Name</a>', formatted_user_name(user)
   end
 
-  test "formatted_user_name indicates unusable accounts with <del> tag" do
+  test "formatted_user_name indicates invited but not accepted accounts" do
     user = build(:user, id: 1, name: "User Name")
+    user.stubs(:invited_but_not_yet_accepted?).returns(true)
+
+    assert_equal '<a href="/users/1/edit">User Name</a> (invited)', formatted_user_name(user)
+  end
+
+  test "formatted_user_name indicates suspended accounts" do
+    user = build(:user, id: 1, name: "User Name")
+    user.stubs(:suspended?).returns(true)
+
+    assert_equal '<a href="/users/1/edit">User Name</a> (suspended)', formatted_user_name(user)
+  end
+
+  test "formatted_user_name indicates access locked accounts" do
+    user = build(:user, id: 1, name: "User Name")
+    user.stubs(:access_locked?).returns(true)
+
+    assert_equal '<a href="/users/1/edit">User Name</a> (access locked)', formatted_user_name(user)
+  end
+
+  test "formatted_user_name_class is blank for usable accounts" do
+    user = build(:user)
+    user.stubs(:unusable_account?).returns(false)
+
+    assert formatted_user_name_class(user).blank?
+  end
+
+  test "formatted_user_name_class strikes through unusable accounts" do
+    user = build(:user)
     user.stubs(:unusable_account?).returns(true)
 
-    assert_equal '<del><a href="/users/1/edit">User Name</a></del>', formatted_user_name(user)
+    assert_equal "line-through", formatted_user_name_class(user)
   end
 
   test "formatted_last_sign_in returns the time in words when the user has signed in" do

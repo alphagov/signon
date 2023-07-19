@@ -29,7 +29,7 @@
   <tbody>
     <% @users.each do |user| %>
       <tr>
-        <td><%= formatted_user_name(user) %></td>
+        <td class="<%= formatted_user_name_class(user) %>"><%= formatted_user_name(user) %></td>
         <td class="email"><%= user.email %></td>
         <td><%= user.role.humanize %></td>
         <td><%= user.organisation.try(:name) %></td>

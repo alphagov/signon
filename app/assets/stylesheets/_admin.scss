@@ -5,3 +5,7 @@
 td.email { // stylelint-disable-line selector-no-qualifying-type
   white-space: nowrap;
 }
+
+td.line-through {
+  text-decoration: line-through;
+}
