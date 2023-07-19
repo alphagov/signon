@@ -24,9 +24,9 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
       get :new, params: { client_id: @application.uid, response_type: "code", redirect_uri: @application.redirect_uri }
     end
 
-    should "redirect immediately" do
+    should "redirect to the native url endpoint and include the access grant code" do
       assert_response :redirect
-      assert_redirected_to(/oauth\/authorize\//)
+      assert_redirected_to(/oauth\/authorize\/native\?code=#{Doorkeeper::AccessGrant.first.token}/)
     end
 
     should "issue a grant" do
@@ -43,9 +43,9 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
       get :new, params: { client_id: @application.uid, response_type: "code", redirect_uri: @application.redirect_uri }
     end
 
-    should "redirect immediately" do
+    should "redirect to the application redirect uri and include the access grant code" do
       assert_response :redirect
-      assert_redirected_to(/^#{@application.redirect_uri}/)
+      assert_redirected_to(/^#{@application.redirect_uri}\?code=#{Doorkeeper::AccessGrant.first.token}/)
     end
 
     should "issue a grant" do
