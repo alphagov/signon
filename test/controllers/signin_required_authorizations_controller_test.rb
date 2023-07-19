@@ -18,6 +18,13 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     end
   end
 
+  context "DELETE #destroy" do
+    should "return 404" do
+      delete :destroy
+      assert_response :not_found
+    end
+  end
+
   context "GET #new code request with native url" do
     setup do
       @application.update! redirect_uri: "urn:ietf:wg:oauth:2.0:oob"

@@ -25,6 +25,10 @@ class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsControl
     render plain: "Not found", status: :not_found
   end
 
+  def destroy
+    render plain: "Not found", status: :not_found
+  end
+
 private
 
   def pre_authorizable?
