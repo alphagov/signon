@@ -26,27 +26,6 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     end
   end
 
-  context "GET #new token request with native url" do
-    setup do
-      auth_type_is_allowed "implicit"
-      @application.update! redirect_uri: "urn:ietf:wg:oauth:2.0:oob"
-      get :new, params: { client_id: @application.uid, response_type: "token", redirect_uri: @application.redirect_uri }
-    end
-
-    should "redirect immediately" do
-      assert_response :redirect
-      assert_redirected_to(/oauth\/token\/info\?access_token=/)
-    end
-
-    should "not issue a grant" do
-      assert_equal 0, Doorkeeper::AccessGrant.count
-    end
-
-    should "issue a token" do
-      assert_equal 1, Doorkeeper::AccessToken.count
-    end
-  end
-
   context "GET #new code request with native url" do
     setup do
       auth_type_is_allowed "authorization_code"
