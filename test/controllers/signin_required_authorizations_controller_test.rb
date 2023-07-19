@@ -21,7 +21,6 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
   setup do
     @application = create(:application)
     @user = create(:user, with_signin_permissions_for: [@application])
-    auth_type_is_allowed("implicit")
     @controller.stubs(current_resource_owner: @user)
   end
 
@@ -34,6 +33,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
 
   context "GET #new token request with native url" do
     setup do
+      auth_type_is_allowed "implicit"
       @application.update! redirect_uri: "urn:ietf:wg:oauth:2.0:oob"
       get :new, params: { client_id: @application.uid, response_type: "token", redirect_uri: @application.redirect_uri }
     end
@@ -75,6 +75,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
 
   context "GET #new" do
     setup do
+      auth_type_is_allowed "implicit"
       get :new, params: { client_id: @application.uid, response_type: "token", redirect_uri: @application.redirect_uri }
     end
 
@@ -107,6 +108,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
 
   context "GET #new with errors" do
     setup do
+      auth_type_is_allowed "implicit"
       default_scopes_exist :public
       get :new, params: { an_invalid: "request" }
     end
@@ -123,6 +125,7 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
 
   context "GET #new when the user does not have signin permission for the app" do
     setup do
+      auth_type_is_allowed "implicit"
       @user.application_permissions.where(supported_permission_id: @application.signin_permission).destroy_all
       @user.application_permissions.reload
       get :new, params: { client_id: @application.uid, response_type: "token", redirect_uri: @application.redirect_uri }
