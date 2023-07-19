@@ -117,8 +117,11 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
       assert_response :ok
     end
 
-    should "not issue any token" do
+    should "not issue a grant" do
       assert_equal 0, Doorkeeper::AccessGrant.count
+    end
+
+    should "not issue a token" do
       assert_equal 0, Doorkeeper::AccessToken.count
     end
   end
@@ -139,8 +142,12 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
       assert_redirected_to signin_required_path
     end
 
-    should "not issue any access token" do
-      assert Doorkeeper::AccessToken.all.empty?
+    should "not issue a grant" do
+      assert_equal 0, Doorkeeper::AccessGrant.count
+    end
+
+    should "not issue a token" do
+      assert_equal 0, Doorkeeper::AccessToken.count
     end
   end
 end
