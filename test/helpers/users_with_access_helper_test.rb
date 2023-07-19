@@ -14,4 +14,17 @@ class UsersWithAccessHelperTest < ActionView::TestCase
 
     assert_equal '<del><a href="/users/1/edit">User Name</a></del>', formatted_user_name(user)
   end
+
+  test "formatted_last_sign_in returns the time in words when the user has signed in" do
+    user = build(:user)
+    user.stubs(:current_sign_in_at).returns(Time.zone.now - 1.second)
+
+    assert_equal "less than a minute ago", formatted_last_sign_in(user)
+  end
+
+  test "formatted_last_sign_in indicates if a user has never signed in" do
+    user = build(:user)
+
+    assert_equal "never signed in", formatted_last_sign_in(user)
+  end
 end

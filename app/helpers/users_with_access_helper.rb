@@ -8,4 +8,12 @@ module UsersWithAccessHelper
       link
     end
   end
+
+  def formatted_last_sign_in(user)
+    if user.current_sign_in_at
+      "#{time_ago_in_words(user.current_sign_in_at)} ago"
+    else
+      "never signed in"
+    end
+  end
 end

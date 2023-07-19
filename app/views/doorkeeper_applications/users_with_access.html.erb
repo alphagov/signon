@@ -34,13 +34,7 @@
         <td class="role"><%= user.role.humanize %></td>
         <td class="organisation"><%= user.organisation.try(:name) %></td>
         <td><%= user.sign_in_count %></td>
-        <td class="last-sign-in">
-          <% if user.current_sign_in_at %>
-            <%= time_ago_in_words(user.current_sign_in_at) %> ago
-          <% else %>
-            never signed in
-          <% end %>
-        </td>
+        <td class="last-sign-in"><%= formatted_last_sign_in(user) %></td>
         <td><%= user.status.humanize %></td>
         <td><%= user.eager_loaded_permission_for(@application).to_sentence %></td>
       </tr>
