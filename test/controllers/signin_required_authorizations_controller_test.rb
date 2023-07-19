@@ -5,14 +5,6 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
     Doorkeeper.configuration.stubs(default_scopes: Doorkeeper::OAuth::Scopes.from_array(scopes))
   end
 
-  def auth_type_is_allowed(*grant_flows)
-    Doorkeeper.configuration.stubs(grant_flows:)
-    # for some reason this value isn't being recalculated between tests
-    # so we stub it too
-    Doorkeeper.configuration.stubs(authorization_response_flows: Doorkeeper.configuration.grant_flows.map { |name| Doorkeeper::GrantFlow.get(name) })
-    Doorkeeper.configuration.stubs(authorization_response_types: Doorkeeper.configuration.grant_flows.map { |name| Doorkeeper::GrantFlow.get(name).response_type_matches })
-  end
-
   setup do
     @application = create(:application)
     @user = create(:user, with_signin_permissions_for: [@application])
@@ -28,7 +20,6 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
 
   context "GET #new code request with native url" do
     setup do
-      auth_type_is_allowed "authorization_code"
       @application.update! redirect_uri: "urn:ietf:wg:oauth:2.0:oob"
       get :new, params: { client_id: @application.uid, response_type: "code", redirect_uri: @application.redirect_uri }
     end
@@ -49,7 +40,6 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
 
   context "GET #new" do
     setup do
-      auth_type_is_allowed "authorization_code"
       get :new, params: { client_id: @application.uid, response_type: "code", redirect_uri: @application.redirect_uri }
     end
 
@@ -69,7 +59,6 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
 
   context "GET #new with errors" do
     setup do
-      auth_type_is_allowed "authorization_code"
       default_scopes_exist :public
       get :new, params: { an_invalid: "request" }
     end
@@ -89,7 +78,6 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
 
   context "GET #new when the user does not have signin permission for the app" do
     setup do
-      auth_type_is_allowed "authorization_code"
       @user.application_permissions.where(supported_permission_id: @application.signin_permission).destroy_all
       @user.application_permissions.reload
       get :new, params: { client_id: @application.uid, response_type: "code", redirect_uri: @application.redirect_uri }
