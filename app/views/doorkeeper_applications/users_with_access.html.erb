@@ -31,14 +31,10 @@
       <tr>
         <td>
           <%= user.unusable_account? ? "<del>".html_safe : "" %>
-          <strong>
-            <%= link_to "#{user.name}", edit_user_path(user) %>
-          </strong>
+          <%= link_to "#{user.name}", edit_user_path(user) %>
           <%= user.unusable_account? ? "</del>".html_safe : "" %>
         </td>
-        <td class="email">
-          <span class="text-muted"><%= user.email %></span>
-        </td>
+        <td class="email"><%= user.email %></td>
         <td class="role"><%= user.role.humanize %></td>
         <td class="organisation"><%= user.organisation.try(:name) %></td>
         <td><%= user.sign_in_count %></td>
