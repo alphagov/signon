@@ -185,10 +185,10 @@ GEM
       sentry-rails (~> 5.3)
       sentry-ruby (~> 5.3)
       statsd-ruby (~> 1.5)
-    govuk_personalisation (0.13.0)
+    govuk_personalisation (0.14.0)
       plek (>= 1.9.0)
       rails (>= 6, < 8)
-    govuk_publishing_components (35.10.0)
+    govuk_publishing_components (35.11.0)
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
