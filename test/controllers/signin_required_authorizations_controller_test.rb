@@ -1,11 +1,6 @@
 require "test_helper"
 
 class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
-  def fragments(param)
-    fragment = URI.parse(response.location).fragment
-    Rack::Utils.parse_query(fragment)[param]
-  end
-
   def default_scopes_exist(*scopes)
     Doorkeeper.configuration.stubs(default_scopes: Doorkeeper::OAuth::Scopes.from_array(scopes))
   end
@@ -75,8 +70,8 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
 
   context "GET #new" do
     setup do
-      auth_type_is_allowed "implicit"
-      get :new, params: { client_id: @application.uid, response_type: "token", redirect_uri: @application.redirect_uri }
+      auth_type_is_allowed "authorization_code"
+      get :new, params: { client_id: @application.uid, response_type: "code", redirect_uri: @application.redirect_uri }
     end
 
     should "redirect immediately" do
@@ -84,31 +79,18 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
       assert_redirected_to(/^#{@application.redirect_uri}/)
     end
 
-    should "issue a token" do
-      assert_equal 1, Doorkeeper::AccessToken.count
+    should "issue a grant" do
+      assert_equal 1, Doorkeeper::AccessGrant.count
     end
 
-    should "include token type in fragment" do
-      assert_equal "Bearer", fragments("token_type")
-    end
-
-    should "include token expiration in fragment" do
-      assert_not_nil fragments("expires_in")
-      assert fragments("expires_in").to_i >= 1.hour.to_i
-    end
-
-    should "issue the token for the current client" do
-      assert_equal @application.id, Doorkeeper::AccessToken.first.application_id
-    end
-
-    should "issue the token for the current resource owner" do
-      assert_equal @user.id, Doorkeeper::AccessToken.first.resource_owner_id
+    should "not issue a token" do
+      assert_equal 0, Doorkeeper::AccessToken.count
     end
   end
 
   context "GET #new with errors" do
     setup do
-      auth_type_is_allowed "implicit"
+      auth_type_is_allowed "authorization_code"
       default_scopes_exist :public
       get :new, params: { an_invalid: "request" }
     end
@@ -128,10 +110,10 @@ class SigninRequiredAuthorizationsControllerTest < ActionController::TestCase
 
   context "GET #new when the user does not have signin permission for the app" do
     setup do
-      auth_type_is_allowed "implicit"
+      auth_type_is_allowed "authorization_code"
       @user.application_permissions.where(supported_permission_id: @application.signin_permission).destroy_all
       @user.application_permissions.reload
-      get :new, params: { client_id: @application.uid, response_type: "token", redirect_uri: @application.redirect_uri }
+      get :new, params: { client_id: @application.uid, response_type: "code", redirect_uri: @application.redirect_uri }
     end
 
     should "redirect after authorization" do
