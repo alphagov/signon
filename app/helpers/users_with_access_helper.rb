@@ -16,8 +16,6 @@ module UsersWithAccessHelper
   def formatted_user_name_class(user)
     if user.unusable_account?
       "line-through"
-    else
-      ""
     end
   end
 
