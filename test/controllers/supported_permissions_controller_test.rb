@@ -13,10 +13,12 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
       get :index, params: { doorkeeper_application_id: app.id }
 
       assert_select "h1", /My first app/
-      assert_select "td[class=name]", /permission1/
-      assert_select "td[class=delegatable]", /Yes/
-      assert_select "td[class=default]", /No/
-      assert_select "a[id='add']", true
+      assert_select "tr:nth-child(2)" do |tr|
+        assert_select tr, "td", /permission1/
+        assert_select tr, "td", /Yes/
+        assert_select tr, "td", /No/
+      end
+      assert_select "a", "Add permission"
     end
   end
 
