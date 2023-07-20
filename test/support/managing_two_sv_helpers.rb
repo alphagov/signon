@@ -96,10 +96,9 @@ module ManagingTwoSvHelpers
   end
 
   def fill_in_expiry_date(date)
-    element = "user_expiry_date_for_2sv_exemption"
-    select date.year.to_s, from: "#{element}_1i"
-    select date.strftime("%B"), from: "#{element}_2i"
-    select date.day.to_s, from: "#{element}_3i"
+    fill_in "Day", with: date.day
+    fill_in "Month", with: date.month
+    fill_in "Year", with: date.year
   end
 
   def assert_user_has_been_exempted_from_2sv(user, reason, expiry_date)
