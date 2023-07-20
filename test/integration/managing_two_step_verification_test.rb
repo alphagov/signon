@@ -205,7 +205,6 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
           assert_user_has_not_been_exempted_from_2sv(user_requiring_2sv)
           assert page.has_text?("Expiry date must be in the future")
-          assert_equal edit_two_step_verification_exemption_path(user_requiring_2sv), current_path
         end
 
         context "when a exemption reason already exists" do
@@ -216,9 +215,9 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
             click_link("Edit reason or expiry date for 2-step verification exemption")
 
             assert page.has_field?("Reason for 2-step verification exemption", with: "user is exempt")
-            assert page.has_field?("user_expiry_date_for_2sv_exemption_1i", with: @expiry_date.year)
-            assert page.has_field?("user_expiry_date_for_2sv_exemption_2i", with: @expiry_date.month)
-            assert page.has_field?("user_expiry_date_for_2sv_exemption_3i", with: @expiry_date.day)
+            assert page.has_field?("Year", with: @expiry_date.year)
+            assert page.has_field?("Month", with: @expiry_date.month)
+            assert page.has_field?("Day", with: @expiry_date.day)
 
             new_expiry_date = 1.month.from_now.to_date
             fill_in_exemption_form(@reason_for_exemption, new_expiry_date)
