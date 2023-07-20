@@ -33,14 +33,14 @@ class UsersWithAccessHelperTest < ActionView::TestCase
     user = build(:user)
     user.stubs(:unusable_account?).returns(false)
 
-    assert formatted_user_name_class(user).blank?
+    assert user_name_format(user).blank?
   end
 
   test "formatted_user_name_class strikes through unusable accounts" do
     user = build(:user)
     user.stubs(:unusable_account?).returns(true)
 
-    assert_equal "line-through", formatted_user_name_class(user)
+    assert_equal "line-through", user_name_format(user)
   end
 
   test "formatted_last_sign_in returns the time in words when the user has signed in" do

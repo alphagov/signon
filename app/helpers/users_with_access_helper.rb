@@ -13,7 +13,7 @@ module UsersWithAccessHelper
     "#{link_to(user.name, edit_user_path(user))}#{status}".html_safe
   end
 
-  def formatted_user_name_class(user)
+  def user_name_format(user)
     if user.unusable_account?
       "line-through"
     end

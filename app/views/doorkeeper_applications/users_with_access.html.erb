@@ -35,7 +35,7 @@
   ],
   rows: @users.map do |user|
     [
-      { text: formatted_user_name(user), format: formatted_user_name_class(user) },
+      { text: formatted_user_name(user), format: user_name_format(user) },
       { text: user.email, format: 'email' },
       { text: user.role.humanize },
       { text: user.organisation.try(:name) },
