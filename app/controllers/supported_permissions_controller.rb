@@ -1,7 +1,13 @@
 class SupportedPermissionsController < ApplicationController
+  layout "admin_layout", only: %w[index]
+
   before_action :authenticate_user!
   before_action :load_and_authorize_application
   respond_to :html
+
+  def index
+    @supported_permissions = @application.sorted_supported_permissions_grantable_from_ui
+  end
 
   def new
     @supported_permission = @application.supported_permissions.build
