@@ -1,16 +1,23 @@
-<% content_for :title, "Create new user" %>
+<% content_for :title, "2-step verification settings for new user" %>
 
-<h1>2-step verification settings for new user</h1>
-
-<%= form_for @user, :html => {:class => 'well'} do |f| %>
+<%= form_for @user do |f| %>
   <%= f.hidden_field :skip_update_user_permissions, value: "true" %>
-  <p class="checkbox">
-    <%= f.label :require_2sv do %>
-      <%= f.check_box :require_2sv %> Mandate 2-step verification for this user <%= "(this will remove their exemption)" if @user.exempt_from_2sv? %>
-    <% end %>
-    <br/>
-    User will be prompted to set up 2-step verification again the next time they sign in.
-  </p>
+  <%= render "govuk_publishing_components/components/hint", {
+    text: "User will be prompted to set up 2-step verification again the next time they sign in."
+  } %>
 
-  <%= f.submit "Update user", :class => 'btn btn-success' %>
+  <%= render "govuk_publishing_components/components/checkboxes", {
+    name: "user[require_2sv]",
+    items: [
+      {
+        label: "Mandate 2-step verification for this user #{'(this will remove their exemption)' if @user.exempt_from_2sv?}",
+        value: 1,
+        checked: @user.require_2sv?,
+      }
+    ]
+  } %>
+
+  <%= render "govuk_publishing_components/components/button", {
+    text: "Update user"
+  } %>
 <% end %>
