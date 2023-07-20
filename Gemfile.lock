@@ -154,7 +154,7 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    gds-api-adapters (88.2.0)
+    gds-api-adapters (89.0.0)
       addressable
       link_header
       null_logger
@@ -514,7 +514,7 @@ GEM
     pry-byebug (3.10.1)
       byebug (~> 11.0)
       pry (>= 0.13, < 0.15)
-    public_suffix (5.0.1)
+    public_suffix (5.0.3)
     puma (6.3.0)
       nio4r (~> 2.0)
     pundit (2.3.1)
