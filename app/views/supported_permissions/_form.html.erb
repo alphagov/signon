@@ -1,35 +1,59 @@
-<%- unless @supported_permission.errors.empty? -%>
-  <div class="alert alert-danger add-top-margin">
-    <ul class="errors">
-      <%- @supported_permission.errors.full_messages.each do |msg| -%>
-      <li><%= msg %></li>
-      <%- end -%>
-    </ul>
-  </div>
-<%- end -%>
-
-<div class="well">
-  <%= form_for [@application, @supported_permission] do |f| %>
-    <div class="form-group">
-      <%= f.label :name, 'Permission name' %>
-        <% if f.object.name.try(:downcase) == 'signin' %>
-          <%= f.object.name %>
-        <% else %>
-          <%= f.text_field :name, placeholder: t('supported_permissions.form.placeholder.name'), class: 'form-control input-md-4', autofocus: 'autofocus' %>
-        <% end %>
-    </div>
-    <hr />
-    <p class="checkbox">
-      <label>
-        <%= f.check_box :delegatable %> <%= t('supported_permissions.form.delegatable') %>
-      </label>
-    </p>
-    <p class="checkbox">
-      <label>
-        <%= f.check_box :default %> <%= t('supported_permissions.form.default') %>
-      </label>
-    </p>
-    <hr />
-    <%= f.submit "Save permission", class: "btn btn-success" %>
+<% if @supported_permission.errors.any? %>
+  <% content_for :error_summary do %>
+    <%= render "govuk_publishing_components/components/error_summary", {
+      title: "There is a problem",
+      items: @supported_permission.errors.map do |error|
+        {
+          text: error.full_message,
+          href: "#supported_permission_#{error.attribute}",
+        }
+      end
+    } %>
   <% end %>
-</div>
+<% end %>
+
+<%= form_for [@application, @supported_permission] do |f| %>
+  <%= render "govuk_publishing_components/components/input", {
+    id: "supported_permission_name",
+    label: { text: "Permission name" },
+    type: "text",
+    width: 20,
+    name: "supported_permission[name]",
+    value: f.object.name,
+    hint: t('supported_permissions.form.placeholder.name') + (f.object.signin? ? " (cannot be changed)" : ""),
+    autofocus: true,
+    autocomplete: "off",
+    readonly: f.object.signin?,
+    error_items: f.object.errors.full_messages_for(:name).map { |message| { text: message } }
+  } %>
+
+  <%= f.hidden_field "delegatable", value: 0 %>
+  <%= render "govuk_publishing_components/components/checkboxes", {
+    id: "supported_permission_delegatable",
+    name: "supported_permission[delegatable]",
+    items: [
+      {
+        label: t('supported_permissions.form.delegatable'),
+        value: 1,
+        checked: f.object.delegatable?,
+      }
+    ]
+  } %>
+
+  <%= f.hidden_field "default", value: 0 %>
+  <%= render "govuk_publishing_components/components/checkboxes", {
+    id: "supported_permission_default",
+    name: "supported_permission[default]",
+    items: [
+      {
+        label: t('supported_permissions.form.default'),
+        value: 1,
+        checked: f.object.default?,
+      }
+    ]
+  } %>
+
+  <%= render "govuk_publishing_components/components/button", {
+    text: "Save permission"
+  } %>
+<% end %>

@@ -10,6 +10,10 @@ class SupportedPermission < ApplicationRecord
   scope :grantable_from_ui, -> { where(grantable_from_ui: true) }
   scope :default, -> { where(default: true) }
 
+  def signin?
+    name.try(:downcase) == "signin"
+  end
+
 private
 
   def signin_permission_name_not_changed

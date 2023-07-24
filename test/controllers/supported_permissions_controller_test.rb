@@ -27,7 +27,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
       app = create(:application, name: "My first app", with_supported_permissions: %w[permission1])
       get :new, params: { doorkeeper_application_id: app.id }
       assert_select "h1", /Add permission/
-      assert_select ".breadcrumb li", /My first app/
+      assert_select ".govuk-breadcrumbs li", /My first app/
       assert_select "input[name='supported_permission[name]']", true
       assert_select "input[name='supported_permission[delegatable]']", true
       assert_select "input[name='supported_permission[default]']", true
@@ -40,7 +40,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
       post :create, params: { doorkeeper_application_id: app.id, supported_permission: { name: "" } }
 
-      assert_select "ul[class='errors'] li", "Name can't be blank"
+      assert_select ".govuk-error-summary ul li", "Name can't be blank"
       assert_equal app.reload.supported_permissions, [app.signin_permission]
     end
 
@@ -71,7 +71,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
       put :update, params: { doorkeeper_application_id: app.id, id: perm.id, supported_permission: { name: "", delegatable: "0", default: "0" } }
 
-      assert_select "ul[class='errors'] li", "Name can't be blank"
+      assert_select ".govuk-error-summary ul li", "Name can't be blank"
       perm.reload
       assert perm.delegatable
       assert perm.default
