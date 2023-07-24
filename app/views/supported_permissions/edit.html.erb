@@ -1,14 +1,30 @@
-<% content_for :title, "Edit permission" %>
+<% content_for :title, "Edit “#{@supported_permission.name_was}” permission for #{@application.name}" %>
 
-<ol class="breadcrumb">
-  <li><%= link_to 'Applications', doorkeeper_applications_path %></li>
-  <li><%= link_to @application.name, edit_doorkeeper_application_path(@application) %></li>
-  <li><%= link_to 'Permissions', doorkeeper_application_supported_permissions_path(@application) %></li>
-  <li class="active">Edit permission</li>
-</ol>
-
-<div class="page-title">
-  <h1>Edit permission “<%= @supported_permission.name %>”</h1>
-</div>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Home",
+         url: root_path,
+       },
+       {
+         title: "Applications",
+         url: doorkeeper_applications_path,
+       },
+       {
+         title: @application.name,
+         url: edit_doorkeeper_application_path(@application),
+       },
+       {
+         title: "Permissions",
+         url: doorkeeper_application_supported_permissions_path(@application),
+       },
+       {
+         title: "Edit “#{@supported_permission.name_was}” permission",
+       },
+     ]
+   })
+%>
 
 <%= render 'form' %>

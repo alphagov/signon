@@ -1,5 +1,5 @@
 class SupportedPermissionsController < ApplicationController
-  layout "admin_layout", only: %w[index]
+  layout "admin_layout"
 
   before_action :authenticate_user!
   before_action :load_and_authorize_application
