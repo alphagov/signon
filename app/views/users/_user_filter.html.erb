@@ -33,9 +33,6 @@
           <%= submit_tag "Search", class: "btn btn-default" %>
           <% end %>
         </li>
-        <li class="<% if any_filter? %>add-right-margin <% end %>pull-right">
-          <%= link_to_users_csv "Export as CSV", params, class: "btn btn-default" %>
-        </li>
       </ul>
     </header>
   </div>
