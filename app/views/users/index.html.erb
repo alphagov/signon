@@ -3,8 +3,8 @@
 <div class="page-title clearfix remove-top-margin">
   <h1 class="pull-left"><%= user_role_text %></h1>
   <div class="pull-right add-top-margin">
-    <%= link_to "Create user", new_user_invitation_path, class: "btn btn-success add-right-margin" %>
     <% if policy(User).new? %>
+      <%= link_to "Create user", new_user_invitation_path, class: "btn btn-success add-right-margin" %>
       <%= link_to "Upload a batch of users", new_batch_invitation_path, class: "btn btn-default add-right-margin" %>
     <% end %>
     <% if policy(BulkGrantPermissionSet).new? %>

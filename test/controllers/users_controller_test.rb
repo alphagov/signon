@@ -244,6 +244,24 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     context "GET index" do
+      should "display 'Create user' button" do
+        get :index
+
+        assert_select "a", text: "Create user"
+      end
+
+      should "display 'Upload a batch of users' button" do
+        get :index
+
+        assert_select "a", text: "Upload a batch of users"
+      end
+
+      should "display 'Grant access to all users' button" do
+        get :index
+
+        assert_select "a", text: "Grant access to all users"
+      end
+
       should "list users" do
         create(:user, email: "another_user@email.com")
         get :index
@@ -889,6 +907,33 @@ class UsersControllerTest < ActionController::TestCase
       @user.update_column(:role, "normal")
       get :index
       assert_redirected_to root_path
+    end
+  end
+
+  context "as Organisation Admin" do
+    setup do
+      @user = create(:organisation_admin)
+      sign_in @user
+    end
+
+    context "GET index" do
+      should "not display 'Create user' button" do
+        get :index
+
+        assert_select "a", text: "Create user", count: 0
+      end
+
+      should "not display 'Upload a batch of users' button" do
+        get :index
+
+        assert_select "a", text: "Upload a batch of users", count: 0
+      end
+
+      should "not display 'Grant access to all users' button" do
+        get :index
+
+        assert_select "a", text: "Grant access to all users", count: 0
+      end
     end
   end
 end
