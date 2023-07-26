@@ -32,7 +32,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       within "table" do
         assert has_css?("td", text: "Enabled", count: 1)
-        assert has_css?("td", text: "Not set up", count: 3)
+        assert has_css?("td", text: "Not set up", count: 7)
       end
     end
 
@@ -43,33 +43,6 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       actual_last_sign_in_strings = page.all("table tr td.last-sign-in").map(&:text).map(&:strip)[0..1]
       assert_equal ["5 minutes ago", "never signed in"], actual_last_sign_in_strings
-    end
-
-    should "see list of users paginated alphabetically" do
-      visit "/users"
-
-      assert page.has_content?("Users")
-
-      expected = [
-        "Aardvark aardvark@example.com",
-        "Abbey abbey@example.com",
-        "Abbot mr_ab@example.com",
-        "Admin User admin@example.com",
-      ]
-      actual = page.all("table tr td.email").map(&:text).map(&:strip)
-      assert_equal expected, actual
-
-      within first(".pagination") do
-        click_on "E"
-      end
-
-      expected = [
-        "Ed ed@example.com",
-        "Eddie eddie_bb@example.com",
-        "Ernie ernie@example.com",
-      ]
-      actual = page.all("table tr td.email").map(&:text).map(&:strip)
-      assert_equal expected, actual
     end
 
     should "be able to filter users" do
@@ -88,7 +61,6 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       click_on "Users"
 
-      assert page.has_content?("Users by initial")
       assert page.has_content?("Aardvark aardvark@example.com")
     end
 

@@ -323,16 +323,6 @@ class UsersControllerTest < ActionController::TestCase
         end
       end
 
-      should "let you paginate by the first letter of the name" do
-        create(:user, name: "alf", email: "a@email.com")
-        create(:user, name: "zed", email: "z@email.com")
-
-        get :index, params: { letter: "Z" }
-
-        assert_select "td.email", /z@email.com/
-        assert_select "tbody tr", count: 1
-      end
-
       context "filter" do
         setup do
           create(:user, email: "not_admin@gov.uk")
