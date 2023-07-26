@@ -152,7 +152,7 @@ private
   end
 
   def paginate_users
-    @users = @users.page(params[:page]).per(100)
+    @users = @users.page(params[:page]).per(25)
   end
 
   def any_filter?
