@@ -23,7 +23,6 @@
       <th scope="col">Role</th>
       <th scope="col">Organisation</th>
       <th scope="col">Last sign-in</th>
-      <th scope="col">Created</th>
       <th scope="col">Status</th>
       <th scope="col"><%= two_step_abbr_tag %> Status</th>
       <th scope="col"><%= two_step_abbr_tag %> Exemption Expiry</th>
@@ -50,7 +49,6 @@
             never signed in
           <% end %>
         </td>
-        <td><%= time_ago_in_words(user.created_at) %> ago</td>
         <td><%= user.status.humanize %></td>
         <td><%= two_step_status(user) %></td>
         <td>
