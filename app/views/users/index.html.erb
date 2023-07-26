@@ -13,9 +13,9 @@
   </div>
 </div>
 
-<%= render partial: "user_filter" %>
+<h2><%= pluralize(number_with_delimiter(@users.total_count), 'user') %></h2>
 
-<h2 class="add-bottom-margin"><%= pluralize(number_with_delimiter(@users.total_count), 'user') %></h2>
+<%= render partial: "user_filter" %>
 
 <table class="table table-striped table-bordered">
   <thead>
