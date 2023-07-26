@@ -34,8 +34,7 @@
           <% end %>
         </li>
         <li class="<% if any_filter? %>add-right-margin <% end %>pull-right">
-          <% merged_params = params.permit(:filter, :role, :permission, :status, :organisation, :two_step_status).merge(format: "csv") %>
-          <%= link_to "Export as CSV", merged_params, class: "btn btn-default" %>
+          <%= link_to_users_csv "Export as CSV", params, class: "btn btn-default" %>
         </li>
       </ul>
     </header>
