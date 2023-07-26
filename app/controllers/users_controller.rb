@@ -152,11 +152,7 @@ private
   end
 
   def paginate_users
-    @users = if @users.is_a?(Array)
-               Kaminari.paginate_array(@users).page(params[:page]).per(100)
-             else
-               @users.page(params[:page]).per(100)
-             end
+    @users = @users.page(params[:page]).per(100)
   end
 
   def any_filter?
