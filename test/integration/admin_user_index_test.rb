@@ -49,7 +49,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       visit "/users"
 
       fill_in "Name or email", with: "bb"
-      click_on "Search"
+      click_on "Filter"
 
       assert page.has_content?("Abbey abbey@example.com")
       assert page.has_content?("Abbot mr_ab@example.com")

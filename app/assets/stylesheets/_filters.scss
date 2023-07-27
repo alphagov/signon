@@ -48,6 +48,10 @@ a.filter-option:visited,
 
 .filter-by-name-field {
   width: 290px;
+
+  &::placeholder {
+    color: #757575;
+  }
 }
 
 // Nav compact
