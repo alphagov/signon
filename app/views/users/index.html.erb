@@ -15,7 +15,7 @@
 
 <div class="clearfix">
   <h2 class="pull-left remove-top-margin"><%= formatted_number_of_users(@users) %></h2>
-  <%= link_to_users_csv "Export as CSV", params, class: "btn btn-default pull-right" %>
+  <%= link_to_users_csv "Export #{formatted_number_of_users(@users)} as CSV", params, class: "btn btn-default pull-right" %>
 </div>
 
 <%= render partial: "user_filter" %>

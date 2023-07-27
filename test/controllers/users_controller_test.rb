@@ -262,6 +262,12 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a", text: "Grant access to all users"
       end
 
+      should "display 'Export N users as CSV' button" do
+        get :index
+
+        assert_select "a", text: "Export 1 user as CSV", href: users_path(format: "csv")
+      end
+
       should "list users" do
         create(:user, email: "another_user@email.com")
         get :index
