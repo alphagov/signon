@@ -346,22 +346,16 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
     end
 
     should "raise an error if email address is not in Notify team" do
-      raises_exception = lambda do |_request, _params|
-        response = MiniTest::Mock.new
-        response.expect :code, 400
-        response.expect :body, "Can't send to this recipient using a team-only API key"
-        raise Notifications::Client::BadRequestError, response
-      end
+      response = stub("response", code: 400, body: "Can't send to this recipient using a team-only API key")
+      User.stubs(:invite!).raises(Notifications::Client::BadRequestError, response)
 
-      User.stub(:invite!, raises_exception) do
-        perform_enqueued_jobs do
-          visit new_user_invitation_path
-          fill_in "Name", with: "Fred Bloggs"
-          fill_in "Email", with: "fred@example.com"
-          click_button "Create user and send email"
+      perform_enqueued_jobs do
+        visit new_user_invitation_path
+        fill_in "Name", with: "Fred Bloggs"
+        fill_in "Email", with: "fred@example.com"
+        click_button "Create user and send email"
 
-          assert_response_contains "Error: One or more recipients not in GOV.UK Notify team (code: 400)"
-        end
+        assert_response_contains "Error: One or more recipients not in GOV.UK Notify team (code: 400)"
       end
     end
   end
