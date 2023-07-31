@@ -263,7 +263,7 @@ class User < ApplicationRecord
 
   def reset_2sv_exemption_reason
     if require_2sv.present?
-      self.reason_for_2sv_exemption =  nil
+      self.reason_for_2sv_exemption = nil
       self.expiry_date_for_2sv_exemption = nil
     end
   end
