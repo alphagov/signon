@@ -3,6 +3,8 @@ class BatchInvitationUser < ApplicationRecord
 
   validates :outcome, inclusion: { in: [nil, "success", "failed", "skipped"] }
 
+  before_save :strip_whitespace_from_name
+
   scope :processed, -> { where.not(outcome: nil) }
   scope :unprocessed, -> { where(outcome: nil) }
   scope :failed, -> { where(outcome: "failed") }
@@ -89,5 +91,9 @@ private
       user_params: raw_attributes,
       current_user_role: inviting_user.role.to_sym,
     ).sanitise
+  end
+
+  def strip_whitespace_from_name
+    name.strip!
   end
 end
