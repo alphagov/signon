@@ -244,6 +244,30 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     context "GET index" do
+      should "display 'Create user' button" do
+        get :index
+
+        assert_select "a", text: "Create user"
+      end
+
+      should "display 'Upload a batch of users' button" do
+        get :index
+
+        assert_select "a", text: "Upload a batch of users"
+      end
+
+      should "display 'Grant access to all users' button" do
+        get :index
+
+        assert_select "a", text: "Grant access to all users"
+      end
+
+      should "display 'Export N users as CSV' button" do
+        get :index
+
+        assert_select "a", text: "Export 1 user as CSV", href: users_path(format: "csv")
+      end
+
       should "list users" do
         create(:user, email: "another_user@email.com")
         get :index
@@ -321,16 +345,6 @@ class UsersControllerTest < ActionController::TestCase
           lines = @response.body.lines
           assert_equal(3, lines.length)
         end
-      end
-
-      should "let you paginate by the first letter of the name" do
-        create(:user, name: "alf", email: "a@email.com")
-        create(:user, name: "zed", email: "z@email.com")
-
-        get :index, params: { letter: "Z" }
-
-        assert_select "td.email", /z@email.com/
-        assert_select "tbody tr", count: 1
       end
 
       context "filter" do
@@ -899,6 +913,33 @@ class UsersControllerTest < ActionController::TestCase
       @user.update_column(:role, "normal")
       get :index
       assert_redirected_to root_path
+    end
+  end
+
+  context "as Organisation Admin" do
+    setup do
+      @user = create(:organisation_admin)
+      sign_in @user
+    end
+
+    context "GET index" do
+      should "not display 'Create user' button" do
+        get :index
+
+        assert_select "a", text: "Create user", count: 0
+      end
+
+      should "not display 'Upload a batch of users' button" do
+        get :index
+
+        assert_select "a", text: "Upload a batch of users", count: 0
+      end
+
+      should "not display 'Grant access to all users' button" do
+        get :index
+
+        assert_select "a", text: "Grant access to all users", count: 0
+      end
     end
   end
 end

@@ -9,6 +9,18 @@
         <% end %>
       <% end %>
       <ul class="nav nav-compact nav-pills">
+        <li class="filter-by-name">
+          <%= form_tag nil, method: "get", class: 'add-right-margin form-inline' do %>
+          <%= hidden_field_tag :role, params[:role] if params[:role] %>
+          <%= hidden_field_tag :permission, params[:permission] if params[:permission] %>
+          <%= hidden_field_tag :status, params[:status] if params[:status] %>
+          <%= hidden_field_tag :organisation, params[:organisation] if params[:organisation] %>
+          <%= hidden_field_tag :two_step_status, params[:two_step_status] if params[:two_step_status] %>
+          <%= label_tag 'filter', 'Name or email', class: 'add-right-margin sr-only' %>
+          <%= text_field_tag "filter", params[:filter], placeholder: "Name or email", class: 'form-control filter-by-name-field' %>
+          <%= submit_tag "Filter", class: "btn btn-default" %>
+          <% end %>
+        </li>
         <li class="nav-pill-text">
           <strong>Filter by</strong>
         </li>
@@ -21,22 +33,6 @@
           <%= render partial: 'user_filter_group', locals: {filter_type: :organisation} %>
         <% end %>
         <%= render partial: 'user_filter_group', locals: {filter_type: :two_step_status} %>
-        <li class="filter-by-name">
-          <%= form_tag nil, method: "get", class: 'add-left-margin form-inline' do %>
-          <%= hidden_field_tag :role, params[:role] if params[:role] %>
-          <%= hidden_field_tag :permission, params[:permission] if params[:permission] %>
-          <%= hidden_field_tag :status, params[:status] if params[:status] %>
-          <%= hidden_field_tag :organisation, params[:organisation] if params[:organisation] %>
-          <%= hidden_field_tag :two_step_status, params[:two_step_status] if params[:two_step_status] %>
-          <%= label_tag 'filter', 'Name or email', class: 'add-right-margin' %>
-          <%= text_field_tag "filter", params[:filter], class: 'form-control filter-by-name-field' %>
-          <%= submit_tag "Search", class: "btn btn-default" %>
-          <% end %>
-        </li>
-        <li class="<% if any_filter? %>add-right-margin <% end %>pull-right">
-          <% merged_params = params.permit(:filter, :role, :permission, :status, :organisation, :two_step_status).merge(format: "csv") %>
-          <%= link_to "Export as CSV", merged_params, class: "btn btn-default" %>
-        </li>
       </ul>
     </header>
   </div>

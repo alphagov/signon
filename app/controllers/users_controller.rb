@@ -28,7 +28,7 @@ class UsersController < ApplicationController
   def index
     authorize User
 
-    @users = policy_scope(User).includes(:organisation)
+    @users = policy_scope(User).includes(:organisation).order(:name)
     filter_users if any_filter?
     respond_to do |format|
       format.html do
@@ -152,19 +152,7 @@ private
   end
 
   def paginate_users
-    if any_filter?
-      @users = if @users.is_a?(Array)
-                 Kaminari.paginate_array(@users).page(params[:page]).per(100)
-               else
-                 @users.page(params[:page]).per(100)
-               end
-    else
-      @users, @sorting_params = @users.alpha_paginate(
-        params.fetch(:letter, "A"),
-        ALPHABETICAL_PAGINATE_CONFIG.dup,
-        &:name
-      )
-    end
+    @users = @users.page(params[:page]).per(25)
   end
 
   def any_filter?

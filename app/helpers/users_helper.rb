@@ -48,4 +48,13 @@ module UsersHelper
     max_last_synced_at = permissions.map(&:last_synced_at).compact.max
     max_updated_at.present? && max_last_synced_at.present? ? max_updated_at > max_last_synced_at : false
   end
+
+  def link_to_users_csv(text, params, options = {})
+    merged_params = params.permit(:filter, :role, :permission, :status, :organisation, :two_step_status).merge(format: "csv")
+    link_to text, merged_params, options
+  end
+
+  def formatted_number_of_users(users)
+    pluralize(number_with_delimiter(users.total_count), "user")
+  end
 end

@@ -3,8 +3,8 @@
 <div class="page-title clearfix remove-top-margin">
   <h1 class="pull-left"><%= user_role_text %></h1>
   <div class="pull-right add-top-margin">
-    <%= link_to "Create user", new_user_invitation_path, class: "btn btn-success add-right-margin" %>
     <% if policy(User).new? %>
+      <%= link_to "Create user", new_user_invitation_path, class: "btn btn-success add-right-margin" %>
       <%= link_to "Upload a batch of users", new_batch_invitation_path, class: "btn btn-default add-right-margin" %>
     <% end %>
     <% if policy(BulkGrantPermissionSet).new? %>
@@ -13,38 +13,39 @@
   </div>
 </div>
 
+<div class="clearfix">
+  <h2 class="pull-left remove-top-margin"><%= formatted_number_of_users(@users) %></h2>
+  <%= link_to_users_csv "Export #{formatted_number_of_users(@users)} as CSV", params, class: "btn btn-default pull-right" %>
+</div>
+
 <%= render partial: "user_filter" %>
-<%= render partial: "pagination", locals: {position: 'top'} %>
 
 <table class="table table-striped table-bordered">
   <thead>
     <tr class="table-header">
-      <th scope="col">Name and email</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
       <th scope="col">Role</th>
       <th scope="col">Organisation</th>
-      <th scope="col">Sign-in count</th>
       <th scope="col">Last sign-in</th>
-      <th scope="col">Created</th>
       <th scope="col">Status</th>
       <th scope="col"><%= two_step_abbr_tag %> Status</th>
-      <th scope="col"><%= two_step_abbr_tag %> Exemption Expiry</th>
       <th scope="col">Actions</th>
     </tr>
   </thead>
   <tbody>
     <% @users.each do |user| %>
       <tr>
-        <td class="email">
+        <td class="name">
           <%= user.unusable_account? ? "<del>".html_safe : "" %>
             <strong>
               <%= link_to "#{user.name}", edit_user_path(user) %>
             </strong>
           <%= user.unusable_account? ? "</del>".html_safe : "" %>
-          <br><span class="text-muted"><%= user.email %></span>
         </td>
+        <td class="email"><%= user.email %></td>
         <td class="role"><%= user.role.humanize %></td>
         <td class="organisation"><%= user.organisation.try(:name) %></td>
-        <td><%= user.sign_in_count %></td>
         <td class="last-sign-in">
           <% if user.current_sign_in_at %>
             <%= time_ago_in_words(user.current_sign_in_at) %> ago
@@ -52,16 +53,8 @@
             never signed in
           <% end %>
         </td>
-        <td><%= time_ago_in_words(user.created_at) %> ago</td>
         <td><%= user.status.humanize %></td>
         <td><%= two_step_status(user) %></td>
-        <td>
-          <% if user.expiry_date_for_2sv_exemption.nil? %>
-            n/a
-          <% else %>
-            <%= user.expiry_date_for_2sv_exemption.strftime("%d/%m/%Y") %>
-          <% end %>
-        </td>
         <td>
           <% if user.invited_but_not_accepted %>
             <%= form_tag resend_user_invitation_path(user) do %>
@@ -79,4 +72,4 @@
   </tbody>
 </table>
 
-<%= render partial: "pagination" %>
+<%= paginate(@users, theme: 'twitter-bootstrap-3') %>
