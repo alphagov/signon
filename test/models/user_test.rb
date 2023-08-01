@@ -523,6 +523,12 @@ class UserTest < ActiveSupport::TestCase
     assert_not user.persisted?
   end
 
+  test "strips unwanted whitespace from name before creating User" do
+    user = create(:user, name: "  Tina Jerković ")
+
+    assert_equal "Tina Jerković", user.name
+  end
+
   test "doesn't allow previously used password" do
     password = @user.password
 
