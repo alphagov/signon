@@ -54,6 +54,7 @@ class User < ApplicationRecord
   before_save :reset_2sv_exemption_reason
   before_save :mark_two_step_mandated_changed
   before_save :update_password_changed
+  before_save :strip_whitespace_from_name
 
   scope :web_users, -> { where(api_user: false) }
   scope :not_suspended, -> { where(suspended_at: nil) }
@@ -373,6 +374,10 @@ private
 
   def fix_apostrophe_in_email
     email.tr!("’", "'") if email.present? && email_changed?
+  end
+
+  def strip_whitespace_from_name
+    name.strip!
   end
 
   def update_password_changed

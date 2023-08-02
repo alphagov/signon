@@ -1,6 +1,14 @@
 require "test_helper"
 
 class BatchInvitationUserTest < ActiveSupport::TestCase
+  context ".create!" do
+    should "strip unwanted whitespace from name before persisting" do
+      user = create(:batch_invitation_user, name: "  Ailean Millard ")
+
+      assert_equal "Ailean Millard", user.name
+    end
+  end
+
   context "invite" do
     setup do
       @inviting_user = create(:admin_user)
