@@ -62,7 +62,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_02_095323) do
     t.datetime "created_at", precision: nil, null: false
     t.integer "initiator_id"
     t.integer "application_id"
-    t.string "trailing_message"
+    t.text "trailing_message"
     t.integer "event_id"
     t.decimal "ip_address", precision: 38
     t.integer "user_agent_id"
