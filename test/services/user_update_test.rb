@@ -38,6 +38,23 @@ class UserUpdateTest < ActionView::TestCase
     assert_equal parsed_ip_address, add_event.ip_address_string
   end
 
+  should "log the addition of a large number of permissions" do
+    current_user = create(:superadmin_user)
+    ip_address = "1.2.3.4"
+
+    affected_user = create(:user)
+    permissions = (0..100).map { |i| "permission-#{i}" }
+    app = create(:application, name: "App", with_supported_permissions: permissions)
+
+    params = { supported_permission_ids: app.supported_permissions.map(&:id) }
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+
+    add_event = EventLog.where(event_id: EventLog::PERMISSIONS_ADDED.id).last
+    logged_permissions = add_event.trailing_message.sub(/^\(/, "").sub(/\)$/, "").gsub(/ /, "").split(",")
+
+    assert Set.new(permissions).subset?(Set.new(logged_permissions))
+  end
+
   should "record when 2SV exemption has been removed" do
     current_user = create(:superadmin_user)
     ip_address = "1.2.3.4"
