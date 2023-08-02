@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     controllers authorizations: "signin_required_authorizations"
     skip_controllers :applications, :authorized_applications, :token_info
   end
+  post "/oauth/access_token" => "doorkeeper/tokens#create" # compatibility with OAuth v1
 
   devise_for :users,
              controllers: {
@@ -84,9 +85,6 @@ Rails.application.routes.draw do
   # Gracefully handle GET on page (e.g. hit refresh) reached by a render to a POST
   match "/users/:id" => redirect("/users/%{id}/edit"), via: :get
   match "/suspensions/:id" => redirect("/users/%{id}/edit"), via: :get
-
-  # compatibility with Signon 1
-  post "oauth/access_token" => "doorkeeper/tokens#create"
 
   get "/signin-required" => "root#signin_required"
 
