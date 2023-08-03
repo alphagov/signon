@@ -70,18 +70,6 @@ Rails.application.routes.draw do
     end
   end
 
-  namespace :api do
-    namespace :v1 do
-      get "applications", to: "applications#show"
-      post "applications", to: "applications#create"
-      patch "applications/:id", to: "applications#update"
-      get "api-users", to: "api_users#show"
-      post "api-users", to: "api_users#create"
-      post "api-users/:id/authorisations", to: "authorisations#create"
-      post "api-users/:id/authorisations/test", to: "authorisations#test"
-    end
-  end
-
   # Gracefully handle GET on page (e.g. hit refresh) reached by a render to a POST
   match "/users/:id" => redirect("/users/%{id}/edit"), via: :get
   match "/suspensions/:id" => redirect("/users/%{id}/edit"), via: :get

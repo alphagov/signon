@@ -309,7 +309,6 @@ class SignInTest < ActionDispatch::IntegrationTest
         organisations_path,
         doorkeeper_applications_path,
         api_users_path,
-        api_v1_applications_path,
       ]
 
       restricted_paths.each do |path|
