@@ -54,6 +54,11 @@ class BatchInvitationsController < ApplicationController
       end
       batch_user = BatchInvitationUser.new(batch_user_args)
 
+      unless batch_user.valid?
+        flash[:alert] = batch_users_error_message(batch_user)
+        return render :new
+      end
+
       @batch_invitation.batch_invitation_users << batch_user
     end
 
@@ -89,6 +94,16 @@ private
   def grant_default_permissions(batch_invitation)
     SupportedPermission.default.each do |default_permission|
       batch_invitation.grant_permission(default_permission)
+    end
+  end
+
+  def batch_users_error_message(batch_user)
+    e = batch_user.errors.first
+
+    if e.attribute == :email
+      "One or more emails were invalid"
+    else
+      e.full_message
     end
   end
 end
