@@ -4,7 +4,6 @@ class ApiUser < User
   validate :require_2sv_is_false
 
   DEFAULT_TOKEN_LIFE = 2.years.to_i
-  AUTOROTATABLE_TOKEN_LIFE = 60.days.to_i
 
   def self.build(attributes = {})
     password = SecureRandom.urlsafe_base64
