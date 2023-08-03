@@ -11,6 +11,8 @@
     navigation_items: navigation_items,
   }%>
 
+  <%= yield(:user_research_recruitment_banner) %>
+
   <div class="govuk-width-container">
     <% if yield(:back_link).present? %>
       <%= render "govuk_publishing_components/components/back_link", href: yield(:back_link) %>
