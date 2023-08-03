@@ -14,4 +14,16 @@ class RootController < ApplicationController
   def signin_required
     @application = ::Doorkeeper::Application.find_by(id: session.delete(:signin_missing_for_application))
   end
+
+  def dismiss_user_research_recruitment_banner
+    cookies[:dismiss_user_research_recruitment_banner] = true
+    redirect_to root_path
+  end
+
+private
+
+  def show_user_research_recruitment_banner?
+    !cookies[:dismiss_user_research_recruitment_banner]
+  end
+  helper_method :show_user_research_recruitment_banner?
 end

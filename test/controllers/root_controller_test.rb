@@ -64,4 +64,20 @@ class RootControllerTest < ActionController::TestCase
     assert_select "h1", "You don’t have permission to use this app."
     assert_select "p", count: 0
   end
+
+  test "#dismiss_user_research_recruitment_banner sets session cookie" do
+    sign_in create(:user)
+
+    post :dismiss_user_research_recruitment_banner
+
+    assert cookies[:dismiss_user_research_recruitment_banner]
+  end
+
+  test "#dismiss_user_research_recruitment_banner redirects to root path" do
+    sign_in create(:user)
+
+    post :dismiss_user_research_recruitment_banner
+
+    assert_redirected_to root_path
+  end
 end

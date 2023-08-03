@@ -77,4 +77,6 @@ Rails.application.routes.draw do
   get "/signin-required" => "root#signin_required"
 
   root to: "root#index"
+
+  post "/dismiss-user-research-recruitment-banner" => "root#dismiss_user_research_recruitment_banner"
 end

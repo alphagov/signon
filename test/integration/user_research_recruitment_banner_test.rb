@@ -26,7 +26,31 @@ class UserResearchRecruitmentBannerTest < ActionDispatch::IntegrationTest
     assert_not has_content?(user_research_recruitment_banner_title)
   end
 
-  should "hide the banner until the next session"
+  should "hide the banner until the next session" do
+    user = create(:user, name: "user-name", email: "user@example.com")
+
+    using_session("Session 1") do
+      visit new_user_session_path
+      signin_with(user)
+
+      assert has_content?(user_research_recruitment_banner_title)
+
+      within ".user-research-recruitment-banner" do
+        click_on "Hide this"
+      end
+
+      visit root_path
+
+      assert_not has_content?(user_research_recruitment_banner_title)
+    end
+
+    using_session("Session 2") do
+      visit new_user_session_path
+      signin_with(user)
+
+      assert has_content?(user_research_recruitment_banner_title)
+    end
+  end
 
   should "hide the banner permanently if the user clicks the button to participate in user research"
 
