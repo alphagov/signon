@@ -9,11 +9,11 @@
         <p class="user-research-recruitment-banner__intro govuk-body">We're holding research sessions to make Publishing work better.</p>
         <div class="govuk-button-group">
           <%= button_to 'Sign up to take part in research',
-                        user_research_recruitment_form_path,
+                        user_research_recruitment_participate_path,
                         class: 'govuk-!-font-size-24 govuk-!-font-weight-bold govuk-button govuk-button--inverse'
           %>
           <%= button_to 'Hide this',
-                        dismiss_user_research_recruitment_banner_path,
+                        user_research_recruitment_dismiss_banner_path,
                         class: 'user-research-recruitment-banner__hide-this govuk-link govuk-link--inverse'
           %>
         </div>
