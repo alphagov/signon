@@ -80,4 +80,21 @@ class RootControllerTest < ActionController::TestCase
 
     assert_redirected_to root_path
   end
+
+  test "#user_research_recruitment_form sets user_research_recruitment_banner_hidden to true for the current_user" do
+    user = create(:user)
+    sign_in user
+
+    post :user_research_recruitment_form
+
+    assert user.user_research_recruitment_banner_hidden?
+  end
+
+  test "#user_research_recruitment_form redirects to the google form" do
+    sign_in create(:user)
+
+    post :user_research_recruitment_form
+
+    assert_redirected_to RootController::USER_RESEARCH_RECRUITMENT_FORM_URL
+  end
 end

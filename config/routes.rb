@@ -79,4 +79,5 @@ Rails.application.routes.draw do
   root to: "root#index"
 
   post "/dismiss-user-research-recruitment-banner" => "root#dismiss_user_research_recruitment_banner"
+  post "/user-research-recruitment-form" => "root#user_research_recruitment_form"
 end

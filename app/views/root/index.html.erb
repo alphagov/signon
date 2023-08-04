@@ -8,9 +8,9 @@
         <h1 class="user-research-recruitment-banner__title govuk-heading-xl">Help us improve GOV.UK Publishing</h1>
         <p class="user-research-recruitment-banner__intro govuk-body">We're holding research sessions to make Publishing work better.</p>
         <div class="govuk-button-group">
-          <%= link_to 'Sign up to take part in research',
-                      'https://docs.google.com/forms/d/1Bdu_GqOrSR4j6mbuzXkFTQg6FRktRMQc8Y-q879Mny8/viewform',
-                      class: 'govuk-!-font-size-24 govuk-!-font-weight-bold govuk-button govuk-button--inverse'
+          <%= button_to 'Sign up to take part in research',
+                        user_research_recruitment_form_path,
+                        class: 'govuk-!-font-size-24 govuk-!-font-weight-bold govuk-button govuk-button--inverse'
           %>
           <%= button_to 'Hide this',
                         dismiss_user_research_recruitment_banner_path,
