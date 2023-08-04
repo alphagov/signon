@@ -4,12 +4,12 @@ class UserResearchRecruitmentController < ApplicationController
   before_action :authenticate_user!
   skip_after_action :verify_authorized
 
-  def dismiss_user_research_recruitment_banner
+  def dismiss_banner
     cookies[:dismiss_user_research_recruitment_banner] = true
     redirect_to root_path
   end
 
-  def user_research_recruitment_form
+  def participate
     current_user.update!(user_research_recruitment_banner_hidden: true)
     redirect_to USER_RESEARCH_RECRUITMENT_FORM_URL, allow_other_host: true
   end
