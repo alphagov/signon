@@ -89,6 +89,6 @@ private
   def allowing_request_to_user_research_recruitment_google_form
     yield
   rescue ActionController::RoutingError
-    raise unless current_url == RootController::USER_RESEARCH_RECRUITMENT_FORM_URL
+    raise unless current_url == UserResearchRecruitmentController::USER_RESEARCH_RECRUITMENT_FORM_URL
   end
 end
