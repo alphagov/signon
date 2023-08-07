@@ -131,6 +131,15 @@ class BatchInvitationsControllerTest < ActionController::TestCase
       end
     end
 
+    context "the CSV contains one or more email addresses that aren't valid" do
+      should "redisplay the form and show a flash message" do
+        post :create, params: { batch_invitation: { user_names_and_emails: users_csv("users_with_non_valid_emails.csv") }, user: { supported_permission_ids: [] } }
+
+        assert_template :new
+        assert_match(/One or more emails were invalid/i, flash[:alert])
+      end
+    end
+
     context "the CSV has all the fields, but not in the expected order" do
       should "process the fields by name" do
         post :create, params: { batch_invitation: { user_names_and_emails: users_csv("reversed_users.csv") }, user: { supported_permission_ids: [] } }

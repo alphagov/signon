@@ -1,6 +1,8 @@
 class BatchInvitationUser < ApplicationRecord
   belongs_to :batch_invitation
 
+  validates :email, presence: true, format: { with: Devise.email_regexp }
+
   validates :outcome, inclusion: { in: [nil, "success", "failed", "skipped"] }
 
   before_save :strip_whitespace_from_name

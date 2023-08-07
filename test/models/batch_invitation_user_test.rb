@@ -9,6 +9,15 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
     end
   end
 
+  context "validations" do
+    should "validate email address" do
+      user = build(:batch_invitation_user, email: "@gov.uk")
+
+      assert_not user.valid?
+      assert_equal ["is invalid"], user.errors[:email]
+    end
+  end
+
   context "invite" do
     setup do
       @inviting_user = create(:admin_user)
@@ -78,7 +87,8 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
 
     context "the user could not be saved (eg email is blank)" do
       should "record it as a failure" do
-        user = create(:batch_invitation_user, batch_invitation: @batch_invitation, email: nil)
+        user = create(:batch_invitation_user, batch_invitation: @batch_invitation)
+        user.email = nil
         user.invite(@inviting_user, [])
 
         assert_equal "failed", user.reload.outcome
@@ -87,7 +97,8 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
       should "log the error" do
         GovukError.expects(:notify).once
 
-        user = create(:batch_invitation_user, batch_invitation: @batch_invitation, email: nil)
+        user = create(:batch_invitation_user, batch_invitation: @batch_invitation)
+        user.email = nil
         user.invite(@inviting_user, [])
       end
     end

@@ -43,8 +43,6 @@ class BatchInvitationsController < ApplicationController
       return
     end
 
-    @batch_invitation.save!
-
     csv.each do |row|
       batch_user_args = {
         batch_invitation: @batch_invitation,
@@ -54,8 +52,18 @@ class BatchInvitationsController < ApplicationController
       if policy(@batch_invitation).assign_organisation_from_csv?
         batch_user_args[:organisation_slug] = row["Organisation"]
       end
-      BatchInvitationUser.create!(batch_user_args)
+      batch_user = BatchInvitationUser.new(batch_user_args)
+
+      unless batch_user.valid?
+        flash[:alert] = batch_users_error_message(batch_user)
+        return render :new
+      end
+
+      @batch_invitation.batch_invitation_users << batch_user
     end
+
+    @batch_invitation.save!
+
     @batch_invitation.enqueue
     flash[:notice] = "Scheduled invitation of #{@batch_invitation.batch_invitation_users.count} users"
     redirect_to batch_invitation_path(@batch_invitation)
@@ -86,6 +94,16 @@ private
   def grant_default_permissions(batch_invitation)
     SupportedPermission.default.each do |default_permission|
       batch_invitation.grant_permission(default_permission)
+    end
+  end
+
+  def batch_users_error_message(batch_user)
+    e = batch_user.errors.first
+
+    if e.attribute == :email
+      "One or more emails were invalid"
+    else
+      e.full_message
     end
   end
 end
