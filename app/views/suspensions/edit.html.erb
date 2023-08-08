@@ -58,6 +58,7 @@
     },
     name: "user[reason_for_suspension]",
     value: @suspension.reason_for_suspension,
+    autocomplete: "off",
     error_items: @suspension.errors.full_messages_for(:reason_for_suspension).map {|message| { text: message } },
   } %>
 

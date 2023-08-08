@@ -10,7 +10,8 @@
         name: "user[email]",
         type: "email",
         autofocus: true,
-        tabindex: 0
+        tabindex: 0,
+        autocomplete: "email",
       } %>
 
       <%= render "govuk_publishing_components/components/input", {
@@ -18,7 +19,8 @@
           text: "Password"
         },
         name: "user[password]",
-        type: "password"
+        type: "password",
+        autocomplete: "current-password"
       } %>
 
       <%= render "govuk_publishing_components/components/button", {

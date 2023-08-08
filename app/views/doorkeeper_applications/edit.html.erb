@@ -29,6 +29,7 @@
         name: "doorkeeper_application[name]",
         type: "text",
         value: @application.name,
+        autocomplete: "off"
       } %>
 
 
@@ -39,6 +40,7 @@
         name: "doorkeeper_application[description]",
         type: "text",
         value: @application.description,
+        autocomplete: "off"
       } %>
 
       <%= render "govuk_publishing_components/components/input", {
@@ -49,6 +51,7 @@
         type: "text",
         hint: "Used to link to the app on the dashboard",
         value: @application.home_uri,
+        autocomplete: "off"
       } %>
 
       <%= render "govuk_publishing_components/components/input", {
@@ -59,6 +62,7 @@
         type: "text",
         hint: "The app should expect this URI. Used in the signin redirect dance.",
         value: @application.redirect_uri,
+        autocomplete: "off"
       } %>
 
       <%= render "govuk_publishing_components/components/input", {
@@ -69,6 +73,7 @@
         type: "text",
         hint: "The app has a copy of this. Used in the signin redirect dance.",
         value: @application.uid,
+        autocomplete: "off"
       } %>
 
       <%= render "govuk_publishing_components/components/input", {
@@ -79,6 +84,7 @@
         type: "text",
         hint: "The app has a copy of this. Used in the signin redirect dance.",
         value: @application.secret,
+        autocomplete: "off"
       } %>
 
       <%# TODO: use a checkbox component for this %>
