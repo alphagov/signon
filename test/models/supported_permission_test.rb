@@ -17,6 +17,15 @@ class SupportedPermissionTest < ActiveSupport::TestCase
     end
   end
 
+  test "name of permission must be unique" do
+    application = create(:application)
+    create(:supported_permission, name: "writer", application:)
+    copy_cat_permission = build(:supported_permission, name: "writer", application:)
+
+    assert_not copy_cat_permission.valid?
+    assert_includes copy_cat_permission.errors[:name], "has already been taken"
+  end
+
   test "associated user application permissions are destroyed when supported permissions are destroyed" do
     user = create(:user)
     application = create(:application, with_supported_permissions: %w[managing_editor])
