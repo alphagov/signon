@@ -10,7 +10,8 @@
         <div class="govuk-button-group">
           <%= button_to 'Sign up to take part in research',
                         user_research_recruitment_participate_path,
-                        class: 'govuk-!-font-size-24 govuk-!-font-weight-bold govuk-button govuk-button--inverse'
+                        class: 'govuk-!-font-size-24 govuk-!-font-weight-bold govuk-button govuk-button--inverse',
+                        form: { target: '_blank' }
           %>
           <%= button_to 'Hide this',
                         user_research_recruitment_dismiss_banner_path,
