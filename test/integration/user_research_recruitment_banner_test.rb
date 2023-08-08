@@ -13,7 +13,7 @@ class UserResearchRecruitmentBannerTest < ActionDispatch::IntegrationTest
     signin_with(user)
 
     assert has_content?(user_research_recruitment_banner_title)
-    assert has_css?("form[action='#{user_research_recruitment_participate_path}']", text: "Sign up to take part in research")
+    assert has_css?("form[action='#{user_research_recruitment_participate_path}']", text: "Find out more")
   end
 
   should "not display the banner on any page other than the dashboard" do
@@ -63,7 +63,7 @@ class UserResearchRecruitmentBannerTest < ActionDispatch::IntegrationTest
 
       within ".user-research-recruitment-banner" do
         allowing_request_to_user_research_recruitment_google_form do
-          click_on "Sign up to take part in research"
+          click_on "Find out more"
         end
       end
 
