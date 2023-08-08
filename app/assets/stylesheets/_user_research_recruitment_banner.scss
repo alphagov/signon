@@ -18,6 +18,7 @@
 
 .user-research-recruitment-banner__buttons {
   @include govuk-responsive-padding(6, "bottom");
+  align-items: center;
 }
 
 .user-research-recruitment-banner__hide-this {
