@@ -16,6 +16,10 @@
   color: govuk-colour("white");
 }
 
+.user-research-recruitment-banner__buttons {
+  @include govuk-responsive-padding(6, "bottom");
+}
+
 .user-research-recruitment-banner__hide-this {
   background: none;
   border: none;
