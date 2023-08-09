@@ -1,5 +1,25 @@
 <% content_for :title, "Your applications" %>
 
+  <% content_for :user_research_recruitment_banner do %>
+    <section class="user-research-recruitment-banner">
+      <div class="govuk-width-container">
+        <hr class="user-research-recruitment-banner__divider govuk-section-break govuk-section-break--l govuk-!-margin-top-0">
+        <h1 class="user-research-recruitment-banner__title govuk-heading-xl">Help us improve GOV.UK Publishing</h1>
+        <p class="user-research-recruitment-banner__intro govuk-body">We're holding research sessions to make Publishing work better.</p>
+        <div class="user-research-recruitment-banner__buttons govuk-button-group">
+          <%= button_to start_button_text('Find out more'),
+                        url_for,
+                        class: 'govuk-!-font-size-24 govuk-!-font-weight-bold govuk-button govuk-button--start govuk-button--inverse'
+          %>
+          <%= button_to 'Hide this',
+                        url_for,
+                        class: 'govuk-button govuk-button--secondary govuk-button--inverse'
+          %>
+        </div>
+      </div>
+    </section>
+  <% end %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 

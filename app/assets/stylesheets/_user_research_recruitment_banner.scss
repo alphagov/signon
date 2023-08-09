@@ -1,0 +1,22 @@
+.user-research-recruitment-banner {
+  background-color: $govuk-brand-colour;
+  @include govuk-responsive-padding(8, "top");
+}
+
+.user-research-recruitment-banner__divider {
+  border-bottom: 1px solid govuk-colour("white");
+}
+
+.user-research-recruitment-banner__title {
+  color: govuk-colour("white");
+  @include govuk-responsive-margin(5, "bottom");
+}
+
+.user-research-recruitment-banner__intro {
+  color: govuk-colour("white");
+}
+
+.user-research-recruitment-banner__buttons {
+  @include govuk-responsive-padding(6, "bottom");
+  align-items: center;
+}
