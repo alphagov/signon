@@ -18,7 +18,7 @@ class RootController < ApplicationController
 private
 
   def show_user_research_recruitment_banner?
-    !cookies[:dismiss_user_research_recruitment_banner]
+    !cookies[:dismiss_user_research_recruitment_banner] && !current_user.user_research_recruitment_banner_hidden?
   end
   helper_method :show_user_research_recruitment_banner?
 end

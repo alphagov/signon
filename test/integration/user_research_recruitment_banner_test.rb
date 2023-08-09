@@ -13,7 +13,7 @@ class UserResearchRecruitmentBannerTest < ActionDispatch::IntegrationTest
     signin_with(user)
 
     assert has_content?(user_research_recruitment_banner_title)
-    assert has_css?("form", text: "Find out more")
+    assert has_css?("form[action='#{user_research_recruitment_participate_path}']", text: "Find out more")
   end
 
   should "not display the banner on any page other than the dashboard" do
@@ -52,9 +52,43 @@ class UserResearchRecruitmentBannerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  should "hide the banner permanently if the user clicks the button to participate in user research" do
+    user = create(:user, name: "user-name", email: "user@example.com")
+
+    using_session("Session 1") do
+      visit new_user_session_path
+      signin_with(user)
+
+      assert has_content?(user_research_recruitment_banner_title)
+
+      within ".user-research-recruitment-banner" do
+        allowing_request_to_user_research_recruitment_google_form do
+          click_on "Find out more"
+        end
+      end
+
+      visit root_path
+
+      assert_not has_content?(user_research_recruitment_banner_title)
+    end
+
+    using_session("Session 2") do
+      visit new_user_session_path
+      signin_with(user)
+
+      assert_not has_content?(user_research_recruitment_banner_title)
+    end
+  end
+
 private
 
   def user_research_recruitment_banner_title
     "Help us improve GOV.UK Publishing"
+  end
+
+  def allowing_request_to_user_research_recruitment_google_form
+    yield
+  rescue ActionController::RoutingError
+    raise unless current_url == UserResearchRecruitmentController::USER_RESEARCH_RECRUITMENT_FORM_URL
   end
 end
