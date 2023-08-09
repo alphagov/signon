@@ -10,7 +10,8 @@
         <div class="user-research-recruitment-banner__buttons govuk-button-group">
           <%= button_to start_button_text('Find out more'),
                         user_research_recruitment_participate_path,
-                        class: 'govuk-!-font-size-24 govuk-!-font-weight-bold govuk-button govuk-button--start govuk-button--inverse'
+                        class: 'govuk-!-font-size-24 govuk-!-font-weight-bold govuk-button govuk-button--start govuk-button--inverse',
+                        form: { target: '_blank' }
           %>
           <%= button_to 'Hide this',
                         user_research_recruitment_dismiss_banner_path,
