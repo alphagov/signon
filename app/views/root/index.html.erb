@@ -1,5 +1,28 @@
 <% content_for :title, "Your applications" %>
 
+  <% content_for :user_research_recruitment_banner do %>
+    <section class="user-research-recruitment-banner">
+      <div class="govuk-width-container">
+        <hr class="user-research-recruitment-banner__divider govuk-section-break govuk-section-break--l govuk-!-margin-top-0">
+        <h1 class="user-research-recruitment-banner__title govuk-heading-xl">Help us improve GOV.UK Publishing</h1>
+        <p class="user-research-recruitment-banner__intro govuk-body">We're holding research sessions to make Publishing work better.</p>
+        <%= form_tag "#" do %>
+          <div class="user-research-recruitment-banner__buttons govuk-button-group">
+            <button class="govuk-!-font-size-24 govuk-!-font-weight-bold govuk-button govuk-button--start govuk-button--inverse" type="submit">
+              <span>Find out more</span>
+              <svg class="govuk-button__start-icon govuk-!-display-none-print" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" focusable="false" aria-hidden="true">
+                <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z"></path>
+              </svg>
+            </button>
+            <button class="govuk-button govuk-button--inverse" type="submit">
+              Hide this
+            </button>
+          </div>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
