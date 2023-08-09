@@ -1,5 +1,6 @@
 <% content_for :title, "Your applications" %>
 
+<% if show_user_research_recruitment_banner? %>
   <% content_for :user_research_recruitment_banner do %>
     <section class="user-research-recruitment-banner">
       <div class="govuk-width-container">
@@ -12,13 +13,14 @@
                         class: 'govuk-!-font-size-24 govuk-!-font-weight-bold govuk-button govuk-button--start govuk-button--inverse'
           %>
           <%= button_to 'Hide this',
-                        url_for,
+                        user_research_recruitment_dismiss_banner_path,
                         class: 'govuk-button govuk-button--secondary govuk-button--inverse'
           %>
         </div>
       </div>
     </section>
   <% end %>
+<% end %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
