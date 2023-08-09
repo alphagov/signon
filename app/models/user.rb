@@ -34,6 +34,7 @@ class User < ApplicationRecord
   encrypts :otp_secret_key
 
   validates :name, presence: true
+  validates :email, reject_non_governmental_email_addresses: true, on: :create
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
   validate :user_can_be_exempted_from_2sv
   validate :organisation_admin_belongs_to_organisation
