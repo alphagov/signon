@@ -10,10 +10,10 @@
 
 <p class="form-group">
   <%= f.label :name %>
-  <%= f.text_field :name, autofocus: true, class: 'form-control input-md-6', required: true %>
+  <%= f.text_field :name, autofocus: true, autocomplete: "off", class: 'form-control input-md-6', required: true %>
 </p>
 
 <p class="form-group">
   <%= f.label :email %>
-  <%= f.text_field :email, class: 'form-control input-md-6', required: true %>
+  <%= f.text_field :email, autocomplete: "off", class: 'form-control input-md-6', required: true %>
 </p>

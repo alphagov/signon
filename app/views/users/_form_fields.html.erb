@@ -1,11 +1,11 @@
 <p class="form-group">
   <%= f.label :name %>
-  <%= f.text_field :name, autofocus: true, class: 'form-control input-md-6 ' %>
+  <%= f.text_field :name, autofocus: true, autocomplete: "off", class: 'form-control input-md-6 ' %>
 </p>
 
 <p class="form-group">
   <%= f.label :email %>
-  <%= f.text_field :email, class: 'form-control input-md-6 add-label-margin' %>
+  <%= f.text_field :email, autocomplete: "off", class: 'form-control input-md-6 add-label-margin' %>
   <% if f.object.persisted? %>
     <% if f.object.invited_but_not_yet_accepted? %>
       <span class="help-block">Changes will trigger a new signup email.</span>

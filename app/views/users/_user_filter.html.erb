@@ -17,7 +17,7 @@
           <%= hidden_field_tag :organisation, params[:organisation] if params[:organisation] %>
           <%= hidden_field_tag :two_step_status, params[:two_step_status] if params[:two_step_status] %>
           <%= label_tag 'filter', 'Name or email', class: 'add-right-margin sr-only' %>
-          <%= text_field_tag "filter", params[:filter], placeholder: "Name or email", class: 'form-control filter-by-name-field' %>
+          <%= text_field_tag "filter", params[:filter], placeholder: "Name or email", autocomplete: "off", class: 'form-control filter-by-name-field' %>
           <%= submit_tag "Filter", class: "btn btn-default" %>
           <% end %>
         </li>

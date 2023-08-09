@@ -24,6 +24,7 @@
         id: "api_user_name",
         error_items: @api_user.errors.full_messages_for(:name).map {|message| { text: message } },
         value: @api_user.name,
+        autocomplete: "off",
         } %>
 
       <%= render "govuk_publishing_components/components/input", {
@@ -35,6 +36,7 @@
         type: "email",
         error_items: @api_user.errors.full_messages_for(:email).map {|message| { text: message } },
         value: @api_user.email,
+        autocomplete: "off",
         } %>
 
       <%= render "govuk_publishing_components/components/button", {

@@ -55,6 +55,7 @@
       Please provide a reason for granting this exemption above.
       Please note - the reason you enter will be visible to the user, and any admins who have the ability to edit the user.
     },
+    autocomplete: "off",
     error_items: @exemption.errors.full_messages_for(:reason).map { |message| { text: message } }
   } %>
 
