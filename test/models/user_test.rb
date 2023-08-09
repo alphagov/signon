@@ -423,7 +423,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "it discourages weak passwords which reuse parts of the email" do
-    u = build(:user, email: "sleuth@gmail.com", password: "sherlock holmes baker street")
+    u = build(:user, email: "sleuth@detective.com", password: "sherlock holmes baker street")
     assert u.valid?
 
     u = build(:user, email: "sherlock.holmes@bakerstreet.com", password: "sherlock holmes baker street")
