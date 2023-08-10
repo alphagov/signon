@@ -304,6 +304,22 @@ class UserTest < ActiveSupport::TestCase
       end
     end
 
+    should "prevent user being created with a known non-government email address" do
+      user = build(:user, email: "piers.quinn@yahoo.co.uk")
+
+      assert_not user.valid?
+      assert_equal ["not accepted. Please enter a workplace email to continue."],
+                   user.errors[:email]
+    end
+
+    should "still allow user to be updated with a known non-government email address" do
+      user = create(:batch_invitation_user, email: "alexia.statham@department.gov.uk")
+
+      user.email = "alexia.statham@yahoo.co.uk"
+
+      assert user.valid?
+    end
+
     should "reject emails with invalid domain parts" do
       user = build(:user)
       [
@@ -423,7 +439,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "it discourages weak passwords which reuse parts of the email" do
-    u = build(:user, email: "sleuth@gmail.com", password: "sherlock holmes baker street")
+    u = build(:user, email: "sleuth@detective.com", password: "sherlock holmes baker street")
     assert u.valid?
 
     u = build(:user, email: "sherlock.holmes@bakerstreet.com", password: "sherlock holmes baker street")
