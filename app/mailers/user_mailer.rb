@@ -17,7 +17,7 @@ class UserMailer < Devise::Mailer
   end
 
   def two_step_enabled(user)
-    prefix = "[#{Rails.application.config.instance_name.titleize}] " unless production?
+    prefix = "[#{GovukEnvironment.name.titleize}] " unless production?
     @user = user
     view_mail(template_id, to: @user.email, subject: "#{prefix}2-step verification set up")
   end
@@ -136,6 +136,6 @@ private
   end
 
   def production?
-    Rails.application.config.instance_name.blank?
+    GovukEnvironment.name.blank?
   end
 end

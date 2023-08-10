@@ -1,5 +1,4 @@
 require "govuk_app_config"
-require_relative "instance_name"
 
 devise_config = Rails.application.config_for(:devise).symbolize_keys
 

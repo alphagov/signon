@@ -16,6 +16,6 @@ module MailerHelper
   end
 
   def instance_name
-    Rails.application.config.instance_name
+    GovukEnvironment.name
   end
 end

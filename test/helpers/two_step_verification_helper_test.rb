@@ -18,12 +18,7 @@ class TwoStepVerificationHelperTest < ActionView::TestCase
 
     context "in production" do
       setup do
-        @old_instance_name = Rails.application.config.instance_name
-        Rails.application.config.instance_name = nil
-      end
-
-      teardown do
-        Rails.application.config.instance_name = @old_instance_name
+        GovukEnvironment.stubs(:name).returns(nil)
       end
 
       should "not include the environment name" do

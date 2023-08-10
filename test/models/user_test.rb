@@ -5,7 +5,7 @@ class UserTest < ActiveSupport::TestCase
   include ActiveJob::TestHelper
 
   def setup
-    Rails.application.config.stubs(instance_name: nil)
+    GovukEnvironment.stubs(:name).returns(nil)
 
     @user = create(:user)
   end
@@ -21,7 +21,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "default to false for admins and superadmins in non-production" do
-      Rails.application.config.stubs(instance_name: "foobar")
+      GovukEnvironment.stubs(:name).returns("foobar")
 
       assert_not create(:admin_user).require_2sv?
       assert_not create(:superadmin_user).require_2sv?

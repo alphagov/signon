@@ -36,7 +36,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
 
   context "make_noise when instance_name has been set" do
     setup do
-      Rails.application.config.stubs(:instance_name).returns("Test Fools")
+      GovukEnvironment.stubs(:name).returns("Test Fools")
 
       user = create(:user, name: "Bob Loblaw")
       @batch_invitation = create(:batch_invitation, user:)
@@ -51,7 +51,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
 
   context "work correctly when no instance name is set" do
     setup do
-      Rails.application.config.stubs(:instance_name).returns(nil)
+      GovukEnvironment.stubs(:name).returns(nil)
 
       user = create(:user, name: "Bob Loblaw")
       @batch_invitation = create(:batch_invitation, user:)
