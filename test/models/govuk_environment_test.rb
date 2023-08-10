@@ -36,4 +36,26 @@ class GovukEnvironmentTest < ActionMailer::TestCase
       end
     end
   end
+
+  context ".production?" do
+    context "when name is blank" do
+      setup do
+        GovukEnvironment.stubs(:name).returns("")
+      end
+
+      should "return truthy" do
+        assert GovukEnvironment.production?
+      end
+    end
+
+    context "when name is not blank" do
+      setup do
+        GovukEnvironment.stubs(:name).returns("not-blank")
+      end
+
+      should "return falsey" do
+        assert_not GovukEnvironment.production?
+      end
+    end
+  end
 end

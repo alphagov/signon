@@ -28,7 +28,7 @@ private
 
   def otp_secret_key_uri(user:, otp_secret_key:)
     issuer = I18n.t("devise.issuer")
-    if GovukEnvironment.name
+    unless GovukEnvironment.production?
       issuer = "#{GovukEnvironment.name.titleize} #{issuer}"
     end
 

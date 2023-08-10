@@ -2,7 +2,7 @@
 
 Your <%= t('department.name') %> Signon <%= account_name %>, for <%= @user.email %>, will be suspended <%= suspension_time %>. After suspension you won't be able to access any <%= t('department.name') %> <%= account_name %> publishing applications.
 
-<% if GovukEnvironment.name.present? %>
+<% unless GovukEnvironment.production? %>
 <%= account_name.humanize %> suspensions do not suspend production accounts or remove access to <%= t('department.name') %> production applications.
 <% end %>
 

@@ -258,7 +258,7 @@ class User < ApplicationRecord
   end
 
   def set_2sv_for_admin_roles
-    return if GovukEnvironment.name.present?
+    return unless GovukEnvironment.production?
 
     self.require_2sv = true if role_changed? && (admin? || superadmin? || organisation_admin? || super_organisation_admin?)
   end

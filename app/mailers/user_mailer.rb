@@ -17,7 +17,7 @@ class UserMailer < Devise::Mailer
   end
 
   def two_step_enabled(user)
-    prefix = "[#{GovukEnvironment.name.titleize}] " if GovukEnvironment.name.present?
+    prefix = "[#{GovukEnvironment.name.titleize}] " unless GovukEnvironment.production?
     @user = user
     view_mail(template_id, to: @user.email, subject: "#{prefix}2-step verification set up")
   end
@@ -119,10 +119,10 @@ private
   end
 
   def account_name
-    if GovukEnvironment.name.present?
-      "#{GovukEnvironment.name} account"
-    else
+    if GovukEnvironment.production?
       "account"
+    else
+      "#{GovukEnvironment.name} account"
     end
   end
 

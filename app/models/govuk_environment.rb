@@ -6,4 +6,8 @@ class GovukEnvironment
       ENV["INSTANCE_NAME"]
     end
   end
+
+  def self.production?
+    name.blank?
+  end
 end

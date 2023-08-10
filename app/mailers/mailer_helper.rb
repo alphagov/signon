@@ -8,10 +8,10 @@ module MailerHelper
   end
 
   def email_from_address
-    if GovukEnvironment.name.present?
-      I18n.t("mailer.email_from_address.instance", instance_name: GovukEnvironment.name.parameterize)
-    else
+    if GovukEnvironment.production?
       I18n.t("mailer.email_from_address.no-instance")
+    else
+      I18n.t("mailer.email_from_address.instance", instance_name: GovukEnvironment.name.parameterize)
     end
   end
 end
