@@ -77,4 +77,6 @@ Rails.application.routes.draw do
   get "/signin-required" => "root#signin_required"
 
   root to: "root#index"
+
+  put "/user-research-recruitment/update" => "user_research_recruitment#update"
 end
