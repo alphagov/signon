@@ -3,5 +3,5 @@
 Rails.application.config.instance_name = if Rails.env.development? || Rails.env.test?
                                            "development"
                                          else
-                                           ENV.fetch("INSTANCE_NAME", nil)
+                                           ENV["INSTANCE_NAME"]
                                          end
