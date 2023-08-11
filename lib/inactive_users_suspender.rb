@@ -5,6 +5,8 @@ class InactiveUsersSuspender
       user.reason_for_suspension = reason
       user.save!(validate: false)
 
+      user.revoke_all_authorisations
+
       PermissionUpdater.perform_on(user)
       ReauthEnforcer.perform_on(user)
 
