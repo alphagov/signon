@@ -6,12 +6,12 @@ end
 namespace :oauth_access_records do
   desc "Delete expired OAuth access grants and tokens"
   task delete_expired: :environment do
-    [Doorkeeper::AccessGrant, Doorkeeper::AccessToken].each do |klass|
-      deleter = ExpiredOauthAccessRecordsDeleter.new(klass:)
+    %i[access_grant access_token].each do |record_type|
+      deleter = ExpiredOauthAccessRecordsDeleter.new(record_type:)
 
       deleter.delete_expired
 
-      puts "Deleted #{deleter.total_deleted} expired #{klass} records"
+      puts "Deleted #{deleter.total_deleted} expired #{deleter.record_class} records"
     end
   end
 end
