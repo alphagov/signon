@@ -465,6 +465,15 @@ class UserTest < ActiveSupport::TestCase
     assert_not_empty u.errors[:reason_for_suspension]
   end
 
+  test "suspension revokes all authorisations (`Doorkeeper::AccessToken`s)" do
+    create(:access_token, resource_owner_id: @user.id)
+    create(:access_token, resource_owner_id: @user.id)
+
+    @user.suspend("Nothing personal, just needed to suspend a user for testing")
+
+    assert @user.authorisations.all?(&:revoked?)
+  end
+
   context "#revoke_all_authorisations" do
     should "revokes all `Doorkeeper::AccessToken`s" do
       create(:access_token, resource_owner_id: @user.id)
