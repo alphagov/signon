@@ -687,6 +687,16 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#event_logs" do
+    should "return all of user's EventLogs" do
+      user = create(:user)
+      create(:event_log, uid: user.uid, event_id: EventLog::UNSUCCESSFUL_LOGIN.id)
+      create(:event_log, uid: user.uid, event_id: EventLog::SUCCESSFUL_LOGIN.id)
+
+      assert_equal 2, user.event_logs.count
+    end
+  end
+
   def authenticate_access(user, app)
     ::Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end
