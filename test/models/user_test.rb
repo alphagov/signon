@@ -695,6 +695,14 @@ class UserTest < ActiveSupport::TestCase
 
       assert_equal 2, user.event_logs.count
     end
+
+    should "filter user's EventLogs by event type when an argument is given" do
+      user = create(:user)
+      create(:event_log, uid: user.uid, event_id: EventLog::UNSUCCESSFUL_LOGIN.id)
+      create(:event_log, uid: user.uid, event_id: EventLog::SUCCESSFUL_LOGIN.id)
+
+      assert_equal 1, user.event_logs(event: EventLog::SUCCESSFUL_LOGIN).count
+    end
   end
 
   def authenticate_access(user, app)

@@ -114,8 +114,11 @@ class User < ApplicationRecord
     reason_for_2sv_exemption.present?
   end
 
-  def event_logs
-    EventLog.where(uid:).order(created_at: :desc).includes(:user_agent)
+  def event_logs(event: nil)
+    relation = EventLog.where(uid:)
+    relation = relation.merge(EventLog.where(event_id: event.id)) if event.present?
+
+    relation.order(created_at: :desc).includes(:user_agent)
   end
 
   def generate_uid
