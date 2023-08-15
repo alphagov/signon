@@ -8,6 +8,6 @@ class GovukEnvironment
   end
 
   def self.production?
-    name.blank?
+    name == "production"
   end
 end
