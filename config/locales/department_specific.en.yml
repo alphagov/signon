@@ -6,7 +6,9 @@ en:
   devise:
     issuer: "GOV.UK Signon"
   mailer:
-    app_name: "GOV.UK Signon %{instance_name}"
+    app_name:
+      instance: "GOV.UK Signon %{instance_name}"
+      no_instance: "GOV.UK Signon"
     email_from_address:
       instance: "noreply-signon-%{instance_name}@digital.cabinet-office.gov.uk"
       no_instance: "noreply-signon@digital.cabinet-office.gov.uk"
