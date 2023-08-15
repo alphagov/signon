@@ -18,7 +18,7 @@ class TwoStepVerificationHelperTest < ActionView::TestCase
 
     context "in production" do
       setup do
-        GovukEnvironment.stubs(:name).returns(nil)
+        GovukEnvironment.stubs(:production?).returns(true)
       end
 
       should "not include the environment name" do

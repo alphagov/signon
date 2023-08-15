@@ -22,6 +22,7 @@ class UserMailerTest < ActionMailer::TestCase
 
     context "in a non-production environment" do
       setup do
+        GovukEnvironment.stubs(:production?).returns(false)
         GovukEnvironment.stubs(:name).returns("foobar")
       end
 
@@ -36,7 +37,7 @@ class UserMailerTest < ActionMailer::TestCase
 
     context "in the production environment" do
       setup do
-        GovukEnvironment.stubs(:name).returns(nil)
+        GovukEnvironment.stubs(:production?).returns(true)
       end
 
       should "not include the environment in the subject" do
@@ -119,6 +120,7 @@ class UserMailerTest < ActionMailer::TestCase
 
   context "email a user to notify of suspension" do
     setup do
+      GovukEnvironment.stubs(:production?).returns(false)
       GovukEnvironment.stubs(:name).returns("test")
       stub_user = stub(name: "User", email: "user@example.com")
       @email = UserMailer.suspension_notification(stub_user)
@@ -137,8 +139,9 @@ class UserMailerTest < ActionMailer::TestCase
     end
   end
 
-  context "on a named Signon instance" do
+  context "on a non-production Signon instance" do
     setup do
+      GovukEnvironment.stubs(:production?).returns(false)
       GovukEnvironment.stubs(:name).returns("test")
       stub_user = stub(name: "User", email: "user@example.com")
       @email = UserMailer.suspension_reminder(stub_user, 3)
@@ -155,6 +158,7 @@ class UserMailerTest < ActionMailer::TestCase
 
   context "emailing a user to explain why their account is locked" do
     setup do
+      GovukEnvironment.stubs(:production?).returns(false)
       GovukEnvironment.stubs(:name).returns("test")
       @the_time = Time.zone.now
       user = User.new(name: "User", email: "user@example.com", locked_at: @the_time)
