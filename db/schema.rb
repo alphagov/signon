@@ -81,6 +81,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_08_16_164936) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "revoked_at", precision: nil
     t.string "scopes", default: "", null: false
+    t.string "code_challenge"
+    t.string "code_challenge_method"
     t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
   end
 
