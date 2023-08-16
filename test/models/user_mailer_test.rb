@@ -22,7 +22,8 @@ class UserMailerTest < ActionMailer::TestCase
 
     context "in a non-production environment" do
       setup do
-        Rails.application.config.stubs(instance_name: "foobar")
+        GovukEnvironment.stubs(:production?).returns(false)
+        GovukEnvironment.stubs(:name).returns("foobar")
       end
 
       should "include the environment in the subject" do
@@ -36,7 +37,7 @@ class UserMailerTest < ActionMailer::TestCase
 
     context "in the production environment" do
       setup do
-        Rails.application.config.stubs(instance_name: nil)
+        GovukEnvironment.stubs(:production?).returns(true)
       end
 
       should "not include the environment in the subject" do
@@ -119,7 +120,8 @@ class UserMailerTest < ActionMailer::TestCase
 
   context "email a user to notify of suspension" do
     setup do
-      Rails.application.config.stubs(:instance_name).returns("test")
+      GovukEnvironment.stubs(:production?).returns(false)
+      GovukEnvironment.stubs(:name).returns("test")
       stub_user = stub(name: "User", email: "user@example.com")
       @email = UserMailer.suspension_notification(stub_user)
     end
@@ -137,9 +139,10 @@ class UserMailerTest < ActionMailer::TestCase
     end
   end
 
-  context "on a named Signon instance" do
+  context "on a non-production Signon instance" do
     setup do
-      Rails.application.config.stubs(:instance_name).returns("test")
+      GovukEnvironment.stubs(:production?).returns(false)
+      GovukEnvironment.stubs(:name).returns("test")
       stub_user = stub(name: "User", email: "user@example.com")
       @email = UserMailer.suspension_reminder(stub_user, 3)
     end
@@ -155,7 +158,8 @@ class UserMailerTest < ActionMailer::TestCase
 
   context "emailing a user to explain why their account is locked" do
     setup do
-      Rails.application.config.stubs(:instance_name).returns("test")
+      GovukEnvironment.stubs(:production?).returns(false)
+      GovukEnvironment.stubs(:name).returns("test")
       @the_time = Time.zone.now
       user = User.new(name: "User", email: "user@example.com", locked_at: @the_time)
       @email = UserMailer.unlock_instructions(user, "afaketoken")

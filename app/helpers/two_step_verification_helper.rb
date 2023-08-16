@@ -28,8 +28,8 @@ private
 
   def otp_secret_key_uri(user:, otp_secret_key:)
     issuer = I18n.t("devise.issuer")
-    if Rails.application.config.instance_name
-      issuer = "#{Rails.application.config.instance_name.titleize} #{issuer}"
+    unless GovukEnvironment.production?
+      issuer = "#{GovukEnvironment.name.titleize} #{issuer}"
     end
 
     issuer = ERB::Util.url_encode(issuer)

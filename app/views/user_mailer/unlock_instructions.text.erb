@@ -1,6 +1,6 @@
 Your <%= t('department.name') %> Signon <%= account_name %>, for <%= @user.email %>, was locked at <%= locked_time %> because the wrong sign on details were entered too many times.
 
-<% if instance_name.present? %>
+<% unless GovukEnvironment.production? %>
   <%= account_name.humanize %> locks do not lock production accounts.
 <% end %>
 

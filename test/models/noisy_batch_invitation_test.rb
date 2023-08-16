@@ -34,9 +34,10 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
     end
   end
 
-  context "make_noise when instance_name has been set" do
+  context "make_noise in non-production environment" do
     setup do
-      Rails.application.config.stubs(:instance_name).returns("Test Fools")
+      GovukEnvironment.stubs(:production?).returns(false)
+      GovukEnvironment.stubs(:name).returns("Test Fools")
 
       user = create(:user, name: "Bob Loblaw")
       @batch_invitation = create(:batch_invitation, user:)
@@ -44,14 +45,14 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
       @email = NoisyBatchInvitation.make_noise(@batch_invitation).deliver_now
     end
 
-    should "from address should include the instance name" do
+    should "from address should include the environment name" do
       assert_match(/".* Signon Test Fools" <noreply-signon-test-fools@.*\.gov\.uk>/, @email[:from].to_s)
     end
   end
 
-  context "work correctly when no instance name is set" do
+  context "work correctly in production environment" do
     setup do
-      Rails.application.config.stubs(:instance_name).returns(nil)
+      GovukEnvironment.stubs(:production?).returns(true)
 
       user = create(:user, name: "Bob Loblaw")
       @batch_invitation = create(:batch_invitation, user:)
@@ -59,7 +60,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
       @email = NoisyBatchInvitation.make_noise(@batch_invitation).deliver_now
     end
 
-    should "from address should include the instance name" do
+    should "from address should not include the environment name" do
       assert_match(/".* Signon" <noreply-signon@.*\.gov\.uk>/, @email[:from].to_s)
     end
   end

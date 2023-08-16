@@ -4,7 +4,7 @@ class UserMailer < Devise::Mailer
 
   default from: proc { email_from }
 
-  helper_method :suspension_time, :account_name, :instance_name, :locked_time, :unlock_time, :production?
+  helper_method :suspension_time, :account_name, :locked_time, :unlock_time
 
   def two_step_reset(user)
     @user = user
@@ -17,7 +17,7 @@ class UserMailer < Devise::Mailer
   end
 
   def two_step_enabled(user)
-    prefix = "[#{Rails.application.config.instance_name.titleize}] " unless production?
+    prefix = "[#{GovukEnvironment.name.titleize}] " unless GovukEnvironment.production?
     @user = user
     view_mail(template_id, to: @user.email, subject: "#{prefix}2-step verification set up")
   end
@@ -119,10 +119,10 @@ private
   end
 
   def account_name
-    if instance_name.present?
-      "#{instance_name} account"
-    else
+    if GovukEnvironment.production?
       "account"
+    else
+      "#{GovukEnvironment.name} account"
     end
   end
 
@@ -133,9 +133,5 @@ private
       default: [:subject, key.to_s.humanize],
       app_name:,
     )
-  end
-
-  def production?
-    Rails.application.config.instance_name.blank?
   end
 end

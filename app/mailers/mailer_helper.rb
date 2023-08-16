@@ -4,18 +4,18 @@ module MailerHelper
   end
 
   def app_name
-    I18n.t("mailer.app_name", instance_name:)
-  end
-
-  def email_from_address
-    if instance_name.present?
-      I18n.t("mailer.email_from_address.instance", instance_name: instance_name.parameterize)
+    if GovukEnvironment.production?
+      I18n.t("mailer.app_name.no_instance")
     else
-      I18n.t("mailer.email_from_address.no-instance")
+      I18n.t("mailer.app_name.instance", instance_name: GovukEnvironment.name)
     end
   end
 
-  def instance_name
-    Rails.application.config.instance_name
+  def email_from_address
+    if GovukEnvironment.production?
+      I18n.t("mailer.email_from_address.no_instance")
+    else
+      I18n.t("mailer.email_from_address.instance", instance_name: GovukEnvironment.name.parameterize)
+    end
   end
 end
