@@ -21,6 +21,7 @@ bundle exec rake
 ## Further documentation
 
 - [Usage documentation]
+- [Environment variables]
 - [Mass password reset]
 - [Troubleshooting]
 
@@ -36,5 +37,6 @@ bundle exec rake
 [Doorkeeper]: https://github.com/applicake/doorkeeper
 [auth]: docs/oauth.md
 [Usage documentation]: docs/usage.md
+[Environment variables]: docs/environment-variables.md
 [Mass password reset]: docs/mass_password_reset.md
 [Troubleshooting]: docs/troubleshooting.md
