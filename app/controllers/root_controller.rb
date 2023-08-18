@@ -2,7 +2,7 @@ class RootController < ApplicationController
   layout "admin_layout"
 
   include UserPermissionsControllerMethods
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: :privacy_notice
   skip_after_action :verify_authorized
 
   def index
@@ -14,6 +14,8 @@ class RootController < ApplicationController
   def signin_required
     @application = ::Doorkeeper::Application.find_by(id: session.delete(:signin_missing_for_application))
   end
+
+  def privacy_notice; end
 
 private
 

@@ -1,0 +1,319 @@
+<% content_for :title, "Privacy notice and cookie policy" %>
+<% content_for :page_heading, "GOV.UK Publisher Signon ‒ Privacy Notice and Cookie Policy" %>
+
+<p class="govuk-body">GOV.UK Publisher Signon is provided by the <%= link_to "Government Digital Service", "https://www.gov.uk/government/organisations/government-digital-service", class: "govuk-link" %> (GDS), part of the Cabinet Office.</p>
+
+<p class="govuk-body">The Cabinet Office is the data controller for GOV.UK Publisher Signon.</p>
+
+<p class="govuk-body">A data controller determines how and why personal data is processed. For more information, read the Cabinet Office’s entry in the <%= link_to "Data Protection Public Register", "https://ico.org.uk/ESDWebPages/Entry/Z7414053", class: "govuk-link" %>.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "What data we collect",
+  padding: true,
+} %>
+
+<p class="govuk-body">The information we collect when you create and use a GOV.UK Publisher account includes:</p>
+
+<%= render "govuk_publishing_components/components/list", {
+  visible_counters: true,
+  items: [
+    "basic personal information needed to set up and authenticate your account, including your name, work email address and department / organisation",
+    "information on how you use your GOV.UK Publisher account, which is collected in the system logs, and by Google Analytics cookies ‒ the Cookies section provides more information about this",
+    "online identifiers, such as your Internet Protocol (IP) address, and technical information about the device you use, including the model, web browser and operating system",
+  ]
+} %>
+
+<p class="govuk-body">This is automatically collected in system logs when you use your GOV.UK Publisher account.</p>
+
+<p class="govuk-body">When you create an account, it will automatically generate a unique account identifier.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Cookies",
+  padding: true,
+} %>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Non-essential cookies",
+  padding: true,
+  heading_level: 3,
+  font_size: "s",
+} %>
+
+<p class="govuk-body">We may use a variety of non-essential cookies to record your preferences as you’re using GOV.UK Publisher Signon, in order to give you a consistent experience. For example, we might use a cookie to record your preference not to see a recurring banner whenever you sign in.</p>
+
+<p class="govuk-body">We also use the Google Analytics cookies detailed in the <%= link_to "GOV.UK Cookie Policy", "https://www.gov.uk/help/cookie-details", class: "govuk-link" %> to collect information about:</p>
+
+<%= render "govuk_publishing_components/components/list", {
+  visible_counters: true,
+  items: [
+    "the pages you visit",
+    "how long you spend on each page",
+    "how you got to the site",
+    "what you click on while you’re visiting the site",
+    "technical information about your device such as your IP address",
+  ]
+} %>
+
+<p class="govuk-body">We minimise the amount of personal data we send to Google Analytics by using <%= link_to "Google Analytics’ IP address anonymisation", "https://support.google.com/analytics/answer/2763052", class: "govuk-link" %> feature and by removing any other personal data from the titles or URLs of the pages you visit.</p>
+
+<p class="govuk-body">We do not combine analytics information with other data sets in a way that would enable us to establish users’ identities. We do not allow Google to use or share this data for their own purposes.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Essential cookies",
+  padding: true,
+  heading_level: 3,
+  font_size: "s",
+} %>
+
+<p class="govuk-body">We also set the following essential cookies:</p>
+
+<%= render "govuk_publishing_components/components/table", {
+  head: [
+    {
+      text: "Name",
+    },
+    {
+      text: "Purpose",
+    },
+    {
+      text: "Expires",
+    }
+  ],
+  rows: [
+    [
+      {
+        text: "remember_2sv_session",
+      },
+      {
+        text: "This sets automatically when a user successfully authenticates using the two-step verification (2SV) 6 digit code. Once set, the user won’t be prompted to enter a 2SV 6 digit code for 30 days as long as the login occurs from the same browser where the cookie was set.",
+      },
+      {
+        text: "30 days",
+      }
+    ],
+    [
+      {
+        text: "_signonotron2_session",
+      },
+      {
+        text: "To remember a user’s logged in session.",
+      },
+      {
+        text: "At the end of the user’s session",
+      }
+    ]
+  ]
+} %>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Why we need your data",
+  padding: true,
+} %>
+
+<p class="govuk-body">We collect your personal information to:</p>
+
+<%= render "govuk_publishing_components/components/list", {
+  visible_counters: true,
+  items: [
+    "provide you with a GOV.UK Publisher account so that you can use it to access GOV.UK publishing tools",
+    "keep your account secure (using your email address, password and system logs)",
+    "contact you about any planned interruptions, problems or changes that may affect your account (using your email address)",
+    "monitor use of the site to identify security threats",
+  ]
+} %>
+
+<p class="govuk-body">We use the information we collect through Google Analytics to understand how users use GOV.UK Publisher Signon. We do this to help make sure the service is meeting the needs of its users and to make improvements.</p>
+
+<p class="govuk-body">We may also use your information to produce anonymised reports about GOV.UK Publisher Signon. This helps us understand where we can make improvements.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Our legal basis for processing your data",
+  padding: true,
+} %>
+
+<p class="govuk-body">The legal basis for processing personal data in relation to site security is our legitimate interests, in ensuring the security and integrity of GOV.UK.</p>
+
+<p class="govuk-body">The legal basis for processing all other personal data is that it’s necessary:</p>
+
+<%= render "govuk_publishing_components/components/list", {
+  visible_counters: true,
+  items: [
+    "to perform a task in the public interest",
+    "in the exercise of our functions as a government department",
+  ]
+} %>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "What we do with your data",
+  padding: true,
+} %>
+
+<p class="govuk-body">The data we collect may be shared with other government departments, agencies and public bodies. It may also be shared with our technology suppliers, for example our hosting provider.</p>
+
+<p class="govuk-body">We will share your data if we are required to do so by law - for example, by court order, or to prevent fraud or other crime.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "How long we keep your data",
+  padding: true,
+} %>
+
+<p class="govuk-body">We will only retain your personal data for as long as it is needed for the purposes set out in this document or for as long as the law requires us to.</p>
+
+<p class="govuk-body">We will:</p>
+
+<%= render "govuk_publishing_components/components/list", {
+  visible_counters: true,
+  items: [
+    "delete access log data after 2 years",
+    "delete Google Analytics data after 26 months",
+  ]
+} %>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Children’s privacy protection",
+  padding: true,
+} %>
+
+<p class="govuk-body">Our services are not designed for, or intentionally targeted at, children 13 years of age or younger. We do not intentionally collect or maintain data about anyone under the age of 13.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Where your data is processed and stored",
+  padding: true,
+} %>
+
+<p class="govuk-body">GOV.UK Signon data is stored in the <%= link_to "European Economic Area", "https://www.gov.uk/eu-eea", class: "govuk-link" %> (EEA). Some third party services, such as Google Analytics, may involve transferring data outside the EEA for processing. In these situations we implement appropriate safeguards, such as contractual clauses, to ensure an adequate level of protection.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "How we protect your data and keep it secure",
+  padding: true,
+} %>
+
+<p class="govuk-body">We are committed to doing all that we can to keep your data secure. We have set up systems and processes to prevent unauthorised access or disclosure of your data ‒ for example, we protect your data using varying levels of encryption. We also make sure that any third parties that we deal with keep all personal data they process on our behalf secure.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Your rights",
+  padding: true,
+} %>
+
+<p class="govuk-body">You have the right to request:</p>
+
+<%= render "govuk_publishing_components/components/list", {
+  visible_counters: true,
+  items: [
+    "information about how your personal data is processed",
+    "a copy of that personal data",
+    "that anything inaccurate in your personal data is corrected immediately",
+  ]
+} %>
+
+<p class="govuk-body">You can also:</p>
+
+<%= render "govuk_publishing_components/components/list", {
+  visible_counters: true,
+  items: [
+    "raise an objection about how your personal data is processed",
+    "request that your personal data is erased if there is no longer a justification for it",
+    "ask that the processing of your personal data is restricted in certain circumstances",
+  ]
+} %>
+
+<p class="govuk-body">If you have any of these requests, get in contact with our Privacy Team ‒ see the Contact us section for their email address.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Contact us or make a complaint",
+  padding: true,
+} %>
+
+<p class="govuk-body">Contact the Privacy Team if you:</p>
+
+<%= render "govuk_publishing_components/components/list", {
+  visible_counters: true,
+  items: [
+    "have a question about anything in this privacy notice",
+    "think that your personal data has been misused or mishandled",
+  ]
+} %>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Privacy Team",
+  padding: true,
+  heading_level: 3,
+  font_size: "s",
+} %>
+
+<p class="govuk-body">Email our Privacy Team at:</p>
+
+<%= render "components/contact_details", {
+  text: mail_to("gds-privacy-office@digital.cabinet-office.gov.uk", class: "govuk-link")
+} %>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Data Protection Officer",
+  padding: true,
+  heading_level: 3,
+  font_size: "s",
+} %>
+
+<p class="govuk-body">You can also contact our Data Protection Officer (DPO) in writing at:</p>
+
+<%= render "components/contact_details", {} do %>
+  Data Protection Officer
+  <br>
+  <%= mail_to "DPO@cabinetoffice.gov.uk", class: "govuk-link" %>
+  <br>
+  Cabinet Office
+  <br>
+  70 Whitehall
+  <br>
+  London
+  <br>
+  SW1A 2AS
+<% end %>
+
+<p class="govuk-body">The DPO provides independent advice and monitoring of our use of personal information.</p>
+
+<p class="govuk-body">You can also make a complaint to the Information Commissioner, who is an independent regulator.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Information Commissioner",
+  padding: true,
+  heading_level: 3,
+  font_size: "s",
+} %>
+
+<p class="govuk-body">Contact the Information Commissioner at:</p>
+
+<%= render "components/contact_details", {} do %>
+  <%= mail_to "casework@ico.org.uk", class: "govuk-link" %>
+  <br>
+  Telephone: 0303 123 1113
+  <br>
+  Textphone: 01625 545860
+  <br>
+  Monday to Friday, 9am to 4:30pm
+  <br>
+  <%= link_to "Find out about call charges", "https://www.gov.uk/call-charges", class: "govuk-link" %>
+<% end %>
+
+<%= render "components/contact_details", {} do %>
+  Information Commissioner’s Office
+  <br>
+  Wycliffe House
+  <br>
+  Water Lane
+  <br>
+  Wilmslow
+  <br>
+  Cheshire SK9 5AF
+<% end %>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Changes to this policy",
+  padding: true,
+} %>
+
+<p class="govuk-body">We may change this privacy policy. In that case, the ‘last updated’ date at the bottom of this page will also change. Any changes to this privacy policy will apply to you and your data immediately.</p>
+
+<p class="govuk-body">If these changes affect how your personal data is processed, GDS will take reasonable steps to let you know.</p>
+
+<p class="govuk-body-s">Last updated 23 August 2023</p>
