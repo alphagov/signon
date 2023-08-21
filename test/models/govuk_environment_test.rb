@@ -28,11 +28,11 @@ class GovukEnvironmentTest < ActionMailer::TestCase
       setup do
         Rails.env.stubs(:development?).returns(false)
         Rails.env.stubs(:test?).returns(false)
-        ENV.stubs(:[]).with("INSTANCE_NAME").returns("instance-name")
+        ENV.stubs(:[]).with("GOVUK_ENVIRONMENT_NAME").returns("govuk-environment-name")
       end
 
-      should "return value of INSTANCE_NAME env var" do
-        assert_equal "instance-name", GovukEnvironment.name
+      should "return value of GOVUK_ENVIRONMENT_NAME env var" do
+        assert_equal "govuk-environment-name", GovukEnvironment.name
       end
     end
   end
