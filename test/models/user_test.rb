@@ -465,6 +465,32 @@ class UserTest < ActiveSupport::TestCase
     assert_not_empty u.errors[:reason_for_suspension]
   end
 
+  context "#revoke_all_authorisations" do
+    should "revokes all `Doorkeeper::AccessToken`s" do
+      create(:access_token, resource_owner_id: @user.id)
+      create(:access_token, resource_owner_id: @user.id)
+
+      @user.revoke_all_authorisations
+
+      assert @user.authorisations.all?(&:revoked?)
+    end
+
+    should "skips `Doorkeeper::AccessToken`s that are already revoked" do
+      first_revoked_at = create(:access_token, resource_owner_id: @user.id).tap(&:revoke).revoked_at
+      second_revoked_at = create(:access_token, resource_owner_id: @user.id).tap(&:revoke).revoked_at
+      create(:access_token, resource_owner_id: @user.id)
+      create(:access_token, resource_owner_id: @user.id)
+
+      Timecop.travel(1.day.from_now)
+
+      @user.revoke_all_authorisations
+
+      all_revoked_ats = @user.authorisations.map(&:revoked_at).compact
+      assert_includes all_revoked_ats, first_revoked_at
+      assert_includes all_revoked_ats, second_revoked_at
+    end
+  end
+
   test "organisation admin must belong to an organisation" do
     user = build(:user, role: "organisation_admin", organisation_id: nil)
 
