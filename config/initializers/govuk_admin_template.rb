@@ -8,5 +8,5 @@ GovukAdminTemplate.configure do |c|
   c.disable_google_analytics = false
 end
 
-GovukAdminTemplate.environment_label = GovukEnvironment.name.titleize
+GovukAdminTemplate.environment_label = (GovukEnvironment.name || "development").titleize
 GovukAdminTemplate.environment_style = GovukEnvironment.production? ? "production" : "preview"
