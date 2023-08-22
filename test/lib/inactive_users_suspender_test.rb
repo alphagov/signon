@@ -99,4 +99,14 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
 
     InactiveUsersSuspender.new.suspend
   end
+
+  test "revokes all authorisations (`Doorkeeper::AccessToken`s)" do
+    inactive_user = create(:user, current_sign_in_at: 46.days.ago)
+    create(:access_token, resource_owner_id: inactive_user.id)
+    create(:access_token, resource_owner_id: inactive_user.id)
+
+    InactiveUsersSuspender.new.suspend
+
+    assert inactive_user.authorisations.all?(&:revoked?)
+  end
 end

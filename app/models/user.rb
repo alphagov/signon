@@ -159,6 +159,10 @@ class User < ApplicationRecord
   end
   alias_method :applications_used, :authorised_applications
 
+  def revoke_all_authorisations
+    authorisations.where(revoked_at: nil).find_each(&:revoke)
+  end
+
   def grant_application_permission(application, supported_permission_name)
     grant_application_permissions(application, [supported_permission_name]).first
   end

@@ -34,6 +34,7 @@ module Devise
         GovukStatsd.increment("users.suspend")
         update(reason_for_suspension: reason,
                suspended_at: Time.zone.now)
+        revoke_all_authorisations
       end
       # rubocop:enable Rails/SaveBang
 
