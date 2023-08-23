@@ -3,7 +3,7 @@ class GovukEnvironment
     if Rails.env.development? || Rails.env.test?
       "development"
     else
-      ENV["GOVUK_ENVIRONMENT_NAME"]
+      ENV.fetch("GOVUK_ENVIRONMENT_NAME")
     end
   end
 

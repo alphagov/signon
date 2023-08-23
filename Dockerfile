@@ -6,7 +6,8 @@ ARG builder_image=ghcr.io/alphagov/govuk-ruby-builder:$ruby_version
 FROM $builder_image AS builder
 
 ENV DEVISE_PEPPER=unused \
-    DEVISE_SECRET_KEY=unused
+    DEVISE_SECRET_KEY=unused \
+    GOVUK_ENVIRONMENT_NAME=unused
 
 WORKDIR $APP_HOME
 COPY Gemfile* .ruby-version ./
