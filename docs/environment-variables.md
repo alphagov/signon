@@ -40,10 +40,6 @@ Used to configure `GovukAdminTemplate` and in `Healthcheck::ApiTokens#expiring_t
 
 * `GOVUK_ENVIRONMENT_NAME`
 
-Used in various bits of logic to detect the production instance of the app and used to display various environment-specific strings.
-
-* `INSTANCE_NAME`
-
 ## Splunk
 
 Used to stream event logs to Splunk for analysis of Signon usage patterns and anomalies.
