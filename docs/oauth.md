@@ -90,6 +90,8 @@ the refresh token process will need to be followed. (for section 5.2, the
 expires_in value will always be sent and end-user facing clients MUST be
 able to interpret it and follow the refresh process)
 
+![A sequence diagram showing the HTTP requests when a user signs in from Whitehall Publisher](diagrams/signon-sign-in-from-whitehall-publisher.svg).
+
 ### API requests
 
 For API requests, we use the Implicit grant type:
