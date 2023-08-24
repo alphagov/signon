@@ -193,4 +193,9 @@ namespace :users do
 
     users_to_update.each { |user| user.update(require_2sv: true) }
   end
+
+  desc "Deletes all web users who've never signed in and were invited at least 90 days ago"
+  task delete_expired_never_signed_in: :environment do
+    ExpiredNotSignedInUserDeleter.new.delete
+  end
 end
