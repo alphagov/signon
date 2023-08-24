@@ -3,4 +3,3 @@
 //= link legacy_layout.css
 //= link application.js
 //= link legacy_layout.js
-//= link password-strength-indicator.js
