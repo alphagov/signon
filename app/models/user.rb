@@ -3,6 +3,8 @@ class User < ApplicationRecord
 
   self.include_root_in_json = true
 
+  NEVER_SIGNED_IN_EXPIRY_PERIOD = 90.days
+
   SUSPENSION_THRESHOLD_PERIOD = 45.days
   UNSUSPENSION_GRACE_PERIOD = 7.days
 
@@ -66,6 +68,8 @@ class User < ApplicationRecord
   scope :last_signed_in_on, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) = date(?)", date) }
   scope :last_signed_in_before, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) < date(?)", date) }
   scope :last_signed_in_after, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) >= date(?)", date) }
+  scope :never_signed_in, -> { web_users.where(current_sign_in_at: nil) }
+  scope :expired_never_signed_in, -> { never_signed_in.where("invitation_sent_at < ?", NEVER_SIGNED_IN_EXPIRY_PERIOD.ago) }
   scope :not_recently_unsuspended, -> { where(["unsuspended_at IS NULL OR unsuspended_at < ?", UNSUSPENSION_GRACE_PERIOD.ago]) }
   scope :with_access_to_application, ->(application) { UsersWithAccess.new(self, application).users }
   scope :with_2sv_enabled,
