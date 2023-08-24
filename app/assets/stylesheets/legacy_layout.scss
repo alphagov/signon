@@ -1,7 +1,7 @@
 @import "govuk_admin_template";
 @import "chosen";
 
-@import "bootstrap_chosen";
-@import "filters";
-@import "admin";
-@import "thin_form";
+@import "legacy/bootstrap_chosen";
+@import "legacy/filters";
+@import "legacy/admin";
+@import "legacy/thin_form";
