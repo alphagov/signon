@@ -75,6 +75,7 @@ Rails.application.routes.draw do
   match "/suspensions/:id" => redirect("/users/%{id}/edit"), via: :get
 
   get "/signin-required" => "root#signin_required"
+  get "/privacy-notice" => "root#privacy_notice"
 
   root to: "root#index"
 

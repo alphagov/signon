@@ -1,0 +1,19 @@
+name: Contact Details
+description: Use the contact details component to differentiate a line or block of contact details from the surrounding content.
+body: |
+  Optional markdown providing further detail about the component
+accessibility_criteria: |
+  All text must have a contrast ratio higher than 4.5:1 against the background colour to meet [WCAG AA](https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast)
+examples:
+  default:
+    data:
+      text: "contact@info.gov.uk"
+
+  with_block:
+    description: |
+      Note that the component applies no formatting to the contents passed to it. There are guidelines covering the use of various types of contact details in [the Style guide](https://www.gov.uk/guidance/style-guide/a-to-z-of-gov-uk-style).
+    data:
+      block: |
+        Address Line 1
+        <br>
+        Address Line 2

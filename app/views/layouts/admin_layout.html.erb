@@ -38,7 +38,13 @@
       <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
           <span class="govuk-caption-l"><%= yield(:context) %></span>
-          <h1 class="govuk-heading-l"><%= yield(:title) %></h1>
+          <h1 class="govuk-heading-l">
+            <% if yield(:page_heading).present? %>
+              <%= yield(:page_heading) %>
+            <% else %>
+              <%= yield(:title) %>
+            <% end %>
+          </h1>
         </div>
       </div>
       <%= yield %>
@@ -59,6 +65,10 @@
           {
             href: "https://www.gov.uk/government/content-publishing",
             text: "How to write, publish, and improve content",
+          },
+          {
+            href: privacy_notice_path,
+            text: "Privacy notice",
           }
         ].compact
       }

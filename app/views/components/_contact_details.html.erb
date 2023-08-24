@@ -1,0 +1,7 @@
+<div class="app-c-contact-details">
+  <% if defined? text %>
+    <%= text %>
+  <% elsif block_given? %>
+    <%= yield %>
+  <% end %>
+</div>
