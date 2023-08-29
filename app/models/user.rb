@@ -45,7 +45,7 @@ class User < ApplicationRecord
   validate :organisation_has_mandatory_2sv, on: :create
 
   has_many :authorisations, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id
-  has_many :application_permissions, class_name: "UserApplicationPermission", inverse_of: :user
+  has_many :application_permissions, class_name: "UserApplicationPermission", inverse_of: :user, dependent: :destroy
   has_many :supported_permissions, through: :application_permissions
   has_many :batch_invitations
   belongs_to :organisation
