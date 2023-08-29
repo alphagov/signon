@@ -1,8 +1,6 @@
 require "test_helper"
-require "support/user_account_helpers"
 
 class EmailChangeTest < ActionDispatch::IntegrationTest
-  include UserAccountHelpers
   include ActiveJob::TestHelper
 
   context "by an admin" do

@@ -73,6 +73,7 @@ require "support/email_helpers"
 require "support/managing_two_sv_helpers"
 require "support/analytics_helpers"
 require "support/html_table_helpers"
+require "support/user_account_helpers"
 
 class ActiveRecord::Base
   mattr_accessor :shared_connection
@@ -94,6 +95,7 @@ class ActionDispatch::IntegrationTest
   include EmailHelpers
   include ConfirmationTokenHelpers
   include AnalyticsHelpers
+  include UserAccountHelpers
 
   def assert_response_contains(content)
     assert page.has_content?(content), "Expected to find '#{content}' in:\n#{page.text}"
