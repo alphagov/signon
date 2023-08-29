@@ -1,7 +1,6 @@
 require "test_helper"
 
 class InvitingUsersTest < ActionDispatch::IntegrationTest
-  include EmailHelpers
   include ActiveJob::TestHelper
 
   should "send the user an invitation token" do
