@@ -119,7 +119,9 @@ class EventLog < ApplicationRecord
 
     event_log_entry = EventLog.create!(attributes)
 
-    SplunkLogStreamingJob.perform_later(event_log_entry.id)
+    if splunk_endpoint_enabled?
+      SplunkLogStreamingJob.perform_later(event_log_entry.id)
+    end
 
     event_log_entry
   end

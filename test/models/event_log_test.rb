@@ -136,6 +136,28 @@ class EventLogTest < ActiveSupport::TestCase
       EventLog.stubs(:splunk_endpoint_enabled?).returns(true)
     end
 
+    should "queue job to send event to Splunk endpoint" do
+      SplunkLogStreamingJob.expects(:perform_later)
+      EventLog.record_event(build(:user), EventLog::SUCCESSFUL_LOGIN)
+    end
+  end
+
+  context "when Splunk endpoint disabled" do
+    setup do
+      EventLog.stubs(:splunk_endpoint_enabled?).returns(false)
+    end
+
+    should "not queue job to send event to Splunk endpoint" do
+      SplunkLogStreamingJob.expects(:perform_later).never
+      EventLog.record_event(build(:user), EventLog::SUCCESSFUL_LOGIN)
+    end
+  end
+
+  context "when Splunk endpoint enabled" do
+    setup do
+      EventLog.stubs(:splunk_endpoint_enabled?).returns(true)
+    end
+
     should "send event to Splunk endpoint" do
       ClimateControl.modify(
         SPLUNK_EVENT_LOG_ENDPOINT_URL: "http://example.com/splunk",
