@@ -47,6 +47,7 @@ class EventLog < ApplicationRecord
     TWO_STEP_MANDATED = LogEntry.new(id: 42, description: "2-step verification setup mandated at next login", require_uid: true, require_initiator: true),
     ACCESS_GRANTS_DELETED = LogEntry.new(id: 43, description: "Access grants deleted", require_uid: true),
     ACCESS_TOKENS_DELETED = LogEntry.new(id: 44, description: "Access tokens deleted", require_uid: true),
+    ACCOUNT_DELETED = LogEntry.new(id: 45, description: "Account deleted", require_uid: true),
 
     # We no longer expire passwords, but we keep this event for history purposes
     PASSWORD_EXPIRED = LogEntry.new(id: 6, description: "Password expired"),

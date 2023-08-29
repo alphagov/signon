@@ -208,6 +208,27 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [signed_in_0_days_ago, signed_in_1_day_ago], User.last_signed_in_after(1.day.ago)
   end
 
+  test "fetches web users who've never signed in" do
+    never_signed_in_1 = @user
+    create(:user, current_sign_in_at: 1.day.ago)
+    create(:user, current_sign_in_at: 1.day.ago)
+    never_signed_in_2 = create(:user)
+
+    assert_equal [never_signed_in_1, never_signed_in_2], User.never_signed_in
+  end
+
+  test "fetches web users who've never signed in and were invited to do so over 90 days ago" do
+    never_signed_in_ages_ago = @user.tap(&:invite!)
+    create(:user, current_sign_in_at: 1.day.ago).invite!
+
+    Timecop.travel(91.days)
+
+    create(:user).invite! # never signed in, invited today
+    create(:user, current_sign_in_at: 1.day.ago).invite!
+
+    assert_equal [never_signed_in_ages_ago], User.expired_never_signed_in
+  end
+
   context ".with_role" do
     setup do
       @admin = create(:admin_user)
