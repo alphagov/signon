@@ -11,7 +11,24 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
     fill_in "Confirm new password", with: "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z"
     click_button "Save password"
 
-    assert_response_contains("You are now signed in")
+    assert_response_contains("Your password was set successfully.")
+  end
+
+  should "require the invited user to sign in after setting their password" do
+    user = User.invite!(name: "Neptuno Keighley", email: "neptuno.keighley@office.gov.uk")
+
+    accept_invitation(
+      invitation_token: user.raw_invitation_token,
+      password: "pretext annoying headpiece waviness header slinky",
+    )
+
+    assert_response_contains("Sign in to GOV.UK")
+
+    fill_in "Email", with: "neptuno.keighley@office.gov.uk"
+    fill_in "Password", with: "pretext annoying headpiece waviness header slinky"
+    click_button "Sign in"
+
+    assert_response_contains("Make your account more secure by setting up 2‑step verification.")
   end
 
   should "not send invitation token to Google Analytics" do
