@@ -3,7 +3,7 @@ require "test_helper"
 class InvitingUsersTest < ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper
 
-  should "send the user an invitation token" do
+  should "ask the invited user to set a password" do
     user = User.invite!(name: "Jim", email: "jim@web.com")
     visit accept_user_invitation_path(invitation_token: user.raw_invitation_token)
 
