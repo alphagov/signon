@@ -130,4 +130,79 @@ class EventLogTest < ActiveSupport::TestCase
     assert_equal admin, event_log.initiator
     assert_equal EventLog::ACCOUNT_INVITED, event_log.entry
   end
+
+  context "when Splunk endpoint enabled" do
+    setup do
+      EventLog.stubs(:splunk_endpoint_enabled?).returns(true)
+    end
+
+    should "queue job to send event to Splunk endpoint" do
+      SplunkLogStreamingJob.expects(:perform_later)
+      EventLog.record_event(build(:user), EventLog::SUCCESSFUL_LOGIN)
+    end
+  end
+
+  context "when Splunk endpoint disabled" do
+    setup do
+      EventLog.stubs(:splunk_endpoint_enabled?).returns(false)
+    end
+
+    should "not queue job to send event to Splunk endpoint" do
+      SplunkLogStreamingJob.expects(:perform_later).never
+      EventLog.record_event(build(:user), EventLog::SUCCESSFUL_LOGIN)
+    end
+  end
+
+  context "when Splunk endpoint enabled" do
+    setup do
+      EventLog.stubs(:splunk_endpoint_enabled?).returns(true)
+    end
+
+    should "send event to Splunk endpoint" do
+      ClimateControl.modify(
+        SPLUNK_EVENT_LOG_ENDPOINT_URL: "http://example.com/splunk",
+        SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN: "hec-token",
+      ) do
+        request = stub_request(:post, "http://example.com/splunk")
+        event_log = create(:event_log)
+        event_log.send_to_splunk
+        assert_requested request
+      end
+    end
+  end
+
+  context "when Splunk endpoint disabled" do
+    setup do
+      EventLog.stubs(:splunk_endpoint_enabled?).returns(false)
+    end
+
+    should "not send event to Splunk endpoint" do
+      request = stub_request(:post, "http://example.com/splunk")
+      event_log = create(:event_log)
+      event_log.send_to_splunk
+      assert_not_requested request
+    end
+  end
+
+  context "when Splunk-related env vars are defined" do
+    should "return true for splunk_endpoint_enabled?" do
+      ClimateControl.modify(
+        SPLUNK_EVENT_LOG_ENDPOINT_URL: "url",
+        SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN: "hec-token",
+      ) do
+        assert EventLog.splunk_endpoint_enabled?
+      end
+    end
+  end
+
+  context "when Splunk-related env vars are not defined" do
+    should "return false for splunk_endpoint_enabled?" do
+      ClimateControl.modify(
+        SPLUNK_EVENT_LOG_ENDPOINT_URL: nil,
+        SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN: nil,
+      ) do
+        assert_not EventLog.splunk_endpoint_enabled?
+      end
+    end
+  end
 end

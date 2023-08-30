@@ -86,7 +86,7 @@ class EventLog < ApplicationRecord
   end
 
   def send_to_splunk(*)
-    return unless ENV["SPLUNK_EVENT_LOG_ENDPOINT_URL"] && ENV["SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN"]
+    return unless self.class.splunk_endpoint_enabled?
 
     event = {
       timestamp: created_at.utc,
@@ -119,7 +119,9 @@ class EventLog < ApplicationRecord
 
     event_log_entry = EventLog.create!(attributes)
 
-    SplunkLogStreamingJob.perform_later(event_log_entry.id)
+    if splunk_endpoint_enabled?
+      SplunkLogStreamingJob.perform_later(event_log_entry.id)
+    end
 
     event_log_entry
   end
@@ -153,6 +155,10 @@ class EventLog < ApplicationRecord
       # IPv4 address
       IPAddr.new(integer, Socket::AF_INET).to_s
     end
+  end
+
+  def self.splunk_endpoint_enabled?
+    ENV["SPLUNK_EVENT_LOG_ENDPOINT_URL"] && ENV["SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN"]
   end
 
 private
