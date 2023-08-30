@@ -14,8 +14,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
     should "not be able to authorise API users" do
       get :new, params: { api_user_id: @api_user.id }
 
-      assert_redirected_to root_path
-      assert_equal "You do not have permission to perform this action.", flash[:alert]
+      assert_not_authorised
     end
 
     should "not be able to revoke API user's authorisations" do
@@ -23,8 +22,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
 
       get :revoke, params: { api_user_id: @api_user.id, id: access_token.id }
 
-      assert_redirected_to root_path
-      assert_equal "You do not have permission to perform this action.", flash[:alert]
+      assert_not_authorised
     end
   end
 

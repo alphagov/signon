@@ -90,7 +90,7 @@ class TwoStepVerificationExemptionsControllerTest < ActionController::TestCase
 
       put :update, params: { id: user.id, exemption: { reason: reason_for_exemption, expiry_date: expiry_date_params } }
 
-      assert_equal "You do not have permission to perform this action.", flash[:alert]
+      assert_not_authorised
       assert_nil user.reason_for_2sv_exemption
     end
   end
