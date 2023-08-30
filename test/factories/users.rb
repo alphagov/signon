@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :user do
+  factory :user, aliases: [:normal_user] do
     transient do
       with_permissions { {} }
       with_signin_permissions_for { [] }

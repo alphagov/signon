@@ -50,6 +50,9 @@ Rails.application.routes.draw do
   resource :user, only: [:show]
 
   resource :account, only: [:show]
+  namespace :account do
+    resources :applications, only: [:index]
+  end
 
   resources :batch_invitations, only: %i[new create show]
   resources :bulk_grant_permission_sets, only: %i[new create show]
