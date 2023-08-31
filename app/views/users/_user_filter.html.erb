@@ -27,7 +27,7 @@
         <%= render partial: 'user_filter_group', locals: {filter_type: :role} %>
         <%= render partial: 'user_filter_group', locals: {filter_type: :permission} %>
         <%= render partial: 'user_filter_group', locals: {filter_type: :status} %>
-        <% if is_org_admin? %>
+        <% if current_user.organisation_admin? %>
           <li class="nav-pill-text text-muted"><%= current_user.organisation.name %></li>
         <% else %>
           <%= render partial: 'user_filter_group', locals: {filter_type: :organisation} %>
