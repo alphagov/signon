@@ -24,7 +24,7 @@ module NavigationItemsHelper
       end
     end
 
-    items << { text: current_user.name, href: user_link_target }
+    items << { text: current_user.name, href: account_path }
     items << { text: "Sign out", href: destroy_user_session_path }
 
     items
