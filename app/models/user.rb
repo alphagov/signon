@@ -271,7 +271,7 @@ class User < ApplicationRecord
   def set_2sv_for_admin_roles
     return unless GovukEnvironment.production?
 
-    self.require_2sv = true if role_changed? && (govuk_admin? || organisation_admin? || super_organisation_admin?)
+    self.require_2sv = true if role_changed? && (govuk_admin? || publishing_manager?)
   end
 
   def reset_2sv_exemption_reason

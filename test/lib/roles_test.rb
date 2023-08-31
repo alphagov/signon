@@ -90,4 +90,28 @@ class RolesTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "#publishing_manager?" do
+    setup do
+      @subject = Subject.new
+    end
+
+    should "be true if the role is super_organisation_admin" do
+      @subject.role = Roles::SuperOrganisationAdmin.role_name
+      assert @subject.publishing_manager?
+    end
+
+    should "be true if role is organisation_admin" do
+      @subject.role = Roles::OrganisationAdmin.role_name
+      assert @subject.publishing_manager?
+    end
+
+    should "be false if role is anything else" do
+      other_role_classes = Subject.role_classes - [Roles::SuperOrganisationAdmin, Roles::OrganisationAdmin]
+      other_role_classes.each do |role_class|
+        @subject.role = role_class.role_name
+        assert_not @subject.publishing_manager?
+      end
+    end
+  end
 end

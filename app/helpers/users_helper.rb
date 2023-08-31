@@ -20,7 +20,7 @@ module UsersHelper
   end
 
   def organisation_select_options
-    { include_blank: current_user.organisation_admin? || current_user.super_organisation_admin? ? false : "None" }
+    { include_blank: current_user.publishing_manager? ? false : "None" }
   end
 
   def user_email_tokens(user = current_user)
