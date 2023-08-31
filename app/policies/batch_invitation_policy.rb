@@ -1,6 +1,6 @@
 class BatchInvitationPolicy < BasePolicy
   def new?
-    return true if current_user.superadmin? || current_user.admin?
+    return true if current_user.govuk_admin?
 
     false
   end
@@ -8,6 +8,6 @@ class BatchInvitationPolicy < BasePolicy
   alias_method :show?, :new?
 
   def assign_organisation_from_csv?
-    current_user.superadmin? || current_user.admin?
+    current_user.govuk_admin?
   end
 end

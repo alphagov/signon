@@ -1,9 +1,7 @@
 class SupportedPermissionPolicy < BasePolicy
   class Scope < ::BasePolicy::Scope
     def resolve
-      if current_user.superadmin?
-        scope.all
-      elsif current_user.admin?
+      if current_user.govuk_admin?
         scope.all
       elsif current_user.super_organisation_admin?
         app_ids = Pundit.policy_scope(current_user, :user_permission_manageable_application).pluck(:id)

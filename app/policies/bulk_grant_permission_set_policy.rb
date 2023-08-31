@@ -1,6 +1,6 @@
 class BulkGrantPermissionSetPolicy < BasePolicy
   def new?
-    return true if current_user.superadmin? || current_user.admin?
+    return true if current_user.govuk_admin?
 
     false
   end

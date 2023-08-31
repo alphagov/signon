@@ -1,10 +1,10 @@
 class OrganisationPolicy < BasePolicy
   def index?
-    current_user.superadmin? || current_user.admin?
+    current_user.govuk_admin?
   end
 
   def can_assign?
-    return true if current_user.superadmin? || current_user.admin?
+    return true if current_user.govuk_admin?
 
     false
   end
@@ -15,7 +15,7 @@ class OrganisationPolicy < BasePolicy
 
   class Scope < ::BasePolicy::Scope
     def resolve
-      if current_user.admin? || current_user.superadmin?
+      if current_user.govuk_admin?
         scope.all
       else
         scope.none

@@ -59,7 +59,7 @@ class UserPolicy < BasePolicy
 
   def exempt_from_two_step_verification?
     current_user.belongs_to_gds? &&
-      (current_user.superadmin? || current_user.admin?) &&
+      current_user.govuk_admin? &&
       record.normal? &&
       !record.api_user
   end

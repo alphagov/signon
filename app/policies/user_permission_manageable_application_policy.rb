@@ -19,9 +19,7 @@ class UserPermissionManageableApplicationPolicy
     end
 
     def resolve
-      if current_user.superadmin?
-        applications
-      elsif current_user.admin?
+      if current_user.govuk_admin?
         applications
       elsif current_user.super_organisation_admin?
         applications.can_signin(current_user).with_signin_delegatable

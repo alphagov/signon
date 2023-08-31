@@ -66,4 +66,28 @@ class RolesTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "#govuk_admin?" do
+    setup do
+      @subject = Subject.new
+    end
+
+    should "be true if the role is superadmin" do
+      @subject.role = Roles::Superadmin.role_name
+      assert @subject.govuk_admin?
+    end
+
+    should "be true if role is admin" do
+      @subject.role = Roles::Admin.role_name
+      assert @subject.govuk_admin?
+    end
+
+    should "be false if role is anything else" do
+      other_role_classes = Subject.role_classes - [Roles::Superadmin, Roles::Admin]
+      other_role_classes.each do |role_class|
+        @subject.role = role_class.role_name
+        assert_not @subject.govuk_admin?
+      end
+    end
+  end
 end
