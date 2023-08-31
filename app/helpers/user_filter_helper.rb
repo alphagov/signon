@@ -35,7 +35,7 @@ module UserFilterHelper
             when :status
               User::USER_STATUSES
             when :organisation
-              if is_super_org_admin?
+              if current_user.super_organisation_admin?
                 current_user.organisation.subtree.order(:name).joins(:users).uniq.map { |org| [org.id, org.name_with_abbreviation] }
               else
                 Organisation.order(:name).joins(:users).uniq.map { |org| [org.id, org.name_with_abbreviation] }
