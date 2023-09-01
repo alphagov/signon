@@ -57,12 +57,17 @@ module Components
         tag.th str, class: classes, scope: opt[:scope] || "col"
       end
 
-      def cell(str, opt = {})
+      def cell(str, opt = {}, &block)
         classes = %w[govuk-table__cell]
         classes << "govuk-table__cell--#{opt[:format]}" if opt[:format]
-        classes << "govuk-table__cell--empty" unless str
+        classes << "govuk-table__cell--empty" unless str || block_given?
         str ||= "Not set"
-        tag.td str, class: classes
+
+        if block_given?
+          tag.td class: classes, &block
+        else
+          tag.td str, class: classes
+        end
       end
     end
   end
