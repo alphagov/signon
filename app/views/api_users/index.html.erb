@@ -23,9 +23,6 @@
       text: "Apps",
     },
     {
-      text: "Created",
-    },
-    {
       text: "Suspended?",
     },
   ],
@@ -39,9 +36,6 @@
       },
       {
         text: permissions_by_application(user),
-      },
-      {
-        text: "#{time_ago_in_words(user.created_at)} ago",
       },
       {
         text: user.suspended? ? "Yes" : "No",
