@@ -33,7 +33,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
 
   test "csv contains counts by role" do
     Numbers::NumbersCsv.generate
-    assert numbers_csv.include? ["Active accounts count by role", "admin", "1"]
+    assert numbers_csv.include? ["Active accounts count by role", Roles::Admin.role_name, "1"]
     assert numbers_csv.include? ["Active accounts count by role", "normal", "3"]
   end
 
@@ -43,7 +43,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
 
     Numbers::NumbersCsv.generate
 
-    assert numbers_csv.include? ["Active admin user names", "admin", "David <dave@gov.uk>, Winston <admin_user@admin.example.com>"]
+    assert numbers_csv.include? ["Active admin user names", Roles::Admin.role_name, "David <dave@gov.uk>, Winston <admin_user@admin.example.com>"]
     assert numbers_csv.include? ["Active admin user names", Roles::Superadmin.role_name, "Margaret <maggie@gov.uk>"]
   end
 

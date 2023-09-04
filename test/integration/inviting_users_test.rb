@@ -262,10 +262,10 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
           select "Test Organisation without 2SV", from: "Organisation"
           click_button "Create user and send email"
 
-          assert_not_nil User.where(email: "fred@example.com", role: "admin").last
+          assert_not_nil User.where(email: "fred@example.com", role: Roles::Admin.role_name).last
           assert_equal "fred@example.com", last_email.to[0]
           assert_match "Please confirm your account", last_email.subject
-          assert User.where(email: "fred@example.com", role: "admin").last.require_2sv?
+          assert User.where(email: "fred@example.com", role: Roles::Admin.role_name).last.require_2sv?
         end
       end
     end
@@ -300,10 +300,10 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
           select "Test Organisation without 2SV", from: "Organisation"
           click_button "Create user and send email"
 
-          assert_not_nil User.where(email: "fred@example.com", role: "admin").last
+          assert_not_nil User.where(email: "fred@example.com", role: Roles::Admin.role_name).last
           assert_equal "fred@example.com", last_email.to[0]
           assert_match "Please confirm your account", last_email.subject
-          assert User.where(email: "fred@example.com", role: "admin").last.require_2sv?
+          assert User.where(email: "fred@example.com", role: Roles::Admin.role_name).last.require_2sv?
         end
       end
     end

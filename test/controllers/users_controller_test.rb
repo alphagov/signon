@@ -373,7 +373,7 @@ class UsersControllerTest < ActionController::TestCase
         should "scope filtered list of users by role" do
           create(:organisation_admin_user, email: "xyz@gov.uk")
 
-          get :index, params: { filter: "admin", role: "admin" }
+          get :index, params: { filter: "admin", role: Roles::Admin.role_name }
 
           assert_select "tbody tr", count: 1
           assert_select "td.email", /admin@gov.uk/
@@ -401,10 +401,10 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "scope list of users by status and role" do
-        create(:suspended_user, email: "suspended_user@gov.uk", role: "admin")
+        create(:suspended_user, email: "suspended_user@gov.uk", role: Roles::Admin.role_name)
         create(:suspended_user, email: "normal_suspended_user@gov.uk")
 
-        get :index, params: { status: "suspended", role: "admin" }
+        get :index, params: { status: "suspended", role: Roles::Admin.role_name }
 
         assert_select "tbody tr", count: 1
         assert_select "td.email", /suspended_user@gov.uk/
@@ -757,7 +757,7 @@ class UsersControllerTest < ActionController::TestCase
 
       should "not let you set the role" do
         not_an_admin = create(:user)
-        put :update, params: { id: not_an_admin.id, user: { role: "admin" } }
+        put :update, params: { id: not_an_admin.id, user: { role: Roles::Admin.role_name } }
         assert_equal "normal", not_an_admin.reload.role
       end
 
@@ -768,8 +768,8 @@ class UsersControllerTest < ActionController::TestCase
 
         should "let you set the role" do
           not_an_admin = create(:user)
-          put :update, params: { id: not_an_admin.id, user: { role: "admin" } }
-          assert_equal "admin", not_an_admin.reload.role
+          put :update, params: { id: not_an_admin.id, user: { role: Roles::Admin.role_name } }
+          assert_equal Roles::Admin.role_name, not_an_admin.reload.role
         end
       end
 

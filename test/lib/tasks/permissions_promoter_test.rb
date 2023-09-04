@@ -44,7 +44,7 @@ class PermissionsPromoterTest < ActiveSupport::TestCase
 
     @task.invoke
 
-    assert admin_user.reload.role == "admin"
+    assert admin_user.reload.role == Roles::Admin.role_name
   end
 
   should "not update a non-GDS user who is suspended" do

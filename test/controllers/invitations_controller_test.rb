@@ -92,7 +92,7 @@ class InvitationsControllerTest < ActionController::TestCase
     should "not render 2SV form and saves user when user is an admin" do
       organisation = create(:organisation, require_2sv: false)
 
-      post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id, role: "admin" } }
+      post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id, role: Roles::Admin.role_name } }
 
       assert_redirected_to users_path
       assert_equal "User Name", User.last.name

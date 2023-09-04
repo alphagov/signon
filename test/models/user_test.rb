@@ -30,7 +30,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "default to true when a user is promoted to admin" do
       user = create(:user)
-      user.update!(role: "admin")
+      user.update!(role: Roles::Admin.role_name)
       assert user.require_2sv?
     end
 
@@ -119,7 +119,7 @@ class UserTest < ActiveSupport::TestCase
 
       context "when promoting a user" do
         should "be true" do
-          @user.update!(role: "admin")
+          @user.update!(role: Roles::Admin.role_name)
 
           assert @user.send_two_step_mandated_notification?
         end
