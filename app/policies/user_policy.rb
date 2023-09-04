@@ -16,7 +16,7 @@ class UserPolicy < BasePolicy
 
   def edit?
     case current_user.role
-    when "superadmin"
+    when Roles::Superadmin.role_name
       true
     when "admin"
       can_manage?

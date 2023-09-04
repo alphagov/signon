@@ -44,7 +44,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
     Numbers::NumbersCsv.generate
 
     assert numbers_csv.include? ["Active admin user names", "admin", "David <dave@gov.uk>, Winston <admin_user@admin.example.com>"]
-    assert numbers_csv.include? ["Active admin user names", "superadmin", "Margaret <maggie@gov.uk>"]
+    assert numbers_csv.include? ["Active admin user names", Roles::Superadmin.role_name, "Margaret <maggie@gov.uk>"]
   end
 
   test "csv contains counts by application access" do

@@ -83,7 +83,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
     end
 
     should "store organisation info from the uploaded CSV when logged in as a superadmin" do
-      @user.update!(role: "superadmin")
+      @user.update!(role: Roles::Superadmin.role_name)
       post :create,
            params: { user: { supported_permission_ids: [] },
                      batch_invitation: { user_names_and_emails: users_csv("users_with_orgs.csv"), organisation_id: 3 } }

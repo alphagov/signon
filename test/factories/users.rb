@@ -67,7 +67,7 @@ FactoryBot.define do
 
   factory :superadmin_user, parent: :user do
     sequence(:email) { |n| "superadmin#{n}@example.com" }
-    role { "superadmin" }
+    role { Roles::Superadmin.role_name }
   end
 
   factory :admin_user, parent: :user do

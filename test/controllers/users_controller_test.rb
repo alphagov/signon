@@ -421,7 +421,7 @@ class UsersControllerTest < ActionController::TestCase
 
       context "as superadmin" do
         should "not list api users" do
-          @user.update_column(:role, "superadmin")
+          @user.update_column(:role, Roles::Superadmin.role_name)
           create(:api_user, email: "api_user@email.com")
 
           get :index
@@ -763,7 +763,7 @@ class UsersControllerTest < ActionController::TestCase
 
       context "you are a superadmin" do
         setup do
-          @user.update_column(:role, "superadmin")
+          @user.update_column(:role, Roles::Superadmin.role_name)
         end
 
         should "let you set the role" do
@@ -819,7 +819,7 @@ class UsersControllerTest < ActionController::TestCase
 
       context "changing a role" do
         should "log an event" do
-          @user.update_column(:role, "superadmin")
+          @user.update_column(:role, Roles::Superadmin.role_name)
           another_user = create(:admin_user)
           put :update, params: { id: another_user.id, user: { role: "normal" } }
 

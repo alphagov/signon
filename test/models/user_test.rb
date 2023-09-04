@@ -36,13 +36,13 @@ class UserTest < ActiveSupport::TestCase
 
     should "default to true when a user is promoted to superadmin" do
       user = create(:user)
-      user.update!(role: "superadmin")
+      user.update!(role: Roles::Superadmin.role_name)
       assert user.require_2sv?
     end
 
     should "default to true when an admin is promoted to superadmin" do
       user = create(:admin_user)
-      user.update!(role: "superadmin")
+      user.update!(role: Roles::Superadmin.role_name)
       assert user.require_2sv?
     end
 
