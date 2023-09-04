@@ -8,7 +8,7 @@ class UserPolicyTest < ActiveSupport::TestCase
     @parent_organisation = create :organisation
     @child_organisation = create(:organisation, parent: @parent_organisation)
     @super_org_admin = create(:super_organisation_admin_user, organisation: @parent_organisation)
-    @organisation_admin = create(:organisation_admin, organisation: @parent_organisation)
+    @organisation_admin = create(:organisation_admin_user, organisation: @parent_organisation)
     @gds = create(:organisation, name: "Government Digital Services", content_id: Organisation::GDS_ORG_CONTENT_ID)
   end
 
@@ -38,7 +38,7 @@ class UserPolicyTest < ActiveSupport::TestCase
         user = create(:superadmin_user)
 
         assert permit?(user, build(:user), permission)
-        assert permit?(user, build(:organisation_admin), permission)
+        assert permit?(user, build(:organisation_admin_user), permission)
         assert permit?(user, build(:super_organisation_admin_user), permission)
         assert permit?(user, build(:admin_user), permission)
         assert permit?(user, build(:superadmin_user), permission)
@@ -90,7 +90,7 @@ class UserPolicyTest < ActiveSupport::TestCase
         user = create(:admin_user)
 
         assert permit?(user, build(:user), permission)
-        assert permit?(user, build(:organisation_admin), permission)
+        assert permit?(user, build(:organisation_admin_user), permission)
         assert permit?(user, build(:super_organisation_admin_user), permission)
         assert permit?(user, build(:admin_user), permission)
         assert forbid?(user, build(:superadmin_user), permission)
@@ -139,7 +139,7 @@ class UserPolicyTest < ActiveSupport::TestCase
     super_org_admin_actions.each do |permission|
       should "allow for #{permission} and users of similar permissions or below from within their own organisation" do
         assert permit?(@super_org_admin, build(:user_in_organisation, organisation: @super_org_admin.organisation), permission)
-        assert permit?(@super_org_admin, build(:organisation_admin, organisation: @super_org_admin.organisation), permission)
+        assert permit?(@super_org_admin, build(:organisation_admin_user, organisation: @super_org_admin.organisation), permission)
         assert permit?(@super_org_admin, build(:super_organisation_admin_user, organisation: @super_org_admin.organisation), permission)
 
         assert forbid?(@super_org_admin, build(:superadmin_user), permission)
@@ -148,7 +148,7 @@ class UserPolicyTest < ActiveSupport::TestCase
 
       should "allow for #{permission} and users of similar permissions or below from within their own organisation's subtree" do
         assert permit?(@super_org_admin, build(:user_in_organisation, organisation: @child_organisation), permission)
-        assert permit?(@super_org_admin, build(:organisation_admin, organisation: @child_organisation), permission)
+        assert permit?(@super_org_admin, build(:organisation_admin_user, organisation: @child_organisation), permission)
         assert permit?(@super_org_admin, build(:super_organisation_admin_user, organisation: @child_organisation), permission)
 
         assert forbid?(@super_org_admin, build(:superadmin_user, organisation: @child_organisation), permission)
@@ -156,7 +156,7 @@ class UserPolicyTest < ActiveSupport::TestCase
       end
 
       should "not allow for #{permission} and users from other organisations" do
-        assert forbid?(@super_org_admin, build(:organisation_admin), permission)
+        assert forbid?(@super_org_admin, build(:organisation_admin_user), permission)
         assert forbid?(@super_org_admin, build(:super_organisation_admin_user), permission)
         assert forbid?(@super_org_admin, build(:admin_user), permission)
         assert forbid?(@super_org_admin, build(:superadmin_user), permission)
@@ -180,23 +180,23 @@ class UserPolicyTest < ActiveSupport::TestCase
 
   context "organisation admins" do
     should "allow for index" do
-      assert permit?(build(:organisation_admin), User, :index)
+      assert permit?(build(:organisation_admin_user), User, :index)
     end
 
     should "not allow for create" do
-      assert forbid?(build(:organisation_admin), User, :create)
+      assert forbid?(build(:organisation_admin_user), User, :create)
     end
 
     primary_management_actions.each do |permission|
       should "not allow for #{permission}" do
-        assert forbid?(build(:organisation_admin), User, permission)
+        assert forbid?(build(:organisation_admin_user), User, permission)
       end
     end
 
     org_admin_actions.each do |permission|
       should "allow for #{permission} and users of similar permissions or below from within their own organisation" do
         assert permit?(@organisation_admin, build(:user_in_organisation, organisation: @organisation_admin.organisation), permission)
-        assert permit?(@organisation_admin, build(:organisation_admin, organisation: @organisation_admin.organisation), permission)
+        assert permit?(@organisation_admin, build(:organisation_admin_user, organisation: @organisation_admin.organisation), permission)
 
         assert forbid?(@organisation_admin, build(:super_organisation_admin_user, organisation: @organisation_admin.organisation), permission)
         assert forbid?(@organisation_admin, build(:superadmin_user), permission)
@@ -205,14 +205,14 @@ class UserPolicyTest < ActiveSupport::TestCase
 
       should "allow for #{permission} and users of similar permissions or below from within their own organisation's subtree" do
         assert forbid?(@organisation_admin, build(:user_in_organisation, organisation: @child_organisation), permission)
-        assert forbid?(@organisation_admin, build(:organisation_admin, organisation: @child_organisation), permission)
+        assert forbid?(@organisation_admin, build(:organisation_admin_user, organisation: @child_organisation), permission)
         assert forbid?(@organisation_admin, build(:super_organisation_admin_user, organisation: @child_organisation), permission)
         assert forbid?(@organisation_admin, build(:superadmin_user, organisation: @child_organisation), permission)
         assert forbid?(@organisation_admin, build(:admin_user, organisation: @child_organisation), permission)
       end
 
       should "not allow for #{permission} and users from other organisations" do
-        assert forbid?(@organisation_admin, build(:organisation_admin), permission)
+        assert forbid?(@organisation_admin, build(:organisation_admin_user), permission)
         assert forbid?(@organisation_admin, build(:super_organisation_admin_user), permission)
         assert forbid?(@organisation_admin, build(:admin_user), permission)
         assert forbid?(@organisation_admin, build(:superadmin_user), permission)
@@ -222,14 +222,14 @@ class UserPolicyTest < ActiveSupport::TestCase
 
     superadmin_actions.each do |permission|
       should "not allow for #{permission}" do
-        assert forbid?(create(:organisation_admin), User, permission)
+        assert forbid?(create(:organisation_admin_user), User, permission)
       end
     end
 
     two_step_verification_exemption_actions.each do |permission|
       should "not allow for #{permission}" do
-        user = create(:organisation_admin)
-        assert forbid?(create(:organisation_admin), user, permission)
+        user = create(:organisation_admin_user)
+        assert forbid?(create(:organisation_admin_user), user, permission)
       end
     end
   end
@@ -249,7 +249,7 @@ class UserPolicyTest < ActiveSupport::TestCase
       should "not allow for #{permission} and equal or fewer privileges" do
         user = create(:user)
         assert forbid?(user, build(:user), permission)
-        assert forbid?(user, build(:organisation_admin), permission)
+        assert forbid?(user, build(:organisation_admin_user), permission)
         assert forbid?(user, build(:super_organisation_admin_user), permission)
         assert forbid?(user, build(:admin_user), permission)
         assert forbid?(user, build(:superadmin_user), permission)

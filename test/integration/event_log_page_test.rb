@@ -77,7 +77,7 @@ class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "organisation admins have permission to view access logs of users belonging to their organisation" do
-    organisation_admin = create(:organisation_admin)
+    organisation_admin = create(:organisation_admin_user)
     user = create(:user_in_organisation, organisation: organisation_admin.organisation)
     user.lock_access!
 
@@ -90,7 +90,7 @@ class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "organisation admins don't have permission to view access logs of users belonging to another organisation" do
-    organisation_admin = create(:organisation_admin)
+    organisation_admin = create(:organisation_admin_user)
 
     visit root_path
     signin_with(organisation_admin)

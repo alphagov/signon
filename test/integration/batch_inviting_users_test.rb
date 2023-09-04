@@ -47,7 +47,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
 
   context "for organisation admins" do
     setup do
-      @user = create(:organisation_admin)
+      @user = create(:organisation_admin_user)
       @user.grant_application_permission(@application, %w[signin])
     end
 

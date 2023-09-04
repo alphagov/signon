@@ -10,7 +10,7 @@ class BulkGrantPermissionSetPolicyTest < ActiveSupport::TestCase
       assert permit?(create(:admin_user), User, :new)
 
       assert forbid?(create(:super_organisation_admin_user), User, :new)
-      assert forbid?(create(:organisation_admin), User, :new)
+      assert forbid?(create(:organisation_admin_user), User, :new)
       assert forbid?(create(:user), User, :new)
     end
   end

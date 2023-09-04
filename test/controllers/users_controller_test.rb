@@ -292,7 +292,7 @@ class UsersControllerTest < ActionController::TestCase
       should "show user roles" do
         create(:user, email: "user@email.com")
         create(:super_organisation_admin_user, email: "superorgadmin@email.com")
-        create(:organisation_admin, email: "orgadmin@email.com")
+        create(:organisation_admin_user, email: "orgadmin@email.com")
 
         get :index
 
@@ -371,7 +371,7 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "scope filtered list of users by role" do
-          create(:organisation_admin, email: "xyz@gov.uk")
+          create(:organisation_admin_user, email: "xyz@gov.uk")
 
           get :index, params: { filter: "admin", role: "admin" }
 
@@ -495,7 +495,7 @@ class UsersControllerTest < ActionController::TestCase
 
       context "organisation admin" do
         should "not be able to assign organisations" do
-          organisation_admin = create(:organisation_admin)
+          organisation_admin = create(:organisation_admin_user)
           create(:organisation)
           sign_in organisation_admin
 
@@ -512,7 +512,7 @@ class UsersControllerTest < ActionController::TestCase
           delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: %w[signin])
           non_delegatable_no_access_to_app = create(:application, with_supported_permissions: %w[signin])
 
-          organisation_admin = create(:organisation_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
+          organisation_admin = create(:organisation_admin_user, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
 
           sign_in organisation_admin
 
@@ -538,7 +538,7 @@ class UsersControllerTest < ActionController::TestCase
           delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ["signin", "GDS Editor"])
           non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ["signin", "Import CSVs"])
 
-          organisation_admin = create(:organisation_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
+          organisation_admin = create(:organisation_admin_user, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
 
           sign_in organisation_admin
 
@@ -715,7 +715,7 @@ class UsersControllerTest < ActionController::TestCase
 
       context "organisation admin" do
         should "not be able to assign organisation ids" do
-          admin = create(:organisation_admin)
+          admin = create(:organisation_admin_user)
           sub_organisation = create(:organisation, parent: admin.organisation)
           sign_in admin
 
@@ -729,7 +729,7 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "redisplay the form if save fails" do
-          admin = create(:organisation_admin)
+          admin = create(:organisation_admin_user)
           sign_in admin
 
           put :update, params: { id: admin.id, user: { name: "" } }
@@ -918,7 +918,7 @@ class UsersControllerTest < ActionController::TestCase
 
   context "as Organisation Admin" do
     setup do
-      @user = create(:organisation_admin)
+      @user = create(:organisation_admin_user)
       sign_in @user
     end
 

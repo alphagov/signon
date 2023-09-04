@@ -10,7 +10,7 @@ class OrganisationPolicyTest < ActiveSupport::TestCase
       assert permit?(create(:admin_user), User, :index)
 
       assert forbid?(create(:super_organisation_admin_user), User, :index)
-      assert forbid?(create(:organisation_admin), User, :index)
+      assert forbid?(create(:organisation_admin_user), User, :index)
       assert forbid?(create(:user), User, :index)
     end
   end
@@ -21,7 +21,7 @@ class OrganisationPolicyTest < ActiveSupport::TestCase
 
       assert forbid?(create(:admin_user), User, :edit)
       assert forbid?(create(:super_organisation_admin_user), User, :edit)
-      assert forbid?(create(:organisation_admin), User, :edit)
+      assert forbid?(create(:organisation_admin_user), User, :edit)
       assert forbid?(create(:user), User, :edit)
     end
   end
@@ -46,7 +46,7 @@ class OrganisationPolicyTest < ActiveSupport::TestCase
     end
 
     should "forbid for organisation admins" do
-      organisation_admin = create(:organisation_admin)
+      organisation_admin = create(:organisation_admin_user)
       admins_organisation = organisation_admin.organisation
       child_organisation = create(:organisation, parent_id: admins_organisation.id)
 
