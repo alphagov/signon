@@ -28,7 +28,7 @@ class BatchInvitationPolicyTest < ActiveSupport::TestCase
       assert permit?(create(:superadmin_user), User, :assign_organisation_from_csv)
       assert permit?(create(:admin_user), User, :assign_organisation_from_csv)
 
-      assert forbid?(create(:super_org_admin), User, :assign_organisation_from_csv)
+      assert forbid?(create(:super_organisation_admin_user), User, :assign_organisation_from_csv)
       assert forbid?(create(:organisation_admin), User, :assign_organisation_from_csv)
       assert forbid?(create(:user), User, :assign_organisation_from_csv)
     end

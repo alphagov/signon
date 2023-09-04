@@ -291,7 +291,7 @@ class UsersControllerTest < ActionController::TestCase
 
       should "show user roles" do
         create(:user, email: "user@email.com")
-        create(:super_org_admin, email: "superorgadmin@email.com")
+        create(:super_organisation_admin_user, email: "superorgadmin@email.com")
         create(:organisation_admin, email: "orgadmin@email.com")
 
         get :index
@@ -577,7 +577,7 @@ class UsersControllerTest < ActionController::TestCase
 
       context "super organisation admin" do
         should "not be able to assign organisations" do
-          super_org_admin = create(:super_org_admin)
+          super_org_admin = create(:super_organisation_admin_user)
           outside_organisation = create(:organisation)
           sign_in super_org_admin
 
@@ -595,7 +595,7 @@ class UsersControllerTest < ActionController::TestCase
           delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: %w[signin])
           non_delegatable_no_access_to_app = create(:application, with_supported_permissions: %w[signin])
 
-          super_org_admin = create(:super_org_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
+          super_org_admin = create(:super_organisation_admin_user, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
 
           sign_in super_org_admin
 
@@ -621,7 +621,7 @@ class UsersControllerTest < ActionController::TestCase
           delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ["signin", "GDS Editor"])
           non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ["signin", "Import CSVs"])
 
-          super_org_admin = create(:super_org_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
+          super_org_admin = create(:super_organisation_admin_user, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
 
           sign_in super_org_admin
 
@@ -740,7 +740,7 @@ class UsersControllerTest < ActionController::TestCase
 
       context "super organisation admin" do
         should "redisplay the form if save fails" do
-          admin = create(:super_org_admin)
+          admin = create(:super_organisation_admin_user)
           sign_in admin
 
           put :update, params: { id: admin.id, user: { name: "" } }

@@ -25,7 +25,7 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
   end
 
   should "super organisation admin user can not grant multiple permissions to all users in one go" do
-    user = create(:super_org_admin)
+    user = create(:super_organisation_admin_user)
 
     visit root_path
     signin_with(user)

@@ -34,7 +34,7 @@ class OrganisationPolicyScopeTest < ActiveSupport::TestCase
     end
 
     should "is empty for super organisation admins" do
-      user = create(:super_org_admin, organisation: @parent_organisation)
+      user = create(:super_organisation_admin_user, organisation: @parent_organisation)
       resolved_scope = OrganisationPolicy::Scope.new(user, Organisation.all).resolve
       assert_empty resolved_scope
     end

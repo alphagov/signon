@@ -40,7 +40,7 @@ class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "super organisation admins have permission to view access logs of users belonging to their organisation" do
-    super_org_admin = create(:super_org_admin)
+    super_org_admin = create(:super_organisation_admin_user)
     user = create(:user_in_organisation, organisation: super_org_admin.organisation)
     user.lock_access!
 
@@ -53,7 +53,7 @@ class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "super organisation admins have permission to view access logs of users belonging to child organisations" do
-    super_org_admin = create(:super_org_admin)
+    super_org_admin = create(:super_organisation_admin_user)
     child_org = create(:organisation, parent: super_org_admin.organisation)
     user = create(:user_in_organisation, organisation: child_org)
     user.lock_access!
@@ -67,7 +67,7 @@ class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
   end
 
   test "super organisation admins don't have permission to view access logs of users belonging to another organisation" do
-    super_org_admin = create(:super_org_admin)
+    super_org_admin = create(:super_organisation_admin_user)
 
     visit root_path
     signin_with(super_org_admin)

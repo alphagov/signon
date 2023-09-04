@@ -75,7 +75,7 @@ FactoryBot.define do
     role { "admin" }
   end
 
-  factory :super_org_admin, parent: :user_in_organisation do
+  factory :super_organisation_admin_user, parent: :user_in_organisation do
     role { "super_organisation_admin" }
   end
 

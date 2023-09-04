@@ -74,7 +74,7 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
     context "when logged in as a super organisation admin" do
       setup do
-        @super_org_admin = create(:super_org_admin, organisation: @user.organisation)
+        @super_org_admin = create(:super_organisation_admin_user, organisation: @user.organisation)
       end
 
       should "be able to send a notification to a user to set up 2SV" do

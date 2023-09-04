@@ -5,7 +5,7 @@ class UsersTaskTest < ActiveSupport::TestCase
     Signon::Application.load_tasks if Rake::Task.tasks.empty?
     $stdout.stubs(:write)
 
-    @user_types = %i[user superadmin_user admin_user organisation_admin super_org_admin]
+    @user_types = %i[user superadmin_user admin_user organisation_admin super_organisation_admin_user]
   end
 
   context "#set_2sv_by_org" do
@@ -67,7 +67,7 @@ class UsersTaskTest < ActiveSupport::TestCase
     end
 
     should "require 2SV for an super organisation admin" do
-      user = create(:super_org_admin)
+      user = create(:super_organisation_admin_user)
 
       @task.invoke
 

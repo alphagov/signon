@@ -51,7 +51,7 @@ class TwoStepVerificationExemptionsControllerTest < ActionController::TestCase
       end
     end
 
-    users_without_exemption_permissions = %i[super_org_admin organisation_admin user]
+    users_without_exemption_permissions = %i[super_organisation_admin_user organisation_admin user]
 
     users_without_exemption_permissions.each do |user_type_without_exemption_permission|
       should "not be able to exempt a user when a #{user_type_without_exemption_permission}" do
@@ -96,7 +96,7 @@ class TwoStepVerificationExemptionsControllerTest < ActionController::TestCase
   end
 
   context "non-gds users" do
-    user_types = %i[superadmin_user admin_user super_org_admin organisation_admin user]
+    user_types = %i[superadmin_user admin_user super_organisation_admin_user organisation_admin user]
 
     user_types.each do |user_type|
       should "not be able to exempt a user from any organisation when logged in as a non-gds #{user_type}" do

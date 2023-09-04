@@ -26,7 +26,7 @@ class SuspensionsControllerTest < ActionController::TestCase
   context "super organisation admin" do
     should "be unable to control suspension of a user outside their organisation subtree" do
       user = create(:suspended_user, reason_for_suspension: "Negligence")
-      super_org_admin = create(:super_org_admin)
+      super_org_admin = create(:super_organisation_admin_user)
       sign_in super_org_admin
 
       put :update, params: { id: user.id, user: { suspended: "0" } }
@@ -35,7 +35,7 @@ class SuspensionsControllerTest < ActionController::TestCase
     end
 
     should "be able to control suspension of a user within their organisation" do
-      super_org_admin = create(:super_org_admin)
+      super_org_admin = create(:super_organisation_admin_user)
       sign_in super_org_admin
       user = create(:suspended_user, reason_for_suspension: "Negligence", organisation: super_org_admin.organisation)
 
@@ -45,7 +45,7 @@ class SuspensionsControllerTest < ActionController::TestCase
     end
 
     should "be able to control suspension of a user within child organisations" do
-      super_org_admin = create(:super_org_admin)
+      super_org_admin = create(:super_organisation_admin_user)
       child_org = create(:organisation, parent: super_org_admin.organisation)
 
       sign_in super_org_admin
