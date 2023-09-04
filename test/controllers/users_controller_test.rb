@@ -141,7 +141,7 @@ class UsersControllerTest < ActionController::TestCase
 
     should "fetching json profile with a valid oauth token should succeed" do
       user = create(:user)
-      user.grant_application_permission(@application, "signin")
+      user.grant_application_signin_permission(@application)
       token = create(:access_token, application: @application, resource_owner_id: user.id)
 
       @request.env["HTTP_AUTHORIZATION"] = "Bearer #{token.token}"
@@ -156,7 +156,7 @@ class UsersControllerTest < ActionController::TestCase
       # For now.  Once gds-sso is updated everywhere, this will 401.
 
       user = create(:user)
-      user.grant_application_permission(@application, "signin")
+      user.grant_application_signin_permission(@application)
       token = create(:access_token, application: @application, resource_owner_id: user.id)
 
       @request.env["HTTP_AUTHORIZATION"] = "Bearer #{token.token}"
@@ -217,7 +217,7 @@ class UsersControllerTest < ActionController::TestCase
 
     should "fetching json profile should update last_synced_at for the relevant app" do
       user = create(:user)
-      user.grant_application_permission(@application, "signin")
+      user.grant_application_signin_permission(@application)
       token = create(:access_token, application: @application, resource_owner_id: user.id)
 
       @request.env["HTTP_AUTHORIZATION"] = "Bearer #{token.token}"
@@ -474,8 +474,8 @@ class UsersControllerTest < ActionController::TestCase
         delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: %w[signin])
         non_delegatable_no_access_to_app = create(:application, with_supported_permissions: %w[signin])
 
-        @user.grant_application_permission(delegatable_app, "signin")
-        @user.grant_application_permission(non_delegatable_app, "signin")
+        @user.grant_application_signin_permission(delegatable_app)
+        @user.grant_application_signin_permission(non_delegatable_app)
 
         user = create(:user_in_organisation)
 
@@ -842,7 +842,7 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "remove all applications access for a user" do
-          @another_user.grant_application_permission(@application, "signin")
+          @another_user.grant_application_signin_permission(@application)
 
           put :update, params: { id: @another_user.id, user: {} }
 

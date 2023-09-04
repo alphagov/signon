@@ -27,7 +27,8 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
     end
 
     should "not create new application permissions if both already exist" do
-      @user.grant_application_permissions(@application, %w[user_update_permission signin])
+      @user.grant_application_signin_permission(@application)
+      @user.grant_application_permissions(@application, %w[user_update_permission])
 
       assert_equal 2, @user.application_permissions.count
       SSOPushCredential.credentials(@application)

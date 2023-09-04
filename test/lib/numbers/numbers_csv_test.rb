@@ -49,7 +49,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
 
   test "csv contains counts by application access" do
     app = create(:application, name: "WhiteCloud")
-    User.first.grant_application_permission(app, "signin")
+    User.first.grant_application_signin_permission(app)
 
     Numbers::NumbersCsv.generate
 
@@ -110,10 +110,10 @@ class NumbersCsvTest < ActiveSupport::TestCase
     another_app = create(:application, name: "Another app")
 
     users = create_list(:user, 4)
-    users[0].grant_application_permission(@licensing, "signin")
+    users[0].grant_application_signin_permission(@licensing)
 
-    users[1].grant_application_permission(@licensing, "signin")
-    users[1].grant_application_permission(another_app, "signin")
+    users[1].grant_application_signin_permission(@licensing)
+    users[1].grant_application_signin_permission(another_app)
 
     users[2].grant_application_permission(@licensing, "another perm")
 

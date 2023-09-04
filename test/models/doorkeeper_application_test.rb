@@ -119,7 +119,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     should "return applications that the user can signin into" do
       user = create(:user)
       application = create(:application)
-      user.grant_application_permission(application, "signin")
+      user.grant_application_signin_permission(application)
 
       assert_includes Doorkeeper::Application.can_signin(user), application
     end
@@ -127,7 +127,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     should "not return applications that are retired" do
       user = create(:user)
       application = create(:application, retired: true)
-      user.grant_application_permission(application, "signin")
+      user.grant_application_signin_permission(application)
 
       assert_empty Doorkeeper::Application.can_signin(user)
     end

@@ -71,8 +71,8 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
     context "super organisation admins" do
       setup do
         user = create(:super_organisation_admin_user).tap do |u|
-          u.grant_application_permission(@app_one, "signin")
-          u.grant_application_permission(@app_two, "signin")
+          u.grant_application_signin_permission(@app_one)
+          u.grant_application_signin_permission(@app_two)
         end
 
         @resolved_scope = SupportedPermissionPolicy::Scope.new(user, SupportedPermission.all).resolve
@@ -104,8 +104,8 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
     context "organisation admins" do
       setup do
         user = create(:organisation_admin_user).tap do |u|
-          u.grant_application_permission(@app_one, "signin")
-          u.grant_application_permission(@app_two, "signin")
+          u.grant_application_signin_permission(@app_one)
+          u.grant_application_signin_permission(@app_two)
         end
 
         @resolved_scope = SupportedPermissionPolicy::Scope.new(user, SupportedPermission.all).resolve

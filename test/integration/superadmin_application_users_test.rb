@@ -16,7 +16,7 @@ class SuperAdminApplicationUsersTest < ActionDispatch::IntegrationTest
 
       # Create a user that's authorized to use our app
       user = create(:user, name: "My Test User")
-      user.grant_application_permission(@application, "signin")
+      user.grant_application_signin_permission(@application)
 
       click_link @application.name
 

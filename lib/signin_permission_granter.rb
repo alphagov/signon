@@ -5,7 +5,7 @@ class SigninPermissionGranter
       next if user.has_access_to?(application)
 
       puts "-- Adding signin permission for #{application.name}"
-      user.grant_application_permission(application, "signin")
+      user.grant_application_signin_permission(application)
 
       if application.supports_push_updates?
         PermissionUpdater.perform_later(user.uid, application.id)
