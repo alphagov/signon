@@ -20,7 +20,7 @@ class UserPolicy < BasePolicy
       true
     when Roles::Admin.role_name
       can_manage?
-    when "super_organisation_admin"
+    when Roles::SuperOrganisationAdmin.role_name
       allow_self_only || (can_manage? && (record_in_own_organisation? || record_in_child_organisation?))
     when "organisation_admin"
       allow_self_only || (can_manage? && record_in_own_organisation?)

@@ -76,7 +76,7 @@ FactoryBot.define do
   end
 
   factory :super_organisation_admin_user, parent: :user_in_organisation do
-    role { "super_organisation_admin" }
+    role { Roles::SuperOrganisationAdmin.role_name }
   end
 
   factory :organisation_admin_user, parent: :user_in_organisation do

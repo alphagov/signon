@@ -60,7 +60,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "default to true when a user is promoted to super organisation admin" do
       user = create(:user_in_organisation)
-      user.update!(role: "super_organisation_admin")
+      user.update!(role: Roles::SuperOrganisationAdmin.role_name)
       assert user.require_2sv?
     end
 
@@ -529,7 +529,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "super organisation admin must belong to an organisation" do
-    user = build(:user, role: "super_organisation_admin", organisation_id: nil)
+    user = build(:user, role: Roles::SuperOrganisationAdmin.role_name, organisation_id: nil)
 
     assert_not user.valid?
     assert_equal "can't be 'None' for Super Organisation Admin", user.errors[:organisation_id].first
