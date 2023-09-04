@@ -14,7 +14,7 @@ class UserSuspensionTest < ActionDispatch::IntegrationTest
   end
 
   should "show the suspension reason to admins" do
-    admin = create(:user, role: "admin")
+    admin = create(:admin_user)
     visit new_user_session_path
     signin_with(admin)
 

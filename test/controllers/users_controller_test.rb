@@ -820,7 +820,7 @@ class UsersControllerTest < ActionController::TestCase
       context "changing a role" do
         should "log an event" do
           @user.update_column(:role, "superadmin")
-          another_user = create(:user, role: "admin")
+          another_user = create(:admin_user)
           put :update, params: { id: another_user.id, user: { role: "normal" } }
 
           assert_equal 1, EventLog.where(event_id: EventLog::ROLE_CHANGED.id, uid: another_user.uid, initiator_id: @user.id).count

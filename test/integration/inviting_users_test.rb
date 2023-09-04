@@ -44,7 +44,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
   context "as an admin" do
     setup do
-      admin = create(:user, role: "admin")
+      admin = create(:admin_user)
       visit root_path
       signin_with(admin)
     end
@@ -356,7 +356,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
   context "Notify service is using an allowlist or is in trial mode" do
     setup do
-      admin = create(:user, role: "admin")
+      admin = create(:admin_user)
       visit root_path
       signin_with(admin)
     end

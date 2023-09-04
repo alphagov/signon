@@ -35,7 +35,7 @@ class UserLockingTest < ActionDispatch::IntegrationTest
   end
 
   should "be reversible by admins" do
-    admin = create(:user, role: "admin")
+    admin = create(:admin_user)
     user = create(:user)
     user.lock_access!
 
@@ -50,7 +50,7 @@ class UserLockingTest < ActionDispatch::IntegrationTest
   end
 
   should "be reversible from the user edit page" do
-    admin = create(:user, role: "admin")
+    admin = create(:admin_user)
     user = create(:user)
     user.lock_access!
 
