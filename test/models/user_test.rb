@@ -577,7 +577,7 @@ class UserTest < ActiveSupport::TestCase
     user.grant_application_signin_permission(app)
     user.grant_application_signin_permission(app)
 
-    assert_user_has_permissions %w[signin], app, user
+    assert_user_has_permissions [SupportedPermission::SIGNIN_NAME], app, user
   end
 
   test "returns multiple permissions in name order" do
@@ -587,7 +587,7 @@ class UserTest < ActiveSupport::TestCase
     user.grant_application_signin_permission(app)
     user.grant_application_permission(app, "edit")
 
-    assert_user_has_permissions %w[edit signin], app, user
+    assert_user_has_permissions ["edit", SupportedPermission::SIGNIN_NAME], app, user
   end
 
   test "inviting a user sets confirmed_at" do

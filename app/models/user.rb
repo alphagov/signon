@@ -168,7 +168,7 @@ class User < ApplicationRecord
   end
 
   def grant_application_signin_permission(application)
-    grant_application_permission(application, "signin")
+    grant_application_permission(application, SupportedPermission::SIGNIN_NAME)
   end
 
   def grant_application_permission(application, supported_permission_name)

@@ -18,7 +18,7 @@ class UserUpdateTest < ActionView::TestCase
     parsed_ip_address = IPAddr.new(ip_address, Socket::AF_INET).to_s
 
     affected_user = create(:user)
-    app = create(:application, name: "App", with_supported_permissions: ["Editor", "signin", "Something Else"])
+    app = create(:application, name: "App", with_supported_permissions: ["Editor", SupportedPermission::SIGNIN_NAME, "Something Else"])
     affected_user.grant_application_permission(app, "Something Else")
 
     perms = app.supported_permissions.first(2).map(&:id)

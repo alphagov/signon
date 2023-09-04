@@ -22,7 +22,7 @@ class UserOAuthPresenterTest < ActiveSupport::TestCase
     }
 
     user_representation = UserOAuthPresenter.new(user, @application).as_hash[:user]
-    assert_same_elements %w[signin managing_editor], user_representation.delete(:permissions)
+    assert_same_elements [SupportedPermission::SIGNIN_NAME, "managing_editor"], user_representation.delete(:permissions)
     assert_equal expected_user_attributes, user_representation
   end
 

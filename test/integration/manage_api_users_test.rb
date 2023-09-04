@@ -34,7 +34,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to authorise application access and manage permissions for an API user which should get recorded in event log" do
-      create(:application, name: "Whitehall", with_supported_permissions: ["Managing Editor", "signin"])
+      create(:application, name: "Whitehall", with_supported_permissions: ["Managing Editor", SupportedPermission::SIGNIN_NAME])
 
       click_link @api_user.name
       click_link "Add application token"

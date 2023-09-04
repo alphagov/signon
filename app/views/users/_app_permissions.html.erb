@@ -22,11 +22,11 @@
         </td>
         <% unless user_object.api_user? %>
           <td>
-            <%= permission_names.include?('signin') ? 'Yes' : 'No' %>
+            <%= permission_names.include?(SupportedPermission::SIGNIN_NAME) ? 'Yes' : 'No' %>
           </td>
         <% end %>
         <td>
-          <%= permission_names.reject{|p| p == 'signin'}.to_sentence %>
+          <%= permission_names.reject{|p| p == SupportedPermission::SIGNIN_NAME}.to_sentence %>
         </td>
       </tr>
     <% end %>

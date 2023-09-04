@@ -33,7 +33,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
       user = User.find_by(email: "a@m.com")
       assert_not_nil user
       assert_equal "A", user.name
-      assert_equal %w[signin], user.permissions_for(@app)
+      assert_equal [SupportedPermission::SIGNIN_NAME], user.permissions_for(@app)
     end
 
     should "trigger an invitation email" do
@@ -78,7 +78,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
         @bi.perform
 
         assert_empty @user.permissions_for(app)
-        assert_same_elements %w[signin foo], @user.permissions_for(another_app)
+        assert_same_elements [SupportedPermission::SIGNIN_NAME, "foo"], @user.permissions_for(another_app)
       end
     end
 

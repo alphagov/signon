@@ -99,7 +99,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "support granting signin permissions to delegatable apps that the super organisation admin has access to" do
-      app = create(:application, name: "MyApp", with_delegatable_supported_permissions: %w[signin])
+      app = create(:application, name: "MyApp", with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
       @super_org_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
@@ -120,7 +120,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "not support granting signin permissions to apps that the super organisation admin doesn't have access to" do
-      create(:application, name: "MyApp", with_delegatable_supported_permissions: %w[signin])
+      create(:application, name: "MyApp", with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
 
       visit edit_user_path(@user)
       assert page.has_no_field? "Has access to MyApp?"
@@ -185,7 +185,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "support granting signin permissions to delegatable apps that the organisation admin has access to" do
-      app = create(:application, name: "MyApp", with_delegatable_supported_permissions: %w[signin])
+      app = create(:application, name: "MyApp", with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
       @organisation_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
@@ -206,7 +206,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "not support granting signin permissions to apps that the organisation admin doesn't have access to" do
-      create(:application, name: "MyApp", with_delegatable_supported_permissions: %w[signin])
+      create(:application, name: "MyApp", with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
 
       visit edit_user_path(@user)
       assert page.has_no_field? "Has access to MyApp?"

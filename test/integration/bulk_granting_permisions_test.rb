@@ -9,7 +9,7 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
     @admins = create_list(:admin_user, 2)
     @superadmins = create_list(:superadmin_user, 2)
 
-    @application = create(:application, with_supported_permissions: %w[signin])
+    @application = create(:application, with_supported_permissions: [SupportedPermission::SIGNIN_NAME])
   end
 
   should "superadmin user can grant multiple permissions to all users in one go" do
@@ -74,7 +74,7 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
 
       [acting_user, @users, @org_admins, @admins, @superadmins].flatten.each do |user|
         user.reload
-        assert_equal %w[signin], user.permissions_for(application)
+        assert_equal [SupportedPermission::SIGNIN_NAME], user.permissions_for(application)
       end
     end
   end
