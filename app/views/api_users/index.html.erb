@@ -23,16 +23,6 @@
       text: "Apps",
     },
     {
-      text: "Role",
-    },
-    {
-      text: "Sign‑ins",
-      format: "numeric"
-    },
-    {
-      text: "Created",
-    },
-    {
       text: "Suspended?",
     },
   ],
@@ -46,16 +36,6 @@
       },
       {
         text: permissions_by_application(user),
-      },
-      {
-        text: user.role.humanize,
-      },
-      {
-        text: user.sign_in_count,
-        format: "numeric"
-      },
-      {
-        text: "#{time_ago_in_words(user.created_at)} ago",
       },
       {
         text: user.suspended? ? "Yes" : "No",
