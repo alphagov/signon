@@ -30,7 +30,7 @@ module Components
 
       def head
         tag.thead class: "govuk-table__head" do
-          tag.tr class: "govuk-table__row" do
+          tag.tr class: "govuk-table__row", role: "row" do
             yield(self)
           end
         end
@@ -43,7 +43,7 @@ module Components
       end
 
       def row
-        tag.tr class: "govuk-table__row js-govuk-table__row" do
+        tag.tr class: "govuk-table__row js-govuk-table__row", role: "row" do
           yield(self)
         end
       end
@@ -55,7 +55,7 @@ module Components
         link_classes = %w[app-table__sort-link]
         link_classes << "app-table__sort-link--#{opt[:sort_direction]}" if opt[:sort_direction]
         str = link_to str, opt[:href], class: link_classes, data: opt[:data_attributes] if opt[:href]
-        tag.th str, class: classes, scope: opt[:scope] || "col"
+        tag.th str, class: classes, scope: opt[:scope] || "col", role: "columnheader"
       end
 
       def cell(str, opt = {}, &block)
@@ -65,9 +65,9 @@ module Components
         str ||= "Not set"
 
         if block_given?
-          tag.td class: classes, &block
+          tag.td class: classes, role: "cell", &block
         else
-          tag.td str, class: classes
+          tag.td str, class: classes, role: "cell"
         end
       end
     end
