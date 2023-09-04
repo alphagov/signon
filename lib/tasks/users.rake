@@ -186,7 +186,7 @@ namespace :users do
 
   desc "Sets 2sv on all organisation admin and organisation superadmin users"
   task set_2sv_for_org_admins: :environment do
-    org_admin_users = User.where(role: "organisation_admin")
+    org_admin_users = User.where(role: Roles::OrganisationAdmin.role_name)
     super_org_admin_users = User.where(role: Roles::SuperOrganisationAdmin.role_name)
 
     users_to_update = org_admin_users + super_org_admin_users

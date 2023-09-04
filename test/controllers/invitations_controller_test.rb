@@ -15,7 +15,7 @@ class InvitationsControllerTest < ActionController::TestCase
     end
 
     should "disallow access to organisation admins" do
-      @user.update!(role: "organisation_admin", organisation_id: create(:organisation).id)
+      @user.update!(role: Roles::OrganisationAdmin.role_name, organisation_id: create(:organisation).id)
       get :new
       assert_redirected_to root_path
     end
@@ -50,7 +50,7 @@ class InvitationsControllerTest < ActionController::TestCase
     end
 
     should "disallow access to organisation admins" do
-      @user.update!(role: "organisation_admin", organisation_id: create(:organisation).id)
+      @user.update!(role: Roles::OrganisationAdmin.role_name, organisation_id: create(:organisation).id)
       post :create, params: { user: { name: "Testing Org Admins", email: "testing_org_admins@example.com" } }
       assert_redirected_to root_path
     end
@@ -102,7 +102,7 @@ class InvitationsControllerTest < ActionController::TestCase
     should "not render 2SV form and saves user when user is an organisation admin" do
       organisation = create(:organisation, require_2sv: false)
 
-      post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id, role: "organisation_admin" } }
+      post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id, role: Roles::OrganisationAdmin.role_name } }
 
       assert_redirected_to users_path
       assert_equal "User Name", User.last.name
@@ -129,7 +129,7 @@ class InvitationsControllerTest < ActionController::TestCase
     end
 
     should "disallow access to organisation admins" do
-      @user.update!(role: "organisation_admin", organisation_id: create(:organisation).id)
+      @user.update!(role: Roles::OrganisationAdmin.role_name, organisation_id: create(:organisation).id)
       user_to_resend_for = create(:user)
       post :resend, params: { id: user_to_resend_for.id }
       assert_redirected_to root_path

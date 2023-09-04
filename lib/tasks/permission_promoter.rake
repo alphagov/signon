@@ -12,7 +12,7 @@ namespace :permissions_promoter do
     puts "user ids to update are #{users_to_update.map(&:id)}"
 
     users_to_update.each do |user|
-      user.update(role: "organisation_admin")
+      user.update(role: Roles::OrganisationAdmin.role_name)
     end
   end
 end

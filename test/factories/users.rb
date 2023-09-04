@@ -80,7 +80,7 @@ FactoryBot.define do
   end
 
   factory :organisation_admin_user, parent: :user_in_organisation do
-    role { "organisation_admin" }
+    role { Roles::OrganisationAdmin.role_name }
   end
 
   factory :suspended_user, parent: :user do
