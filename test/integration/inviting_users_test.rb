@@ -196,7 +196,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
   context "as a superadmin" do
     setup do
-      superadmin = create(:user, role: "superadmin")
+      superadmin = create(:superadmin_user)
       visit root_path
       signin_with(superadmin)
     end

@@ -7,7 +7,7 @@ class UserSuspensionsExporterTest < ActionView::TestCase
     @ketchup_org = create(:organisation, name: "Ministry of ketchup")
     @brown_sauce_org = create(:organisation, name: "Ministry of brown sauce")
     @bill = create(:user, name: "Bill", email: "bill@bill.com", role: "normal", organisation: @chips_org, created_at: Date.new(2010, 10, 10))
-    @anne = create(:user, name: "Anne", email: "anne@anne.com", role: "superadmin", organisation: @ketchup_org, created_at: Date.new(2010, 10, 10))
+    @anne = create(:superadmin_user, name: "Anne", email: "anne@anne.com", organisation: @ketchup_org, created_at: Date.new(2010, 10, 10))
     @mary = create(:user, name: "Mary", email: "mary@mary.com", role: "admin", organisation: @brown_sauce_org, created_at: Date.new(2000, 1, 1))
 
     # give bill multiple suspensions

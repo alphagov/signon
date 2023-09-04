@@ -38,7 +38,7 @@ class NumbersCsvTest < ActiveSupport::TestCase
   end
 
   test "csv contains admin and superadmin user names" do
-    create(:admin_user, email: "maggie@gov.uk", name: "Margaret", role: "superadmin")
+    create(:superadmin_user, email: "maggie@gov.uk", name: "Margaret")
     create(:admin_user, email: "dave@gov.uk", name: "David", role: "admin")
 
     Numbers::NumbersCsv.generate

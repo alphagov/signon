@@ -13,7 +13,7 @@ class UserPermissionsExporterTest < ActionView::TestCase
       suspended_at: Date.parse("2000-01-01"),
       reason_for_suspension: "Left Chips.org",
     )
-    @anne = create(:user, name: "Anne", email: "anne@anne.com", role: "superadmin", organisation: @ketchup_org)
+    @anne = create(:superadmin_user, name: "Anne", email: "anne@anne.com", organisation: @ketchup_org)
     @mary = create(:user, name: "Mary", email: "mary@mary.com", role: "admin", organisation: @brown_sauce_org)
 
     @tmpfile = Tempfile.new(%w[user_permissions_exporter_test_example csv])
