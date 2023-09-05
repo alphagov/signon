@@ -6,10 +6,12 @@
   caption_classes ||= nil
   sortable ||= false
   filterable ||= false
+  vertical_on_small_screen ||= false
   label ||= t("components.table.filter_label")
 
   table_id = "table-id-#{SecureRandom.hex(4)}"
   filter_count_id = "filter-count-id-#{SecureRandom.hex(4)}"
+  classes = "app-c-table--vertical" if vertical_on_small_screen
 %>
 
 <% @table = capture do %>
@@ -17,7 +19,8 @@
       sortable: sortable,
       filterable: filterable,
       caption_classes: caption_classes,
-      table_id: table_id
+      table_id: table_id,
+      classes: classes,
     }) do |t| %>
 
     <% if head.any? %>
@@ -42,6 +45,13 @@
                 scope: "row",
                 format: cell[:format]
               } %>
+            <% elsif vertical_on_small_screen && head.any? %>
+              <%= t.cell nil, { format: cell[:format] } do %>
+                <span class="app-c-table__duplicate-heading" aria-hidden="true">
+                  <%= head[cellindex][:text] %>
+                </span>
+                <%= cell[:text] %>
+              <% end %>
             <% else %>
               <%= t.cell cell[:text], {
                 format: cell[:format]

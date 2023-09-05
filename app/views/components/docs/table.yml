@@ -169,3 +169,32 @@ examples:
           format: numeric
         - text: £125
           format: numeric
+  vertical_layout_on_small_screens:
+    description: This option only kicks-in on tablet-sized screens and smaller. It switches the layout of the table into a vertical list of cards. In this new layout, the table's main header is hidden but a copy of the relevant heading text is embedded into each table cell.
+    data:
+      vertical_on_small_screen: true
+      head:
+        - text: Month you apply
+        - text: Rate for bicycles
+          format: numeric
+        - text: Rate for vehicles
+          format: numeric
+      rows:
+      -
+        - text: January
+        - text: £85
+          format: numeric
+        - text: £95
+          format: numeric
+      -
+        - text: February
+        - text: £75
+          format: numeric
+        - text: £55
+          format: numeric
+      -
+        - text: March
+        - text: £165
+          format: numeric
+        - text: £125
+          format: numeric
