@@ -17,7 +17,8 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   scope :with_signin_delegatable,
         lambda {
           joins(:supported_permissions)
-            .where(supported_permissions: { name: SupportedPermission::SIGNIN_NAME, delegatable: true })
+            .where(supported_permissions: { name: SupportedPermission::SIGNIN_NAME })
+            .merge(SupportedPermission.delegatable)
         }
 
   after_create :create_signin_supported_permission
@@ -78,7 +79,7 @@ private
   end
 
   def create_signin_supported_permission
-    supported_permissions.create!(name: SupportedPermission::SIGNIN_NAME, delegatable: true)
+    supported_permissions.delegatable.create!(name: SupportedPermission::SIGNIN_NAME)
   end
 
   def create_user_update_supported_permission
