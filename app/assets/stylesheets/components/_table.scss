@@ -127,3 +127,9 @@ $table-row-even-background-colour: govuk-colour("light-grey", $legacy: "grey-4")
   }
 }
 /* stylelint-enable */
+
+.app-c-table {
+  tbody tr td {
+    word-break: break-word;
+  }
+}
