@@ -10,8 +10,8 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   scope :can_signin,
         lambda { |user|
           joins(supported_permissions: :user_application_permissions)
-            .where("user_application_permissions.user_id" => user.id)
-            .where("supported_permissions.name" => SupportedPermission::SIGNIN_NAME)
+            .where(user_application_permissions: { user: })
+            .where(supported_permissions: { name: SupportedPermission::SIGNIN_NAME })
             .where(retired: false)
         }
   scope :with_signin_delegatable,
