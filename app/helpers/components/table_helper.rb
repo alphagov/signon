@@ -5,6 +5,7 @@ module Components
 
       classes = %w[app-c-table govuk-table]
       classes << "govuk-table--sortable" if opt[:sortable]
+      classes << opt[:classes] if opt[:classes]
 
       caption_classes = %w[govuk-table__caption]
       caption_classes << opt[:caption_classes] if opt[:caption_classes]
