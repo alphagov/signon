@@ -1,4 +1,4 @@
-module ComponentHelper
+module NavigationItemsHelper
   def navigation_items
     return [] unless current_user
 

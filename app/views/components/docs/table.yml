@@ -1,0 +1,200 @@
+name: Table
+description: A table component to make information easier to compare and scan for users.
+accessibility_criteria: |
+  Accessible tables need HTML markup that indicates header cells and data cells and defines their relationship. Assistive technologies use this information to provide context to users.
+  Header cells must be marked up with `<th>`, and data cells with `<td>` to make tables accessible.
+  For more complex tables, explicit associations is needed using scope attributes.
+shared_accessibility_criteria:
+  - link
+type: helper
+examples:
+  default:
+    data:
+     rows:
+       -
+         - text: January
+         - text: £85
+           format: numeric
+         - text: £95
+           format: numeric
+       -
+         - text: February
+         - text: £75
+           format: numeric
+         - text: £55
+           format: numeric
+       -
+         - text: March
+         - text: £165
+           format: numeric
+         - text: £125
+           format: numeric
+  with_head:
+    data:
+      head:
+        - text: Month you apply
+        - text: Rate for bicycles
+          format: numeric
+        - text: Rate for vehicles
+          format: numeric
+      rows:
+      -
+        - text: January
+        - text: £85
+          format: numeric
+        - text: £95
+          format: numeric
+      -
+        - text: February
+        - text: £75
+          format: numeric
+        - text: £55
+          format: numeric
+      -
+        - text: March
+        - text: £165
+          format: numeric
+        - text: £125
+          format: numeric
+  with_head_and_caption:
+    data:
+      caption: 'Caption 1: Months and rates'
+      caption_classes: govuk-heading-m
+      first_cell_is_header: true
+      head:
+        - text: Month you apply
+        - text: Rate for bicycles
+          format: numeric
+        - text: Rate for vehicles
+          format: numeric
+      rows:
+      -
+        - text: January
+        - text: £85
+          format: numeric
+        - text: £95
+          format: numeric
+      -
+        - text: February
+        - text: £75
+          format: numeric
+        - text: £55
+          format: numeric
+      -
+        - text: March
+        - text: £165
+          format: numeric
+        - text: £125
+          format: numeric
+  with_sortable_head:
+    description: |
+      This option allows links to be added to the table headers for sorting. Sorting must be handled server side, it is not done by the component.
+
+      The example shown applies a tracking attribute specifically for use by Google Tag Manager in [Content Publisher](https://github.com/alphagov/content-publisher).
+
+      Other data attributes can also be applied as required. Note that the component does not include built in tracking. If this is required consider using the [track click script](https://github.com/alphagov/govuk_publishing_components/blob/main/docs/analytics/track-click.md).
+    data:
+      sortable: true
+      head:
+        - text: Month you apply
+        - text: Rate for bicycles
+          format: numeric
+          sort_direction: descending
+          href: /?sort_direction=desc
+          data_attributes:
+            tracking: "UTM-123A"
+        - text: Rate for vehicles
+          format: numeric
+          href: /?sort_direction=desc
+          data_attributes:
+            tracking: "UTM-123B"
+      rows:
+      -
+        - text: January
+        - text:
+          format: numeric
+        - text: £95
+          format: numeric
+      -
+        - text: February
+        - text: £75
+          format: numeric
+        - text: £55
+          format: numeric
+      -
+        - text: March
+        - text: £125
+          format: numeric
+        - text: £60
+          format: numeric
+      -
+        - text: April
+        - text: £135
+          format: numeric
+        - text: £62
+          format: numeric
+      -
+        - text: May
+        - text: £150
+          format: numeric
+        - text: £80
+          format: numeric
+  with_filter:
+    description: This option allows table rows to be filtered by user input. Since this filtering is implemented client-side the filter section is not displayed by default but displays only when JavaScript is enabled. The label for the input field can be set when the coponent is rendered via the `label` key. if this is not set a fallback value will display.
+    data:
+      filterable: true
+      label: Filter months
+      head:
+        - text: Month you apply
+        - text: Rate for bicycles
+          format: numeric
+        - text: Rate for vehicles
+          format: numeric
+      rows:
+      -
+        - text: January
+        - text: £85
+          format: numeric
+        - text: £95
+          format: numeric
+      -
+        - text: February
+        - text: £75
+          format: numeric
+        - text: £55
+          format: numeric
+      -
+        - text: March
+        - text: £165
+          format: numeric
+        - text: £125
+          format: numeric
+  vertical_layout_on_small_screens:
+    description: This option only kicks-in on tablet-sized screens and smaller. It switches the layout of the table into a vertical list of cards. In this new layout, the table's main header is hidden but a copy of the relevant heading text is embedded into each table cell.
+    data:
+      vertical_on_small_screen: true
+      head:
+        - text: Month you apply
+        - text: Rate for bicycles
+          format: numeric
+        - text: Rate for vehicles
+          format: numeric
+      rows:
+      -
+        - text: January
+        - text: £85
+          format: numeric
+        - text: £95
+          format: numeric
+      -
+        - text: February
+        - text: £75
+          format: numeric
+        - text: £55
+          format: numeric
+      -
+        - text: March
+        - text: £165
+          format: numeric
+        - text: £125
+          format: numeric

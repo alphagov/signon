@@ -7,10 +7,11 @@
   } %>
 </div>
 
-<%= render "govuk_publishing_components/components/table", {
+<%= render "components/table", {
   caption: "API users",
   caption_classes: "govuk-visually-hidden",
   filterable: true,
+  vertical_on_small_screen: true,
   label: "Filter API users",
   head: [
     {

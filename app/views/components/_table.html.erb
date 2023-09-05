@@ -1,0 +1,88 @@
+<%
+  caption ||= nil
+  head ||= []
+  rows ||= []
+  first_cell_is_header ||= false
+  caption_classes ||= nil
+  sortable ||= false
+  filterable ||= false
+  vertical_on_small_screen ||= false
+  label ||= t("components.table.filter_label")
+
+  table_id = "table-id-#{SecureRandom.hex(4)}"
+  filter_count_id = "filter-count-id-#{SecureRandom.hex(4)}"
+  classes = "app-c-table--vertical" if vertical_on_small_screen
+%>
+
+<% @table = capture do %>
+  <%= Components::TableHelper.helper(self, caption, {
+      sortable: sortable,
+      filterable: filterable,
+      caption_classes: caption_classes,
+      table_id: table_id,
+      classes: classes,
+    }) do |t| %>
+
+    <% if head.any? %>
+      <%= t.head do %>
+        <% head.each_with_index do |item, cellindex| %>
+          <%= t.header item[:text], {
+            format: item[:format],
+            href: item[:href],
+            data_attributes: item[:data_attributes],
+            sort_direction: item[:sort_direction]
+          } %>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%= t.body do %>
+      <% rows.each_with_index do |row, rowindex| %>
+        <%= t.row do %>
+          <% row.each_with_index do |cell, cellindex| %>
+            <% if cellindex == 0 && first_cell_is_header %>
+              <%= t.header cell[:text], {
+                scope: "row",
+                format: cell[:format]
+              } %>
+            <% elsif vertical_on_small_screen && head.any? %>
+              <%= t.cell nil, { format: cell[:format] } do %>
+                <span class="app-c-table__duplicate-heading" aria-hidden="true">
+                  <%= head[cellindex][:text] %>
+                </span>
+                <%= cell[:text] %>
+              <% end %>
+            <% else %>
+              <%= t.cell cell[:text], {
+                format: cell[:format]
+              } %>
+            <% end %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% if filterable %>
+  <div data-module="table">
+    <div class="js-app-c-table__filter govuk-!-display-none">
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: label
+        },
+        name: "filter",
+        controls: table_id,
+        aria_described_by: filter_count_id,
+      } %>
+
+      <p id="<%= filter_count_id %>" aria-live="polite" class="js-filter-count govuk-visually-hidden" data-count-text="<%= t("components.table.filter_count") %>"></p>
+    </div>
+
+    <%= @table %>
+
+    <p class="govuk-body govuk-!-display-none js-app-c-table__message"><%= t("components.table.filter_message") %></p>
+  </div>
+<% else %>
+  <%= @table %>
+<% end %>
