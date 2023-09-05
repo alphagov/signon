@@ -44,7 +44,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
   context "as an admin" do
     setup do
-      admin = create(:user, role: "admin")
+      admin = create(:admin_user)
       visit root_path
       signin_with(admin)
     end
@@ -196,7 +196,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
   context "as a superadmin" do
     setup do
-      superadmin = create(:user, role: "superadmin")
+      superadmin = create(:superadmin_user)
       visit root_path
       signin_with(superadmin)
     end
@@ -246,10 +246,10 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
           select "Test Organisation without 2SV", from: "Organisation"
           click_button "Create user and send email"
 
-          assert_not_nil User.where(email: "fred@example.com", role: "superadmin").last
+          assert_not_nil User.where(email: "fred@example.com", role: Roles::Superadmin.role_name).last
           assert_equal "fred@example.com", last_email.to[0]
           assert_match "Please confirm your account", last_email.subject
-          assert User.where(email: "fred@example.com", role: "superadmin").last.require_2sv?
+          assert User.where(email: "fred@example.com", role: Roles::Superadmin.role_name).last.require_2sv?
         end
       end
 
@@ -262,10 +262,10 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
           select "Test Organisation without 2SV", from: "Organisation"
           click_button "Create user and send email"
 
-          assert_not_nil User.where(email: "fred@example.com", role: "admin").last
+          assert_not_nil User.where(email: "fred@example.com", role: Roles::Admin.role_name).last
           assert_equal "fred@example.com", last_email.to[0]
           assert_match "Please confirm your account", last_email.subject
-          assert User.where(email: "fred@example.com", role: "admin").last.require_2sv?
+          assert User.where(email: "fred@example.com", role: Roles::Admin.role_name).last.require_2sv?
         end
       end
     end
@@ -284,10 +284,10 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
           select "Test Organisation without 2SV", from: "Organisation"
           click_button "Create user and send email"
 
-          assert_not_nil User.where(email: "fred@example.com", role: "superadmin").last
+          assert_not_nil User.where(email: "fred@example.com", role: Roles::Superadmin.role_name).last
           assert_equal "fred@example.com", last_email.to[0]
           assert_match "Please confirm your account", last_email.subject
-          assert User.where(email: "fred@example.com", role: "superadmin").last.require_2sv?
+          assert User.where(email: "fred@example.com", role: Roles::Superadmin.role_name).last.require_2sv?
         end
       end
 
@@ -300,10 +300,10 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
           select "Test Organisation without 2SV", from: "Organisation"
           click_button "Create user and send email"
 
-          assert_not_nil User.where(email: "fred@example.com", role: "admin").last
+          assert_not_nil User.where(email: "fred@example.com", role: Roles::Admin.role_name).last
           assert_equal "fred@example.com", last_email.to[0]
           assert_match "Please confirm your account", last_email.subject
-          assert User.where(email: "fred@example.com", role: "admin").last.require_2sv?
+          assert User.where(email: "fred@example.com", role: Roles::Admin.role_name).last.require_2sv?
         end
       end
     end
@@ -356,7 +356,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
   context "Notify service is using an allowlist or is in trial mode" do
     setup do
-      admin = create(:user, role: "admin")
+      admin = create(:admin_user)
       visit root_path
       signin_with(admin)
     end

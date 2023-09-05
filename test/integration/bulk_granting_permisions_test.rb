@@ -5,7 +5,7 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
 
   setup do
     @users = create_list(:user, 2)
-    @org_admins = create_list(:organisation_admin, 2)
+    @org_admins = create_list(:organisation_admin_user, 2)
     @admins = create_list(:admin_user, 2)
     @superadmins = create_list(:superadmin_user, 2)
 
@@ -25,7 +25,7 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
   end
 
   should "super organisation admin user can not grant multiple permissions to all users in one go" do
-    user = create(:super_org_admin)
+    user = create(:super_organisation_admin_user)
 
     visit root_path
     signin_with(user)
@@ -35,7 +35,7 @@ class BulkGrantingPermissionsTest < ActionDispatch::IntegrationTest
   end
 
   should "organisation admin user can not grant multiple permissions to all users in one go" do
-    user = create(:organisation_admin)
+    user = create(:organisation_admin_user)
 
     visit root_path
     signin_with(user)

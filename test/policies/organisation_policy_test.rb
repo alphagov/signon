@@ -9,8 +9,8 @@ class OrganisationPolicyTest < ActiveSupport::TestCase
       assert permit?(create(:superadmin_user), User, :index)
       assert permit?(create(:admin_user), User, :index)
 
-      assert forbid?(create(:super_org_admin), User, :index)
-      assert forbid?(create(:organisation_admin), User, :index)
+      assert forbid?(create(:super_organisation_admin_user), User, :index)
+      assert forbid?(create(:organisation_admin_user), User, :index)
       assert forbid?(create(:user), User, :index)
     end
   end
@@ -20,20 +20,20 @@ class OrganisationPolicyTest < ActiveSupport::TestCase
       assert permit?(create(:superadmin_user), User, :edit)
 
       assert forbid?(create(:admin_user), User, :edit)
-      assert forbid?(create(:super_org_admin), User, :edit)
-      assert forbid?(create(:organisation_admin), User, :edit)
+      assert forbid?(create(:super_organisation_admin_user), User, :edit)
+      assert forbid?(create(:organisation_admin_user), User, :edit)
       assert forbid?(create(:user), User, :edit)
     end
   end
 
   context "can_assign" do
     should "allow superadmins and admins to assign a user to any organisation" do
-      assert permit?(create(:user_in_organisation, role: "superadmin"), build(:organisation), :can_assign)
-      assert permit?(create(:user_in_organisation, role: "admin"), build(:organisation), :can_assign)
+      assert permit?(create(:user_in_organisation, role: Roles::Superadmin.role_name), build(:organisation), :can_assign)
+      assert permit?(create(:user_in_organisation, role: Roles::Admin.role_name), build(:organisation), :can_assign)
     end
 
     should "forbid for super organisation admins" do
-      super_org_admin = create(:super_org_admin)
+      super_org_admin = create(:super_organisation_admin_user)
       admins_organisation = super_org_admin.organisation
       child_organisation = create(:organisation, parent_id: admins_organisation.id)
 
@@ -46,7 +46,7 @@ class OrganisationPolicyTest < ActiveSupport::TestCase
     end
 
     should "forbid for organisation admins" do
-      organisation_admin = create(:organisation_admin)
+      organisation_admin = create(:organisation_admin_user)
       admins_organisation = organisation_admin.organisation
       child_organisation = create(:organisation, parent_id: admins_organisation.id)
 

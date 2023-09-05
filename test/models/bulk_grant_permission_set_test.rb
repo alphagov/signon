@@ -52,7 +52,7 @@ class BulkGrantPermissionSetTest < ActiveSupport::TestCase
       user = create(:user)
       admin_user = create(:admin_user)
       superadmin_user = create(:superadmin_user)
-      orgadmin_user = create(:organisation_admin)
+      orgadmin_user = create(:organisation_admin_user)
 
       @permission_set.perform
 

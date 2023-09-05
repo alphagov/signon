@@ -10,8 +10,8 @@ class ApplicationPolicyTest < ActiveSupport::TestCase
         assert permit?(create(:superadmin_user), User, permission_name)
 
         assert forbid?(create(:admin_user), User, permission_name)
-        assert forbid?(create(:super_org_admin), User, permission_name)
-        assert forbid?(create(:organisation_admin), User, permission_name)
+        assert forbid?(create(:super_organisation_admin_user), User, permission_name)
+        assert forbid?(create(:organisation_admin_user), User, permission_name)
         assert forbid?(create(:user), User, permission_name)
       end
     end

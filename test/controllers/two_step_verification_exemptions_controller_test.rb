@@ -51,7 +51,7 @@ class TwoStepVerificationExemptionsControllerTest < ActionController::TestCase
       end
     end
 
-    users_without_exemption_permissions = %i[super_org_admin organisation_admin user]
+    users_without_exemption_permissions = %i[super_organisation_admin_user organisation_admin_user user]
 
     users_without_exemption_permissions.each do |user_type_without_exemption_permission|
       should "not be able to exempt a user when a #{user_type_without_exemption_permission}" do
@@ -82,7 +82,7 @@ class TwoStepVerificationExemptionsControllerTest < ActionController::TestCase
     end
 
     should "not be able to exempt an admin user" do
-      user = create(:organisation_admin, organisation: create(:organisation))
+      user = create(:organisation_admin_user, organisation: create(:organisation))
       admin = create(:superadmin_user, organisation: @gds)
       sign_in admin
       reason_for_exemption = "accessibility reasons"
@@ -90,13 +90,13 @@ class TwoStepVerificationExemptionsControllerTest < ActionController::TestCase
 
       put :update, params: { id: user.id, exemption: { reason: reason_for_exemption, expiry_date: expiry_date_params } }
 
-      assert_equal "You do not have permission to perform this action.", flash[:alert]
+      assert_not_authorised
       assert_nil user.reason_for_2sv_exemption
     end
   end
 
   context "non-gds users" do
-    user_types = %i[superadmin_user admin_user super_org_admin organisation_admin user]
+    user_types = %i[superadmin_user admin_user super_organisation_admin_user organisation_admin_user user]
 
     user_types.each do |user_type|
       should "not be able to exempt a user from any organisation when logged in as a non-gds #{user_type}" do

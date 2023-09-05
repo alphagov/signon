@@ -32,4 +32,12 @@ module Roles
       role_classes.sort_by(&:level).map(&:role_name)
     end
   end
+
+  def govuk_admin?
+    [Roles::Superadmin.role_name, Roles::Admin.role_name].include? role
+  end
+
+  def publishing_manager?
+    [Roles::SuperOrganisationAdmin.role_name, Roles::OrganisationAdmin.role_name].include? role
+  end
 end

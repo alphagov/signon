@@ -74,7 +74,7 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
     context "when logged in as a super organisation admin" do
       setup do
-        @super_org_admin = create(:super_org_admin, organisation: @user.organisation)
+        @super_org_admin = create(:super_organisation_admin_user, organisation: @user.organisation)
       end
 
       should "be able to send a notification to a user to set up 2SV" do
@@ -108,7 +108,7 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
     context "when logged in as an organisation admin" do
       setup do
-        @org_admin = create(:organisation_admin, organisation: @user.organisation)
+        @org_admin = create(:organisation_admin_user, organisation: @user.organisation)
       end
 
       should "be able to send a notification to a user to set up 2SV" do
@@ -144,7 +144,7 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
     context "when a user has already had 2sv mandated" do
       setup do
-        @org_admin = create(:organisation_admin, organisation: @organisation)
+        @org_admin = create(:organisation_admin_user, organisation: @organisation)
       end
 
       should "be able to see an appropriate message reflecting the user's 2sv status when enabled but not set up" do

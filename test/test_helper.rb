@@ -47,6 +47,11 @@ class ActionController::TestCase
     warden.unstub(:session)
     @controller.unstub(:current_user)
   end
+
+  def assert_not_authorised
+    assert_redirected_to root_path
+    assert_equal "You do not have permission to perform this action.", flash[:alert]
+  end
 end
 
 # Capybara.server = :webrick

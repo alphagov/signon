@@ -47,14 +47,14 @@ class OrganisationsControllerTest < ActionController::TestCase
       should "not be allowed to set require 2sv to true" do
         organisation = create(:organisation, name: "Ministry of Funk")
         put :update, params: { id: organisation.id, organisation: { require_2sv: "1" } }
-        assert_equal "You do not have permission to perform this action.", flash[:alert]
+        assert_not_authorised
         assert_not organisation.reload.require_2sv?
       end
 
       should "not be allowed to set require 2sv to false" do
         organisation = create(:organisation, name: "Ministry of Funk", require_2sv: true)
         put :update, params: { id: organisation.id }
-        assert_equal "You do not have permission to perform this action.", flash[:alert]
+        assert_not_authorised
         assert organisation.reload.require_2sv?
       end
     end

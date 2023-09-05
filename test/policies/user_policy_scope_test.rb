@@ -8,20 +8,20 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
 
     @super_admin_in_org = create(:superadmin_user, organisation: @parent_organisation)
     @admin_in_org = create(:admin_user, organisation: @parent_organisation)
-    @super_org_admin_in_org = create(:super_org_admin, organisation: @parent_organisation)
-    @org_admin_in_org = create(:organisation_admin, organisation: @parent_organisation)
+    @super_org_admin_in_org = create(:super_organisation_admin_user, organisation: @parent_organisation)
+    @org_admin_in_org = create(:organisation_admin_user, organisation: @parent_organisation)
     @normal_user_in_org = create(:user_in_organisation, organisation: @parent_organisation)
 
     @super_admin_in_child_org = create(:superadmin_user, organisation: @child_organisation)
     @admin_in_child_org = create(:admin_user, organisation: @child_organisation)
-    @super_org_admin_in_child_org = create(:super_org_admin, organisation: @child_organisation)
-    @org_admin_in_child_org = create(:organisation_admin, organisation: @child_organisation)
+    @super_org_admin_in_child_org = create(:super_organisation_admin_user, organisation: @child_organisation)
+    @org_admin_in_child_org = create(:organisation_admin_user, organisation: @child_organisation)
     @normal_user_in_child_org = create(:user_in_organisation, organisation: @child_organisation)
 
     @super_admin_in_other_org = create(:superadmin_user, organisation: @other_organisation)
     @admin_in_other_org = create(:admin_user, organisation: @other_organisation)
-    @super_org_admin_in_other_org = create(:super_org_admin, organisation: @other_organisation)
-    @org_admin_in_other_org = create(:organisation_admin, organisation: @other_organisation)
+    @super_org_admin_in_other_org = create(:super_organisation_admin_user, organisation: @other_organisation)
+    @org_admin_in_other_org = create(:organisation_admin_user, organisation: @other_organisation)
     @normal_user_in_other_org = create(:user_in_organisation, organisation: @other_organisation)
 
     @api_user = create(:api_user)
@@ -101,7 +101,7 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
 
   context "super organisation admins" do
     should "includes users of similar permission or below belonging to their organisation" do
-      user = create(:super_org_admin, organisation: @parent_organisation)
+      user = create(:super_organisation_admin_user, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
       assert_not_includes resolved_scope, @super_admin_in_org
@@ -112,7 +112,7 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
     end
 
     should "includes users of similar permission or below belonging to a child organisation" do
-      user = create(:super_org_admin, organisation: @parent_organisation)
+      user = create(:super_organisation_admin_user, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
       assert_not_includes resolved_scope, @super_admin_in_child_org
@@ -123,7 +123,7 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
     end
 
     should "does not include users of similar permission or below belonging to another organisation" do
-      user = create(:super_org_admin, organisation: @parent_organisation)
+      user = create(:super_organisation_admin_user, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
       assert_not_includes resolved_scope, @super_admin_in_other_org
@@ -134,7 +134,7 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
     end
 
     should "does not include api users" do
-      user = create(:super_org_admin, organisation: @parent_organisation)
+      user = create(:super_organisation_admin_user, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
       assert_not_includes resolved_scope, @api_user
     end
@@ -142,7 +142,7 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
 
   context "organisation admins" do
     should "includes users of similar permission or below belonging to their organisation" do
-      user = create(:organisation_admin, organisation: @parent_organisation)
+      user = create(:organisation_admin_user, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
       assert_not_includes resolved_scope, @super_admin_in_org
@@ -153,7 +153,7 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
     end
 
     should "does not include users of similar permission or below belonging to a child organisation" do
-      user = create(:organisation_admin, organisation: @parent_organisation)
+      user = create(:organisation_admin_user, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
       assert_not_includes resolved_scope, @super_admin_in_child_org
@@ -164,7 +164,7 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
     end
 
     should "does not include users of similar permission or below belonging to another organisation" do
-      user = create(:organisation_admin, organisation: @parent_organisation)
+      user = create(:organisation_admin_user, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
 
       assert_not_includes resolved_scope, @super_admin_in_other_org
@@ -175,7 +175,7 @@ class UserPolicyScopeTest < ActiveSupport::TestCase
     end
 
     should "does not include api users" do
-      user = create(:organisation_admin, organisation: @parent_organisation)
+      user = create(:organisation_admin_user, organisation: @parent_organisation)
       resolved_scope = UserPolicy::Scope.new(user, User.all).resolve
       assert_not_includes resolved_scope, @api_user
     end

@@ -13,8 +13,8 @@ class UserPermissionsExporterTest < ActionView::TestCase
       suspended_at: Date.parse("2000-01-01"),
       reason_for_suspension: "Left Chips.org",
     )
-    @anne = create(:user, name: "Anne", email: "anne@anne.com", role: "superadmin", organisation: @ketchup_org)
-    @mary = create(:user, name: "Mary", email: "mary@mary.com", role: "admin", organisation: @brown_sauce_org)
+    @anne = create(:superadmin_user, name: "Anne", email: "anne@anne.com", organisation: @ketchup_org)
+    @mary = create(:admin_user, name: "Mary", email: "mary@mary.com", organisation: @brown_sauce_org)
 
     @tmpfile = Tempfile.new(%w[user_permissions_exporter_test_example csv])
     UserPermissionsExporter.any_instance.stubs(:file_path).returns(@tmpfile.path)
@@ -67,8 +67,8 @@ class UserPermissionsExporterTest < ActionView::TestCase
     csv_data = CSV.read(@tmpfile.path)
 
     assert_equal ["Name", "Email", "Organisation", "Role", "Suspended at"], csv_data[0]
-    assert_equal ["Anne", "anne@anne.com", "Ministry of ketchup", "superadmin", ""], csv_data[1]
+    assert_equal ["Anne", "anne@anne.com", "Ministry of ketchup", Roles::Superadmin.role_name, ""], csv_data[1]
     assert_equal ["Bill", "bill@bill.com", "Ministry of chips", "normal", "2000-01-01 00:00:00 +0000"], csv_data[2]
-    assert_equal ["Mary", "mary@mary.com", "Ministry of brown sauce", "admin", ""], csv_data[3]
+    assert_equal ["Mary", "mary@mary.com", "Ministry of brown sauce", Roles::Admin.role_name, ""], csv_data[3]
   end
 end

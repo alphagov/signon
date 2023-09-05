@@ -26,7 +26,7 @@ class PermissionsPromoterTest < ActiveSupport::TestCase
       users = [first_non_gds_user, second_non_gds_user].each(&:reload)
 
       assert users.all? do |user|
-        user.role == "organisation_admin"
+        user.role == Roles::OrganisationAdmin.role_name
       end
     end
   end
@@ -44,7 +44,7 @@ class PermissionsPromoterTest < ActiveSupport::TestCase
 
     @task.invoke
 
-    assert admin_user.reload.role == "admin"
+    assert admin_user.reload.role == Roles::Admin.role_name
   end
 
   should "not update a non-GDS user who is suspended" do

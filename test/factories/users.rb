@@ -39,7 +39,7 @@ FactoryBot.define do
     otp_secret_key { "Sssshh" }
   end
 
-  factory :two_step_enabled_organisation_admin, parent: :organisation_admin do
+  factory :two_step_enabled_organisation_admin, parent: :organisation_admin_user do
     require_2sv { true }
     otp_secret_key { "Sssshh" }
   end
@@ -67,20 +67,20 @@ FactoryBot.define do
 
   factory :superadmin_user, parent: :user do
     sequence(:email) { |n| "superadmin#{n}@example.com" }
-    role { "superadmin" }
+    role { Roles::Superadmin.role_name }
   end
 
   factory :admin_user, parent: :user do
     sequence(:email) { |n| "admin#{n}@example.com" }
-    role { "admin" }
+    role { Roles::Admin.role_name }
   end
 
-  factory :super_org_admin, parent: :user_in_organisation do
-    role { "super_organisation_admin" }
+  factory :super_organisation_admin_user, parent: :user_in_organisation do
+    role { Roles::SuperOrganisationAdmin.role_name }
   end
 
-  factory :organisation_admin, parent: :user_in_organisation do
-    role { "organisation_admin" }
+  factory :organisation_admin_user, parent: :user_in_organisation do
+    role { Roles::OrganisationAdmin.role_name }
   end
 
   factory :suspended_user, parent: :user do

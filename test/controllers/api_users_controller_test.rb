@@ -10,15 +10,13 @@ class ApiUsersControllerTest < ActionController::TestCase
     should "not be able to access API user's list" do
       get :index
 
-      assert_redirected_to root_path
-      assert_equal "You do not have permission to perform this action.", flash[:alert]
+      assert_not_authorised
     end
 
     should "not be able to view API user create form" do
       get :new
 
-      assert_redirected_to root_path
-      assert_equal "You do not have permission to perform this action.", flash[:alert]
+      assert_not_authorised
     end
   end
 

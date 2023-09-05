@@ -291,8 +291,8 @@ class UsersControllerTest < ActionController::TestCase
 
       should "show user roles" do
         create(:user, email: "user@email.com")
-        create(:super_org_admin, email: "superorgadmin@email.com")
-        create(:organisation_admin, email: "orgadmin@email.com")
+        create(:super_organisation_admin_user, email: "superorgadmin@email.com")
+        create(:organisation_admin_user, email: "orgadmin@email.com")
 
         get :index
 
@@ -371,9 +371,9 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "scope filtered list of users by role" do
-          create(:organisation_admin, email: "xyz@gov.uk")
+          create(:organisation_admin_user, email: "xyz@gov.uk")
 
-          get :index, params: { filter: "admin", role: "admin" }
+          get :index, params: { filter: "admin", role: Roles::Admin.role_name }
 
           assert_select "tbody tr", count: 1
           assert_select "td.email", /admin@gov.uk/
@@ -401,10 +401,10 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "scope list of users by status and role" do
-        create(:suspended_user, email: "suspended_user@gov.uk", role: "admin")
+        create(:suspended_user, email: "suspended_user@gov.uk", role: Roles::Admin.role_name)
         create(:suspended_user, email: "normal_suspended_user@gov.uk")
 
-        get :index, params: { status: "suspended", role: "admin" }
+        get :index, params: { status: "suspended", role: Roles::Admin.role_name }
 
         assert_select "tbody tr", count: 1
         assert_select "td.email", /suspended_user@gov.uk/
@@ -421,7 +421,7 @@ class UsersControllerTest < ActionController::TestCase
 
       context "as superadmin" do
         should "not list api users" do
-          @user.update_column(:role, "superadmin")
+          @user.update_column(:role, Roles::Superadmin.role_name)
           create(:api_user, email: "api_user@email.com")
 
           get :index
@@ -495,7 +495,7 @@ class UsersControllerTest < ActionController::TestCase
 
       context "organisation admin" do
         should "not be able to assign organisations" do
-          organisation_admin = create(:organisation_admin)
+          organisation_admin = create(:organisation_admin_user)
           create(:organisation)
           sign_in organisation_admin
 
@@ -512,7 +512,7 @@ class UsersControllerTest < ActionController::TestCase
           delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: %w[signin])
           non_delegatable_no_access_to_app = create(:application, with_supported_permissions: %w[signin])
 
-          organisation_admin = create(:organisation_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
+          organisation_admin = create(:organisation_admin_user, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
 
           sign_in organisation_admin
 
@@ -538,7 +538,7 @@ class UsersControllerTest < ActionController::TestCase
           delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ["signin", "GDS Editor"])
           non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ["signin", "Import CSVs"])
 
-          organisation_admin = create(:organisation_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
+          organisation_admin = create(:organisation_admin_user, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
 
           sign_in organisation_admin
 
@@ -577,7 +577,7 @@ class UsersControllerTest < ActionController::TestCase
 
       context "super organisation admin" do
         should "not be able to assign organisations" do
-          super_org_admin = create(:super_org_admin)
+          super_org_admin = create(:super_organisation_admin_user)
           outside_organisation = create(:organisation)
           sign_in super_org_admin
 
@@ -595,7 +595,7 @@ class UsersControllerTest < ActionController::TestCase
           delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: %w[signin])
           non_delegatable_no_access_to_app = create(:application, with_supported_permissions: %w[signin])
 
-          super_org_admin = create(:super_org_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
+          super_org_admin = create(:super_organisation_admin_user, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
 
           sign_in super_org_admin
 
@@ -621,7 +621,7 @@ class UsersControllerTest < ActionController::TestCase
           delegatable_no_access_to_app = create(:application, with_delegatable_supported_permissions: ["signin", "GDS Editor"])
           non_delegatable_no_access_to_app = create(:application, with_supported_permissions: ["signin", "Import CSVs"])
 
-          super_org_admin = create(:super_org_admin, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
+          super_org_admin = create(:super_organisation_admin_user, with_signin_permissions_for: [delegatable_app, non_delegatable_app])
 
           sign_in super_org_admin
 
@@ -715,7 +715,7 @@ class UsersControllerTest < ActionController::TestCase
 
       context "organisation admin" do
         should "not be able to assign organisation ids" do
-          admin = create(:organisation_admin)
+          admin = create(:organisation_admin_user)
           sub_organisation = create(:organisation, parent: admin.organisation)
           sign_in admin
 
@@ -729,7 +729,7 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "redisplay the form if save fails" do
-          admin = create(:organisation_admin)
+          admin = create(:organisation_admin_user)
           sign_in admin
 
           put :update, params: { id: admin.id, user: { name: "" } }
@@ -740,7 +740,7 @@ class UsersControllerTest < ActionController::TestCase
 
       context "super organisation admin" do
         should "redisplay the form if save fails" do
-          admin = create(:super_org_admin)
+          admin = create(:super_organisation_admin_user)
           sign_in admin
 
           put :update, params: { id: admin.id, user: { name: "" } }
@@ -757,19 +757,19 @@ class UsersControllerTest < ActionController::TestCase
 
       should "not let you set the role" do
         not_an_admin = create(:user)
-        put :update, params: { id: not_an_admin.id, user: { role: "admin" } }
+        put :update, params: { id: not_an_admin.id, user: { role: Roles::Admin.role_name } }
         assert_equal "normal", not_an_admin.reload.role
       end
 
       context "you are a superadmin" do
         setup do
-          @user.update_column(:role, "superadmin")
+          @user.update_column(:role, Roles::Superadmin.role_name)
         end
 
         should "let you set the role" do
           not_an_admin = create(:user)
-          put :update, params: { id: not_an_admin.id, user: { role: "admin" } }
-          assert_equal "admin", not_an_admin.reload.role
+          put :update, params: { id: not_an_admin.id, user: { role: Roles::Admin.role_name } }
+          assert_equal Roles::Admin.role_name, not_an_admin.reload.role
         end
       end
 
@@ -819,8 +819,8 @@ class UsersControllerTest < ActionController::TestCase
 
       context "changing a role" do
         should "log an event" do
-          @user.update_column(:role, "superadmin")
-          another_user = create(:user, role: "admin")
+          @user.update_column(:role, Roles::Superadmin.role_name)
+          another_user = create(:admin_user)
           put :update, params: { id: another_user.id, user: { role: "normal" } }
 
           assert_equal 1, EventLog.where(event_id: EventLog::ROLE_CHANGED.id, uid: another_user.uid, initiator_id: @user.id).count
@@ -918,7 +918,7 @@ class UsersControllerTest < ActionController::TestCase
 
   context "as Organisation Admin" do
     setup do
-      @user = create(:organisation_admin)
+      @user = create(:organisation_admin_user)
       sign_in @user
     end
 

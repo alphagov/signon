@@ -2,7 +2,7 @@ require "test_helper"
 
 class DoorkeeperApplicationsControllerTest < ActionController::TestCase
   setup do
-    @user = create(:user, role: "superadmin")
+    @user = create(:superadmin_user)
     sign_in @user
   end
 

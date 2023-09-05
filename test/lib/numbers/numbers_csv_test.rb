@@ -33,18 +33,18 @@ class NumbersCsvTest < ActiveSupport::TestCase
 
   test "csv contains counts by role" do
     Numbers::NumbersCsv.generate
-    assert numbers_csv.include? ["Active accounts count by role", "admin", "1"]
+    assert numbers_csv.include? ["Active accounts count by role", Roles::Admin.role_name, "1"]
     assert numbers_csv.include? ["Active accounts count by role", "normal", "3"]
   end
 
   test "csv contains admin and superadmin user names" do
-    create(:admin_user, email: "maggie@gov.uk", name: "Margaret", role: "superadmin")
-    create(:admin_user, email: "dave@gov.uk", name: "David", role: "admin")
+    create(:superadmin_user, email: "maggie@gov.uk", name: "Margaret")
+    create(:admin_user, email: "dave@gov.uk", name: "David")
 
     Numbers::NumbersCsv.generate
 
-    assert numbers_csv.include? ["Active admin user names", "admin", "David <dave@gov.uk>, Winston <admin_user@admin.example.com>"]
-    assert numbers_csv.include? ["Active admin user names", "superadmin", "Margaret <maggie@gov.uk>"]
+    assert numbers_csv.include? ["Active admin user names", Roles::Admin.role_name, "David <dave@gov.uk>, Winston <admin_user@admin.example.com>"]
+    assert numbers_csv.include? ["Active admin user names", Roles::Superadmin.role_name, "Margaret <maggie@gov.uk>"]
   end
 
   test "csv contains counts by application access" do

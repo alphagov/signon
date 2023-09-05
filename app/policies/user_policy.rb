@@ -16,13 +16,13 @@ class UserPolicy < BasePolicy
 
   def edit?
     case current_user.role
-    when "superadmin"
+    when Roles::Superadmin.role_name
       true
-    when "admin"
+    when Roles::Admin.role_name
       can_manage?
-    when "super_organisation_admin"
+    when Roles::SuperOrganisationAdmin.role_name
       allow_self_only || (can_manage? && (record_in_own_organisation? || record_in_child_organisation?))
-    when "organisation_admin"
+    when Roles::OrganisationAdmin.role_name
       allow_self_only || (can_manage? && record_in_own_organisation?)
     else # 'normal'
       false
@@ -59,7 +59,7 @@ class UserPolicy < BasePolicy
 
   def exempt_from_two_step_verification?
     current_user.belongs_to_gds? &&
-      (current_user.superadmin? || current_user.admin?) &&
+      current_user.govuk_admin? &&
       record.normal? &&
       !record.api_user
   end

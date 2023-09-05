@@ -12,7 +12,7 @@ class BulkGrantPermissionSetsHelperTest < ActionView::TestCase
 
     context "for a superadmin" do
       setup do
-        @current_user = create(:user, role: "superadmin")
+        @current_user = create(:superadmin_user)
       end
 
       should "return all non-retired applications in alphabetical order" do
@@ -22,7 +22,7 @@ class BulkGrantPermissionSetsHelperTest < ActionView::TestCase
 
     context "for an admin" do
       setup do
-        @current_user = create(:user, role: "admin")
+        @current_user = create(:admin_user)
       end
 
       should "return all non-retired applications in alphabetical order" do

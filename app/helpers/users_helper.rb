@@ -20,7 +20,7 @@ module UsersHelper
   end
 
   def organisation_select_options
-    { include_blank: is_org_admin? || is_super_org_admin? ? false : "None" }
+    { include_blank: current_user.publishing_manager? ? false : "None" }
   end
 
   def user_email_tokens(user = current_user)
@@ -33,14 +33,6 @@ module UsersHelper
 
   def edit_user_path_by_user_type(user)
     user.api_user? ? edit_api_user_path(user) : edit_user_path(user)
-  end
-
-  def is_org_admin?
-    current_user.organisation_admin?
-  end
-
-  def is_super_org_admin?
-    current_user.super_organisation_admin?
   end
 
   def sync_needed?(permissions)

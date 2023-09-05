@@ -34,13 +34,13 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
 
     should "only show permissions that super organisation admins themselves have" do
       app = create(:application, with_delegatable_supported_permissions: %w[write approve])
-      super_org_admin = create(:super_org_admin, with_permissions: { app => %w[write] })
+      super_org_admin = create(:super_organisation_admin_user, with_permissions: { app => %w[write] })
 
       assert_equal %w[write], app.supported_permission_strings(super_org_admin)
     end
 
     should "only show delegatable permissions to super organisation admins" do
-      super_org_admin = create(:super_org_admin)
+      super_org_admin = create(:super_organisation_admin_user)
       app = create(:application, with_delegatable_supported_permissions: %w[write], with_supported_permissions: %w[approve])
       super_org_admin.grant_application_permissions(app, %w[write approve])
 
@@ -49,13 +49,13 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
 
     should "only show permissions that organisation admins themselves have" do
       app = create(:application, with_delegatable_supported_permissions: %w[write approve])
-      organisation_admin = create(:organisation_admin, with_permissions: { app => %w[write] })
+      organisation_admin = create(:organisation_admin_user, with_permissions: { app => %w[write] })
 
       assert_equal %w[write], app.supported_permission_strings(organisation_admin)
     end
 
     should "only show delegatable permissions to organisation admins" do
-      user = create(:organisation_admin)
+      user = create(:organisation_admin_user)
       app = create(:application, with_delegatable_supported_permissions: %w[write], with_supported_permissions: %w[approve])
       user.grant_application_permissions(app, %w[write approve])
 

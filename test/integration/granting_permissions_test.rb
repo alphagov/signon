@@ -91,7 +91,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
 
   context "as a super organisation admin" do
     setup do
-      @super_org_admin = create(:super_org_admin)
+      @super_org_admin = create(:super_organisation_admin_user)
       @user = create(:user, organisation: @super_org_admin.organisation)
 
       visit root_path
@@ -177,7 +177,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
 
   context "as an organisation admin" do
     setup do
-      @organisation_admin = create(:organisation_admin)
+      @organisation_admin = create(:organisation_admin_user)
       @user = create(:user, organisation: @organisation_admin.organisation)
 
       visit root_path

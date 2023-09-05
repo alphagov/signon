@@ -70,7 +70,7 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
 
     context "super organisation admins" do
       setup do
-        user = create(:super_org_admin).tap do |u|
+        user = create(:super_organisation_admin_user).tap do |u|
           u.grant_application_permission(@app_one, "signin")
           u.grant_application_permission(@app_two, "signin")
         end
@@ -103,7 +103,7 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
 
     context "organisation admins" do
       setup do
-        user = create(:organisation_admin).tap do |u|
+        user = create(:organisation_admin_user).tap do |u|
           u.grant_application_permission(@app_one, "signin")
           u.grant_application_permission(@app_two, "signin")
         end
