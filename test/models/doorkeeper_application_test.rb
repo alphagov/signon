@@ -29,7 +29,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       user = create(:user)
       app = create(:application, with_supported_permissions: %w[write])
 
-      assert_equal %w[signin write], app.supported_permission_strings(user)
+      assert_equal [SupportedPermission::SIGNIN_NAME, "write"], app.supported_permission_strings(user)
     end
 
     should "only show permissions that super organisation admins themselves have" do
@@ -119,7 +119,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     should "return applications that the user can signin into" do
       user = create(:user)
       application = create(:application)
-      user.grant_application_permission(application, "signin")
+      user.grant_application_signin_permission(application)
 
       assert_includes Doorkeeper::Application.can_signin(user), application
     end
@@ -127,7 +127,7 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     should "not return applications that are retired" do
       user = create(:user)
       application = create(:application, retired: true)
-      user.grant_application_permission(application, "signin")
+      user.grant_application_signin_permission(application)
 
       assert_empty Doorkeeper::Application.can_signin(user)
     end
@@ -140,13 +140,13 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
 
     should "return applications that support delegation of signin permission" do
-      application = create(:application, with_delegatable_supported_permissions: %w[signin])
+      application = create(:application, with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
 
       assert_includes Doorkeeper::Application.with_signin_delegatable, application
     end
 
     should "not return applications that don't support delegation of signin permission" do
-      create(:application, with_supported_permissions: %w[signin])
+      create(:application, with_supported_permissions: [SupportedPermission::SIGNIN_NAME])
 
       assert_empty Doorkeeper::Application.with_signin_delegatable
     end

@@ -31,19 +31,19 @@
             # API Users will always have a "signin" permission for apps for which they have access token.
             # The hidden field ensures it is not lost.
           %>
-          <%= hidden_field_tag supported_permission_field_name, application.signin_permission.id, id: "#{supported_permission_field_prefix}_signin" %>
+          <%= hidden_field_tag supported_permission_field_name, application.signin_permission.id, id: "#{supported_permission_field_prefix}_#{SupportedPermission::SIGNIN_NAME}" %>
         <% else %>
           <td>
-            <%= label_tag "#{supported_permission_field_prefix}_signin", "Has access to #{application.name}?", class: "rm" %>
+            <%= label_tag "#{supported_permission_field_prefix}_#{SupportedPermission::SIGNIN_NAME}", "Has access to #{application.name}?", class: "rm" %>
             <%= check_box_tag supported_permission_field_name, application.signin_permission.id, user_object.has_access_to?(application),
-                              id: "#{supported_permission_field_prefix}_signin" %>
+                              id: "#{supported_permission_field_prefix}_#{SupportedPermission::SIGNIN_NAME}" %>
           </td>
         <% end %>
         <td>
           <%= label_tag "#{supported_permission_field_prefix}_ids", "Permissions for #{application.name}", class: "rm" %>
           <% supported_permissions_options = application.supported_permissions.grantable_from_ui
                                                .inject({}) {|h, per| h.merge(per.name => per.id) }
-             supported_permissions_options.delete('signin') %>
+             supported_permissions_options.delete(SupportedPermission::SIGNIN_NAME) %>
           <%= select_tag supported_permission_field_name,
                           options_for_select(supported_permissions_options,
                             user_object.permission_ids_for(application) - [application.signin_permission.id]),

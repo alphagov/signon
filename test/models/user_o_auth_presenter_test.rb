@@ -8,7 +8,8 @@ class UserOAuthPresenterTest < ActiveSupport::TestCase
   should "generate JSON" do
     user = create(:user)
     justice_league = create(:organisation, slug: "justice-league")
-    user.grant_application_permissions(@application, %w[signin managing_editor])
+    user.grant_application_signin_permission(@application)
+    user.grant_application_permissions(@application, %w[managing_editor])
     user.organisation = justice_league
 
     expected_user_attributes = {
@@ -21,7 +22,7 @@ class UserOAuthPresenterTest < ActiveSupport::TestCase
     }
 
     user_representation = UserOAuthPresenter.new(user, @application).as_hash[:user]
-    assert_same_elements %w[signin managing_editor], user_representation.delete(:permissions)
+    assert_same_elements [SupportedPermission::SIGNIN_NAME, "managing_editor"], user_representation.delete(:permissions)
     assert_equal expected_user_attributes, user_representation
   end
 
@@ -34,7 +35,8 @@ class UserOAuthPresenterTest < ActiveSupport::TestCase
 
   should "mark suspended users disabled" do
     suspended_user = create(:suspended_user)
-    suspended_user.grant_application_permissions(@application, %w[signin managing_editor])
+    suspended_user.grant_application_signin_permission(@application)
+    suspended_user.grant_application_permissions(@application, %w[managing_editor])
 
     presenter = UserOAuthPresenter.new(suspended_user, @application)
     assert presenter.as_hash[:user][:disabled]
@@ -42,7 +44,8 @@ class UserOAuthPresenterTest < ActiveSupport::TestCase
 
   should "exclude permissions if user is suspended" do
     suspended_user = create(:suspended_user)
-    suspended_user.grant_application_permissions(@application, %w[signin managing_editor])
+    suspended_user.grant_application_signin_permission(@application)
+    suspended_user.grant_application_permissions(@application, %w[managing_editor])
 
     presenter = UserOAuthPresenter.new(suspended_user, @application)
     assert_empty presenter.as_hash[:user][:permissions]

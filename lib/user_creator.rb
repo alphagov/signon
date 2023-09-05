@@ -35,7 +35,7 @@ private
 
   def grant_requested_signin_permissions
     applications.each do |application|
-      user.grant_application_permission(application, "signin")
+      user.grant_application_signin_permission(application)
     end
   end
 

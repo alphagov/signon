@@ -167,6 +167,10 @@ class User < ApplicationRecord
     authorisations.where(revoked_at: nil).find_each(&:revoke)
   end
 
+  def grant_application_signin_permission(application)
+    grant_application_permission(application, SupportedPermission::SIGNIN_NAME)
+  end
+
   def grant_application_permission(application, supported_permission_name)
     grant_application_permissions(application, [supported_permission_name]).first
   end

@@ -11,13 +11,13 @@ class ::Doorkeeper::Application < ActiveRecord::Base
         lambda { |user|
           joins(supported_permissions: :user_application_permissions)
             .where("user_application_permissions.user_id" => user.id)
-            .where("supported_permissions.name" => "signin")
+            .where("supported_permissions.name" => SupportedPermission::SIGNIN_NAME)
             .where(retired: false)
         }
   scope :with_signin_delegatable,
         lambda {
           joins(:supported_permissions)
-            .where(supported_permissions: { name: "signin", delegatable: true })
+            .where(supported_permissions: { name: SupportedPermission::SIGNIN_NAME, delegatable: true })
         }
 
   after_create :create_signin_supported_permission
@@ -36,7 +36,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   end
 
   def signin_permission
-    supported_permissions.find_by(name: "signin")
+    supported_permissions.find_by(name: SupportedPermission::SIGNIN_NAME)
   end
 
   def sorted_supported_permissions_grantable_from_ui
@@ -78,7 +78,7 @@ private
   end
 
   def create_signin_supported_permission
-    supported_permissions.create!(name: "signin", delegatable: true)
+    supported_permissions.create!(name: SupportedPermission::SIGNIN_NAME, delegatable: true)
   end
 
   def create_user_update_supported_permission

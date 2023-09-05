@@ -23,9 +23,12 @@ class UserPermissionsExporterTest < ActionView::TestCase
 
   def test_export_one_application
     foo_app = create(:application, name: "Foo", with_supported_permissions: %w[administer add_vinegar do_some_stuff cook])
-    @bill.grant_application_permissions(foo_app, %w[signin cook])
-    @anne.grant_application_permissions(foo_app, %w[signin administer add_vinegar])
-    @mary.grant_application_permissions(foo_app, %w[signin do_some_stuff])
+    @bill.grant_application_signin_permission(foo_app)
+    @bill.grant_application_permissions(foo_app, %w[cook])
+    @anne.grant_application_signin_permission(foo_app)
+    @anne.grant_application_permissions(foo_app, %w[administer add_vinegar])
+    @mary.grant_application_signin_permission(foo_app)
+    @mary.grant_application_permissions(foo_app, %w[do_some_stuff])
 
     UserPermissionsExporter.new(@tmpfile.path).export(%w[Foo])
 
@@ -42,12 +45,17 @@ class UserPermissionsExporterTest < ActionView::TestCase
     bar_app = create(:application, name: "Bar", with_supported_permissions: %w[administer])
     baz_app = create(:application, name: "Baz")
 
-    @bill.grant_application_permissions(foo_app, %w[signin cook])
+    @bill.grant_application_signin_permission(foo_app)
+    @bill.grant_application_permissions(foo_app, %w[cook])
     @bill.grant_application_permissions(baz_app, [])
-    @anne.grant_application_permissions(foo_app, %w[signin administer add_vinegar])
-    @anne.grant_application_permissions(bar_app, %w[signin administer])
-    @mary.grant_application_permissions(foo_app, %w[signin do_some_stuff])
-    @mary.grant_application_permissions(bar_app, %w[signin administer])
+    @anne.grant_application_signin_permission(foo_app)
+    @anne.grant_application_permissions(foo_app, %w[administer add_vinegar])
+    @anne.grant_application_signin_permission(bar_app)
+    @anne.grant_application_permissions(bar_app, %w[administer])
+    @mary.grant_application_signin_permission(foo_app)
+    @mary.grant_application_permissions(foo_app, %w[do_some_stuff])
+    @mary.grant_application_signin_permission(bar_app)
+    @mary.grant_application_permissions(bar_app, %w[administer])
 
     UserPermissionsExporter.new(@tmpfile.path).export(%w[Foo Bar Baz])
 

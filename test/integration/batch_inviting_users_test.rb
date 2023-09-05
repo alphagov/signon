@@ -48,7 +48,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
   context "for organisation admins" do
     setup do
       @user = create(:organisation_admin_user)
-      @user.grant_application_permission(@application, %w[signin])
+      @user.grant_application_signin_permission(@application)
     end
 
     should "not allow batch inviting users" do
@@ -63,7 +63,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
   context "for super organisation admins" do
     setup do
       @user = create(:super_organisation_admin_user)
-      @user.grant_application_permission(@application, %w[signin])
+      @user.grant_application_signin_permission(@application)
     end
 
     should "not allow batch inviting users" do
@@ -77,7 +77,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
 
   should "ensure that batch invited users get default permissions even when not checked in UI" do
     create(:supported_permission, application: @application, name: "reader", default: true)
-    support_app = create(:application, name: "support", with_supported_permissions: %w[signin])
+    support_app = create(:application, name: "support", with_supported_permissions: [SupportedPermission::SIGNIN_NAME])
     support_app.signin_permission.update!(default: true)
     user = create(:admin_user)
 

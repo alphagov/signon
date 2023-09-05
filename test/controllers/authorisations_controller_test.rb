@@ -58,11 +58,11 @@ class AuthorisationsControllerTest < ActionController::TestCase
       end
 
       should "not duplicate 'signin' permission for the authorised application if it already exists" do
-        @api_user.grant_application_permission(@application, "signin")
+        @api_user.grant_application_signin_permission(@application)
 
         post :create, params: { api_user_id: @api_user.id, doorkeeper_access_token: { application_id: @application.id } }
 
-        assert_equal %w[signin], @api_user.permissions_for(@application)
+        assert_equal [SupportedPermission::SIGNIN_NAME], @api_user.permissions_for(@application)
       end
     end
   end

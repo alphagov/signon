@@ -99,8 +99,8 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "support granting signin permissions to delegatable apps that the super organisation admin has access to" do
-      app = create(:application, name: "MyApp", with_delegatable_supported_permissions: %w[signin])
-      @super_org_admin.grant_application_permission(app, "signin")
+      app = create(:application, name: "MyApp", with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
+      @super_org_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
       check "Has access to MyApp?"
@@ -113,14 +113,14 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       app = create(:application, name: "MyApp")
       signin_permission = app.signin_permission
       signin_permission.update!(delegatable: false)
-      @super_org_admin.grant_application_permission(app, "signin")
+      @super_org_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
       assert page.has_no_field? "Has access to MyApp?"
     end
 
     should "not support granting signin permissions to apps that the super organisation admin doesn't have access to" do
-      create(:application, name: "MyApp", with_delegatable_supported_permissions: %w[signin])
+      create(:application, name: "MyApp", with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
 
       visit edit_user_path(@user)
       assert page.has_no_field? "Has access to MyApp?"
@@ -128,7 +128,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
 
     should "not remove permissions the user has that the super organisation admin does not have" do
       app = create(:application, name: "MyApp")
-      @user.grant_application_permission(app, "signin")
+      @user.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
       click_button "Update User"
@@ -139,8 +139,8 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     should "not remove permissions the user has that the super organisation admin cannot delegate" do
       app = create(:application, name: "MyApp")
       app.signin_permission.update!(delegatable: false)
-      @super_org_admin.grant_application_permission(app, "signin")
-      @user.grant_application_permission(app, "signin")
+      @super_org_admin.grant_application_signin_permission(app)
+      @user.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
       click_button "Update User"
@@ -154,7 +154,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
         name: "MyApp",
         with_supported_permissions: %w[pre-existing adding never],
       )
-      @super_org_admin.grant_application_permission(app, "signin")
+      @super_org_admin.grant_application_signin_permission(app)
       @user.grant_application_permission(app, "pre-existing")
 
       visit edit_user_path(@user)
@@ -168,7 +168,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
 
     should "not be able to grant permissions that are not grantable_from_ui" do
       app = create(:application, name: "MyApp", with_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
-      @super_org_admin.grant_application_permission(app, "signin")
+      @super_org_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
       assert page.has_no_select?("Permissions for MyApp", options: %w[user_update_permission])
@@ -185,8 +185,8 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "support granting signin permissions to delegatable apps that the organisation admin has access to" do
-      app = create(:application, name: "MyApp", with_delegatable_supported_permissions: %w[signin])
-      @organisation_admin.grant_application_permission(app, "signin")
+      app = create(:application, name: "MyApp", with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
+      @organisation_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
       check "Has access to MyApp?"
@@ -199,14 +199,14 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       app = create(:application, name: "MyApp")
       signin_permission = app.signin_permission
       signin_permission.update!(delegatable: false)
-      @organisation_admin.grant_application_permission(app, "signin")
+      @organisation_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
       assert page.has_no_field? "Has access to MyApp?"
     end
 
     should "not support granting signin permissions to apps that the organisation admin doesn't have access to" do
-      create(:application, name: "MyApp", with_delegatable_supported_permissions: %w[signin])
+      create(:application, name: "MyApp", with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
 
       visit edit_user_path(@user)
       assert page.has_no_field? "Has access to MyApp?"
@@ -214,7 +214,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
 
     should "not remove permissions the user has that the organisation admin does not have" do
       app = create(:application, name: "MyApp")
-      @user.grant_application_permission(app, "signin")
+      @user.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
       click_button "Update User"
@@ -225,8 +225,8 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     should "not remove permissions the user has that the organisation admin cannot delegate" do
       app = create(:application, name: "MyApp")
       app.signin_permission.update!(delegatable: false)
-      @organisation_admin.grant_application_permission(app, "signin")
-      @user.grant_application_permission(app, "signin")
+      @organisation_admin.grant_application_signin_permission(app)
+      @user.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
       click_button "Update User"
@@ -240,7 +240,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
         name: "MyApp",
         with_supported_permissions: %w[pre-existing adding never],
       )
-      @organisation_admin.grant_application_permission(app, "signin")
+      @organisation_admin.grant_application_signin_permission(app)
       @user.grant_application_permission(app, "pre-existing")
 
       visit edit_user_path(@user)
@@ -254,7 +254,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
 
     should "not be able to grant permissions that are not grantable_from_ui" do
       app = create(:application, name: "MyApp", with_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
-      @organisation_admin.grant_application_permission(app, "signin")
+      @organisation_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
       assert page.has_no_select?("Permissions for MyApp", options: %w[user_update_permission])

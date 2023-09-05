@@ -549,6 +549,17 @@ class UserTest < ActiveSupport::TestCase
     assert_equal old_encrypted_password, u.encrypted_password, "Changed password"
   end
 
+  test "can grant signin permission to allow user to access the app" do
+    app = create(:application)
+    user = create(:user)
+
+    assert_not user.has_access_to?(app)
+
+    user.grant_application_signin_permission(app)
+
+    assert user.has_access_to?(app)
+  end
+
   test "can grant permissions to users and return the created permission" do
     app = create(:application, name: "my_app", with_supported_permissions: ["Create publications", "Delete publications"])
     user = create(:user)
@@ -563,20 +574,20 @@ class UserTest < ActiveSupport::TestCase
     app = create(:application, name: "my_app")
     user = create(:user)
 
-    user.grant_application_permission(app, "signin")
-    user.grant_application_permission(app, "signin")
+    user.grant_application_signin_permission(app)
+    user.grant_application_signin_permission(app)
 
-    assert_user_has_permissions %w[signin], app, user
+    assert_user_has_permissions [SupportedPermission::SIGNIN_NAME], app, user
   end
 
   test "returns multiple permissions in name order" do
     app = create(:application, name: "my_app", with_supported_permissions: %w[edit])
     user = create(:user)
 
-    user.grant_application_permission(app, "signin")
+    user.grant_application_signin_permission(app)
     user.grant_application_permission(app, "edit")
 
-    assert_user_has_permissions %w[edit signin], app, user
+    assert_user_has_permissions ["edit", SupportedPermission::SIGNIN_NAME], app, user
   end
 
   test "inviting a user sets confirmed_at" do

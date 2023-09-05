@@ -35,8 +35,8 @@ class UserPermissionManageableApplicationPolicyScopeTest < ActiveSupport::TestCa
     context "super organisation admins" do
       setup do
         user = create(:super_organisation_admin_user).tap do |u|
-          u.grant_application_permission(@app_one, "signin")
-          u.grant_application_permission(@app_two, "signin")
+          u.grant_application_signin_permission(@app_one)
+          u.grant_application_signin_permission(@app_two)
         end
 
         @resolved_scope = UserPermissionManageableApplicationPolicy::Scope.new(user).resolve
@@ -59,8 +59,8 @@ class UserPermissionManageableApplicationPolicyScopeTest < ActiveSupport::TestCa
     context "for organisation admins" do
       setup do
         user = create(:organisation_admin_user).tap do |u|
-          u.grant_application_permission(@app_one, "signin")
-          u.grant_application_permission(@app_two, "signin")
+          u.grant_application_signin_permission(@app_one)
+          u.grant_application_signin_permission(@app_two)
         end
 
         @resolved_scope = UserPermissionManageableApplicationPolicy::Scope.new(user).resolve

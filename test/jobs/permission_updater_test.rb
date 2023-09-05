@@ -9,7 +9,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
   setup do
     @user = create(:user)
     @application = create(:application, redirect_uri: "https://app.com/callback", supports_push_updates: true)
-    @signin_permission = @user.grant_application_permission(@application, "signin")
+    @signin_permission = @user.grant_application_signin_permission(@application)
     @other_permission = @user.grant_application_permission(@application, "user_update_permission")
   end
 
