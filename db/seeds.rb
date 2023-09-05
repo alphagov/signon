@@ -8,10 +8,37 @@ gds = Organisation.create!(
 )
 
 User.create!(
+  name: "Test Superadmin",
+  email: "test.superadmin@gov.uk",
+  password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
+  role: :superadmin,
+  confirmed_at: Time.zone.now,
+  organisation: gds,
+)
+
+User.create!(
   name: "Test Admin",
   email: "test.admin@gov.uk",
   password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
-  role: :superadmin,
+  role: :admin,
+  confirmed_at: Time.zone.now,
+  organisation: gds,
+)
+
+User.create!(
+  name: "Test Super Organisation Admin",
+  email: "test.super-organisation-admin@gov.uk",
+  password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
+  role: :super_organisation_admin,
+  confirmed_at: Time.zone.now,
+  organisation: gds,
+)
+
+User.create!(
+  name: "Test Organisation Admin",
+  email: "test.organisation-admin@gov.uk",
+  password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
+  role: :organisation_admin,
   confirmed_at: Time.zone.now,
   organisation: gds,
 )
