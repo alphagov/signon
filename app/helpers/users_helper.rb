@@ -4,13 +4,7 @@ module UsersHelper
   end
 
   def two_step_status(user)
-    if user.has_2sv?
-      "Enabled"
-    elsif user.exempt_from_2sv?
-      "Exempted"
-    else
-      "Not set up"
-    end
+    user.two_step_status.humanize.capitalize
   end
 
   def organisation_options(form_builder)

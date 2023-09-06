@@ -20,6 +20,10 @@ class User < ApplicationRecord
                    USER_STATUS_LOCKED,
                    USER_STATUS_ACTIVE].freeze
 
+  TWO_STEP_STATUS_ENABLED = "enabled".freeze
+  TWO_STEP_STATUS_NOT_SET_UP = "not_set_up".freeze
+  TWO_STEP_STATUS_EXEMPTED = "exempted".freeze
+
   devise :database_authenticatable,
          :recoverable,
          :trackable,
@@ -251,6 +255,16 @@ class User < ApplicationRecord
     return USER_STATUS_LOCKED if access_locked?
 
     USER_STATUS_ACTIVE
+  end
+
+  def two_step_status
+    if has_2sv?
+      TWO_STEP_STATUS_ENABLED
+    elsif exempt_from_2sv?
+      TWO_STEP_STATUS_EXEMPTED
+    else
+      TWO_STEP_STATUS_NOT_SET_UP
+    end
   end
 
   def role_class

@@ -641,6 +641,23 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#two_step_status" do
+    should "return 'enabled' when user has 2SV" do
+      user = build(:two_step_enabled_user)
+      assert_equal User::TWO_STEP_STATUS_ENABLED, user.two_step_status
+    end
+
+    should "return 'exempt' when user has been exempted from 2SV" do
+      user = build(:two_step_exempted_user)
+      assert_equal User::TWO_STEP_STATUS_EXEMPTED, user.two_step_status
+    end
+
+    should "return 'not_set_up' when user does not have 2SV and has not been exempted" do
+      user = build(:user)
+      assert_equal User::TWO_STEP_STATUS_NOT_SET_UP, user.two_step_status
+    end
+  end
+
   context "authorised applications" do
     setup do
       @user = create(:user)
