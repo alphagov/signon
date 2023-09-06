@@ -748,6 +748,40 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#can_manage?" do
+    should "indicate whether user is allowed to manage another user" do
+      assert_not build(:user).can_manage?(build(:user))
+      assert_not build(:user).can_manage?(build(:organisation_admin_user))
+      assert_not build(:user).can_manage?(build(:super_organisation_admin_user))
+      assert_not build(:user).can_manage?(build(:admin_user))
+      assert_not build(:user).can_manage?(build(:superadmin_user))
+
+      assert build(:organisation_admin_user).can_manage?(build(:user))
+      assert build(:organisation_admin_user).can_manage?(build(:organisation_admin_user))
+      assert_not build(:organisation_admin_user).can_manage?(build(:super_organisation_admin_user))
+      assert_not build(:organisation_admin_user).can_manage?(build(:admin_user))
+      assert_not build(:organisation_admin_user).can_manage?(build(:superadmin_user))
+
+      assert build(:super_organisation_admin_user).can_manage?(build(:user))
+      assert build(:super_organisation_admin_user).can_manage?(build(:organisation_admin_user))
+      assert build(:super_organisation_admin_user).can_manage?(build(:super_organisation_admin_user))
+      assert_not build(:super_organisation_admin_user).can_manage?(build(:admin_user))
+      assert_not build(:super_organisation_admin_user).can_manage?(build(:superadmin_user))
+
+      assert build(:admin_user).can_manage?(build(:user))
+      assert build(:admin_user).can_manage?(build(:organisation_admin_user))
+      assert build(:admin_user).can_manage?(build(:super_organisation_admin_user))
+      assert build(:admin_user).can_manage?(build(:admin_user))
+      assert_not build(:admin_user).can_manage?(build(:superadmin_user))
+
+      assert build(:superadmin_user).can_manage?(build(:user))
+      assert build(:superadmin_user).can_manage?(build(:organisation_admin_user))
+      assert build(:superadmin_user).can_manage?(build(:super_organisation_admin_user))
+      assert build(:superadmin_user).can_manage?(build(:admin_user))
+      assert build(:superadmin_user).can_manage?(build(:superadmin_user))
+    end
+  end
+
   def authenticate_access(user, app)
     ::Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end

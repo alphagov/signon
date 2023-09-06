@@ -235,6 +235,10 @@ class User < ApplicationRecord
     Roles.const_get(role.classify)
   end
 
+  def can_manage?(other_user)
+    role_class.can_manage?(other_user.role)
+  end
+
   # Make devise send all emails using ActiveJob
   def send_devise_notification(notification, *args)
     devise_mailer.send(notification, self, *args).deliver_later
