@@ -60,4 +60,8 @@
       <%= link_to "Clear all filters", users_path, class: "govuk-link govuk-link--no-visited-state" %>
     </div>
   <% end %>
+
+  <div class="govuk-button-group">
+    <%= link_to "Export #{formatted_number_of_users(@users)} as CSV", url_for(filter_params.merge(format: "csv")), class: "govuk-link govuk-link--no-visited-state" %>
+  </div>
 </div>
