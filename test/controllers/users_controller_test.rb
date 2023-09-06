@@ -343,6 +343,23 @@ class UsersControllerTest < ActionController::TestCase
           assert_select "tr td:nth-child(1)", text: "normal-user"
         end
 
+        should "filter by permissions" do
+          app1 = create(:application, name: "App 1")
+          app2 = create(:application, name: "App 2")
+
+          permission1 = create(:supported_permission, application: app1, name: "Permission 1")
+
+          create(:user, name: "user1", supported_permissions: [app1.signin_permission, permission1])
+          create(:user, name: "user2", supported_permissions: [])
+          create(:user, name: "user3", supported_permissions: [app2.signin_permission, permission1])
+
+          get :index, params: { permissions: [app1.signin_permission, app2.signin_permission] }
+
+          assert_select "tr td:nth-child(1)", text: "user1"
+          assert_select "tr td:nth-child(1)", text: "user2", count: 0
+          assert_select "tr td:nth-child(1)", text: "user3"
+        end
+
         should "filter by organisations" do
           organisation1 = create(:organisation, name: "Organisation 1")
           organisation2 = create(:organisation, name: "Organisation 2")

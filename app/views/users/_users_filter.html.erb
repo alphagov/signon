@@ -28,6 +28,15 @@
       } %>
     <% end %>
 
+    <%= render "components/option_select", {
+      key: "permissions",
+      title: "Permissions",
+      options_container_id: "permissions_filter",
+      show_filter: true,
+      closed_on_load: true,
+      options: @filter.permission_option_select_options,
+    } %>
+
     <div class="govuk-button-group">
       <%= render "govuk_publishing_components/components/button", {
         text: "Update results",

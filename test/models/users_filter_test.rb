@@ -89,6 +89,63 @@ class UsersFilterTest < ActiveSupport::TestCase
     end
   end
 
+  context "when filtering by permission" do
+    should "return users matching any of the specified permissions" do
+      app1 = create(:application, name: "App 1")
+      app2 = create(:application, name: "App 2")
+
+      permission1 = create(:supported_permission, application: app1, name: "Permission 1")
+
+      create(:user, name: "user1", supported_permissions: [app1.signin_permission, permission1])
+      create(:user, name: "user2", supported_permissions: [])
+      create(:user, name: "user3", supported_permissions: [app2.signin_permission, permission1])
+
+      filter = UsersFilter.new(User.all, @current_user, permissions: [permission1].map(&:to_param))
+
+      assert_equal %w[user1 user3], filter.users.map(&:name)
+    end
+  end
+
+  context "#permission_option_select_options" do
+    setup do
+      @app1 = create(:application, name: "App 1")
+      @app2 = create(:application, name: "App 2")
+
+      @permission1 = create(:supported_permission, application: @app1, name: "Permission 1")
+    end
+
+    context "when no permissions are selected" do
+      should "return options for application permissions in alphabetical order with none checked" do
+        filter = UsersFilter.new(User.all, @current_user, {})
+        options = filter.permission_option_select_options
+
+        expected_options = [
+          { label: "App 1 Permission 1", value: @permission1.to_param, checked: false },
+          { label: "App 1 signin", value: @app1.signin_permission.to_param, checked: false },
+          { label: "App 2 signin", value: @app2.signin_permission.to_param, checked: false },
+        ]
+
+        assert_equal expected_options, options
+      end
+    end
+
+    context "when some permissions are selected" do
+      should "return options for application permissions with relevant options checked" do
+        selected_permissions = [@app2.signin_permission, @permission1]
+        filter = UsersFilter.new(User.all, @current_user, permissions: selected_permissions.map(&:to_param))
+        options = filter.permission_option_select_options
+
+        expected_options = [
+          { label: "App 1 Permission 1", value: @permission1.to_param, checked: true },
+          { label: "App 1 signin", value: @app1.signin_permission.to_param, checked: false },
+          { label: "App 2 signin", value: @app2.signin_permission.to_param, checked: true },
+        ]
+
+        assert_equal expected_options, options
+      end
+    end
+  end
+
   context "when filtering by organisation" do
     should "return users matching any of the specified organisations" do
       organisation1 = create(:organisation, name: "Organisation 1")

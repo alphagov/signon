@@ -806,6 +806,22 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context ".with_permission" do
+    should "only return users with specified permission(s)" do
+      app1 = create(:application)
+      app2 = create(:application)
+
+      permission1 = create(:supported_permission, application: app1)
+
+      user1 = create(:user, supported_permissions: [app1.signin_permission, permission1])
+      create(:user, supported_permissions: [])
+      user2 = create(:user, supported_permissions: [app2.signin_permission, permission1])
+
+      specified_permissions = [app1.signin_permission, app2.signin_permission]
+      assert_equal [user1, user2], User.with_permission(specified_permissions.map(&:to_param))
+    end
+  end
+
   context ".with_organisation" do
     should "only return users with specified organisation(s)" do
       org1 = create(:organisation)
