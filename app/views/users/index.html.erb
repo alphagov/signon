@@ -16,12 +16,6 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <h2 class="govuk-heading-m"><%= filtered_users_heading(@users) %></h2>
-  </div>
-</div>
-
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
     <div class="govuk-form-group">
       <% if policy(User).new? %>
         <%= render "govuk_publishing_components/components/button", {
@@ -52,8 +46,7 @@
   </div>
   <div class="govuk-grid-column-two-thirds">
     <%= render "govuk_publishing_components/components/table", {
-      caption: "Users",
-      caption_classes: "govuk-visually-hidden",
+      caption: filtered_users_heading(@users),
       head: [
         { text: "Name" },
         { text: "Email" },
