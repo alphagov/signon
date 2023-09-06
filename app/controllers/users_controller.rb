@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   before_action :authenticate_user!, except: :show
   before_action :load_and_authorize_user, except: %i[index show]
   before_action :allow_no_application_access, only: [:update]
-  helper_method :applications_and_permissions
+  helper_method :applications_and_permissions, :filter_params
   respond_to :html
 
   before_action :doorkeeper_authorize!, only: :show
@@ -28,12 +28,14 @@ class UsersController < ApplicationController
   def index
     authorize User
 
-    @users = policy_scope(User).includes(:organisation).order(:name)
+    @filter = UsersFilter.new(policy_scope(User), filter_params)
+
     respond_to do |format|
       format.html do
-        paginate_users
+        @users = @filter.paginated_users
       end
       format.csv do
+        @users = @filter.users
         headers["Content-Disposition"] = 'attachment; filename="signon_users.csv"'
         render plain: export, content_type: "text/csv"
       end
@@ -136,10 +138,6 @@ private
     params[:format] == "csv"
   end
 
-  def paginate_users
-    @users = @users.page(params[:page]).per(25)
-  end
-
   def validate_token_matches_client_id
     # FIXME: Once gds-sso is updated everywhere, this should always validate
     # the client_id param.  It should 401 if no client_id is given.
@@ -187,5 +185,9 @@ private
       :password,
       :password_confirmation,
     )
+  end
+
+  def filter_params
+    params.permit(:page, :format)
   end
 end

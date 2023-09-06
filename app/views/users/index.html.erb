@@ -50,13 +50,16 @@
   <div class="govuk-grid-column-two-thirds">
     <%= render "govuk_publishing_components/components/button", {
       text: "Export #{formatted_number_of_users(@users)} as CSV",
-      href: url_for(format: "csv"),
+      href: url_for(filter_params.merge(format: "csv")),
       margin_bottom: 4,
     } %>
   </div>
 </div>
 
 <div class="govuk-grid-row">
+  <div class="govuk-grid-column-one-third">
+    <%= render "users_filter", filter: @filter %>
+  </div>
   <div class="govuk-grid-column-two-thirds">
     <%= render "govuk_publishing_components/components/table", {
       caption: "Users",
