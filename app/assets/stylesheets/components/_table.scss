@@ -6,6 +6,7 @@ $table-border-colour: govuk-colour("mid-grey", $legacy: "grey-2");
 $table-header-border-width: 2px;
 $table-header-background-colour: govuk-colour("light-grey", $legacy: "grey-3");
 $vertical-row-bottom-border-width: 3px;
+$vertical-on-smallscreen-breakpoint: 940px;
 $sort-link-active-colour: govuk-colour("white");
 $sort-link-arrow-size: 14px;
 $sort-link-arrow-size-small: 8px;
@@ -157,7 +158,7 @@ $table-row-even-background-colour: govuk-colour("light-grey", $legacy: "grey-4")
     text-align: right;
   }
 
-  @include govuk-media-query($until: tablet) {
+  @include govuk-media-query($until: $vertical-on-smallscreen-breakpoint) {
     .govuk-table__cell {
       padding-right: 0;
     }
@@ -178,7 +179,7 @@ $table-row-even-background-colour: govuk-colour("light-grey", $legacy: "grey-4")
     word-break: initial;
   }
 
-  @include govuk-media-query($from: tablet) {
+  @include govuk-media-query($from: $vertical-on-smallscreen-breakpoint) {
     .govuk-table__head {
       clip: auto;
       -webkit-clip-path: none;
