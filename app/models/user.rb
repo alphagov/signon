@@ -33,6 +33,8 @@ class User < ApplicationRecord
          :confirmable,
          :password_archivable # in signon/lib/devise/models/password_archivable.rb
 
+  delegate :manageable_roles, to: :role_class
+
   encrypts :otp_secret_key
 
   validates :name, presence: true
@@ -229,8 +231,8 @@ class User < ApplicationRecord
     USER_STATUS_ACTIVE
   end
 
-  def manageable_roles
-    "Roles::#{role.camelize}".constantize.manageable_roles
+  def role_class
+    Roles.const_get(role.classify)
   end
 
   # Make devise send all emails using ActiveJob

@@ -728,6 +728,26 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#role_class" do
+    should "return the role class" do
+      assert_equal Roles::Normal, build(:user).role_class
+      assert_equal Roles::OrganisationAdmin, build(:organisation_admin_user).role_class
+      assert_equal Roles::SuperOrganisationAdmin, build(:super_organisation_admin_user).role_class
+      assert_equal Roles::Admin, build(:admin_user).role_class
+      assert_equal Roles::Superadmin, build(:superadmin_user).role_class
+    end
+  end
+
+  context "#manageable_roles" do
+    should "return names of roles that the user is allowed to manage" do
+      assert_equal %w[], build(:user).manageable_roles
+      assert_equal %w[normal organisation_admin], build(:organisation_admin_user).manageable_roles
+      assert_equal %w[normal organisation_admin super_organisation_admin], build(:super_organisation_admin_user).manageable_roles
+      assert_equal %w[normal organisation_admin super_organisation_admin admin], build(:admin_user).manageable_roles
+      assert_equal User.roles, build(:superadmin_user).manageable_roles
+    end
+  end
+
   def authenticate_access(user, app)
     ::Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end
