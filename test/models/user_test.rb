@@ -658,6 +658,74 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#role_class" do
+    should "return the role class" do
+      assert_equal Roles::Normal, build(:user).role_class
+      assert_equal Roles::OrganisationAdmin, build(:organisation_admin_user).role_class
+      assert_equal Roles::SuperOrganisationAdmin, build(:super_organisation_admin_user).role_class
+      assert_equal Roles::Admin, build(:admin_user).role_class
+      assert_equal Roles::Superadmin, build(:superadmin_user).role_class
+    end
+  end
+
+  context "#manageable_roles" do
+    should "return names of roles that the user is allowed to manage" do
+      assert_equal %w[], build(:user).manageable_roles
+      assert_equal %w[normal organisation_admin], build(:organisation_admin_user).manageable_roles
+      assert_equal %w[normal organisation_admin super_organisation_admin], build(:super_organisation_admin_user).manageable_roles
+      assert_equal %w[normal organisation_admin super_organisation_admin admin], build(:admin_user).manageable_roles
+      assert_equal User.roles, build(:superadmin_user).manageable_roles
+    end
+  end
+
+  context "#can_manage?" do
+    should "indicate whether user is allowed to manage another user" do
+      assert_not build(:user).can_manage?(build(:user))
+      assert_not build(:user).can_manage?(build(:organisation_admin_user))
+      assert_not build(:user).can_manage?(build(:super_organisation_admin_user))
+      assert_not build(:user).can_manage?(build(:admin_user))
+      assert_not build(:user).can_manage?(build(:superadmin_user))
+
+      assert build(:organisation_admin_user).can_manage?(build(:user))
+      assert build(:organisation_admin_user).can_manage?(build(:organisation_admin_user))
+      assert_not build(:organisation_admin_user).can_manage?(build(:super_organisation_admin_user))
+      assert_not build(:organisation_admin_user).can_manage?(build(:admin_user))
+      assert_not build(:organisation_admin_user).can_manage?(build(:superadmin_user))
+
+      assert build(:super_organisation_admin_user).can_manage?(build(:user))
+      assert build(:super_organisation_admin_user).can_manage?(build(:organisation_admin_user))
+      assert build(:super_organisation_admin_user).can_manage?(build(:super_organisation_admin_user))
+      assert_not build(:super_organisation_admin_user).can_manage?(build(:admin_user))
+      assert_not build(:super_organisation_admin_user).can_manage?(build(:superadmin_user))
+
+      assert build(:admin_user).can_manage?(build(:user))
+      assert build(:admin_user).can_manage?(build(:organisation_admin_user))
+      assert build(:admin_user).can_manage?(build(:super_organisation_admin_user))
+      assert build(:admin_user).can_manage?(build(:admin_user))
+      assert_not build(:admin_user).can_manage?(build(:superadmin_user))
+
+      assert build(:superadmin_user).can_manage?(build(:user))
+      assert build(:superadmin_user).can_manage?(build(:organisation_admin_user))
+      assert build(:superadmin_user).can_manage?(build(:super_organisation_admin_user))
+      assert build(:superadmin_user).can_manage?(build(:admin_user))
+      assert build(:superadmin_user).can_manage?(build(:superadmin_user))
+    end
+  end
+
+  context "#manageable_organisations" do
+    should "return relation for organisations that the user is allowed to manage" do
+      organisation = create(:organisation, name: "Org1")
+      child_organisation = create(:organisation, parent: organisation, name: "Org2")
+      create(:organisation, name: "Org3")
+
+      assert_equal [], create(:user, organisation:).manageable_organisations
+      assert_equal [organisation], create(:organisation_admin_user, organisation:).manageable_organisations
+      assert_equal [organisation, child_organisation], create(:super_organisation_admin_user, organisation:).manageable_organisations
+      assert_equal Organisation.order(:name), create(:admin_user, organisation:).manageable_organisations
+      assert_equal Organisation.order(:name), create(:superadmin_user, organisation:).manageable_organisations
+    end
+  end
+
   context "authorised applications" do
     setup do
       @user = create(:user)
@@ -855,60 +923,6 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context "#role_class" do
-    should "return the role class" do
-      assert_equal Roles::Normal, build(:user).role_class
-      assert_equal Roles::OrganisationAdmin, build(:organisation_admin_user).role_class
-      assert_equal Roles::SuperOrganisationAdmin, build(:super_organisation_admin_user).role_class
-      assert_equal Roles::Admin, build(:admin_user).role_class
-      assert_equal Roles::Superadmin, build(:superadmin_user).role_class
-    end
-  end
-
-  context "#manageable_roles" do
-    should "return names of roles that the user is allowed to manage" do
-      assert_equal %w[], build(:user).manageable_roles
-      assert_equal %w[normal organisation_admin], build(:organisation_admin_user).manageable_roles
-      assert_equal %w[normal organisation_admin super_organisation_admin], build(:super_organisation_admin_user).manageable_roles
-      assert_equal %w[normal organisation_admin super_organisation_admin admin], build(:admin_user).manageable_roles
-      assert_equal User.roles, build(:superadmin_user).manageable_roles
-    end
-  end
-
-  context "#can_manage?" do
-    should "indicate whether user is allowed to manage another user" do
-      assert_not build(:user).can_manage?(build(:user))
-      assert_not build(:user).can_manage?(build(:organisation_admin_user))
-      assert_not build(:user).can_manage?(build(:super_organisation_admin_user))
-      assert_not build(:user).can_manage?(build(:admin_user))
-      assert_not build(:user).can_manage?(build(:superadmin_user))
-
-      assert build(:organisation_admin_user).can_manage?(build(:user))
-      assert build(:organisation_admin_user).can_manage?(build(:organisation_admin_user))
-      assert_not build(:organisation_admin_user).can_manage?(build(:super_organisation_admin_user))
-      assert_not build(:organisation_admin_user).can_manage?(build(:admin_user))
-      assert_not build(:organisation_admin_user).can_manage?(build(:superadmin_user))
-
-      assert build(:super_organisation_admin_user).can_manage?(build(:user))
-      assert build(:super_organisation_admin_user).can_manage?(build(:organisation_admin_user))
-      assert build(:super_organisation_admin_user).can_manage?(build(:super_organisation_admin_user))
-      assert_not build(:super_organisation_admin_user).can_manage?(build(:admin_user))
-      assert_not build(:super_organisation_admin_user).can_manage?(build(:superadmin_user))
-
-      assert build(:admin_user).can_manage?(build(:user))
-      assert build(:admin_user).can_manage?(build(:organisation_admin_user))
-      assert build(:admin_user).can_manage?(build(:super_organisation_admin_user))
-      assert build(:admin_user).can_manage?(build(:admin_user))
-      assert_not build(:admin_user).can_manage?(build(:superadmin_user))
-
-      assert build(:superadmin_user).can_manage?(build(:user))
-      assert build(:superadmin_user).can_manage?(build(:organisation_admin_user))
-      assert build(:superadmin_user).can_manage?(build(:super_organisation_admin_user))
-      assert build(:superadmin_user).can_manage?(build(:admin_user))
-      assert build(:superadmin_user).can_manage?(build(:superadmin_user))
-    end
-  end
-
   context ".with_statuses" do
     should "only return suspended or invited users" do
       suspended_user = create(:suspended_user)
@@ -988,20 +1002,6 @@ class UserTest < ActiveSupport::TestCase
       create(:user)
 
       assert_equal [admin_user, organisation_admin], User.with_role(%w[admin organisation_admin])
-    end
-  end
-
-  context "#manageable_organisations" do
-    should "return relation for organisations that the user is allowed to manage" do
-      organisation = create(:organisation, name: "Org1")
-      child_organisation = create(:organisation, parent: organisation, name: "Org2")
-      create(:organisation, name: "Org3")
-
-      assert_equal [], create(:user, organisation:).manageable_organisations
-      assert_equal [organisation], create(:organisation_admin_user, organisation:).manageable_organisations
-      assert_equal [organisation, child_organisation], create(:super_organisation_admin_user, organisation:).manageable_organisations
-      assert_equal Organisation.order(:name), create(:admin_user, organisation:).manageable_organisations
-      assert_equal Organisation.order(:name), create(:superadmin_user, organisation:).manageable_organisations
     end
   end
 
