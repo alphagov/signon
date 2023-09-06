@@ -26,5 +26,9 @@ module Roles
     def self.manageable_roles
       %w[normal organisation_admin]
     end
+
+    def self.manageable_organisations_for(user)
+      Organisation.where(id: user.organisation)
+    end
   end
 end

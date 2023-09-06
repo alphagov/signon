@@ -27,5 +27,9 @@ module Roles
     def self.manageable_roles
       User.roles
     end
+
+    def self.manageable_organisations_for(_)
+      Organisation.all
+    end
   end
 end

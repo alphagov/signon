@@ -792,6 +792,20 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#manageable_organisations" do
+    should "return relation for organisations that the user is allowed to manage" do
+      organisation = create(:organisation, name: "Org1")
+      child_organisation = create(:organisation, parent: organisation, name: "Org2")
+      create(:organisation, name: "Org3")
+
+      assert_equal [], create(:user, organisation:).manageable_organisations
+      assert_equal [organisation], create(:organisation_admin_user, organisation:).manageable_organisations
+      assert_equal [organisation, child_organisation], create(:super_organisation_admin_user, organisation:).manageable_organisations
+      assert_equal Organisation.order(:name), create(:admin_user, organisation:).manageable_organisations
+      assert_equal Organisation.order(:name), create(:superadmin_user, organisation:).manageable_organisations
+    end
+  end
+
   def authenticate_access(user, app)
     ::Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end

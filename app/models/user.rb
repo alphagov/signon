@@ -240,6 +240,10 @@ class User < ApplicationRecord
     manageable_roles.include?(other_user.role)
   end
 
+  def manageable_organisations
+    role_class.manageable_organisations_for(self).order(:name)
+  end
+
   # Make devise send all emails using ActiveJob
   def send_devise_notification(notification, *args)
     devise_mailer.send(notification, self, *args).deliver_later
