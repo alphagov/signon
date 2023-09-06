@@ -8,6 +8,7 @@ class UsersController < ApplicationController
   before_action :authenticate_user!, except: :show
   before_action :load_and_authorize_user, except: %i[index show]
   before_action :allow_no_application_access, only: [:update]
+  before_action :redirect_legacy_filters, only: [:index]
   helper_method :applications_and_permissions, :filter_params
   respond_to :html
 
@@ -190,7 +191,15 @@ private
   def filter_params
     params.permit(
       :filter, :page, :format, :"option-select-filter",
+      *LegacyUsersFilter::PARAM_KEYS,
       **UsersFilter::PERMITTED_CHECKBOX_FILTER_PARAMS
     ).except(:"option-select-filter")
+  end
+
+  def redirect_legacy_filters
+    filter = LegacyUsersFilter.new(filter_params)
+    if filter.redirect?
+      redirect_to users_path(filter.options)
+    end
   end
 end

@@ -409,6 +409,14 @@ class UsersControllerTest < ActionController::TestCase
 
           assert_select "a", text: "Clear all filters", href: users_path
         end
+
+        should "redirect legacy filters" do
+          organisation1 = create(:organisation, name: "Organisation 1")
+
+          get :index, params: { organisation: organisation1 }
+
+          assert_redirected_to users_path(organisations: [organisation1])
+        end
       end
 
       context "CSV export" do
