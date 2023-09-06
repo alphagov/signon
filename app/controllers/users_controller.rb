@@ -153,7 +153,7 @@ private
     CSV.generate do |csv|
       presenter = UserExportPresenter.new(applications)
       csv << presenter.header_row
-      @users.includes(:organisation).find_each do |user|
+      @users.find_each do |user|
         csv << presenter.row(user)
       end
     end
