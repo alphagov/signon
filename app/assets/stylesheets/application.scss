@@ -42,6 +42,10 @@
   padding: 7px 10px;
 }
 
+.app-bottom-separator {
+  border-bottom: 1px solid $govuk-border-colour;
+}
+
 .govuk-error-message p {
   margin: 0;
 }

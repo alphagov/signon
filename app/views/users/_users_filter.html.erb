@@ -1,13 +1,15 @@
 <div>
   <%= form_with url: users_path, method: :get do |form| %>
-    <%= render "govuk_publishing_components/components/search", {
-      id: "name_or_email_filter",
-      name: "filter",
-      label_text: "Search by name or email",
-      label_size: "s",
-      value: filter.options[:filter],
-      margin_bottom: 4,
-    } %>
+    <div class="app-bottom-separator">
+      <%= render "govuk_publishing_components/components/search", {
+        id: "name_or_email_filter",
+        name: "filter",
+        label_text: "Search by name or email",
+        label_size: "s",
+        value: filter.options[:filter],
+        margin_bottom: 4,
+      } %>
+    </div>
 
     <%= render "components/option_select", {
       key: "statuses",
@@ -52,7 +54,7 @@
       options: @filter.permission_option_select_options,
     } %>
 
-    <div class="govuk-button-group">
+    <div class="govuk-button-group app-bottom-separator">
       <%= render "govuk_publishing_components/components/button", {
         text: "Update results",
       } %>
