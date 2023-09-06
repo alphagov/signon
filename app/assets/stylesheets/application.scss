@@ -77,3 +77,9 @@
 .govuk-table__cell--line-through {
   text-decoration: line-through;
 }
+
+.users-index-button-group {
+  @include govuk-media-query($from: tablet) {
+    float: right;
+  }
+}

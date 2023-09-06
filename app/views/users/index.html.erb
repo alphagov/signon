@@ -14,31 +14,29 @@
    })
 %>
 
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
-    <div class="govuk-form-group">
-      <% if policy(User).new? %>
-        <%= render "govuk_publishing_components/components/button", {
-          text: "Create user",
-          href: new_user_invitation_path,
-          margin_bottom: 4,
-        } %>
-        <%= render "govuk_publishing_components/components/button", {
-          text: "Upload a batch of users",
-          href: new_batch_invitation_path,
-          margin_bottom: 4,
-        } %>
-      <% end %>
-      <% if policy(BulkGrantPermissionSet).new? %>
-        <%= render "govuk_publishing_components/components/button", {
-          text: "Grant access to all users",
-          href: new_bulk_grant_permission_set_path,
-          margin_bottom: 4,
-        } %>
-      <% end %>
-    </div>
+<% content_for :top_right do %>
+  <div class="govuk-form-group users-index-button-group">
+    <% if policy(User).new? %>
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Create user",
+        href: new_user_invitation_path,
+        margin_bottom: 4,
+      } %>
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Upload a batch of users",
+        href: new_batch_invitation_path,
+        margin_bottom: 4,
+      } %>
+    <% end %>
+    <% if policy(BulkGrantPermissionSet).new? %>
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Grant access to all users",
+        href: new_bulk_grant_permission_set_path,
+        margin_bottom: 4,
+      } %>
+    <% end %>
   </div>
-</div>
+<% end %>
 
 <% filtered_users_id = "filtered-users" %>
 
