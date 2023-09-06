@@ -21,7 +21,7 @@ module UserFilterHelper
   def user_filter_list_items(filter_type)
     items = case filter_type
             when :role
-              filtered_user_roles
+              assignable_user_roles
             when :permission
               Doorkeeper::Application
                 .joins(:supported_permissions)
@@ -64,7 +64,7 @@ module UserFilterHelper
     list_items.join("\n").html_safe
   end
 
-  def filtered_user_roles
+  def assignable_user_roles
     current_user.manageable_roles
   end
 

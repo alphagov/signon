@@ -28,7 +28,7 @@
 <% if policy(User).assign_role? && @user.reason_for_2sv_exemption.blank? %>
   <p class="form-group">
     <%= f.label :role %><br />
-    <%= f.select :role, options_for_select(filtered_user_roles.map(&:humanize).zip(filtered_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
+    <%= f.select :role, options_for_select(assignable_user_roles.map(&:humanize).zip(assignable_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
     <span class="help-block">
       <strong>Superadmins</strong> can create and edit all user types and edit applications.<br />
       <strong>Admins</strong> can create and edit normal users.<br />
