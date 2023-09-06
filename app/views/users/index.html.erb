@@ -55,8 +55,6 @@
           { text: "Name" },
           { text: "Email" },
           { text: "Role" },
-          { text: "Organisation" },
-          { text: "Last sign-in" },
           { text: "Status" },
           { text: "#{two_step_abbr_tag} Status".html_safe },
         ],
@@ -65,8 +63,6 @@
             { text: user_name(user) },
             { text: user.email },
             { text: user.role.humanize },
-            { text: user.organisation.try(:name) },
-            { text: user.current_sign_in_at ? "#{time_ago_in_words(user.current_sign_in_at)} ago" : "never signed in" },
             { text: user.status.humanize },
             { text: two_step_status(user) },
           ]

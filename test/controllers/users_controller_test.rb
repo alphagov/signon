@@ -302,14 +302,6 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "tr td:nth-child(3)", /Admin/
       end
 
-      should "show user organisation" do
-        user = create(:user_in_organisation)
-
-        get :index
-
-        assert_select "tr td:nth-child(4)", Regexp.new(user.organisation.name)
-      end
-
       context "filter" do
         should "filter by partially matching name" do
           create(:user, name: "does-match1")

@@ -35,14 +35,5 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
         assert has_css?("td", text: "Not set up", count: 7)
       end
     end
-
-    should "see when the user last logged in" do
-      visit "/users"
-
-      assert page.has_content?("Last sign-in")
-
-      actual_last_sign_in_strings = page.all("table tr td:nth-child(5)").map(&:text).map(&:strip)[0..1]
-      assert_equal ["5 minutes ago", "never signed in"], actual_last_sign_in_strings
-    end
   end
 end
