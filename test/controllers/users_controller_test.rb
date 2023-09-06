@@ -317,11 +317,11 @@ class UsersControllerTest < ActionController::TestCase
           assert_equal "text/csv", @response.media_type
         end
 
-        should "export all users" do
+        should "include all users" do
           create(:user)
           get :index, params: { format: :csv }
-          lines = @response.body.lines
-          assert_equal(3, lines.length)
+          number_of_users = CSV.parse(@response.body, headers: true).length
+          assert_equal User.count, number_of_users
         end
       end
 
