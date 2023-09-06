@@ -1,5 +1,14 @@
 <div>
   <%= form_with url: users_path, method: :get do |form| %>
+    <%= render "govuk_publishing_components/components/search", {
+      id: "name_or_email_filter",
+      name: "filter",
+      label_text: "Search by name or email",
+      label_size: "s",
+      value: filter.options[:filter],
+      margin_bottom: 4,
+    } %>
+
     <%= render "govuk_publishing_components/components/button", {
       text: "Update results",
     } %>

@@ -9,6 +9,7 @@ class UsersFilter
 
   def users
     filtered_users = @users
+    filtered_users = filtered_users.with_partially_matching_name_or_email(options[:filter].strip) if options[:filter]
     filtered_users.includes(:organisation).order(:name)
   end
 

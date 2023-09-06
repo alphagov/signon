@@ -188,6 +188,6 @@ private
   end
 
   def filter_params
-    params.permit(:page, :format)
+    params.permit(:filter, :page, :format)
   end
 end

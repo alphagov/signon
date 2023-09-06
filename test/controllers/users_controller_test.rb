@@ -310,6 +310,28 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "tr td:nth-child(4)", user.organisation.name
       end
 
+      context "filter" do
+        should "filter by partially matching name" do
+          create(:user, name: "does-match1")
+          create(:user, name: "does-match2")
+          create(:user, name: "does-not-match")
+
+          get :index, params: { filter: "does-match" }
+
+          assert_select "tr td:nth-child(1)", text: /does-match/, count: 2
+        end
+
+        should "filter by partially matching email" do
+          create(:user, email: "does-match1@example.com")
+          create(:user, email: "does-match2@example.com")
+          create(:user, email: "does-not-match@example.com")
+
+          get :index, params: { filter: "does-match" }
+
+          assert_select "tr td:nth-child(2)", text: /does-match/, count: 2
+        end
+      end
+
       context "CSV export" do
         should "respond to CSV format" do
           get :index, params: { format: :csv }
@@ -317,7 +339,15 @@ class UsersControllerTest < ActionController::TestCase
           assert_equal "text/csv", @response.media_type
         end
 
-        should "include all users" do
+        should "only include filtered users" do
+          create(:user, name: "does-match")
+          create(:user, name: "does-not-match")
+          get :index, params: { filter: "does-match", format: :csv }
+          number_of_users = CSV.parse(@response.body, headers: true).length
+          assert_equal 1, number_of_users
+        end
+
+        should "include all users when no filter selected" do
           create(:user)
           get :index, params: { format: :csv }
           number_of_users = CSV.parse(@response.body, headers: true).length

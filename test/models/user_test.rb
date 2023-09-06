@@ -698,6 +698,36 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context ".with_partially_matching_name" do
+    should "only return users with a name that includes the value" do
+      user1 = create(:user, name: "does-match1")
+      user2 = create(:user, name: "does-match2")
+      create(:user, name: "does-not-match")
+
+      assert_equal [user1, user2], User.with_partially_matching_name("does-match")
+    end
+  end
+
+  context ".with_partially_matching_email" do
+    should "only return users with an email that includes the value" do
+      user1 = create(:user, email: "does-match1@example.com")
+      user2 = create(:user, email: "does-match2@example.com")
+      create(:user, email: "does-not-match@example.com")
+
+      assert_equal [user1, user2], User.with_partially_matching_email("does-match")
+    end
+  end
+
+  context ".with_partially_matching_name_or_email" do
+    should "only return users with a name OR email that includes the value" do
+      user1 = create(:user, name: "does-match", email: "does-not-match@example.com")
+      user2 = create(:user, name: "does-not-match", email: "does-match@example.com")
+      create(:user, name: "does-not-match", email: "does-not-match-either@example.com")
+
+      assert_equal [user1, user2], User.with_partially_matching_name_or_email("does-match")
+    end
+  end
+
   def authenticate_access(user, app)
     ::Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end

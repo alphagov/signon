@@ -61,6 +61,9 @@ class User < ApplicationRecord
 
   scope :web_users, -> { where(api_user: false) }
   scope :not_suspended, -> { where(suspended_at: nil) }
+  scope :with_partially_matching_name, ->(name) { where("name LIKE ?", "%#{name}%") }
+  scope :with_partially_matching_email, ->(email) { where("email LIKE ?", "%#{email}%") }
+  scope :with_partially_matching_name_or_email, ->(value) { with_partially_matching_name(value).or(with_partially_matching_email(value)) }
   scope :last_signed_in_on, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) = date(?)", date) }
   scope :last_signed_in_before, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) < date(?)", date) }
   scope :last_signed_in_after, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) >= date(?)", date) }
