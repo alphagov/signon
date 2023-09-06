@@ -64,10 +64,6 @@ module UserFilterHelper
     list_items.join("\n").html_safe
   end
 
-  def assignable_user_roles
-    current_user.manageable_roles
-  end
-
   def value_from(filter_type)
     value = params[filter_type]
     return nil if value.blank?

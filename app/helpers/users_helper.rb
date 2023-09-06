@@ -53,4 +53,8 @@ module UsersHelper
   def formatted_number_of_users(users)
     pluralize(number_with_delimiter(users.total_count), "user")
   end
+
+  def assignable_user_roles
+    current_user.manageable_roles
+  end
 end
