@@ -59,11 +59,6 @@
               <%= submit_tag "Resend signup email", :class => 'btn btn-sm btn-default' %>
             <% end %>
           <% end %>
-          <% if user.access_locked? %>
-            <%= form_tag unlock_user_path(user) do %>
-              <%= submit_tag "Unlock account", :class => 'btn btn-default' %>
-            <% end %>
-          <% end %>
         </td>
       </tr>
     <% end %>

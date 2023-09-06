@@ -34,21 +34,6 @@ class UserLockingTest < ActionDispatch::IntegrationTest
     end
   end
 
-  should "be reversible by admins" do
-    admin = create(:admin_user)
-    user = create(:user)
-    user.lock_access!
-
-    visit root_path
-    signin_with(admin)
-    first_letter_of_name = user.name[0]
-    visit users_path(letter: first_letter_of_name)
-    click_button "Unlock account"
-
-    user.reload
-    assert_not user.access_locked?
-  end
-
   should "be reversible from the user edit page" do
     admin = create(:admin_user)
     user = create(:user)
