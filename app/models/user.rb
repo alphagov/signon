@@ -62,13 +62,22 @@ class User < ApplicationRecord
   before_save :strip_whitespace_from_name
 
   scope :web_users, -> { where(api_user: false) }
+
+  scope :suspended, -> { where.not(suspended_at: nil) }
   scope :not_suspended, -> { where(suspended_at: nil) }
+  scope :invited, -> { where.not(invitation_sent_at: nil).where(invitation_accepted_at: nil) }
+  scope :not_invited, -> { where(invitation_sent_at: nil).or(where.not(invitation_accepted_at: nil)) }
+  scope :locked, -> { where.not(locked_at: nil) }
+  scope :not_locked, -> { where(locked_at: nil) }
+  scope :active, -> { not_suspended.not_invited.not_locked }
+
   scope :with_role, ->(role) { where(role:) }
   scope :with_permission, ->(permission) { joins(:supported_permissions).merge(SupportedPermission.where(id: permission)) }
   scope :with_organisation, ->(organisation) { where(organisation:) }
   scope :with_partially_matching_name, ->(name) { where(arel_table[:name].matches("%#{name}%")) }
   scope :with_partially_matching_email, ->(email) { where(arel_table[:email].matches("%#{email}%")) }
   scope :with_partially_matching_name_or_email, ->(value) { with_partially_matching_name(value).or(with_partially_matching_email(value)) }
+
   scope :last_signed_in_on, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) = date(?)", date) }
   scope :last_signed_in_before, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) < date(?)", date) }
   scope :last_signed_in_after, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) >= date(?)", date) }
@@ -76,6 +85,16 @@ class User < ApplicationRecord
   scope :expired_never_signed_in, -> { never_signed_in.where("invitation_sent_at < ?", NEVER_SIGNED_IN_EXPIRY_PERIOD.ago) }
   scope :not_recently_unsuspended, -> { where(["unsuspended_at IS NULL OR unsuspended_at < ?", UNSUSPENSION_GRACE_PERIOD.ago]) }
   scope :with_access_to_application, ->(application) { UsersWithAccess.new(self, application).users }
+
+  def self.with_statuses(statuses)
+    permitted_statuses = statuses.intersection(USER_STATUSES)
+    relations = permitted_statuses.map { |s| public_send(s) }
+    relation = relations.pop || all
+    while (next_relation = relations.pop)
+      relation = relation.or(next_relation)
+    end
+    relation
+  end
 
   def require_2sv?
     return require_2sv unless organisation

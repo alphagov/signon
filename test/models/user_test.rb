@@ -698,6 +698,70 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context ".suspended" do
+    should "only return suspended users" do
+      suspended_user = create(:suspended_user)
+
+      assert_equal [suspended_user], User.suspended
+    end
+  end
+
+  context ".not_suspended" do
+    should "only return users that have not been suspended" do
+      create(:suspended_user)
+      active_user = create(:active_user)
+
+      assert_equal [@user, active_user], User.not_suspended
+    end
+  end
+
+  context ".invited" do
+    should "only return users that have been invited but have not accepted" do
+      invited_user = create(:invited_user)
+      create(:active_user)
+
+      assert_equal [invited_user], User.invited
+    end
+  end
+
+  context ".not_invited" do
+    should "only return users that have not been invited or have accepted" do
+      create(:invited_user)
+      active_user = create(:active_user)
+
+      assert_equal [@user, active_user], User.not_invited
+    end
+  end
+
+  context ".locked" do
+    should "only return users that have been locked" do
+      locked_user = create(:locked_user)
+      create(:active_user)
+
+      assert_equal [locked_user], User.locked
+    end
+  end
+
+  context ".not_locked" do
+    should "only return users that have not been locked" do
+      create(:locked_user)
+      active_user = create(:active_user)
+
+      assert_equal [@user, active_user], User.not_locked
+    end
+  end
+
+  context ".active" do
+    should "only return users that are considered active" do
+      create(:invited_user)
+      create(:locked_user)
+      create(:suspended_user)
+      active_user = create(:active_user)
+
+      assert_equal [@user, active_user], User.active
+    end
+  end
+
   context ".with_partially_matching_name" do
     should "only return users with a name that includes the value" do
       user1 = create(:user, name: "does-match1")
@@ -779,6 +843,44 @@ class UserTest < ActiveSupport::TestCase
       assert build(:superadmin_user).can_manage?(build(:super_organisation_admin_user))
       assert build(:superadmin_user).can_manage?(build(:admin_user))
       assert build(:superadmin_user).can_manage?(build(:superadmin_user))
+    end
+  end
+
+  context ".with_statuses" do
+    should "only return suspended or invited users" do
+      suspended_user = create(:suspended_user)
+      invited_user = create(:invited_user)
+      create(:locked_user)
+      create(:active_user)
+
+      assert_equal [suspended_user, invited_user], User.with_statuses(%w[suspended invited])
+    end
+
+    should "only return active or locked users" do
+      create(:suspended_user)
+      create(:invited_user)
+      locked_user = create(:locked_user)
+      active_user = create(:active_user)
+
+      assert_equal [@user, locked_user, active_user], User.with_statuses(%w[active locked])
+    end
+
+    should "return all users if no statuses specified" do
+      suspended_user = create(:suspended_user)
+      invited_user = create(:invited_user)
+      locked_user = create(:locked_user)
+      active_user = create(:active_user)
+
+      assert_equal [@user, suspended_user, invited_user, locked_user, active_user], User.with_statuses([])
+    end
+
+    should "ignore any non-existent statuses" do
+      suspended_user = create(:suspended_user)
+      invited_user = create(:invited_user)
+      locked_user = create(:locked_user)
+      active_user = create(:active_user)
+
+      assert_equal [@user, suspended_user, invited_user, locked_user, active_user], User.with_statuses(%w[non-existent])
     end
   end
 

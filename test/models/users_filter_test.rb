@@ -44,6 +44,51 @@ class UsersFilterTest < ActiveSupport::TestCase
     end
   end
 
+  context "when filtering by status" do
+    should "return users matching any of the specified statuses" do
+      create(:suspended_user, name: "suspended-user")
+      create(:invited_user, name: "invited-user")
+      create(:locked_user, name: "locked-user")
+      create(:active_user, name: "active-user")
+
+      filter = UsersFilter.new(User.all, @current_user, statuses: %w[suspended locked])
+
+      assert_equal %w[locked-user suspended-user], filter.users.map(&:name)
+    end
+  end
+
+  context "#status_option_select_options" do
+    context "when no statuses are selected" do
+      should "return options for statuses with none checked" do
+        filter = UsersFilter.new(User.all, @current_user, {})
+        options = filter.status_option_select_options
+
+        expected_options = [
+          { label: "Suspended", value: "suspended", checked: false },
+          { label: "Invited", value: "invited", checked: false },
+          { label: "Locked", value: "locked", checked: false },
+          { label: "Active", value: "active", checked: false },
+        ]
+        assert_equal expected_options, options
+      end
+    end
+
+    context "when some statuses are selected" do
+      should "return options for statuses with relevant options checked" do
+        filter = UsersFilter.new(User.all, @current_user, statuses: %w[invited active])
+        options = filter.status_option_select_options
+
+        expected_options = [
+          { label: "Suspended", value: "suspended", checked: false },
+          { label: "Invited", value: "invited", checked: true },
+          { label: "Locked", value: "locked", checked: false },
+          { label: "Active", value: "active", checked: true },
+        ]
+        assert_equal expected_options, options
+      end
+    end
+  end
+
   context "when filtering by role" do
     should "return users matching any of the specified roles" do
       create(:admin_user, name: "admin-user")

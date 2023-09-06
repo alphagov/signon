@@ -331,6 +331,20 @@ class UsersControllerTest < ActionController::TestCase
           assert_select "tr td:nth-child(2)", text: /does-match/, count: 2
         end
 
+        should "filter by statuses" do
+          create(:active_user, name: "active-user")
+          create(:suspended_user, name: "suspended-user")
+          create(:invited_user, name: "invited-user")
+          create(:locked_user, name: "locked-user")
+
+          get :index, params: { statuses: %w[locked suspended] }
+
+          assert_select "tr td:nth-child(1)", text: "active-user", count: 0
+          assert_select "tr td:nth-child(1)", text: "suspended-user"
+          assert_select "tr td:nth-child(1)", text: "invited-user", count: 0
+          assert_select "tr td:nth-child(1)", text: "locked-user"
+        end
+
         should "filter by roles" do
           create(:admin_user, name: "admin-user")
           create(:organisation_admin_user, name: "organisation-admin-user")

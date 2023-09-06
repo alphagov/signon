@@ -10,6 +10,13 @@
     } %>
 
     <%= render "components/option_select", {
+      key: "statuses",
+      title: "Status",
+      options_container_id: "statuses_filter",
+      options: @filter.status_option_select_options,
+    } %>
+
+    <%= render "components/option_select", {
       key: "roles",
       title: "Roles",
       options_container_id: "roles_filter",

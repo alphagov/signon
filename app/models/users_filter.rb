@@ -11,6 +11,7 @@ class UsersFilter
   def users
     filtered_users = @users
     filtered_users = filtered_users.with_partially_matching_name_or_email(options[:filter].strip) if options[:filter]
+    filtered_users = filtered_users.with_statuses(options[:statuses]) if options[:statuses]
     filtered_users = filtered_users.with_role(options[:roles]) if options[:roles]
     filtered_users = filtered_users.with_permission(options[:permissions]) if options[:permissions]
     filtered_users = filtered_users.with_organisation(options[:organisations]) if options[:organisations]
@@ -19,6 +20,16 @@ class UsersFilter
 
   def paginated_users
     users.page(options[:page]).per(options[:per_page])
+  end
+
+  def status_option_select_options
+    User::USER_STATUSES.map do |status|
+      {
+        label: status.humanize.capitalize,
+        value: status,
+        checked: Array(options[:statuses]).include?(status),
+      }
+    end
   end
 
   def role_option_select_options
