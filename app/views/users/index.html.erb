@@ -1,7 +1,7 @@
-<% content_for :title, user_role_text %>
+<% content_for :title, "Users" %>
 
 <div class="page-title clearfix remove-top-margin">
-  <h1 class="pull-left"><%= user_role_text %></h1>
+  <h1 class="pull-left">Users</h1>
   <div class="pull-right add-top-margin">
     <% if policy(User).new? %>
       <%= link_to "Create user", new_user_invitation_path, class: "btn btn-success add-right-margin" %>
@@ -15,10 +15,8 @@
 
 <div class="clearfix">
   <h2 class="pull-left remove-top-margin"><%= formatted_number_of_users(@users) %></h2>
-  <%= link_to_users_csv "Export #{formatted_number_of_users(@users)} as CSV", params, class: "btn btn-default pull-right" %>
+  <%= link_to "Export #{formatted_number_of_users(@users)} as CSV", url_for(format: "csv"), class: "btn btn-default pull-right" %>
 </div>
-
-<%= render partial: "user_filter" %>
 
 <table class="table table-striped table-bordered">
   <thead>

@@ -318,105 +318,12 @@ class UsersControllerTest < ActionController::TestCase
           assert_equal "text/csv", @response.media_type
         end
 
-        should "export filtered users by role" do
-          create(:user)
-          get :index, params: { role: "normal", format: :csv }
-          lines = @response.body.lines
-          assert_equal(2, lines.length)
-        end
-
-        should "export filtered users by all fields" do
-          organisation = create(:organisation, name: "Cookies Of Other Lands", abbreviation: "COOL")
-
-          create(:suspended_user, name: "Special cookie", email: "specialcookie@email.com", role: "normal", organisation:)
-          create(:suspended_user, name: "Normal cookie", email: "normalcookie@email.com", role: "normal", organisation:)
-
-          assert_equal(3, User.count)
-
-          get :index, params: { role: "normal", status: "suspended", organisation:, two_step_status: false, filter: "special", format: :csv }
-
-          lines = @response.body.lines
-          assert_equal(2, lines.length)
-        end
-
-        should "export all users when no filter selected" do
+        should "export all users" do
           create(:user)
           get :index, params: { format: :csv }
           lines = @response.body.lines
           assert_equal(3, lines.length)
         end
-      end
-
-      context "filter" do
-        setup do
-          create(:user, email: "not_admin@gov.uk")
-        end
-
-        should "filter results to users where their name or email contains the string" do
-          create(:user, email: "special@gov.uk")
-          create(:user, name: "Someone special", email: "someone@gov.uk")
-
-          get :index, params: { filter: "special" }
-
-          assert_select "tbody tr", count: 2
-          assert_select "td.email", /special@gov.uk/
-          assert_select "td.email", /someone@gov.uk/
-        end
-
-        should "scope list of users by role" do
-          get :index, params: { role: "normal" }
-
-          assert_select "tbody tr", count: 1
-          assert_select "td.email", /admin@gov.uk/
-        end
-
-        should "scope filtered list of users by role" do
-          create(:organisation_admin_user, email: "xyz@gov.uk")
-
-          get :index, params: { filter: "admin", role: Roles::Admin.role_name }
-
-          assert_select "tbody tr", count: 1
-          assert_select "td.email", /admin@gov.uk/
-        end
-
-        should "scope list of users by permission" do
-          user_application_permissions = create_list(:user_application_permission, 2)
-
-          user_application_permissions.each do |uap|
-            get :index, params: { permission: uap.supported_permission_id }
-
-            assert_select "tbody tr", count: 1
-            assert_select "td.email", /#{uap.user.email}/
-          end
-        end
-      end
-
-      should "scope list of users by status" do
-        create(:suspended_user, email: "suspended_user@gov.uk")
-
-        get :index, params: { status: "suspended" }
-
-        assert_select "tbody tr", count: 1
-        assert_select "td.email", /suspended_user@gov.uk/
-      end
-
-      should "scope list of users by status and role" do
-        create(:suspended_user, email: "suspended_user@gov.uk", role: Roles::Admin.role_name)
-        create(:suspended_user, email: "normal_suspended_user@gov.uk")
-
-        get :index, params: { status: "suspended", role: Roles::Admin.role_name }
-
-        assert_select "tbody tr", count: 1
-        assert_select "td.email", /suspended_user@gov.uk/
-      end
-
-      should "scope list of users by organisation" do
-        user = create(:user_in_organisation, email: "orgmember@gov.uk")
-
-        get :index, params: { organisation: user.organisation.id }
-
-        assert_select "tbody tr", count: 1
-        assert_select "td.email", /orgmember@gov.uk/
       end
 
       context "as superadmin" do

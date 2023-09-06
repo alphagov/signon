@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   before_action :authenticate_user!, except: :show
   before_action :load_and_authorize_user, except: %i[index show]
   before_action :allow_no_application_access, only: [:update]
-  helper_method :applications_and_permissions, :any_filter?
+  helper_method :applications_and_permissions
   respond_to :html
 
   before_action :doorkeeper_authorize!, only: :show
@@ -29,7 +29,6 @@ class UsersController < ApplicationController
     authorize User
 
     @users = policy_scope(User).includes(:organisation).order(:name)
-    filter_users if any_filter?
     respond_to do |format|
       format.html do
         paginate_users
@@ -133,35 +132,12 @@ private
     authorize @user
   end
 
-  def filter_users
-    @users = @users.filter_by_name(params[:filter]) if params[:filter].present?
-    @users = @users.with_role(params[:role]) if can_filter_role?
-    @users = @users.with_permission(params[:permission]) if params[:permission].present?
-    @users = @users.with_organisation(params[:organisation]) if params[:organisation].present?
-    @users = @users.with_status(params[:status]) if params[:status].present?
-    @users = @users.with_2sv_enabled(params[:two_step_status]) if params[:two_step_status].present?
-  end
-
-  def can_filter_role?
-    params[:role].present? &&
-      current_user.manageable_roles.include?(params[:role])
-  end
-
   def should_include_permissions?
     params[:format] == "csv"
   end
 
   def paginate_users
     @users = @users.page(params[:page]).per(25)
-  end
-
-  def any_filter?
-    params[:filter].present? ||
-      params[:role].present? ||
-      params[:permission].present? ||
-      params[:status].present? ||
-      params[:organisation].present? ||
-      params[:two_step_status].present?
   end
 
   def validate_token_matches_client_id

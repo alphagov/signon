@@ -229,37 +229,6 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [never_signed_in_ages_ago], User.expired_never_signed_in
   end
 
-  context ".with_role" do
-    setup do
-      @admin = create(:admin_user)
-      @normal = create(:user)
-    end
-
-    should "return users with specified role" do
-      assert_includes User.with_role(:admin), @admin
-    end
-
-    should "not return users with a role other than the specified role" do
-      assert_not_includes User.with_role(:admin), @normal
-    end
-  end
-
-  context ".with_permission" do
-    should "only return users with the specified permission" do
-      joe = create(:user)
-      amy = create(:user)
-      app = create(:application, with_supported_permissions: %w[manage])
-      signin_perm = app.signin_permission # created in a callback in the Application model
-      manage_perm = app.supported_permissions.find_by(name: "manage")
-      create(:user_application_permission, user: joe, application: app, supported_permission: signin_perm)
-      create(:user_application_permission, user: amy, application: app, supported_permission: signin_perm)
-      create(:user_application_permission, user: amy, application: app, supported_permission: manage_perm)
-
-      assert_equal User.with_permission(signin_perm.id), [joe, amy]
-      assert_equal User.with_permission(manage_perm.id), [amy]
-    end
-  end
-
   context ".not_recently_unsuspended" do
     should "return users who have never been unsuspended" do
       assert_includes User.not_recently_unsuspended, @user
@@ -280,28 +249,9 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context ".with_2sv_enabled" do
-    should "return users with 2SV enabled when true" do
-      enabled_user = create(:two_step_enabled_user)
-      exempt_user = create(:two_step_exempted_user)
-
-      enabled_users = User.with_2sv_enabled("true")
-      assert_equal 1, enabled_users.count
-      assert_equal enabled_user, enabled_users.first
-
-      disabled_users = User.with_2sv_enabled("false")
-      assert_equal 1, disabled_users.count
-      assert_equal @user, disabled_users.first
-
-      exempt_users = User.with_2sv_enabled("exempt")
-      assert_equal 1, exempt_users.count
-      assert_equal exempt_user, exempt_users.first
-    end
-
-    should "encrypt otp_secret_key" do
-      enabled_user = create(:two_step_enabled_user)
-      assert enabled_user.encrypted_attribute?(:otp_secret_key)
-    end
+  should "encrypt otp_secret_key" do
+    enabled_user = create(:two_step_enabled_user)
+    assert enabled_user.encrypted_attribute?(:otp_secret_key)
   end
 
   context "email validation" do
@@ -643,30 +593,6 @@ class UserTest < ActiveSupport::TestCase
       @suspended = create(:user)
       @suspended.suspend("because grumble")
       @invited = User.invite!(name: "Oberyn Martell", email: "redviper@dorne.com")
-    end
-
-    context "filtering" do
-      should "be able to filter by all statuses" do
-        User::USER_STATUSES.each do |status|
-          assert_not_empty User.with_status(status)
-        end
-      end
-
-      should "filter suspended" do
-        assert_equal [@suspended], User.with_status(User::USER_STATUS_SUSPENDED).all
-      end
-
-      should "filter invited" do
-        assert_equal [@invited], User.with_status(User::USER_STATUS_INVITED).all
-      end
-
-      should "filter locked" do
-        assert_equal [@locked], User.with_status(User::USER_STATUS_LOCKED).all
-      end
-
-      should "filter active" do
-        assert_equal [@user], User.with_status(User::USER_STATUS_ACTIVE).all
-      end
     end
 
     context "detecting" do

@@ -61,10 +61,6 @@ class User < ApplicationRecord
 
   scope :web_users, -> { where(api_user: false) }
   scope :not_suspended, -> { where(suspended_at: nil) }
-  scope :with_role, ->(role_name) { where(role: role_name) }
-  scope :with_permission, ->(permission_id) { joins(:supported_permissions).where("supported_permissions.id = ?", permission_id) }
-  scope :with_organisation, ->(org_id) { where(organisation_id: org_id) }
-  scope :filter_by_name, ->(filter_param) { where("users.email like ? OR users.name like ?", "%#{filter_param.strip}%", "%#{filter_param.strip}%") }
   scope :last_signed_in_on, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) = date(?)", date) }
   scope :last_signed_in_before, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) < date(?)", date) }
   scope :last_signed_in_after, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) >= date(?)", date) }
@@ -72,35 +68,6 @@ class User < ApplicationRecord
   scope :expired_never_signed_in, -> { never_signed_in.where("invitation_sent_at < ?", NEVER_SIGNED_IN_EXPIRY_PERIOD.ago) }
   scope :not_recently_unsuspended, -> { where(["unsuspended_at IS NULL OR unsuspended_at < ?", UNSUSPENSION_GRACE_PERIOD.ago]) }
   scope :with_access_to_application, ->(application) { UsersWithAccess.new(self, application).users }
-  scope :with_2sv_enabled,
-        lambda { |enabled|
-          case enabled
-          when "exempt"
-            where("reason_for_2sv_exemption IS NOT NULL")
-          when "true"
-            where("otp_secret_key IS NOT NULL")
-          else
-            where("otp_secret_key IS NULL AND reason_for_2sv_exemption IS NULL")
-          end
-        }
-
-  scope :with_status,
-        lambda { |status|
-          case status
-          when USER_STATUS_SUSPENDED
-            where.not(suspended_at: nil)
-          when USER_STATUS_INVITED
-            where.not(invitation_sent_at: nil).where(invitation_accepted_at: nil)
-          when USER_STATUS_LOCKED
-            where.not(locked_at: nil)
-          when USER_STATUS_ACTIVE
-            where(suspended_at: nil, locked_at: nil)
-              .where(arel_table[:invitation_sent_at].eq(nil)
-                .or(arel_table[:invitation_accepted_at].not_eq(nil)))
-          else
-            raise NotImplementedError, "Filtering by status '#{status}' not implemented."
-          end
-        }
 
   def require_2sv?
     return require_2sv unless organisation
