@@ -41,7 +41,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
 
       assert page.has_content?("Last sign-in")
 
-      actual_last_sign_in_strings = page.all("table tr td.last-sign-in").map(&:text).map(&:strip)[0..1]
+      actual_last_sign_in_strings = page.all("table tr td:nth-child(5)").map(&:text).map(&:strip)[0..1]
       assert_equal ["5 minutes ago", "never signed in"], actual_last_sign_in_strings
     end
   end

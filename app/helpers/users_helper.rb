@@ -52,4 +52,9 @@ module UsersHelper
   def assignable_user_roles
     current_user.manageable_roles
   end
+
+  def user_name(user)
+    anchor_tag = link_to(user.name, edit_user_path(user), class: "govuk-link")
+    user.suspended? ? content_tag(:del, anchor_tag) : anchor_tag
+  end
 end

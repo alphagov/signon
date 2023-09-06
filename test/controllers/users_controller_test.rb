@@ -271,13 +271,13 @@ class UsersControllerTest < ActionController::TestCase
       should "list users" do
         create(:user, email: "another_user@email.com")
         get :index
-        assert_select "td.email", /another_user@email.com/
+        assert_select "tr td:nth-child(2)", /another_user@email.com/
       end
 
       should "not list api users" do
         create(:api_user, email: "api_user@email.com")
         get :index
-        assert_select "td.email", count: 0, text: /api_user@email.com/
+        assert_select "tr td:nth-child(2)", count: 0, text: /api_user@email.com/
       end
 
       should "not show superadmin users" do
@@ -286,7 +286,7 @@ class UsersControllerTest < ActionController::TestCase
         get :index
 
         assert_select "tbody tr", count: 1
-        assert_select "td.email", /#{@user.email}/
+        assert_select "tr td:nth-child(2)", /#{@user.email}/
       end
 
       should "show user roles" do
@@ -296,11 +296,10 @@ class UsersControllerTest < ActionController::TestCase
 
         get :index
 
-        assert_select "td.role", "Normal"
-        assert_select "td.role", "Organisation admin"
-        assert_select "td.role", "Super organisation admin"
-        assert_select "td.role", "Admin"
-        assert_select "td.role", count: 4
+        assert_select "tr td:nth-child(3)", "Normal"
+        assert_select "tr td:nth-child(3)", "Organisation admin"
+        assert_select "tr td:nth-child(3)", "Super organisation admin"
+        assert_select "tr td:nth-child(3)", "Admin"
       end
 
       should "show user organisation" do
@@ -308,7 +307,7 @@ class UsersControllerTest < ActionController::TestCase
 
         get :index
 
-        assert_select "td.organisation", user.organisation.name
+        assert_select "tr td:nth-child(4)", user.organisation.name
       end
 
       context "CSV export" do
@@ -333,7 +332,7 @@ class UsersControllerTest < ActionController::TestCase
 
           get :index
 
-          assert_select "td.email", count: 0, text: /api_user@email.com/
+          assert_select "tr td:nth-child(2)", count: 0, text: /api_user@email.com/
         end
       end
     end
