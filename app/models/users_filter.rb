@@ -1,4 +1,7 @@
 class UsersFilter
+  CHECKBOX_FILTER_KEYS = %i[statuses two_step_statuses roles permissions organisations].freeze
+  PERMITTED_CHECKBOX_FILTER_PARAMS = CHECKBOX_FILTER_KEYS.each.with_object({}) { |k, h| h[k] = [] }.freeze
+
   attr_reader :options
 
   def initialize(users, current_user, options = {})
@@ -74,5 +77,13 @@ class UsersFilter
         checked: Array(options[:organisations]).include?(organisation.to_param),
       }
     end
+  end
+
+  def no_options_selected_for?(key)
+    Array(options[key]).none?
+  end
+
+  def any_options_selected?
+    options.slice(*CHECKBOX_FILTER_KEYS).values.any?
   end
 end

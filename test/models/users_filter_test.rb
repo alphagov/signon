@@ -328,4 +328,28 @@ class UsersFilterTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "#no_options_selected_for?" do
+    should "return true when there are no options selected for the specified key" do
+      filter = UsersFilter.new(User.all, @current_user, {})
+      assert filter.no_options_selected_for?(:statuses)
+    end
+
+    should "return false when there is at least one option selected for the specified key" do
+      filter = UsersFilter.new(User.all, @current_user, { statuses: %w[active] })
+      assert_not filter.no_options_selected_for?(:statuses)
+    end
+  end
+
+  context "#any_options_selected?" do
+    should "return true when this is at least one checkbox filter option selected" do
+      filter = UsersFilter.new(User.all, @current_user, { statuses: %w[active] })
+      assert filter.any_options_selected?
+    end
+
+    should "return false when there are no checkbox filter options selected" do
+      filter = UsersFilter.new(User.all, @current_user, { filter: "Jill", page: 1, per_page: 25 })
+      assert_not filter.any_options_selected?
+    end
+  end
 end

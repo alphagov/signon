@@ -20,6 +20,7 @@
       key: "statuses",
       title: "Status",
       options_container_id: "statuses_filter",
+      closed_on_load: @filter.no_options_selected_for?(:statuses) && @filter.any_options_selected?,
       options: @filter.status_option_select_options,
     } %>
 
@@ -27,7 +28,7 @@
       key: "two_step_statuses",
       title: "2SV Status",
       options_container_id: "two_step_statuses_filter",
-      closed_on_load: true,
+      closed_on_load: @filter.no_options_selected_for?(:two_step_statuses),
       options: @filter.two_step_status_option_select_options,
     } %>
 
@@ -35,7 +36,7 @@
       key: "roles",
       title: "Roles",
       options_container_id: "roles_filter",
-      closed_on_load: true,
+      closed_on_load: @filter.no_options_selected_for?(:roles),
       options: @filter.role_option_select_options,
     } %>
 
@@ -45,7 +46,7 @@
         title: "Organisations",
         options_container_id: "organisations_filter",
         show_filter: true,
-        closed_on_load: true,
+        closed_on_load: @filter.no_options_selected_for?(:organisations),
         options: @filter.organisation_option_select_options,
       } %>
     <% end %>
@@ -55,7 +56,7 @@
       title: "Permissions",
       options_container_id: "permissions_filter",
       show_filter: true,
-      closed_on_load: true,
+      closed_on_load: @filter.no_options_selected_for?(:permissions),
       options: @filter.permission_option_select_options,
     } %>
 

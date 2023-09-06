@@ -190,7 +190,7 @@ private
   def filter_params
     params.permit(
       :filter, :page, :format, :"option-select-filter",
-      statuses: [], two_step_statuses: [], roles: [], permissions: [], organisations: []
+      **UsersFilter::PERMITTED_CHECKBOX_FILTER_PARAMS
     ).except(:"option-select-filter")
   end
 end
