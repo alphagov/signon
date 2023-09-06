@@ -10,10 +10,6 @@ module UserFilterHelper
     "#{params[:role]} users".strip.humanize.capitalize
   end
 
-  def two_step_abbr_tag
-    tag.abbr("2SV", title: "Two step verification")
-  end
-
   def title_from(filter_type)
     if filter_type == :two_step_status
       safe_join([two_step_abbr_tag, "Status"], " ")

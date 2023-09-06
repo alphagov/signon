@@ -1,4 +1,8 @@
 module UsersHelper
+  def two_step_abbr_tag
+    tag.abbr("2SV", title: "Two step verification")
+  end
+
   def two_step_status(user)
     if user.has_2sv?
       "Enabled"
