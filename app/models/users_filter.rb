@@ -30,56 +30,61 @@ class UsersFilter
     users.page(options[:page]).per(options[:per_page])
   end
 
-  def status_option_select_options
+  def status_option_select_options(aria_controls_id: nil)
     User::USER_STATUSES.map do |status|
       {
         label: status.humanize.capitalize,
+        controls: aria_controls_id,
         value: status,
         checked: Array(options[:statuses]).include?(status),
-      }
+      }.compact
     end
   end
 
-  def two_step_status_option_select_options
+  def two_step_status_option_select_options(aria_controls_id: nil)
     User::TWO_STEP_STATUSES_VS_NAMED_SCOPES.map do |status, scope_name|
       {
         label: status.humanize.capitalize,
+        controls: aria_controls_id,
         value: scope_name,
         checked: Array(options[:two_step_statuses]).include?(scope_name),
-      }
+      }.compact
     end
   end
 
-  def role_option_select_options
+  def role_option_select_options(aria_controls_id: nil)
     @current_user.manageable_roles.map do |role|
       {
         label: role.humanize.capitalize,
+        controls: aria_controls_id,
         value: role,
         checked: Array(options[:roles]).include?(role),
-      }
+      }.compact
     end
   end
 
-  def permission_option_select_options
+  def permission_option_select_options(aria_controls_id: nil)
     Doorkeeper::Application.includes(:supported_permissions).flat_map do |application|
       application.supported_permissions.map do |permission|
         {
           label: "#{application.name} #{permission.name}",
+          controls: aria_controls_id,
           value: permission.to_param,
           checked: Array(options[:permissions]).include?(permission.to_param),
-        }
+        }.compact
       end
     end
   end
 
-  def organisation_option_select_options
+  def organisation_option_select_options(aria_controls_id: nil)
     scope = @current_user.manageable_organisations
     scope.order(:name).joins(:users).uniq.map do |organisation|
       {
         label: organisation.name_with_abbreviation,
+        controls: aria_controls_id,
         value: organisation.to_param,
         checked: Array(options[:organisations]).include?(organisation.to_param),
-      }
+      }.compact
     end
   end
 

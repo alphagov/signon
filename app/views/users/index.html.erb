@@ -40,34 +40,38 @@
   </div>
 </div>
 
+<% filtered_users_id = "filtered-users" %>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-one-third">
-    <%= render "users_filter", filter: @filter %>
+    <%= render "users_filter", filter: @filter, filtered_users_id: %>
   </div>
   <div class="govuk-grid-column-two-thirds">
-    <%= render "govuk_publishing_components/components/table", {
-      caption: filtered_users_heading(@users),
-      head: [
-        { text: "Name" },
-        { text: "Email" },
-        { text: "Role" },
-        { text: "Organisation" },
-        { text: "Last sign-in" },
-        { text: "Status" },
-        { text: "#{two_step_abbr_tag} Status".html_safe },
-      ],
-      rows: @users.map do |user|
-        [
-          { text: user_name(user) },
-          { text: user.email },
-          { text: user.role.humanize },
-          { text: user.organisation.try(:name) },
-          { text: user.current_sign_in_at ? "#{time_ago_in_words(user.current_sign_in_at)} ago" : "never signed in" },
-          { text: user.status.humanize },
-          { text: two_step_status(user) },
-        ]
-      end,
-    } %>
+    <%= content_tag :div, id: filtered_users_id do %>
+      <%= render "govuk_publishing_components/components/table", {
+        caption: filtered_users_heading(@users),
+        head: [
+          { text: "Name" },
+          { text: "Email" },
+          { text: "Role" },
+          { text: "Organisation" },
+          { text: "Last sign-in" },
+          { text: "Status" },
+          { text: "#{two_step_abbr_tag} Status".html_safe },
+        ],
+        rows: @users.map do |user|
+          [
+            { text: user_name(user) },
+            { text: user.email },
+            { text: user.role.humanize },
+            { text: user.organisation.try(:name) },
+            { text: user.current_sign_in_at ? "#{time_ago_in_words(user.current_sign_in_at)} ago" : "never signed in" },
+            { text: user.status.humanize },
+            { text: two_step_status(user) },
+          ]
+        end,
+      } %>
+    <% end %>
 
     <%= paginate(@users, theme: "gds") %>
   </div>
