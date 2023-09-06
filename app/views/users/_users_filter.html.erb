@@ -17,6 +17,17 @@
       options: @filter.role_option_select_options,
     } %>
 
+    <% if current_user.manageable_organisations.many? %>
+      <%= render "components/option_select", {
+        key: "organisations",
+        title: "Organisations",
+        options_container_id: "organisations_filter",
+        show_filter: true,
+        closed_on_load: true,
+        options: @filter.organisation_option_select_options,
+      } %>
+    <% end %>
+
     <div class="govuk-button-group">
       <%= render "govuk_publishing_components/components/button", {
         text: "Update results",

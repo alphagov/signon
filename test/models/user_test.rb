@@ -806,6 +806,20 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context ".with_organisation" do
+    should "only return users with specified organisation(s)" do
+      org1 = create(:organisation)
+      org2 = create(:organisation)
+      org3 = create(:organisation)
+
+      user_in_org1 = create(:user, organisation: org1)
+      create(:user, organisation: org2)
+      user_in_org3 = create(:user, organisation: org3)
+
+      assert_equal [user_in_org1, user_in_org3], User.with_organisation([org1, org3].map(&:to_param))
+    end
+  end
+
   def authenticate_access(user, app)
     ::Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end

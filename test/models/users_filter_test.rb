@@ -88,4 +88,100 @@ class UsersFilterTest < ActiveSupport::TestCase
       end
     end
   end
+
+  context "when filtering by organisation" do
+    should "return users matching any of the specified organisations" do
+      organisation1 = create(:organisation, name: "Organisation 1")
+      organisation2 = create(:organisation, name: "Organisation 2")
+      organisation3 = create(:organisation, name: "Organisation 3")
+
+      create(:user, name: "user1-in-organisation1", organisation: organisation1)
+      create(:user, name: "user2-in-organisation1", organisation: organisation1)
+      create(:user, name: "user3-in-organisation2", organisation: organisation2)
+      create(:user, name: "user4-in-organisation3", organisation: organisation3)
+
+      filter = UsersFilter.new(User.all, @current_user, organisations: [organisation1, organisation3].map(&:to_param))
+
+      assert_equal %w[user1-in-organisation1 user2-in-organisation1 user4-in-organisation3], filter.users.map(&:name)
+    end
+  end
+
+  context "#organisation_option_select_options" do
+    context "when current user is an admin" do
+      setup do
+        @organisation = create(:organisation, name: "Org1")
+        @current_user = create(:admin_user, organisation: @organisation)
+      end
+
+      should "return select options for organisations that have any users" do
+        another_organisation = create(:organisation, name: "Org2")
+        create(:user, organisation: another_organisation)
+
+        filter = UsersFilter.new(User.all, @current_user, {})
+        options = filter.organisation_option_select_options
+
+        expected_options = [
+          { label: @organisation.name, value: @organisation.to_param, checked: false },
+          { label: another_organisation.name, value: another_organisation.to_param, checked: false },
+        ]
+        assert_equal expected_options, options
+      end
+
+      should "return select options with `selected` set appropriately" do
+        another_organisation = create(:organisation, name: "Org2")
+        create(:user, organisation: another_organisation)
+
+        filter = UsersFilter.new(User.all, @current_user, organisations: [another_organisation.to_param])
+        options = filter.organisation_option_select_options
+
+        expected_options = [
+          { label: @organisation.name, value: @organisation.to_param, checked: false },
+          { label: another_organisation.name, value: another_organisation.to_param, checked: true },
+        ]
+        assert_equal expected_options, options
+      end
+    end
+
+    context "when current user is a super organisation admin" do
+      setup do
+        @organisation = create(:organisation, name: "Org1")
+        @current_user = create(:super_organisation_admin_user, organisation: @organisation)
+      end
+
+      should "return select options for organisation and sub-organisations that have any users" do
+        sub_organisation = create(:organisation, parent: @organisation, name: "Org2")
+        create(:organisation, parent: @organisation, name: "Org3")
+        create(:user, organisation: sub_organisation)
+
+        filter = UsersFilter.new(User.all, @current_user, {})
+        options = filter.organisation_option_select_options
+
+        expected_options = [
+          { label: @organisation.name, value: @organisation.to_param, checked: false },
+          { label: sub_organisation.name, value: sub_organisation.to_param, checked: false },
+        ]
+        assert_equal expected_options, options
+      end
+    end
+
+    context "when current user is an organisation admin" do
+      setup do
+        @organisation = create(:organisation, name: "Org1")
+        @current_user = create(:organisation_admin_user, organisation: @organisation)
+      end
+
+      should "return select options for only the user's organisation" do
+        another_organisation = create(:organisation, name: "Org2")
+        create(:user, organisation: another_organisation)
+
+        filter = UsersFilter.new(User.all, @current_user, {})
+        options = filter.organisation_option_select_options
+
+        expected_options = [
+          { label: @organisation.name, value: @organisation.to_param, checked: false },
+        ]
+        assert_equal expected_options, options
+      end
+    end
+  end
 end

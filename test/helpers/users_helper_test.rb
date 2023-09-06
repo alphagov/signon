@@ -20,4 +20,27 @@ class UsersHelperTest < ActionView::TestCase
   test "two_step_status should reflect the user's status accurately when the user does not have 2sv set up" do
     assert_equal "Not set up", two_step_status(create(:user))
   end
+
+  context "#filtered_users_heading" do
+    setup do
+      @users = [build(:user), build(:user)]
+      @current_user = build(:user)
+      stubs(:formatted_number_of_users).with(@users).returns("2 users")
+      stubs(:current_user).returns(@current_user)
+      @organisation = build(:organisation)
+    end
+
+    should "return formatted number of users" do
+      another_organisation = build(:organisation)
+      @current_user.stubs(:manageable_organisations).returns([@organisation, another_organisation])
+
+      assert_equal "2 users", filtered_users_heading(@users)
+    end
+
+    should "return formatted number of users in specified organisation" do
+      @current_user.stubs(:manageable_organisations).returns([@organisation])
+
+      assert_equal "2 users in #{@organisation.name}", filtered_users_heading(@users)
+    end
+  end
 end

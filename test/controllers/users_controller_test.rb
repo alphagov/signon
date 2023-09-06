@@ -343,6 +343,24 @@ class UsersControllerTest < ActionController::TestCase
           assert_select "tr td:nth-child(1)", text: "normal-user"
         end
 
+        should "filter by organisations" do
+          organisation1 = create(:organisation, name: "Organisation 1")
+          organisation2 = create(:organisation, name: "Organisation 2")
+          organisation3 = create(:organisation, name: "Organisation 3")
+
+          create(:user, name: "user1-in-organisation1", organisation: organisation1)
+          create(:user, name: "user2-in-organisation1", organisation: organisation1)
+          create(:user, name: "user3-in-organisation2", organisation: organisation2)
+          create(:user, name: "user4-in-organisation3", organisation: organisation3)
+
+          get :index, params: { organisations: [organisation1, organisation3] }
+
+          assert_select "tr td:nth-child(1)", text: "user1-in-organisation1"
+          assert_select "tr td:nth-child(1)", text: "user2-in-organisation1"
+          assert_select "tr td:nth-child(1)", text: "user3-in-organisation2", count: 0
+          assert_select "tr td:nth-child(1)", text: "user4-in-organisation3"
+        end
+
         should "display link to clear all filters" do
           get :index
 
@@ -893,6 +911,12 @@ class UsersControllerTest < ActionController::TestCase
         get :index
 
         assert_select "a", text: "Grant access to all users", count: 0
+      end
+
+      should "not display organisations filter" do
+        get :index
+
+        assert_select "#organisations_filter", count: 0
       end
     end
   end

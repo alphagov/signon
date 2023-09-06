@@ -49,6 +49,15 @@ module UsersHelper
     pluralize(number_with_delimiter(users.total_count), "user")
   end
 
+  def filtered_users_heading(users)
+    count = formatted_number_of_users(users)
+    if current_user.manageable_organisations.one?
+      "#{count} in #{current_user.manageable_organisations.first.name}"
+    else
+      count
+    end
+  end
+
   def assignable_user_roles
     current_user.manageable_roles
   end

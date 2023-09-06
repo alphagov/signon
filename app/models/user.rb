@@ -64,6 +64,7 @@ class User < ApplicationRecord
   scope :web_users, -> { where(api_user: false) }
   scope :not_suspended, -> { where(suspended_at: nil) }
   scope :with_role, ->(role) { where(role:) }
+  scope :with_organisation, ->(organisation) { where(organisation:) }
   scope :with_partially_matching_name, ->(name) { where("name LIKE ?", "%#{name}%") }
   scope :with_partially_matching_email, ->(email) { where("email LIKE ?", "%#{email}%") }
   scope :with_partially_matching_name_or_email, ->(value) { with_partially_matching_name(value).or(with_partially_matching_email(value)) }
