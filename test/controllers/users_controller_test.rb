@@ -330,6 +330,12 @@ class UsersControllerTest < ActionController::TestCase
 
           assert_select "tr td:nth-child(2)", text: /does-match/, count: 2
         end
+
+        should "display link to clear all filters" do
+          get :index
+
+          assert_select "a", text: "Clear all filters", href: users_path
+        end
       end
 
       context "CSV export" do

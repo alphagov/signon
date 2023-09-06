@@ -9,8 +9,12 @@
       margin_bottom: 4,
     } %>
 
-    <%= render "govuk_publishing_components/components/button", {
-      text: "Update results",
-    } %>
+    <div class="govuk-button-group">
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Update results",
+      } %>
+
+      <%= link_to "Clear all filters", users_path, class: "govuk-link govuk-link--no-visited-state" %>
+    </div>
   <% end %>
 </div>
