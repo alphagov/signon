@@ -296,10 +296,10 @@ class UsersControllerTest < ActionController::TestCase
 
         get :index
 
-        assert_select "tr td:nth-child(3)", "Normal"
-        assert_select "tr td:nth-child(3)", "Organisation admin"
-        assert_select "tr td:nth-child(3)", "Super organisation admin"
-        assert_select "tr td:nth-child(3)", "Admin"
+        assert_select "tr td:nth-child(3)", /Normal/
+        assert_select "tr td:nth-child(3)", /Organisation admin/
+        assert_select "tr td:nth-child(3)", /Super organisation admin/
+        assert_select "tr td:nth-child(3)", /Admin/
       end
 
       should "show user organisation" do
@@ -307,7 +307,7 @@ class UsersControllerTest < ActionController::TestCase
 
         get :index
 
-        assert_select "tr td:nth-child(4)", user.organisation.name
+        assert_select "tr td:nth-child(4)", Regexp.new(user.organisation.name)
       end
 
       context "filter" do
@@ -339,10 +339,10 @@ class UsersControllerTest < ActionController::TestCase
 
           get :index, params: { statuses: %w[locked suspended] }
 
-          assert_select "tr td:nth-child(1)", text: "active-user", count: 0
-          assert_select "tr td:nth-child(1)", text: "suspended-user"
-          assert_select "tr td:nth-child(1)", text: "invited-user", count: 0
-          assert_select "tr td:nth-child(1)", text: "locked-user"
+          assert_select "tr td:nth-child(1)", text: /active-user/, count: 0
+          assert_select "tr td:nth-child(1)", text: /suspended-user/
+          assert_select "tr td:nth-child(1)", text: /invited-user/, count: 0
+          assert_select "tr td:nth-child(1)", text: /locked-user/
         end
 
         should "filter by 2SV statuses" do
@@ -352,9 +352,9 @@ class UsersControllerTest < ActionController::TestCase
 
           get :index, params: { two_step_statuses: %w[not_setup_2sv exempt_from_2sv] }
 
-          assert_select "tr td:nth-child(1)", text: "not-set-up-user"
-          assert_select "tr td:nth-child(1)", text: "exempted-user"
-          assert_select "tr td:nth-child(1)", text: "enabled-user", count: 0
+          assert_select "tr td:nth-child(1)", text: /not-set-up-user/
+          assert_select "tr td:nth-child(1)", text: /exempted-user/
+          assert_select "tr td:nth-child(1)", text: /enabled-user/, count: 0
         end
 
         should "filter by roles" do
@@ -364,9 +364,9 @@ class UsersControllerTest < ActionController::TestCase
 
           get :index, params: { roles: %w[admin normal] }
 
-          assert_select "tr td:nth-child(1)", text: "admin-user"
-          assert_select "tr td:nth-child(1)", text: "organisation-admin-user", count: 0
-          assert_select "tr td:nth-child(1)", text: "normal-user"
+          assert_select "tr td:nth-child(1)", text: /admin-user/
+          assert_select "tr td:nth-child(1)", text: /organisation-admin-user/, count: 0
+          assert_select "tr td:nth-child(1)", text: /normal-user/
         end
 
         should "filter by permissions" do
@@ -381,9 +381,9 @@ class UsersControllerTest < ActionController::TestCase
 
           get :index, params: { permissions: [app1.signin_permission, app2.signin_permission] }
 
-          assert_select "tr td:nth-child(1)", text: "user1"
-          assert_select "tr td:nth-child(1)", text: "user2", count: 0
-          assert_select "tr td:nth-child(1)", text: "user3"
+          assert_select "tr td:nth-child(1)", text: /user1/
+          assert_select "tr td:nth-child(1)", text: /user2/, count: 0
+          assert_select "tr td:nth-child(1)", text: /user3/
         end
 
         should "filter by organisations" do
@@ -398,10 +398,10 @@ class UsersControllerTest < ActionController::TestCase
 
           get :index, params: { organisations: [organisation1, organisation3] }
 
-          assert_select "tr td:nth-child(1)", text: "user1-in-organisation1"
-          assert_select "tr td:nth-child(1)", text: "user2-in-organisation1"
-          assert_select "tr td:nth-child(1)", text: "user3-in-organisation2", count: 0
-          assert_select "tr td:nth-child(1)", text: "user4-in-organisation3"
+          assert_select "tr td:nth-child(1)", text: /user1-in-organisation1/
+          assert_select "tr td:nth-child(1)", text: /user2-in-organisation1/
+          assert_select "tr td:nth-child(1)", text: /user3-in-organisation2/, count: 0
+          assert_select "tr td:nth-child(1)", text: /user4-in-organisation3/
         end
 
         should "display link to clear all filters" do

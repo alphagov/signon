@@ -48,8 +48,9 @@
   </div>
   <div class="govuk-grid-column-two-thirds">
     <%= content_tag :div, id: filtered_users_id do %>
-      <%= render "govuk_publishing_components/components/table", {
+      <%= render "components/table", {
         caption: filtered_users_heading(@users),
+        vertical_on_small_screen: true,
         head: [
           { text: "Name" },
           { text: "Email" },
