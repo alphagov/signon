@@ -12,6 +12,7 @@ class UsersFilter
     filtered_users = @users
     filtered_users = filtered_users.with_partially_matching_name_or_email(options[:filter].strip) if options[:filter]
     filtered_users = filtered_users.with_statuses(options[:statuses]) if options[:statuses]
+    filtered_users = filtered_users.with_2sv_statuses(options[:two_step_statuses]) if options[:two_step_statuses]
     filtered_users = filtered_users.with_role(options[:roles]) if options[:roles]
     filtered_users = filtered_users.with_permission(options[:permissions]) if options[:permissions]
     filtered_users = filtered_users.with_organisation(options[:organisations]) if options[:organisations]
@@ -28,6 +29,16 @@ class UsersFilter
         label: status.humanize.capitalize,
         value: status,
         checked: Array(options[:statuses]).include?(status),
+      }
+    end
+  end
+
+  def two_step_status_option_select_options
+    User::TWO_STEP_STATUSES_VS_NAMED_SCOPES.map do |status, scope_name|
+      {
+        label: status.humanize.capitalize,
+        value: scope_name,
+        checked: Array(options[:two_step_statuses]).include?(scope_name),
       }
     end
   end

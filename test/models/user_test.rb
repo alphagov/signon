@@ -779,6 +779,52 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context ".exempt_from_2sv" do
+    should "only return users that have been exempted from 2SV" do
+      exempted_user = create(:two_step_exempted_user)
+      create(:two_step_enabled_user)
+
+      assert_equal [exempted_user], User.exempt_from_2sv
+    end
+  end
+
+  context ".not_exempt_from_2sv" do
+    should "only return users that have not been exempted from 2SV" do
+      create(:two_step_exempted_user)
+      enabled_user = create(:two_step_enabled_user)
+
+      assert_equal [@user, enabled_user], User.not_exempt_from_2sv
+    end
+  end
+
+  context ".has_2sv" do
+    should "only return users that have 2SV" do
+      create(:two_step_exempted_user)
+      enabled_user = create(:two_step_enabled_user)
+
+      assert_equal [enabled_user], User.has_2sv
+    end
+  end
+
+  context ".does_not_have_2sv" do
+    should "only return users that do not have 2SV" do
+      exempted_user = create(:two_step_exempted_user)
+      create(:two_step_enabled_user)
+
+      assert_equal [@user, exempted_user], User.does_not_have_2sv
+    end
+  end
+
+  context ".not_setup_2sv" do
+    should "only return users that have not been exempted from 2SV and do not have 2SV" do
+      not_set_up_user = create(:user)
+      create(:two_step_exempted_user)
+      create(:two_step_enabled_user)
+
+      assert_equal [@user, not_set_up_user], User.not_setup_2sv
+    end
+  end
+
   context ".with_partially_matching_name" do
     should "only return users with a name that includes the value" do
       user1 = create(:user, name: "does-match1")
@@ -898,6 +944,40 @@ class UserTest < ActiveSupport::TestCase
       active_user = create(:active_user)
 
       assert_equal [@user, suspended_user, invited_user, locked_user, active_user], User.with_statuses(%w[non-existent])
+    end
+  end
+
+  context ".with_2sv_statuses" do
+    should "only return not_set_up and exempted users" do
+      not_set_up_user = create(:user)
+      exempted_user = create(:two_step_exempted_user)
+      create(:two_step_enabled_user)
+
+      assert_equal [@user, not_set_up_user, exempted_user], User.with_2sv_statuses(%w[not_setup_2sv exempt_from_2sv])
+    end
+
+    should "only return enabled users" do
+      create(:user)
+      create(:two_step_exempted_user)
+      enabled_user = create(:two_step_enabled_user)
+
+      assert_equal [enabled_user], User.with_2sv_statuses(%w[has_2sv])
+    end
+
+    should "return all users if no statuses specified" do
+      not_set_up_user = create(:user)
+      exempted_user = create(:two_step_exempted_user)
+      enabled_user = create(:two_step_enabled_user)
+
+      assert_equal [@user, not_set_up_user, exempted_user, enabled_user], User.with_2sv_statuses([])
+    end
+
+    should "ignore any non-existent statuses" do
+      not_set_up_user = create(:user)
+      exempted_user = create(:two_step_exempted_user)
+      enabled_user = create(:two_step_enabled_user)
+
+      assert_equal [@user, not_set_up_user, exempted_user, enabled_user], User.with_2sv_statuses(%w[non-existent])
     end
   end
 

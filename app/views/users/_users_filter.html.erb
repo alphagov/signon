@@ -17,6 +17,14 @@
     } %>
 
     <%= render "components/option_select", {
+      key: "two_step_statuses",
+      title: "2SV Status",
+      options_container_id: "two_step_statuses_filter",
+      closed_on_load: true,
+      options: @filter.two_step_status_option_select_options,
+    } %>
+
+    <%= render "components/option_select", {
       key: "roles",
       title: "Roles",
       options_container_id: "roles_filter",

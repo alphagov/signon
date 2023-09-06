@@ -24,6 +24,12 @@ class User < ApplicationRecord
   TWO_STEP_STATUS_NOT_SET_UP = "not_set_up".freeze
   TWO_STEP_STATUS_EXEMPTED = "exempted".freeze
 
+  TWO_STEP_STATUSES_VS_NAMED_SCOPES = {
+    TWO_STEP_STATUS_ENABLED => "has_2sv",
+    TWO_STEP_STATUS_NOT_SET_UP => "not_setup_2sv",
+    TWO_STEP_STATUS_EXEMPTED => "exempt_from_2sv",
+  }.freeze
+
   devise :database_authenticatable,
          :recoverable,
          :trackable,
@@ -75,6 +81,12 @@ class User < ApplicationRecord
   scope :not_locked, -> { where(locked_at: nil) }
   scope :active, -> { not_suspended.not_invited.not_locked }
 
+  scope :exempt_from_2sv, -> { where.not(reason_for_2sv_exemption: nil) }
+  scope :not_exempt_from_2sv, -> { where(reason_for_2sv_exemption: nil) }
+  scope :has_2sv, -> { where.not(otp_secret_key: nil) }
+  scope :does_not_have_2sv, -> { where(otp_secret_key: nil) }
+  scope :not_setup_2sv, -> { not_exempt_from_2sv.does_not_have_2sv }
+
   scope :with_role, ->(role) { where(role:) }
   scope :with_permission, ->(permission) { joins(:supported_permissions).merge(SupportedPermission.where(id: permission)) }
   scope :with_organisation, ->(organisation) { where(organisation:) }
@@ -93,6 +105,16 @@ class User < ApplicationRecord
   def self.with_statuses(statuses)
     permitted_statuses = statuses.intersection(USER_STATUSES)
     relations = permitted_statuses.map { |s| public_send(s) }
+    relation = relations.pop || all
+    while (next_relation = relations.pop)
+      relation = relation.or(next_relation)
+    end
+    relation
+  end
+
+  def self.with_2sv_statuses(scope_names)
+    permitted_scopes = scope_names.intersection(TWO_STEP_STATUSES_VS_NAMED_SCOPES.values)
+    relations = permitted_scopes.map { |s| public_send(s) }
     relation = relations.pop || all
     while (next_relation = relations.pop)
       relation = relation.or(next_relation)

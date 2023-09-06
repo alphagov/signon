@@ -188,6 +188,6 @@ private
   end
 
   def filter_params
-    params.permit(:filter, :page, :format, statuses: [], roles: [], permissions: [], organisations: [])
+    params.permit(:filter, :page, :format, statuses: [], two_step_statuses: [], roles: [], permissions: [], organisations: [])
   end
 end

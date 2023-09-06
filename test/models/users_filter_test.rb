@@ -89,6 +89,48 @@ class UsersFilterTest < ActiveSupport::TestCase
     end
   end
 
+  context "when filtering by 2SV status" do
+    should "return users matching any of the specified 2SV statuses" do
+      create(:user, name: "not-set-up-user")
+      create(:two_step_exempted_user, name: "exempted-user")
+      create(:two_step_enabled_user, name: "enabled-user")
+
+      filter = UsersFilter.new(User.all, @current_user, two_step_statuses: %w[not_setup_2sv exempt_from_2sv])
+
+      assert_equal %w[exempted-user not-set-up-user], filter.users.map(&:name)
+    end
+  end
+
+  context "#two_step_status_option_select_options" do
+    context "when no 2SV statuses are selected" do
+      should "return options for 2SV statuses with none checked" do
+        filter = UsersFilter.new(User.all, @current_user, {})
+        options = filter.two_step_status_option_select_options
+
+        expected_options = [
+          { label: "Enabled", value: "has_2sv", checked: false },
+          { label: "Not set up", value: "not_setup_2sv", checked: false },
+          { label: "Exempted", value: "exempt_from_2sv", checked: false },
+        ]
+        assert_equal expected_options, options
+      end
+    end
+
+    context "when some 2SV statuses are selected" do
+      should "return options for statuses with relevant options checked" do
+        filter = UsersFilter.new(User.all, @current_user, two_step_statuses: %w[not_setup_2sv exempt_from_2sv])
+        options = filter.two_step_status_option_select_options
+
+        expected_options = [
+          { label: "Enabled", value: "has_2sv", checked: false },
+          { label: "Not set up", value: "not_setup_2sv", checked: true },
+          { label: "Exempted", value: "exempt_from_2sv", checked: true },
+        ]
+        assert_equal expected_options, options
+      end
+    end
+  end
+
   context "when filtering by role" do
     should "return users matching any of the specified roles" do
       create(:admin_user, name: "admin-user")

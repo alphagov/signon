@@ -345,6 +345,18 @@ class UsersControllerTest < ActionController::TestCase
           assert_select "tr td:nth-child(1)", text: "locked-user"
         end
 
+        should "filter by 2SV statuses" do
+          create(:user, name: "not-set-up-user")
+          create(:two_step_exempted_user, name: "exempted-user")
+          create(:two_step_enabled_user, name: "enabled-user")
+
+          get :index, params: { two_step_statuses: %w[not_setup_2sv exempt_from_2sv] }
+
+          assert_select "tr td:nth-child(1)", text: "not-set-up-user"
+          assert_select "tr td:nth-child(1)", text: "exempted-user"
+          assert_select "tr td:nth-child(1)", text: "enabled-user", count: 0
+        end
+
         should "filter by roles" do
           create(:admin_user, name: "admin-user")
           create(:organisation_admin_user, name: "organisation-admin-user")
