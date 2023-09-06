@@ -11,6 +11,11 @@
       } %>
     </div>
 
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "Filter results",
+      padding: true,
+    } %>
+
     <%= render "components/option_select", {
       key: "statuses",
       title: "Status",
