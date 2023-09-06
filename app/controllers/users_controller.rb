@@ -28,7 +28,7 @@ class UsersController < ApplicationController
   def index
     authorize User
 
-    @filter = UsersFilter.new(policy_scope(User), filter_params)
+    @filter = UsersFilter.new(policy_scope(User), current_user, filter_params)
 
     respond_to do |format|
       format.html do
@@ -188,6 +188,6 @@ private
   end
 
   def filter_params
-    params.permit(:filter, :page, :format)
+    params.permit(:filter, :page, :format, roles: [])
   end
 end

@@ -9,6 +9,14 @@
       margin_bottom: 4,
     } %>
 
+    <%= render "components/option_select", {
+      key: "roles",
+      title: "Roles",
+      options_container_id: "roles_filter",
+      closed_on_load: true,
+      options: @filter.role_option_select_options,
+    } %>
+
     <div class="govuk-button-group">
       <%= render "govuk_publishing_components/components/button", {
         text: "Update results",

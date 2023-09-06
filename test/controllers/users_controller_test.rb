@@ -331,6 +331,18 @@ class UsersControllerTest < ActionController::TestCase
           assert_select "tr td:nth-child(2)", text: /does-match/, count: 2
         end
 
+        should "filter by roles" do
+          create(:admin_user, name: "admin-user")
+          create(:organisation_admin_user, name: "organisation-admin-user")
+          create(:user, name: "normal-user")
+
+          get :index, params: { roles: %w[admin normal] }
+
+          assert_select "tr td:nth-child(1)", text: "admin-user"
+          assert_select "tr td:nth-child(1)", text: "organisation-admin-user", count: 0
+          assert_select "tr td:nth-child(1)", text: "normal-user"
+        end
+
         should "display link to clear all filters" do
           get :index
 

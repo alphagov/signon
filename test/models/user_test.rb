@@ -782,6 +782,16 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context ".with_role" do
+    should "only return users with specified role(s)" do
+      admin_user = create(:admin_user)
+      organisation_admin = create(:organisation_admin_user)
+      create(:user)
+
+      assert_equal [admin_user, organisation_admin], User.with_role(%w[admin organisation_admin])
+    end
+  end
+
   def authenticate_access(user, app)
     ::Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end
