@@ -236,7 +236,7 @@ class User < ApplicationRecord
   end
 
   def can_manage?(other_user)
-    role_class.can_manage?(other_user.role)
+    manageable_roles.include?(other_user.role)
   end
 
   # Make devise send all emails using ActiveJob
