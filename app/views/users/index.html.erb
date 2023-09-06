@@ -25,6 +25,7 @@
       <%= render "govuk_publishing_components/components/button", {
         text: "Upload a batch of users",
         href: new_batch_invitation_path,
+        secondary: true,
         margin_bottom: 4,
       } %>
     <% end %>
@@ -32,6 +33,7 @@
       <%= render "govuk_publishing_components/components/button", {
         text: "Grant access to all users",
         href: new_bulk_grant_permission_set_path,
+        secondary: true,
         margin_bottom: 4,
       } %>
     <% end %>
