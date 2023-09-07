@@ -88,6 +88,8 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
       visit new_batch_invitation_path
       path = Rails.root.join("test/fixtures/users.csv")
       attach_file("Choose a CSV file of users with names and email addresses", path)
+      click_button "Manage permissions for new users"
+
       uncheck "Has access to #{support_app.name}?"
       check "Has access to #{@application.name}?"
       unselect "reader", from: "Permissions for #{@application.name}"
@@ -124,11 +126,12 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
       visit new_batch_invitation_path
       path = Rails.root.join("test/fixtures", fixture_file)
       attach_file("Choose a CSV file of users with names and email addresses", path)
-      check "Has access to #{application.name}?"
       if organisation
         select organisation.name, from: "Organisation"
       end
+      click_button "Manage permissions for new users"
 
+      check "Has access to #{application.name}?"
       click_button "Create users and send emails"
 
       assert_response_contains("Creating a batch of users")

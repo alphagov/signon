@@ -1,10 +1,8 @@
 require "csv"
 
 class BatchInvitationsController < ApplicationController
-  include UserPermissionsControllerMethods
   before_action :authenticate_user!
 
-  helper_method :applications_and_permissions
   helper_method :recent_batch_invitations
 
   layout "admin_layout", only: %w[show]
@@ -16,8 +14,6 @@ class BatchInvitationsController < ApplicationController
 
   def create
     @batch_invitation = BatchInvitation.new(user: current_user, organisation_id: params[:batch_invitation][:organisation_id])
-    @batch_invitation.supported_permission_ids = params[:user][:supported_permission_ids] if params[:user]
-    grant_default_permissions(@batch_invitation)
     authorize @batch_invitation
 
     unless file_uploaded?
@@ -64,9 +60,7 @@ class BatchInvitationsController < ApplicationController
 
     @batch_invitation.save!
 
-    @batch_invitation.enqueue
-    flash[:notice] = "Scheduled invitation of #{@batch_invitation.batch_invitation_users.count} users"
-    redirect_to batch_invitation_path(@batch_invitation)
+    redirect_to new_batch_invitation_permissions_path(@batch_invitation)
   end
 
   def show
@@ -88,12 +82,6 @@ private
       false
     else
       true
-    end
-  end
-
-  def grant_default_permissions(batch_invitation)
-    SupportedPermission.default.each do |default_permission|
-      batch_invitation.grant_permission(default_permission)
     end
   end
 
