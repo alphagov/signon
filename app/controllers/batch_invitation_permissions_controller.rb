@@ -26,7 +26,7 @@ private
   end
 
   def authorise_to_manage_permissions
-    authorize @batch_invitation
+    authorize @batch_invitation, :manage_permissions?
   end
 
   def grant_default_permissions(batch_invitation)
