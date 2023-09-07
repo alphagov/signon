@@ -25,6 +25,16 @@ class BatchInvitationPermissionsControllerTest < ActionController::TestCase
   end
 
   context "GET new" do
+    should "not allow access if batch invitation already has permissions" do
+      @batch_invitation.supported_permission_ids = [@app.signin_permission.id]
+      @batch_invitation.save!
+
+      get :new, params: { batch_invitation_id: @batch_invitation.id }
+
+      assert_match(/Permissions have already been set for this batch of users/, flash[:alert])
+      assert_redirected_to "/batch_invitations/#{@batch_invitation.id}"
+    end
+
     should "allow selection of application permissions to grant to users" do
       get :new, params: { batch_invitation_id: @batch_invitation.id }
 
@@ -36,6 +46,16 @@ class BatchInvitationPermissionsControllerTest < ActionController::TestCase
   end
 
   context "POST create" do
+    should "not accept submission if batch invitation already has permissions" do
+      @batch_invitation.supported_permission_ids = [@app.signin_permission.id]
+      @batch_invitation.save!
+
+      post :create, params: { batch_invitation_id: @batch_invitation.id }
+
+      assert_match(/Permissions have already been set for this batch of users/, flash[:alert])
+      assert_redirected_to "/batch_invitations/#{@batch_invitation.id}"
+    end
+
     should "grant selected permissions and default permissions to BatchInvitation" do
       support_app = create(:application, name: "Support")
       support_app.signin_permission.update!(default: true)

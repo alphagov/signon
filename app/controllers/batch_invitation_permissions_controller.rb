@@ -3,6 +3,7 @@ class BatchInvitationPermissionsController < ApplicationController
   before_action :authenticate_user!
   before_action :load_batch_invitation
   before_action :authorise_to_manage_permissions
+  before_action :prevent_updating
 
   helper_method :applications_and_permissions
 
@@ -27,6 +28,13 @@ private
 
   def authorise_to_manage_permissions
     authorize @batch_invitation, :manage_permissions?
+  end
+
+  def prevent_updating
+    if @batch_invitation.has_permissions?
+      flash[:alert] = "Permissions have already been set for this batch of users"
+      redirect_to batch_invitation_path(@batch_invitation)
+    end
   end
 
   def grant_default_permissions(batch_invitation)
