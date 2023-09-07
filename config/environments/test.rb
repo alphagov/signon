@@ -65,4 +65,6 @@ Rails.application.configure do
 
   config.logger = Logger.new($stdout)
   config.log_level = :fatal
+
+  config.show_user_research_recruitment_banner = true
 end

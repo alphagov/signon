@@ -97,5 +97,7 @@ module Signon
 
       cookies.rotate :encrypted, secret
     end
+
+    config.show_user_research_recruitment_banner = false
   end
 end
