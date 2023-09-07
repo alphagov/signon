@@ -35,6 +35,10 @@ class UserPolicy < BasePolicy
   alias_method :resend?, :edit?
   alias_method :event_logs?, :edit?
 
+  def grant_signin_permission?
+    current_user.govuk_admin?
+  end
+
   def edit_email_or_password?
     allow_self_only
   end
