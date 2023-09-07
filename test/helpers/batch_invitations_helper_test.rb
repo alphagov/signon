@@ -1,6 +1,38 @@
 require "test_helper"
 
 class BatchInvitationsHelperTest < ActionView::TestCase
+  context "#batch_invite_status_message" do
+    should "state number of users processed so far when still in progress" do
+      batch_invitation = create(:batch_invitation, outcome: nil)
+      create(:batch_invitation_user, outcome: "failed", batch_invitation:)
+      create(:batch_invitation_user, outcome: "skipped", batch_invitation:)
+      create(:batch_invitation_user, outcome: "success", batch_invitation:)
+      create(:batch_invitation_user, outcome: nil, batch_invitation:)
+
+      assert_equal "In progress. 3 of 4 users processed.",
+                   batch_invite_status_message(batch_invitation)
+    end
+
+    should "state number of users processed when all were successful" do
+      batch_invitation = create(:batch_invitation, outcome: "success")
+      create(:batch_invitation_user, outcome: "skipped", batch_invitation:)
+      create(:batch_invitation_user, outcome: "success", batch_invitation:)
+
+      assert_equal "2 users processed.",
+                   batch_invite_status_message(batch_invitation)
+    end
+
+    should "state number of failures if any users have failed to process" do
+      batch_invitation = create(:batch_invitation, outcome: "success")
+      create(:batch_invitation_user, outcome: "failed", batch_invitation:)
+      create(:batch_invitation_user, outcome: "skipped", batch_invitation:)
+      create(:batch_invitation_user, outcome: "success", batch_invitation:)
+
+      assert_equal "1 error out of 3 users processed.",
+                   batch_invite_status_message(batch_invitation)
+    end
+  end
+
   context "#batch_invite_organisation_for_user" do
     context "when the batch invitation user raises an invalid slug error when asked for organisation_id" do
       setup do
