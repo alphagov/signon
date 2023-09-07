@@ -7,18 +7,28 @@ class ::Doorkeeper::Application < ActiveRecord::Base
 
   default_scope { order("oauth_applications.name") }
   scope :support_push_updates, -> { where(supports_push_updates: true) }
+  scope :not_retired, -> { where(retired: false) }
   scope :can_signin,
         lambda { |user|
-          joins(supported_permissions: :user_application_permissions)
-            .where(user_application_permissions: { user: })
-            .merge(SupportedPermission.signin)
-            .where(retired: false)
+          with_signin_permission_for(user)
+            .not_retired
         }
   scope :with_signin_delegatable,
         lambda {
           joins(:supported_permissions)
             .merge(SupportedPermission.signin)
             .merge(SupportedPermission.delegatable)
+        }
+  scope :with_signin_permission_for,
+        lambda { |user|
+          joins(supported_permissions: :user_application_permissions)
+            .where(user_application_permissions: { user: })
+            .merge(SupportedPermission.signin)
+        }
+  scope :without_signin_permission_for,
+        lambda { |user|
+          excluded_app_ids = with_signin_permission_for(user).map(&:id)
+          where.not(id: excluded_app_ids)
         }
 
   after_create :create_signin_supported_permission

@@ -22,8 +22,9 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
 
       visit account_applications_path
 
-      assert page.has_content?("app-name")
-      assert page.has_content?("app-description")
+      table = find("table caption[text()='Apps you have access to']").ancestor("table")
+      assert table.has_content?("app-name")
+      assert table.has_content?("app-description")
     end
 
     should "not list retired applications the user has access to" do
@@ -37,13 +38,26 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
       assert_not page.has_content?("retired-app-name")
     end
 
-    should "not list the applications the user does not have access to" do
+    should "list the applications the user does not have access to" do
       visit new_user_session_path
       signin_with @user
 
       visit account_applications_path
 
-      assert_not page.has_content?("app-name")
+      heading = find("h2", text: "Apps you don't have access to")
+      table = find("table[aria-labelledby='#{heading['id']}']")
+
+      assert table.has_content?("app-name")
+      assert table.has_content?("app-description")
+    end
+
+    should "not list retired applications the user does not have access to" do
+      visit new_user_session_path
+      signin_with @user
+
+      visit account_applications_path
+
+      assert_not page.has_content?("retired-app-name")
     end
   end
 end
