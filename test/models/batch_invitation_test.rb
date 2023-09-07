@@ -26,6 +26,20 @@ class BatchInvitationTest < ActiveSupport::TestCase
     @bi.save!
   end
 
+  context "#has_permissions?" do
+    should "be false when BatchInvitation has no batch_invitation_application_permissions" do
+      invitation = create(:batch_invitation)
+
+      assert_not invitation.has_permissions?
+    end
+
+    should "be true when BatchInvitation has any batch_invitation_application_permissions at all" do
+      invitation = create(:batch_invitation, supported_permissions: [@app.signin_permission])
+
+      assert invitation.has_permissions?
+    end
+  end
+
   context "#all_successful?" do
     should "be false when at least one BatchInvitationUser has failed" do
       @bi.update_column(:outcome, "success")
