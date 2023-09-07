@@ -54,7 +54,12 @@ Rails.application.routes.draw do
     resources :applications, only: [:index]
   end
 
-  resources :batch_invitations, only: %i[new create show]
+  resources :batch_invitations, only: %i[new create show] do
+    resource :permissions,
+             only: %i[new create],
+             controller: :batch_invitation_permissions
+  end
+
   resources :bulk_grant_permission_sets, only: %i[new create show]
   resources :organisations, only: %i[index edit update]
   resources :suspensions, only: %i[edit update]
