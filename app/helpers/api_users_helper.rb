@@ -8,15 +8,13 @@ module ApiUsersHelper
     user.suspended? ? content_tag(:del, anchor_tag) : anchor_tag
   end
 
-  def permissions_by_application(user)
+  def application_list(user)
     content_tag(:ul, class: "govuk-list") do
       safe_join(
         visible_applications(user).map do |application|
           next unless user.permissions_for(application).any?
 
-          content_tag(:li) do
-            content_tag(:abbr, application.name, title: "Permissions: #{user.permissions_for(application).to_sentence}")
-          end
+          content_tag(:li, application.name)
         end,
       )
     end

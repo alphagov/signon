@@ -19,7 +19,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       assert page.has_selector?("td", text: @api_user.name)
       assert page.has_selector?("td", text: @api_user.email)
 
-      assert page.has_selector?("abbr", text: @application.name)
+      assert page.has_selector?("td", text: @application.name)
       assert page.has_selector?("td:last-child", text: "No") # suspended?
     end
 
@@ -54,16 +54,18 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       select "Managing Editor", from: "Permissions for Whitehall"
       click_button "Update API user"
 
-      assert page.has_selector?("abbr[title='Permissions: Managing Editor and signin']", text: "Whitehall")
-
       click_link @api_user.name
+
+      assert_has_signin_permission_for("Whitehall")
+      assert_has_other_permissions("Whitehall", ["Managing Editor"])
 
       unselect "Managing Editor", from: "Permissions for Whitehall"
       click_button "Update API user"
 
-      assert page.has_selector?("abbr[title='Permissions: signin']", text: "Whitehall")
-
       click_link @api_user.name
+
+      assert_has_signin_permission_for("Whitehall")
+
       click_link "Account access log"
       assert page.has_text?("Access token generated for Whitehall by #{@superadmin.name}")
     end
@@ -110,5 +112,17 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
 
       assert page.has_selector?(".alert-success", text: "#{@api_user.email} is now active.")
     end
+  end
+
+  def assert_has_signin_permission_for(application_name)
+    within "table#editable-permissions" do
+      # The existence of the <tr> indicates that the API User has "singin"
+      # permission for the application
+      assert has_selector?("tr", text: application_name)
+    end
+  end
+
+  def assert_has_other_permissions(application_name, permission_names)
+    assert has_select?("Permissions for #{application_name}", selected: permission_names)
   end
 end
