@@ -14,7 +14,11 @@ class BatchInvitationsHelperTest < ActionView::TestCase
     end
 
     should "state number of users processed when all were successful" do
-      batch_invitation = create(:batch_invitation, outcome: "success")
+      batch_invitation = create(
+        :batch_invitation,
+        :has_permissions,
+        outcome: "success",
+      )
       create(:batch_invitation_user, outcome: "skipped", batch_invitation:)
       create(:batch_invitation_user, outcome: "success", batch_invitation:)
 
@@ -23,12 +27,23 @@ class BatchInvitationsHelperTest < ActionView::TestCase
     end
 
     should "state number of failures if any users have failed to process" do
-      batch_invitation = create(:batch_invitation, outcome: "success")
+      batch_invitation = create(
+        :batch_invitation,
+        :has_permissions,
+        outcome: "success",
+      )
       create(:batch_invitation_user, outcome: "failed", batch_invitation:)
       create(:batch_invitation_user, outcome: "skipped", batch_invitation:)
       create(:batch_invitation_user, outcome: "success", batch_invitation:)
 
       assert_equal "1 error out of 3 users processed.",
+                   batch_invite_status_message(batch_invitation)
+    end
+
+    should "explain the problem for a batch invitation that has no permissions" do
+      batch_invitation = create(:batch_invitation)
+
+      assert_equal "Batch invitation doesn't have any permissions yet.",
                    batch_invite_status_message(batch_invitation)
     end
   end

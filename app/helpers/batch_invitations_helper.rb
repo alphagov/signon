@@ -7,6 +7,8 @@ module BatchInvitationsHelper
         "users processed."
     elsif batch_invitation.all_successful?
       "#{batch_invitation.batch_invitation_users.count} users processed."
+    elsif !batch_invitation.has_permissions?
+      "Batch invitation doesn't have any permissions yet."
     else
       "#{pluralize(batch_invitation.batch_invitation_users.failed.count, 'error')} out of " \
         "#{batch_invitation.batch_invitation_users.count} " \
