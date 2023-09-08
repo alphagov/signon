@@ -228,5 +228,23 @@ class BatchInvitationsControllerTest < ActionController::TestCase
         assert_select "head meta[http-equiv=refresh]", count: 0
       end
     end
+
+    context "batch invitation doesn't have any permissions yet" do
+      setup do
+        @bi = create(:batch_invitation)
+        create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
+        create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
+        get :show, params: { id: @bi.id }
+      end
+
+      should "explain the problem with the batch invitation" do
+        assert_select "div.gem-c-error-alert",
+                      /Batch invitation doesn't have any permissions yet./
+      end
+
+      should "not include the meta refresh" do
+        assert_select "head meta[http-equiv=refresh]", count: 0
+      end
+    end
   end
 end
