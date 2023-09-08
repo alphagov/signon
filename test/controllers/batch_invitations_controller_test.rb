@@ -179,40 +179,44 @@ class BatchInvitationsControllerTest < ActionController::TestCase
   end
 
   context "GET show" do
-    setup do
-      @bi = create(:batch_invitation, :in_progress)
-      @user1 = create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
-      @user2 = create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
-    end
+    context "processing in progress" do
+      setup do
+        @bi = create(:batch_invitation, :in_progress)
+        @user1 = create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
+        @user2 = create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
+      end
 
-    should "list the users being created" do
-      get :show, params: { id: @bi.id }
-      assert_select "table tbody tr", 2
-      assert_select "table td", "a@m.com"
-      assert_select "table td", "b@m.com"
-    end
+      should "list the users being created" do
+        get :show, params: { id: @bi.id }
+        assert_select "table tbody tr", 2
+        assert_select "table td", "a@m.com"
+        assert_select "table td", "b@m.com"
+      end
 
-    should "include a meta refresh" do
-      get :show, params: { id: @bi.id }
-      assert_select 'head meta[http-equiv=refresh][content="3"]'
-    end
+      should "include a meta refresh" do
+        get :show, params: { id: @bi.id }
+        assert_select 'head meta[http-equiv=refresh][content="3"]'
+      end
 
-    should "show the state of the processing" do
-      @user1.update_column(:outcome, "failed")
-      get :show, params: { id: @bi.id }
-      assert_select "section.gem-c-notice", /In progress/i
-      assert_select "section.gem-c-notice", /1 of 2 users processed/i
-    end
+      should "show the state of the processing" do
+        @user1.update_column(:outcome, "failed")
+        get :show, params: { id: @bi.id }
+        assert_select "section.gem-c-notice", /In progress/i
+        assert_select "section.gem-c-notice", /1 of 2 users processed/i
+      end
 
-    should "show the outcome for each user" do
-      @user1.update_column(:outcome, "failed")
-      get :show, params: { id: @bi.id }
-      assert_select "td", /Failed/i
+      should "show the outcome for each user" do
+        @user1.update_column(:outcome, "failed")
+        get :show, params: { id: @bi.id }
+        assert_select "td", /Failed/i
+      end
     end
 
     context "processing complete" do
       setup do
-        @bi.update_column(:outcome, "success")
+        @bi = create(:batch_invitation, outcome: "success")
+        create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
+        create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
         get :show, params: { id: @bi.id }
       end
 
