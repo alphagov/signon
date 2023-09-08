@@ -26,6 +26,39 @@ class BatchInvitationTest < ActiveSupport::TestCase
     @bi.save!
   end
 
+  context "#all_successful?" do
+    should "be false when at least one BatchInvitationUser has failed" do
+      @bi.update_column(:outcome, "success")
+      @user_a.update_column(:outcome, "failed")
+
+      assert_not @bi.all_successful?
+    end
+
+    should "be true when no BatchInvitationUsers have failed" do
+      @bi.update_column(:outcome, "success")
+      @user_a.update_column(:outcome, "success")
+      @user_b.update_column(:outcome, "success")
+
+      assert @bi.all_successful?
+    end
+
+    should "be true even if outcome is 'fail' as long as no BatchInvitationUsers have failed" do
+      @bi.update_column(:outcome, "fail")
+      @user_a.update_column(:outcome, "success")
+      @user_b.update_column(:outcome, "success")
+
+      assert @bi.all_successful?
+    end
+
+    should "be false when BatchInvitation is still in progress" do
+      @bi.update_column(:outcome, nil)
+      @user_a.update_column(:outcome, "success")
+      @user_b.update_column(:outcome, "success")
+
+      assert_not @bi.all_successful?
+    end
+  end
+
   context "perform" do
     should "create the users and assign them permissions" do
       @bi.reload.perform

@@ -17,7 +17,7 @@ class BatchInvitation < ApplicationRecord
   end
 
   def all_successful?
-    batch_invitation_users.failed.count.zero?
+    !outcome.nil? && batch_invitation_users.failed.count.zero?
   end
 
   def enqueue
