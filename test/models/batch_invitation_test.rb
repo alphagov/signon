@@ -40,6 +40,26 @@ class BatchInvitationTest < ActiveSupport::TestCase
     end
   end
 
+  context "#in_progress?" do
+    should "be false when BatchInvitation has an outcome" do
+      @bi.update_column(:outcome, "success")
+
+      assert_not @bi.in_progress?
+    end
+
+    should "be true when BatchInvitation does not have an outcome yet" do
+      @bi.update_column(:outcome, nil)
+
+      assert @bi.in_progress?
+    end
+
+    should "be false when BatchInvitation does not have any permissions yet" do
+      invitation = create(:batch_invitation, outcome: nil)
+
+      assert_not invitation.in_progress?
+    end
+  end
+
   context "#all_successful?" do
     should "be false when at least one BatchInvitationUser has failed" do
       @bi.update_column(:outcome, "success")

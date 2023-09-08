@@ -3,7 +3,7 @@ require "test_helper"
 class BatchInvitationsHelperTest < ActionView::TestCase
   context "#batch_invite_status_message" do
     should "state number of users processed so far when still in progress" do
-      batch_invitation = create(:batch_invitation, outcome: nil)
+      batch_invitation = create(:batch_invitation, :in_progress)
       create(:batch_invitation_user, outcome: "failed", batch_invitation:)
       create(:batch_invitation_user, outcome: "skipped", batch_invitation:)
       create(:batch_invitation_user, outcome: "success", batch_invitation:)

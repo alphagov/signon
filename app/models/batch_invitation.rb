@@ -17,7 +17,7 @@ class BatchInvitation < ApplicationRecord
   end
 
   def in_progress?
-    outcome.nil?
+    outcome.nil? && has_permissions?
   end
 
   def all_successful?

@@ -21,7 +21,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
 
     context "some batches created recently" do
       setup do
-        @bi = create(:batch_invitation)
+        @bi = create(:batch_invitation, :in_progress)
         create(:batch_invitation_user, batch_invitation: @bi)
       end
 
@@ -180,7 +180,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
 
   context "GET show" do
     setup do
-      @bi = create(:batch_invitation)
+      @bi = create(:batch_invitation, :in_progress)
       @user1 = create(:batch_invitation_user, name: "A", email: "a@m.com", batch_invitation: @bi)
       @user2 = create(:batch_invitation_user, name: "B", email: "b@m.com", batch_invitation: @bi)
     end
