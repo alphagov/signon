@@ -56,4 +56,11 @@ class SupportedPermissionTest < ActiveSupport::TestCase
     assert_not default_permissions.include? permission_three
     assert_not default_permissions.include? application_one.signin_permission
   end
+
+  test ".signin returns all signin permissions" do
+    app1 = create(:application, with_supported_permissions: %w[app1-permission])
+    app2 = create(:application, with_supported_permissions: %w[app2-permission])
+
+    assert_same_elements [app1.signin_permission, app2.signin_permission], SupportedPermission.signin
+  end
 end

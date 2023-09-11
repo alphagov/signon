@@ -150,5 +150,67 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
 
       assert_empty Doorkeeper::Application.with_signin_delegatable
     end
+
+    context ".not_retired" do
+      setup do
+        @app = create(:application)
+      end
+
+      should "include apps that have not been retired" do
+        @app.update!(retired: false)
+        assert_equal [@app], Doorkeeper::Application.not_retired
+      end
+
+      should "exclude apps that have been retired" do
+        @app.update!(retired: true)
+        assert_equal [], Doorkeeper::Application.not_retired
+      end
+    end
+
+    context ".with_signin_permission_for" do
+      setup do
+        @user = create(:user)
+        @app = create(:application)
+      end
+
+      should "include applications the user has the signin permission for" do
+        @user.grant_application_signin_permission(@app)
+
+        assert_equal [@app], Doorkeeper::Application.with_signin_permission_for(@user)
+      end
+
+      should "exclude applications the user does not have the signin permission for" do
+        create(:supported_permission, application: @app, name: "not-signin")
+
+        @user.grant_application_permission(@app, %w[not-signin])
+
+        assert_equal [], Doorkeeper::Application.with_signin_permission_for(@user)
+      end
+    end
+
+    context ".without_signin_permission_for" do
+      setup do
+        @user = create(:user)
+        @app = create(:application)
+      end
+
+      should "exclude applications the user has the signin permission for" do
+        @user.grant_application_signin_permission(@app)
+
+        assert_equal [], Doorkeeper::Application.without_signin_permission_for(@user)
+      end
+
+      should "include applications the user does not have the signin permission for" do
+        create(:supported_permission, application: @app, name: "not-signin")
+
+        @user.grant_application_permission(@app, %w[not-signin])
+
+        assert_equal [@app], Doorkeeper::Application.without_signin_permission_for(@user)
+      end
+
+      should "include applications the user doesn't have any permissions for" do
+        assert_equal [@app], Doorkeeper::Application.without_signin_permission_for(@user)
+      end
+    end
   end
 end

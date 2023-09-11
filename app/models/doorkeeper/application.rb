@@ -7,17 +7,28 @@ class ::Doorkeeper::Application < ActiveRecord::Base
 
   default_scope { order("oauth_applications.name") }
   scope :support_push_updates, -> { where(supports_push_updates: true) }
+  scope :not_retired, -> { where(retired: false) }
   scope :can_signin,
         lambda { |user|
-          joins(supported_permissions: :user_application_permissions)
-            .where("user_application_permissions.user_id" => user.id)
-            .where("supported_permissions.name" => SupportedPermission::SIGNIN_NAME)
-            .where(retired: false)
+          with_signin_permission_for(user)
+            .not_retired
         }
   scope :with_signin_delegatable,
         lambda {
           joins(:supported_permissions)
-            .where(supported_permissions: { name: SupportedPermission::SIGNIN_NAME, delegatable: true })
+            .merge(SupportedPermission.signin)
+            .merge(SupportedPermission.delegatable)
+        }
+  scope :with_signin_permission_for,
+        lambda { |user|
+          joins(supported_permissions: :user_application_permissions)
+            .where(user_application_permissions: { user: })
+            .merge(SupportedPermission.signin)
+        }
+  scope :without_signin_permission_for,
+        lambda { |user|
+          excluded_app_ids = with_signin_permission_for(user).map(&:id)
+          where.not(id: excluded_app_ids)
         }
 
   after_create :create_signin_supported_permission
@@ -36,7 +47,7 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   end
 
   def signin_permission
-    supported_permissions.find_by(name: SupportedPermission::SIGNIN_NAME)
+    supported_permissions.signin.first
   end
 
   def sorted_supported_permissions_grantable_from_ui
@@ -78,7 +89,7 @@ private
   end
 
   def create_signin_supported_permission
-    supported_permissions.create!(name: SupportedPermission::SIGNIN_NAME, delegatable: true)
+    supported_permissions.delegatable.signin.create!
   end
 
   def create_user_update_supported_permission
