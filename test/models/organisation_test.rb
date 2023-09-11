@@ -17,6 +17,12 @@ class OrganisationTest < ActiveSupport::TestCase
     end
   end
 
+  test "strips unwanted whitespace from name" do
+    organisation = create(:organisation, name: "  An organisation ")
+
+    assert_equal "An organisation", organisation.name
+  end
+
   context "displaying name with abbreviation" do
     should "use abbreviation when it is not the same as name" do
       organisation = build(:organisation, name: "An Organisation", abbreviation: "ABBR")

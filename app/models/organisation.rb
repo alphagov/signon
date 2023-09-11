@@ -10,6 +10,8 @@ class Organisation < ApplicationRecord
   validates :name, presence: true
   validates :organisation_type, presence: true
 
+  before_save :strip_whitespace_from_name
+
   def name_with_abbreviation
     return_value = if abbreviation.present? && abbreviation != name
                      "#{name} – #{abbreviation}"
@@ -20,5 +22,11 @@ class Organisation < ApplicationRecord
     return_value += " (closed)" if closed?
 
     return_value
+  end
+
+private
+
+  def strip_whitespace_from_name
+    name.strip!
   end
 end
