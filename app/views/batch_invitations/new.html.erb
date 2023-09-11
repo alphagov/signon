@@ -17,7 +17,7 @@
       <% recent_batch_invitations.each do |batch_invitation| %>
         <tr>
           <td>
-            <%= link_to(batch_invitation_path(batch_invitation), alt: "View this batch") do %>
+            <%= batch_invite_status_link(batch_invitation) do %>
               <%= batch_invitation.batch_invitation_users.count %> users by <%= batch_invitation.user.name %> at <%= batch_invitation.created_at.to_fs(:govuk_date) %>
             <% end %>
           </td>
