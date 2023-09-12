@@ -12,12 +12,16 @@ class BatchInvitation < ApplicationRecord
   validates :outcome, inclusion: { in: [nil, "success", "fail"] }
   validates :user_id, presence: true
 
+  def has_permissions?
+    batch_invitation_application_permissions.exists?
+  end
+
   def in_progress?
-    outcome.nil?
+    outcome.nil? && has_permissions?
   end
 
   def all_successful?
-    batch_invitation_users.failed.count.zero?
+    !outcome.nil? && batch_invitation_users.failed.count.zero?
   end
 
   def enqueue

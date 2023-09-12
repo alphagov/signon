@@ -17,7 +17,7 @@
       <% recent_batch_invitations.each do |batch_invitation| %>
         <tr>
           <td>
-            <%= link_to(batch_invitation_path(batch_invitation), alt: "View this batch") do %>
+            <%= batch_invite_status_link(batch_invitation) do %>
               <%= batch_invitation.batch_invitation_users.count %> users by <%= batch_invitation.user.name %> at <%= batch_invitation.created_at.to_fs(:govuk_date) %>
             <% end %>
           </td>
@@ -66,10 +66,6 @@ Winston Churchill,winston@example.com
       <% end %>
     </div>
 
-    <h2>Permissions for the users</h2>
-
-    <%= render partial: "shared/user_permissions", locals: { user_object: User.new } %>
-
-    <%= f.submit "Create users and send emails", :class => 'btn btn-success' %>
+    <%= f.submit "Manage permissions for new users", :class => 'btn btn-success' %>
   <% end %>
 </div>

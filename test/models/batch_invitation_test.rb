@@ -26,6 +26,73 @@ class BatchInvitationTest < ActiveSupport::TestCase
     @bi.save!
   end
 
+  context "#has_permissions?" do
+    should "be false when BatchInvitation has no batch_invitation_application_permissions" do
+      invitation = create(:batch_invitation)
+
+      assert_not invitation.has_permissions?
+    end
+
+    should "be true when BatchInvitation has any batch_invitation_application_permissions at all" do
+      invitation = create(:batch_invitation, supported_permissions: [@app.signin_permission])
+
+      assert invitation.has_permissions?
+    end
+  end
+
+  context "#in_progress?" do
+    should "be false when BatchInvitation has an outcome" do
+      @bi.update_column(:outcome, "success")
+
+      assert_not @bi.in_progress?
+    end
+
+    should "be true when BatchInvitation does not have an outcome yet" do
+      @bi.update_column(:outcome, nil)
+
+      assert @bi.in_progress?
+    end
+
+    should "be false when BatchInvitation does not have any permissions yet" do
+      invitation = create(:batch_invitation, outcome: nil)
+
+      assert_not invitation.in_progress?
+    end
+  end
+
+  context "#all_successful?" do
+    should "be false when at least one BatchInvitationUser has failed" do
+      @bi.update_column(:outcome, "success")
+      @user_a.update_column(:outcome, "failed")
+
+      assert_not @bi.all_successful?
+    end
+
+    should "be true when no BatchInvitationUsers have failed" do
+      @bi.update_column(:outcome, "success")
+      @user_a.update_column(:outcome, "success")
+      @user_b.update_column(:outcome, "success")
+
+      assert @bi.all_successful?
+    end
+
+    should "be true even if outcome is 'fail' as long as no BatchInvitationUsers have failed" do
+      @bi.update_column(:outcome, "fail")
+      @user_a.update_column(:outcome, "success")
+      @user_b.update_column(:outcome, "success")
+
+      assert @bi.all_successful?
+    end
+
+    should "be false when BatchInvitation is still in progress" do
+      @bi.update_column(:outcome, nil)
+      @user_a.update_column(:outcome, "success")
+      @user_b.update_column(:outcome, "success")
+
+      assert_not @bi.all_successful?
+    end
+  end
+
   context "perform" do
     should "create the users and assign them permissions" do
       @bi.reload.perform
