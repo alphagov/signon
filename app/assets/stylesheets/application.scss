@@ -1,3 +1,5 @@
+$govuk-page-width: 1140px;
+
 @import "govuk_publishing_components/all_components";
 @import "user_research_recruitment_banner";
 
@@ -42,6 +44,10 @@
   padding: 7px 10px;
 }
 
+.app-bottom-separator {
+  border-bottom: 1px solid $govuk-border-colour;
+}
+
 .govuk-error-message p {
   margin: 0;
 }
@@ -72,4 +78,10 @@
 
 .govuk-table__cell--line-through {
   text-decoration: line-through;
+}
+
+.users-index-button-group {
+  @include govuk-media-query($from: tablet) {
+    float: right;
+  }
 }

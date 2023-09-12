@@ -1,0 +1,343 @@
+name: Option select
+description: A scrollable list of checkboxes to be displayed on a form where one might
+  otherwise use a multi-select
+body:
+accessibility_criteria: |
+  The option select must:
+
+  - indicate that the option select is expandable/collapsible
+  - indicate the initial state of expandable content
+  - indicate where the state of expandable content has changed
+
+  The option select inputs must:
+
+  - have a margin to the right when the box is scrollable so that users can interact with a scrollbar without accidentally clicking an option
+  - only include an `aria-controls` attribute if an element with the ID specified exists on the page
+  - be [grouped with a label](https://www.w3.org/WAI/GL/wiki/Using_grouping_roles_to_identify_related_form_controls)
+
+  The option select filter must:
+
+  - be focusable with a keyboard
+  - indicate when it has keyboard focus
+  - inform the user that is it an editable field
+  - inform the user when there are matches, or if there are no matches
+  - inform the user as the number of matches changes
+examples:
+  default:
+    data:
+      key: market_sector
+      title: Market sector
+      options_container_id: list_of_sectors
+      options:
+      - value: aerospace
+        label: Aerospace
+        id: aerospace
+      - value: agriculture-environment-and-natural-resources
+        label: Agriculture, environment and natural resources
+        id: agriculture-environment-and-natural-resources
+      - value: building-and-construction
+        label: Building and construction
+        id: building-and-construction
+      - value: chemicals
+        label: Chemicals
+        id: chemicals
+      - value: clothing-footwear-and-fashion
+        label: Clothing, footwear and fashion
+        id: clothing-footwear-and-fashion
+      - value: defence
+        label: Defence
+        id: defence
+      - value: distribution-and-service-industries
+        label: Distribution and Service Industries
+        id: distribution-and-service-industries
+      - value: electronics-industry
+        label: Electronics Industry
+        id: electronics-industry
+      - value: energy
+        label: Energy
+        id: energy
+      - value: engineering
+        label: Engineering
+        id: engineering
+      - value: financial-services
+        label: Financial services
+        id: financial-services
+      - value: fire-police-and-security
+        label: Fire, police, and security
+        id: fire-police-and-security
+      - value: food-manufacturing
+        label: Food manufacturing
+        id: food-manufacturing
+      - value: giftware-jewellery-and-tableware
+        label: Giftware, jewellery and tableware
+        id: giftware-jewellery-and-tableware
+  with_option_pre_checked:
+    data:
+      key: with_checked_value_set
+      title: List of options
+      options_container_id: list_of_vegetables
+      options:
+      - value: potatoes
+        label: Potatoes
+        checked: true
+      - value: carrots
+        label: Carrots
+        id: carrots
+      - value: mash
+        label: Mash
+        id: mash
+  with_aria_controls:
+    description: |
+      aria_controls_id adds an [`aria-controls` attribute](https://tink.uk/using-the-aria-controls-attribute/) to each checkbox input. This makes it easier for users of assitive tech to jump from them to the part of the page they’re updating.
+
+      The aria_controls_id must be set to the ID of an element that’s on the page or it won’t be included.
+    data:
+      key: with_aria-control_set
+      title: List of options (with aria controls)
+      aria_controls_id: wrapper
+      options_container_id: list_of_countries
+      options:
+      - value: britain
+        label: Britain
+        id: britain
+      - value: france
+        label: France
+        id: france
+      - value: spain
+        label: Spain
+        id: spain
+  closed_on_load:
+    data:
+      key: closed_on_load
+      title: List of hats
+      closed_on_load: true
+      options_container_id: list_of_hats
+      options:
+      - value: bobble_hat
+        label: Bobble hat
+        id: bobble_hat
+      - value: fez
+        label: Fez
+        id: fez
+      - value: sombrero
+        label: Sombrero
+        id: sombrero
+  with_tracking:
+    data:
+      key: list_of_shoes
+      title: List of shoes
+      options_container_id: list_of_shoes
+      options:
+      - value: trainers
+        label: Trainers
+        id: trainers
+        data_attributes:
+          track_category: "filterClicked"
+          track_action: "List of shoes"
+          track_label: "trainers"
+          track_options:
+            dimension28: 1
+      - value: plimsolls
+        label: Plimsolls
+        id: plimsolls
+        data_attributes:
+          track_category: "filterClicked"
+          track_action: "List of shoes"
+          track_label: "plimsolls"
+          track_options:
+            dimension28: 1
+      - value: high_heels
+        label: High heels
+        id: high_heels
+        data_attributes:
+          track_category: "filterClicked"
+          track_action: "List of shoes"
+          track_label: "high_heels"
+          track_options:
+            dimension28: 1
+  with_filter:
+    description: Adds a filter to allow users to narrow the checkboxes down. Checkboxes will only show if they match what the user has typed, or if they are already checked. The filter is case insensitive and strips out punctuation characters and duplicate whitespace, and sees '&' and 'and' as the same, to make filtering easier.
+    data:
+      key: filter_demo
+      title: Countries
+      options_container_id: list_of_countries_to_filter
+      show_filter: true
+      options:
+      - value: afghanistan
+        label: Afghanistan
+        id: afghanistan
+      - value: albania
+        label: Albania
+        id: albania
+      - value: algeria
+        label: Algeria
+        id: algeria
+        checked: true
+      - value: american_samoa
+        label: American Samoa
+        id: american_samoa
+      - value: andorra
+        label: Andorra
+        id: andorra
+        checked: true
+      - value: angola
+        label: Angola
+        id: angola
+      - value: anguilla
+        label: Anguilla
+        id: anguilla
+      - value: antigua_and_barbuda
+        label: Antigua and Barbuda
+        id: antigua_and_barbuda
+      - value: argentina
+        label: Argentina
+        id: argentina
+      - value: armenia
+        label: Armenia
+        id: armenia
+      - value: aruba
+        label: Aruba
+        id: aruba
+      - value: australia
+        label: Australia
+        id: australia
+      - value: austria
+        label: Austria
+        id: austria
+      - value: azerbaijan
+        label: Azerbaijan
+        id: azerbaijan
+      - value: bahamas
+        label: Bahamas
+        id: bahamas
+      - value: bahrain
+        label: Bahrain
+        id: bahrain
+      - value: bangladesh
+        label: Bangladesh
+        id: bangladesh
+      - value: barbados
+        label: Barbados
+        id: barbados
+      - value: belarus
+        label: Belarus
+        id: belarus
+      - value: belgium
+        label: Belgium
+        id: belgium
+      - value: belize
+        label: Belize
+        id: belize
+      - value: benin
+        label: Benin
+        id: benin
+      - value: bermuda
+        label: Bermuda
+        id: bermuda
+      - value: bhutan
+        label: Bhutan
+        id: bhutan
+      - value: bolivia
+        label: Bolivia
+        id: bolivia
+      - value: cote
+        label: Cote d’Ivoire
+        id: cote
+      - value: sthelena
+        label: St Helena, Ascension and Tristan da Cunha
+        id: sthelena
+      - value: trinidad
+        label: Trinidad & Tobago
+        id: trinidad
+  large:
+    description: When `large` is set to `true`, the option-select container has an increased max-height of 600px, allowing more checkbox items to be visible.
+    data:
+      key: large_demo
+      title: Countries
+      options_container_id: list_of_countries_to_filter_large
+      large: true
+      options:
+      - value: afghanistan
+        label: Afghanistan
+        id: afghanistanLargeExample
+      - value: albania
+        label: Albania
+        id: albaniaLargeExample
+      - value: algeria
+        label: Algeria
+        id: algeriaLargeExample
+      - value: american_samoa
+        label: American Samoa
+        id: american_samoaLargeExample
+      - value: andorra
+        label: Andorra
+        id: andorraLargeExample
+      - value: angola
+        label: Angola
+        id: angolaLargeExample
+      - value: anguilla
+        label: Anguilla
+        id: anguillaLargeExample
+      - value: antigua_and_barbuda
+        label: Antigua and Barbuda
+        id: antigua_and_barbudaLargeExample
+      - value: argentina
+        label: Argentina
+        id: argentinaLargeExample
+      - value: armenia
+        label: Armenia
+        id: armeniaLargeExample
+      - value: aruba
+        label: Aruba
+        id: arubaLargeExample
+      - value: australia
+        label: Australia
+        id: australiaLargeExample
+      - value: austria
+        label: Austria
+        id: austriaLargeExample
+      - value: azerbaijan
+        label: Azerbaijan
+        id: azerbaijanLargeExample
+      - value: bahamas
+        label: Bahamas
+        id: bahamasLargeExample
+      - value: bahrain
+        label: Bahrain
+        id: bahrainLargeExample
+      - value: bangladesh
+        label: Bangladesh
+        id: bangladeshLargeExample
+      - value: barbados
+        label: Barbados
+        id: barbadosLargeExample
+      - value: belarus
+        label: Belarus
+        id: belarusLargeExample
+      - value: belgium
+        label: Belgium
+        id: belgiumLargeExample
+      - value: belize
+        label: Belize
+        id: belizeLargeExample
+      - value: benin
+        label: Benin
+        id: beninLargeExample
+      - value: bermuda
+        label: Bermuda
+        id: bermudaLargeExample
+      - value: bhutan
+        label: Bhutan
+        id: bhutanLargeExample
+      - value: bolivia
+        label: Bolivia
+        id: boliviaLargeExample
+      - value: cote
+        label: Cote d'Ivoire
+        id: coteLargeExample
+      - value: sthelena
+        label: St Helena, Ascension and Tristan da Cunha
+        id: sthelenaLargeExample
+      - value: trinidad
+        label: Trinidad & Tobago
+        id: trinidadLargeExample

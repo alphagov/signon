@@ -1,12 +1,10 @@
 module UsersHelper
+  def two_step_abbr_tag
+    tag.abbr("2SV", title: "Two step verification")
+  end
+
   def two_step_status(user)
-    if user.has_2sv?
-      "Enabled"
-    elsif user.exempt_from_2sv?
-      "Exempted"
-    else
-      "Not set up"
-    end
+    user.two_step_status.humanize.capitalize
   end
 
   def organisation_options(form_builder)
@@ -41,12 +39,25 @@ module UsersHelper
     max_updated_at.present? && max_last_synced_at.present? ? max_updated_at > max_last_synced_at : false
   end
 
-  def link_to_users_csv(text, params, options = {})
-    merged_params = params.permit(:filter, :role, :permission, :status, :organisation, :two_step_status).merge(format: "csv")
-    link_to text, merged_params, options
-  end
-
   def formatted_number_of_users(users)
     pluralize(number_with_delimiter(users.total_count), "user")
+  end
+
+  def filtered_users_heading(users)
+    count = formatted_number_of_users(users)
+    if current_user.manageable_organisations.one?
+      "#{count} in #{current_user.manageable_organisations.first.name}"
+    else
+      count
+    end
+  end
+
+  def assignable_user_roles
+    current_user.manageable_roles
+  end
+
+  def user_name(user)
+    anchor_tag = link_to(user.name, edit_user_path(user), class: "govuk-link")
+    user.suspended? ? content_tag(:del, anchor_tag) : anchor_tag
   end
 end

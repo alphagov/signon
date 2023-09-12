@@ -271,13 +271,13 @@ class UsersControllerTest < ActionController::TestCase
       should "list users" do
         create(:user, email: "another_user@email.com")
         get :index
-        assert_select "td.email", /another_user@email.com/
+        assert_select "tr td:nth-child(2)", /another_user@email.com/
       end
 
       should "not list api users" do
         create(:api_user, email: "api_user@email.com")
         get :index
-        assert_select "td.email", count: 0, text: /api_user@email.com/
+        assert_select "tr td:nth-child(2)", count: 0, text: /api_user@email.com/
       end
 
       should "not show superadmin users" do
@@ -286,7 +286,7 @@ class UsersControllerTest < ActionController::TestCase
         get :index
 
         assert_select "tbody tr", count: 1
-        assert_select "td.email", /#{@user.email}/
+        assert_select "tr td:nth-child(2)", /#{@user.email}/
       end
 
       should "show user roles" do
@@ -296,19 +296,119 @@ class UsersControllerTest < ActionController::TestCase
 
         get :index
 
-        assert_select "td.role", "Normal"
-        assert_select "td.role", "Organisation admin"
-        assert_select "td.role", "Super organisation admin"
-        assert_select "td.role", "Admin"
-        assert_select "td.role", count: 4
+        assert_select "tr td:nth-child(3)", /Normal/
+        assert_select "tr td:nth-child(3)", /Organisation admin/
+        assert_select "tr td:nth-child(3)", /Super organisation admin/
+        assert_select "tr td:nth-child(3)", /Admin/
       end
 
-      should "show user organisation" do
-        user = create(:user_in_organisation)
+      context "filter" do
+        should "filter by partially matching name" do
+          create(:user, name: "does-match1")
+          create(:user, name: "does-match2")
+          create(:user, name: "does-not-match")
 
-        get :index
+          get :index, params: { filter: "does-match" }
 
-        assert_select "td.organisation", user.organisation.name
+          assert_select "tr td:nth-child(1)", text: /does-match/, count: 2
+        end
+
+        should "filter by partially matching email" do
+          create(:user, email: "does-match1@example.com")
+          create(:user, email: "does-match2@example.com")
+          create(:user, email: "does-not-match@example.com")
+
+          get :index, params: { filter: "does-match" }
+
+          assert_select "tr td:nth-child(2)", text: /does-match/, count: 2
+        end
+
+        should "filter by statuses" do
+          create(:active_user, name: "active-user")
+          create(:suspended_user, name: "suspended-user")
+          create(:invited_user, name: "invited-user")
+          create(:locked_user, name: "locked-user")
+
+          get :index, params: { statuses: %w[locked suspended] }
+
+          assert_select "tr td:nth-child(1)", text: /active-user/, count: 0
+          assert_select "tr td:nth-child(1)", text: /suspended-user/
+          assert_select "tr td:nth-child(1)", text: /invited-user/, count: 0
+          assert_select "tr td:nth-child(1)", text: /locked-user/
+        end
+
+        should "filter by 2SV statuses" do
+          create(:user, name: "not-set-up-user")
+          create(:two_step_exempted_user, name: "exempted-user")
+          create(:two_step_enabled_user, name: "enabled-user")
+
+          get :index, params: { two_step_statuses: %w[not_setup_2sv exempt_from_2sv] }
+
+          assert_select "tr td:nth-child(1)", text: /not-set-up-user/
+          assert_select "tr td:nth-child(1)", text: /exempted-user/
+          assert_select "tr td:nth-child(1)", text: /enabled-user/, count: 0
+        end
+
+        should "filter by roles" do
+          create(:admin_user, name: "admin-user")
+          create(:organisation_admin_user, name: "organisation-admin-user")
+          create(:user, name: "normal-user")
+
+          get :index, params: { roles: %w[admin normal] }
+
+          assert_select "tr td:nth-child(1)", text: /admin-user/
+          assert_select "tr td:nth-child(1)", text: /organisation-admin-user/, count: 0
+          assert_select "tr td:nth-child(1)", text: /normal-user/
+        end
+
+        should "filter by permissions" do
+          app1 = create(:application, name: "App 1")
+          app2 = create(:application, name: "App 2")
+
+          permission1 = create(:supported_permission, application: app1, name: "Permission 1")
+
+          create(:user, name: "user1", supported_permissions: [app1.signin_permission, permission1])
+          create(:user, name: "user2", supported_permissions: [])
+          create(:user, name: "user3", supported_permissions: [app2.signin_permission, permission1])
+
+          get :index, params: { permissions: [app1.signin_permission, app2.signin_permission] }
+
+          assert_select "tr td:nth-child(1)", text: /user1/
+          assert_select "tr td:nth-child(1)", text: /user2/, count: 0
+          assert_select "tr td:nth-child(1)", text: /user3/
+        end
+
+        should "filter by organisations" do
+          organisation1 = create(:organisation, name: "Organisation 1")
+          organisation2 = create(:organisation, name: "Organisation 2")
+          organisation3 = create(:organisation, name: "Organisation 3")
+
+          create(:user, name: "user1-in-organisation1", organisation: organisation1)
+          create(:user, name: "user2-in-organisation1", organisation: organisation1)
+          create(:user, name: "user3-in-organisation2", organisation: organisation2)
+          create(:user, name: "user4-in-organisation3", organisation: organisation3)
+
+          get :index, params: { organisations: [organisation1, organisation3] }
+
+          assert_select "tr td:nth-child(1)", text: /user1-in-organisation1/
+          assert_select "tr td:nth-child(1)", text: /user2-in-organisation1/
+          assert_select "tr td:nth-child(1)", text: /user3-in-organisation2/, count: 0
+          assert_select "tr td:nth-child(1)", text: /user4-in-organisation3/
+        end
+
+        should "display link to clear all filters" do
+          get :index
+
+          assert_select "a", text: "Clear all filters", href: users_path
+        end
+
+        should "redirect legacy filters" do
+          organisation1 = create(:organisation, name: "Organisation 1")
+
+          get :index, params: { organisation: organisation1 }
+
+          assert_redirected_to users_path(organisations: [organisation1])
+        end
       end
 
       context "CSV export" do
@@ -318,105 +418,20 @@ class UsersControllerTest < ActionController::TestCase
           assert_equal "text/csv", @response.media_type
         end
 
-        should "export filtered users by role" do
-          create(:user)
-          get :index, params: { role: "normal", format: :csv }
-          lines = @response.body.lines
-          assert_equal(2, lines.length)
+        should "only include filtered users" do
+          create(:user, name: "does-match")
+          create(:user, name: "does-not-match")
+          get :index, params: { filter: "does-match", format: :csv }
+          number_of_users = CSV.parse(@response.body, headers: true).length
+          assert_equal 1, number_of_users
         end
 
-        should "export filtered users by all fields" do
-          organisation = create(:organisation, name: "Cookies Of Other Lands", abbreviation: "COOL")
-
-          create(:suspended_user, name: "Special cookie", email: "specialcookie@email.com", role: "normal", organisation:)
-          create(:suspended_user, name: "Normal cookie", email: "normalcookie@email.com", role: "normal", organisation:)
-
-          assert_equal(3, User.count)
-
-          get :index, params: { role: "normal", status: "suspended", organisation:, two_step_status: false, filter: "special", format: :csv }
-
-          lines = @response.body.lines
-          assert_equal(2, lines.length)
-        end
-
-        should "export all users when no filter selected" do
+        should "include all users when no filter selected" do
           create(:user)
           get :index, params: { format: :csv }
-          lines = @response.body.lines
-          assert_equal(3, lines.length)
+          number_of_users = CSV.parse(@response.body, headers: true).length
+          assert_equal User.count, number_of_users
         end
-      end
-
-      context "filter" do
-        setup do
-          create(:user, email: "not_admin@gov.uk")
-        end
-
-        should "filter results to users where their name or email contains the string" do
-          create(:user, email: "special@gov.uk")
-          create(:user, name: "Someone special", email: "someone@gov.uk")
-
-          get :index, params: { filter: "special" }
-
-          assert_select "tbody tr", count: 2
-          assert_select "td.email", /special@gov.uk/
-          assert_select "td.email", /someone@gov.uk/
-        end
-
-        should "scope list of users by role" do
-          get :index, params: { role: "normal" }
-
-          assert_select "tbody tr", count: 1
-          assert_select "td.email", /admin@gov.uk/
-        end
-
-        should "scope filtered list of users by role" do
-          create(:organisation_admin_user, email: "xyz@gov.uk")
-
-          get :index, params: { filter: "admin", role: Roles::Admin.role_name }
-
-          assert_select "tbody tr", count: 1
-          assert_select "td.email", /admin@gov.uk/
-        end
-
-        should "scope list of users by permission" do
-          user_application_permissions = create_list(:user_application_permission, 2)
-
-          user_application_permissions.each do |uap|
-            get :index, params: { permission: uap.supported_permission_id }
-
-            assert_select "tbody tr", count: 1
-            assert_select "td.email", /#{uap.user.email}/
-          end
-        end
-      end
-
-      should "scope list of users by status" do
-        create(:suspended_user, email: "suspended_user@gov.uk")
-
-        get :index, params: { status: "suspended" }
-
-        assert_select "tbody tr", count: 1
-        assert_select "td.email", /suspended_user@gov.uk/
-      end
-
-      should "scope list of users by status and role" do
-        create(:suspended_user, email: "suspended_user@gov.uk", role: Roles::Admin.role_name)
-        create(:suspended_user, email: "normal_suspended_user@gov.uk")
-
-        get :index, params: { status: "suspended", role: Roles::Admin.role_name }
-
-        assert_select "tbody tr", count: 1
-        assert_select "td.email", /suspended_user@gov.uk/
-      end
-
-      should "scope list of users by organisation" do
-        user = create(:user_in_organisation, email: "orgmember@gov.uk")
-
-        get :index, params: { organisation: user.organisation.id }
-
-        assert_select "tbody tr", count: 1
-        assert_select "td.email", /orgmember@gov.uk/
       end
 
       context "as superadmin" do
@@ -426,7 +441,7 @@ class UsersControllerTest < ActionController::TestCase
 
           get :index
 
-          assert_select "td.email", count: 0, text: /api_user@email.com/
+          assert_select "tr td:nth-child(2)", count: 0, text: /api_user@email.com/
         end
       end
     end
@@ -939,6 +954,12 @@ class UsersControllerTest < ActionController::TestCase
         get :index
 
         assert_select "a", text: "Grant access to all users", count: 0
+      end
+
+      should "not display organisations filter" do
+        get :index
+
+        assert_select "#organisations_filter", count: 0
       end
     end
   end

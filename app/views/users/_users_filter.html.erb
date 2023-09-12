@@ -1,0 +1,80 @@
+<div>
+  <%= form_with url: users_path, method: :get, data: { module: "auto-submit-form", "auto-submit-ignore": "option-select-filter" } do |form| %>
+    <div class="app-bottom-separator">
+      <%= render "govuk_publishing_components/components/search", {
+        id: "name_or_email_filter",
+        name: "filter",
+        label_text: "Search by name or email",
+        label_size: "s",
+        aria_controls: filtered_users_id,
+        value: filter.options[:filter],
+        margin_bottom: 4,
+      } %>
+    </div>
+
+    <%= render "govuk_publishing_components/components/heading", {
+      text: "Filter results",
+      padding: true,
+    } %>
+
+    <%= render "components/option_select", {
+      key: "statuses",
+      title: "Status",
+      options_container_id: "statuses_filter",
+      closed_on_load: @filter.no_options_selected_for?(:statuses) && @filter.any_options_selected?,
+      options: @filter.status_option_select_options(aria_controls_id: filtered_users_id),
+    } %>
+
+    <%= render "components/option_select", {
+      key: "two_step_statuses",
+      title: "2SV Status",
+      options_container_id: "two_step_statuses_filter",
+      closed_on_load: @filter.no_options_selected_for?(:two_step_statuses),
+      options: @filter.two_step_status_option_select_options(aria_controls_id: filtered_users_id),
+    } %>
+
+    <%= render "components/option_select", {
+      key: "roles",
+      title: "Roles",
+      options_container_id: "roles_filter",
+      closed_on_load: @filter.no_options_selected_for?(:roles),
+      options: @filter.role_option_select_options(aria_controls_id: filtered_users_id),
+    } %>
+
+    <% if current_user.manageable_organisations.many? %>
+      <%= render "components/option_select", {
+        key: "organisations",
+        title: "Organisations",
+        options_container_id: "organisations_filter",
+        show_filter: true,
+        closed_on_load: @filter.no_options_selected_for?(:organisations),
+        options: UsersFilter.with_checked_at_top(
+          @filter.organisation_option_select_options(aria_controls_id: filtered_users_id)
+        ),
+      } %>
+    <% end %>
+
+    <%= render "components/option_select", {
+      key: "permissions",
+      title: "Permissions",
+      options_container_id: "permissions_filter",
+      show_filter: true,
+      closed_on_load: @filter.no_options_selected_for?(:permissions),
+      options: UsersFilter.with_checked_at_top(
+        @filter.permission_option_select_options(aria_controls_id: filtered_users_id)
+      ),
+    } %>
+
+    <div class="govuk-button-group app-bottom-separator">
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Update results",
+      } %>
+
+      <%= link_to "Clear all filters", users_path, class: "govuk-link govuk-link--no-visited-state" %>
+    </div>
+  <% end %>
+
+  <div class="govuk-button-group">
+    <%= link_to "Export #{formatted_number_of_users(@users)} as CSV", url_for(filter_params.merge(format: "csv")), class: "govuk-link govuk-link--no-visited-state" %>
+  </div>
+</div>

@@ -83,9 +83,22 @@ FactoryBot.define do
     role { Roles::OrganisationAdmin.role_name }
   end
 
+  factory :invited_user, parent: :user do
+    invitation_sent_at { 1.minute.ago }
+    invitation_accepted_at { nil }
+  end
+
+  factory :active_user, parent: :invited_user do
+    invitation_accepted_at { Time.zone.now }
+  end
+
   factory :suspended_user, parent: :user do
     suspended_at { Time.zone.now }
     reason_for_suspension { "Testing" }
+  end
+
+  factory :locked_user, parent: :user do
+    locked_at { Time.zone.now }
   end
 
   factory :user_in_organisation, parent: :user do

@@ -229,37 +229,6 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [never_signed_in_ages_ago], User.expired_never_signed_in
   end
 
-  context ".with_role" do
-    setup do
-      @admin = create(:admin_user)
-      @normal = create(:user)
-    end
-
-    should "return users with specified role" do
-      assert_includes User.with_role(:admin), @admin
-    end
-
-    should "not return users with a role other than the specified role" do
-      assert_not_includes User.with_role(:admin), @normal
-    end
-  end
-
-  context ".with_permission" do
-    should "only return users with the specified permission" do
-      joe = create(:user)
-      amy = create(:user)
-      app = create(:application, with_supported_permissions: %w[manage])
-      signin_perm = app.signin_permission # created in a callback in the Application model
-      manage_perm = app.supported_permissions.find_by(name: "manage")
-      create(:user_application_permission, user: joe, application: app, supported_permission: signin_perm)
-      create(:user_application_permission, user: amy, application: app, supported_permission: signin_perm)
-      create(:user_application_permission, user: amy, application: app, supported_permission: manage_perm)
-
-      assert_equal User.with_permission(signin_perm.id), [joe, amy]
-      assert_equal User.with_permission(manage_perm.id), [amy]
-    end
-  end
-
   context ".not_recently_unsuspended" do
     should "return users who have never been unsuspended" do
       assert_includes User.not_recently_unsuspended, @user
@@ -280,28 +249,9 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context ".with_2sv_enabled" do
-    should "return users with 2SV enabled when true" do
-      enabled_user = create(:two_step_enabled_user)
-      exempt_user = create(:two_step_exempted_user)
-
-      enabled_users = User.with_2sv_enabled("true")
-      assert_equal 1, enabled_users.count
-      assert_equal enabled_user, enabled_users.first
-
-      disabled_users = User.with_2sv_enabled("false")
-      assert_equal 1, disabled_users.count
-      assert_equal @user, disabled_users.first
-
-      exempt_users = User.with_2sv_enabled("exempt")
-      assert_equal 1, exempt_users.count
-      assert_equal exempt_user, exempt_users.first
-    end
-
-    should "encrypt otp_secret_key" do
-      enabled_user = create(:two_step_enabled_user)
-      assert enabled_user.encrypted_attribute?(:otp_secret_key)
-    end
+  should "encrypt otp_secret_key" do
+    enabled_user = create(:two_step_enabled_user)
+    assert enabled_user.encrypted_attribute?(:otp_secret_key)
   end
 
   context "email validation" do
@@ -645,30 +595,6 @@ class UserTest < ActiveSupport::TestCase
       @invited = User.invite!(name: "Oberyn Martell", email: "redviper@dorne.com")
     end
 
-    context "filtering" do
-      should "be able to filter by all statuses" do
-        User::USER_STATUSES.each do |status|
-          assert_not_empty User.with_status(status)
-        end
-      end
-
-      should "filter suspended" do
-        assert_equal [@suspended], User.with_status(User::USER_STATUS_SUSPENDED).all
-      end
-
-      should "filter invited" do
-        assert_equal [@invited], User.with_status(User::USER_STATUS_INVITED).all
-      end
-
-      should "filter locked" do
-        assert_equal [@locked], User.with_status(User::USER_STATUS_LOCKED).all
-      end
-
-      should "filter active" do
-        assert_equal [@user], User.with_status(User::USER_STATUS_ACTIVE).all
-      end
-    end
-
     context "detecting" do
       should "detect suspended" do
         assert_equal "suspended", @suspended.status
@@ -712,6 +638,91 @@ class UserTest < ActiveSupport::TestCase
       api_user.update_column :api_user, true
 
       assert_not_equal "invited", api_user.reload.status
+    end
+  end
+
+  context "#two_step_status" do
+    should "return 'enabled' when user has 2SV" do
+      user = build(:two_step_enabled_user)
+      assert_equal User::TWO_STEP_STATUS_ENABLED, user.two_step_status
+    end
+
+    should "return 'exempt' when user has been exempted from 2SV" do
+      user = build(:two_step_exempted_user)
+      assert_equal User::TWO_STEP_STATUS_EXEMPTED, user.two_step_status
+    end
+
+    should "return 'not_set_up' when user does not have 2SV and has not been exempted" do
+      user = build(:user)
+      assert_equal User::TWO_STEP_STATUS_NOT_SET_UP, user.two_step_status
+    end
+  end
+
+  context "#role_class" do
+    should "return the role class" do
+      assert_equal Roles::Normal, build(:user).role_class
+      assert_equal Roles::OrganisationAdmin, build(:organisation_admin_user).role_class
+      assert_equal Roles::SuperOrganisationAdmin, build(:super_organisation_admin_user).role_class
+      assert_equal Roles::Admin, build(:admin_user).role_class
+      assert_equal Roles::Superadmin, build(:superadmin_user).role_class
+    end
+  end
+
+  context "#manageable_roles" do
+    should "return names of roles that the user is allowed to manage" do
+      assert_equal %w[], build(:user).manageable_roles
+      assert_equal %w[normal organisation_admin], build(:organisation_admin_user).manageable_roles
+      assert_equal %w[normal organisation_admin super_organisation_admin], build(:super_organisation_admin_user).manageable_roles
+      assert_equal %w[normal organisation_admin super_organisation_admin admin], build(:admin_user).manageable_roles
+      assert_equal User.roles, build(:superadmin_user).manageable_roles
+    end
+  end
+
+  context "#can_manage?" do
+    should "indicate whether user is allowed to manage another user" do
+      assert_not build(:user).can_manage?(build(:user))
+      assert_not build(:user).can_manage?(build(:organisation_admin_user))
+      assert_not build(:user).can_manage?(build(:super_organisation_admin_user))
+      assert_not build(:user).can_manage?(build(:admin_user))
+      assert_not build(:user).can_manage?(build(:superadmin_user))
+
+      assert build(:organisation_admin_user).can_manage?(build(:user))
+      assert build(:organisation_admin_user).can_manage?(build(:organisation_admin_user))
+      assert_not build(:organisation_admin_user).can_manage?(build(:super_organisation_admin_user))
+      assert_not build(:organisation_admin_user).can_manage?(build(:admin_user))
+      assert_not build(:organisation_admin_user).can_manage?(build(:superadmin_user))
+
+      assert build(:super_organisation_admin_user).can_manage?(build(:user))
+      assert build(:super_organisation_admin_user).can_manage?(build(:organisation_admin_user))
+      assert build(:super_organisation_admin_user).can_manage?(build(:super_organisation_admin_user))
+      assert_not build(:super_organisation_admin_user).can_manage?(build(:admin_user))
+      assert_not build(:super_organisation_admin_user).can_manage?(build(:superadmin_user))
+
+      assert build(:admin_user).can_manage?(build(:user))
+      assert build(:admin_user).can_manage?(build(:organisation_admin_user))
+      assert build(:admin_user).can_manage?(build(:super_organisation_admin_user))
+      assert build(:admin_user).can_manage?(build(:admin_user))
+      assert_not build(:admin_user).can_manage?(build(:superadmin_user))
+
+      assert build(:superadmin_user).can_manage?(build(:user))
+      assert build(:superadmin_user).can_manage?(build(:organisation_admin_user))
+      assert build(:superadmin_user).can_manage?(build(:super_organisation_admin_user))
+      assert build(:superadmin_user).can_manage?(build(:admin_user))
+      assert build(:superadmin_user).can_manage?(build(:superadmin_user))
+    end
+  end
+
+  context "#manageable_organisations" do
+    should "return relation for organisations that the user is allowed to manage" do
+      organisation = create(:organisation, name: "Org1")
+      child_organisation = create(:organisation, parent: organisation, name: "Org2")
+      create(:organisation, name: "Org3")
+
+      assert_equal [], create(:user, organisation:).manageable_organisations
+      assert_equal [organisation], create(:organisation_admin_user, organisation:).manageable_organisations
+      assert_equal [organisation, child_organisation], create(:super_organisation_admin_user, organisation:).manageable_organisations
+      assert_equal Organisation.order(:name), create(:admin_user, organisation:).manageable_organisations
+      assert_equal Organisation.order(:name), create(:superadmin_user, organisation:).manageable_organisations
     end
   end
 
@@ -769,6 +780,258 @@ class UserTest < ActiveSupport::TestCase
       create(:event_log, uid: user.uid, event_id: EventLog::SUCCESSFUL_LOGIN.id)
 
       assert_equal 1, user.event_logs(event: EventLog::SUCCESSFUL_LOGIN).count
+    end
+  end
+
+  context ".suspended" do
+    should "only return suspended users" do
+      suspended_user = create(:suspended_user)
+
+      assert_equal [suspended_user], User.suspended
+    end
+  end
+
+  context ".not_suspended" do
+    should "only return users that have not been suspended" do
+      create(:suspended_user)
+      active_user = create(:active_user)
+
+      assert_equal [@user, active_user], User.not_suspended
+    end
+  end
+
+  context ".invited" do
+    should "only return users that have been invited but have not accepted" do
+      invited_user = create(:invited_user)
+      create(:active_user)
+
+      assert_equal [invited_user], User.invited
+    end
+  end
+
+  context ".not_invited" do
+    should "only return users that have not been invited or have accepted" do
+      create(:invited_user)
+      active_user = create(:active_user)
+
+      assert_equal [@user, active_user], User.not_invited
+    end
+  end
+
+  context ".locked" do
+    should "only return users that have been locked" do
+      locked_user = create(:locked_user)
+      create(:active_user)
+
+      assert_equal [locked_user], User.locked
+    end
+  end
+
+  context ".not_locked" do
+    should "only return users that have not been locked" do
+      create(:locked_user)
+      active_user = create(:active_user)
+
+      assert_equal [@user, active_user], User.not_locked
+    end
+  end
+
+  context ".active" do
+    should "only return users that are considered active" do
+      create(:invited_user)
+      create(:locked_user)
+      create(:suspended_user)
+      active_user = create(:active_user)
+
+      assert_equal [@user, active_user], User.active
+    end
+  end
+
+  context ".exempt_from_2sv" do
+    should "only return users that have been exempted from 2SV" do
+      exempted_user = create(:two_step_exempted_user)
+      create(:two_step_enabled_user)
+
+      assert_equal [exempted_user], User.exempt_from_2sv
+    end
+  end
+
+  context ".not_exempt_from_2sv" do
+    should "only return users that have not been exempted from 2SV" do
+      create(:two_step_exempted_user)
+      enabled_user = create(:two_step_enabled_user)
+
+      assert_equal [@user, enabled_user], User.not_exempt_from_2sv
+    end
+  end
+
+  context ".has_2sv" do
+    should "only return users that have 2SV" do
+      create(:two_step_exempted_user)
+      enabled_user = create(:two_step_enabled_user)
+
+      assert_equal [enabled_user], User.has_2sv
+    end
+  end
+
+  context ".does_not_have_2sv" do
+    should "only return users that do not have 2SV" do
+      exempted_user = create(:two_step_exempted_user)
+      create(:two_step_enabled_user)
+
+      assert_equal [@user, exempted_user], User.does_not_have_2sv
+    end
+  end
+
+  context ".not_setup_2sv" do
+    should "only return users that have not been exempted from 2SV and do not have 2SV" do
+      not_set_up_user = create(:user)
+      create(:two_step_exempted_user)
+      create(:two_step_enabled_user)
+
+      assert_equal [@user, not_set_up_user], User.not_setup_2sv
+    end
+  end
+
+  context ".with_partially_matching_name" do
+    should "only return users with a name that includes the value" do
+      user1 = create(:user, name: "does-match1")
+      user2 = create(:user, name: "does-match2")
+      create(:user, name: "does-not-match")
+
+      assert_equal [user1, user2], User.with_partially_matching_name("does-match")
+    end
+  end
+
+  context ".with_partially_matching_email" do
+    should "only return users with an email that includes the value" do
+      user1 = create(:user, email: "does-match1@example.com")
+      user2 = create(:user, email: "does-match2@example.com")
+      create(:user, email: "does-not-match@example.com")
+
+      assert_equal [user1, user2], User.with_partially_matching_email("does-match")
+    end
+  end
+
+  context ".with_partially_matching_name_or_email" do
+    should "only return users with a name OR email that includes the value" do
+      user1 = create(:user, name: "does-match", email: "does-not-match@example.com")
+      user2 = create(:user, name: "does-not-match", email: "does-match@example.com")
+      create(:user, name: "does-not-match", email: "does-not-match-either@example.com")
+
+      assert_equal [user1, user2], User.with_partially_matching_name_or_email("does-match")
+    end
+  end
+
+  context ".with_statuses" do
+    should "only return suspended or invited users" do
+      suspended_user = create(:suspended_user)
+      invited_user = create(:invited_user)
+      create(:locked_user)
+      create(:active_user)
+
+      assert_equal [suspended_user, invited_user], User.with_statuses(%w[suspended invited])
+    end
+
+    should "only return active or locked users" do
+      create(:suspended_user)
+      create(:invited_user)
+      locked_user = create(:locked_user)
+      active_user = create(:active_user)
+
+      assert_equal [@user, locked_user, active_user], User.with_statuses(%w[active locked])
+    end
+
+    should "return all users if no statuses specified" do
+      suspended_user = create(:suspended_user)
+      invited_user = create(:invited_user)
+      locked_user = create(:locked_user)
+      active_user = create(:active_user)
+
+      assert_equal [@user, suspended_user, invited_user, locked_user, active_user], User.with_statuses([])
+    end
+
+    should "ignore any non-existent statuses" do
+      suspended_user = create(:suspended_user)
+      invited_user = create(:invited_user)
+      locked_user = create(:locked_user)
+      active_user = create(:active_user)
+
+      assert_equal [@user, suspended_user, invited_user, locked_user, active_user], User.with_statuses(%w[non-existent])
+    end
+  end
+
+  context ".with_2sv_statuses" do
+    should "only return not_set_up and exempted users" do
+      not_set_up_user = create(:user)
+      exempted_user = create(:two_step_exempted_user)
+      create(:two_step_enabled_user)
+
+      assert_equal [@user, not_set_up_user, exempted_user], User.with_2sv_statuses(%w[not_setup_2sv exempt_from_2sv])
+    end
+
+    should "only return enabled users" do
+      create(:user)
+      create(:two_step_exempted_user)
+      enabled_user = create(:two_step_enabled_user)
+
+      assert_equal [enabled_user], User.with_2sv_statuses(%w[has_2sv])
+    end
+
+    should "return all users if no statuses specified" do
+      not_set_up_user = create(:user)
+      exempted_user = create(:two_step_exempted_user)
+      enabled_user = create(:two_step_enabled_user)
+
+      assert_equal [@user, not_set_up_user, exempted_user, enabled_user], User.with_2sv_statuses([])
+    end
+
+    should "ignore any non-existent statuses" do
+      not_set_up_user = create(:user)
+      exempted_user = create(:two_step_exempted_user)
+      enabled_user = create(:two_step_enabled_user)
+
+      assert_equal [@user, not_set_up_user, exempted_user, enabled_user], User.with_2sv_statuses(%w[non-existent])
+    end
+  end
+
+  context ".with_role" do
+    should "only return users with specified role(s)" do
+      admin_user = create(:admin_user)
+      organisation_admin = create(:organisation_admin_user)
+      create(:user)
+
+      assert_equal [admin_user, organisation_admin], User.with_role(%w[admin organisation_admin])
+    end
+  end
+
+  context ".with_permission" do
+    should "only return users with specified permission(s)" do
+      app1 = create(:application)
+      app2 = create(:application)
+
+      permission1 = create(:supported_permission, application: app1)
+
+      user1 = create(:user, supported_permissions: [app1.signin_permission, permission1])
+      create(:user, supported_permissions: [])
+      user2 = create(:user, supported_permissions: [app2.signin_permission, permission1])
+
+      specified_permissions = [app1.signin_permission, app2.signin_permission]
+      assert_equal [user1, user2], User.with_permission(specified_permissions.map(&:to_param))
+    end
+  end
+
+  context ".with_organisation" do
+    should "only return users with specified organisation(s)" do
+      org1 = create(:organisation)
+      org2 = create(:organisation)
+      org3 = create(:organisation)
+
+      user_in_org1 = create(:user, organisation: org1)
+      create(:user, organisation: org2)
+      user_in_org3 = create(:user, organisation: org3)
+
+      assert_equal [user_in_org1, user_in_org3], User.with_organisation([org1, org3].map(&:to_param))
     end
   end
 

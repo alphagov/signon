@@ -3,6 +3,8 @@ require "test_helper"
 class AdminUserIndexTest < ActionDispatch::IntegrationTest
   context "logged in as an admin" do
     setup do
+      use_javascript_driver
+
       current_time = Time.zone.now
       Timecop.freeze(current_time)
 
@@ -13,14 +15,21 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
       org1 = create(:organisation, name: "Org 1")
       org2 = create(:organisation, name: "Org 2")
 
-      create(:user, name: "Aardvark", email: "aardvark@example.com", current_sign_in_at: current_time - 5.minutes)
-      create(:two_step_enabled_user, name: "Abbey", email: "abbey@example.com")
-      create(:user, name: "Abbot", email: "mr_ab@example.com")
-      create(:user, name: "Bert", email: "bbbert@example.com")
-      create(:user, name: "Ed", email: "ed@example.com", organisation: org1)
-      create(:user, name: "Eddie", email: "eddie_bb@example.com")
-      create(:two_step_exempted_user, name: "Ernie", email: "ernie@example.com", organisation: org2)
-      create(:suspended_user, name: "Suspended McFee", email: "suspenders@example.com")
+      @aardvark = create(:user, name: "Aardvark", email: "aardvark@example.com", current_sign_in_at: current_time - 5.minutes)
+      @abbey = create(:two_step_enabled_user, name: "Abbey", email: "abbey@example.com")
+      @abbot = create(:user, name: "Abbot", email: "mr_ab@example.com")
+      @bert = create(:user, name: "Bert", email: "bbbert@example.com")
+      @ed = create(:user, name: "Ed", email: "ed@example.com", organisation: org1)
+      @eddie = create(:user, name: "Eddie", email: "eddie_bb@example.com")
+      @ernie = create(:two_step_exempted_user, name: "Ernie", email: "ernie@example.com", organisation: org2)
+      @suspended_mcfee = create(:suspended_user, name: "Suspended McFee", email: "suspenders@example.com")
+
+      application = create(:application, name: "App name")
+      create(:supported_permission, application:, name: "App permission")
+      @aardvark.grant_application_signin_permission(application)
+      @bert.grant_application_permission(application, "App permission")
+
+      visit "/users"
     end
 
     teardown do
@@ -28,182 +37,77 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     end
 
     should "display the 2SV enrollment status for users" do
-      visit "/users"
-
       within "table" do
         assert has_css?("td", text: "Enabled", count: 1)
         assert has_css?("td", text: "Not set up", count: 7)
       end
     end
 
-    should "see when the user last logged in" do
-      visit "/users"
-
-      assert page.has_content?("Last sign-in")
-
-      actual_last_sign_in_strings = page.all("table tr td.last-sign-in").map(&:text).map(&:strip)[0..1]
-      assert_equal ["5 minutes ago", "never signed in"], actual_last_sign_in_strings
+    should "list all users" do
+      assert_results @admin, @aardvark, @abbey, @abbot, @bert, @ed, @eddie, @ernie, @suspended_mcfee
     end
 
-    should "be able to filter users" do
-      visit "/users"
+    should "filter users by search string" do
+      fill_in "Search", with: "bb"
+      click_on "Search"
 
-      fill_in "Name or email", with: "bb"
-      click_on "Filter"
-
-      assert page.has_content?("Abbey abbey@example.com")
-      assert page.has_content?("Abbot mr_ab@example.com")
-      assert page.has_content?("Bert bbbert@example.com")
-      assert page.has_content?("Eddie eddie_bb@example.com")
-
-      assert_not page.has_content?("Aardvark aardvark@example.com")
-      assert_not page.has_content?("Ernie ernie@example.com")
-
-      click_on "Users"
-
-      assert page.has_content?("Aardvark aardvark@example.com")
-    end
-
-    should "filter users by role" do
-      visit "/users"
-
-      assert_role_not_present("Superadmin")
-
-      select_role("Normal")
-
-      assert_equal User.with_role(:normal).count, page.all("table tbody tr").count
-      assert_not page.has_content?("Admin User admin@example.com")
-      User.with_role(:normal).each do |normal_user|
-        assert page.has_content?(normal_user.email)
-      end
-
-      select_role("All Roles")
-
-      %w[Aardvark Abbot Abbey Admin].each do |user_name|
-        assert page.has_content?(user_name)
-      end
-    end
-
-    should "filter users by permission" do
-      uap = create(:user_application_permission, user: User.find_by(name: "Ernie"))
-      visit "/users"
-
-      select_permission("#{uap.application.name} #{uap.supported_permission.name}")
-
-      assert_equal 1, page.all("table tbody tr").count
-      within ".table" do
-        assert page.has_content?("Ernie")
-        (User.pluck(:name) - %w[Ernie]).each do |name|
-          assert_not page.has_content?(name)
-        end
-      end
-
-      select_permission("All Permissions")
-
-      %w[Aardvark Abbot Abbey Admin].each do |user_name|
-        assert page.has_content?(user_name)
-      end
+      assert_results @abbey, @abbot, @bert, @eddie
     end
 
     should "filter users by status" do
-      visit "/users"
+      check "Suspended", allow_label_click: true
 
-      select_status("Suspended")
+      assert_results @suspended_mcfee
+    end
 
-      assert_equal 1, page.all("table tbody tr").count
-      assert_not page.has_content?("Aardvark")
-      assert page.has_content?("Suspended McFee")
+    should "filter users by 2sv status" do
+      click_on "2SV Status"
 
-      select_status("All Statuses")
+      check "Exempted", allow_label_click: true
+      assert_results @ernie
 
-      %w[Aardvark Abbot Abbey Admin Suspended].each do |user_name|
-        assert page.has_content?(user_name)
-      end
+      check "Enable", allow_label_click: true
+      assert_results @ernie, @abbey
+    end
+
+    should "filter users by role" do
+      click_on "Role"
+
+      check "Admin", allow_label_click: true
+      assert_results @admin
     end
 
     should "filter users by organisation" do
-      visit "/users"
+      click_on "Organisation"
 
-      select_organisation("Org 1")
-      assert_equal 1, page.all("table tbody tr").count
-      assert_not page.has_content?("Aardvark")
-      assert page.has_content?("Ed")
+      check "Org 1", allow_label_click: true
+      assert_results @ed
 
-      select_organisation("All Organisations")
-
-      %w[Aardvark Abbot Abbey Admin Suspended].each do |user_name|
-        assert page.has_content?(user_name)
-      end
+      check "Org 2", allow_label_click: true
+      assert_results @ed, @ernie
     end
 
-    should "filter users by 2SV status" do
-      visit "/users"
-      total_enabled = 1
-      total_disabled = 7
-      total_exempted = 1
+    should "filter users by permission" do
+      click_on "Permissions"
 
-      within ".filter-by-two_step_status-menu .dropdown-menu" do
-        click_on "Enabled"
-      end
+      check "App name signin", allow_label_click: true
+      assert_results @aardvark
 
-      assert has_css?("td", text: "Enabled", count: total_enabled)
-      assert has_css?(".filter-by-two_step_status-menu .filter-selected span", text: "Enabled")
-      assert has_no_css?("td", text: "Not set up")
-      assert has_no_css?("td", text: "Exempted")
-
-      within ".filter-by-two_step_status-menu .dropdown-menu" do
-        click_on "Not set up"
-      end
-
-      assert has_no_css?("td", text: "Enabled")
-      assert has_css?("td", text: "Not set up", count: total_disabled)
-      assert has_css?(".filter-by-two_step_status-menu .filter-selected span", text: "Not set up")
-      assert has_no_css?("td", text: "Exempted")
-
-      within ".filter-by-two_step_status-menu .dropdown-menu" do
-        click_on "Exempted"
-      end
-
-      assert has_css?("td", text: "Exempted", count: total_exempted)
-      assert has_css?(".filter-by-two_step_status-menu .filter-selected span", text: "Exempted")
-      assert has_no_css?("td", text: "Not set up")
-      assert has_no_css?("td", text: "Enabled")
+      check "App name App permission", allow_label_click: true
+      assert_results @aardvark, @bert
     end
   end
 
-  def select_organisation(organisation_name)
-    within ".filter-by-organisation-menu .dropdown-menu" do
-      click_on organisation_name
-    end
-  end
+private
 
-  def select_status(status_name)
-    within ".filter-by-status-menu .dropdown-menu" do
-      click_on status_name
-    end
-  end
+  def assert_results(*users)
+    expected_table_caption = [users.count, "user".pluralize(users.count)].join(" ")
 
-  def assert_role_not_present(role_name)
-    within ".filter-by-role-menu" do
-      click_on "Role", match: :prefer_exact
-      within ".dropdown-menu" do
-        assert page.has_no_content? role_name
-      end
-    end
-  end
+    table = find("table caption", text: expected_table_caption).ancestor(:table)
+    assert table.has_css?("tbody tr", count: users.count)
 
-  def select_role(role_name)
-    within ".filter-by-role-menu" do
-      click_on "Role", match: :prefer_exact
-      within ".dropdown-menu" do
-        click_on role_name
-      end
-    end
-  end
-
-  def select_permission(permission_name)
-    within ".filter-by-permission-menu" do
-      click_on permission_name
+    users.each do |user|
+      assert table.has_content?(user.name)
     end
   end
 end

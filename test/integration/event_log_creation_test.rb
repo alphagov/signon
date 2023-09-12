@@ -129,9 +129,8 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
 
     visit root_path
     signin_with(@admin)
-    first_letter_of_name = @user.name[0]
-    visit users_path(letter: first_letter_of_name)
-    click_on "Unlock"
+    visit user_path(@user)
+    click_on "Unlock account"
 
     visit event_logs_user_path(@user)
     assert page.has_content?("#{EventLog::MANUAL_ACCOUNT_UNLOCK.description} by #{@admin.name}")

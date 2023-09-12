@@ -20,6 +20,16 @@ class User < ApplicationRecord
                    USER_STATUS_LOCKED,
                    USER_STATUS_ACTIVE].freeze
 
+  TWO_STEP_STATUS_ENABLED = "enabled".freeze
+  TWO_STEP_STATUS_NOT_SET_UP = "not_set_up".freeze
+  TWO_STEP_STATUS_EXEMPTED = "exempted".freeze
+
+  TWO_STEP_STATUSES_VS_NAMED_SCOPES = {
+    TWO_STEP_STATUS_ENABLED => "has_2sv",
+    TWO_STEP_STATUS_NOT_SET_UP => "not_setup_2sv",
+    TWO_STEP_STATUS_EXEMPTED => "exempt_from_2sv",
+  }.freeze
+
   devise :database_authenticatable,
          :recoverable,
          :trackable,
@@ -32,6 +42,8 @@ class User < ApplicationRecord
          :encryptable,
          :confirmable,
          :password_archivable # in signon/lib/devise/models/password_archivable.rb
+
+  delegate :manageable_roles, to: :role_class
 
   encrypts :otp_secret_key
 
@@ -60,11 +72,28 @@ class User < ApplicationRecord
   before_save :strip_whitespace_from_name
 
   scope :web_users, -> { where(api_user: false) }
+
+  scope :suspended, -> { where.not(suspended_at: nil) }
   scope :not_suspended, -> { where(suspended_at: nil) }
-  scope :with_role, ->(role_name) { where(role: role_name) }
-  scope :with_permission, ->(permission_id) { joins(:supported_permissions).where("supported_permissions.id = ?", permission_id) }
-  scope :with_organisation, ->(org_id) { where(organisation_id: org_id) }
-  scope :filter_by_name, ->(filter_param) { where("users.email like ? OR users.name like ?", "%#{filter_param.strip}%", "%#{filter_param.strip}%") }
+  scope :invited, -> { where.not(invitation_sent_at: nil).where(invitation_accepted_at: nil) }
+  scope :not_invited, -> { where(invitation_sent_at: nil).or(where.not(invitation_accepted_at: nil)) }
+  scope :locked, -> { where.not(locked_at: nil) }
+  scope :not_locked, -> { where(locked_at: nil) }
+  scope :active, -> { not_suspended.not_invited.not_locked }
+
+  scope :exempt_from_2sv, -> { where.not(reason_for_2sv_exemption: nil) }
+  scope :not_exempt_from_2sv, -> { where(reason_for_2sv_exemption: nil) }
+  scope :has_2sv, -> { where.not(otp_secret_key: nil) }
+  scope :does_not_have_2sv, -> { where(otp_secret_key: nil) }
+  scope :not_setup_2sv, -> { not_exempt_from_2sv.does_not_have_2sv }
+
+  scope :with_role, ->(role) { where(role:) }
+  scope :with_permission, ->(permission) { joins(:supported_permissions).merge(SupportedPermission.where(id: permission)) }
+  scope :with_organisation, ->(organisation) { where(organisation:) }
+  scope :with_partially_matching_name, ->(name) { where(arel_table[:name].matches("%#{name}%")) }
+  scope :with_partially_matching_email, ->(email) { where(arel_table[:email].matches("%#{email}%")) }
+  scope :with_partially_matching_name_or_email, ->(value) { with_partially_matching_name(value).or(with_partially_matching_email(value)) }
+
   scope :last_signed_in_on, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) = date(?)", date) }
   scope :last_signed_in_before, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) < date(?)", date) }
   scope :last_signed_in_after, ->(date) { web_users.not_suspended.where("date(current_sign_in_at) >= date(?)", date) }
@@ -72,35 +101,26 @@ class User < ApplicationRecord
   scope :expired_never_signed_in, -> { never_signed_in.where("invitation_sent_at < ?", NEVER_SIGNED_IN_EXPIRY_PERIOD.ago) }
   scope :not_recently_unsuspended, -> { where(["unsuspended_at IS NULL OR unsuspended_at < ?", UNSUSPENSION_GRACE_PERIOD.ago]) }
   scope :with_access_to_application, ->(application) { UsersWithAccess.new(self, application).users }
-  scope :with_2sv_enabled,
-        lambda { |enabled|
-          case enabled
-          when "exempt"
-            where("reason_for_2sv_exemption IS NOT NULL")
-          when "true"
-            where("otp_secret_key IS NOT NULL")
-          else
-            where("otp_secret_key IS NULL AND reason_for_2sv_exemption IS NULL")
-          end
-        }
 
-  scope :with_status,
-        lambda { |status|
-          case status
-          when USER_STATUS_SUSPENDED
-            where.not(suspended_at: nil)
-          when USER_STATUS_INVITED
-            where.not(invitation_sent_at: nil).where(invitation_accepted_at: nil)
-          when USER_STATUS_LOCKED
-            where.not(locked_at: nil)
-          when USER_STATUS_ACTIVE
-            where(suspended_at: nil, locked_at: nil)
-              .where(arel_table[:invitation_sent_at].eq(nil)
-                .or(arel_table[:invitation_accepted_at].not_eq(nil)))
-          else
-            raise NotImplementedError, "Filtering by status '#{status}' not implemented."
-          end
-        }
+  def self.with_statuses(statuses)
+    permitted_statuses = statuses.intersection(USER_STATUSES)
+    relations = permitted_statuses.map { |s| public_send(s) }
+    relation = relations.pop || all
+    while (next_relation = relations.pop)
+      relation = relation.or(next_relation)
+    end
+    relation
+  end
+
+  def self.with_2sv_statuses(scope_names)
+    permitted_scopes = scope_names.intersection(TWO_STEP_STATUSES_VS_NAMED_SCOPES.values)
+    relations = permitted_scopes.map { |s| public_send(s) }
+    relation = relations.pop || all
+    while (next_relation = relations.pop)
+      relation = relation.or(next_relation)
+    end
+    relation
+  end
 
   def require_2sv?
     return require_2sv unless organisation
@@ -259,8 +279,26 @@ class User < ApplicationRecord
     USER_STATUS_ACTIVE
   end
 
-  def manageable_roles
-    "Roles::#{role.camelize}".constantize.manageable_roles
+  def two_step_status
+    if has_2sv?
+      TWO_STEP_STATUS_ENABLED
+    elsif exempt_from_2sv?
+      TWO_STEP_STATUS_EXEMPTED
+    else
+      TWO_STEP_STATUS_NOT_SET_UP
+    end
+  end
+
+  def role_class
+    Roles.const_get(role.classify)
+  end
+
+  def can_manage?(other_user)
+    manageable_roles.include?(other_user.role)
+  end
+
+  def manageable_organisations
+    role_class.manageable_organisations_for(self).order(:name)
   end
 
   # Make devise send all emails using ActiveJob

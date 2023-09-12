@@ -71,7 +71,7 @@ private
   end
 
   def can_manage?
-    Roles.const_get(current_user.role.classify).can_manage?(record.role)
+    current_user.can_manage?(record)
   end
 
   class Scope < ::BasePolicy::Scope

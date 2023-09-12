@@ -15,5 +15,9 @@ module Roles
     def self.manageable_roles
       []
     end
+
+    def self.manageable_organisations_for(_)
+      Organisation.where("false")
+    end
   end
 end
