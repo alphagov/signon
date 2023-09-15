@@ -93,18 +93,4 @@ class BatchInvitationsHelperTest < ActionView::TestCase
       end
     end
   end
-
-  context "#batch_invite_status_link" do
-    should "link to show the batch when it has permissions" do
-      batch_invitation = create(:batch_invitation, :has_permissions, outcome: "success")
-
-      assert_includes batch_invite_status_link(batch_invitation) {}, batch_invitation_path(batch_invitation)
-    end
-
-    should "link to show edit the permissions when it has no permissions" do
-      batch_invitation = create(:batch_invitation)
-
-      assert_includes batch_invite_status_link(batch_invitation) {}, new_batch_invitation_permissions_path(batch_invitation)
-    end
-  end
 end

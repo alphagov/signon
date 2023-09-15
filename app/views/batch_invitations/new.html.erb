@@ -4,30 +4,6 @@
   <h1>Upload a batch of users</h1>
 </div>
 
-<% if recent_batch_invitations.any? %>
-  <h3 class="add-bottom-margin">Recent batches</h3>
-  <table class="recent-batches table table-bordered">
-    <thead>
-      <tr class="table-header">
-        <th>Summary</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% recent_batch_invitations.each do |batch_invitation| %>
-        <tr>
-          <td>
-            <%= batch_invite_status_link(batch_invitation) do %>
-              <%= batch_invitation.batch_invitation_users.count %> users by <%= batch_invitation.user.name %> at <%= batch_invitation.created_at.to_fs(:govuk_date) %>
-            <% end %>
-          </td>
-          <td><%= batch_invite_status_message(batch_invitation) %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
-
 <div class="well">
   <%= form_for @batch_invitation do |f| %>
     <h2>Upload a CSV</h2>

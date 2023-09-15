@@ -3,8 +3,6 @@ require "csv"
 class BatchInvitationsController < ApplicationController
   before_action :authenticate_user!
 
-  helper_method :recent_batch_invitations
-
   layout "admin_layout", only: %w[show]
 
   def new
@@ -67,10 +65,6 @@ class BatchInvitationsController < ApplicationController
   end
 
 private
-
-  def recent_batch_invitations
-    @recent_batch_invitations ||= BatchInvitation.where("created_at > ?", 3.days.ago).order("created_at desc")
-  end
 
   def file_uploaded?
     if params[:batch_invitation].nil? || params[:batch_invitation][:user_names_and_emails].nil?
