@@ -87,7 +87,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
     perform_enqueued_jobs do
       visit new_batch_invitation_path
       path = Rails.root.join("test/fixtures/users.csv")
-      attach_file("Choose a CSV file of users with names and email addresses", path)
+      attach_file("Upload a CSV file", path)
       click_button "Manage permissions for new users"
 
       uncheck "Has access to #{support_app.name}?"
@@ -125,7 +125,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
 
       visit new_batch_invitation_path
       path = Rails.root.join("test/fixtures", fixture_file)
-      attach_file("Choose a CSV file of users with names and email addresses", path)
+      attach_file("Upload a CSV file", path)
       if organisation
         select organisation.name, from: "Organisation"
       end

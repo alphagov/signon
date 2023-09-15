@@ -1,35 +1,85 @@
 <% content_for :title, "Upload a batch of users" %>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Home",
+         url: root_path,
+       },
+       {
+         title: "Users",
+         url: users_path,
+       },
+       {
+         title: "Upload a batch of users",
+       }
+     ]
+   })
+%>
 
-<div class="page-title">
-  <h1>Upload a batch of users</h1>
-</div>
+<div>
+  <%= form_for @batch_invitation, multipart: true do |f| %>
+    <%= render "govuk_publishing_components/components/fieldset", {
+        legend_text: "Upload a CSV",
+        heading_level: 2,
+        heading_size: "s"
+        } do %>
 
-<div class="well">
-  <%= form_for @batch_invitation do |f| %>
-    <h2>Upload a CSV</h2>
-    <div class="row">
-      <div class="col-md-5">
-        <%= f.label :user_names_and_emails, "Choose a CSV file of users with names and email addresses" %>
-        <%= f.file_field(:user_names_and_emails, :accept => 'text/csv', required: true) %>
-      </div>
-      <div class="col-md-5 pull-right">
-        <p>The format of the CSV should be as follows:</p>
-          <pre>
-Name,Email,Organisation
-Jane Smith,jane@example.com,government-digital-service
-Winston Churchill,winston@example.com,cabinet-office
-          </pre>
-        <p class="help-block">The values in the Organisation column should be the slug of the organisation the user will be assigned to.  If the value is blank, the user will be assigned to the Organisation selected in the drop-down below.  If the value is provided, but is not a valid slug, the user will not be invited.  You can find the slug for an organisation on <%= link_to 'the list of organisations', organisations_path %>.</p>
-        <p class="help-block">Any fields in the CSV other than those shown above will be ignored.</p>
-      </div>
-    </div>
+      <%= render "govuk_publishing_components/components/hint", { text:
+          "The format of the CSV should be as follows:" } %>
 
-    <div class="form-group">
-      <%= f.label :organisation_id, "Organisation" %>
-      <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select", 'data-module' => 'chosen' } %>
-      <p class="help-block">If the uploaded CSV doesn't contain an Organisation column, or the value is blank for a row, the user will be assigned to this organisation instead.</p>
-    </div>
+      <pre>
+        Name,Email,Organisation
+        Jane Smith,jane@example.com,government-digital-service
+        Winston Churchill,winston@example.com,cabinet-office
+      </pre>
 
-    <%= f.submit "Manage permissions for new users", :class => 'btn btn-success' %>
+      <p class="gem-c-hint govuk-hint">The values in the Organisation
+        column should be the slug of the organisation the user will be
+        assigned to.  If the value is blank, the user will be assigned
+        to the Organisation selected in the drop-down below.  If the
+        value is provided, but is not a valid slug, the user will not
+        be invited.  You can find the slug for an organisation on
+        <%= link_to 'the list of organisations', organisations_path
+        %>.</p>
+
+      <%= render "govuk_publishing_components/components/hint", { text:
+          "Any fields in the CSV other than those shown above will be
+           ignored." } %>
+
+      <%= render "govuk_publishing_components/components/file_upload", {
+          label: {
+            text: "Upload a CSV file"
+          },
+          name: "batch_invitation[user_names_and_emails]",
+          id: "batch_invitation_user_names_and_emails",
+          accept: "text/csv",
+          } %>
+    <% end %>
+
+    <%= render "govuk_publishing_components/components/fieldset", {
+        legend_text: "Organisation",
+        heading_level: 2,
+        heading_size: "s"
+        } do %>
+
+      <%= render "govuk_publishing_components/components/hint", {
+          text: "If the uploaded CSV doesn't contain an Organisation
+          column, or the value is blank for a row, the user will be
+          assigned to this organisation instead."  } %>
+
+      <%= render "govuk_publishing_components/components/select", {
+          id: "batch_invitation_organisation_id",
+          name: "batch_invitation[organisation_id]",
+          label: "Organisation",
+          options: policy_scope(Organisation).map { |organisation| { text: organisation.name_with_abbreviation, value: organisation.id } }
+          } %>
+
+    <% end %>
+
+    <%= render "govuk_publishing_components/components/button", {
+        text: "Manage permissions for new users"
+        } %>
   <% end %>
 </div>
