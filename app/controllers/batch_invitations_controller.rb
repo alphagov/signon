@@ -44,10 +44,8 @@ class BatchInvitationsController < ApplicationController
         batch_invitation: @batch_invitation,
         name: row["Name"],
         email: row["Email"],
+        organisation_slug: row["Organisation"],
       }
-      if policy(@batch_invitation).assign_organisation_from_csv?
-        batch_user_args[:organisation_slug] = row["Organisation"]
-      end
       batch_user = BatchInvitationUser.new(batch_user_args)
 
       unless batch_user.valid?
