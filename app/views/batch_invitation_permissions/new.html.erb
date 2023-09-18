@@ -16,7 +16,7 @@
         </tr>
       </thead>
       <tbody>
-        <% applications_and_permissions(user_object).each do |(application, _)|
+        <% policy_scope(:user_permission_manageable_application).each do |application|
            supported_permission_field_name = "user[supported_permission_ids][]"
            supported_permission_field_prefix = "user_application_#{application.id}_supported_permission" %>
         <% next if application.retired? %>

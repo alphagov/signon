@@ -5,8 +5,6 @@ class BatchInvitationPermissionsController < ApplicationController
   before_action :authorise_to_manage_permissions
   before_action :prevent_updating
 
-  helper_method :applications_and_permissions
-
   def new; end
 
   def create
