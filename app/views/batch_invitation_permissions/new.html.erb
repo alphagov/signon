@@ -34,8 +34,7 @@
                                                .inject({}) {|h, per| h.merge(per.name => per.id) }
                supported_permissions_options.delete(SupportedPermission::SIGNIN_NAME) %>
             <%= select_tag supported_permission_field_name,
-                options_for_select(supported_permissions_options,
-                user_object.permission_ids_for(application) - [application.signin_permission.id]),
+                options_for_select(supported_permissions_options),
                 multiple: true,
                 class: "chosen-select",
                 id: "#{supported_permission_field_prefix}_ids",
