@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_11_092404) do
+ActiveRecord::Schema[7.0].define(version: 2023_09_18_141453) do
   create_table "batch_invitation_application_permissions", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "batch_invitation_id", null: false
     t.integer "supported_permission_id", null: false
@@ -38,23 +38,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_11_092404) do
     t.integer "user_id", null: false
     t.integer "organisation_id"
     t.index ["outcome"], name: "index_batch_invitations_on_outcome"
-  end
-
-  create_table "bulk_grant_permission_set_application_permissions", id: :integer, charset: "utf8mb3", force: :cascade do |t|
-    t.integer "bulk_grant_permission_set_id", null: false
-    t.integer "supported_permission_id", null: false
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
-    t.index ["bulk_grant_permission_set_id", "supported_permission_id"], name: "index_app_permissions_on_bulk_grant_permission_set", unique: true
-  end
-
-  create_table "bulk_grant_permission_sets", id: :integer, charset: "utf8mb3", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.string "outcome"
-    t.integer "processed_users", default: 0, null: false
-    t.integer "total_users", default: 0, null: false
-    t.datetime "created_at", precision: nil
-    t.datetime "updated_at", precision: nil
   end
 
   create_table "event_logs", id: :integer, charset: "utf8mb3", force: :cascade do |t|
