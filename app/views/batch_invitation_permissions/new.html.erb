@@ -6,7 +6,6 @@
 
 <div class="well">
   <%= form_for @batch_invitation, url: :batch_invitation_permissions, method: :post do |f| %>
-    <% user_object = User.new %>
     <table id="editable-permissions" class="table table-bordered table-striped table-on-white">
       <thead>
         <tr class="table-header">
