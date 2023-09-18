@@ -11,10 +11,8 @@
       <thead>
         <tr class="table-header">
           <th>Application</th>
-          <% unless user_object.api_user? %>
           <th>Has access?</th>
-          <% end %>
-          <th><%= "Other" unless user_object.api_user? %> Permissions</th>
+          <th>Other Permissions</th>
           <% if user_object.persisted? %>
           <th>Last synced at</th>
           <% end %>
@@ -22,7 +20,7 @@
       </thead>
       <tbody>
         <% applications_and_permissions(user_object).each do |(application, permissions)|
-           attribute_name = user_object.api_user? ? 'api_user' : 'user'
+           attribute_name = 'user'
            supported_permission_field_name = "#{attribute_name}[supported_permission_ids][]"
            supported_permission_field_prefix = "#{attribute_name}_application_#{application.id}_supported_permission" %>
         <tr>
@@ -33,21 +31,11 @@
             <%= application.name %>
             <% end %>
           </td>
-          <% if user_object.api_user? %>
-          <%
-            # Emulate form.check_box helper:
-            # http://api.rubyonrails.org/v3.1.3/classes/ActionView/Helpers/FormHelper.html#method-i-check_box
-            # API Users will always have a "signin" permission for apps for which they have access token.
-            # The hidden field ensures it is not lost.
-          %>
-          <%= hidden_field_tag supported_permission_field_name, application.signin_permission.id, id: "#{supported_permission_field_prefix}_#{SupportedPermission::SIGNIN_NAME}" %>
-          <% else %>
           <td>
             <%= label_tag "#{supported_permission_field_prefix}_#{SupportedPermission::SIGNIN_NAME}", "Has access to #{application.name}?", class: "rm" %>
             <%= check_box_tag supported_permission_field_name, application.signin_permission.id, user_object.has_access_to?(application),
                               id: "#{supported_permission_field_prefix}_#{SupportedPermission::SIGNIN_NAME}" %>
           </td>
-          <% end %>
           <td>
             <%= label_tag "#{supported_permission_field_prefix}_ids", "Permissions for #{application.name}", class: "rm" %>
             <% supported_permissions_options = application.supported_permissions.grantable_from_ui
