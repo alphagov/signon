@@ -60,7 +60,6 @@ Rails.application.routes.draw do
              controller: :batch_invitation_permissions
   end
 
-  resources :bulk_grant_permission_sets, only: %i[new create show]
   resources :organisations, only: %i[index edit update]
   resources :suspensions, only: %i[edit update]
   resources :two_step_verification_exemptions, only: %i[edit update]
