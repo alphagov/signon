@@ -25,7 +25,7 @@
           </td>
           <td>
             <%= label_tag "#{supported_permission_field_prefix}_#{SupportedPermission::SIGNIN_NAME}", "Has access to #{application.name}?", class: "rm" %>
-            <%= check_box_tag supported_permission_field_name, application.signin_permission.id, user_object.has_access_to?(application),
+            <%= check_box_tag supported_permission_field_name, application.signin_permission.id, false,
                               id: "#{supported_permission_field_prefix}_#{SupportedPermission::SIGNIN_NAME}" %>
           </td>
           <td>
