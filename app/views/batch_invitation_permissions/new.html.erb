@@ -6,7 +6,8 @@
 
 <div class="well">
   <%= form_for @batch_invitation, url: :batch_invitation_permissions, method: :post do |f| %>
-    <%= render partial: "shared/user_permissions", locals: { user_object: User.new } %>
+    <% user_object = User.new %>
+    <%= render partial: "shared/user_permissions", locals: { user_object: user_object } %>
 
     <%= f.submit "Create users and send emails", :class => 'btn btn-success' %>
   <% end %>
