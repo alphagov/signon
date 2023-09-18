@@ -16,7 +16,6 @@
       </thead>
       <tbody>
         <% policy_scope(:user_permission_manageable_application).reject(&:retired?).each do |application|
-           supported_permission_field_name = "user[supported_permission_ids][]"
            supported_permission_field_prefix = "user_application_#{application.id}_supported_permission" %>
         <tr>
           <td>
@@ -24,7 +23,7 @@
           </td>
           <td>
             <%= label_tag "#{supported_permission_field_prefix}_#{SupportedPermission::SIGNIN_NAME}", "Has access to #{application.name}?", class: "rm" %>
-            <%= check_box_tag supported_permission_field_name, application.signin_permission.id, false,
+            <%= check_box_tag "user[supported_permission_ids][]", application.signin_permission.id, false,
                               id: "#{supported_permission_field_prefix}_#{SupportedPermission::SIGNIN_NAME}" %>
           </td>
           <td>
@@ -32,7 +31,7 @@
             <% supported_permissions_options = application.supported_permissions.grantable_from_ui
                                                .inject({}) {|h, per| h.merge(per.name => per.id) }
                supported_permissions_options.delete(SupportedPermission::SIGNIN_NAME) %>
-            <%= select_tag supported_permission_field_name,
+            <%= select_tag "user[supported_permission_ids][]",
                 options_for_select(supported_permissions_options),
                 multiple: true,
                 class: "chosen-select",
