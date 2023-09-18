@@ -256,12 +256,6 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a", text: "Upload a batch of users"
       end
 
-      should "display 'Grant access to all users' button" do
-        get :index
-
-        assert_select "a", text: "Grant access to all users"
-      end
-
       should "display 'Export N users as CSV' button" do
         get :index
 
@@ -948,12 +942,6 @@ class UsersControllerTest < ActionController::TestCase
         get :index
 
         assert_select "a", text: "Upload a batch of users", count: 0
-      end
-
-      should "not display 'Grant access to all users' button" do
-        get :index
-
-        assert_select "a", text: "Grant access to all users", count: 0
       end
 
       should "not display organisations filter" do
