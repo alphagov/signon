@@ -13,9 +13,6 @@
           <th>Application</th>
           <th>Has access?</th>
           <th>Other Permissions</th>
-          <% if user_object.persisted? %>
-          <th>Last synced at</th>
-          <% end %>
         </tr>
       </thead>
       <tbody>
@@ -51,18 +48,6 @@
             'data-placeholder' => 'Start typing to search for permissions'
             %>
           </td>
-          <% if user_object.persisted? %>
-          <td>
-            <% synced_permissions = permissions.select { |p| p.last_synced_at.present? } %>
-            <% if synced_permissions.any? %>
-            <span class="label <%= sync_needed?(synced_permissions) ? "label-danger" : "label-success" %>">
-              <%= time_ago_in_words(synced_permissions.map(&:last_synced_at).max) %> ago
-            </span>
-            <% else %>
-            <span class="label label-danger">Never</span>
-            <% end %>
-          </td>
-          <% end %>
         </tr>
         <% end %>
       </tbody>
