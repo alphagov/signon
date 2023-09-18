@@ -19,13 +19,10 @@
         <% applications_and_permissions(user_object).each do |(application, permissions)|
            supported_permission_field_name = "user[supported_permission_ids][]"
            supported_permission_field_prefix = "user_application_#{application.id}_supported_permission" %>
+        <% next if application.retired? %>
         <tr>
           <td>
-            <% if application.retired? %>
-            <del><%= application.name %></del>
-            <% else %>
             <%= application.name %>
-            <% end %>
           </td>
           <td>
             <%= label_tag "#{supported_permission_field_prefix}_#{SupportedPermission::SIGNIN_NAME}", "Has access to #{application.name}?", class: "rm" %>
