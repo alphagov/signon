@@ -29,14 +29,6 @@
         margin_bottom: 4,
       } %>
     <% end %>
-    <% if policy(BulkGrantPermissionSet).new? %>
-      <%= render "govuk_publishing_components/components/button", {
-        text: "Grant access to all users",
-        href: new_bulk_grant_permission_set_path,
-        secondary: true,
-        margin_bottom: 4,
-      } %>
-    <% end %>
   </div>
 <% end %>
 
