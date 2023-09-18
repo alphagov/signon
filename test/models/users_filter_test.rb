@@ -84,10 +84,10 @@ class UsersFilterTest < ActiveSupport::TestCase
         options = filter.status_option_select_options
 
         expected_options = [
+          { label: "Active", value: "active", checked: false },
           { label: "Suspended", value: "suspended", checked: false },
           { label: "Invited", value: "invited", checked: false },
           { label: "Locked", value: "locked", checked: false },
-          { label: "Active", value: "active", checked: false },
         ]
         assert_equal expected_options, options
       end
@@ -99,10 +99,10 @@ class UsersFilterTest < ActiveSupport::TestCase
         options = filter.status_option_select_options
 
         expected_options = [
+          { label: "Active", value: "active", checked: true },
           { label: "Suspended", value: "suspended", checked: false },
           { label: "Invited", value: "invited", checked: true },
           { label: "Locked", value: "locked", checked: false },
-          { label: "Active", value: "active", checked: true },
         ]
         assert_equal expected_options, options
       end

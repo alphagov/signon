@@ -15,10 +15,10 @@ class User < ApplicationRecord
   USER_STATUS_INVITED = "invited".freeze
   USER_STATUS_LOCKED = "locked".freeze
   USER_STATUS_ACTIVE = "active".freeze
-  USER_STATUSES = [USER_STATUS_SUSPENDED,
+  USER_STATUSES = [USER_STATUS_ACTIVE,
+                   USER_STATUS_SUSPENDED,
                    USER_STATUS_INVITED,
-                   USER_STATUS_LOCKED,
-                   USER_STATUS_ACTIVE].freeze
+                   USER_STATUS_LOCKED].freeze
 
   TWO_STEP_STATUS_ENABLED = "enabled".freeze
   TWO_STEP_STATUS_NOT_SET_UP = "not_set_up".freeze
