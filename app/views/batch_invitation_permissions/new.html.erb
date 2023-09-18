@@ -15,19 +15,18 @@
         </tr>
       </thead>
       <tbody>
-        <% policy_scope(:user_permission_manageable_application).reject(&:retired?).each do |application|
-           supported_permission_field_prefix = "user_application_#{application.id}_supported_permission" %>
+        <% policy_scope(:user_permission_manageable_application).reject(&:retired?).each do |application| %>
         <tr>
           <td>
             <%= application.name %>
           </td>
           <td>
-            <%= label_tag "#{supported_permission_field_prefix}_#{SupportedPermission::SIGNIN_NAME}", "Has access to #{application.name}?", class: "rm" %>
+            <%= label_tag "user_application_#{application.id}_supported_permission_#{SupportedPermission::SIGNIN_NAME}", "Has access to #{application.name}?", class: "rm" %>
             <%= check_box_tag "user[supported_permission_ids][]", application.signin_permission.id, false,
-                              id: "#{supported_permission_field_prefix}_#{SupportedPermission::SIGNIN_NAME}" %>
+                              id: "user_application_#{application.id}_supported_permission_#{SupportedPermission::SIGNIN_NAME}" %>
           </td>
           <td>
-            <%= label_tag "#{supported_permission_field_prefix}_ids", "Permissions for #{application.name}", class: "rm" %>
+            <%= label_tag "user_application_#{application.id}_supported_permission_ids", "Permissions for #{application.name}", class: "rm" %>
             <% supported_permissions_options = application.supported_permissions.grantable_from_ui
                                                .inject({}) {|h, per| h.merge(per.name => per.id) }
                supported_permissions_options.delete(SupportedPermission::SIGNIN_NAME) %>
@@ -35,7 +34,7 @@
                 options_for_select(supported_permissions_options),
                 multiple: true,
                 class: "chosen-select",
-                id: "#{supported_permission_field_prefix}_ids",
+                id: "user_application_#{application.id}_supported_permission_ids",
                 'data-module' => 'chosen',
             'data-placeholder' => 'Start typing to search for permissions'
             %>
