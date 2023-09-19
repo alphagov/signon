@@ -38,10 +38,8 @@ class BatchInvitationPermissionsControllerTest < ActionController::TestCase
     should "allow selection of application permissions to grant to users" do
       get :new, params: { batch_invitation_id: @batch_invitation.id }
 
-      assert_select "table#editable-permissions" do
-        assert_select "label", "Has access to Profound Publisher?"
-        assert_select "label", "reader"
-      end
+      assert_select "label", "Has access to Profound Publisher?"
+      assert_select "label", "reader"
     end
   end
 

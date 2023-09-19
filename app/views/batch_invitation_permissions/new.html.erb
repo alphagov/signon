@@ -1,36 +1,48 @@
 <% content_for :title, "Manage permissions for new users" %>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Home",
+         url: root_path,
+       },
+       {
+         title: "Users",
+         url: users_path,
+       },
+       {
+         title: "Manage permissions for new users",
+       }
+     ]
+   })
+%>
 
-<div class="page-title">
-  <h1>Manage permissions for new users</h1>
-</div>
-
-<div class="well">
-  <%= form_for @batch_invitation, url: :batch_invitation_permissions, method: :post do |f| %>
-    <table id="editable-permissions" class="table table-bordered table-striped table-on-white">
-      <thead>
-        <tr class="table-header">
-          <th>Application</th>
-          <th>Permissions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% policy_scope(:user_permission_manageable_application).reject(&:retired?).each do |application| %>
-        <tr>
-          <td>
-            <%= application.name %>
-          </td>
-          <td>
-            <% permissions_for(application).each do |permission| %>
-              <%= label_tag "user_application_#{application.id}_supported_permission_#{permission.id}", formatted_permission_name(application.name, permission.name) %>
-              <%= check_box_tag "user[supported_permission_ids][]", permission.id, false,
-                  id: "user_application_#{application.id}_supported_permission_#{permission.id}" %>
-            <% end %>
-          </td>
-        </tr>
-        <% end %>
-      </tbody>
-    </table>
-
-    <%= f.submit "Create users and send emails", :class => 'btn btn-success' %>
+<%= form_for @batch_invitation, url: :batch_invitation_permissions, method: :post do |f| %>
+<div class="govuk-accordion" data-module="govuk-accordion">
+  <% policy_scope(:user_permission_manageable_application).reject(&:retired?).each_with_index do |application, idx| %>
+  <div class="govuk-accordion__section">
+    <div class="govuk-accordion__section-header">
+      <h2 class="govuk-accordion__section-heading">
+        <span class="govuk-accordion__section-button" id="accordion-heading-<%= idx %>">
+          <%= application.name %>
+        </span>
+      </h2>
+    </div>
+    <div class="govuk-accordion__section-content" aria-labelledby="accordion-heading-<%= idx %>">
+      <%= render "govuk_publishing_components/components/checkboxes", {
+          name: "permissions_for_#{application.id}",
+          heading: "Permissions for #{application.name}",
+          items: permissions_for(application).map do |permission|
+            { label: formatted_permission_name(application.name, permission.name),
+              value: permission.id,
+              id: "user_application_#{application.id}_supported_permission_#{permission.id}",
+              name: "user[supported_permission_ids][]" }
+          end
+          } %>
+    </div>
+  </div>
   <% end %>
 </div>
+<%= render "govuk_publishing_components/components/button", { text: "Create users and send emails" } %>
+<% end %>
