@@ -7,7 +7,7 @@ class AccountsController < ApplicationController
     if policy(current_user).edit?
       redirect_to edit_user_path(current_user)
     else
-      redirect_to edit_email_or_password_user_path(current_user)
+      redirect_to account_email_password_path
     end
   end
 end

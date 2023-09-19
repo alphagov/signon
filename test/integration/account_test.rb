@@ -27,7 +27,7 @@ class AccountTest < ActionDispatch::IntegrationTest
 
       visit account_path
 
-      assert_current_url edit_email_or_password_user_path(user)
+      assert_current_url account_email_password_path
     end
   end
 end

@@ -117,7 +117,7 @@ class UsersControllerTest < ActionController::TestCase
     setup do
       @user = create(:user_with_pending_email_change)
       sign_in @user
-      request.env["HTTP_REFERER"] = edit_email_or_password_user_path(@user)
+      request.env["HTTP_REFERER"] = account_email_password_path
     end
 
     should "clear the unconfirmed_email and the confirmation_token" do
@@ -128,9 +128,9 @@ class UsersControllerTest < ActionController::TestCase
       assert_nil @user.confirmation_token
     end
 
-    should "redirect to the user edit email or password page" do
+    should "redirect to the change email password page" do
       delete :cancel_email_change, params: { id: @user.id }
-      assert_redirected_to edit_email_or_password_user_path(@user)
+      assert_redirected_to account_email_password_path
     end
   end
 
