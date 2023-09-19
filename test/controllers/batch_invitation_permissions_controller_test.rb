@@ -39,7 +39,7 @@ class BatchInvitationPermissionsControllerTest < ActionController::TestCase
       get :new, params: { batch_invitation_id: @batch_invitation.id }
 
       assert_select "table#editable-permissions" do
-        assert_select "td", "Has access to Profound Publisher?"
+        assert_select "label", "Has access to Profound Publisher?"
         assert_select "label", "reader"
       end
     end

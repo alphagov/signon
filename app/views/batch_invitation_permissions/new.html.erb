@@ -10,8 +10,7 @@
       <thead>
         <tr class="table-header">
           <th>Application</th>
-          <th>Has access?</th>
-          <th>Other Permissions</th>
+          <th>Permissions</th>
         </tr>
       </thead>
       <tbody>
@@ -21,13 +20,8 @@
             <%= application.name %>
           </td>
           <td>
-            <%= label_tag "user_application_#{application.id}_supported_permission_#{SupportedPermission::SIGNIN_NAME}", "Has access to #{application.name}?", class: "rm" %>
-            <%= check_box_tag "user[supported_permission_ids][]", application.signin_permission.id, false,
-                              id: "user_application_#{application.id}_supported_permission_#{SupportedPermission::SIGNIN_NAME}" %>
-          </td>
-          <td>
-            <% application.supported_permissions.grantable_from_ui.reject { |p| p.name == SupportedPermission::SIGNIN_NAME }.each do |permission| %>
-              <%= label_tag "user_application_#{application.id}_supported_permission_#{permission.id}", permission.name %>
+            <% application.supported_permissions.grantable_from_ui.each do |permission| %>
+              <%= label_tag "user_application_#{application.id}_supported_permission_#{permission.id}", formatted_permission_name(application.name, permission.name) %>
               <%= check_box_tag "user[supported_permission_ids][]", permission.id, false,
                   id: "user_application_#{application.id}_supported_permission_#{permission.id}" %>
             <% end %>
