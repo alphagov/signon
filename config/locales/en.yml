@@ -20,8 +20,6 @@ en:
     edit:
       change: "Save password"
       set_password: "Save password"
-    edit_email_or_password:
-      change_password: "Change your password"
 
   supported_permissions:
     form:
