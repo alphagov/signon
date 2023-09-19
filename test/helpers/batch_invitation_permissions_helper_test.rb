@@ -24,5 +24,15 @@ class BatchInvitationPermissionsHelperTest < ActionView::TestCase
       assert permission_names.include?(SupportedPermission::SIGNIN_NAME)
       assert_not permission_names.include?("Not grantable")
     end
+
+    should "sort the permissions alphabetically by name, but with the signin permission first" do
+      application = create(:application,
+                           name: "Whitehall",
+                           with_supported_permissions: ["Writer", "Editor", SupportedPermission::SIGNIN_NAME])
+
+      permission_names = permissions_for(application).map(&:name)
+
+      assert_equal [SupportedPermission::SIGNIN_NAME, "Editor", "Writer"], permission_names
+    end
   end
 end
