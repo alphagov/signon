@@ -6,4 +6,8 @@ module BatchInvitationPermissionsHelper
       permission_name
     end
   end
+
+  def permissions_for(application)
+    application.supported_permissions.grantable_from_ui
+  end
 end

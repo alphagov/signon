@@ -10,4 +10,19 @@ class BatchInvitationPermissionsHelperTest < ActionView::TestCase
       assert_equal "Has access to Whitehall?", formatted_permission_name("Whitehall", SupportedPermission::SIGNIN_NAME)
     end
   end
+
+  context "#permissions_for" do
+    should "return all of the supported permissions that are grantable from the ui" do
+      application = create(:application,
+                           name: "Whitehall",
+                           with_supported_permissions: ["Editor", SupportedPermission::SIGNIN_NAME],
+                           with_supported_permissions_not_grantable_from_ui: ["Not grantable"])
+
+      permission_names = permissions_for(application).map(&:name)
+
+      assert permission_names.include?("Editor")
+      assert permission_names.include?(SupportedPermission::SIGNIN_NAME)
+      assert_not permission_names.include?("Not grantable")
+    end
+  end
 end
