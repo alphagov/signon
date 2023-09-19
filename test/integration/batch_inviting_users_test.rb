@@ -92,7 +92,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
 
       uncheck "Has access to #{support_app.name}?"
       check "Has access to #{@application.name}?"
-      unselect "reader", from: "Permissions for #{@application.name}"
+      uncheck "reader"
       click_button "Create users and send emails"
 
       invited_user = User.find_by(email: "fred@example.com")

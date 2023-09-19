@@ -7,7 +7,7 @@ class BatchInvitationPermissionsControllerTest < ActionController::TestCase
     @user = create(:admin_user)
     sign_in @user
 
-    @app = create(:application, name: "Profound Publisher")
+    @app = create(:application, name: "Profound Publisher", with_supported_permissions: %w[reader])
 
     @batch_invitation = create(:batch_invitation, user: @user)
     create(
@@ -40,7 +40,7 @@ class BatchInvitationPermissionsControllerTest < ActionController::TestCase
 
       assert_select "table#editable-permissions" do
         assert_select "td", "Has access to Profound Publisher?"
-        assert_select "td", "Permissions for Profound Publisher"
+        assert_select "label", "reader"
       end
     end
   end
