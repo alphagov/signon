@@ -79,4 +79,26 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
       assert table.has_content?("app-name")
     end
   end
+
+  context "removing access to apps" do
+    setup do
+      application = create(:application, name: "app-name", description: "app-description")
+      @user = create(:admin_user)
+      @user.grant_application_signin_permission(application)
+    end
+
+    should "allow admins to remove their access to apps" do
+      visit new_user_session_path
+      signin_with @user
+
+      visit account_applications_path
+
+      click_on "Remove access to app-name"
+      click_on "Confirm"
+
+      heading = find("h2", text: "Apps you don't have access to")
+      table = find("table[aria-labelledby='#{heading['id']}']")
+      assert table.has_content?("app-name")
+    end
+  end
 end

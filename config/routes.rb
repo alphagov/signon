@@ -52,7 +52,9 @@ Rails.application.routes.draw do
   resource :account, only: [:show]
   namespace :account do
     resources :applications, only: %i[show index] do
-      resource :signin_permission, only: [:create]
+      resource :signin_permission, only: %i[create destroy] do
+        get :delete
+      end
     end
   end
 
