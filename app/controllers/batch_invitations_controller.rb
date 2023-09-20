@@ -3,9 +3,7 @@ require "csv"
 class BatchInvitationsController < ApplicationController
   before_action :authenticate_user!
 
-  helper_method :recent_batch_invitations
-
-  layout "admin_layout", only: %w[show]
+  layout "admin_layout"
 
   def new
     @batch_invitation = BatchInvitation.new(organisation_id: current_user.organisation_id)
@@ -44,10 +42,8 @@ class BatchInvitationsController < ApplicationController
         batch_invitation: @batch_invitation,
         name: row["Name"],
         email: row["Email"],
+        organisation_slug: row["Organisation"],
       }
-      if policy(@batch_invitation).assign_organisation_from_csv?
-        batch_user_args[:organisation_slug] = row["Organisation"]
-      end
       batch_user = BatchInvitationUser.new(batch_user_args)
 
       unless batch_user.valid?
@@ -69,10 +65,6 @@ class BatchInvitationsController < ApplicationController
   end
 
 private
-
-  def recent_batch_invitations
-    @recent_batch_invitations ||= BatchInvitation.where("created_at > ?", 3.days.ago).order("created_at desc")
-  end
 
   def file_uploaded?
     if params[:batch_invitation].nil? || params[:batch_invitation][:user_names_and_emails].nil?

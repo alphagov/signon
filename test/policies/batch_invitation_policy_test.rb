@@ -22,15 +22,4 @@ class BatchInvitationPolicyTest < ActiveSupport::TestCase
       forbid?(create(:user), BatchInvitation.new, :new)
     end
   end
-
-  context "assign_organisation_from_csv" do
-    should "allow only for superadmins and admins" do
-      assert permit?(create(:superadmin_user), User, :assign_organisation_from_csv)
-      assert permit?(create(:admin_user), User, :assign_organisation_from_csv)
-
-      assert forbid?(create(:super_organisation_admin_user), User, :assign_organisation_from_csv)
-      assert forbid?(create(:organisation_admin_user), User, :assign_organisation_from_csv)
-      assert forbid?(create(:user), User, :assign_organisation_from_csv)
-    end
-  end
 end

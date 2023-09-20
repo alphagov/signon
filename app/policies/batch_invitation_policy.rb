@@ -7,8 +7,4 @@ class BatchInvitationPolicy < BasePolicy
   alias_method :create?, :new?
   alias_method :show?, :new?
   alias_method :manage_permissions?, :new?
-
-  def assign_organisation_from_csv?
-    current_user.govuk_admin?
-  end
 end
