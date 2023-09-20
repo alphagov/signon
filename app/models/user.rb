@@ -174,6 +174,10 @@ class User < ApplicationRecord
     application_permissions.detect { |permission| permission.supported_permission_id == application.signin_permission.id }
   end
 
+  def has_permission?(supported_permission)
+    supported_permissions.exists?(supported_permission.id)
+  end
+
   def permissions_synced!(application)
     application_permissions.where(application_id: application.id).update_all(last_synced_at: Time.zone.now)
   end

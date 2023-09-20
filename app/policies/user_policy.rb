@@ -39,6 +39,7 @@ class UserPolicy < BasePolicy
     current_user.govuk_admin?
   end
   alias_method :remove_signin_permission?, :grant_signin_permission?
+  alias_method :view_permissions?, :grant_signin_permission?
 
   def edit_email_or_password?
     allow_self_only

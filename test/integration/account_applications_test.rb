@@ -101,4 +101,31 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
       assert table.has_content?("app-name")
     end
   end
+
+  context "viewing permissions for an app" do
+    setup do
+      application = create(:application, name: "app-name", description: "app-description", with_supported_permissions: %w[perm1 perm2])
+      @user = create(:admin_user)
+      @user.grant_application_signin_permission(application)
+      @user.grant_application_permission(application, "perm1")
+    end
+
+    should "allow admins to view their permissions for apps" do
+      visit new_user_session_path
+      signin_with @user
+
+      visit account_applications_path
+
+      click_on "View permissions for app-name"
+
+      signin_permission_row = find("table tr td:nth-child(1)", text: "signin").ancestor("tr")
+      assert signin_permission_row.has_content?("Yes")
+
+      perm1_permission_row = find("table tr td:nth-child(1)", text: "perm1").ancestor("tr")
+      assert perm1_permission_row.has_content?("Yes")
+
+      perm2_permission_row = find("table tr td:nth-child(1)", text: "perm2").ancestor("tr")
+      assert perm2_permission_row.has_content?("No")
+    end
+  end
 end
