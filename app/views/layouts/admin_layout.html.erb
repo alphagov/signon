@@ -36,7 +36,7 @@
       <%= yield(:error_summary) %>
 
       <div class="govuk-grid-row">
-        <div class="<%= yield(:top_right) ? 'govuk-grid-column-one-third' : 'govuk-grid-column-two-thirds' %>">
+        <div class="<%= yield(:top_right).present? ? 'govuk-grid-column-one-third' : 'govuk-grid-column-two-thirds' %>">
           <h1 class="govuk-heading-l">
             <% if yield(:page_heading).present? %>
               <%= yield(:page_heading) %>
@@ -45,7 +45,7 @@
             <% end %>
           </h1>
         </div>
-        <% if yield(:top_right) %>
+        <% if yield(:top_right).present? %>
           <div class="govuk-grid-column-two-thirds">
             <%= yield(:top_right) %>
           </div>
