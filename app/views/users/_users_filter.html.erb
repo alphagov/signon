@@ -17,7 +17,7 @@
       padding: true,
     } %>
 
-    <%= render "components/option_select", {
+    <%= render "govuk_publishing_components/components/option_select", {
       key: "statuses",
       title: "Status",
       options_container_id: "statuses_filter",
@@ -25,7 +25,7 @@
       options: @filter.status_option_select_options(aria_controls_id: filtered_users_id),
     } %>
 
-    <%= render "components/option_select", {
+    <%= render "govuk_publishing_components/components/option_select", {
       key: "two_step_statuses",
       title: "2SV Status",
       options_container_id: "two_step_statuses_filter",
@@ -33,7 +33,7 @@
       options: @filter.two_step_status_option_select_options(aria_controls_id: filtered_users_id),
     } %>
 
-    <%= render "components/option_select", {
+    <%= render "govuk_publishing_components/components/option_select", {
       key: "roles",
       title: "Roles",
       options_container_id: "roles_filter",
@@ -42,7 +42,7 @@
     } %>
 
     <% if current_user.manageable_organisations.many? %>
-      <%= render "components/option_select", {
+      <%= render "govuk_publishing_components/components/option_select", {
         key: "organisations",
         title: "Organisations",
         options_container_id: "organisations_filter",
@@ -54,7 +54,7 @@
       } %>
     <% end %>
 
-    <%= render "components/option_select", {
+    <%= render "govuk_publishing_components/components/option_select", {
       key: "permissions",
       title: "Permissions",
       options_container_id: "permissions_filter",
