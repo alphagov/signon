@@ -92,21 +92,6 @@ class UsersController < ApplicationController
     @logs = @user.event_logs.page(params[:page]).per(100) if @user
   end
 
-  def update_email
-    current_email = @user.email
-    new_email = params[:user][:email]
-    if current_email == new_email.strip
-      flash[:alert] = "Nothing to update."
-      render "account/email_passwords/show", layout: "admin_layout"
-    elsif @user.update(email: new_email)
-      EventLog.record_email_change(@user, current_email, new_email)
-      UserMailer.email_changed_notification(@user).deliver_later
-      redirect_to root_path, notice: "An email has been sent to #{new_email}. Follow the link in the email to update your address."
-    else
-      render "account/email_passwords/show", layout: "admin_layout"
-    end
-  end
-
   def update_password
     if @user.update_with_password(password_params)
       EventLog.record_event(@user, EventLog::SUCCESSFUL_PASSWORD_CHANGE, ip_address: user_ip_address)

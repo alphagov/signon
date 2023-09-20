@@ -36,7 +36,6 @@ Rails.application.routes.draw do
 
   resources :users, except: [:show] do
     member do
-      patch :update_email
       patch :update_password
       post :unlock
       put :resend_email_change
@@ -56,7 +55,9 @@ Rails.application.routes.draw do
         get :delete
       end
     end
-    resource :email_password, only: [:show]
+    resource :email_password, only: [:show] do
+      patch :update_email
+    end
   end
 
   resources :batch_invitations, only: %i[new create show] do

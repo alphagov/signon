@@ -30,7 +30,7 @@
   <div class="govuk-grid-column-two-thirds">
     <h2 class="govuk-heading-m">Change your email address</h2>
 
-    <%= form_for current_user, url: update_email_user_path(current_user) do |f| %>
+    <%= form_for current_user, url: update_email_account_email_password_path do |f| %>
       <%= render "govuk_publishing_components/components/input", {
         label: {
           text: "Email address"
