@@ -25,12 +25,12 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
                    user.errors[:email]
     end
 
-    should "still allow user to be updated with a known non-government email address" do
+    should "not allow user to be updated with a known non-government email address" do
       user = create(:batch_invitation_user, email: "alexia.statham@department.gov.uk")
 
       user.email = "alexia.statham@yahoo.co.uk"
 
-      assert user.valid?
+      assert_not user.valid?
     end
   end
 

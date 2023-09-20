@@ -2,7 +2,7 @@ class BatchInvitationUser < ApplicationRecord
   belongs_to :batch_invitation
 
   validates :email, presence: true, format: { with: Devise.email_regexp }
-  validates :email, reject_non_governmental_email_addresses: true, on: :create
+  validates :email, reject_non_governmental_email_addresses: true
 
   validates :outcome, inclusion: { in: [nil, "success", "failed", "skipped"] }
 
