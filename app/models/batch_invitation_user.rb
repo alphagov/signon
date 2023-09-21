@@ -7,6 +7,7 @@ class BatchInvitationUser < ApplicationRecord
   validates :outcome, inclusion: { in: [nil, "success", "failed", "skipped"] }
 
   before_save :strip_whitespace_from_name
+  before_validation :strip_whitespace_from_email
 
   scope :processed, -> { where.not(outcome: nil) }
   scope :unprocessed, -> { where(outcome: nil) }
@@ -98,5 +99,9 @@ private
 
   def strip_whitespace_from_name
     name.strip!
+  end
+
+  def strip_whitespace_from_email
+    email.strip!
   end
 end

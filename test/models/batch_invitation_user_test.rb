@@ -7,6 +7,13 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
 
       assert_equal "Ailean Millard", user.name
     end
+
+    should "strip unwanted whitespace from email before validating" do
+      user = build(:batch_invitation_user, email: "  foo@example.com ")
+      user.valid?
+
+      assert_equal "foo@example.com", user.email
+    end
   end
 
   context "validations" do
