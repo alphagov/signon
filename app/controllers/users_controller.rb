@@ -92,18 +92,6 @@ class UsersController < ApplicationController
     @logs = @user.event_logs.page(params[:page]).per(100) if @user
   end
 
-  def update_password
-    if @user.update_with_password(password_params)
-      EventLog.record_event(@user, EventLog::SUCCESSFUL_PASSWORD_CHANGE, ip_address: user_ip_address)
-      flash[:notice] = t(:updated, scope: "devise.passwords")
-      bypass_sign_in(@user)
-      redirect_to root_path
-    else
-      EventLog.record_event(@user, EventLog::UNSUCCESSFUL_PASSWORD_CHANGE, ip_address: user_ip_address)
-      render "account/email_passwords/show", layout: "admin_layout"
-    end
-  end
-
   def reset_two_step_verification
     @user.reset_2sv!(current_user)
     UserMailer.two_step_reset(@user).deliver_later
@@ -163,14 +151,6 @@ private
 
   def permitted_user_params
     @permitted_user_params ||= params.require(:user).permit(:user, :name, :email, :organisation_id, :require_2sv, :role, :skip_update_user_permissions, supported_permission_ids: []).to_h
-  end
-
-  def password_params
-    params.require(:user).permit(
-      :current_password,
-      :password,
-      :password_confirmation,
-    )
   end
 
   def filter_params

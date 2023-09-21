@@ -3,4 +3,5 @@ class Account::EmailPasswordsPolicy < BasePolicy
     current_user.present?
   end
   alias_method :update_email?, :show?
+  alias_method :update_password?, :show?
 end

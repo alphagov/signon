@@ -50,7 +50,7 @@
     <hr class="govuk-section-break govuk-section-break--visible govuk-section-break--xl">
 
     <h2 class="govuk-heading-m">Change your password</h2>
-    <%= form_for current_user, :url => update_password_user_path(current_user) do |f| %>
+    <%= form_for current_user, :url => update_password_account_email_password_path do |f| %>
       <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: current_user, updating_password: true } %>
     <% end %>
   </div>
