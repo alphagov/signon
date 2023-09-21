@@ -89,7 +89,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
         post :create, params: { batch_invitation: { user_names_and_emails: nil } }
 
         assert_template :new
-        assert_match(/You must upload a file/i, flash[:alert])
+        assert_match(/You must upload a file/i, flash.now[:alert])
       end
     end
 
@@ -98,7 +98,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
         post :create, params: { batch_invitation: { user_names_and_emails: users_csv("users_with_non_valid_emails.csv") } }
 
         assert_template :new
-        assert_match(/One or more emails were invalid/i, flash[:alert])
+        assert_match(/One or more emails were invalid/i, flash.now[:alert])
       end
     end
 
@@ -117,7 +117,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
         post :create, params: { batch_invitation: { user_names_and_emails: users_csv("empty_users.csv") } }
 
         assert_template :new
-        assert_match(/no rows/i, flash[:alert])
+        assert_match(/no rows/i, flash.now[:alert])
       end
     end
 
@@ -126,7 +126,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
         post :create, params: { batch_invitation: { user_names_and_emails: users_csv("invalid_users.csv") } }
 
         assert_template :new
-        assert_match(/Couldn't understand that file/i, flash[:alert])
+        assert_match(/Couldn't understand that file/i, flash.now[:alert])
       end
     end
 
@@ -135,7 +135,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
         post :create, params: { batch_invitation: { user_names_and_emails: users_csv("no_headers_users.csv") } }
 
         assert_template :new
-        assert_match(/must have headers/i, flash[:alert])
+        assert_match(/must have headers/i, flash.now[:alert])
       end
     end
   end

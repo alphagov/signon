@@ -15,7 +15,7 @@ class BatchInvitationsController < ApplicationController
     authorize @batch_invitation
 
     unless file_uploaded?
-      flash[:alert] = "You must upload a file"
+      flash.now[:alert] = "You must upload a file"
       render :new
       return
     end
@@ -23,16 +23,16 @@ class BatchInvitationsController < ApplicationController
     begin
       csv = CSV.parse(params[:batch_invitation][:user_names_and_emails].read, headers: true)
     rescue CSV::MalformedCSVError => e
-      flash[:alert] = "Couldn't understand that file: #{e.message}"
+      flash.now[:alert] = "Couldn't understand that file: #{e.message}"
       render :new
       return
     end
     if csv.empty?
-      flash[:alert] = "CSV had no rows."
+      flash.now[:alert] = "CSV had no rows."
       render :new
       return
     elsif %w[Name Email].any? { |required_header| csv.headers.exclude?(required_header) }
-      flash[:alert] = "CSV must have headers including 'Name' and 'Email'"
+      flash.now[:alert] = "CSV must have headers including 'Name' and 'Email'"
       render :new
       return
     end
@@ -47,7 +47,7 @@ class BatchInvitationsController < ApplicationController
       batch_user = BatchInvitationUser.new(batch_user_args)
 
       unless batch_user.valid?
-        flash[:alert] = batch_users_error_message(batch_user)
+        flash.now[:alert] = batch_users_error_message(batch_user)
         return render :new
       end
 
