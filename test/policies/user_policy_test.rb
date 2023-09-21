@@ -14,13 +14,11 @@ class UserPolicyTest < ActiveSupport::TestCase
 
   primary_management_actions = %i[new assign_organisations]
   user_management_actions = %i[edit create update unlock suspension cancel_email_change resend_email_change event_logs reset_2sv mandate_2sv]
-  self_management_actions = %i[cancel_email_change]
   superadmin_actions = %i[assign_role]
   two_step_verification_exemption_actions = %i[exempt_from_two_step_verification]
 
   org_admin_actions = user_management_actions - %i[create]
   super_org_admin_actions = user_management_actions - %i[create]
-  admin_actions = user_management_actions - self_management_actions
 
   context "superadmins" do
     should "allow for index" do
@@ -256,13 +254,6 @@ class UserPolicyTest < ActiveSupport::TestCase
       end
     end
 
-    self_management_actions.each do |permission|
-      should "allow for #{permission} accessing their own record" do
-        user = create(:user)
-        assert permit?(user, user, permission)
-      end
-    end
-
     superadmin_actions.each do |permission|
       should "not allow for #{permission}" do
         assert forbid?(create(:user), User, permission)
@@ -273,13 +264,6 @@ class UserPolicyTest < ActiveSupport::TestCase
       should "not allow for #{permission}" do
         user = create(:user)
         assert forbid?(create(:user), user, permission)
-      end
-    end
-
-    admin_actions.each do |permission|
-      should "not allow for #{permission} accessing their own record" do
-        user = create(:user)
-        assert forbid?(user, user, permission)
       end
     end
   end

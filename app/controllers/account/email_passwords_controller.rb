@@ -42,6 +42,12 @@ class Account::EmailPasswordsController < ApplicationController
     end
   end
 
+  def cancel_email_change
+    current_user.cancel_email_change!
+
+    redirect_back_or_to(root_path)
+  end
+
 private
 
   def authorise_user

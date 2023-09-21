@@ -58,6 +58,7 @@ Rails.application.routes.draw do
       patch :update_email
       patch :update_password
       put :resend_email_change
+      delete :cancel_email_change
     end
   end
 
