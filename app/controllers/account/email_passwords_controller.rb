@@ -33,6 +33,15 @@ class Account::EmailPasswordsController < ApplicationController
     end
   end
 
+  def resend_email_change
+    current_user.resend_confirmation_instructions
+    if current_user.errors.empty?
+      redirect_to root_path, notice: "An email has been sent to #{current_user.unconfirmed_email}. Follow the link in the email to update your address."
+    else
+      redirect_to account_email_password_path, alert: "Failed to send email change email"
+    end
+  end
+
 private
 
   def authorise_user

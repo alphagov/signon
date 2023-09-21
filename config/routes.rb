@@ -57,6 +57,7 @@ Rails.application.routes.draw do
     resource :email_password, only: [:show] do
       patch :update_email
       patch :update_password
+      put :resend_email_change
     end
   end
 

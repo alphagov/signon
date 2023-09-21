@@ -3,34 +3,6 @@ require "test_helper"
 class UsersControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
 
-  context "PUT resend_email_change" do
-    should "send an email change confirmation email" do
-      perform_enqueued_jobs do
-        @user = create(:user_with_pending_email_change)
-        sign_in @user
-
-        put :resend_email_change, params: { id: @user.id }
-
-        assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
-      end
-    end
-
-    should "use a new token if it's expired" do
-      perform_enqueued_jobs do
-        @user = create(
-          :user_with_pending_email_change,
-          confirmation_token: "old token",
-          confirmation_sent_at: 15.days.ago,
-        )
-        sign_in @user
-
-        put :resend_email_change, params: { id: @user.id }
-
-        assert_not_equal "old token", @user.reload.confirmation_token
-      end
-    end
-  end
-
   context "DELETE cancel_email_change" do
     setup do
       @user = create(:user_with_pending_email_change)

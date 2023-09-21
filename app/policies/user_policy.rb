@@ -37,12 +37,9 @@ class UserPolicy < BasePolicy
   alias_method :require_2sv?, :edit?
   alias_method :reset_2sv?, :edit?
   alias_method :reset_two_step_verification?, :edit?
+  alias_method :resend_email_change?, :edit?
 
   def cancel_email_change?
-    allow_self_only || edit?
-  end
-
-  def resend_email_change?
     allow_self_only || edit?
   end
 

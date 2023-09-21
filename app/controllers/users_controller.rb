@@ -69,12 +69,7 @@ class UsersController < ApplicationController
   def resend_email_change
     @user.resend_confirmation_instructions
     if @user.errors.empty?
-      notice = if @user.normal?
-                 "An email has been sent to #{@user.unconfirmed_email}. Follow the link in the email to update your address."
-               else
-                 "Successfully resent email change email to #{@user.unconfirmed_email}"
-               end
-      redirect_to root_path, notice:
+      redirect_to root_path, notice: "Successfully resent email change email to #{@user.unconfirmed_email}"
     else
       redirect_to edit_user_path(@user), alert: "Failed to send email change email"
     end

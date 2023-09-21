@@ -7,7 +7,7 @@
   } do %>
     <p class="govuk-body">We've sent an email to <strong><%= current_user.unconfirmed_email %></strong> with a link to confirm the change. If you haven't received this email, we can send it again:</p>
 
-    <%= link_to "Resend confirmation email", resend_email_change_user_path(current_user), method: :put, class: "govuk-button app-button--no-margin" %>
+    <%= link_to "Resend confirmation email", resend_email_change_account_email_password_path, method: :put, class: "govuk-button app-button--no-margin" %>
     <%= link_to "Cancel change", cancel_email_change_user_path(current_user), method: :delete, class: "govuk-link app-link--inline" %>
   <% end %>
 <% end %>
