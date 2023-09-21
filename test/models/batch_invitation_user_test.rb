@@ -14,6 +14,12 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
 
       assert_equal "foo@example.com", user.email
     end
+
+    should "strip unwanted whitespace from organisation_slug before persisting" do
+      user = create(:batch_invitation_user, organisation_slug: "  cabinet-office ")
+
+      assert_equal "cabinet-office", user.organisation_slug
+    end
   end
 
   context "validations" do
