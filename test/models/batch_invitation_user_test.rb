@@ -23,19 +23,25 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
   end
 
   context "validations" do
-    should "validate email address" do
+    should "validate presence of email address" do
+      user = build(:batch_invitation_user, email: nil)
+
+      assert_not user.valid?
+      assert_includes user.errors[:email], "can't be blank"
+    end
+
+    should "validate format of email address" do
       user = build(:batch_invitation_user, email: "@gov.uk")
 
       assert_not user.valid?
-      assert_equal ["is invalid"], user.errors[:email]
+      assert_includes user.errors[:email], "is invalid"
     end
 
     should "prevent user being created with a known non-government email address" do
       user = build(:batch_invitation_user, email: "piers.quinn@yahoo.co.uk")
 
       assert_not user.valid?
-      assert_equal ["not accepted. Please enter a workplace email to continue."],
-                   user.errors[:email]
+      assert_includes user.errors[:email], "not accepted. Please enter a workplace email to continue."
     end
 
     should "not allow user to be updated with a known non-government email address" do

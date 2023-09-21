@@ -103,7 +103,7 @@ private
   end
 
   def strip_whitespace_from_email
-    email.strip!
+    email&.strip!
   end
 
   def strip_whitespace_from_organisation_slug
