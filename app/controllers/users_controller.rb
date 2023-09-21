@@ -76,9 +76,8 @@ class UsersController < ApplicationController
   end
 
   def cancel_email_change
-    @user.unconfirmed_email = nil
-    @user.confirmation_token = nil
-    @user.save!(validate: false)
+    @user.cancel_email_change!
+
     redirect_back_or_to(root_path)
   end
 
