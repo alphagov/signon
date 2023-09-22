@@ -24,12 +24,14 @@ Rails.application.routes.draw do
   devise_scope :user do
     post "/users/invitation/resend/:id" => "invitations#resend", :as => "resend_user_invitation"
     put "/users/confirmation" => "confirmations#update"
+    resource :two_step_verification_session,
+             only: %i[new create],
+             path: "/users/two_step_verification_session",
+             controller: "devise/two_step_verification_session"
     resource :two_step_verification,
              only: %i[show update],
              path: "/users/two_step_verification",
              controller: "devise/two_step_verification" do
-      resource :session, only: %i[new create], controller: "devise/two_step_verification_session"
-
       member { get :prompt }
     end
   end
