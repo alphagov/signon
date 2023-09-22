@@ -24,5 +24,14 @@
       },
       description: "Reset your password or change your email address.",
     },
+    (
+      {
+        link: {
+          text: "Manage permissions",
+          path: account_manage_permissions_path,
+        },
+        description: "Make changes to your permissions across different apps.",
+      } if policy(%i[account manage_permissions]).show?
+    ),
   ].compact
 } %>
