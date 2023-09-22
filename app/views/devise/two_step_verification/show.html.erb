@@ -1,5 +1,19 @@
 <% content_for :title, two_step_verification_page_title %>
-<% content_for :back_link, root_path %>
+
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: two_step_verification_page_title,
+       }
+     ]
+   })
+%>
 
 <% if flash[:invalid_code].present? %>
   <% content_for :error_summary do %>
