@@ -33,5 +33,11 @@
         description: "Make changes to your permissions across different apps.",
       } if policy(%i[account manage_permissions]).show?
     ),
+    {
+      link: {
+        text: two_step_verification_page_title,
+        path: two_step_verification_path,
+      },
+    },
   ].compact
 } %>
