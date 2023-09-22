@@ -25,6 +25,28 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
       assert_user_created_and_invited("lara@example.com", @application, organisation: @cabinet_office)
       assert_user_not_created("emma@example.com")
     end
+
+    should "only display flash alert once on validation error" do
+      visit root_path
+      signin_with(@user)
+
+      visit new_batch_invitation_path
+      click_button "Manage permissions for new users"
+
+      assert_response_contains "You must upload a file"
+
+      path = Rails.root.join("test/fixtures/users.csv")
+      attach_file("Upload a CSV file", path)
+      click_button "Manage permissions for new users"
+
+      batch_invitation = BatchInvitation.last
+      assert batch_invitation.present?
+
+      invited_user = batch_invitation.batch_invitation_users.last
+      assert_equal "fred@example.com", invited_user.email
+
+      refute_response_contains "You must upload a file"
+    end
   end
 
   context "for admin users" do
