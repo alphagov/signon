@@ -30,7 +30,7 @@ Rails.application.routes.draw do
              controller: "devise/two_step_verification_session"
     resource :two_step_verification,
              only: %i[show update],
-             path: "/users/two_step_verification",
+             path: "/account/two_step_verification",
              controller: "devise/two_step_verification" do
       member { get :prompt }
     end
