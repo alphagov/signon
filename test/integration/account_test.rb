@@ -8,26 +8,16 @@ class AccountTest < ActionDispatch::IntegrationTest
       assert_current_url new_user_session_path
     end
 
-    should "redirect to user's edit page for admin users" do
-      user = FactoryBot.create(:admin_user)
-
-      visit new_user_session_path
-      signin_with user
-
-      visit account_path
-
-      assert_current_url edit_user_path(user)
-    end
-
-    should "redirect to edit email or password page for normal users" do
+    should "link to Change email/password" do
       user = FactoryBot.create(:user)
 
       visit new_user_session_path
       signin_with user
 
       visit account_path
+      assert page.has_selector?("h1", text: "Settings")
 
-      assert_current_url account_email_password_path
+      assert page.has_link?("Change your email or password", href: account_email_password_path)
     end
   end
 end

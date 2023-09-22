@@ -1,0 +1,28 @@
+<% content_for :title, "Settings" %>
+
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "Settings",
+       }
+     ]
+   })
+%>
+
+<%= render "govuk_publishing_components/components/cards", {
+  items: [
+    {
+      link: {
+        text: "Change your email or password",
+        path: account_email_password_path,
+      },
+      description: "Reset your password or change your email address.",
+    },
+  ].compact
+} %>
