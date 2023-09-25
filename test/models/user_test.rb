@@ -285,7 +285,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "not allow user to be updated with a known non-government email address" do
-      user = create(:batch_invitation_user, email: "alexia.statham@department.gov.uk")
+      user = create(:user, email: "alexia.statham@department.gov.uk")
 
       user.email = "alexia.statham@yahoo.co.uk"
 
