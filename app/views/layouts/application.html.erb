@@ -47,7 +47,7 @@
   <% if content_for?(:thin_form) %></div><% end %>
 <% end %>
 
-<% content_for :footer_version, CURRENT_RELEASE_SHA %>
+<% content_for :footer_version, ENV.fetch("SENTRY_RELEASE", "null") %>
 
 <%# use the govuk_admin_template layout %>
 <%= render :template => 'layouts/govuk_admin_template' %>
