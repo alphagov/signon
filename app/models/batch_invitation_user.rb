@@ -99,7 +99,7 @@ private
   end
 
   def strip_whitespace_from_name
-    name.strip!
+    name&.strip!
   end
 
   def strip_whitespace_from_email

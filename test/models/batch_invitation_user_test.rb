@@ -20,6 +20,12 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
 
       assert_equal "cabinet-office", user.organisation_slug
     end
+
+    should "strip unwanted whitespace from organisation_slug before persisting even if name is nil" do
+      user = create(:batch_invitation_user, organisation_slug: "  cabinet-office ", name: nil)
+
+      assert_equal "cabinet-office", user.organisation_slug
+    end
   end
 
   context "validations" do
