@@ -45,7 +45,7 @@ class Account::EmailPasswordsController < ApplicationController
   def cancel_email_change
     current_user.cancel_email_change!
 
-    redirect_to root_path
+    redirect_to root_path, notice: "You have cancelled your pending email address change."
   end
 
 private
