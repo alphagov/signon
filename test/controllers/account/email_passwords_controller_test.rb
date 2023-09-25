@@ -29,6 +29,12 @@ class Account::EmailPasswordsControllerTest < ActionController::TestCase
         end
       end
 
+      should "confirm the change in a flash notice" do
+        put :update_email, params: { user: { email: "new@email.com" } }
+
+        assert_match(/An email has been sent to new@email\.com/, flash[:notice])
+      end
+
       should "log an event" do
         put :update_email, params: { user: { email: "new@email.com" } }
         assert_equal 1, EventLog.where(event_id: EventLog::EMAIL_CHANGE_INITIATED.id, uid: @user.uid, initiator_id: @user.id).count
@@ -96,6 +102,15 @@ class Account::EmailPasswordsControllerTest < ActionController::TestCase
 
         assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
       end
+    end
+
+    should "confirm resend in a flash notice" do
+      user = create(:user_with_pending_email_change, unconfirmed_email: "new@email.com")
+      sign_in user
+
+      put :resend_email_change
+
+      assert_match(/An email has been sent to new@email\.com/, flash[:notice])
     end
 
     should "use a new token if it's expired" do

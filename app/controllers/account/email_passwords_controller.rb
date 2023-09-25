@@ -15,7 +15,7 @@ class Account::EmailPasswordsController < ApplicationController
     elsif current_user.update(email: new_email)
       EventLog.record_email_change(current_user, current_email, new_email)
       UserMailer.email_changed_notification(current_user).deliver_later
-      redirect_to root_path, notice: "An email has been sent to #{new_email}. Follow the link in the email to update your address."
+      redirect_to root_path, notice: email_change_notice
     else
       render :show
     end
@@ -36,7 +36,7 @@ class Account::EmailPasswordsController < ApplicationController
   def resend_email_change
     current_user.resend_confirmation_instructions
     if current_user.errors.empty?
-      redirect_to root_path, notice: "An email has been sent to #{current_user.unconfirmed_email}. Follow the link in the email to update your address."
+      redirect_to root_path, notice: email_change_notice
     else
       redirect_to account_email_password_path, alert: "Failed to send email change email"
     end
@@ -60,5 +60,10 @@ private
       :password,
       :password_confirmation,
     )
+  end
+
+  def email_change_notice
+    "An email has been sent to #{current_user.unconfirmed_email}. "\
+    "Follow the link in the email to update your address."
   end
 end
