@@ -46,6 +46,14 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
         end
       end
 
+      should "redirect to account page on success" do
+        enter_2sv_code(@new_secret)
+        click_button "Finish replacing your phone"
+
+        assert_current_url account_path
+        assert_response_contains "2-step verification phone changed successfully"
+      end
+
       should "require the code again on next login" do
         enter_2sv_code(@new_secret)
         click_button "Finish replacing your phone"
