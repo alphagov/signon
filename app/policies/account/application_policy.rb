@@ -1,4 +1,4 @@
-class AccountApplicationsPolicy < BasePolicy
+class Account::ApplicationPolicy < BasePolicy
   def index?
     current_user.govuk_admin?
   end

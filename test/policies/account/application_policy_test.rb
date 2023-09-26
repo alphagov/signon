@@ -1,7 +1,7 @@
 require "test_helper"
 require "support/policy_helpers"
 
-class AccountApplicationsPolicyTest < ActiveSupport::TestCase
+class Account::ApplicationPolicyTest < ActiveSupport::TestCase
   include PolicyHelpers
 
   context "accessing index?" do
