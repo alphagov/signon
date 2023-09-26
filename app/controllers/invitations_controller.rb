@@ -73,14 +73,6 @@ private
     end
   end
 
-  # TODO: once we've upgraded Devise and DeviseInvitable, `resource_params`
-  # hopefully won't be being called for actions like `#new` anymore and we
-  # can change the following `params.fetch(:user)` to
-  # `params.require(:user)`. See
-  # https://github.com/scambra/devise_invitable/blob/v1.1.5/app/controllers/devise/invitations_controller.rb#L10
-  # and
-  # https://github.com/plataformatec/devise/blob/v2.2/app/controllers/devise_controller.rb#L99
-  # for details :)
   def unsanitised_user_params
     params.require(:user).permit(
       :name,
