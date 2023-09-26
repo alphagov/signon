@@ -1,0 +1,32 @@
+<% content_for :title, "Remove access to #{@application.name}" %>
+
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "GOV.UK apps",
+         url: account_applications_path,
+       },
+       {
+         title: "Remove access to #{@application.name}",
+       },
+     ]
+   })
+%>
+
+<p class="govuk-body">Are you sure you want to remove access to <%= @application.name %>?</p>
+
+<%= form_with url: account_application_signin_permission_path(@application), method: :delete do |form| %>
+  <div class="govuk-button-group">
+    <%= render "govuk_publishing_components/components/button", {
+      text: "Confirm",
+    } %>
+
+    <%= link_to "Cancel", account_applications_path, class: "govuk-link govuk-link--no-visited-state" %>
+  </div>
+<% end %>

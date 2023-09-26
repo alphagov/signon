@@ -51,7 +51,12 @@ Rails.application.routes.draw do
 
   resource :account, only: [:show]
   namespace :account do
-    resources :applications, only: [:index]
+    resources :applications, only: %i[show index] do
+      resources :permissions, only: [:index]
+      resource :signin_permission, only: %i[create destroy] do
+        get :delete
+      end
+    end
   end
 
   resources :batch_invitations, only: %i[new create show] do
