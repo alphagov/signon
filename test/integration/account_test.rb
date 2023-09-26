@@ -8,7 +8,7 @@ class AccountTest < ActionDispatch::IntegrationTest
       assert_current_url new_user_session_path
     end
 
-    should "link to Change email/password, Manage permissions and Change 2SV for admin users" do
+    should "link to Change email/password, Manage permissions, Change 2SV and Role/org for admin users" do
       user = FactoryBot.create(:admin_user, otp_secret_key: "2SVenabled")
 
       visit new_user_session_path
@@ -21,9 +21,10 @@ class AccountTest < ActionDispatch::IntegrationTest
       assert page.has_link?("Change your email or password", href: account_email_password_path)
       assert page.has_link?("Manage permissions", href: account_manage_permissions_path)
       assert page.has_link?("Change your 2-step verification phone", href: two_step_verification_path)
+      assert page.has_link?("Change your role or organisation", href: account_role_organisation_path)
     end
 
-    should "link to Change email/password and Change 2SV for normal users" do
+    should "link to Change email/password, Change 2SV and Role/org for normal users" do
       user = FactoryBot.create(:user, otp_secret_key: "2SVenabled")
 
       visit new_user_session_path
@@ -34,6 +35,7 @@ class AccountTest < ActionDispatch::IntegrationTest
 
       assert page.has_link?("Change your email or password", href: account_email_password_path)
       assert page.has_link?("Change your 2-step verification phone", href: two_step_verification_path)
+      assert page.has_link?("View your role and organisation", href: account_role_organisation_path)
 
       assert_not page.has_link?("Manage permissions")
     end

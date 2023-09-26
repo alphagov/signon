@@ -63,6 +63,10 @@ Rails.application.routes.draw do
       delete :cancel_email_change
     end
     resource :manage_permissions, only: %i[show update]
+    resource :role_organisation, only: [:show] do
+      patch :update_organisation
+      patch :update_role
+    end
   end
 
   resources :batch_invitations, only: %i[new create show] do
