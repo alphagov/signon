@@ -31,7 +31,7 @@
         <td class="govuk-table__cell"><%= application.name %></td>
         <td class="govuk-table__cell"><%= application.description %></td>
         <td class="govuk-table__cell govuk-!-text-align-right">
-          <%= link_to account_application_permissions_path(application) do %>
+          <%= link_to account_application_permissions_path(application), class: "govuk-link" do %>
               View permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
           <% end %>
         </td>
