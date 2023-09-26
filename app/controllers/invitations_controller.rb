@@ -60,12 +60,6 @@ private
     end
   end
 
-  # TODO: remove this method when we're on a version of devise_invitable which
-  # no longer expects it to exist (v1.2.1 onwards)
-  def build_resource
-    self.resource = resource_class.new(resource_params)
-  end
-
   def resource_params
     sanitised_params = UserParameterSanitiser.new(
       user_params: unsanitised_user_params,
