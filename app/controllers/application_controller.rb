@@ -66,7 +66,7 @@ private
     render plain: "Error: One or more recipients not in GOV.UK Notify team (code: 400)", status: :bad_request
   end
 
-  def redirect_to_prior_flow(args = {})
-    redirect_to stored_location_for("2sv") || :root, args
+  def redirect_to_prior_flow_or_to(fallback_location, args = {})
+    redirect_to stored_location_for("2sv") || fallback_location, args
   end
 end

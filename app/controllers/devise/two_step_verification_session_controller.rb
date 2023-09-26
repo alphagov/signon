@@ -26,7 +26,7 @@ class Devise::TwoStepVerificationSessionController < DeviseController
       warden.session(:user)["need_two_step_verification"] = false
       bypass_sign_in current_user
       set_flash_message :notice, :success
-      redirect_to_prior_flow
+      redirect_to_prior_flow_or_to root_path
       current_user.update!(second_factor_attempts_count: 0)
     else
       flash.now[:alert] = find_message(:attempt_failed)
