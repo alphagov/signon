@@ -4,4 +4,7 @@ class Account::ApplicationPolicy < BasePolicy
   end
 
   alias_method :show?, :index?
+  alias_method :grant_signin_permission?, :index?
+  alias_method :remove_signin_permission?, :index?
+  alias_method :view_permissions?, :index?
 end
