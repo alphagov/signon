@@ -133,10 +133,6 @@ class UserMailerTest < ActionMailer::TestCase
     should "say 'suspended' in the body" do
       assert_body_includes "suspended"
     end
-
-    should "include support links" do
-      assert_support_present_in_text "support form"
-    end
   end
 
   context "on a non-production Signon instance" do

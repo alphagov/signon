@@ -1,15 +1,13 @@
-<%= t('department.name') %> Signon accounts are suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.
+Your <%= t('department.name') %> Signon <%= account_name %> for <%= @user.email %> is now suspended.
 
-Your <%= t('department.name') %> Signon <%= account_name %>, for <%= @user.email %>, has now been suspended and you won't be able to access any <%= t('department.name') %> <%= account_name %> publishing applications.
+^ Please do not reply to this email.
 
-<% unless GovukEnvironment.production? %>
-<%= account_name.humanize %> suspensions do not suspend production accounts or remove access to <%= t('department.name') %> production applications.
-<% end %>
+## How to reactive your account
 
-If you don't need the account you can ignore this email.
+Contact your managing editor or user manager ‒ they can unsuspend your account.
 
-If you do still need the account you will have to contact a managing <%= t('department.name') %> editor in your organisation (or your parent organisation). They can use the support form (<%= t('support.url') %>) to get help from the <%= t('department.name') %> team.
+## If you’re a managing editor or user manager
 
-Read our blog post about suspending unused <%= t('department.name') %> accounts:
+Contact another managing editor or user manager and ask them to unsuspend you.
 
-https://insidegovuk.blog.gov.uk/2014/08/21/suspending-unused-gov-uk-accounts
+Please note that managing editors in an arm's length body may not have this authority.
