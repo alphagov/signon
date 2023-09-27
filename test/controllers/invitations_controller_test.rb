@@ -6,6 +6,14 @@ class InvitationsControllerTest < ActionController::TestCase
   end
 
   context "GET new" do
+    context "when not signed in" do
+      should "require user to be signed in" do
+        get :new
+
+        assert_redirected_to new_user_session_path
+      end
+    end
+
     context "when signed in" do
       setup do
         @user = create(:superadmin_user)
@@ -33,6 +41,14 @@ class InvitationsControllerTest < ActionController::TestCase
   end
 
   context "POST create" do
+    context "when not signed in" do
+      should "require user to be signed in" do
+        post :create
+
+        assert_redirected_to new_user_session_path
+      end
+    end
+
     context "when signed in" do
       setup do
         @user = create(:superadmin_user)
@@ -133,6 +149,15 @@ class InvitationsControllerTest < ActionController::TestCase
   end
 
   context "POST resend" do
+    context "when not signed in" do
+      should "require user to be signed in" do
+        user_to_resend_for = create(:user)
+        post :resend, params: { id: user_to_resend_for.id }
+
+        assert_redirected_to new_user_session_path
+      end
+    end
+
     context "when signed in" do
       setup do
         @user = create(:superadmin_user)
