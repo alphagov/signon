@@ -87,17 +87,6 @@ private
     ).to_h
   end
 
-  # NOTE: `current_user` doesn't exist for `#edit` and `#update` actions as
-  # implemented in our current (out-of-date) versions of Devise
-  # (https://github.com/plataformatec/devise/blob/v2.2/app/controllers/devise_controller.rb#L117)
-  # and DeviseInvitable
-  # (https://github.com/scambra/devise_invitable/blob/v1.1.5/app/controllers/devise/invitations_controller.rb#L5)
-  #
-  # With the old attr_accessible approach, this would fall back to the
-  # default whitelist (i.e. equivalent to the `:normal` role) and this
-  # this preserves that behaviour. In fact, a user accepting an invitation
-  # only needs to modify `password` and `password_confirmation` so we could
-  # only permit those two params for the `edit` and `update` actions.
   def current_user_role
     current_user.try(:role).try(:to_sym) || :normal
   end
