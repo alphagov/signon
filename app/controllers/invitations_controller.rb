@@ -24,7 +24,6 @@ class InvitationsController < Devise::InvitationsController
       all_params[:require_2sv] = new_user_requires_2sv(all_params.symbolize_keys)
 
       user = User.new(all_params)
-      user.organisation_id = all_params[:organisation_id]
       authorize user
 
       self.resource = resource_class.invite!(all_params, current_inviter)
