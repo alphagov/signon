@@ -14,8 +14,6 @@ class InvitationsController < Devise::InvitationsController
   end
 
   def create
-    # Prevent an error when devise_invitable invites/updates an existing user,
-    # and accepts_nested_attributes_for tries to create duplicate permissions.
     if (self.resource = User.find_by(email: params[:user][:email]))
       authorize resource
       flash[:alert] = "User already invited. If you want to, you can click 'Resend signup email'."

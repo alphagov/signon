@@ -67,7 +67,7 @@ class InvitationsControllerTest < ActionController::TestCase
         assert_empty User.where(api_user: true)
       end
 
-      should "not error while inviting an existing user" do
+      should "redirect to users page and display flash alert when inviting an existing user" do
         user = create(:user)
 
         post :create, params: { user: { name: user.name, email: user.email } }
