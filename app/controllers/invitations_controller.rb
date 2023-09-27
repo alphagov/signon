@@ -88,7 +88,7 @@ private
   end
 
   def current_user_role
-    current_user.try(:role).try(:to_sym) || :normal
+    (current_user || User.new).role.to_sym
   end
 
   def invitation_token
