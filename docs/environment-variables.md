@@ -39,10 +39,3 @@ Used to configure Google Analytics in the new `app/views/layouts/admin_layout.ht
 Used to configure `GovukAdminTemplate` and in `Healthcheck::ApiTokens#expiring_tokens`.
 
 * `GOVUK_ENVIRONMENT_NAME`
-
-## Splunk
-
-Used to stream event logs to Splunk for analysis of Signon usage patterns and anomalies.
-
-* `SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN`
-* `SPLUNK_EVENT_LOG_ENDPOINT_URL`

@@ -85,29 +85,6 @@ class EventLog < ApplicationRecord
     self.class.convert_integer_to_ip_address(ip_address)
   end
 
-  def send_to_splunk(*)
-    return unless self.class.splunk_endpoint_enabled?
-
-    event = {
-      timestamp: created_at.utc,
-      app: application&.name,
-      object_id: id,
-      user: initiator&.name || user_email_string,
-      user_uid: uid,
-      src_ip: (ip_address_string if ip_address.present?),
-      action: self.event,
-      result: trailing_message,
-      http_user_agent: user_agent_as_string,
-    }
-
-    conn = Faraday.new(ENV["SPLUNK_EVENT_LOG_ENDPOINT_URL"])
-    conn.post do |request|
-      request.headers["Content-Type"] = "application/json"
-      request.headers["Authorization"] = "Splunk #{ENV['SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN']}"
-      request.body = { event: }.to_json
-    end
-  end
-
   def self.record_event(user, event, options = {})
     if options[:ip_address]
       options[:ip_address] = convert_ip_address_to_integer(options[:ip_address])
@@ -117,13 +94,7 @@ class EventLog < ApplicationRecord
       event_id: event.id,
     }.merge!(options.slice(*VALID_OPTIONS))
 
-    event_log_entry = EventLog.create!(attributes)
-
-    if splunk_endpoint_enabled?
-      SplunkLogStreamingJob.perform_later(event_log_entry.id)
-    end
-
-    event_log_entry
+    EventLog.create!(attributes)
   end
 
   def self.record_email_change(user, email_was, email_is, initiator = user)
@@ -155,10 +126,6 @@ class EventLog < ApplicationRecord
       # IPv4 address
       IPAddr.new(integer, Socket::AF_INET).to_s
     end
-  end
-
-  def self.splunk_endpoint_enabled?
-    ENV["SPLUNK_EVENT_LOG_ENDPOINT_URL"] && ENV["SPLUNK_EVENT_LOG_ENDPOINT_HEC_TOKEN"]
   end
 
 private
