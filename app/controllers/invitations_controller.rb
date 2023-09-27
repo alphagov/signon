@@ -1,7 +1,7 @@
 # https://raw.github.com/scambra/devise_invitable/master/app/controllers/devise/invitations_controller.rb
 class InvitationsController < Devise::InvitationsController
   before_action :authenticate_user!
-  after_action :verify_authorized, except: %i[edit update] # rubocop:disable Rails/LexicallyScopedActionFilter
+  after_action :verify_authorized, except: %i[edit update]
   layout "admin_layout", only: %i[edit update]
 
   include UserPermissionsControllerMethods
@@ -40,6 +40,21 @@ class InvitationsController < Devise::InvitationsController
       EventLog.record_account_invitation(@user, current_user)
     end
   end
+
+  # rubocop:disable Lint/UselessMethodDefinition
+  # Renders app/views/devise/invitations/edit.html.erb
+  def edit
+    super
+  end
+
+  def update
+    super
+  end
+
+  def destroy
+    super
+  end
+  # rubocop:enable Lint/UselessMethodDefinition
 
   def resend
     user = User.find(params[:id])
