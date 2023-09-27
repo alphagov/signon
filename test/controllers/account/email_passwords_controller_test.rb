@@ -118,7 +118,6 @@ class Account::EmailPasswordsControllerTest < ActionController::TestCase
     setup do
       @user = create(:user_with_pending_email_change)
       sign_in @user
-      request.env["HTTP_REFERER"] = account_email_password_path
     end
 
     should "clear the unconfirmed_email and the confirmation_token" do
