@@ -1,19 +1,24 @@
-<%= t('department.name') %> Signon accounts are suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.
+Your <%= t('department.name') %> Signon <%= account_name %>, for <%= @user.email %> will be suspended <%= suspension_time %>.
 
-Your <%= t('department.name') %> Signon <%= account_name %>, for <%= @user.email %>, will be suspended <%= suspension_time %>. After suspension you won't be able to access any <%= t('department.name') %> <%= account_name %> publishing applications.
-
-<% unless GovukEnvironment.production? %>
-<%= account_name.humanize %> suspensions do not suspend production accounts or remove access to <%= t('department.name') %> production applications.
+<% if GovukEnvironment.production? %>
+If this happens you won’t be able to access any of your publishing apps from this account, including Whitehall and Publisher.
+<% else %>
+If this happens you won’t be able to do any training from this account.
 <% end %>
 
-If you don't need the account you can ignore these emails.
+## How to stop suspension
 
-To stop your account suspension you will need to sign in:
+^ Please do not reply to this email.
 
+To stop your account being suspended, all you have to do is sign in:
 <%= new_user_session_url(protocol: 'https') %>
 
-If you’ve forgotten your password, you can request a new one from the sign in screen.
+<%= t('department.name') %> Signon accounts are automatically suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.
 
-Read our blog post about suspending unused <%= t('department.name') %> accounts:
+<% unless GovukEnvironment.production? %>
+Please note that Integration account suspensions do not suspend Production accounts.
 
-https://insidegovuk.blog.gov.uk/2014/08/21/suspending-unused-gov-uk-accounts
+Find about more about the two kinds of accounts on the [How to Publish on GOV.UK page](https://www.gov.uk/guidance/how-to-publish-on-gov-uk/introduction-and-access-to-whitehall-publisher).
+<% end %>
+
+If you no longer need this account, please ignore these instructions.
