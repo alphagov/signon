@@ -115,7 +115,11 @@ private
   end
 
   def unlock_time
-    (@user.locked_at + 1.hour).to_fs(:govuk_date)
+    t = (@user.locked_at + User.unlock_in)
+    time_part = t.to_fs(:govuk_time)
+    date_part = t.to_date.to_fs(:govuk_date)
+
+    "#{time_part} UK time on #{date_part}"
   end
 
   def account_name

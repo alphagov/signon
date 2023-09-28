@@ -156,7 +156,7 @@ class UserMailerTest < ActionMailer::TestCase
     setup do
       GovukEnvironment.stubs(:production?).returns(false)
       GovukEnvironment.stubs(:name).returns("test")
-      @the_time = Time.zone.now
+      @the_time = Time.zone.parse("2023-10-31 02:00:00")
       user = User.new(name: "User", email: "user@example.com", locked_at: @the_time)
       @email = UserMailer.unlock_instructions(user, "afaketoken")
     end
@@ -167,7 +167,7 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "state when the account will be unlocked" do
-      assert_body_includes "Your account will be unlocked at #{(@the_time + 1.hour).to_fs(:govuk_date)}"
+      assert_body_includes "Your account will be unlocked at 3:00am UK time on 31 October 2023"
     end
   end
 
