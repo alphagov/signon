@@ -145,6 +145,13 @@ class InvitationsControllerTest < ActionController::TestCase
         assert_equal "User Name", User.last.name
         assert User.last.require_2sv
       end
+
+      should "re-render form and not save user if there are validation errors" do
+        post :create, params: { user: { name: "User Name", email: "" } }
+
+        assert_template :new
+        assert_not User.exists?(name: "User Name")
+      end
     end
   end
 
