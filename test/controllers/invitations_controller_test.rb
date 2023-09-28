@@ -15,27 +15,40 @@ class InvitationsControllerTest < ActionController::TestCase
     end
 
     context "when inviter is signed in" do
-      setup do
-        @inviter = create(:superadmin_user)
-        sign_in @inviter
+      context "and inviter is not an admin" do
+        setup do
+          sign_in create(:user)
+        end
+
+        should "disallow access" do
+          get :new
+
+          assert_redirected_to root_path
+        end
       end
 
-      should "disallow access to non-admin inviter" do
-        @inviter.update_column(:role, Roles::Normal.role_name)
-        get :new
-        assert_redirected_to root_path
+      context "and inviter is an organisation admin" do
+        setup do
+          sign_in create(:organisation_admin_user)
+        end
+
+        should "disallow access" do
+          get :new
+
+          assert_redirected_to root_path
+        end
       end
 
-      should "disallow access to organisation admin inviter" do
-        @inviter.update!(role: Roles::OrganisationAdmin.role_name, organisation_id: create(:organisation).id)
-        get :new
-        assert_redirected_to root_path
-      end
+      context "and inviter is a super organisation admin" do
+        setup do
+          sign_in create(:super_organisation_admin_user)
+        end
 
-      should "disallow access to super organisation admin inviter" do
-        @inviter.update!(role: Roles::SuperOrganisationAdmin.role_name, organisation_id: create(:organisation).id)
-        get :new
-        assert_redirected_to root_path
+        should "disallow access" do
+          get :new
+
+          assert_redirected_to root_path
+        end
       end
     end
   end
@@ -55,10 +68,16 @@ class InvitationsControllerTest < ActionController::TestCase
         sign_in @inviter
       end
 
-      should "disallow access to non-admin inviter" do
-        @inviter.update_column(:role, Roles::Normal.role_name)
-        post :create, params: { user: { name: "invitee", email: "invitee@gov.uk" } }
-        assert_redirected_to root_path
+      context "and inviter is not an admin" do
+        setup do
+          sign_in create(:user)
+        end
+
+        should "disallow access" do
+          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk" } }
+
+          assert_redirected_to root_path
+        end
       end
 
       should "not allow creation of api users" do
@@ -76,16 +95,28 @@ class InvitationsControllerTest < ActionController::TestCase
         assert_equal "User already invited. If you want to, you can click 'Resend signup email'.", flash[:alert]
       end
 
-      should "disallow access to organisation admin inviter" do
-        @inviter.update!(role: Roles::OrganisationAdmin.role_name, organisation_id: create(:organisation).id)
-        post :create, params: { user: { name: "org-admin-invitee", email: "org-admin-invitee@gov.uk" } }
-        assert_redirected_to root_path
+      context "and inviter is an organisation admin" do
+        setup do
+          sign_in create(:organisation_admin_user)
+        end
+
+        should "disallow access" do
+          post :create, params: { user: { name: "org-admin-invitee", email: "org-admin-invitee@gov.uk" } }
+
+          assert_redirected_to root_path
+        end
       end
 
-      should "disallow access to super organisation admin inviter" do
-        @inviter.update!(role: Roles::SuperOrganisationAdmin.role_name, organisation_id: create(:organisation).id)
-        post :create, params: { user: { name: "super-org-admin-invitee", email: "super-org-admin-invitee@gov.uk" } }
-        assert_redirected_to root_path
+      context "and inviter is a super organisation admin" do
+        setup do
+          sign_in create(:super_organisation_admin_user)
+        end
+
+        should "disallow access" do
+          post :create, params: { user: { name: "super-org-admin-invitee", email: "super-org-admin-invitee@gov.uk" } }
+
+          assert_redirected_to root_path
+        end
       end
 
       should "save invitee and render 2SV form when invitee will be assigned to organisation that does not require 2SV" do
@@ -187,36 +218,54 @@ class InvitationsControllerTest < ActionController::TestCase
 
     context "when inviter is signed in" do
       setup do
-        @inviter = create(:superadmin_user)
-        sign_in @inviter
+        sign_in create(:superadmin_user)
       end
 
-      should "disallow access to non-admin inviter" do
-        @inviter.update_column(:role, Roles::Normal.role_name)
-        user_to_resend_for = create(:user)
-        post :resend, params: { id: user_to_resend_for.id }
-        assert_redirected_to root_path
+      context "and inviter is not an admin" do
+        setup do
+          sign_in create(:user)
+        end
+
+        should "disallow access" do
+          user_to_resend_for = create(:user)
+
+          post :resend, params: { id: user_to_resend_for.id }
+
+          assert_redirected_to root_path
+        end
       end
 
-      should "disallow access to organisation admin inviter" do
-        @inviter.update!(role: Roles::OrganisationAdmin.role_name, organisation_id: create(:organisation).id)
-        user_to_resend_for = create(:user)
-        post :resend, params: { id: user_to_resend_for.id }
-        assert_redirected_to root_path
+      context "and inviter is an organisation admin" do
+        setup do
+          sign_in create(:organisation_admin_user)
+        end
+
+        should "disallow access" do
+          user_to_resend_for = create(:user)
+
+          post :resend, params: { id: user_to_resend_for.id }
+
+          assert_redirected_to root_path
+        end
       end
 
-      should "disallow access to super organisation admin inviter" do
-        @inviter.update!(role: Roles::SuperOrganisationAdmin.role_name, organisation_id: create(:organisation).id)
-        user_to_resend_for = create(:user)
-        post :resend, params: { id: user_to_resend_for.id }
-        assert_redirected_to root_path
+      context "and inviter is a super organisation admin" do
+        setup do
+          sign_in create(:super_organisation_admin_user)
+        end
+
+        should "disallow access" do
+          user_to_resend_for = create(:user)
+
+          post :resend, params: { id: user_to_resend_for.id }
+
+          assert_redirected_to root_path
+        end
       end
 
       should "resend account signup email to invitee" do
-        admin_inviter = create(:admin_user)
         user_to_resend_for = create(:user)
         User.any_instance.expects(:invite!).once
-        sign_in admin_inviter
 
         post :resend, params: { id: user_to_resend_for.id }
 
