@@ -21,7 +21,7 @@ class InvitationsControllerTest < ActionController::TestCase
       end
 
       should "disallow access to non-admin inviter" do
-        @inviter.update_column(:role, "normal")
+        @inviter.update_column(:role, Roles::Normal.role_name)
         get :new
         assert_redirected_to root_path
       end
@@ -56,7 +56,7 @@ class InvitationsControllerTest < ActionController::TestCase
       end
 
       should "disallow access to non-admin inviter" do
-        @inviter.update_column(:role, "normal")
+        @inviter.update_column(:role, Roles::Normal.role_name)
         post :create, params: { user: { name: "invitee", email: "invitee@gov.uk" } }
         assert_redirected_to root_path
       end
@@ -192,7 +192,7 @@ class InvitationsControllerTest < ActionController::TestCase
       end
 
       should "disallow access to non-admin inviter" do
-        @inviter.update_column(:role, "normal")
+        @inviter.update_column(:role, Roles::Normal.role_name)
         user_to_resend_for = create(:user)
         post :resend, params: { id: user_to_resend_for.id }
         assert_redirected_to root_path
