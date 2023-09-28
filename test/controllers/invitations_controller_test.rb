@@ -242,6 +242,7 @@ class InvitationsControllerTest < ActionController::TestCase
 
     context "when inviter is signed in" do
       setup do
+        @user_to_resend_for = create(:user)
         sign_in create(:superadmin_user)
       end
 
@@ -251,9 +252,7 @@ class InvitationsControllerTest < ActionController::TestCase
         end
 
         should "disallow access" do
-          user_to_resend_for = create(:user)
-
-          post :resend, params: { id: user_to_resend_for.id }
+          post :resend, params: { id: @user_to_resend_for.id }
 
           assert_redirected_to root_path
         end
@@ -265,9 +264,7 @@ class InvitationsControllerTest < ActionController::TestCase
         end
 
         should "disallow access" do
-          user_to_resend_for = create(:user)
-
-          post :resend, params: { id: user_to_resend_for.id }
+          post :resend, params: { id: @user_to_resend_for.id }
 
           assert_redirected_to root_path
         end
@@ -279,19 +276,16 @@ class InvitationsControllerTest < ActionController::TestCase
         end
 
         should "disallow access" do
-          user_to_resend_for = create(:user)
-
-          post :resend, params: { id: user_to_resend_for.id }
+          post :resend, params: { id: @user_to_resend_for.id }
 
           assert_redirected_to root_path
         end
       end
 
       should "resend account signup email to invitee" do
-        user_to_resend_for = create(:user)
         User.any_instance.expects(:invite!).once
 
-        post :resend, params: { id: user_to_resend_for.id }
+        post :resend, params: { id: @user_to_resend_for.id }
 
         assert_redirected_to users_path
       end
