@@ -6,34 +6,34 @@ class InvitationsControllerTest < ActionController::TestCase
   end
 
   context "GET new" do
-    context "when not signed in" do
-      should "require user to be signed in" do
+    context "when inviter is not signed in" do
+      should "require inviter to be signed in" do
         get :new
 
         assert_redirected_to new_user_session_path
       end
     end
 
-    context "when signed in" do
+    context "when inviter is signed in" do
       setup do
-        @user = create(:superadmin_user)
-        sign_in @user
+        @inviter = create(:superadmin_user)
+        sign_in @inviter
       end
 
-      should "disallow access to non-admins" do
-        @user.update_column(:role, "normal")
+      should "disallow access to non-admin inviter" do
+        @inviter.update_column(:role, "normal")
         get :new
         assert_redirected_to root_path
       end
 
-      should "disallow access to organisation admins" do
-        @user.update!(role: Roles::OrganisationAdmin.role_name, organisation_id: create(:organisation).id)
+      should "disallow access to organisation admin inviter" do
+        @inviter.update!(role: Roles::OrganisationAdmin.role_name, organisation_id: create(:organisation).id)
         get :new
         assert_redirected_to root_path
       end
 
-      should "disallow access to super organisation admins" do
-        @user.update!(role: Roles::SuperOrganisationAdmin.role_name, organisation_id: create(:organisation).id)
+      should "disallow access to super organisation admin inviter" do
+        @inviter.update!(role: Roles::SuperOrganisationAdmin.role_name, organisation_id: create(:organisation).id)
         get :new
         assert_redirected_to root_path
       end
@@ -41,22 +41,22 @@ class InvitationsControllerTest < ActionController::TestCase
   end
 
   context "POST create" do
-    context "when not signed in" do
-      should "require user to be signed in" do
+    context "when inviter is not signed in" do
+      should "require inviter to be signed in" do
         post :create
 
         assert_redirected_to new_user_session_path
       end
     end
 
-    context "when signed in" do
+    context "when inviter is signed in" do
       setup do
-        @user = create(:superadmin_user)
-        sign_in @user
+        @inviter = create(:superadmin_user)
+        sign_in @inviter
       end
 
-      should "disallow access to non-admins" do
-        @user.update_column(:role, "normal")
+      should "disallow access to non-admin inviter" do
+        @inviter.update_column(:role, "normal")
         post :create, params: { user: { name: "Testing Non-admins", email: "testing_non_admins@example.com" } }
         assert_redirected_to root_path
       end
@@ -76,14 +76,14 @@ class InvitationsControllerTest < ActionController::TestCase
         assert_equal "User already invited. If you want to, you can click 'Resend signup email'.", flash[:alert]
       end
 
-      should "disallow access to organisation admins" do
-        @user.update!(role: Roles::OrganisationAdmin.role_name, organisation_id: create(:organisation).id)
+      should "disallow access to organisation admin inviter" do
+        @inviter.update!(role: Roles::OrganisationAdmin.role_name, organisation_id: create(:organisation).id)
         post :create, params: { user: { name: "Testing Org Admins", email: "testing_org_admins@example.com" } }
         assert_redirected_to root_path
       end
 
-      should "disallow access to super organisation admins" do
-        @user.update!(role: Roles::SuperOrganisationAdmin.role_name, organisation_id: create(:organisation).id)
+      should "disallow access to super organisation admin inviter" do
+        @inviter.update!(role: Roles::SuperOrganisationAdmin.role_name, organisation_id: create(:organisation).id)
         post :create, params: { user: { name: "Testing Org Admins", email: "testing_org_admins@example.com" } }
         assert_redirected_to root_path
       end
@@ -154,7 +154,7 @@ class InvitationsControllerTest < ActionController::TestCase
       end
 
       should "record account invitation in event log when invitation sent" do
-        EventLog.expects(:record_account_invitation).with(instance_of(User), @user)
+        EventLog.expects(:record_account_invitation).with(instance_of(User), @inviter)
 
         post :create, params: { user: { name: "User Name", email: "person@gov.uk" } }
       end
@@ -176,8 +176,8 @@ class InvitationsControllerTest < ActionController::TestCase
   end
 
   context "POST resend" do
-    context "when not signed in" do
-      should "require user to be signed in" do
+    context "when inviter is not signed in" do
+      should "require inviter to be signed in" do
         user_to_resend_for = create(:user)
         post :resend, params: { id: user_to_resend_for.id }
 
@@ -185,38 +185,38 @@ class InvitationsControllerTest < ActionController::TestCase
       end
     end
 
-    context "when signed in" do
+    context "when inviter is signed in" do
       setup do
-        @user = create(:superadmin_user)
-        sign_in @user
+        @inviter = create(:superadmin_user)
+        sign_in @inviter
       end
 
-      should "disallow access to non-admins" do
-        @user.update_column(:role, "normal")
+      should "disallow access to non-admin inviter" do
+        @inviter.update_column(:role, "normal")
         user_to_resend_for = create(:user)
         post :resend, params: { id: user_to_resend_for.id }
         assert_redirected_to root_path
       end
 
-      should "disallow access to organisation admins" do
-        @user.update!(role: Roles::OrganisationAdmin.role_name, organisation_id: create(:organisation).id)
+      should "disallow access to organisation admin inviter" do
+        @inviter.update!(role: Roles::OrganisationAdmin.role_name, organisation_id: create(:organisation).id)
         user_to_resend_for = create(:user)
         post :resend, params: { id: user_to_resend_for.id }
         assert_redirected_to root_path
       end
 
-      should "disallow access to super organisation admins" do
-        @user.update!(role: Roles::SuperOrganisationAdmin.role_name, organisation_id: create(:organisation).id)
+      should "disallow access to super organisation admin inviter" do
+        @inviter.update!(role: Roles::SuperOrganisationAdmin.role_name, organisation_id: create(:organisation).id)
         user_to_resend_for = create(:user)
         post :resend, params: { id: user_to_resend_for.id }
         assert_redirected_to root_path
       end
 
       should "resend account signup email to user" do
-        admin = create(:admin_user)
+        admin_inviter = create(:admin_user)
         user_to_resend_for = create(:user)
         User.any_instance.expects(:invite!).once
-        sign_in admin
+        sign_in admin_inviter
 
         post :resend, params: { id: user_to_resend_for.id }
 
