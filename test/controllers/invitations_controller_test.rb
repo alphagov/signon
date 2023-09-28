@@ -68,9 +68,9 @@ class InvitationsControllerTest < ActionController::TestCase
       end
 
       should "redirect to users page and display flash alert when inviting an existing user" do
-        user = create(:user)
+        existing_user = create(:user)
 
-        post :create, params: { user: { name: user.name, email: user.email } }
+        post :create, params: { user: { name: existing_user.name, email: existing_user.email } }
 
         assert_redirected_to users_path
         assert_equal "User already invited. If you want to, you can click 'Resend signup email'.", flash[:alert]
@@ -88,7 +88,7 @@ class InvitationsControllerTest < ActionController::TestCase
         assert_redirected_to root_path
       end
 
-      should "save user and render 2SV form when user assigned to organisation that does not require 2SV" do
+      should "save invitee and render 2SV form when invitee will be assigned to organisation that does not require 2SV" do
         organisation = create(:organisation, require_2sv: false)
 
         post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id } }
@@ -97,7 +97,7 @@ class InvitationsControllerTest < ActionController::TestCase
         assert_equal "User Name", User.last.name
       end
 
-      should "save user and not render 2SV form when user assigned to organisation that requires 2SV" do
+      should "save invitee and not render 2SV form when invitee will be assigned to organisation that requires 2SV" do
         organisation = create(:organisation, require_2sv: true)
 
         post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id } }
@@ -106,7 +106,7 @@ class InvitationsControllerTest < ActionController::TestCase
         assert_equal "User Name", User.last.name
       end
 
-      should "not render 2SV form and saves user when user is a superadmin" do
+      should "not render 2SV form and saves invitee when invitee will be a superadmin" do
         organisation = create(:organisation, require_2sv: false)
 
         post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id, role: Roles::Superadmin.role_name } }
@@ -116,7 +116,7 @@ class InvitationsControllerTest < ActionController::TestCase
         assert User.last.require_2sv
       end
 
-      should "not render 2SV form and saves user when user is an admin" do
+      should "not render 2SV form and saves invitee when invitee will be an admin" do
         organisation = create(:organisation, require_2sv: false)
 
         post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id, role: Roles::Admin.role_name } }
@@ -126,7 +126,7 @@ class InvitationsControllerTest < ActionController::TestCase
         assert User.last.require_2sv
       end
 
-      should "not render 2SV form and saves user when user is an organisation admin" do
+      should "not render 2SV form and saves invitee when invitee will be an organisation admin" do
         organisation = create(:organisation, require_2sv: false)
 
         post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id, role: Roles::OrganisationAdmin.role_name } }
@@ -136,7 +136,7 @@ class InvitationsControllerTest < ActionController::TestCase
         assert User.last.require_2sv
       end
 
-      should "not render 2SV form and saves user when user is an super organisation admin" do
+      should "not render 2SV form and saves invitee when invitee will be a super organisation admin" do
         organisation = create(:organisation, require_2sv: false)
 
         post :create, params: { user: { name: "User Name", email: "person@gov.uk", organisation_id: organisation.id, role: Roles::SuperOrganisationAdmin.role_name } }
@@ -146,7 +146,7 @@ class InvitationsControllerTest < ActionController::TestCase
         assert User.last.require_2sv
       end
 
-      should "re-render form and not save user if there are validation errors" do
+      should "re-render form and not save invitee if there are validation errors" do
         post :create, params: { user: { name: "User Name", email: "" } }
 
         assert_template :new
@@ -166,11 +166,11 @@ class InvitationsControllerTest < ActionController::TestCase
       end
 
       should "not record account invitation in event log when invitation not sent because user already exists" do
-        user = create(:user)
+        existing_user = create(:user)
 
         EventLog.expects(:record_account_invitation).never
 
-        post :create, params: { user: { name: user.name, email: user.email } }
+        post :create, params: { user: { name: existing_user.name, email: existing_user.email } }
       end
     end
   end
@@ -212,7 +212,7 @@ class InvitationsControllerTest < ActionController::TestCase
         assert_redirected_to root_path
       end
 
-      should "resend account signup email to user" do
+      should "resend account signup email to invitee" do
         admin_inviter = create(:admin_user)
         user_to_resend_for = create(:user)
         User.any_instance.expects(:invite!).once
