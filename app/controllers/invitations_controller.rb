@@ -3,6 +3,8 @@ class InvitationsController < Devise::InvitationsController
   before_action :authenticate_inviter!, only: %i[new create resend]
   after_action :verify_authorized, only: %i[new create resend]
 
+  before_action :redirect_if_invitee_already_exists, only: :create
+
   layout "admin_layout", only: %i[edit update]
 
   include UserPermissionsControllerMethods
@@ -14,27 +16,21 @@ class InvitationsController < Devise::InvitationsController
   end
 
   def create
-    if (self.resource = User.find_by(email: params[:user][:email]))
-      authorize resource
-      flash[:alert] = "User already invited. If you want to, you can click 'Resend signup email'."
-      respond_with resource, location: users_path
+    # workaround for invitatable not providing a build_invitation which could be authorised before saving
+    all_params = resource_params
+    all_params[:require_2sv] = new_user_requires_2sv(all_params.symbolize_keys)
+
+    user = User.new(all_params)
+    authorize user
+
+    self.resource = resource_class.invite!(all_params, current_inviter)
+    if resource.errors.empty?
+      grant_default_permissions(resource)
+      EventLog.record_account_invitation(@user, current_user)
+      set_flash_message :notice, :send_instructions, email: resource.email
+      respond_with resource, location: after_invite_path_for(resource)
     else
-      # workaround for invitatable not providing a build_invitation which could be authorised before saving
-      all_params = resource_params
-      all_params[:require_2sv] = new_user_requires_2sv(all_params.symbolize_keys)
-
-      user = User.new(all_params)
-      authorize user
-
-      self.resource = resource_class.invite!(all_params, current_inviter)
-      if resource.errors.empty?
-        grant_default_permissions(resource)
-        EventLog.record_account_invitation(@user, current_user)
-        set_flash_message :notice, :send_instructions, email: resource.email
-        respond_with resource, location: after_invite_path_for(resource)
-      else
-        respond_with_navigational(resource) { render :new }
-      end
+      respond_with_navigational(resource) { render :new }
     end
   end
 
@@ -120,5 +116,13 @@ private
   def new_user_requires_2sv(params)
     (params[:organisation_id].present? && Organisation.find(params[:organisation_id]).require_2sv?) ||
       %w[superadmin admin organisation_admin super_organisation_admin].include?(params[:role])
+  end
+
+  def redirect_if_invitee_already_exists
+    if (resource = User.find_by(email: params[:user][:email]))
+      authorize resource
+      flash[:alert] = "User already invited. If you want to, you can click 'Resend signup email'."
+      respond_with resource, location: users_path
+    end
   end
 end
