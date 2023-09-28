@@ -1,0 +1,22 @@
+<% content_for :title, "Account access log" %>
+
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "Settings",
+         url: account_path,
+       },
+       {
+         title: "Account access log",
+       },
+     ]
+   })
+%>
+
+<%= render "shared/event_logs_table", logs: @logs %>

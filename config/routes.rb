@@ -50,6 +50,7 @@ Rails.application.routes.draw do
 
   resource :account, only: [:show]
   namespace :account do
+    resource :activity, only: [:show]
     resources :applications, only: %i[show index] do
       resources :permissions, only: [:index]
       resource :signin_permission, only: %i[create destroy] do
