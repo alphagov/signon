@@ -50,6 +50,30 @@ class InvitationsControllerTest < ActionController::TestCase
           assert_redirected_to root_path
         end
       end
+
+      context "and inviter is an admin" do
+        setup do
+          sign_in create(:admin_user)
+        end
+
+        should "allow access" do
+          get :new
+
+          assert_template :new
+        end
+      end
+
+      context "and inviter is a super admin" do
+        setup do
+          sign_in create(:superadmin_user)
+        end
+
+        should "allow access" do
+          get :new
+
+          assert_template :new
+        end
+      end
     end
   end
 
