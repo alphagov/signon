@@ -4,7 +4,7 @@ class Account::SigninPermissionsController < ApplicationController
   before_action :authenticate_user!
 
   def create
-    authorize current_user, :grant_signin_permission?
+    authorize [:account, Doorkeeper::Application], :grant_signin_permission?
 
     application = Doorkeeper::Application.not_retired.find(params[:application_id])
 
@@ -17,13 +17,13 @@ class Account::SigninPermissionsController < ApplicationController
   def delete
     @application = Doorkeeper::Application.not_retired.find(params[:application_id])
 
-    authorize current_user, :remove_signin_permission?
+    authorize [:account, @application], :remove_signin_permission?
   end
 
   def destroy
     application = Doorkeeper::Application.not_retired.find(params[:application_id])
 
-    authorize current_user, :remove_signin_permission?
+    authorize [:account, application], :remove_signin_permission?
 
     params = { supported_permission_ids: current_user.supported_permissions.map(&:id) - [application.signin_permission.id] }
     UserUpdate.new(current_user, params, current_user, user_ip_address).call
