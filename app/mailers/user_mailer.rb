@@ -119,11 +119,7 @@ private
   end
 
   def account_name
-    if GovukEnvironment.production?
-      "account"
-    else
-      "#{GovukEnvironment.name} account"
-    end
+    "#{GovukEnvironment.name} account"
   end
 
   def subject_for(key)
