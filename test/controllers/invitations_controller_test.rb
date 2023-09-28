@@ -152,6 +152,26 @@ class InvitationsControllerTest < ActionController::TestCase
         assert_template :new
         assert_not User.exists?(name: "User Name")
       end
+
+      should "record account invitation in event log when invitation sent" do
+        EventLog.expects(:record_account_invitation).with(instance_of(User), @user)
+
+        post :create, params: { user: { name: "User Name", email: "person@gov.uk" } }
+      end
+
+      should "not record account invitation in event log when invitation not sent because of validation errors" do
+        EventLog.expects(:record_account_invitation).never
+
+        post :create, params: { user: { name: "User Name", email: "" } }
+      end
+
+      should "not record account invitation in event log when invitation not sent because user already exists" do
+        user = create(:user)
+
+        EventLog.expects(:record_account_invitation).never
+
+        post :create, params: { user: { name: user.name, email: user.email } }
+      end
     end
   end
 
