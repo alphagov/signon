@@ -184,7 +184,7 @@ GEM
     govuk_personalisation (0.15.0)
       plek (>= 1.9.0)
       rails (>= 6, < 8)
-    govuk_publishing_components (35.16.0)
+    govuk_publishing_components (35.16.1)
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
@@ -290,7 +290,7 @@ GEM
       net-protocol
     net-protocol (0.2.1)
       timeout
-    net-smtp (0.3.3)
+    net-smtp (0.4.0)
       net-protocol
     netrc (0.11.0)
     nio4r (2.5.9)
@@ -406,7 +406,7 @@ GEM
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
       opentelemetry-instrumentation-rack (~> 0.21)
-    opentelemetry-instrumentation-graphql (0.26.6)
+    opentelemetry-instrumentation-graphql (0.26.7)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-gruf (0.1.0)
@@ -515,7 +515,7 @@ GEM
       byebug (~> 11.0)
       pry (>= 0.13, < 0.15)
     public_suffix (5.0.3)
-    puma (6.3.1)
+    puma (6.4.0)
       nio4r (~> 2.0)
     pundit (2.3.1)
       activesupport (>= 3.0.0)
@@ -695,7 +695,7 @@ GEM
       chronic (>= 0.6.3)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.6.11)
+    zeitwerk (2.6.12)
     zeroclipboard-rails (0.1.2)
       railties (>= 3.1)
     zxcvbn-ruby (1.2.0)
