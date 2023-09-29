@@ -1,7 +1,13 @@
-Your <%= t('department.name') %> Signon <%= account_name %>, for <%= @user.email %>, was locked at <%= locked_time %> because the wrong sign on details were entered too many times.
+Your <%= t('department.name') %> Signon <%= account_name %>, for <%= @user.email %> has been locked.
 
-<% unless GovukEnvironment.production? %>
-  <%= account_name.humanize %> locks do not lock production accounts.
-<% end %>
+This has happened because the wrong sign in details were entered too many times.
 
-Your account will be unlocked at <%= unlock_time %>. If you need your account unlocked sooner, please contact a managing <%= t('department.name') %> editor in your organisation (or your parent organisation). They can use the support form (<%= t('support.url') %>) to get help from the <%= t('department.name') %> team.
+## What happens now
+
+Your account will be unlocked at <%= unlock_time %> UK time.
+
+## If you need your account to be unlocked immediately
+
+Please contact a GOV.UK managing editor or user manager in your organisation (or parent organisation) for further assistance.
+
+Please note that managing editors in an arm’s length body may not have the authority to unlock.

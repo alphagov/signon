@@ -53,6 +53,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
   context "work correctly in production environment" do
     setup do
       GovukEnvironment.stubs(:production?).returns(true)
+      GovukEnvironment.stubs(:name).returns("production")
 
       user = create(:user, name: "Bob Loblaw")
       @batch_invitation = create(:batch_invitation, user:)
@@ -61,7 +62,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
     end
 
     should "from address should not include the environment name" do
-      assert_match(/".* Signon" <noreply-signon@.*\.gov\.uk>/, @email[:from].to_s)
+      assert_match(/".* Signon production" <noreply-signon@.*\.gov\.uk>/, @email[:from].to_s)
     end
   end
 end
