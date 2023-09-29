@@ -12,7 +12,7 @@ class Account::ManagePermissionsController < ApplicationController
   def update
     updater = UserUpdate.new(current_user, user_params, current_user, user_ip_address)
     if updater.call
-      redirect_to root_path, notice: "Your permissions have been updated."
+      redirect_to account_path, notice: "Your permissions have been updated."
     else
       @application_permissions = all_applications_and_permissions_for(current_user)
       render :show

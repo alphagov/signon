@@ -176,12 +176,12 @@ class Account::ManagePermissionsControllerTest < ActionController::TestCase
         assert_equal 1, @user.reload.application_permissions.count
       end
 
-      should "redirect to Dashboard on success" do
+      should "redirect to Account page on success" do
         @user.grant_application_signin_permission(@application)
 
         put :update, params: { user: {} }
 
-        assert_redirected_to root_path
+        assert_redirected_to account_path
         assert_match(/Your permissions have been updated./, flash[:notice])
       end
     end
