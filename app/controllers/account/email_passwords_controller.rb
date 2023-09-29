@@ -15,7 +15,7 @@ class Account::EmailPasswordsController < ApplicationController
     elsif current_user.update(email: new_email)
       EventLog.record_email_change(current_user, current_email, new_email)
       UserMailer.email_changed_notification(current_user).deliver_later
-      redirect_to root_path, notice: email_change_notice
+      redirect_to account_path, notice: email_change_notice
     else
       render :show
     end
@@ -26,7 +26,7 @@ class Account::EmailPasswordsController < ApplicationController
       EventLog.record_event(current_user, EventLog::SUCCESSFUL_PASSWORD_CHANGE, ip_address: user_ip_address)
       flash[:notice] = t(:updated, scope: "devise.passwords")
       bypass_sign_in(current_user)
-      redirect_to root_path
+      redirect_to account_path
     else
       EventLog.record_event(current_user, EventLog::UNSUCCESSFUL_PASSWORD_CHANGE, ip_address: user_ip_address)
       render :show
@@ -36,7 +36,7 @@ class Account::EmailPasswordsController < ApplicationController
   def resend_email_change
     current_user.resend_confirmation_instructions
     if current_user.errors.empty?
-      redirect_to root_path, notice: email_change_notice
+      redirect_to account_path, notice: email_change_notice
     else
       redirect_to account_email_password_path, alert: "Failed to send email change email"
     end
@@ -45,7 +45,7 @@ class Account::EmailPasswordsController < ApplicationController
   def cancel_email_change
     current_user.cancel_email_change!
 
-    redirect_to root_path, notice: "You have cancelled your pending email address change."
+    redirect_to account_path, notice: "You have cancelled your pending email address change."
   end
 
 private

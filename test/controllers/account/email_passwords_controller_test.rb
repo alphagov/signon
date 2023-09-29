@@ -39,6 +39,11 @@ class Account::EmailPasswordsControllerTest < ActionController::TestCase
         put :update_email, params: { user: { email: "new@email.com" } }
         assert_equal 1, EventLog.where(event_id: EventLog::EMAIL_CHANGE_INITIATED.id, uid: @user.uid, initiator_id: @user.id).count
       end
+
+      should "redirect to account page" do
+        put :update_email, params: { user: { email: "new@email.com" } }
+        assert_redirected_to account_path
+      end
     end
   end
 
@@ -64,8 +69,7 @@ class Account::EmailPasswordsControllerTest < ActionController::TestCase
     should "changing passwords to something strong should succeed" do
       user, orig_password = change_user_password(:user, "destabilizers842}orthophosphate")
 
-      assert_equal "302", response.code
-      assert_equal root_url, response.location
+      assert_redirected_to account_path
 
       user.reload
       assert_not_equal orig_password, user.encrypted_password
@@ -127,6 +131,14 @@ class Account::EmailPasswordsControllerTest < ActionController::TestCase
         assert_not_equal "old token", @user.reload.confirmation_token
       end
     end
+
+    should "redirect to account page" do
+      @user = create(:user_with_pending_email_change)
+      sign_in @user
+
+      put :resend_email_change
+      assert_redirected_to account_path
+    end
   end
 
   context "DELETE cancel_email_change" do
@@ -143,9 +155,9 @@ class Account::EmailPasswordsControllerTest < ActionController::TestCase
       assert_nil @user.confirmation_token
     end
 
-    should "redirect to the change email password page" do
+    should "redirect to account page" do
       delete :cancel_email_change
-      assert_redirected_to account_email_password_path
+      assert_redirected_to account_path
     end
   end
 end
