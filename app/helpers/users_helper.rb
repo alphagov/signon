@@ -1,8 +1,4 @@
 module UsersHelper
-  def two_step_abbr_tag
-    tag.abbr("2SV", title: "Two step verification")
-  end
-
   def two_step_status(user)
     user.two_step_status.humanize.capitalize
   end
