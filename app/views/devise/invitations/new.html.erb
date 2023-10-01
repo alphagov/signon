@@ -37,13 +37,8 @@
     </p>
   <% end %>
 
-  <h2 class="add-vertical-margins"> <%= "Editable " if (current_user.publishing_manager? ) %>Permissions</h2>
+  <h2 class="add-vertical-margins">Permissions</h2>
   <%= render partial: "shared/user_permissions", locals: { user_object: f.object }%>
-
-  <% if current_user.publishing_manager? %>
-      <h2 class="add-vertical-margins">All Permissions for this user</h2>
-      <%= render partial: "app_permissions", locals: { user_object: f.object }%>
-  <% end %>
 
   <%= f.submit "Create user and send email", :class => 'btn btn-success' %>
 <% end %>
