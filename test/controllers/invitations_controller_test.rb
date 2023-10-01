@@ -84,62 +84,71 @@ class InvitationsControllerTest < ActionController::TestCase
         sign_in @inviter
       end
 
-      should "save invitee and render 2SV form when invitee will be assigned to organisation that does not require 2SV" do
-        organisation = create(:organisation, require_2sv: false)
+      context "and invitee will be assigned to organisation not requiring 2SV" do
+        setup do
+          @organisation = create(:organisation, require_2sv: false)
+        end
 
-        post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: organisation.id } }
+        should "save invitee" do
+          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation.id } }
 
-        assert_redirected_to require_2sv_user_path(User.last)
-        assert_equal "invitee", User.last.name
+          assert_equal "invitee", User.last.name
+        end
+
+        should "render 2SV form allowing inviter to choose whether to require 2SV" do
+          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation.id } }
+
+          assert_redirected_to require_2sv_user_path(User.last)
+        end
       end
 
-      should "save invitee and not render 2SV form when invitee will be assigned to organisation that requires 2SV" do
-        organisation = create(:organisation, require_2sv: true)
+      context "and invitee will be assigned to organisation requiring 2SV" do
+        setup do
+          @organisation = create(:organisation, require_2sv: true)
+        end
 
-        post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: organisation.id } }
+        should "save invitee" do
+          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation.id } }
 
-        assert_redirected_to users_path
-        assert_equal "invitee", User.last.name
+          assert_equal "invitee", User.last.name
+        end
+
+        should "not render 2SV form allowing inviter to choose whether to require 2SV" do
+          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation.id } }
+
+          assert_redirected_to users_path
+          assert_equal "invitee", User.last.name
+        end
       end
 
-      should "not render 2SV form and saves invitee when invitee will be a superadmin" do
-        organisation = create(:organisation, require_2sv: false)
+      context "and invitee will be assigned to organisation not requiring 2SV" do
+        setup do
+          @organisation = create(:organisation, require_2sv: false)
+        end
 
-        post :create, params: { user: { name: "superadmin-invitee", email: "superadmin-invitee@gov.uk", organisation_id: organisation.id, role: Roles::Superadmin.role_name } }
+        should "not render 2SV form when invitee will be a superadmin" do
+          post :create, params: { user: { name: "superadmin-invitee", email: "superadmin-invitee@gov.uk", organisation_id: @organisation.id, role: Roles::Superadmin.role_name } }
 
-        assert_redirected_to users_path
-        assert_equal "superadmin-invitee", User.last.name
-        assert User.last.require_2sv
-      end
+          assert_redirected_to users_path
+        end
 
-      should "not render 2SV form and saves invitee when invitee will be an admin" do
-        organisation = create(:organisation, require_2sv: false)
+        should "not render 2SV form when invitee will be an admin" do
+          post :create, params: { user: { name: "admin-invitee", email: "admin-invitee@gov.uk", organisation_id: @organisation.id, role: Roles::Admin.role_name } }
 
-        post :create, params: { user: { name: "admin-invitee", email: "admin-invitee@gov.uk", organisation_id: organisation.id, role: Roles::Admin.role_name } }
+          assert_redirected_to users_path
+        end
 
-        assert_redirected_to users_path
-        assert_equal "admin-invitee", User.last.name
-        assert User.last.require_2sv
-      end
+        should "not render 2SV form when invitee will be an organisation admin" do
+          post :create, params: { user: { name: "org-admin-invitee", email: "org-admin-invitee@gov.uk", organisation_id: @organisation.id, role: Roles::OrganisationAdmin.role_name } }
 
-      should "not render 2SV form and saves invitee when invitee will be an organisation admin" do
-        organisation = create(:organisation, require_2sv: false)
+          assert_redirected_to users_path
+        end
 
-        post :create, params: { user: { name: "org-admin-invitee", email: "org-admin-invitee@gov.uk", organisation_id: organisation.id, role: Roles::OrganisationAdmin.role_name } }
+        should "not render 2SV form when invitee will be a super organisation admin" do
+          post :create, params: { user: { name: "super-org-admin-invitee", email: "super-org-admin-invitee@gov.uk", organisation_id: @organisation.id, role: Roles::SuperOrganisationAdmin.role_name } }
 
-        assert_redirected_to users_path
-        assert_equal "org-admin-invitee", User.last.name
-        assert User.last.require_2sv
-      end
-
-      should "not render 2SV form and saves invitee when invitee will be a super organisation admin" do
-        organisation = create(:organisation, require_2sv: false)
-
-        post :create, params: { user: { name: "super-org-admin-invitee", email: "super-org-admin-invitee@gov.uk", organisation_id: organisation.id, role: Roles::SuperOrganisationAdmin.role_name } }
-
-        assert_redirected_to users_path
-        assert_equal "super-org-admin-invitee", User.last.name
-        assert User.last.require_2sv
+          assert_redirected_to users_path
+        end
       end
 
       should "re-render form and not save invitee if there are validation errors" do
