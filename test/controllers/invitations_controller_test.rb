@@ -90,37 +90,37 @@ class InvitationsControllerTest < ActionController::TestCase
         end
 
         should "save invitee" do
-          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation.id } }
+          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation } }
 
           assert_equal "invitee", User.last.name
         end
 
         should "render 2SV form allowing inviter to choose whether to require 2SV" do
-          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation.id } }
+          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation } }
 
           assert_redirected_to require_2sv_user_path(User.last)
         end
 
         should "not render 2SV form when invitee will be a superadmin" do
-          post :create, params: { user: { name: "superadmin-invitee", email: "superadmin-invitee@gov.uk", organisation_id: @organisation.id, role: Roles::Superadmin.role_name } }
+          post :create, params: { user: { name: "superadmin-invitee", email: "superadmin-invitee@gov.uk", organisation_id: @organisation, role: Roles::Superadmin.role_name } }
 
           assert_redirected_to users_path
         end
 
         should "not render 2SV form when invitee will be an admin" do
-          post :create, params: { user: { name: "admin-invitee", email: "admin-invitee@gov.uk", organisation_id: @organisation.id, role: Roles::Admin.role_name } }
+          post :create, params: { user: { name: "admin-invitee", email: "admin-invitee@gov.uk", organisation_id: @organisation, role: Roles::Admin.role_name } }
 
           assert_redirected_to users_path
         end
 
         should "not render 2SV form when invitee will be an organisation admin" do
-          post :create, params: { user: { name: "org-admin-invitee", email: "org-admin-invitee@gov.uk", organisation_id: @organisation.id, role: Roles::OrganisationAdmin.role_name } }
+          post :create, params: { user: { name: "org-admin-invitee", email: "org-admin-invitee@gov.uk", organisation_id: @organisation, role: Roles::OrganisationAdmin.role_name } }
 
           assert_redirected_to users_path
         end
 
         should "not render 2SV form when invitee will be a super organisation admin" do
-          post :create, params: { user: { name: "super-org-admin-invitee", email: "super-org-admin-invitee@gov.uk", organisation_id: @organisation.id, role: Roles::SuperOrganisationAdmin.role_name } }
+          post :create, params: { user: { name: "super-org-admin-invitee", email: "super-org-admin-invitee@gov.uk", organisation_id: @organisation, role: Roles::SuperOrganisationAdmin.role_name } }
 
           assert_redirected_to users_path
         end
@@ -132,13 +132,13 @@ class InvitationsControllerTest < ActionController::TestCase
         end
 
         should "save invitee" do
-          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation.id } }
+          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation } }
 
           assert_equal "invitee", User.last.name
         end
 
         should "not render 2SV form allowing inviter to choose whether to require 2SV" do
-          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation.id } }
+          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation } }
 
           assert_redirected_to users_path
           assert_equal "invitee", User.last.name
@@ -243,7 +243,7 @@ class InvitationsControllerTest < ActionController::TestCase
       should "resend account signup email to invitee" do
         User.any_instance.expects(:invite!).once
 
-        post :resend, params: { id: @user_to_resend_for.id }
+        post :resend, params: { id: @user_to_resend_for }
 
         assert_redirected_to users_path
       end
@@ -254,7 +254,7 @@ class InvitationsControllerTest < ActionController::TestCase
         end
 
         should "disallow access" do
-          post :resend, params: { id: @user_to_resend_for.id }
+          post :resend, params: { id: @user_to_resend_for }
 
           assert_redirected_to root_path
         end
@@ -266,7 +266,7 @@ class InvitationsControllerTest < ActionController::TestCase
         end
 
         should "disallow access" do
-          post :resend, params: { id: @user_to_resend_for.id }
+          post :resend, params: { id: @user_to_resend_for }
 
           assert_redirected_to root_path
         end
@@ -278,7 +278,7 @@ class InvitationsControllerTest < ActionController::TestCase
         end
 
         should "disallow access" do
-          post :resend, params: { id: @user_to_resend_for.id }
+          post :resend, params: { id: @user_to_resend_for }
 
           assert_redirected_to root_path
         end
@@ -288,7 +288,7 @@ class InvitationsControllerTest < ActionController::TestCase
     context "when inviter is not signed in" do
       should "require inviter to be signed in" do
         user_to_resend_for = create(:user)
-        post :resend, params: { id: user_to_resend_for.id }
+        post :resend, params: { id: user_to_resend_for }
 
         assert_redirected_to new_user_session_path
       end
