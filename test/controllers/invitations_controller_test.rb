@@ -100,31 +100,6 @@ class InvitationsControllerTest < ActionController::TestCase
 
           assert_redirected_to require_2sv_user_path(User.last)
         end
-      end
-
-      context "and invitee will be assigned to organisation requiring 2SV" do
-        setup do
-          @organisation = create(:organisation, require_2sv: true)
-        end
-
-        should "save invitee" do
-          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation.id } }
-
-          assert_equal "invitee", User.last.name
-        end
-
-        should "not render 2SV form allowing inviter to choose whether to require 2SV" do
-          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation.id } }
-
-          assert_redirected_to users_path
-          assert_equal "invitee", User.last.name
-        end
-      end
-
-      context "and invitee will be assigned to organisation not requiring 2SV" do
-        setup do
-          @organisation = create(:organisation, require_2sv: false)
-        end
 
         should "not render 2SV form when invitee will be a superadmin" do
           post :create, params: { user: { name: "superadmin-invitee", email: "superadmin-invitee@gov.uk", organisation_id: @organisation.id, role: Roles::Superadmin.role_name } }
@@ -148,6 +123,25 @@ class InvitationsControllerTest < ActionController::TestCase
           post :create, params: { user: { name: "super-org-admin-invitee", email: "super-org-admin-invitee@gov.uk", organisation_id: @organisation.id, role: Roles::SuperOrganisationAdmin.role_name } }
 
           assert_redirected_to users_path
+        end
+      end
+
+      context "and invitee will be assigned to organisation requiring 2SV" do
+        setup do
+          @organisation = create(:organisation, require_2sv: true)
+        end
+
+        should "save invitee" do
+          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation.id } }
+
+          assert_equal "invitee", User.last.name
+        end
+
+        should "not render 2SV form allowing inviter to choose whether to require 2SV" do
+          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation.id } }
+
+          assert_redirected_to users_path
+          assert_equal "invitee", User.last.name
         end
       end
 
