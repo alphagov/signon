@@ -15,19 +15,21 @@
     <%= f.text_field :email, autocomplete: "off", class: 'form-control input-md-6 add-label-margin' %>
   </p>
 
-  <% if policy(User).assign_role? && f.object.reason_for_2sv_exemption.blank? %>
-    <p class="form-group">
-      <%= f.label :role %><br />
-      <%= f.select :role, options_for_select(assignable_user_roles.map(&:humanize).zip(assignable_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
-      <span class="help-block">
-        <strong>Superadmins</strong> can create and edit all user types and edit applications.<br />
-        <strong>Admins</strong> can create and edit normal users.<br />
-        <strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.<br />
-        <strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.
-      </span>
-    </p>
-  <% elsif policy(User).assign_role? %>
-    <p>This user's role is set to <%= f.object.role %>. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification.</p>
+  <% if policy(User).assign_role? %>
+    <% if f.object.reason_for_2sv_exemption.blank? %>
+      <p class="form-group">
+        <%= f.label :role %><br />
+        <%= f.select :role, options_for_select(assignable_user_roles.map(&:humanize).zip(assignable_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
+        <span class="help-block">
+          <strong>Superadmins</strong> can create and edit all user types and edit applications.<br />
+          <strong>Admins</strong> can create and edit normal users.<br />
+          <strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.<br />
+          <strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.
+        </span>
+      </p>
+    <% else %>
+      <p>This user's role is set to <%= f.object.role %>. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification.</p>
+    <% end %>
   <% end %>
 
   <% if policy(User).assign_organisations? %>
