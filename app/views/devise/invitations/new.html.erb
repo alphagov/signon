@@ -5,7 +5,110 @@
 <%= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => {:method => :post, :class => 'well'} do |f| %>
   <%= render "devise/shared/error_messages", resource: resource %>
 
-  <%= render partial: "users/form_fields", locals: { f: f } %>
+  <p class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name, autofocus: true, autocomplete: "off", class: 'form-control input-md-6 ' %>
+  </p>
+
+  <p class="form-group">
+    <%= f.label :email %>
+    <%= f.text_field :email, autocomplete: "off", class: 'form-control input-md-6 add-label-margin' %>
+    <% if f.object.persisted? %>
+      <% if f.object.invited_but_not_yet_accepted? %>
+        <span class="help-block">Changes will trigger a new signup email.</span>
+      <% end %>
+    <% end %>
+  </p>
+
+  <% if f.object.unconfirmed_email.present? %>
+    <p class="form-group">
+      <%= f.label :unconfirmed_email, "Pending email" %>
+      <%= f.text_field :unconfirmed_email, readonly: "readonly", disabled: "disabled", class: 'form-control' %>
+
+      <div class="help-block add-bottom-margin">
+        <%= link_to "Resend confirmation email", resend_email_change_user_path(f.object), :method => :put, :class => "btn btn-primary add-right-margin" %>
+        <%= link_to "Cancel change", cancel_email_change_user_path(f.object), :method => :delete, :class => "btn btn-danger" %>
+      </div>
+    </p>
+  <% end %>
+
+  <% if policy(User).assign_role? && f.object.reason_for_2sv_exemption.blank? %>
+    <p class="form-group">
+      <%= f.label :role %><br />
+      <%= f.select :role, options_for_select(assignable_user_roles.map(&:humanize).zip(assignable_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
+      <span class="help-block">
+        <strong>Superadmins</strong> can create and edit all user types and edit applications.<br />
+        <strong>Admins</strong> can create and edit normal users.<br />
+        <strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.<br />
+        <strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.
+      </span>
+    </p>
+  <% elsif policy(User).assign_role? %>
+    <p>This user's role is set to <%= f.object.role %>. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification.</p>
+  <% end %>
+
+  <% if policy(f.object).mandate_2sv? && f.object.persisted? %>
+    <dl>
+      <dt>Account security</dt>
+      <dd>
+        <% if f.object.exempt_from_2sv? %>
+          <p>
+            The user has been made exempt from 2-step verification for the following reason: <%= f.object.reason_for_2sv_exemption %>
+          <% if policy(f.object).exempt_from_two_step_verification? %>
+            <br>
+            <%= link_to 'Edit reason or expiry date for 2-step verification exemption', edit_two_step_verification_exemption_path(f.object) %>
+          <% end %>
+          </p>
+        <% elsif f.object.has_2sv? %>
+          <p>2-step verification enabled</p>
+          <p>
+            <%= link_to 'Reset 2-step verification',
+              reset_two_step_verification_user_path(f.object),
+              data: { confirm: 'Are you sure?' },
+              method: :patch
+            %><br/>
+            Allows user to sign in without a verification code.<br/>
+            User will be prompted to set up 2-step verification again the next time they sign in.
+          </p>
+        <% elsif f.object.require_2sv? %>
+          <p>2-step verification required but not set up</p>
+        <% else %>
+          <p>2-step verification not set up</p>
+        <% end %>
+
+        <% unless f.object.require_2sv? %>
+          <p class="checkbox">
+            <%= f.label :require_2sv do %>
+              <%= f.check_box :require_2sv %> Mandate 2-step verification for this user <%= "(this will remove their exemption)" if f.object.exempt_from_2sv? %>
+            <% end %>
+          <br/>
+          User will be prompted to set up 2-step verification again the next time they sign in.</p>
+        <% end %>
+        <% if f.object.persisted? && policy(f.object).exempt_from_two_step_verification? && f.object.reason_for_2sv_exemption.nil? %>
+            <p>
+              <%= link_to 'Exempt user from 2-step verification', edit_two_step_verification_exemption_path(f.object) %>
+              <br/>
+              Exempt a user from 2-step verification (requires a reason to be supplied).
+            </p>
+        <%end %>
+      </dd>
+    </dl>
+  <% end %>
+
+  <% if policy(User).assign_organisations? %>
+    <p class="form-group">
+      <%= f.label :organisation_id, "Organisation" %><br />
+      <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control", 'data-module' => 'chosen' } %>
+    </p>
+  <% end %>
+
+  <h2 class="add-vertical-margins"> <%= "Editable " if (current_user.publishing_manager? ) %>Permissions</h2>
+  <%= render partial: "shared/user_permissions", locals: { user_object: f.object }%>
+
+  <% if current_user.publishing_manager? %>
+      <h2 class="add-vertical-margins">All Permissions for this user</h2>
+      <%= render partial: "app_permissions", locals: { user_object: f.object }%>
+  <% end %>
 
   <%= f.submit "Create user and send email", :class => 'btn btn-success' %>
 <% end %>
