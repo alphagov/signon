@@ -101,25 +101,25 @@ class InvitationsControllerTest < ActionController::TestCase
           assert_redirected_to require_2sv_user_path(User.last)
         end
 
-        should "not render 2SV form when invitee will be a superadmin" do
+        should "not render 2SV form for superadmin invitee, because superadmins must use 2SV" do
           post :create, params: { user: { name: "superadmin-invitee", email: "superadmin-invitee@gov.uk", organisation_id: @organisation, role: Roles::Superadmin.role_name } }
 
           assert_redirected_to users_path
         end
 
-        should "not render 2SV form when invitee will be an admin" do
+        should "not render 2SV for admin invitee, because admins must use 2SV" do
           post :create, params: { user: { name: "admin-invitee", email: "admin-invitee@gov.uk", organisation_id: @organisation, role: Roles::Admin.role_name } }
 
           assert_redirected_to users_path
         end
 
-        should "not render 2SV form when invitee will be an organisation admin" do
+        should "not render 2SV for organisation admin invitee, because organisation admins must use 2SV" do
           post :create, params: { user: { name: "org-admin-invitee", email: "org-admin-invitee@gov.uk", organisation_id: @organisation, role: Roles::OrganisationAdmin.role_name } }
 
           assert_redirected_to users_path
         end
 
-        should "not render 2SV form when invitee will be a super organisation admin" do
+        should "not render 2SV form for super organisation admin invitee, because super organisation admins must use 2SV" do
           post :create, params: { user: { name: "super-org-admin-invitee", email: "super-org-admin-invitee@gov.uk", organisation_id: @organisation, role: Roles::SuperOrganisationAdmin.role_name } }
 
           assert_redirected_to users_path
