@@ -55,16 +55,23 @@
   </div>
 
   <div class="govuk-grid-column-one-third">
-    <ul class="govuk-list app-dashboard-side">
-      <li>
-        <%= link_to "Change your email or password", edit_email_or_password_user_path(current_user), class: "govuk-link" %>
-      </li>
+    <div class="app-dashboard-side">
+      <%= render "govuk_publishing_components/components/heading", {
+        text: "Actions and settings",
+        padding: true,
+        margin_bottom: 3,
+      } %>
+      <ul class="govuk-list">
+        <li>
+          <%= link_to "Change your email or password", edit_email_or_password_user_path(current_user), class: "govuk-link" %>
+        </li>
 
-      <% if current_user.has_2sv? %>
-        <li><%= link_to "Change your 2-step verification phone", two_step_verification_path, class: "govuk-link" %></li>
-      <% else %>
-        <li><%= link_to "Set up 2-step verification", two_step_verification_path, class: "govuk-link" %></li>
-      <% end %>
-    </ul>
+        <% if current_user.has_2sv? %>
+          <li><%= link_to "Change your 2-step verification phone", two_step_verification_path, class: "govuk-link" %></li>
+        <% else %>
+          <li><%= link_to "Set up 2-step verification", two_step_verification_path, class: "govuk-link" %></li>
+        <% end %>
+      </ul>
+    </div>
   </div>
 </div>
