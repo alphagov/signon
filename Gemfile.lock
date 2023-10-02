@@ -677,7 +677,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.8.2)
-    unicode-display_width (2.4.2)
+    unicode-display_width (2.5.0)
     uuid (2.3.9)
       macaddr (~> 1.0)
     warden (1.2.9)
