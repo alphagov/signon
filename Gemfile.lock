@@ -221,7 +221,7 @@ GEM
     json (2.6.3)
     jsonpath (1.1.4)
       multi_json
-    jwt (2.5.0)
+    jwt (2.7.1)
     kaminari (1.2.2)
       activesupport (>= 4.1.0)
       kaminari-actionview (= 1.2.2)
