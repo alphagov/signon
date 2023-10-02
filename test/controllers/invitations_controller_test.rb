@@ -78,19 +78,20 @@ class InvitationsControllerTest < ActionController::TestCase
   context "POST create" do
     context "when inviter is signed in as a superadmin" do
       setup do
+        @organisation = create(:organisation)
         @inviter = create(:superadmin_user)
         sign_in @inviter
+      end
+
+      should "save invitee with permitted attributes" do
+        post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation } }
+
+        assert_equal "invitee", User.last.name
       end
 
       context "and invitee will be assigned to organisation not requiring 2SV" do
         setup do
           @organisation = create(:organisation, require_2sv: false)
-        end
-
-        should "save invitee" do
-          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation } }
-
-          assert_equal "invitee", User.last.name
         end
 
         should "render 2SV form allowing inviter to choose whether to require 2SV" do
@@ -127,12 +128,6 @@ class InvitationsControllerTest < ActionController::TestCase
       context "and invitee will be assigned to organisation requiring 2SV" do
         setup do
           @organisation = create(:organisation, require_2sv: true)
-        end
-
-        should "save invitee" do
-          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation } }
-
-          assert_equal "invitee", User.last.name
         end
 
         should "not render 2SV form allowing inviter to choose whether to require 2SV" do
