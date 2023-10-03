@@ -310,6 +310,13 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     context "GET edit" do
+      context "for the currently logged in user" do
+        should "redirect to the account page" do
+          get :edit, params: { id: @user.id }
+          assert_redirected_to account_path
+        end
+      end
+
       should "show the form" do
         not_an_admin = create(:user)
         get :edit, params: { id: not_an_admin.id }
