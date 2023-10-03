@@ -20,7 +20,7 @@ class InvitationsController < Devise::InvitationsController
     authorize User
 
     all_params = invite_params
-    all_params[:require_2sv] = new_user_requires_2sv(all_params.symbolize_keys)
+    all_params[:require_2sv] = invitee_requires_2sv(all_params.symbolize_keys)
 
     self.resource = resource_class.invite!(all_params, current_inviter)
     if resource.errors.empty?
@@ -60,7 +60,7 @@ class InvitationsController < Devise::InvitationsController
 private
 
   def after_invite_path_for(_resource)
-    if new_user_requires_2sv(resource)
+    if invitee_requires_2sv(resource)
       users_path
     else
       require_2sv_user_path(resource)
@@ -77,7 +77,7 @@ private
     Organisation.find_by(id: params[:organisation_id])
   end
 
-  def new_user_requires_2sv(params)
+  def invitee_requires_2sv(params)
     organisation(params)&.require_2sv? || User.admin_roles.include?(params[:role])
   end
 
