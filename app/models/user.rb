@@ -255,6 +255,12 @@ class User < ApplicationRecord
     end
   end
 
+  def cancel_email_change!
+    self.unconfirmed_email = nil
+    self.confirmation_token = nil
+    save!(validate: false)
+  end
+
   def invited_but_not_yet_accepted?
     invitation_sent_at.present? && invitation_accepted_at.nil?
   end

@@ -173,6 +173,19 @@ class UserTest < ActiveSupport::TestCase
     assert_equal "needs to be confirmed within 14 days, please request a new one", @user.errors[:email][0]
   end
 
+  test "#cancel_email_change!" do
+    original_email = "isabella.nagarkar@department.gov.uk"
+    user = create(:user_with_pending_email_change, email: original_email)
+
+    assert user.pending_reconfirmation?
+
+    user.cancel_email_change!
+    user.reload
+
+    assert_not user.pending_reconfirmation?
+    assert_equal original_email, user.email
+  end
+
   # Scopes
 
   test "web_users includes non api users" do

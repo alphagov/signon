@@ -15,43 +15,32 @@ class UserPolicy < BasePolicy
   end
 
   def edit?
+    return false if current_user == record
+
     case current_user.role
     when Roles::Superadmin.role_name
       true
     when Roles::Admin.role_name
       can_manage?
     when Roles::SuperOrganisationAdmin.role_name
-      allow_self_only || (can_manage? && (record_in_own_organisation? || record_in_child_organisation?))
+      can_manage? && (record_in_own_organisation? || record_in_child_organisation?)
     when Roles::OrganisationAdmin.role_name
-      allow_self_only || (can_manage? && record_in_own_organisation?)
+      can_manage? && record_in_own_organisation?
     else # 'normal'
       false
     end
   end
-
   alias_method :update?, :edit?
   alias_method :unlock?, :edit?
   alias_method :suspension?, :edit?
   alias_method :resend?, :edit?
   alias_method :event_logs?, :edit?
-
-  def edit_email_or_password?
-    allow_self_only
-  end
-  alias_method :update_email?, :edit_email_or_password?
-  alias_method :update_password?, :edit_email_or_password?
   alias_method :mandate_2sv?, :edit?
   alias_method :require_2sv?, :edit?
   alias_method :reset_2sv?, :edit?
   alias_method :reset_two_step_verification?, :edit?
-
-  def cancel_email_change?
-    allow_self_only || edit?
-  end
-
-  def resend_email_change?
-    allow_self_only || edit?
-  end
+  alias_method :resend_email_change?, :edit?
+  alias_method :cancel_email_change?, :edit?
 
   def assign_role?
     current_user.superadmin?
@@ -65,10 +54,6 @@ class UserPolicy < BasePolicy
   end
 
 private
-
-  def allow_self_only
-    current_user.id == record.id
-  end
 
   def can_manage?
     current_user.can_manage?(record)

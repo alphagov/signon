@@ -24,21 +24,20 @@ Rails.application.routes.draw do
   devise_scope :user do
     post "/users/invitation/resend/:id" => "invitations#resend", :as => "resend_user_invitation"
     put "/users/confirmation" => "confirmations#update"
+    resource :two_step_verification_session,
+             only: %i[new create],
+             path: "/users/two_step_verification_session",
+             controller: "devise/two_step_verification_session"
     resource :two_step_verification,
              only: %i[show update],
-             path: "/users/two_step_verification",
+             path: "/account/two_step_verification",
              controller: "devise/two_step_verification" do
-      resource :session, only: %i[new create], controller: "devise/two_step_verification_session"
-
       member { get :prompt }
     end
   end
 
   resources :users, except: [:show] do
     member do
-      get :edit_email_or_password
-      patch :update_email
-      patch :update_password
       post :unlock
       put :resend_email_change
       delete :cancel_email_change
@@ -51,11 +50,23 @@ Rails.application.routes.draw do
 
   resource :account, only: [:show]
   namespace :account do
+    resource :activity, only: [:show]
     resources :applications, only: %i[show index] do
       resources :permissions, only: [:index]
       resource :signin_permission, only: %i[create destroy] do
         get :delete
       end
+    end
+    resource :email_password, only: [:show] do
+      patch :update_email
+      patch :update_password
+      put :resend_email_change
+      delete :cancel_email_change
+    end
+    resource :manage_permissions, only: %i[show update]
+    resource :role_organisation, only: [:show] do
+      patch :update_organisation
+      patch :update_role
     end
   end
 

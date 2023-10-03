@@ -3,137 +3,6 @@ require "test_helper"
 class UsersControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
 
-  def change_user_password(user_factory, new_password)
-    original_password = "I am a very original password. Refrigerator weevil."
-    user = create(user_factory, password: original_password)
-    original_password_hash = user.encrypted_password
-    sign_in user
-
-    post :update_password,
-         params: { id: user.id,
-                   user: {
-                     current_password: original_password,
-                     password: new_password,
-                     password_confirmation: new_password,
-                   } }
-
-    [user, original_password_hash]
-  end
-
-  context "PUT update_password" do
-    should "changing passwords to something strong should succeed" do
-      user, orig_password = change_user_password(:user, "destabilizers842}orthophosphate")
-
-      assert_equal "302", response.code
-      assert_equal root_url, response.location
-
-      user.reload
-      assert_not_equal orig_password, user.encrypted_password
-    end
-
-    should "changing password to something too short should fail" do
-      user, orig_password = change_user_password(:user, "short")
-
-      assert_equal "200", response.code
-      assert_match "too short", response.body
-
-      user.reload
-      assert_equal orig_password, user.encrypted_password
-    end
-
-    should "changing password to something too weak should fail" do
-      user, orig_password = change_user_password(:user, "zymophosphate")
-
-      assert_equal "200", response.code
-      assert_match "not strong enough", response.body
-
-      user.reload
-      assert_equal orig_password, user.encrypted_password
-    end
-  end
-
-  context "PUT update_email" do
-    setup do
-      @user = create(:user, email: "old@email.com")
-      sign_in @user
-    end
-
-    context "changing an email" do
-      should "stage the change, send a confirmation email to the new address and email change notification to the old address" do
-        perform_enqueued_jobs do
-          put :update_email, params: { id: @user.id, user: { email: "new@email.com" } }
-
-          @user.reload
-
-          assert_equal "new@email.com", @user.unconfirmed_email
-          assert_equal "old@email.com", @user.email
-
-          confirmation_email = ActionMailer::Base.deliveries[-2]
-          assert_equal "Confirm your email change", confirmation_email.subject
-          assert_equal "new@email.com", confirmation_email.to.first
-
-          email_changed_notification = ActionMailer::Base.deliveries.last
-          assert_match(/Your .* Signon development email address is being changed/, email_changed_notification.subject)
-          assert_equal "old@email.com", email_changed_notification.to.first
-        end
-      end
-
-      should "log an event" do
-        put :update_email, params: { id: @user.id, user: { email: "new@email.com" } }
-        assert_equal 1, EventLog.where(event_id: EventLog::EMAIL_CHANGE_INITIATED.id, uid: @user.uid, initiator_id: @user.id).count
-      end
-    end
-  end
-
-  context "PUT resend_email_change" do
-    should "send an email change confirmation email" do
-      perform_enqueued_jobs do
-        @user = create(:user_with_pending_email_change)
-        sign_in @user
-
-        put :resend_email_change, params: { id: @user.id }
-
-        assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
-      end
-    end
-
-    should "use a new token if it's expired" do
-      perform_enqueued_jobs do
-        @user = create(
-          :user_with_pending_email_change,
-          confirmation_token: "old token",
-          confirmation_sent_at: 15.days.ago,
-        )
-        sign_in @user
-
-        put :resend_email_change, params: { id: @user.id }
-
-        assert_not_equal "old token", @user.reload.confirmation_token
-      end
-    end
-  end
-
-  context "DELETE cancel_email_change" do
-    setup do
-      @user = create(:user_with_pending_email_change)
-      sign_in @user
-      request.env["HTTP_REFERER"] = edit_email_or_password_user_path(@user)
-    end
-
-    should "clear the unconfirmed_email and the confirmation_token" do
-      delete :cancel_email_change, params: { id: @user.id }
-
-      @user.reload
-      assert_nil @user.unconfirmed_email
-      assert_nil @user.confirmation_token
-    end
-
-    should "redirect to the user edit email or password page" do
-      delete :cancel_email_change, params: { id: @user.id }
-      assert_redirected_to edit_email_or_password_user_path(@user)
-    end
-  end
-
   context "GET show (as OAuth client application)" do
     setup do
       @application = create(:application)
@@ -441,6 +310,13 @@ class UsersControllerTest < ActionController::TestCase
     end
 
     context "GET edit" do
+      context "for the currently logged in user" do
+        should "redirect to the account page" do
+          get :edit, params: { id: @user.id }
+          assert_redirected_to account_path
+        end
+      end
+
       should "show the form" do
         not_an_admin = create(:user)
         get :edit, params: { id: not_an_admin.id }
@@ -738,23 +614,29 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "redisplay the form if save fails" do
-          admin = create(:organisation_admin_user)
-          sign_in admin
+          organisation = create(:organisation)
+          admin1 = create(:organisation_admin_user, organisation:)
+          admin2 = create(:organisation_admin_user, organisation:)
 
-          put :update, params: { id: admin.id, user: { name: "" } }
+          sign_in admin1
 
-          assert_select "form#edit_user_#{admin.id}"
+          put :update, params: { id: admin2.id, user: { name: "" } }
+
+          assert_select "form#edit_user_#{admin2.id}"
         end
       end
 
       context "super organisation admin" do
         should "redisplay the form if save fails" do
-          admin = create(:super_organisation_admin_user)
-          sign_in admin
+          organisation = create(:organisation)
+          admin1 = create(:super_organisation_admin_user, organisation:)
+          admin2 = create(:super_organisation_admin_user, organisation:)
 
-          put :update, params: { id: admin.id, user: { name: "" } }
+          sign_in admin1
 
-          assert_select "form#edit_user_#{admin.id}"
+          put :update, params: { id: admin2.id, user: { name: "" } }
+
+          assert_select "form#edit_user_#{admin2.id}"
         end
       end
 

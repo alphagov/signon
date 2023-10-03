@@ -14,13 +14,11 @@ class UserPolicyTest < ActiveSupport::TestCase
 
   primary_management_actions = %i[new assign_organisations]
   user_management_actions = %i[edit create update unlock suspension cancel_email_change resend_email_change event_logs reset_2sv mandate_2sv]
-  self_management_actions = %i[edit_email_or_password update_email update_password cancel_email_change resend_email_change]
   superadmin_actions = %i[assign_role]
   two_step_verification_exemption_actions = %i[exempt_from_two_step_verification]
 
   org_admin_actions = user_management_actions - %i[create]
   super_org_admin_actions = user_management_actions - %i[create]
-  admin_actions = user_management_actions - self_management_actions
 
   context "superadmins" do
     should "allow for index" do
@@ -42,6 +40,14 @@ class UserPolicyTest < ActiveSupport::TestCase
         assert permit?(user, build(:super_organisation_admin_user), permission)
         assert permit?(user, build(:admin_user), permission)
         assert permit?(user, build(:superadmin_user), permission)
+      end
+
+      next if permission == :create
+
+      should "not allow for #{permission} for the logged in user" do
+        user = create(:superadmin_user)
+
+        assert forbid?(user, user, permission)
       end
     end
 
@@ -95,6 +101,14 @@ class UserPolicyTest < ActiveSupport::TestCase
         assert permit?(user, build(:admin_user), permission)
         assert forbid?(user, build(:superadmin_user), permission)
       end
+
+      next if permission == :create
+
+      should "not allow for #{permission} for the logged in user" do
+        user = create(:admin_user)
+
+        assert forbid?(user, user, permission)
+      end
     end
 
     superadmin_actions.each do |permission|
@@ -137,6 +151,10 @@ class UserPolicyTest < ActiveSupport::TestCase
     end
 
     super_org_admin_actions.each do |permission|
+      should "not allow for #{permission} for the logged in user" do
+        assert forbid?(@super_org_admin, @super_org_admin, permission)
+      end
+
       should "allow for #{permission} and users of similar permissions or below from within their own organisation" do
         assert permit?(@super_org_admin, build(:user_in_organisation, organisation: @super_org_admin.organisation), permission)
         assert permit?(@super_org_admin, build(:organisation_admin_user, organisation: @super_org_admin.organisation), permission)
@@ -194,6 +212,10 @@ class UserPolicyTest < ActiveSupport::TestCase
     end
 
     org_admin_actions.each do |permission|
+      should "not allow for #{permission} for the logged in user" do
+        assert forbid?(@organisation_admin, @organisation_admin, permission)
+      end
+
       should "allow for #{permission} and users of similar permissions or below from within their own organisation" do
         assert permit?(@organisation_admin, build(:user_in_organisation, organisation: @organisation_admin.organisation), permission)
         assert permit?(@organisation_admin, build(:organisation_admin_user, organisation: @organisation_admin.organisation), permission)
@@ -256,13 +278,6 @@ class UserPolicyTest < ActiveSupport::TestCase
       end
     end
 
-    self_management_actions.each do |permission|
-      should "allow for #{permission} accessing their own record" do
-        user = create(:user)
-        assert permit?(user, user, permission)
-      end
-    end
-
     superadmin_actions.each do |permission|
       should "not allow for #{permission}" do
         assert forbid?(create(:user), User, permission)
@@ -273,13 +288,6 @@ class UserPolicyTest < ActiveSupport::TestCase
       should "not allow for #{permission}" do
         user = create(:user)
         assert forbid?(create(:user), user, permission)
-      end
-    end
-
-    admin_actions.each do |permission|
-      should "not allow for #{permission} accessing their own record" do
-        user = create(:user)
-        assert forbid?(user, user, permission)
       end
     end
   end

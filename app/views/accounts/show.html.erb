@@ -1,0 +1,56 @@
+<% content_for :title, "Settings" %>
+
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "Settings",
+       }
+     ]
+   })
+%>
+
+<%= render "govuk_publishing_components/components/cards", {
+  items: [
+    {
+      link: {
+        text: "Change your email or password",
+        path: account_email_password_path,
+      },
+      description: "Reset your password or change your email address.",
+    },
+    (
+      {
+        link: {
+          text: "Manage permissions",
+          path: account_manage_permissions_path,
+        },
+        description: "Make changes to your permissions across different apps.",
+      } if policy(%i[account manage_permissions]).show?
+    ),
+    {
+      link: {
+        text: two_step_verification_page_title,
+        path: two_step_verification_path,
+      },
+    },
+    {
+      link: {
+        text: role_organisation_page_title,
+        path: account_role_organisation_path,
+      },
+    },
+    {
+      link: {
+        text: "Your account access log",
+        path: account_activity_path,
+      },
+      description: "View your account activity.",
+    },
+  ].compact
+} %>

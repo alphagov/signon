@@ -16,7 +16,7 @@ class Devise::TwoStepVerificationController < DeviseController
     if verify_code_and_update
       EventLog.record_event(current_user, success_event_for(mode), ip_address: user_ip_address)
       send_notification(current_user, mode)
-      redirect_to_prior_flow notice: I18n.t("devise.two_step_verification.messages.success.#{mode}")
+      redirect_to_prior_flow_or_to account_path, notice: I18n.t("devise.two_step_verification.messages.success.#{mode}")
     else
       EventLog.record_event(current_user, failure_event_for(mode), ip_address: user_ip_address)
       flash.now[:invalid_code] = "Sorry that code didn’t work. Please try again."
