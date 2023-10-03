@@ -6,5 +6,8 @@ class Account::RoleOrganisationsPolicy < BasePolicy
   def update_organisation?
     current_user.govuk_admin?
   end
-  alias_method :update_role?, :update_organisation?
+
+  def update_role?
+    current_user.superadmin?
+  end
 end
