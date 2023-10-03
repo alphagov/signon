@@ -129,40 +129,101 @@ class InvitationsControllerTest < ActionController::TestCase
           @organisation = create(:organisation, require_2sv: false)
         end
 
+        should "set require_2sv on invitee to false" do
+          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation } }
+
+          assert_not User.last.require_2sv?
+        end
+
         should "render 2SV form allowing inviter to choose whether to require 2SV" do
           post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation } }
 
           assert_redirected_to require_2sv_user_path(User.last)
         end
 
-        should "not render 2SV form for superadmin invitee, because superadmins must use 2SV" do
-          post :create, params: { user: { name: "superadmin-invitee", email: "superadmin-invitee@gov.uk", organisation_id: @organisation, role: Roles::Superadmin.role_name } }
+        context "when invitee role is set to superadmin" do
+          setup do
+            @role = Roles::Superadmin.role_name
+          end
 
-          assert_redirected_to users_path
+          should "set require_2sv on invitee to true" do
+            post :create, params: { user: { name: "superadmin-invitee", email: "superadmin-invitee@gov.uk", organisation_id: @organisation, role: @role } }
+
+            assert User.last.require_2sv?
+          end
+
+          should "not render 2SV form, because superadmins must use 2SV" do
+            post :create, params: { user: { name: "superadmin-invitee", email: "superadmin-invitee@gov.uk", organisation_id: @organisation, role: @role } }
+
+            assert_redirected_to users_path
+          end
         end
 
-        should "not render 2SV for admin invitee, because admins must use 2SV" do
-          post :create, params: { user: { name: "admin-invitee", email: "admin-invitee@gov.uk", organisation_id: @organisation, role: Roles::Admin.role_name } }
+        context "when invitee role is set to admin" do
+          setup do
+            @role = Roles::Admin.role_name
+          end
 
-          assert_redirected_to users_path
+          should "set require_2sv on invitee to true" do
+            post :create, params: { user: { name: "admin-invitee", email: "admin-invitee@gov.uk", organisation_id: @organisation, role: @role } }
+
+            assert User.last.require_2sv?
+          end
+
+          should "not render 2SV form, because admins must use 2SV" do
+            post :create, params: { user: { name: "admin-invitee", email: "admin-invitee@gov.uk", organisation_id: @organisation, role: @role } }
+
+            assert_redirected_to users_path
+          end
         end
 
-        should "not render 2SV for organisation admin invitee, because organisation admins must use 2SV" do
-          post :create, params: { user: { name: "org-admin-invitee", email: "org-admin-invitee@gov.uk", organisation_id: @organisation, role: Roles::OrganisationAdmin.role_name } }
+        context "when invitee role is set to organisation admin" do
+          setup do
+            @role = Roles::OrganisationAdmin.role_name
+          end
 
-          assert_redirected_to users_path
+          should "set require_2sv on invitee to true" do
+            post :create, params: { user: { name: "org-admin-invitee", email: "org-admin-invitee@gov.uk", organisation_id: @organisation, role: @role } }
+
+            assert User.last.require_2sv?
+          end
+
+          should "not render 2SV form, because organisation admins must use 2SV" do
+            post :create, params: { user: { name: "org-admin-invitee", email: "org-admin-invitee@gov.uk", organisation_id: @organisation, role: @role } }
+
+            assert_redirected_to users_path
+          end
         end
 
-        should "not render 2SV form for super organisation admin invitee, because super organisation admins must use 2SV" do
-          post :create, params: { user: { name: "super-org-admin-invitee", email: "super-org-admin-invitee@gov.uk", organisation_id: @organisation, role: Roles::SuperOrganisationAdmin.role_name } }
+        context "when invitee role is set to super organisation admin" do
+          setup do
+            @role = Roles::SuperOrganisationAdmin.role_name
+          end
 
-          assert_redirected_to users_path
+          should "set require_2sv on invitee to true" do
+            post :create, params: { user: { name: "super-org-admin-invitee", email: "super-org-admin-invitee@gov.uk", organisation_id: @organisation, role: @role } }
+
+            assert User.last.require_2sv?
+          end
+
+          should "not render 2SV form, because super organisation admins must use 2SV" do
+            post :create, params: { user: { name: "super-org-admin-invitee", email: "super-org-admin-invitee@gov.uk", organisation_id: @organisation, role: @role } }
+
+            assert_redirected_to users_path
+          end
         end
       end
 
       context "and invitee will be assigned to organisation requiring 2SV" do
         setup do
           @organisation = create(:organisation, require_2sv: true)
+        end
+
+        should "set require_2sv on invitee to true" do
+          post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation } }
+
+          invitee = User.last
+          assert invitee.require_2sv?
         end
 
         should "not render 2SV form allowing inviter to choose whether to require 2SV" do
