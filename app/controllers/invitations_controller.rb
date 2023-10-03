@@ -20,7 +20,7 @@ class InvitationsController < Devise::InvitationsController
     authorize User
 
     all_params = invite_params
-    all_params[:require_2sv] = invitee_requires_2sv(all_params.symbolize_keys)
+    all_params[:require_2sv] = invitee_requires_2sv(all_params)
 
     self.resource = resource_class.invite!(all_params, current_inviter)
     if resource.errors.empty?
