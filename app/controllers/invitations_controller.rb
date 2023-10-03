@@ -17,7 +17,7 @@ class InvitationsController < Devise::InvitationsController
 
   def create
     # workaround for invitatable not providing a build_invitation which could be authorised before saving
-    all_params = resource_params
+    all_params = invite_params
     all_params[:require_2sv] = new_user_requires_2sv(all_params.symbolize_keys)
 
     user = User.new(all_params)
@@ -68,17 +68,11 @@ private
     end
   end
 
-  def resource_params
-    sanitised_params = UserParameterSanitiser.new(
+  def invite_params
+    UserParameterSanitiser.new(
       user_params: unsanitised_user_params,
       current_user_role:,
-    ).sanitise
-
-    if params[:action] == "update"
-      sanitised_params.to_h.merge(invitation_token:)
-    else
-      sanitised_params.to_h
-    end
+    ).sanitise.to_h
   end
 
   def unsanitised_user_params
@@ -97,14 +91,6 @@ private
 
   def current_user_role
     (current_user || User.new).role.to_sym
-  end
-
-  def invitation_token
-    unsanitised_user_params.fetch(:invitation_token, {})
-  end
-
-  def update_resource_params
-    resource_params
   end
 
   def grant_default_permissions(user)
