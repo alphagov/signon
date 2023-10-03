@@ -59,7 +59,7 @@ class InvitationsController < Devise::InvitationsController
 
 private
 
-  def after_invite_path_for(_resource)
+  def after_invite_path_for(_)
     if invitee_requires_2sv(resource)
       users_path
     else
