@@ -4,6 +4,7 @@ class InvitationsController < Devise::InvitationsController
   after_action :verify_authorized, only: %i[new create resend]
 
   before_action :redirect_if_invitee_already_exists, only: :create
+  before_action :configure_permitted_parameters, only: :create
 
   layout "admin_layout", only: %i[edit update]
 
@@ -68,31 +69,6 @@ private
     end
   end
 
-  def invite_params
-    UserParameterSanitiser.new(
-      user_params: unsanitised_user_params,
-      current_user_role:,
-    ).sanitise.to_h
-  end
-
-  def unsanitised_user_params
-    params.require(:user).permit(
-      :name,
-      :email,
-      :organisation_id,
-      :invitation_token,
-      :password,
-      :password_confirmation,
-      :require_2sv,
-      :role,
-      supported_permission_ids: [],
-    ).to_h
-  end
-
-  def current_user_role
-    (current_user || User.new).role.to_sym
-  end
-
   def grant_default_permissions(user)
     SupportedPermission.default.each do |default_permission|
       user.grant_permission(default_permission)
@@ -110,5 +86,11 @@ private
       flash[:alert] = "User already invited. If you want to, you can click 'Resend signup email'."
       respond_with resource, location: users_path
     end
+  end
+
+  def configure_permitted_parameters
+    keys = [:name, :organisation_id, { supported_permission_ids: [] }]
+    keys << :role if policy(User).assign_role?
+    devise_parameter_sanitizer.permit(:invite, keys:)
   end
 end
