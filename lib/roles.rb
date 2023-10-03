@@ -28,6 +28,10 @@ module Roles
       role_classes - [Roles::Normal, Roles::Base]
     end
 
+    def admin_roles
+      admin_role_classes.map(&:role_name)
+    end
+
     def roles
       role_classes.sort_by(&:level).map(&:role_name)
     end

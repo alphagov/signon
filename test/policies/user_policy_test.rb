@@ -42,8 +42,6 @@ class UserPolicyTest < ActiveSupport::TestCase
         assert permit?(user, build(:superadmin_user), permission)
       end
 
-      next if permission == :create
-
       should "not allow for #{permission} for the logged in user" do
         user = create(:superadmin_user)
 
@@ -101,8 +99,6 @@ class UserPolicyTest < ActiveSupport::TestCase
         assert permit?(user, build(:admin_user), permission)
         assert forbid?(user, build(:superadmin_user), permission)
       end
-
-      next if permission == :create
 
       should "not allow for #{permission} for the logged in user" do
         user = create(:admin_user)

@@ -78,8 +78,7 @@ private
   end
 
   def new_user_requires_2sv(params)
-    organisation(params)&.require_2sv? ||
-      %w[superadmin admin organisation_admin super_organisation_admin].include?(params[:role])
+    organisation(params)&.require_2sv? || User.admin_roles.include?(params[:role])
   end
 
   def redirect_if_invitee_already_exists
