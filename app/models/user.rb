@@ -88,7 +88,7 @@ class User < ApplicationRecord
   scope :not_setup_2sv, -> { not_exempt_from_2sv.does_not_have_2sv }
 
   scope :with_role, ->(role) { where(role:) }
-  scope :with_permission, ->(permission) { joins(:supported_permissions).merge(SupportedPermission.where(id: permission)) }
+  scope :with_permission, ->(permission) { joins(:supported_permissions).merge(SupportedPermission.unscoped.where(id: permission)).distinct }
   scope :with_organisation, ->(organisation) { where(organisation:) }
   scope :with_partially_matching_name, ->(name) { where(arel_table[:name].matches("%#{name}%")) }
   scope :with_partially_matching_email, ->(email) { where(arel_table[:email].matches("%#{email}%")) }

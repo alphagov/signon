@@ -1056,6 +1056,16 @@ class UserTest < ActiveSupport::TestCase
       specified_permissions = [app1.signin_permission, app2.signin_permission]
       assert_equal [user1, user2], User.with_permission(specified_permissions.map(&:to_param))
     end
+
+    should "only return a user once even when they have two permissions for the same app" do
+      app = create(:application)
+
+      permission = create(:supported_permission, application: app)
+      create(:user, supported_permissions: [app.signin_permission, permission])
+
+      specified_permissions = [app.signin_permission, permission]
+      assert_equal 1, User.with_permission(specified_permissions.map(&:to_param)).count
+    end
   end
 
   context ".with_organisation" do

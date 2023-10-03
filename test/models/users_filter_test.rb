@@ -211,6 +211,17 @@ class UsersFilterTest < ActiveSupport::TestCase
 
       assert_equal %w[user1 user3], filter.users.map(&:name)
     end
+
+    should "return a user once if they have multiple selected permissions for the same app" do
+      app = create(:application, name: "App 1")
+      permission = create(:supported_permission, application: app, name: "Permission 1")
+
+      create(:user, name: "user", supported_permissions: [app.signin_permission, permission])
+
+      filter = UsersFilter.new(User.all, @current_user, permissions: [app.signin_permission, permission].map(&:to_param))
+
+      assert_equal %w[user], filter.users.map(&:name)
+    end
   end
 
   context "#permission_option_select_options" do
