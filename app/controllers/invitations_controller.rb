@@ -73,8 +73,12 @@ private
     end
   end
 
+  def organisation(params)
+    Organisation.find_by(id: params[:organisation_id])
+  end
+
   def new_user_requires_2sv(params)
-    (params[:organisation_id].present? && Organisation.find(params[:organisation_id]).require_2sv?) ||
+    organisation(params)&.require_2sv? ||
       %w[superadmin admin organisation_admin super_organisation_admin].include?(params[:role])
   end
 
