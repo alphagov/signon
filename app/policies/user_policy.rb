@@ -15,6 +15,8 @@ class UserPolicy < BasePolicy
   end
 
   def edit?
+    return false if current_user == record
+
     case current_user.role
     when Roles::Superadmin.role_name
       true

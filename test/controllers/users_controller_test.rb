@@ -614,23 +614,29 @@ class UsersControllerTest < ActionController::TestCase
         end
 
         should "redisplay the form if save fails" do
-          admin = create(:organisation_admin_user)
-          sign_in admin
+          organisation = create(:organisation)
+          admin1 = create(:organisation_admin_user, organisation:)
+          admin2 = create(:organisation_admin_user, organisation:)
 
-          put :update, params: { id: admin.id, user: { name: "" } }
+          sign_in admin1
 
-          assert_select "form#edit_user_#{admin.id}"
+          put :update, params: { id: admin2.id, user: { name: "" } }
+
+          assert_select "form#edit_user_#{admin2.id}"
         end
       end
 
       context "super organisation admin" do
         should "redisplay the form if save fails" do
-          admin = create(:super_organisation_admin_user)
-          sign_in admin
+          organisation = create(:organisation)
+          admin1 = create(:super_organisation_admin_user, organisation:)
+          admin2 = create(:super_organisation_admin_user, organisation:)
 
-          put :update, params: { id: admin.id, user: { name: "" } }
+          sign_in admin1
 
-          assert_select "form#edit_user_#{admin.id}"
+          put :update, params: { id: admin2.id, user: { name: "" } }
+
+          assert_select "form#edit_user_#{admin2.id}"
         end
       end
 
