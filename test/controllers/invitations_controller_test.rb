@@ -409,4 +409,93 @@ class InvitationsControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "PUT update" do
+    setup do
+      organisation = create(:organisation)
+      @invitee = User.invite!(attributes_for(:user, organisation:))
+      @token = @invitee.raw_invitation_token
+      @password = User.send(:random_password)
+    end
+
+    context "when invitation is accepted successfully" do
+      should "set invitation accepted timestamp on invitee" do
+        freeze_time do
+          put :update, params: { user: { invitation_token: @token, password: @password, password_confirmation: @password } }
+
+          assert_equal Time.current, @invitee.reload.invitation_accepted_at
+        end
+      end
+
+      should "redirect to sign in page" do
+        put :update, params: { user: { invitation_token: @token, password: @password, password_confirmation: @password } }
+
+        assert_redirected_to new_user_session_path
+      end
+
+      should "not allow invitee role to be changed" do
+        new_role = Roles::Superadmin.role_name
+
+        put :update, params: { user: { invitation_token: @token, password: @password, password_confirmation: @password, role: new_role } }
+
+        assert_equal @invitee.role, @invitee.reload.role
+      end
+
+      should "not allow invitee organisation to be changed" do
+        new_organisation = create(:organisation)
+
+        put :update, params: { user: { invitation_token: @token, password: @password, password_confirmation: @password, organisation_id: new_organisation } }
+
+        assert_equal @invitee.organisation, @invitee.reload.organisation
+      end
+
+      should "not allow invitee require_2sv to be changed" do
+        put :update, params: { user: { invitation_token: @token, password: @password, password_confirmation: @password, require_2sv: true } }
+
+        assert_not @invitee.reload.require_2sv?
+      end
+    end
+
+    context "when invitation token is invalid" do
+      should "not set invitation accepted timestamp on invitee" do
+        put :update, params: { user: { invitation_token: "invalid", password: @password, password_confirmation: @password } }
+
+        assert @invitee.reload.invitation_accepted_at.nil?
+      end
+
+      should "re-render edit page" do
+        put :update, params: { user: { invitation_token: "invalid", password: @password, password_confirmation: @password } }
+
+        assert_template :edit
+      end
+
+      should "display error message" do
+        put :update, params: { user: { invitation_token: "invalid", password: @password, password_confirmation: @password } }
+
+        assert_select ".govuk-error-summary__title", text: "There was a problem changing your password"
+        assert_select ".govuk-error-summary__body", text: "Invitation token is invalid"
+      end
+    end
+
+    context "when passwords do not match" do
+      should "not set invitation accepted timestamp on invitee" do
+        put :update, params: { user: { invitation_token: @token, password: @password, password_confirmation: "does-not-match" } }
+
+        assert @invitee.reload.invitation_accepted_at.nil?
+      end
+
+      should "re-render edit page" do
+        put :update, params: { user: { invitation_token: @token, password: @password, password_confirmation: "does-not-match" } }
+
+        assert_template :edit
+      end
+
+      should "display error message" do
+        put :update, params: { user: { invitation_token: @token, password: @password, password_confirmation: "does-not-match" } }
+
+        assert_select ".govuk-error-summary__title", text: "There was a problem changing your password"
+        assert_select ".govuk-error-summary__body", text: "Password confirmation doesn't match Password"
+      end
+    end
+  end
 end
