@@ -84,9 +84,44 @@ class InvitationsControllerTest < ActionController::TestCase
       end
 
       should "save invitee with permitted attributes" do
-        post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation } }
+        permission = create(:supported_permission)
 
-        assert_equal "invitee", User.last.name
+        post :create, params: {
+          user: {
+            name: "invitee",
+            email: "invitee@gov.uk",
+            organisation_id: @organisation,
+            role: Roles::OrganisationAdmin.role_name,
+            supported_permission_ids: [permission.to_param],
+          },
+        }
+
+        invitee = User.last
+        assert invitee.present?
+        assert_equal "invitee", invitee.name
+        assert_equal "invitee@gov.uk", invitee.email
+        assert_equal @organisation, invitee.organisation
+        assert_equal Roles::OrganisationAdmin.role_name, invitee.role
+        assert_equal [permission], invitee.supported_permissions
+      end
+
+      should "save invitee with default supported permissions" do
+        default_permission = create(:supported_permission, default: true)
+        non_default_permission = create(:supported_permission, default: false)
+
+        post :create, params: {
+          user: { name: "invitee", email: "invitee@gov.uk", supported_permission_ids: [non_default_permission.to_param] },
+        }
+
+        invitee = User.last
+        assert_same_elements [default_permission, non_default_permission], invitee.supported_permissions
+      end
+
+      should "send invitation to invitee from inviter" do
+        invitee = create(:user)
+        User.expects(:invite!).with(anything, @inviter).returns(invitee)
+
+        post :create, params: { user: { name: "invitee", email: "invitee@gov.uk", organisation_id: @organisation } }
       end
 
       context "and invitee will be assigned to organisation not requiring 2SV" do
@@ -178,6 +213,29 @@ class InvitationsControllerTest < ActionController::TestCase
 
         assert_redirected_to users_path
         assert_equal "User already invited. If you want to, you can click 'Resend signup email'.", flash[:alert]
+      end
+    end
+
+    context "when inviter is signed in as an admin" do
+      setup do
+        @organisation = create(:organisation)
+        sign_in create(:admin_user)
+      end
+
+      should "ignore role param when saving invitee" do
+        post :create, params: {
+          user: {
+            name: "invitee",
+            email: "invitee@gov.uk",
+            organisation_id: @organisation,
+            role: Roles::OrganisationAdmin.role_name,
+          },
+        }
+
+        invitee = User.last
+        assert invitee.present?
+        default_role = Roles::Normal.role_name
+        assert_equal default_role, invitee.role
       end
     end
 
