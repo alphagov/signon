@@ -17,12 +17,10 @@ class InvitationsController < Devise::InvitationsController
   end
 
   def create
-    # workaround for invitatable not providing a build_invitation which could be authorised before saving
+    authorize User
+
     all_params = invite_params
     all_params[:require_2sv] = new_user_requires_2sv(all_params.symbolize_keys)
-
-    user = User.new(all_params)
-    authorize user
 
     self.resource = resource_class.invite!(all_params, current_inviter)
     if resource.errors.empty?

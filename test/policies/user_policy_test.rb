@@ -12,8 +12,8 @@ class UserPolicyTest < ActiveSupport::TestCase
     @gds = create(:organisation, name: "Government Digital Services", content_id: Organisation::GDS_ORG_CONTENT_ID)
   end
 
-  primary_management_actions = %i[new assign_organisations]
-  user_management_actions = %i[edit create update unlock suspension cancel_email_change resend_email_change event_logs reset_2sv mandate_2sv]
+  primary_management_actions = %i[new create assign_organisations]
+  user_management_actions = %i[edit update unlock suspension cancel_email_change resend_email_change event_logs reset_2sv mandate_2sv]
   superadmin_actions = %i[assign_role]
   two_step_verification_exemption_actions = %i[exempt_from_two_step_verification]
 
@@ -140,10 +140,6 @@ class UserPolicyTest < ActiveSupport::TestCase
       assert permit?(build(:super_organisation_admin_user), User, :index)
     end
 
-    should "not allow for create" do
-      assert forbid?(build(:super_organisation_admin_user), User, :create)
-    end
-
     primary_management_actions.each do |permission|
       should "not allow for #{permission}" do
         assert forbid?(build(:super_organisation_admin_user), User, permission)
@@ -199,10 +195,6 @@ class UserPolicyTest < ActiveSupport::TestCase
   context "organisation admins" do
     should "allow for index" do
       assert permit?(build(:organisation_admin_user), User, :index)
-    end
-
-    should "not allow for create" do
-      assert forbid?(build(:organisation_admin_user), User, :create)
     end
 
     primary_management_actions.each do |permission|
