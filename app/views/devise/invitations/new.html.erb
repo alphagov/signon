@@ -28,12 +28,10 @@
     </p>
   <% end %>
 
-  <% if policy(User).assign_organisations? %>
-    <p class="form-group">
-      <%= f.label :organisation_id, "Organisation" %><br />
-      <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control", 'data-module' => 'chosen' } %>
-    </p>
-  <% end %>
+  <p class="form-group">
+    <%= f.label :organisation_id, "Organisation" %><br />
+    <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control", 'data-module' => 'chosen' } %>
+  </p>
 
   <h2 class="add-vertical-margins">Permissions</h2>
   <%= render partial: "shared/user_permissions", locals: { user_object: f.object }%>
