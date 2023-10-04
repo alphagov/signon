@@ -6,10 +6,8 @@
 <p class="form-group">
   <%= f.label :email %>
   <%= f.text_field :email, autocomplete: "off", class: 'form-control input-md-6 add-label-margin' %>
-  <% if f.object.persisted? %>
-    <% if f.object.invited_but_not_yet_accepted? %>
-      <span class="help-block">Changes will trigger a new signup email.</span>
-    <% end %>
+  <% if f.object.invited_but_not_yet_accepted? %>
+    <span class="help-block">Changes will trigger a new signup email.</span>
   <% end %>
 </p>
 
@@ -25,22 +23,24 @@
   </p>
 <% end %>
 
-<% if policy(User).assign_role? && @user.reason_for_2sv_exemption.blank? %>
-  <p class="form-group">
-    <%= f.label :role %><br />
-    <%= f.select :role, options_for_select(assignable_user_roles.map(&:humanize).zip(assignable_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
-    <span class="help-block">
-      <strong>Superadmins</strong> can create and edit all user types and edit applications.<br />
-      <strong>Admins</strong> can create and edit normal users.<br />
-      <strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.<br />
-      <strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.
-    </span>
-  </p>
-<% elsif policy(User).assign_role? %>
-  <p>This user's role is set to <%= @user.role %>. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification.</p>
+<% if policy(User).assign_role? %>
+  <% if @user.reason_for_2sv_exemption.blank? %>
+    <p class="form-group">
+      <%= f.label :role %><br />
+      <%= f.select :role, options_for_select(assignable_user_roles.map(&:humanize).zip(assignable_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
+      <span class="help-block">
+        <strong>Superadmins</strong> can create and edit all user types and edit applications.<br />
+        <strong>Admins</strong> can create and edit normal users.<br />
+        <strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.<br />
+        <strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.
+      </span>
+    </p>
+  <% else %>
+    <p>This user's role is set to <%= @user.role %>. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification.</p>
+  <% end %>
 <% end %>
 
-<% if policy(@user).mandate_2sv? && @user.persisted? %>
+<% if policy(@user).mandate_2sv? %>
   <dl>
     <dt>Account security</dt>
     <dd>
@@ -77,7 +77,7 @@
         <br/>
         User will be prompted to set up 2-step verification again the next time they sign in.</p>
       <% end %>
-      <% if @user.persisted? && policy(@user).exempt_from_two_step_verification? && @user.reason_for_2sv_exemption.nil? %>
+      <% if policy(@user).exempt_from_two_step_verification? && @user.reason_for_2sv_exemption.nil? %>
           <p>
             <%= link_to 'Exempt user from 2-step verification', edit_two_step_verification_exemption_path(@user) %>
             <br/>

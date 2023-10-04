@@ -1,7 +1,11 @@
 # https://raw.github.com/scambra/devise_invitable/master/app/controllers/devise/invitations_controller.rb
 class InvitationsController < Devise::InvitationsController
-  before_action :authenticate_user!
-  after_action :verify_authorized, except: %i[edit update] # rubocop:disable Rails/LexicallyScopedActionFilter
+  before_action :authenticate_inviter!, only: %i[new create resend]
+  after_action :verify_authorized, only: %i[new create resend]
+
+  before_action :redirect_if_invitee_already_exists, only: :create
+  before_action :configure_permitted_parameters, only: :create
+
   layout "admin_layout", only: %i[edit update]
 
   include UserPermissionsControllerMethods
@@ -13,33 +17,36 @@ class InvitationsController < Devise::InvitationsController
   end
 
   def create
-    # Prevent an error when devise_invitable invites/updates an existing user,
-    # and accepts_nested_attributes_for tries to create duplicate permissions.
-    if (self.resource = User.find_by(email: params[:user][:email]))
-      authorize resource
-      flash[:alert] = "User already invited. If you want to, you can click 'Resend signup email'."
-      respond_with resource, location: users_path
+    authorize User
+
+    all_params = invite_params
+    all_params[:require_2sv] = invitee_requires_2sv(all_params)
+
+    self.resource = resource_class.invite!(all_params, current_inviter)
+    if resource.errors.empty?
+      grant_default_permissions(resource)
+      EventLog.record_account_invitation(resource, current_user)
+      set_flash_message :notice, :send_instructions, email: resource.email
+      respond_with resource, location: after_invite_path_for(resource)
     else
-      # workaround for invitatable not providing a build_invitation which could be authorised before saving
-      all_params = resource_params
-      all_params[:require_2sv] = new_user_requires_2sv(all_params.symbolize_keys)
-
-      user = User.new(all_params)
-      user.organisation_id = all_params[:organisation_id]
-      authorize user
-
-      self.resource = resource_class.invite!(all_params, current_inviter)
-      if resource.errors.empty?
-        grant_default_permissions(resource)
-        set_flash_message :notice, :send_instructions, email: resource.email
-        respond_with resource, location: after_invite_path_for(resource)
-      else
-        respond_with_navigational(resource) { render :new }
-      end
-
-      EventLog.record_account_invitation(@user, current_user)
+      respond_with_navigational(resource) { render :new }
     end
   end
+
+  # rubocop:disable Lint/UselessMethodDefinition
+  # Renders app/views/devise/invitations/edit.html.erb
+  def edit
+    super
+  end
+
+  def update
+    super
+  end
+
+  def destroy
+    super
+  end
+  # rubocop:enable Lint/UselessMethodDefinition
 
   def resend
     user = User.find(params[:id])
@@ -52,76 +59,12 @@ class InvitationsController < Devise::InvitationsController
 
 private
 
-  def after_invite_path_for(_resource)
-    if new_user_requires_2sv(resource)
+  def after_invite_path_for(_)
+    if invitee_requires_2sv(resource)
       users_path
     else
       require_2sv_user_path(resource)
     end
-  end
-
-  # TODO: remove this method when we're on a version of devise_invitable which
-  # no longer expects it to exist (v1.2.1 onwards)
-  def build_resource
-    self.resource = resource_class.new(resource_params)
-  end
-
-  def resource_params
-    sanitised_params = UserParameterSanitiser.new(
-      user_params: unsanitised_user_params,
-      current_user_role:,
-    ).sanitise
-
-    if params[:action] == "update"
-      sanitised_params.to_h.merge(invitation_token:)
-    else
-      sanitised_params.to_h
-    end
-  end
-
-  # TODO: once we've upgraded Devise and DeviseInvitable, `resource_params`
-  # hopefully won't be being called for actions like `#new` anymore and we
-  # can change the following `params.fetch(:user)` to
-  # `params.require(:user)`. See
-  # https://github.com/scambra/devise_invitable/blob/v1.1.5/app/controllers/devise/invitations_controller.rb#L10
-  # and
-  # https://github.com/plataformatec/devise/blob/v2.2/app/controllers/devise_controller.rb#L99
-  # for details :)
-  def unsanitised_user_params
-    params.require(:user).permit(
-      :name,
-      :email,
-      :organisation_id,
-      :invitation_token,
-      :password,
-      :password_confirmation,
-      :require_2sv,
-      :role,
-      supported_permission_ids: [],
-    ).to_h
-  end
-
-  # NOTE: `current_user` doesn't exist for `#edit` and `#update` actions as
-  # implemented in our current (out-of-date) versions of Devise
-  # (https://github.com/plataformatec/devise/blob/v2.2/app/controllers/devise_controller.rb#L117)
-  # and DeviseInvitable
-  # (https://github.com/scambra/devise_invitable/blob/v1.1.5/app/controllers/devise/invitations_controller.rb#L5)
-  #
-  # With the old attr_accessible approach, this would fall back to the
-  # default whitelist (i.e. equivalent to the `:normal` role) and this
-  # this preserves that behaviour. In fact, a user accepting an invitation
-  # only needs to modify `password` and `password_confirmation` so we could
-  # only permit those two params for the `edit` and `update` actions.
-  def current_user_role
-    current_user.try(:role).try(:to_sym) || :normal
-  end
-
-  def invitation_token
-    unsanitised_user_params.fetch(:invitation_token, {})
-  end
-
-  def update_resource_params
-    resource_params
   end
 
   def grant_default_permissions(user)
@@ -130,8 +73,25 @@ private
     end
   end
 
-  def new_user_requires_2sv(params)
-    (params[:organisation_id].present? && Organisation.find(params[:organisation_id]).require_2sv?) ||
-      %w[superadmin admin organisation_admin super_organisation_admin].include?(params[:role])
+  def organisation(params)
+    Organisation.find_by(id: params[:organisation_id])
+  end
+
+  def invitee_requires_2sv(params)
+    organisation(params)&.require_2sv? || User.admin_roles.include?(params[:role])
+  end
+
+  def redirect_if_invitee_already_exists
+    if (resource = User.find_by(email: params[:user][:email]))
+      authorize resource
+      flash[:alert] = "User already invited. If you want to, you can click 'Resend signup email'."
+      respond_with resource, location: users_path
+    end
+  end
+
+  def configure_permitted_parameters
+    keys = [:name, :organisation_id, { supported_permission_ids: [] }]
+    keys << :role if policy(User).assign_role?
+    devise_parameter_sanitizer.permit(:invite, keys:)
   end
 end

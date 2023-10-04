@@ -10,9 +10,7 @@ class UserPolicy < BasePolicy
   alias_method :assign_organisations?, :new?
 
   # invitations#create
-  def create?
-    current_user.superadmin? || (current_user.admin? && !record.superadmin?)
-  end
+  alias_method :create?, :new?
 
   def edit?
     return false if current_user == record
