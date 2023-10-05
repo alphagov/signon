@@ -37,6 +37,36 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
     end
   end
 
+  context "given an application with a revoked authorisation" do
+    setup do
+      @user.authorisations.create!(application_id: @application.id, revoked_at: Time.current)
+    end
+
+    should "create a new authorisation to replace the revoked one" do
+      bearer_token = SSOPushCredential.credentials(@application)
+
+      new_authorisation = @user.authorisations.find_by(token: bearer_token)
+      assert_nil new_authorisation.revoked_at
+      assert_equal @application.id, new_authorisation.application_id
+    end
+  end
+
+  context "given an application with an expired authorisation" do
+    setup do
+      travel(-1.day) do
+        @user.authorisations.create!(application_id: @application.id, expires_in: 0)
+      end
+    end
+
+    should "create a new authorisation to replace the expired one" do
+      bearer_token = SSOPushCredential.credentials(@application)
+
+      new_authorisation = @user.authorisations.find_by(token: bearer_token)
+      assert new_authorisation.expires_at > Time.current
+      assert_equal @application.id, new_authorisation.application_id
+    end
+  end
+
   should "create an authorisation if one does not already exist" do
     assert_equal 0, @user.authorisations.count
 
