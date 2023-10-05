@@ -167,7 +167,7 @@ class User < ApplicationRecord
   end
 
   def permission_ids_for(application)
-    application_permissions.where(application_id: application.id).pluck(:supported_permission_id)
+    application_permissions.select { |ap| ap.application_id == application.id }.map(&:supported_permission_id)
   end
 
   def has_access_to?(application)

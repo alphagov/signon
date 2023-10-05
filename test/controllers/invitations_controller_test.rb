@@ -241,6 +241,51 @@ class InvitationsControllerTest < ActionController::TestCase
         assert_not User.exists?(name: "invitee-without-email")
       end
 
+      should "keep name value if there are validation errors" do
+        post :create, params: { user: { name: "invitee" } }
+
+        assert_select "form" do
+          assert_select "input[name='user[name]'][value='invitee']"
+        end
+      end
+
+      should "keep email value if there are validation errors" do
+        post :create, params: { user: { email: "invitee@gov.uk" } }
+
+        assert_select "form" do
+          assert_select "input[name='user[email]'][value='invitee@gov.uk']"
+        end
+      end
+
+      should "keep selected organisation & role if there are validation errors" do
+        post :create, params: { user: { organisation_id: @organisation, role: Roles::Admin.role_name } }
+
+        assert_select "form" do
+          assert_select "select[name='user[organisation_id]']" do
+            assert_select "option[value='#{@organisation.to_param}'][selected]"
+          end
+          assert_select "select[name='user[role]']" do
+            assert_select "option[value='#{Roles::Admin.role_name}'][selected]"
+          end
+        end
+      end
+
+      should "keep selected permissions if there are validation errors" do
+        application = create(:application)
+        signin_permission = application.signin_permission
+        other_permission = create(:supported_permission)
+        selected_permissions = [signin_permission, other_permission]
+
+        post :create, params: { user: { supported_permission_ids: selected_permissions.map(&:to_param) } }
+
+        assert_select "form" do
+          assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{signin_permission.to_param}'][checked]"
+          assert_select "select[name='user[supported_permission_ids][]']" do
+            assert_select "option[value='#{other_permission.to_param}'][selected]"
+          end
+        end
+      end
+
       should "record account invitation in event log when invitation sent" do
         EventLog.expects(:record_account_invitation).with(instance_of(User), @inviter)
 
