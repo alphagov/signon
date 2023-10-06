@@ -16,6 +16,46 @@ class InvitationsControllerTest < ActionController::TestCase
 
         assert_template :new
       end
+
+      should "render form with action pointing at create action" do
+        get :new
+
+        assert_select "form[action='#{user_invitation_path}']"
+      end
+
+      should "render form text inputs for name & email" do
+        get :new
+
+        assert_select "form" do
+          assert_select "input[name='user[name]']"
+          assert_select "input[name='user[email]']"
+        end
+      end
+
+      should "not render form select for role" do
+        get :new
+
+        assert_select "form" do
+          assert_select "select[name='user[role]']", count: 0
+        end
+      end
+
+      should "render form select for organisation" do
+        get :new
+
+        assert_select "form" do
+          assert_select "select[name='user[organisation_id]']"
+        end
+      end
+
+      should "render form checkbox input for signin permission & select for other permissions" do
+        create(:application)
+
+        get :new
+
+        assert_select "input[type='checkbox'][name='user[supported_permission_ids][]']"
+        assert_select "select[name='user[supported_permission_ids][]']"
+      end
     end
 
     context "when inviter is signed in as a superadmin" do
@@ -27,6 +67,14 @@ class InvitationsControllerTest < ActionController::TestCase
         get :new
 
         assert_template :new
+      end
+
+      should "render form select for role" do
+        get :new
+
+        assert_select "form" do
+          assert_select "select[name='user[role]']"
+        end
       end
     end
 
