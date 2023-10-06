@@ -8,13 +8,12 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
 
   context "given an already authorised application" do
     setup do
-      authorisation = @user.authorisations.create!(application_id: @application.id)
-      authorisation.update!(token: "foo")
+      @authorisation = @user.authorisations.create!(application_id: @application.id)
     end
 
     should "return the bearer token for an already-authorized application" do
       bearer_token = SSOPushCredential.credentials(@application)
-      assert_equal "foo", bearer_token
+      assert_equal @authorisation.token, bearer_token
     end
 
     should "create required application permissions if they do not already exist" do
@@ -35,6 +34,36 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
 
       assert_equal 2, @user.application_permissions.count
       assert_same_elements ["user_update_permission", SupportedPermission::SIGNIN_NAME], @user.permissions_for(@application)
+    end
+  end
+
+  context "given an application with a revoked authorisation" do
+    setup do
+      @user.authorisations.create!(application_id: @application.id, revoked_at: Time.current)
+    end
+
+    should "create a new authorisation to replace the revoked one" do
+      bearer_token = SSOPushCredential.credentials(@application)
+
+      new_authorisation = @user.authorisations.find_by(token: bearer_token)
+      assert_nil new_authorisation.revoked_at
+      assert_equal @application.id, new_authorisation.application_id
+    end
+  end
+
+  context "given an application with an expired authorisation" do
+    setup do
+      travel(-1.day) do
+        @user.authorisations.create!(application_id: @application.id, expires_in: 0)
+      end
+    end
+
+    should "create a new authorisation to replace the expired one" do
+      bearer_token = SSOPushCredential.credentials(@application)
+
+      new_authorisation = @user.authorisations.find_by(token: bearer_token)
+      assert new_authorisation.expires_at > Time.current
+      assert_equal @application.id, new_authorisation.application_id
     end
   end
 
