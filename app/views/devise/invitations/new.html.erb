@@ -81,32 +81,22 @@
         } %>
       <% end %>
 
-      <div class="govuk-accordion" data-module="govuk-accordion">
-        <% policy_scope(:user_permission_manageable_application).reject(&:retired?).each_with_index do |application, idx| %>
-        <div class="govuk-accordion__section">
-          <div class="govuk-accordion__section-header">
-            <h2 class="govuk-accordion__section-heading">
-              <span class="govuk-accordion__section-button" id="accordion-heading-<%= idx %>">
-                <%= application.name %>
-              </span>
-            </h2>
-          </div>
-          <div class="govuk-accordion__section-content" aria-labelledby="accordion-heading-<%= idx %>">
-            <%= render "govuk_publishing_components/components/checkboxes", {
+      <%= render "govuk_publishing_components/components/accordion", {
+        items: policy_scope(:user_permission_manageable_application).reject(&:retired?).map do |application|
+          {
+            heading: {
+              text: application.name
+            },
+            content: {
+              html: render("govuk_publishing_components/components/checkboxes", {
                 name: "permissions_for_#{application.id}",
                 heading: "Permissions for #{application.name}",
-                items: permissions_for(application).map do |permission|
-                  { label: formatted_permission_name(application.name, permission.name),
-                    value: permission.id,
-                    id: "user_application_#{application.id}_supported_permission_#{permission.id}",
-                    name: "user[supported_permission_ids][]",
-                    checked: f.object.has_permission?(permission) }
-                end
-                } %>
-          </div>
-        </div>
-        <% end %>
-      </div>
+                items: items_for_permission_checkboxes(application:, user: f.object),
+              })
+            },
+          }
+        end
+      } %>
 
       <div class="govuk-button-group">
         <%= render "govuk_publishing_components/components/button", {

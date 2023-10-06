@@ -73,4 +73,46 @@ class UsersHelperTest < ActionView::TestCase
       assert_equal expected_options, options
     end
   end
+
+  include PermissionsHelper
+  include BatchInvitationPermissionsHelper
+
+  context "#items_for_permission_checkboxes" do
+    should "return permission options suitable for checkboxes component" do
+      application = create(:application)
+      signin_permission = application.signin_permission
+      permission1 = create(:supported_permission, application:)
+      permission2 = create(:supported_permission, application:)
+
+      user = create(:user, supported_permissions: [signin_permission, permission1])
+
+      items = items_for_permission_checkboxes(application:, user:)
+
+      expected_items = [
+        {
+          id: supported_permission_checkbox_id(application, signin_permission),
+          name: "user[supported_permission_ids][]",
+          label: "Has access to #{application.name}?",
+          value: signin_permission.id,
+          checked: true,
+        },
+        {
+          id: supported_permission_checkbox_id(application, permission1),
+          name: "user[supported_permission_ids][]",
+          label: permission1.name,
+          value: permission1.id,
+          checked: true,
+        },
+        {
+          id: supported_permission_checkbox_id(application, permission2),
+          name: "user[supported_permission_ids][]",
+          label: permission2.name,
+          value: permission2.id,
+          checked: false,
+        },
+      ]
+
+      assert_equal expected_items, items
+    end
+  end
 end
