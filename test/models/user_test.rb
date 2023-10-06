@@ -527,22 +527,49 @@ class UserTest < ActiveSupport::TestCase
     setup do
       @app = create(:application)
       @supported_permission = create(:supported_permission, application: @app)
-      @user = create(:user)
     end
 
-    context "when user has the permission" do
+    context "when user is persisted" do
       setup do
-        @user.supported_permissions << @supported_permission
+        @user = create(:user)
       end
 
-      should "return true" do
-        assert @user.has_permission?(@supported_permission)
+      context "when user has the permission" do
+        setup do
+          @user.supported_permissions << @supported_permission
+        end
+
+        should "return true" do
+          assert @user.has_permission?(@supported_permission)
+        end
+      end
+
+      context "when user does not have the permission" do
+        should "return false" do
+          assert_not @user.has_permission?(@supported_permission)
+        end
       end
     end
 
-    context "when user does not have the permission" do
-      should "return false" do
-        assert_not @user.has_permission?(@supported_permission)
+    context "when user is not persisted" do
+      setup do
+        @user = build(:user)
+      end
+
+      context "when user has the permission" do
+        setup do
+          @user.supported_permissions << @supported_permission
+        end
+
+        should "return true" do
+          assert @user.has_permission?(@supported_permission)
+        end
+      end
+
+      context "when user does not have the permission" do
+        should "return false" do
+          assert_not @user.has_permission?(@supported_permission)
+        end
       end
     end
   end

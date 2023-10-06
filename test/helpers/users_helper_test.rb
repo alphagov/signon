@@ -43,4 +43,34 @@ class UsersHelperTest < ActionView::TestCase
       assert_equal "2 users in #{@organisation.name}", filtered_users_heading(@users)
     end
   end
+
+  context "#options_for_role_select" do
+    should "return role options suitable for select component" do
+      roles = [Roles::Admin.role_name, Roles::Normal.role_name]
+      stubs(:assignable_user_roles).returns(roles)
+
+      options = options_for_role_select(selected: Roles::Normal.role_name)
+
+      expected_options = [{ text: "Admin", value: "admin" }, { text: "Normal", value: "normal", selected: true }]
+      assert_equal expected_options, options
+    end
+  end
+
+  context "#options_for_organisation_select" do
+    should "return organisation options suitable for select component" do
+      organisation1 = create(:organisation)
+      organisation2 = create(:organisation)
+      organisations = [organisation1, organisation2]
+      stubs(:policy_scope).with(Organisation).returns(organisations)
+
+      options = options_for_organisation_select(selected: organisation2.id)
+
+      expected_options = [
+        { text: "None", value: nil },
+        { text: organisation1.name, value: organisation1.id },
+        { text: organisation2.name, value: organisation2.id, selected: true },
+      ]
+      assert_equal expected_options, options
+    end
+  end
 end

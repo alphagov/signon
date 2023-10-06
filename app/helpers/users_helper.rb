@@ -56,4 +56,20 @@ module UsersHelper
     anchor_tag = link_to(user.name, edit_user_path(user), class: "govuk-link")
     user.suspended? ? content_tag(:del, anchor_tag) : anchor_tag
   end
+
+  def options_for_role_select(selected: nil)
+    assignable_user_roles.map do |role|
+      { text: role.humanize, value: role }.tap do |option|
+        option[:selected] = true if option[:value] == selected
+      end
+    end
+  end
+
+  def options_for_organisation_select(selected: nil)
+    [{ text: "None", value: nil }] + policy_scope(Organisation).map do |organisation|
+      { text: organisation.name_with_abbreviation, value: organisation.id }.tap do |option|
+        option[:selected] = true if option[:value] == selected
+      end
+    end
+  end
 end

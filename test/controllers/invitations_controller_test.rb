@@ -54,7 +54,6 @@ class InvitationsControllerTest < ActionController::TestCase
         get :new
 
         assert_select "input[type='checkbox'][name='user[supported_permission_ids][]']"
-        assert_select "select[name='user[supported_permission_ids][]']"
       end
     end
 
@@ -328,9 +327,7 @@ class InvitationsControllerTest < ActionController::TestCase
 
         assert_select "form" do
           assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{signin_permission.to_param}'][checked]"
-          assert_select "select[name='user[supported_permission_ids][]']" do
-            assert_select "option[value='#{other_permission.to_param}'][selected]"
-          end
+          assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{other_permission.to_param}'][checked]"
         end
       end
 

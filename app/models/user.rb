@@ -175,7 +175,11 @@ class User < ApplicationRecord
   end
 
   def has_permission?(supported_permission)
-    supported_permissions.exists?(supported_permission.id)
+    if persisted?
+      supported_permissions.exists?(supported_permission.id)
+    else
+      supported_permissions.any? { |sp| sp.id == supported_permission.id }
+    end
   end
 
   def permissions_synced!(application)
