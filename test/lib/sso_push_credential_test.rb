@@ -8,13 +8,12 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
 
   context "given an already authorised application" do
     setup do
-      authorisation = @user.authorisations.create!(application_id: @application.id)
-      authorisation.update!(token: "foo")
+      @authorisation = @user.authorisations.create!(application_id: @application.id)
     end
 
     should "return the bearer token for an already-authorized application" do
       bearer_token = SSOPushCredential.credentials(@application)
-      assert_equal "foo", bearer_token
+      assert_equal @authorisation.token, bearer_token
     end
 
     should "create required application permissions if they do not already exist" do
