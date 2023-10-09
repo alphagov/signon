@@ -74,8 +74,6 @@ class UsersHelperTest < ActionView::TestCase
     end
   end
 
-  include BatchInvitationPermissionsHelper
-
   context "#items_for_permission_checkboxes" do
     should "return permission options suitable for checkboxes component" do
       application = create(:application)
@@ -112,6 +110,16 @@ class UsersHelperTest < ActionView::TestCase
       ]
 
       assert_equal expected_items, items
+    end
+  end
+
+  context "#formatted_permission_name" do
+    should "return the permission name if permission is not the signin permission" do
+      assert_equal "Editor", formatted_permission_name("Whitehall", "Editor")
+    end
+
+    should "include the application name if permission is the signin permission" do
+      assert_equal "Has access to Whitehall?", formatted_permission_name("Whitehall", SupportedPermission::SIGNIN_NAME)
     end
   end
 end
