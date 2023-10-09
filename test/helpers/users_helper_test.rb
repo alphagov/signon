@@ -43,4 +43,83 @@ class UsersHelperTest < ActionView::TestCase
       assert_equal "2 users in #{@organisation.name}", filtered_users_heading(@users)
     end
   end
+
+  context "#options_for_role_select" do
+    should "return role options suitable for select component" do
+      roles = [Roles::Admin.role_name, Roles::Normal.role_name]
+      stubs(:assignable_user_roles).returns(roles)
+
+      options = options_for_role_select(selected: Roles::Normal.role_name)
+
+      expected_options = [{ text: "Admin", value: "admin" }, { text: "Normal", value: "normal", selected: true }]
+      assert_equal expected_options, options
+    end
+  end
+
+  context "#options_for_organisation_select" do
+    should "return organisation options suitable for select component" do
+      organisation1 = create(:organisation)
+      organisation2 = create(:organisation)
+      organisations = [organisation1, organisation2]
+      stubs(:policy_scope).with(Organisation).returns(organisations)
+
+      options = options_for_organisation_select(selected: organisation2.id)
+
+      expected_options = [
+        { text: "None", value: nil },
+        { text: organisation1.name, value: organisation1.id },
+        { text: organisation2.name, value: organisation2.id, selected: true },
+      ]
+      assert_equal expected_options, options
+    end
+  end
+
+  context "#items_for_permission_checkboxes" do
+    should "return permission options suitable for checkboxes component" do
+      application = create(:application)
+      signin_permission = application.signin_permission
+      permission1 = create(:supported_permission, application:)
+      permission2 = create(:supported_permission, application:)
+
+      user = create(:user, supported_permissions: [signin_permission, permission1])
+
+      items = items_for_permission_checkboxes(application:, user:)
+
+      expected_items = [
+        {
+          id: supported_permission_checkbox_id(application, signin_permission),
+          name: "user[supported_permission_ids][]",
+          label: "Has access to #{application.name}?",
+          value: signin_permission.id,
+          checked: true,
+        },
+        {
+          id: supported_permission_checkbox_id(application, permission1),
+          name: "user[supported_permission_ids][]",
+          label: permission1.name,
+          value: permission1.id,
+          checked: true,
+        },
+        {
+          id: supported_permission_checkbox_id(application, permission2),
+          name: "user[supported_permission_ids][]",
+          label: permission2.name,
+          value: permission2.id,
+          checked: false,
+        },
+      ]
+
+      assert_equal expected_items, items
+    end
+  end
+
+  context "#formatted_permission_name" do
+    should "return the permission name if permission is not the signin permission" do
+      assert_equal "Editor", formatted_permission_name("Whitehall", "Editor")
+    end
+
+    should "include the application name if permission is the signin permission" do
+      assert_equal "Has access to Whitehall?", formatted_permission_name("Whitehall", SupportedPermission::SIGNIN_NAME)
+    end
+  end
 end

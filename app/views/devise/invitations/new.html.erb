@@ -1,40 +1,117 @@
 <% content_for :title, "Create new user" %>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Home",
+         url: root_path,
+       },
+       {
+         title: "Users",
+         url: users_path,
+       },
+       {
+         title: "Create new user",
+       }
+     ]
+   })
+%>
 
-<h1>Create new user</h1>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :post } do |f| %>
+      <% if f.object.errors.any? %>
+        <%= render "govuk_publishing_components/components/error_summary", {
+          id: "error-summary",
+          title: "There was a problem with your new user",
+          items: f.object.errors.map do |error|
+            {
+              text: error.full_message,
+              href: "#user_#{error.attribute}",
+            }
+          end
+        } %>
+      <% end %>
 
-<%= form_for resource, :as => resource_name, :url => invitation_path(resource_name), :html => {:method => :post, :class => 'well'} do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
+      <%= render "govuk_publishing_components/components/input", {
+        label: { text: "Name" },
+        name: "user[name]",
+        id: "user_name",
+        error_items: f.object.errors.full_messages_for(:name).map { |message| { text: message } },
+        value: f.object.name,
+        autocomplete: "off",
+      } %>
 
-  <p class="form-group">
-    <%= f.label :name %>
-    <%= f.text_field :name, autofocus: true, autocomplete: "off", class: 'form-control input-md-6 ' %>
-  </p>
+      <%= render "govuk_publishing_components/components/input", {
+        label: { text: "Email" },
+        name: "user[email]",
+        id: "user_email",
+        error_items: f.object.errors.full_messages_for(:email).map { |message| { text: message } },
+        value: f.object.email,
+        autocomplete: "off",
+      } %>
 
-  <p class="form-group">
-    <%= f.label :email %>
-    <%= f.text_field :email, autocomplete: "off", class: 'form-control input-md-6 add-label-margin' %>
-  </p>
+      <%= render "govuk_publishing_components/components/select", {
+        id: "user_organisation_id",
+        name: "user[organisation_id]",
+        label: "Organisation",
+        options: options_for_organisation_select(selected: f.object.organisation_id)
+      } %>
 
-  <% if policy(User).assign_role? %>
-    <p class="form-group">
-      <%= f.label :role %><br />
-      <%= f.select :role, options_for_select(assignable_user_roles.map(&:humanize).zip(assignable_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
-      <span class="help-block">
-        <strong>Superadmins</strong> can create and edit all user types and edit applications.<br />
-        <strong>Admins</strong> can create and edit normal users.<br />
-        <strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.<br />
-        <strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.
-      </span>
-    </p>
-  <% end %>
+      <% if policy(User).assign_role? %>
+        <% role_hint = capture do %>
+          <%= render "govuk_publishing_components/components/list", {
+            visible_counters: true,
+            items: [
+              "<strong>Superadmins</strong> can create and edit all user types and edit applications.",
+              "<strong>Admins</strong> can create and edit normal users.",
+              "<strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.",
+              "<strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.",
+            ]
+          } %>
+        <% end %>
 
-  <p class="form-group">
-    <%= f.label :organisation_id, "Organisation" %><br />
-    <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control", 'data-module' => 'chosen' } %>
-  </p>
+        <%= render "govuk_publishing_components/components/select", {
+          id: "user_role",
+          name: "user[role]",
+          label: "Role",
+          hint: role_hint,
+          options: options_for_role_select(selected: f.object.role),
+        } %>
+      <% end %>
 
-  <h2 class="add-vertical-margins">Permissions</h2>
-  <%= render partial: "shared/user_permissions", locals: { user_object: f.object }%>
+      <%= render "govuk_publishing_components/components/fieldset", {
+        legend_text: "Permissions",
+        heading_size: "l",
+      } do %>
 
-  <%= f.submit "Create user and send email", :class => 'btn btn-success' %>
-<% end %>
+        <%= render "govuk_publishing_components/components/accordion", {
+          items: policy_scope(:user_permission_manageable_application).reject(&:retired?).map do |application|
+            {
+              heading: {
+                text: application.name
+              },
+              content: {
+                html: render("govuk_publishing_components/components/checkboxes", {
+                  name: "permissions_for_#{application.id}",
+                  heading: "Permissions for #{application.name}",
+                  items: items_for_permission_checkboxes(application:, user: f.object),
+                })
+              },
+            }
+          end
+        } %>
+
+      <% end %>
+
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Create user and send email",
+        } %>
+
+        <%= link_to "Cancel", users_path, class: "govuk-link govuk-link--no-visited-state" %>
+      </div>
+    <% end %>
+  </div>
+</div>

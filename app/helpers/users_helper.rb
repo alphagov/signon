@@ -56,4 +56,44 @@ module UsersHelper
     anchor_tag = link_to(user.name, edit_user_path(user), class: "govuk-link")
     user.suspended? ? content_tag(:del, anchor_tag) : anchor_tag
   end
+
+  def options_for_role_select(selected: nil)
+    assignable_user_roles.map do |role|
+      { text: role.humanize, value: role }.tap do |option|
+        option[:selected] = true if option[:value] == selected
+      end
+    end
+  end
+
+  def options_for_organisation_select(selected: nil)
+    [{ text: "None", value: nil }] + policy_scope(Organisation).map do |organisation|
+      { text: organisation.name_with_abbreviation, value: organisation.id }.tap do |option|
+        option[:selected] = true if option[:value] == selected
+      end
+    end
+  end
+
+  def items_for_permission_checkboxes(application:, user: nil)
+    application.sorted_supported_permissions_grantable_from_ui.map do |permission|
+      {
+        id: supported_permission_checkbox_id(application, permission),
+        name: "user[supported_permission_ids][]",
+        label: formatted_permission_name(application.name, permission.name),
+        value: permission.id,
+        checked: user&.has_permission?(permission),
+      }
+    end
+  end
+
+  def supported_permission_checkbox_id(application, permission)
+    "user_application_#{application.id}_supported_permission_#{permission.id}"
+  end
+
+  def formatted_permission_name(application_name, permission_name)
+    if permission_name == SupportedPermission::SIGNIN_NAME
+      "Has access to #{application_name}?"
+    else
+      permission_name
+    end
+  end
 end

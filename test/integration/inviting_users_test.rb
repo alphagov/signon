@@ -151,10 +151,14 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       fill_in "Name", with: "Alicia Smith"
       fill_in "Email", with: "alicia@example.com"
 
-      uncheck "Has access to #{application_one.name}?"
-      check "Has access to #{application_two.name}?"
-      select "editor", from: "Permissions for #{application_one.name}"
-      unselect "gds-admin", from: "Permissions for #{application_two.name}"
+      within_fieldset "Permissions for #{application_one.name}" do
+        uncheck "Has access to #{application_one.name}?"
+        check "editor", allow_label_click: true
+      end
+      within_fieldset "Permissions for #{application_two.name}" do
+        check "Has access to #{application_two.name}?"
+        uncheck "gds-admin", allow_label_click: true
+      end
 
       click_button "Create user and send email"
 
@@ -318,10 +322,14 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       fill_in "Name", with: "Alicia Smith"
       fill_in "Email", with: "alicia@example.com"
 
-      uncheck "Has access to #{application_one.name}?"
-      check "Has access to #{application_two.name}?"
-      select "editor", from: "Permissions for #{application_one.name}"
-      unselect "gds-admin", from: "Permissions for #{application_two.name}"
+      within_fieldset "Permissions for #{application_one.name}" do
+        uncheck "Has access to #{application_one.name}?"
+        check "editor"
+      end
+      within_fieldset "Permissions for #{application_two.name}" do
+        check "Has access to #{application_two.name}?"
+        uncheck "gds-admin"
+      end
 
       click_button "Create user and send email"
 

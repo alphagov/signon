@@ -1,6 +1,4 @@
 class Account::PermissionsController < ApplicationController
-  include PermissionsHelper
-
   layout "admin_layout"
 
   before_action :authenticate_user!
@@ -10,6 +8,8 @@ class Account::PermissionsController < ApplicationController
 
     authorize [:account, @application], :view_permissions?
 
-    @permissions = permissions_for(@application).sort_by { |permission| current_user.has_permission?(permission) ? 0 : 1 }
+    @permissions = @application
+      .sorted_supported_permissions_grantable_from_ui
+      .sort_by { |permission| current_user.has_permission?(permission) ? 0 : 1 }
   end
 end
