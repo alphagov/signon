@@ -74,7 +74,6 @@ class UsersHelperTest < ActionView::TestCase
     end
   end
 
-  include PermissionsHelper
   include BatchInvitationPermissionsHelper
 
   context "#items_for_permission_checkboxes" do
