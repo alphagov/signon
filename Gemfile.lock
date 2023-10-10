@@ -108,7 +108,6 @@ GEM
     capybara-email (3.0.2)
       capybara (>= 2.4, < 4.0)
       mail
-    childprocess (4.1.0)
     chronic (0.10.2)
     chunky_png (1.4.0)
     climate_control (1.2.0)
@@ -633,8 +632,7 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    selenium-webdriver (4.4.0)
-      childprocess (>= 0.5, < 5.0)
+    selenium-webdriver (4.14.0)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
