@@ -5,6 +5,7 @@ class RoleOrganisationsHelperTest < ActionView::TestCase
     setup do
       @user_organisation = create(:organisation, name: "User Organisation", abbreviation: "UO")
       @other_organisation = create(:organisation, name: "Other Organisation")
+      @closed_organisation = create(:organisation, name: "Closed Organisation", closed: true)
       @user = create(:admin_user, organisation: @user_organisation)
     end
 
@@ -31,6 +32,12 @@ class RoleOrganisationsHelperTest < ActionView::TestCase
       options = options_for_your_organisation_select(@user)
 
       assert_equal ["Other Organisation", "User Organisation – UO"], (options.map { |o| o[:text] })
+    end
+
+    should "not include closed organisations" do
+      closed_organisation_option = options_for_your_organisation_select(@user).detect { |o| o[:value] == @closed_organisation.id }
+
+      assert_not closed_organisation_option
     end
   end
 end
