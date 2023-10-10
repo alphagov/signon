@@ -47,6 +47,7 @@
       <th>Token (hidden)</th>
       <th>Generated</th>
       <th>Expires</th>
+      <th>State</th>
       <th>Action</th>
     </tr>
   </thead>
@@ -60,6 +61,13 @@
         </td>
         <td>
           <%= authorisation.expires_at.to_date.to_fs(:govuk_date) %>
+        </td>
+        <td>
+          <% if authorisation.expired? %>
+            <span class="label label-danger">Expired</span>
+          <% else %>
+            <span class="label label-success">Valid</span>
+          <% end %>
         </td>
         <td>
           <div class="btn-group">
