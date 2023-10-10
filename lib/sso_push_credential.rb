@@ -10,6 +10,7 @@ class SSOPushCredential
 
       user.authorisations
         .not_expired
+        .expires_after(4.weeks.from_now)
         .create_with(expires_in: 10.years)
         .find_or_create_by!(application_id: application.id).token
     end

@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
   end
 
   def application_making_request
-    @_application_making_request ||= ::Doorkeeper::Application.find(doorkeeper_token.application_id) if doorkeeper_token
+    @_application_making_request ||= Doorkeeper::Application.find(doorkeeper_token.application_id) if doorkeeper_token
   end
 
 private

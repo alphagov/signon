@@ -192,7 +192,7 @@ class User < ApplicationRecord
   alias_method :applications_used, :authorised_applications
 
   def revoke_all_authorisations
-    authorisations.where(revoked_at: nil).find_each(&:revoke)
+    authorisations.not_revoked.find_each(&:revoke)
   end
 
   def grant_application_signin_permission(application)

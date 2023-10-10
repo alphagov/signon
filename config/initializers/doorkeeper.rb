@@ -74,7 +74,7 @@ Doorkeeper.configure do
   # Use a custom class for generating the access token.
   # See https://doorkeeper.gitbook.io/guides/configuration/other-configurations#custom-access-token-generator
   #
-  # access_token_generator '::Doorkeeper::JWT'
+  # access_token_generator 'Doorkeeper::JWT'
 
   # The controller +Doorkeeper::ApplicationController+ inherits from.
   # Defaults to +ActionController::Base+ unless +api_only+ is set, which changes the default to
@@ -119,7 +119,7 @@ Doorkeeper.configure do
   # If you wish to use another hashing implementation, you can override
   # this strategy as follows:
   #
-  # hash_token_secrets using: '::Doorkeeper::Hashing::MyCustomHashImpl'
+  # hash_token_secrets using: 'Doorkeeper::Hashing::MyCustomHashImpl'
   #
   # Keep in mind that changing the hashing function will invalidate all existing
   # secrets, if there are any.
@@ -134,7 +134,7 @@ Doorkeeper.configure do
   # If you wish to use bcrypt for application secret hashing, uncomment
   # this line instead:
   #
-  # hash_application_secrets using: '::Doorkeeper::SecretStoring::BCrypt'
+  # hash_application_secrets using: 'Doorkeeper::SecretStoring::BCrypt'
 
   # When the above option is enabled, and a hashed token or secret is not found,
   # you can allow to fall back to another strategy. For users upgrading

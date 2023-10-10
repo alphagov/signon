@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
+class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
   should "have a signin supported permission on create" do
     assert_not_nil create(:application).signin_permission
   end
@@ -240,6 +240,17 @@ class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       should "include applications the user doesn't have any permissions for" do
         assert_equal [@app], Doorkeeper::Application.without_signin_permission_for(@user)
       end
+    end
+  end
+
+  context ".ordered_by_name" do
+    should "return applications ordered by name" do
+      application_named_foo = create(:application, name: "Foo")
+      application_named_bar = create(:application, name: "Bar")
+
+      applications = Doorkeeper::Application.ordered_by_name
+
+      assert_equal [application_named_bar, application_named_foo], applications
     end
   end
 end

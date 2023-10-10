@@ -8,7 +8,7 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
 
   context "given an already authorised application" do
     setup do
-      @authorisation = @user.authorisations.create!(application_id: @application.id)
+      @authorisation = @user.authorisations.create!(application_id: @application.id, expires_in: 5.weeks)
     end
 
     should "return the bearer token for an already-authorized application" do
@@ -34,6 +34,20 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
 
       assert_equal 2, @user.application_permissions.count
       assert_same_elements ["user_update_permission", SupportedPermission::SIGNIN_NAME], @user.permissions_for(@application)
+    end
+  end
+
+  context "given an application with an authorisation close to expiry" do
+    setup do
+      @user.authorisations.create!(application_id: @application.id, expires_in: 4.weeks)
+    end
+
+    should "create a new authorisation to replace the expired one" do
+      bearer_token = SSOPushCredential.credentials(@application)
+
+      new_authorisation = @user.authorisations.find_by(token: bearer_token)
+      assert new_authorisation.expires_at > 4.weeks.from_now
+      assert_equal @application.id, new_authorisation.application_id
     end
   end
 
