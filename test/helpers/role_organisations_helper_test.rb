@@ -26,5 +26,11 @@ class RoleOrganisationsHelperTest < ActionView::TestCase
 
       assert_equal expected_options, options
     end
+
+    should "sort by organisation name alphabetically" do
+      options = options_for_your_organisation_select(@user)
+
+      assert_equal ["Other Organisation", "User Organisation – UO"], (options.map { |o| o[:text] })
+    end
   end
 end
