@@ -98,7 +98,7 @@ def deverise_uri(uri)
 end
 
 puts "Updating SSO config so that it works in development..."
-applications = ::Doorkeeper::Application.where(retired: false)
+applications = Doorkeeper::Application.where(retired: false)
 applications.each do |application|
   local_config = values_for_app(application)
   if local_config.present?

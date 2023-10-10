@@ -14,7 +14,7 @@ class SuperAdminApplicationEditTest < ActionDispatch::IntegrationTest
 
       # normal user who's authorised to use app
       @user = create(:user)
-      ::Doorkeeper::AccessToken.create!(resource_owner_id: @user.id, application_id: @application.id, token: "1234")
+      Doorkeeper::AccessToken.create!(resource_owner_id: @user.id, application_id: @application.id, token: "1234")
     end
 
     should "be able to enable push updates to applications" do

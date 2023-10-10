@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ::Doorkeeper::ApplicationTest < ActiveSupport::TestCase
+class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
   should "have a signin supported permission on create" do
     assert_not_nil create(:application).signin_permission
   end

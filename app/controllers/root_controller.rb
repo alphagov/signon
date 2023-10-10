@@ -6,13 +6,13 @@ class RootController < ApplicationController
   skip_after_action :verify_authorized
 
   def index
-    applications = ::Doorkeeper::Application.where(show_on_dashboard: true).can_signin(current_user)
+    applications = Doorkeeper::Application.where(show_on_dashboard: true).can_signin(current_user)
 
     @applications_and_permissions = zip_permissions(applications, current_user)
   end
 
   def signin_required
-    @application = ::Doorkeeper::Application.find_by(id: session.delete(:signin_missing_for_application))
+    @application = Doorkeeper::Application.find_by(id: session.delete(:signin_missing_for_application))
   end
 
   def privacy_notice; end

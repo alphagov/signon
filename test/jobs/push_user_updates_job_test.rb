@@ -12,7 +12,7 @@ class PushUserUpdatesJobTest < ActiveSupport::TestCase
       foo_app, _bar_app = *create_list(:application, 2)
 
       # authenticate access
-      ::Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: foo_app.id, token: "1234")
+      Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: foo_app.id, token: "1234")
 
       assert_enqueued_with(job: TestJob, args: [user.uid, foo_app.id]) do
         TestJob.perform_on(user)

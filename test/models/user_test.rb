@@ -1110,7 +1110,7 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def authenticate_access(user, app)
-    ::Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
+    Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end
 
   def assert_user_has_permissions(expected_permissions, application, user)
