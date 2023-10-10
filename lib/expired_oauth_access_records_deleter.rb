@@ -8,8 +8,6 @@ class ExpiredOauthAccessRecordsDeleter
     access_token: EventLog::ACCESS_TOKENS_DELETED,
   }.freeze
 
-  HAS_EXPIRED = "expires_in is not null AND DATE_ADD(created_at, INTERVAL expires_in second) < ?".freeze
-
   def initialize(record_type:)
     @record_class = CLASSES.fetch(record_type)
     @event = EVENTS.fetch(record_type)
@@ -19,7 +17,7 @@ class ExpiredOauthAccessRecordsDeleter
   attr_reader :record_class, :total_deleted
 
   def delete_expired
-    @record_class.where(HAS_EXPIRED, Time.zone.now).in_batches do |relation|
+    @record_class.expired.in_batches do |relation|
       records_by_user_id = relation.includes(:application).group_by(&:resource_owner_id)
       all_users = User.where(id: records_by_user_id.keys)
 

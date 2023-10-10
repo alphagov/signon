@@ -25,6 +25,18 @@ class Doorkeeper::AccessTokenTest < ActiveSupport::TestCase
     end
   end
 
+  context ".expired" do
+    should "return tokens that have expired" do
+      token_expiring_1_day_ago = create(:access_token, expires_in: -1.day)
+      token_expiring_in_1_day = create(:access_token, expires_in: 1.day)
+
+      tokens = Doorkeeper::AccessToken.expired
+
+      assert_includes tokens, token_expiring_1_day_ago
+      assert_not_includes tokens, token_expiring_in_1_day
+    end
+  end
+
   context ".ordered_by_expires_at" do
     should "return tokens ordered by expiry time" do
       token_expiring_in_2_weeks = create(:access_token, expires_in: 2.weeks)
