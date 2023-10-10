@@ -78,8 +78,8 @@ class UsersHelperTest < ActionView::TestCase
     should "return permission options suitable for checkboxes component" do
       application = create(:application)
       signin_permission = application.signin_permission
-      permission1 = create(:supported_permission, application:)
-      permission2 = create(:supported_permission, application:)
+      permission1 = create(:supported_permission, application:, name: "permission1")
+      permission2 = create(:supported_permission, application:, name: "permission2")
 
       user = create(:user, supported_permissions: [signin_permission, permission1])
 
@@ -96,14 +96,14 @@ class UsersHelperTest < ActionView::TestCase
         {
           id: supported_permission_checkbox_id(application, permission1),
           name: "user[supported_permission_ids][]",
-          label: permission1.name,
+          label: "permission1",
           value: permission1.id,
           checked: true,
         },
         {
           id: supported_permission_checkbox_id(application, permission2),
           name: "user[supported_permission_ids][]",
-          label: permission2.name,
+          label: "permission2",
           value: permission2.id,
           checked: false,
         },
