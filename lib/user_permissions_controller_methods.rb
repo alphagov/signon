@@ -5,7 +5,7 @@ private
     if user.api_user?
       applications = ::Doorkeeper::Application.includes(:supported_permissions)
       if current_user.superadmin?
-        api_user_authorised_apps = user.authorisations.where(revoked_at: nil).pluck(:application_id)
+        api_user_authorised_apps = user.authorisations.not_revoked.pluck(:application_id)
         applications.where(id: api_user_authorised_apps)
       else
         applications.none

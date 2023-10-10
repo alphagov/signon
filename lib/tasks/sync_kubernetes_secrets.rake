@@ -10,7 +10,7 @@ namespace :kubernetes do
     missing_users = emails - api_users.map(&:email)
 
     api_users.each do |api_user|
-      api_user.authorisations.where(revoked_at: nil).each do |token|
+      api_user.authorisations.not_revoked.each do |token|
         name = "signon-token-#{api_user.name}-#{token.application.name}".parameterize
         data = { bearer_token: token.token }
 
