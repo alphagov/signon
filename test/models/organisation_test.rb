@@ -23,6 +23,12 @@ class OrganisationTest < ActiveSupport::TestCase
     assert_equal "An organisation", organisation.name
   end
 
+  test "#not_closed" do
+    create(:organisation, closed: true)
+
+    assert_equal [@organisation], Organisation.not_closed.to_a
+  end
+
   context "displaying name with abbreviation" do
     should "use abbreviation when it is not the same as name" do
       organisation = build(:organisation, name: "An Organisation", abbreviation: "ABBR")

@@ -60,7 +60,7 @@
               id: "user_organisation_id",
               name: "user[organisation_id]",
               label: "Organisation",
-              options: policy_scope(Organisation).map { |organisation| { text: organisation.name_with_abbreviation, value: organisation.id, selected: current_user.organisation == organisation } }
+              options: options_for_your_organisation_select(current_user)
               } %>
           <%= render "govuk_publishing_components/components/button", {
             text: "Change organisation"
