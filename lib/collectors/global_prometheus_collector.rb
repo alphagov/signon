@@ -25,7 +25,7 @@ module Collectors
     def token_expiry_info
       # Cache metric to prevent needless expensive calls to the database
       Rails.cache.fetch("token_expiry_info", expires_in: 1.hour) do
-        ApiUser.where.not(email: SSOPushCredential::USER_EMAIL).flat_map do |user|
+        ApiUser.all.flat_map do |user|
           user.authorisations.not_revoked.map do |token|
             {
               expires_at: token.expires_at.to_i,
