@@ -5,7 +5,8 @@ class ::Doorkeeper::Application < ActiveRecord::Base
   # rubocop:enable Rails/ApplicationRecord
   has_many :supported_permissions, dependent: :destroy
 
-  default_scope { order("oauth_applications.name") }
+  default_scope { ordered_by_name }
+  scope :ordered_by_name, -> { order("oauth_applications.name") }
   scope :support_push_updates, -> { where(supports_push_updates: true) }
   scope :not_retired, -> { where(retired: false) }
   scope :can_signin,

@@ -51,7 +51,7 @@
     </tr>
   </thead>
   <tbody>
-    <% @api_user.authorisations.not_revoked.each do |authorisation| %>
+    <% @api_user.authorisations.not_revoked.ordered_by_application_name.ordered_by_expires_at.each do |authorisation| %>
       <tr>
         <td><%= authorisation.application.name %></td>
         <td><code><%= truncate_access_token(authorisation.token) %></code></td>

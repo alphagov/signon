@@ -24,4 +24,29 @@ class Doorkeeper::AccessTokenTest < ActiveSupport::TestCase
       assert_includes tokens, token_expiring_in_3_weeks
     end
   end
+
+  context ".ordered_by_expires_at" do
+    should "return tokens ordered by expiry time" do
+      token_expiring_in_2_weeks = create(:access_token, expires_in: 2.weeks)
+      token_expiring_in_1_week = create(:access_token, expires_in: 1.week)
+
+      tokens = Doorkeeper::AccessToken.ordered_by_expires_at
+
+      assert_equal [token_expiring_in_1_week, token_expiring_in_2_weeks], tokens
+    end
+  end
+
+  context ".ordered_by_application_name" do
+    should "return tokens ordered by application name" do
+      application_named_foo = create(:application, name: "Foo")
+      application_named_bar = create(:application, name: "Bar")
+
+      token_for_foo = create(:access_token, application: application_named_foo)
+      token_for_bar = create(:access_token, application: application_named_bar)
+
+      tokens = Doorkeeper::AccessToken.ordered_by_application_name
+
+      assert_equal [token_for_bar, token_for_foo], tokens
+    end
+  end
 end
