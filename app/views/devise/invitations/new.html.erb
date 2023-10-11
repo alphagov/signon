@@ -86,22 +86,17 @@
         heading_size: "l",
       } do %>
 
-        <%= render "govuk_publishing_components/components/accordion", {
-          items: policy_scope(:user_permission_manageable_application).reject(&:retired?).map do |application|
-            {
-              heading: {
-                text: application.name
-              },
-              content: {
-                html: render("govuk_publishing_components/components/checkboxes", {
-                  name: "permissions_for_#{application.id}",
-                  heading: "Permissions for #{application.name}",
-                  items: items_for_permission_checkboxes(application:, user: f.object),
-                })
-              },
-            }
-          end
-        } %>
+        <% policy_scope(:user_permission_manageable_application).reject(&:retired?).map do |application| %>
+          <% options = options_for_permission_option_select(application:, user: f.object) %>
+          <%= render("govuk_publishing_components/components/option_select", {
+            title: application.name,
+            key: "user[supported_permission_ids]",
+            options_container_id: "user_application_#{application.id}_supported_permissions",
+            show_filter: options.length > 4,
+            closed_on_load: options.none? { |o| o[:checked] },
+            options: with_checked_options_at_top(options),
+          }) %>
+        <% end %>
 
       <% end %>
 

@@ -4,10 +4,6 @@ class UsersFilter
 
   attr_reader :options
 
-  def self.with_checked_at_top(options)
-    options.sort_by { |o| o[:checked] ? 0 : 1 }
-  end
-
   def initialize(users, current_user, options = {})
     @users = users
     @current_user = current_user

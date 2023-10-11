@@ -25,4 +25,24 @@ class ApplicationHelperTest < ActionView::TestCase
     self.request = ActionDispatch::Request.new(Rack::MockRequest.env_for("/secret-squirrel?invitation_token=w1&reset_password_token=d1&sharing=ok"))
     assert_equal "/secret-squirrel?sharing=ok", sanitised_fullpath
   end
+
+  context "#with_checked_options_at_top" do
+    should "put all checked options before all unchecked options" do
+      options = [
+        { label: "A", checked: false },
+        { label: "B", checked: true },
+        { label: "C", checked: false },
+        { label: "D", checked: true },
+      ]
+
+      expected_options = [
+        { label: "B", checked: true },
+        { label: "D", checked: true },
+        { label: "A", checked: false },
+        { label: "C", checked: false },
+      ]
+
+      assert_equal expected_options, with_checked_options_at_top(options)
+    end
+  end
 end

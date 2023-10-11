@@ -75,20 +75,14 @@ module UsersHelper
     end
   end
 
-  def items_for_permission_checkboxes(application:, user: nil)
+  def options_for_permission_option_select(application:, user: nil)
     application.sorted_supported_permissions_grantable_from_ui.map do |permission|
       {
-        id: supported_permission_checkbox_id(application, permission),
-        name: "user[supported_permission_ids][]",
         label: formatted_permission_name(application.name, permission.name),
         value: permission.id,
         checked: user&.has_permission?(permission),
       }
     end
-  end
-
-  def supported_permission_checkbox_id(application, permission)
-    "user_application_#{application.id}_supported_permission_#{permission.id}"
   end
 
   def formatted_permission_name(application_name, permission_name)

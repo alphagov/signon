@@ -48,7 +48,7 @@
         options_container_id: "organisations_filter",
         show_filter: true,
         closed_on_load: @filter.no_options_selected_for?(:organisations),
-        options: UsersFilter.with_checked_at_top(
+        options: with_checked_options_at_top(
           @filter.organisation_option_select_options(aria_controls_id: filtered_users_id)
         ),
       } %>
@@ -60,7 +60,7 @@
       options_container_id: "permissions_filter",
       show_filter: true,
       closed_on_load: @filter.no_options_selected_for?(:permissions),
-      options: UsersFilter.with_checked_at_top(
+      options: with_checked_options_at_top(
         @filter.permission_option_select_options(aria_controls_id: filtered_users_id)
       ),
     } %>

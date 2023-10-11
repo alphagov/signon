@@ -5,26 +5,6 @@ class UsersFilterTest < ActiveSupport::TestCase
     @current_user = User.new
   end
 
-  context ".with_checked_at_top" do
-    should "put all checked options before all unchecked options" do
-      options = [
-        { label: "A", checked: false },
-        { label: "B", checked: true },
-        { label: "C", checked: false },
-        { label: "D", checked: true },
-      ]
-
-      expected_options = [
-        { label: "B", checked: true },
-        { label: "D", checked: true },
-        { label: "A", checked: false },
-        { label: "C", checked: false },
-      ]
-
-      assert_equal expected_options, UsersFilter.with_checked_at_top(options)
-    end
-  end
-
   should "return all users in alphabetical name order" do
     create(:user, name: "beta")
     create(:user, name: "alpha")

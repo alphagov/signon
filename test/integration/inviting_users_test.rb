@@ -151,11 +151,11 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       fill_in "Name", with: "Alicia Smith"
       fill_in "Email", with: "alicia@example.com"
 
-      within_fieldset "Permissions for #{application_one.name}" do
+      within_fieldset application_one.name do
         uncheck "Has access to #{application_one.name}?"
         check "editor", allow_label_click: true
       end
-      within_fieldset "Permissions for #{application_two.name}" do
+      within_fieldset application_two.name do
         check "Has access to #{application_two.name}?"
         uncheck "gds-admin", allow_label_click: true
       end
@@ -322,11 +322,11 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       fill_in "Name", with: "Alicia Smith"
       fill_in "Email", with: "alicia@example.com"
 
-      within_fieldset "Permissions for #{application_one.name}" do
+      within_fieldset application_one.name do
         uncheck "Has access to #{application_one.name}?"
         check "editor"
       end
-      within_fieldset "Permissions for #{application_two.name}" do
+      within_fieldset application_two.name do
         check "Has access to #{application_two.name}?"
         uncheck "gds-admin"
       end

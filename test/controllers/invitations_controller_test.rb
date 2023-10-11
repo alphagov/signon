@@ -48,12 +48,29 @@ class InvitationsControllerTest < ActionController::TestCase
         end
       end
 
-      should "render form checkbox input for signin permission & select for other permissions" do
-        create(:application)
+      should "render form checkbox inputs for permissions" do
+        application = create(:application)
+        signin_permission = application.signin_permission
+        other_permission = create(:supported_permission)
 
         get :new
 
-        assert_select "input[type='checkbox'][name='user[supported_permission_ids][]']"
+        assert_select "form" do
+          assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{signin_permission.to_param}']"
+          assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{other_permission.to_param}']"
+        end
+      end
+
+      should "render filter for option-select component when app has more than 4 permissions" do
+        application = create(:application)
+        4.times { create(:supported_permission, application:) }
+        assert application.supported_permissions.count > 4
+
+        get :new
+
+        assert_select "form" do
+          assert_select ".gem-c-option-select[data-filter-element]"
+        end
       end
     end
 
@@ -328,6 +345,22 @@ class InvitationsControllerTest < ActionController::TestCase
         assert_select "form" do
           assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{signin_permission.to_param}'][checked]"
           assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{other_permission.to_param}'][checked]"
+        end
+      end
+
+      should "put selected permissions at the top if there are validation errors" do
+        application = create(:application)
+        signin_permission = application.signin_permission
+        other_permission = create(:supported_permission, application:)
+        selected_permissions = [other_permission]
+
+        post :create, params: { user: { supported_permission_ids: selected_permissions.map(&:to_param) } }
+
+        assert_select "form #user_application_#{application.id}_supported_permissions" do
+          assert_select "input[type='checkbox'][name='user[supported_permission_ids][]']" do |checkboxes|
+            assert_equal other_permission.to_param, checkboxes.first["value"]
+            assert_equal signin_permission.to_param, checkboxes.last["value"]
+          end
         end
       end
 

@@ -76,8 +76,8 @@ class UsersHelperTest < ActionView::TestCase
     end
   end
 
-  context "#items_for_permission_checkboxes" do
-    should "return permission options suitable for checkboxes component" do
+  context "#options_for_permission_option_select" do
+    should "return permission options suitable for option-select component" do
       application = create(:application)
       signin_permission = application.signin_permission
       permission1 = create(:supported_permission, application:, name: "permission1")
@@ -85,33 +85,27 @@ class UsersHelperTest < ActionView::TestCase
 
       user = create(:user, supported_permissions: [signin_permission, permission1])
 
-      items = items_for_permission_checkboxes(application:, user:)
+      options = options_for_permission_option_select(application:, user:)
 
-      expected_items = [
+      expected_options = [
         {
-          id: supported_permission_checkbox_id(application, signin_permission),
-          name: "user[supported_permission_ids][]",
           label: "Has access to #{application.name}?",
           value: signin_permission.id,
           checked: true,
         },
         {
-          id: supported_permission_checkbox_id(application, permission1),
-          name: "user[supported_permission_ids][]",
           label: "permission1",
           value: permission1.id,
           checked: true,
         },
         {
-          id: supported_permission_checkbox_id(application, permission2),
-          name: "user[supported_permission_ids][]",
           label: "permission2",
           value: permission2.id,
           checked: false,
         },
       ]
 
-      assert_equal expected_items, items
+      assert_equal expected_options, options
     end
   end
 
