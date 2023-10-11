@@ -73,7 +73,7 @@
           id: "batch_invitation_organisation_id",
           name: "batch_invitation[organisation_id]",
           label: "Organisation",
-          options: policy_scope(Organisation).map { |organisation| { text: organisation.name_with_abbreviation, value: organisation.id } }
+          options: policy_scope(Organisation).not_closed.order(:name).map { |organisation| { text: organisation.name_with_abbreviation, value: organisation.id } }
           } %>
 
     <% end %>
