@@ -93,6 +93,7 @@
             key: "user[supported_permission_ids]",
             options_container_id: "user_application_#{application.id}_supported_permissions",
             show_filter: options.length > 4,
+            closed_on_load: options.none? { |o| o[:checked] },
             options:,
           }) %>
         <% end %>
