@@ -48,7 +48,7 @@ class InvitationsControllerTest < ActionController::TestCase
         end
       end
 
-      should "render form checkbox input for signin permission & select for other permissions" do
+      should "render form checkbox input for permission" do
         create(:application)
 
         get :new
