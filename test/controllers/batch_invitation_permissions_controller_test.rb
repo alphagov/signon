@@ -54,6 +54,18 @@ class BatchInvitationPermissionsControllerTest < ActionController::TestCase
         assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{other_permission.to_param}']"
       end
     end
+
+    should "render filter for option-select component when app has more than 4 permissions" do
+      application = create(:application)
+      4.times { create(:supported_permission, application:) }
+      assert application.supported_permissions.count > 4
+
+      get :new, params: { batch_invitation_id: @batch_invitation.id }
+
+      assert_select "form" do
+        assert_select ".gem-c-option-select[data-filter-element]"
+      end
+    end
   end
 
   context "POST create" do

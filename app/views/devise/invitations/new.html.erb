@@ -87,11 +87,13 @@
       } do %>
 
         <% policy_scope(:user_permission_manageable_application).reject(&:retired?).map do |application| %>
+          <% options = options_for_permission_option_select(application:, user: f.object) %>
           <%= render("govuk_publishing_components/components/option_select", {
             title: application.name,
             key: "user[supported_permission_ids]",
             options_container_id: "user_application_#{application.id}_supported_permissions",
-            options: options_for_permission_option_select(application:, user: f.object),
+            show_filter: options.length > 4,
+            options:,
           }) %>
         <% end %>
 
