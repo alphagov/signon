@@ -48,12 +48,17 @@ class InvitationsControllerTest < ActionController::TestCase
         end
       end
 
-      should "render form checkbox input for permission" do
-        create(:application)
+      should "render form checkbox inputs for permissions" do
+        application = create(:application)
+        signin_permission = application.signin_permission
+        other_permission = create(:supported_permission)
 
         get :new
 
-        assert_select "input[type='checkbox'][name='user[supported_permission_ids][]']"
+        assert_select "form" do
+          assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{signin_permission.to_param}']"
+          assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{other_permission.to_param}']"
+        end
       end
     end
 
