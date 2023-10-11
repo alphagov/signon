@@ -89,19 +89,16 @@ class UsersHelperTest < ActionView::TestCase
 
       expected_options = [
         {
-          name: "user[supported_permission_ids][]",
           label: "Has access to #{application.name}?",
           value: signin_permission.id,
           checked: true,
         },
         {
-          name: "user[supported_permission_ids][]",
           label: "permission1",
           value: permission1.id,
           checked: true,
         },
         {
-          name: "user[supported_permission_ids][]",
           label: "permission2",
           value: permission2.id,
           checked: false,

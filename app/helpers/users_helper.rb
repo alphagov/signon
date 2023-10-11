@@ -78,7 +78,6 @@ module UsersHelper
   def options_for_permission_option_select(application:, user: nil)
     application.sorted_supported_permissions_grantable_from_ui.map do |permission|
       {
-        name: "user[supported_permission_ids][]",
         label: formatted_permission_name(application.name, permission.name),
         value: permission.id,
         checked: user&.has_permission?(permission),
