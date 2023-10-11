@@ -41,6 +41,19 @@ class BatchInvitationPermissionsControllerTest < ActionController::TestCase
       assert_select "label", "Has access to Profound Publisher?"
       assert_select "label", "reader"
     end
+
+    should "render form checkbox inputs for permissions" do
+      application = create(:application)
+      signin_permission = application.signin_permission
+      other_permission = create(:supported_permission)
+
+      get :new, params: { batch_invitation_id: @batch_invitation.id }
+
+      assert_select "form" do
+        assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{signin_permission.to_param}']"
+        assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{other_permission.to_param}']"
+      end
+    end
   end
 
   context "POST create" do
