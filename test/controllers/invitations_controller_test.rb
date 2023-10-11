@@ -348,6 +348,22 @@ class InvitationsControllerTest < ActionController::TestCase
         end
       end
 
+      should "put selected permissions at the top if there are validation errors" do
+        application = create(:application)
+        signin_permission = application.signin_permission
+        other_permission = create(:supported_permission, application:)
+        selected_permissions = [other_permission]
+
+        post :create, params: { user: { supported_permission_ids: selected_permissions.map(&:to_param) } }
+
+        assert_select "form #user_application_#{application.id}_supported_permissions" do
+          assert_select "input[type='checkbox'][name='user[supported_permission_ids][]']" do |checkboxes|
+            assert_equal other_permission.to_param, checkboxes.first["value"]
+            assert_equal signin_permission.to_param, checkboxes.last["value"]
+          end
+        end
+      end
+
       should "record account invitation in event log when invitation sent" do
         EventLog.expects(:record_account_invitation).with(instance_of(User), @inviter)
 
