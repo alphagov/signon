@@ -26,4 +26,8 @@ module ApplicationHelper
     uri.query_values = uri.query_values.reject { |key, _value| SENSITIVE_QUERY_PARAMETERS.include?(key) }
     uri.to_s
   end
+
+  def with_checked_options_at_top(options)
+    options.sort_by { |o| o[:checked] ? 0 : 1 }
+  end
 end
