@@ -25,6 +25,14 @@ class BatchInvitationsControllerTest < ActionController::TestCase
 
       assert_select "#batch_invitation_organisation_id option", organisation.name
     end
+
+    should "exclude closed organisations from select" do
+      create(:organisation)
+      create(:organisation, closed: true)
+      get :new
+
+      assert_select "#batch_invitation_organisation_id option", 1
+    end
   end
 
   context "POST create" do
