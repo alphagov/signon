@@ -89,21 +89,18 @@ class UsersHelperTest < ActionView::TestCase
 
       expected_options = [
         {
-          id: supported_permission_checkbox_id(application, signin_permission),
           name: "user[supported_permission_ids][]",
           label: "Has access to #{application.name}?",
           value: signin_permission.id,
           checked: true,
         },
         {
-          id: supported_permission_checkbox_id(application, permission1),
           name: "user[supported_permission_ids][]",
           label: "permission1",
           value: permission1.id,
           checked: true,
         },
         {
-          id: supported_permission_checkbox_id(application, permission2),
           name: "user[supported_permission_ids][]",
           label: "permission2",
           value: permission2.id,
