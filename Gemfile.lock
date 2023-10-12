@@ -218,7 +218,7 @@ GEM
       railties (>= 4.2.0)
       thor (>= 0.14, < 2.0)
     json (2.6.3)
-    jsonpath (1.1.4)
+    jsonpath (1.1.5)
       multi_json
     jwt (2.7.1)
     kaminari (1.2.2)
