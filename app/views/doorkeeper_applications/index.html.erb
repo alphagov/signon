@@ -5,12 +5,12 @@
     {
       id: "active",
       label: "Active applications",
-      content: render("application_list", applications: @applications.reject(&:retired?))
+      content: render("application_list", applications: @applications.not_retired)
     },
     {
       id: "retired",
       label: "Retired applications",
-      content: render("application_list", applications: @applications.select(&:retired?))
+      content: render("application_list", applications: @applications.retired)
     }
   ]
 } %>
