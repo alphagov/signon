@@ -180,6 +180,22 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       assert_empty Doorkeeper::Application.with_signin_delegatable
     end
 
+    context ".retired" do
+      setup do
+        @app = create(:application)
+      end
+
+      should "include apps that have been retired" do
+        @app.update!(retired: true)
+        assert_equal [@app], Doorkeeper::Application.retired
+      end
+
+      should "exclude apps that have not been retired" do
+        @app.update!(retired: false)
+        assert_equal [], Doorkeeper::Application.retired
+      end
+    end
+
     context ".not_retired" do
       setup do
         @app = create(:application)

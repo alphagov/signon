@@ -8,6 +8,7 @@ class Doorkeeper::Application < ActiveRecord::Base
   default_scope { ordered_by_name }
   scope :ordered_by_name, -> { order("oauth_applications.name") }
   scope :support_push_updates, -> { where(supports_push_updates: true) }
+  scope :retired, -> { where(retired: true) }
   scope :not_retired, -> { where(retired: false) }
   scope :can_signin,
         lambda { |user|
