@@ -9,8 +9,12 @@ class DoorkeeperApplicationsControllerTest < ActionController::TestCase
   context "GET index" do
     should "list applications" do
       create(:application, name: "My first app")
+      create(:application, name: "My retired app", retired: true)
+
       get :index
-      assert_select "td", /My first app/
+
+      assert_select "#active td", /My first app/
+      assert_select "#retired td", /My retired app/
     end
   end
 
