@@ -211,7 +211,11 @@ class User < ApplicationRecord
   end
 
   def grant_permission(supported_permission)
-    application_permissions.where(supported_permission_id: supported_permission.id).first_or_create!
+    if persisted?
+      application_permissions.where(supported_permission_id: supported_permission.id).first_or_create!
+    else
+      supported_permissions << supported_permission unless supported_permissions.include?(supported_permission)
+    end
   end
 
   # This overrides `Devise::Recoverable` behavior.

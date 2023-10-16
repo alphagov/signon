@@ -538,6 +538,30 @@ class UserTest < ActiveSupport::TestCase
         assert user.supported_permissions.include?(supported_permission)
       end
     end
+
+    context "where the user is a new user" do
+      should "grant the permission" do
+        user = build(:user)
+        application = create(:application)
+        supported_permission = create(:supported_permission, application:)
+
+        user.grant_permission(supported_permission)
+
+        assert user.has_permission?(supported_permission)
+      end
+
+      should "prevent the permission being granted twice" do
+        user = build(:user)
+        application = create(:application)
+        supported_permission = create(:supported_permission, application:)
+
+        user.grant_permission(supported_permission)
+        user.grant_permission(supported_permission)
+        user.save!
+
+        user.has_permission?(supported_permission)
+      end
+    end
   end
 
   test "can grant signin permission to allow user to access the app" do
