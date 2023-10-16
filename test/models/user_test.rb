@@ -512,6 +512,16 @@ class UserTest < ActiveSupport::TestCase
     assert_equal old_encrypted_password, u.encrypted_password, "Changed password"
   end
 
+  test "#grant_permission" do
+    user = create(:user)
+    application = create(:application)
+    supported_permission = create(:supported_permission, application:)
+
+    user.grant_permission(supported_permission)
+
+    assert user.has_permission?(supported_permission)
+  end
+
   test "can grant signin permission to allow user to access the app" do
     app = create(:application)
     user = create(:user)
