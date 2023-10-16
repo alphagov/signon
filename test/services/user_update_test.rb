@@ -78,4 +78,18 @@ class UserUpdateTest < ActionView::TestCase
 
     assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_MANDATED.id).count
   end
+
+  should "not lose permissions when supported_permissions are absent from params" do
+    current_user = create(:superadmin_user)
+    ip_address = "1.2.3.4"
+
+    affected_user = create(:user)
+    app = create(:application)
+    affected_user.grant_application_signin_permission(app)
+    assert affected_user.has_access_to?(app)
+
+    UserUpdate.new(affected_user, {}, current_user, ip_address).call
+
+    assert affected_user.has_access_to?(app)
+  end
 end

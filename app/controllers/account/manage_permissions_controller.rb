@@ -4,6 +4,7 @@ class Account::ManagePermissionsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :authorise_user
+  before_action :allow_no_application_access, only: [:update]
 
   def show
     @application_permissions = all_applications_and_permissions_for(current_user)
@@ -20,6 +21,11 @@ class Account::ManagePermissionsController < ApplicationController
   end
 
 private
+
+  def allow_no_application_access
+    params[:user] ||= {}
+    params[:user][:supported_permission_ids] ||= []
+  end
 
   def authorise_user
     authorize %i[account manage_permissions]

@@ -29,6 +29,8 @@ class UserUpdate
 private
 
   def filtered_user_params
+    return user_params unless user_params.key?(:supported_permission_ids)
+
     filter = SupportedPermissionParameterFilter.new(current_user, user, user_params)
     user_params.merge(supported_permission_ids: filter.filtered_supported_permission_ids)
   end
