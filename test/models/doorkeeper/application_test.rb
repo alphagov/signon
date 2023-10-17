@@ -144,6 +144,22 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
   end
 
+  context ".all (default scope)" do
+    setup do
+      @app = create(:application)
+    end
+
+    should "include apps that have not been retired" do
+      @app.update!(retired: false)
+      assert_equal [@app], Doorkeeper::Application.all
+    end
+
+    should "exclude apps that have been retired" do
+      @app.update!(retired: true)
+      assert_equal [], Doorkeeper::Application.all
+    end
+  end
+
   context ".retired" do
     setup do
       @app = create(:application)
@@ -151,12 +167,12 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
 
     should "include apps that have been retired" do
       @app.update!(retired: true)
-      assert_equal [@app], Doorkeeper::Application.retired
+      assert_equal [@app], Doorkeeper::Application.unscoped.retired
     end
 
     should "exclude apps that have not been retired" do
       @app.update!(retired: false)
-      assert_equal [], Doorkeeper::Application.retired
+      assert_equal [], Doorkeeper::Application.unscoped.retired
     end
   end
 

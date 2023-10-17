@@ -3,7 +3,7 @@ require "doorkeeper/orm/active_record/application"
 class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/ApplicationRecord
   has_many :supported_permissions, dependent: :destroy
 
-  default_scope { ordered_by_name }
+  default_scope { not_retired.ordered_by_name }
 
   scope :ordered_by_name, -> { order("oauth_applications.name") }
   scope :support_push_updates, -> { where(supports_push_updates: true) }

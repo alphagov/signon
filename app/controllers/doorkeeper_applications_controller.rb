@@ -29,7 +29,7 @@ class DoorkeeperApplicationsController < ApplicationController
 private
 
   def load_and_authorize_application
-    @application = Doorkeeper::Application.find(params[:id])
+    @application = Doorkeeper::Application.unscoped.find(params[:id])
     authorize @application
   end
 

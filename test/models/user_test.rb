@@ -596,16 +596,16 @@ class UserTest < ActiveSupport::TestCase
       assert_user_has_permissions ["Create publications"], app, user
     end
 
-    should "grant permission to user for a retired application" do
+    should "not grant permission to user for a retired application" do
       app = create(:application, retired: true, with_supported_permissions: %w[edit])
       user = create(:user)
 
       signin_permission = user.grant_application_signin_permission(app)
       edit_permission = user.grant_application_permission(app, "edit")
 
-      assert_includes user.application_permissions, signin_permission
-      assert_includes user.application_permissions, edit_permission
-      assert_user_has_permissions ["edit", SupportedPermission::SIGNIN_NAME], app, user
+      assert_nil signin_permission
+      assert_nil edit_permission
+      assert_user_has_permissions [], app, user
     end
 
     should "return multiple permissions in name order" do

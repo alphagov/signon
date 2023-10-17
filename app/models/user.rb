@@ -208,6 +208,8 @@ class User < ApplicationRecord
   end
 
   def grant_application_permissions(application, supported_permission_names)
+    return [] if application.retired?
+
     supported_permission_names.map do |supported_permission_name|
       supported_permission = SupportedPermission.find_by(application_id: application.id, name: supported_permission_name)
       grant_permission(supported_permission)
