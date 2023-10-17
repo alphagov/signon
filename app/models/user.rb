@@ -161,8 +161,8 @@ class User < ApplicationRecord
     application_permissions
       .joins(:supported_permission)
       .where(application_id: application.id)
-      .order("supported_permissions.name")
-      .pluck(:name)
+      .order(SupportedPermission.arel_table[:name])
+      .pluck(SupportedPermission.arel_table[:name])
   end
 
   # Avoid N+1 queries by using the relations eager loaded with `includes()`.
