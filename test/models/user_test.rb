@@ -17,6 +17,13 @@ class UserTest < ActiveSupport::TestCase
 
       assert_includes @user.application_permissions, user_application_permission
     end
+
+    should "not include user application permissions for retired applications" do
+      application = create(:application, retired: true)
+      user_application_permission = create(:user_application_permission, user: @user, application:)
+
+      assert_not_includes @user.application_permissions, user_application_permission
+    end
   end
 
   context "#require_2sv" do
