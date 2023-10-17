@@ -78,4 +78,61 @@ class UserUpdateTest < ActionView::TestCase
 
     assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_MANDATED.id).count
   end
+
+  should "not lose permissions when supported_permissions are absent from params" do
+    current_user = create(:superadmin_user)
+    ip_address = "1.2.3.4"
+
+    affected_user = create(:user)
+    app = create(:application)
+    affected_user.grant_application_signin_permission(app)
+    assert affected_user.has_access_to?(app)
+
+    UserUpdate.new(affected_user, {}, current_user, ip_address).call
+
+    assert affected_user.has_access_to?(app)
+  end
+
+  should "record when organisation has been changed" do
+    current_user = create(:superadmin_user)
+    ip_address = "1.2.3.4"
+
+    organisation_1 = create(:organisation, name: "organisation-1")
+    organisation_2 = create(:organisation, name: "organisation-2")
+    affected_user = create(:user, organisation: organisation_1)
+
+    params = { organisation_id: organisation_2.id }
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+
+    assert_equal 1, EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).count
+    assert_equal "from organisation-1 to organisation-2", EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).last.trailing_message
+  end
+
+  should "record when organisation has been changed from 'None'" do
+    current_user = create(:superadmin_user)
+    ip_address = "1.2.3.4"
+
+    organisation = create(:organisation, name: "organisation-name")
+    affected_user = create(:user, organisation: nil)
+
+    params = { organisation_id: organisation.id }
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+
+    assert_equal 1, EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).count
+    assert_equal "from None to organisation-name", EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).last.trailing_message
+  end
+
+  should "record when organisation has been changed to 'None'" do
+    current_user = create(:superadmin_user)
+    ip_address = "1.2.3.4"
+
+    organisation = create(:organisation, name: "organisation-name")
+    affected_user = create(:user, organisation:)
+
+    params = { organisation_id: nil }
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+
+    assert_equal 1, EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).count
+    assert_equal "from organisation-name to None", EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).last.trailing_message
+  end
 end

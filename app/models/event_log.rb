@@ -48,6 +48,7 @@ class EventLog < ApplicationRecord
     ACCESS_GRANTS_DELETED = LogEntry.new(id: 43, description: "Access grants deleted", require_uid: true),
     ACCESS_TOKENS_DELETED = LogEntry.new(id: 44, description: "Access tokens deleted", require_uid: true),
     ACCOUNT_DELETED = LogEntry.new(id: 45, description: "Account deleted", require_uid: true),
+    ORGANISATION_CHANGED = LogEntry.new(id: 46, description: "Organisation changed", require_uid: true, require_initiator: true),
 
     # We no longer expire passwords, but we keep this event for history purposes
     PASSWORD_EXPIRED = LogEntry.new(id: 6, description: "Password expired"),
@@ -104,6 +105,10 @@ class EventLog < ApplicationRecord
 
   def self.record_role_change(user, previous_role, new_role, initiator)
     record_event(user, ROLE_CHANGED, initiator:, trailing_message: "from #{previous_role} to #{new_role}")
+  end
+
+  def self.record_organisation_change(user, previous_organisation, new_organisation, initiator)
+    record_event(user, ORGANISATION_CHANGED, initiator:, trailing_message: "from #{previous_organisation} to #{new_organisation}")
   end
 
   def self.record_account_invitation(user, initiator)
