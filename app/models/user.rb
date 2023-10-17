@@ -122,6 +122,16 @@ class User < ApplicationRecord
     relation
   end
 
+  def self.with_preselected_permissions
+    user = new
+
+    PreselectedPermission.permissions.each do |permission|
+      user.grant_permission(permission)
+    end
+
+    user
+  end
+
   def require_2sv?
     return require_2sv unless organisation
 

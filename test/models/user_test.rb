@@ -1140,6 +1140,18 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context ".with_preselected_permissions" do
+    should "return a new user with some permissions added" do
+      preselected_application_name = PreselectedPermission::PRESELECTED_PERMISSIONS.first[:application_name]
+      preselected_permission_name = PreselectedPermission::PRESELECTED_PERMISSIONS.first[:permission]
+      create(:application, name: preselected_application_name, with_supported_permissions: [preselected_permission_name])
+
+      user = User.with_preselected_permissions
+
+      assert 1, user.supported_permissions.size
+    end
+  end
+
   def authenticate_access(user, app)
     Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end

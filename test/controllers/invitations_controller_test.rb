@@ -61,6 +61,19 @@ class InvitationsControllerTest < ActionController::TestCase
         end
       end
 
+      should "render form checkbox inputs with some permissions preselected" do
+        preselected_application_name = PreselectedPermission::PRESELECTED_PERMISSIONS.first[:application_name]
+        preselected_permission_name = PreselectedPermission::PRESELECTED_PERMISSIONS.first[:permission]
+        application = create(:application, name: preselected_application_name, with_supported_permissions: [preselected_permission_name])
+        expected_permission = application.supported_permissions.first
+
+        get :new
+
+        assert_select "form" do
+          assert_select "input[type='checkbox'][checked='checked'][name='user[supported_permission_ids][]'][value='#{expected_permission.to_param}']"
+        end
+      end
+
       should "render filter for option-select component when app has more than 4 permissions" do
         application = create(:application)
         4.times { create(:supported_permission, application:) }
