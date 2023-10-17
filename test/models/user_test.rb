@@ -34,6 +34,14 @@ class UserTest < ActiveSupport::TestCase
 
       assert_includes @user.supported_permissions, supported_permission
     end
+
+    should "not include supported permissions for retired applications" do
+      application = create(:application, retired: true)
+      supported_permission = create(:supported_permission, application:)
+      create(:user_application_permission, user: @user, application:, supported_permission:)
+
+      assert_not_includes @user.supported_permissions, supported_permission
+    end
   end
 
   context "#require_2sv" do
