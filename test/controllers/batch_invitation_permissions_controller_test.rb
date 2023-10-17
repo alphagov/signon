@@ -66,6 +66,17 @@ class BatchInvitationPermissionsControllerTest < ActionController::TestCase
         assert_select ".gem-c-option-select[data-filter-element]"
       end
     end
+
+    should "render form checkbox inputs with default permissions checked" do
+      application = create(:application)
+      permission = create(:supported_permission, default: true, application:)
+
+      get :new, params: { batch_invitation_id: @batch_invitation.id }
+
+      assert_select "form" do
+        assert_select "input[type='checkbox'][checked='checked'][name='user[supported_permission_ids][]'][value='#{permission.to_param}']"
+      end
+    end
   end
 
   context "POST create" do
