@@ -26,7 +26,6 @@ class InvitationsController < Devise::InvitationsController
 
     self.resource = resource_class.invite!(all_params, current_inviter)
     if resource.errors.empty?
-      grant_default_permissions(resource)
       EventLog.record_account_invitation(resource, current_user)
       set_flash_message :notice, :send_instructions, email: resource.email
       respond_with resource, location: after_invite_path_for(resource)
@@ -66,12 +65,6 @@ private
       users_path
     else
       require_2sv_user_path(resource)
-    end
-  end
-
-  def grant_default_permissions(user)
-    SupportedPermission.default.each do |default_permission|
-      user.grant_permission(default_permission)
     end
   end
 

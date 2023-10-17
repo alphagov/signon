@@ -180,18 +180,6 @@ class InvitationsControllerTest < ActionController::TestCase
         assert_equal [permission], invitee.supported_permissions
       end
 
-      should "save invitee with default supported permissions" do
-        default_permission = create(:supported_permission, default: true)
-        non_default_permission = create(:supported_permission, default: false)
-
-        post :create, params: {
-          user: { name: "invitee", email: "invitee@gov.uk", supported_permission_ids: [non_default_permission.to_param] },
-        }
-
-        invitee = User.last
-        assert_same_elements [default_permission, non_default_permission], invitee.supported_permissions
-      end
-
       should "send invitation to invitee from inviter" do
         invitee = create(:user)
         User.expects(:invite!).with(anything, @inviter).returns(invitee)
