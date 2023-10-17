@@ -19,7 +19,7 @@
 %>
 
 <%= form_for @batch_invitation, url: :batch_invitation_permissions, method: :post do |f| %>
-  <% policy_scope(:user_permission_manageable_application).not_retired.map do |application| %>
+  <% policy_scope(:user_permission_manageable_application).map do |application| %>
     <% options = options_for_permission_option_select(application:, user: User.with_default_permissions) %>
     <%= render("govuk_publishing_components/components/option_select", {
       title: application.name,
