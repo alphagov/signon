@@ -577,7 +577,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "not create duplication permission when granting an already granted permission" do
-      app = create(:application, name: "my_app")
+      app = create(:application)
       user = create(:user)
 
       user.grant_application_signin_permission(app)
@@ -587,7 +587,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "grant permissions to user and return the created permission" do
-      app = create(:application, name: "my_app", with_supported_permissions: ["Create publications", "Delete publications"])
+      app = create(:application, with_supported_permissions: ["Create publications", "Delete publications"])
       user = create(:user)
 
       permission = user.grant_application_permission(app, "Create publications")
@@ -597,7 +597,7 @@ class UserTest < ActiveSupport::TestCase
     end
 
     should "return multiple permissions in name order" do
-      app = create(:application, name: "my_app", with_supported_permissions: %w[edit])
+      app = create(:application, with_supported_permissions: %w[edit])
       user = create(:user)
 
       user.grant_application_signin_permission(app)
