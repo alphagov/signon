@@ -122,6 +122,10 @@ class User < ApplicationRecord
     relation
   end
 
+  def self.with_default_permissions
+    new(supported_permissions: SupportedPermission.default)
+  end
+
   def require_2sv?
     return require_2sv unless organisation
 

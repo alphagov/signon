@@ -13,7 +13,9 @@ class InvitationsController < Devise::InvitationsController
 
   def new
     authorize User
-    super
+
+    self.resource = User.with_default_permissions
+    render :new
   end
 
   def create

@@ -1161,6 +1161,17 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context ".with_default_permissions" do
+    should "return a new user with default permissions added" do
+      application = create(:application)
+      create(:supported_permission, default: true, application:)
+
+      user = User.with_default_permissions
+
+      assert 1, user.supported_permissions.size
+    end
+  end
+
   def authenticate_access(user, app)
     Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end
