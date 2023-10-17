@@ -24,6 +24,12 @@ class DoorkeeperApplicationsControllerTest < ActionController::TestCase
       get :edit, params: { id: app.id }
       assert_select "input[name='doorkeeper_application[name]'][value='My first app']"
     end
+
+    should "render the form for retired app" do
+      app = create(:application, name: "My first app", retired: true)
+      get :edit, params: { id: app.id }
+      assert_select "input[name='doorkeeper_application[name]'][value='My first app']"
+    end
   end
 
   context "PUT update" do
@@ -34,6 +40,13 @@ class DoorkeeperApplicationsControllerTest < ActionController::TestCase
       assert_equal "A better name", app.reload.name
       assert_redirected_to doorkeeper_applications_path
       assert_match(/updated/, flash[:notice])
+    end
+
+    should "update a retired application" do
+      app = create(:application, name: "My first app", retired: true)
+      put :update, params: { id: app.id, doorkeeper_application: { name: "A better name" } }
+
+      assert_equal "A better name", app.reload.name
     end
 
     should "redisplay the form if save fails" do
