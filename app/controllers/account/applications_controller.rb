@@ -13,6 +13,6 @@ class Account::ApplicationsController < ApplicationController
     authorize [:account, Doorkeeper::Application]
 
     @applications_with_signin = Doorkeeper::Application.can_signin(current_user)
-    @applications_without_signin = Doorkeeper::Application.not_retired.without_signin_permission_for(current_user)
+    @applications_without_signin = Doorkeeper::Application.without_signin_permission_for(current_user)
   end
 end
