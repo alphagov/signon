@@ -26,6 +26,16 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#supported_permissions" do
+    should "return supported permissions for user" do
+      application = create(:application)
+      supported_permission = create(:supported_permission, application:)
+      create(:user_application_permission, user: @user, application:, supported_permission:)
+
+      assert_includes @user.supported_permissions, supported_permission
+    end
+  end
+
   context "#require_2sv" do
     should "default to false for normal users" do
       assert_not create(:user).require_2sv?
