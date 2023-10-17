@@ -4,6 +4,7 @@ class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/Appli
   has_many :supported_permissions, dependent: :destroy
 
   default_scope { ordered_by_name }
+
   scope :ordered_by_name, -> { order("oauth_applications.name") }
   scope :support_push_updates, -> { where(supports_push_updates: true) }
   scope :retired, -> { where(retired: true) }
