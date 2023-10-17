@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_17_152747) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_17_153040) do
   create_table "batch_invitation_application_permissions", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "batch_invitation_id", null: false
     t.integer "supported_permission_id", null: false
@@ -127,7 +127,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_17_152747) do
   end
 
   create_table "supported_permissions", id: :integer, charset: "utf8mb3", force: :cascade do |t|
-    t.integer "application_id"
+    t.integer "application_id", null: false
     t.string "name"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
