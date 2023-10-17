@@ -90,29 +90,13 @@ class BatchInvitationPermissionsControllerTest < ActionController::TestCase
       assert_redirected_to "/batch_invitations/#{@batch_invitation.id}"
     end
 
-    should "grant selected permissions and default permissions to BatchInvitation" do
-      support_app = create(:application, name: "Support")
-      support_app.signin_permission.update!(default: true)
-
+    should "grant selected permissions to BatchInvitation" do
       post :create, params: {
         batch_invitation_id: @batch_invitation.id,
         user: { supported_permission_ids: [@app.signin_permission.id] },
       }
 
-      assert_equal [@app.signin_permission, support_app.signin_permission],
-                   @batch_invitation.supported_permissions
-    end
-
-    context "with no permissions selected" do
-      should "still grant default permissions to BatchInvitation" do
-        support_app = create(:application, name: "Support")
-        support_app.signin_permission.update!(default: true)
-
-        post :create, params: { batch_invitation_id: @batch_invitation.id }
-
-        assert_equal [support_app.signin_permission],
-                     @batch_invitation.supported_permissions
-      end
+      assert_equal [@app.signin_permission], @batch_invitation.supported_permissions
     end
 
     should "send an email to signon-alerts" do

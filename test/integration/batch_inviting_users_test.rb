@@ -97,32 +97,6 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
     end
   end
 
-  should "ensure that batch invited users get default permissions even when not checked in UI" do
-    create(:supported_permission, application: @application, name: "reader", default: true)
-    support_app = create(:application, name: "support", with_supported_permissions: [SupportedPermission::SIGNIN_NAME])
-    support_app.signin_permission.update!(default: true)
-    user = create(:admin_user)
-
-    visit root_path
-    signin_with(user)
-
-    perform_enqueued_jobs do
-      visit new_batch_invitation_path
-      path = Rails.root.join("test/fixtures/users.csv")
-      attach_file("Upload a CSV file", path)
-      click_button "Manage permissions for new users"
-
-      uncheck "Has access to #{support_app.name}?"
-      check "Has access to #{@application.name}?"
-      uncheck "reader"
-      click_button "Create users and send emails"
-
-      invited_user = User.find_by(email: "fred@example.com")
-      assert invited_user.has_access_to?(support_app)
-      assert invited_user.permissions_for(@application).include? "reader"
-    end
-  end
-
   context "when the organisation mandates 2sv" do
     setup do
       @user = create(:superadmin_user)

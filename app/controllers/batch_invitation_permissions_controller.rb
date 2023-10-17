@@ -11,7 +11,6 @@ class BatchInvitationPermissionsController < ApplicationController
 
   def create
     @batch_invitation.supported_permission_ids = params[:user][:supported_permission_ids] if params[:user]
-    grant_default_permissions(@batch_invitation)
 
     @batch_invitation.save!
 
@@ -34,12 +33,6 @@ private
     if @batch_invitation.has_permissions?
       flash[:alert] = "Permissions have already been set for this batch of users"
       redirect_to batch_invitation_path(@batch_invitation)
-    end
-  end
-
-  def grant_default_permissions(batch_invitation)
-    SupportedPermission.default.each do |default_permission|
-      batch_invitation.grant_permission(default_permission)
     end
   end
 end
