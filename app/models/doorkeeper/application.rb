@@ -1,8 +1,6 @@
 require "doorkeeper/orm/active_record/application"
 
-# rubocop:disable Rails/ApplicationRecord
-class Doorkeeper::Application < ActiveRecord::Base
-  # rubocop:enable Rails/ApplicationRecord
+class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/ApplicationRecord
   has_many :supported_permissions, dependent: :destroy
 
   default_scope { ordered_by_name }
