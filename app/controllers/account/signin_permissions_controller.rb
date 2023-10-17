@@ -28,6 +28,6 @@ class Account::SigninPermissionsController < ApplicationController
 private
 
   def application
-    @application ||= Doorkeeper::Application.not_retired.find(params[:application_id])
+    @application ||= Doorkeeper::Application.find(params[:application_id])
   end
 end
