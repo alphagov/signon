@@ -564,15 +564,47 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  test "can grant signin permission to allow user to access the app" do
-    app = create(:application)
-    user = create(:user)
+  context "granting permissions" do
+    should "grant signin permission to allow user to access the app" do
+      app = create(:application)
+      user = create(:user)
 
-    assert_not user.has_access_to?(app)
+      assert_not user.has_access_to?(app)
 
-    user.grant_application_signin_permission(app)
+      user.grant_application_signin_permission(app)
 
-    assert user.has_access_to?(app)
+      assert user.has_access_to?(app)
+    end
+
+    should "not create duplication permission when granting an already granted permission" do
+      app = create(:application, name: "my_app")
+      user = create(:user)
+
+      user.grant_application_signin_permission(app)
+      user.grant_application_signin_permission(app)
+
+      assert_user_has_permissions [SupportedPermission::SIGNIN_NAME], app, user
+    end
+
+    should "grant permissions to user and return the created permission" do
+      app = create(:application, name: "my_app", with_supported_permissions: ["Create publications", "Delete publications"])
+      user = create(:user)
+
+      permission = user.grant_application_permission(app, "Create publications")
+
+      assert_equal permission, user.application_permissions.first
+      assert_user_has_permissions ["Create publications"], app, user
+    end
+
+    should "return multiple permissions in name order" do
+      app = create(:application, name: "my_app", with_supported_permissions: %w[edit])
+      user = create(:user)
+
+      user.grant_application_signin_permission(app)
+      user.grant_application_permission(app, "edit")
+
+      assert_user_has_permissions ["edit", SupportedPermission::SIGNIN_NAME], app, user
+    end
   end
 
   context "#has_permission?" do
@@ -624,36 +656,6 @@ class UserTest < ActiveSupport::TestCase
         end
       end
     end
-  end
-
-  test "can grant permissions to users and return the created permission" do
-    app = create(:application, name: "my_app", with_supported_permissions: ["Create publications", "Delete publications"])
-    user = create(:user)
-
-    permission = user.grant_application_permission(app, "Create publications")
-
-    assert_equal permission, user.application_permissions.first
-    assert_user_has_permissions ["Create publications"], app, user
-  end
-
-  test "granting an already granted permission doesn't cause duplicates" do
-    app = create(:application, name: "my_app")
-    user = create(:user)
-
-    user.grant_application_signin_permission(app)
-    user.grant_application_signin_permission(app)
-
-    assert_user_has_permissions [SupportedPermission::SIGNIN_NAME], app, user
-  end
-
-  test "returns multiple permissions in name order" do
-    app = create(:application, name: "my_app", with_supported_permissions: %w[edit])
-    user = create(:user)
-
-    user.grant_application_signin_permission(app)
-    user.grant_application_permission(app, "edit")
-
-    assert_user_has_permissions ["edit", SupportedPermission::SIGNIN_NAME], app, user
   end
 
   test "inviting a user sets confirmed_at" do
