@@ -147,9 +147,7 @@ class ApiUsersControllerTest < ActionController::TestCase
 
         get :edit, params: { id: api_user.id }
 
-        assert_select "table#editable-permissions tr" do
-          assert_select "td", text: "retired-app-name", count: 0
-        end
+        assert_select "table#editable-permissions", count: 0
       end
 
       should "allow editing permissions for API-only application" do
@@ -208,6 +206,15 @@ class ApiUsersControllerTest < ActionController::TestCase
       should "not show API user's revoked access tokens" do
         application = create(:application)
         create(:access_token, resource_owner_id: @api_user.id, application:, revoked_at: Time.current)
+
+        get :edit, params: { id: @api_user }
+
+        assert_select "table#authorisations tbody td", text: application.name, count: 0
+      end
+
+      should "not show API user's access tokens for retired applications" do
+        application = create(:application, retired: true)
+        create(:access_token, resource_owner_id: @api_user.id, application:)
 
         get :edit, params: { id: @api_user }
 

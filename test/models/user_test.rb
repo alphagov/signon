@@ -19,6 +19,13 @@ class UserTest < ActiveSupport::TestCase
       assert_includes @user.authorisations, token
       assert_not_includes @user.authorisations, token_for_another_user
     end
+
+    should "not include access tokens for retired applications" do
+      application = create(:application, retired: true)
+      token = create(:access_token, resource_owner_id: @user.id, application:)
+
+      assert_not_includes @user.authorisations, token
+    end
   end
 
   context "#application_permissions" do

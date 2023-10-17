@@ -3,12 +3,13 @@ require "test_helper"
 class GlobalPrometheusCollectorTest < ActiveSupport::TestCase
   def setup
     @collector = Collectors::GlobalPrometheusCollector.new
-    @api_user = api_user_with_token("user1", token_count: 3)
+    @api_user = api_user_with_token("user1", token_count: 4)
   end
 
   context "#metrics" do
-    should "list all non-revoked token expiry timestamps" do
+    should "list all non-revoked token expiry timestamps for non-retired aps" do
       @api_user.authorisations[2].revoke
+      @api_user.authorisations[3].application.update!(retired: true)
 
       metrics = @collector.metrics
 

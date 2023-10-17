@@ -17,5 +17,16 @@ class PushUserUpdatesJobTest < ActiveSupport::TestCase
         TestJob.perform_on(user)
       end
     end
+
+    should "not perform_async updates on user's retired applications" do
+      user = create(:user)
+      retired_app = create(:application, retired: true)
+
+      create(:access_token, resource_owner_id: user.id, application: retired_app)
+
+      assert_no_enqueued_jobs do
+        TestJob.perform_on(user)
+      end
+    end
   end
 end
