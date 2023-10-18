@@ -26,6 +26,13 @@ class SupportedPermissionTest < ActiveSupport::TestCase
     assert_includes copy_cat_permission.errors[:name], "has already been taken"
   end
 
+  test "application of permission must be present" do
+    permission = build(:supported_permission, application: nil)
+
+    assert_not permission.valid?
+    assert_includes permission.errors[:application], "can't be blank"
+  end
+
   test "associated user application permissions are destroyed when supported permissions are destroyed" do
     user = create(:user)
     application = create(:application, with_supported_permissions: %w[managing_editor])

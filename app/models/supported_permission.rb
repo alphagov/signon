@@ -5,6 +5,7 @@ class SupportedPermission < ApplicationRecord
   has_many :user_application_permissions, dependent: :destroy, inverse_of: :supported_permission
 
   validates :name, presence: true, uniqueness: { scope: :application_id }
+  validates :application, presence: true
   validate :signin_permission_name_not_changed
 
   default_scope { order(:name) }
