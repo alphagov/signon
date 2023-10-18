@@ -1,19 +1,6 @@
 require "date"
 
 namespace :users do
-  desc "Create a new user (specify name and email in environment)"
-  task create: :environment do
-    raise "Requires name, email and applications specified in environment" unless ENV["name"] && ENV["email"] && ENV["applications"]
-
-    user_creator = UserCreator.new(ENV["name"], ENV["email"], ENV["applications"])
-    user_creator.create_user!
-
-    puts "User created: user.name <#{user_creator.user.name}>"
-    puts "              user.email <#{user_creator.user.email}>"
-    puts "              signin permissions for: '#{user_creator.applications.map(&:name).join("', '")}' "
-    puts "              follow this link to set a password: #{user_creator.invitation_url}"
-  end
-
   desc "Remind users that their account will get suspended"
   task send_suspension_reminders: :environment do
     include VolatileLock::DSL
