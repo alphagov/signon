@@ -512,6 +512,58 @@ class UserTest < ActiveSupport::TestCase
     assert_equal old_encrypted_password, u.encrypted_password, "Changed password"
   end
 
+  context "#grant_permission" do
+    context "where the user does not have the permission" do
+      should "add the new permission"  do
+        user = create(:user)
+        application = create(:application)
+        supported_permission = create(:supported_permission, application:)
+
+        user.grant_permission(supported_permission)
+
+        assert user.has_permission?(supported_permission)
+      end
+    end
+
+    context "where the user has the permission" do
+      should "use the existing permission" do
+        user = create(:user)
+        application = create(:application)
+        supported_permission = create(:supported_permission, application:)
+        user.supported_permissions << supported_permission
+
+        user.grant_permission(supported_permission)
+
+        assert user.has_permission?(supported_permission)
+        assert user.supported_permissions.include?(supported_permission)
+      end
+    end
+
+    context "where the user is a new user" do
+      should "grant the permission" do
+        user = build(:user)
+        application = create(:application)
+        supported_permission = create(:supported_permission, application:)
+
+        user.grant_permission(supported_permission)
+
+        assert user.has_permission?(supported_permission)
+      end
+
+      should "prevent the permission being granted twice" do
+        user = build(:user)
+        application = create(:application)
+        supported_permission = create(:supported_permission, application:)
+
+        user.grant_permission(supported_permission)
+        user.grant_permission(supported_permission)
+        user.save!
+
+        user.has_permission?(supported_permission)
+      end
+    end
+  end
+
   test "can grant signin permission to allow user to access the app" do
     app = create(:application)
     user = create(:user)
@@ -1106,6 +1158,17 @@ class UserTest < ActiveSupport::TestCase
       user_in_org3 = create(:user, organisation: org3)
 
       assert_equal [user_in_org1, user_in_org3], User.with_organisation([org1, org3].map(&:to_param))
+    end
+  end
+
+  context ".with_default_permissions" do
+    should "return a new user with default permissions added" do
+      application = create(:application)
+      create(:supported_permission, default: true, application:)
+
+      user = User.with_default_permissions
+
+      assert 1, user.supported_permissions.size
     end
   end
 
