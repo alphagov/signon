@@ -15,17 +15,6 @@ This will create and return a client ID and secret that can be used in the app
 You can then add the ID and secret to the app's `ENV` using your preferred
 method.
 
-To create a new user, use the following syntax:
-
-```sh
-rake users:create name='First Last' email=user@example.com \
-applications=Comma,Seperated,ListOf,Application,Names* \
-[github=username] [twitter=username]
-```
-
-\* You can also set the applications in a comma separated list via an
-`ENV['applications']` variable if you prefer.
-
 ## Access Tokens
 
 You may also need to create an access token, so one application can identify
