@@ -557,6 +557,22 @@ class UsersControllerTest < ActionController::TestCase
             assert_select "td", text: retired_app.name, count: 0
           end
         end
+
+        should "not be able to see permissions to API-only applications for a user" do
+          api_only_app = create(:application, api_only: true)
+          super_org_admin = create(:super_organisation_admin_user)
+
+          sign_in super_org_admin
+          user = create(:user_in_organisation, organisation: super_org_admin.organisation)
+          create(:user_application_permission, application: api_only_app, user:)
+
+          get :edit, params: { id: user.id }
+
+          assert_select "h2", "All Permissions for this user"
+          assert_select "#all-permissions" do
+            assert_select "td", text: api_only_app.name, count: 0
+          end
+        end
       end
 
       context "superadmin" do

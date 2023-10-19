@@ -26,6 +26,10 @@ private
   end
 
   def all_applications_and_permissions_for(user)
-    user.supported_permissions.includes(:application).group_by(&:application)
+    user
+      .supported_permissions
+      .merge(Doorkeeper::Application.not_api_only)
+      .includes(:application)
+      .group_by(&:application)
   end
 end
