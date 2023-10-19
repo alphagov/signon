@@ -192,6 +192,22 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
   end
 
+  context ".api_only" do
+    setup do
+      @app = create(:application)
+    end
+
+    should "include apps that are api only" do
+      @app.update!(api_only: true)
+      assert_equal [@app], Doorkeeper::Application.api_only
+    end
+
+    should "exclude apps that are not api only" do
+      @app.update!(api_only: false)
+      assert_equal [], Doorkeeper::Application.api_only
+    end
+  end
+
   context ".not_api_only" do
     setup do
       @app = create(:application)
