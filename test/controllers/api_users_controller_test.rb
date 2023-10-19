@@ -64,6 +64,19 @@ class ApiUsersControllerTest < ActionController::TestCase
           assert_select apps_span.parent, "ul>li", text: "app-name", count: 0
         end
       end
+
+      should "list API-only applications for api user" do
+        application = create(:application, name: "app-name", api_only: true)
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :index
+
+        assert_select "td>span" do |spans|
+          apps_span = spans.find { |s| s.text.strip == "Apps" }
+          assert_select apps_span.parent, "ul>li", text: "app-name"
+        end
+      end
     end
 
     context "POST create" do
