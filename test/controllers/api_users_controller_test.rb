@@ -125,6 +125,18 @@ class ApiUsersControllerTest < ActionController::TestCase
           assert_select "td", text: "retired-app-name", count: 0
         end
       end
+
+      should "allow editing permissions for API-only application" do
+        application = create(:application, name: "api-only-app-name", api_only: true)
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :edit, params: { id: api_user.id }
+
+        assert_select "table#editable-permissions tr" do
+          assert_select "td", text: "api-only-app-name"
+        end
+      end
     end
 
     context "PUT update" do
