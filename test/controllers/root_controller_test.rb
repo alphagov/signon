@@ -36,6 +36,16 @@ class RootControllerTest < ActionController::TestCase
     assert_select "h3", count: 1
   end
 
+  test "do not display retired application on dashboard even if you have signin permission" do
+    application = create(:application, name: "Retired app", retired: true)
+    user = create(:user, with_signin_permissions_for: [application])
+    sign_in user
+
+    get :index
+
+    assert_select "h3", text: "Retired app", count: 0
+  end
+
   test "GDS publishers should be told to ask their delivery manager when they don't have permission to use a publishing app" do
     gds = create(:organisation, content_id: "af07d5a5-df63-4ddc-9383-6a666845ebe9")
     gds_user = create(:user, organisation: gds)
