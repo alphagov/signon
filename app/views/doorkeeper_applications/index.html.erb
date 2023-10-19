@@ -5,7 +5,12 @@
     {
       id: "active",
       label: "Active applications",
-      content: render("application_list", applications: @applications)
+      content: render("application_list", applications: @applications.not_api_only)
+    },
+    {
+      id: "api-only",
+      label: "API-only applications",
+      content: render("application_list", applications: @applications.api_only)
     },
     {
       id: "retired",
