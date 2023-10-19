@@ -1,5 +1,6 @@
 class ApiUser < User
   default_scope { where(api_user: true).order(:name) }
+
   validate :reason_for_2sv_exemption_blank
   validate :require_2sv_is_false
 

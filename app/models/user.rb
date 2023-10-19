@@ -57,8 +57,8 @@ class User < ApplicationRecord
   validate :organisation_has_mandatory_2sv, on: :create
 
   has_many :authorisations, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id
-  has_many :application_permissions, class_name: "UserApplicationPermission", inverse_of: :user, dependent: :destroy
-  has_many :supported_permissions, through: :application_permissions
+  has_many :application_permissions, -> { joins(:application) }, class_name: "UserApplicationPermission", inverse_of: :user, dependent: :destroy
+  has_many :supported_permissions, -> { joins(:application) }, through: :application_permissions
   has_many :batch_invitations
   belongs_to :organisation
 
@@ -161,8 +161,8 @@ class User < ApplicationRecord
     application_permissions
       .joins(:supported_permission)
       .where(application_id: application.id)
-      .order("supported_permissions.name")
-      .pluck(:name)
+      .order(SupportedPermission.arel_table[:name])
+      .pluck(SupportedPermission.arel_table[:name])
   end
 
   # Avoid N+1 queries by using the relations eager loaded with `includes()`.
@@ -208,6 +208,8 @@ class User < ApplicationRecord
   end
 
   def grant_application_permissions(application, supported_permission_names)
+    return [] if application.retired?
+
     supported_permission_names.map do |supported_permission_name|
       supported_permission = SupportedPermission.find_by(application_id: application.id, name: supported_permission_name)
       grant_permission(supported_permission)

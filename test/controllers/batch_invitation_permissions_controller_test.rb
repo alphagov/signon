@@ -77,6 +77,17 @@ class BatchInvitationPermissionsControllerTest < ActionController::TestCase
         assert_select "input[type='checkbox'][checked='checked'][name='user[supported_permission_ids][]'][value='#{permission.to_param}']"
       end
     end
+
+    should "not include permissions for retired apps" do
+      application = create(:application, retired: true)
+      signin_permission = application.signin_permission
+
+      get :new, params: { batch_invitation_id: @batch_invitation.id }
+
+      assert_select "form" do
+        assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{signin_permission.to_param}']", count: 0
+      end
+    end
   end
 
   context "POST create" do

@@ -83,6 +83,17 @@ class InvitationsControllerTest < ActionController::TestCase
           assert_select ".gem-c-option-select[data-filter-element]"
         end
       end
+
+      should "not render form checkbox inputs for permissions for retired applications" do
+        application = create(:application, retired: true)
+        signin_permission = application.signin_permission
+
+        get :new
+
+        assert_select "form" do
+          assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{signin_permission.to_param}']", count: 0
+        end
+      end
     end
 
     context "when inviter is signed in as a superadmin" do
