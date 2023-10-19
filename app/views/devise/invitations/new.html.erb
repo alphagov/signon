@@ -81,11 +81,20 @@
         } %>
       <% end %>
 
-      <div>
+      <div data-module="clear-selected-permissions">
         <%= render "govuk_publishing_components/components/fieldset", {
           legend_text: "Permissions",
           heading_size: "l",
         } do %>
+
+          <%= render "govuk_publishing_components/components/button", {
+            text: "Clear selected permissions",
+            secondary_solid: true,
+            margin_bottom: 4,
+            data_attributes: {
+              action: "clear"
+            }
+          } %>
 
           <% policy_scope(:user_permission_manageable_application).map do |application| %>
             <% options = options_for_permission_option_select(application:, user: f.object) %>
