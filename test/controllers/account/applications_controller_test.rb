@@ -47,6 +47,15 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
         assert_select "tr td", text: "app-name"
         assert_select "a[href='#{delete_account_application_signin_permission_path(application)}']"
       end
+
+      should "not display a retired application" do
+        create(:application, name: "retired-app-name", retired: true)
+        sign_in create(:admin_user)
+
+        get :index
+
+        assert_select "tr td", text: "retired-app-name", count: 0
+      end
     end
 
     context "logged in as a publishing manager" do
