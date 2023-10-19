@@ -30,10 +30,10 @@ If the email was sent in the last 7 days, it can be retrieved by searching for t
 
 #### Rails console
 
-First, open a Rails console:
+First, open a Rails console - you will need to [configure your EKS access](https://docs.publishing.service.gov.uk/kubernetes/cheatsheet.html#set-your-aws-environment-and-role):
 
 ```
-gds govuk c app-console -e <environment> signon
+kubectl exec -it deploy/signon -- rails c
 ```
 
 Run the following to obtain a token:
