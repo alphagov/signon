@@ -9,6 +9,7 @@ class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/Appli
   scope :support_push_updates, -> { where(supports_push_updates: true) }
   scope :retired, -> { where(retired: true) }
   scope :not_retired, -> { where(retired: false) }
+  scope :not_api_only, -> { where(api_only: false) }
   scope :can_signin, ->(user) { with_signin_permission_for(user) }
   scope :with_signin_delegatable,
         lambda {
