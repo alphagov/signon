@@ -150,6 +150,20 @@ class ApiUsersControllerTest < ActionController::TestCase
         assert_equal "Updated API user #{api_user.email} successfully", flash[:notice]
       end
 
+      should "update the user's permissions" do
+        application = create(:application, name: "app-name", with_supported_permissions: %w[edit])
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        signin_permission = application.supported_permissions.find_by(name: SupportedPermission::SIGNIN_NAME)
+        edit_permission = application.supported_permissions.find_by(name: "edit")
+        permissions = [signin_permission, edit_permission]
+
+        put :update, params: { id: api_user.id, api_user: { supported_permission_ids: permissions } }
+
+        assert_same_elements permissions, api_user.reload.supported_permissions
+      end
+
       should "redisplay the form with errors if save fails" do
         api_user = create(:api_user)
 
