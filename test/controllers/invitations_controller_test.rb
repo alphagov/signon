@@ -84,6 +84,17 @@ class InvitationsControllerTest < ActionController::TestCase
         end
       end
 
+      should "not render form checkbox inputs for permissions for API-only applications" do
+        application = create(:application, api_only: true)
+        signin_permission = application.signin_permission
+
+        get :new
+
+        assert_select "form" do
+          assert_select "input[type='checkbox'][name='user[supported_permission_ids][]'][value='#{signin_permission.to_param}']", count: 0
+        end
+      end
+
       should "not render form checkbox inputs for permissions for retired applications" do
         application = create(:application, retired: true)
         signin_permission = application.signin_permission

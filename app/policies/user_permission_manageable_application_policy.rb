@@ -31,7 +31,7 @@ class UserPermissionManageableApplicationPolicy
   private
 
     def applications
-      Doorkeeper::Application.includes(:supported_permissions)
+      Doorkeeper::Application.not_api_only.includes(:supported_permissions)
     end
   end
 end

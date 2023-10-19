@@ -44,6 +44,20 @@ class Account::ManagePermissionsControllerTest < ActionController::TestCase
           assert_select "td", count: 0, text: retired_app.name
         end
       end
+
+      should "not list API-only applications" do
+        user = create(:admin_user, email: "admin@gov.uk")
+        sign_in user
+
+        api_only_app = create(:application, api_only: true)
+        user.grant_application_signin_permission(api_only_app)
+
+        get :show
+
+        assert_select ".container" do
+          assert_select "td", count: 0, text: api_only_app.name
+        end
+      end
     end
 
     context "organisation admin" do
