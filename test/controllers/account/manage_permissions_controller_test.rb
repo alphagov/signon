@@ -30,6 +30,20 @@ class Account::ManagePermissionsControllerTest < ActionController::TestCase
           assert_select "td", count: 1, text: non_delegatable_no_access_to_app.name
         end
       end
+
+      should "not list retired applications" do
+        user = create(:admin_user, email: "admin@gov.uk")
+        sign_in user
+
+        retired_app = create(:application, retired: true)
+        user.grant_application_signin_permission(retired_app)
+
+        get :show
+
+        assert_select ".container" do
+          assert_select "td", count: 0, text: retired_app.name
+        end
+      end
     end
 
     context "organisation admin" do
