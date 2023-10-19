@@ -96,6 +96,23 @@ class ApiUsersControllerTest < ActionController::TestCase
         assert_select "input[name='api_user[name]'][value='#{api_user.name}']"
         assert_select "input[name='api_user[email]'][value='#{api_user.email}']"
       end
+
+      should "allow editing permissions for application which user has access to" do
+        application = create(:application, name: "app-name", with_supported_permissions: %w[edit])
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :edit, params: { id: api_user.id }
+
+        assert_select "table#editable-permissions tr" do
+          assert_select "td", text: "app-name"
+          assert_select "td" do
+            assert_select "select[name='api_user[supported_permission_ids][]']" do
+              assert_select "option", text: "edit"
+            end
+          end
+        end
+      end
     end
 
     context "PUT update" do
