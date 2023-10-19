@@ -56,6 +56,15 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
         assert_select "tr td", text: "retired-app-name", count: 0
       end
+
+      should "not display an API-only application" do
+        create(:application, name: "api-only-app-name", api_only: true)
+        sign_in create(:admin_user)
+
+        get :index
+
+        assert_select "tr td", text: "api-only-app-name", count: 0
+      end
     end
 
     context "logged in as a publishing manager" do
