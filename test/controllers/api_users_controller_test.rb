@@ -113,6 +113,18 @@ class ApiUsersControllerTest < ActionController::TestCase
           end
         end
       end
+
+      should "not allow editing permissions for retired application" do
+        application = create(:application, name: "retired-app-name", retired: true)
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :edit, params: { id: api_user.id }
+
+        assert_select "table#editable-permissions tr" do
+          assert_select "td", text: "retired-app-name", count: 0
+        end
+      end
     end
 
     context "PUT update" do
