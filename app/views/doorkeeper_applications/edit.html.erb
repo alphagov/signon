@@ -97,8 +97,13 @@
 
       <div class="govuk-body">
         <label>
-          <%= f.check_box :show_on_dashboard %> Show on dashboard
+          <%= f.check_box :api_only %> Is API-only
         </label>
+
+        <p>
+          An API-only application is one that doesn't have a user interface and is only used by API users.
+          It will not appear on the dashboard.
+        </p>
       </div>
 
       <div class="govuk-body">

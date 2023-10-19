@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_18_141956) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_19_080657) do
   create_table "batch_invitation_application_permissions", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "batch_invitation_id", null: false
     t.integer "supported_permission_id", null: false
@@ -95,8 +95,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_18_141956) do
     t.string "description"
     t.boolean "supports_push_updates", default: true
     t.boolean "retired", default: false, null: false
-    t.boolean "show_on_dashboard", default: true, null: false
     t.boolean "confidential", default: true, null: false
+    t.boolean "api_only", default: false, null: false
     t.index ["name"], name: "unique_application_name", unique: true
     t.index ["uid"], name: "index_oauth_applications_on_uid", unique: true
   end
