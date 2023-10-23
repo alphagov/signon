@@ -101,13 +101,17 @@ class ApiUsersControllerTest < ActionController::TestCase
     end
 
     context "GET edit" do
-      should "show the form" do
-        api_user = create(:api_user)
+      setup do
+        @api_user = create(:api_user)
+      end
 
-        get :edit, params: { id: api_user.id }
+      should "show the form for editing an API user" do
+        get :edit, params: { id: @api_user }
 
-        assert_select "input[name='api_user[name]'][value='#{api_user.name}']"
-        assert_select "input[name='api_user[email]'][value='#{api_user.email}']"
+        assert_select "form[action='#{api_user_path(@api_user)}']" do
+          assert_select "input[name='api_user[name]'][value='#{@api_user.name}']"
+          assert_select "input[name='api_user[email]'][value='#{@api_user.email}']"
+        end
       end
 
       should "allow editing permissions for application which user has access to" do
