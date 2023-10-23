@@ -10,6 +10,17 @@ class UserTest < ActiveSupport::TestCase
     @user = create(:user)
   end
 
+  context "#authorisations" do
+    should "return access tokens for user" do
+      token = create(:access_token, resource_owner_id: @user.id)
+      another_user = create(:user)
+      token_for_another_user = create(:access_token, resource_owner_id: another_user.id)
+
+      assert_includes @user.authorisations, token
+      assert_not_includes @user.authorisations, token_for_another_user
+    end
+  end
+
   context "#application_permissions" do
     should "return user application permissions for user" do
       application = create(:application)
