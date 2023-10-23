@@ -1,6 +1,7 @@
 {
   "srcDir": "public/assets/signon",
   "srcFiles": [
+    "application-*.js",
     "govuk-admin-template-*.js",
     "legacy_layout-*.js"
   ],
