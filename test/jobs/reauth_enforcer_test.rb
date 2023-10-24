@@ -28,5 +28,15 @@ class ReauthEnforcerTest < ActiveSupport::TestCase
 
       ReauthEnforcer.new.perform("a-uid", app.id)
     end
+
+    should "do nothing if the application is retired" do
+      app = create(:application, retired: true)
+
+      mock_client = mock("sso_push_client")
+      SSOPushClient.stubs(:new).returns(mock_client)
+      mock_client.expects(:reauth_user).never
+
+      ReauthEnforcer.new.perform("a-uid", app.id)
+    end
   end
 end
