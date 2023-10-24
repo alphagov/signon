@@ -38,6 +38,45 @@ class ApiUsersControllerTest < ActionController::TestCase
         get :index
         assert_select "td", count: 0, text: /web_user@email.com/
       end
+
+      should "list applications for api user" do
+        application = create(:application, name: "app-name")
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :index
+
+        assert_select "td>span" do |spans|
+          apps_span = spans.find { |s| s.text.strip == "Apps" }
+          assert_select apps_span.parent, "ul>li", text: "app-name"
+        end
+      end
+
+      should "not list retired applications for api user" do
+        application = create(:application, name: "app-name", retired: true)
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :index
+
+        assert_select "td>span" do |spans|
+          apps_span = spans.find { |s| s.text.strip == "Apps" }
+          assert_select apps_span.parent, "ul>li", text: "app-name", count: 0
+        end
+      end
+
+      should "list API-only applications for api user" do
+        application = create(:application, name: "app-name", api_only: true)
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :index
+
+        assert_select "td>span" do |spans|
+          apps_span = spans.find { |s| s.text.strip == "Apps" }
+          assert_select apps_span.parent, "ul>li", text: "app-name"
+        end
+      end
     end
 
     context "POST create" do
@@ -70,6 +109,47 @@ class ApiUsersControllerTest < ActionController::TestCase
         assert_select "input[name='api_user[name]'][value='#{api_user.name}']"
         assert_select "input[name='api_user[email]'][value='#{api_user.email}']"
       end
+
+      should "allow editing permissions for application which user has access to" do
+        application = create(:application, name: "app-name", with_supported_permissions: %w[edit])
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :edit, params: { id: api_user.id }
+
+        assert_select "table#editable-permissions tr" do
+          assert_select "td", text: "app-name"
+          assert_select "td" do
+            assert_select "select[name='api_user[supported_permission_ids][]']" do
+              assert_select "option", text: "edit"
+            end
+          end
+        end
+      end
+
+      should "not allow editing permissions for retired application" do
+        application = create(:application, name: "retired-app-name", retired: true)
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :edit, params: { id: api_user.id }
+
+        assert_select "table#editable-permissions tr" do
+          assert_select "td", text: "retired-app-name", count: 0
+        end
+      end
+
+      should "allow editing permissions for API-only application" do
+        application = create(:application, name: "api-only-app-name", api_only: true)
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :edit, params: { id: api_user.id }
+
+        assert_select "table#editable-permissions tr" do
+          assert_select "td", text: "api-only-app-name"
+        end
+      end
     end
 
     context "PUT update" do
@@ -81,6 +161,34 @@ class ApiUsersControllerTest < ActionController::TestCase
         assert_equal "New Name", api_user.reload.name
         assert_redirected_to :api_users
         assert_equal "Updated API user #{api_user.email} successfully", flash[:notice]
+      end
+
+      should "update the user's permissions" do
+        application = create(:application, name: "app-name", with_supported_permissions: %w[edit])
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        signin_permission = application.supported_permissions.find_by(name: SupportedPermission::SIGNIN_NAME)
+        edit_permission = application.supported_permissions.find_by(name: "edit")
+        permissions = [signin_permission, edit_permission]
+
+        put :update, params: { id: api_user.id, api_user: { supported_permission_ids: permissions } }
+
+        assert_same_elements permissions, api_user.reload.supported_permissions
+      end
+
+      should "update the user's permissions for API-only app" do
+        application = create(:application, name: "app-name", with_supported_permissions: %w[edit], api_only: true)
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        signin_permission = application.supported_permissions.find_by(name: SupportedPermission::SIGNIN_NAME)
+        edit_permission = application.supported_permissions.find_by(name: "edit")
+        permissions = [signin_permission, edit_permission]
+
+        put :update, params: { id: api_user.id, api_user: { supported_permission_ids: permissions } }
+
+        assert_same_elements permissions, api_user.reload.supported_permissions
       end
 
       should "redisplay the form with errors if save fails" do

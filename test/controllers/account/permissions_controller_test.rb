@@ -34,6 +34,16 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       end
     end
 
+    should "exclude API-only applications" do
+      sign_in create(:admin_user)
+
+      application = create(:application, api_only: true)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :index, params: { application_id: application.id }
+      end
+    end
+
     should "order permissions by whether the user has access and then alphabetically" do
       application = create(:application,
                            with_supported_permissions: %w[aaa bbb ttt uuu])

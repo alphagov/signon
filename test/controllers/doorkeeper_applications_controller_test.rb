@@ -7,14 +7,34 @@ class DoorkeeperApplicationsControllerTest < ActionController::TestCase
   end
 
   context "GET index" do
-    should "list applications" do
+    should "list applications in separate tabs for Active, API-only & Retired" do
       create(:application, name: "My first app")
+      create(:application, name: "My API-only app", api_only: true)
       create(:application, name: "My retired app", retired: true)
 
       get :index
 
-      assert_select "#active td", /My first app/
-      assert_select "#retired td", /My retired app/
+      assert_select "#active td", text: /My first app/
+      assert_select "#api-only td", text: /My first app/, count: 0
+      assert_select "#retired td", text: /My first app/, count: 0
+
+      assert_select "#active td", text: /My API-only app/, count: 0
+      assert_select "#api-only td", text: /My API-only app/
+      assert_select "#retired td", text: /My API-only app/, count: 0
+
+      assert_select "#active td", text: /My retired app/, count: 0
+      assert_select "#api-only td", text: /My retired app/, count: 0
+      assert_select "#retired td", text: /My retired app/
+    end
+
+    should "list retired apps in alphabetical order" do
+      create(:application, name: "My retired app B", retired: true)
+      create(:application, name: "My retired app A", retired: true)
+
+      get :index
+
+      assert_select "#retired tr:first-child td:first-child", text: /My retired app A/
+      assert_select "#retired tr:last-child td:first-child", text: /My retired app B/
     end
   end
 

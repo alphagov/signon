@@ -5,6 +5,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
     setup do
       @application = create(:application, name: "app-name", description: "app-description")
       @retired_application = create(:application, retired: true, name: "retired-app-name")
+      @api_only_application = create(:application, api_only: true, name: "api-only-app-name")
       @user = FactoryBot.create(:admin_user)
     end
 
@@ -38,6 +39,17 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
       assert_not page.has_content?("retired-app-name")
     end
 
+    should "not list API-only applications the user has access to" do
+      @user.grant_application_signin_permission(@api_only_application)
+
+      visit new_user_session_path
+      signin_with @user
+
+      visit account_applications_path
+
+      assert_not page.has_content?("api-only-app-name")
+    end
+
     should "list the applications the user does not have access to" do
       visit new_user_session_path
       signin_with @user
@@ -58,6 +70,15 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
       visit account_applications_path
 
       assert_not page.has_content?("retired-app-name")
+    end
+
+    should "not list API-only applications the user does not have access to" do
+      visit new_user_session_path
+      signin_with @user
+
+      visit account_applications_path
+
+      assert_not page.has_content?("api-only-app-name")
     end
   end
 
