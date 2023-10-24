@@ -256,6 +256,20 @@ class UsersFilterTest < ActiveSupport::TestCase
         assert_not app2_option
       end
     end
+
+    context "when App 2 is API-only" do
+      setup do
+        @app2.update!(api_only: true)
+      end
+
+      should "return not include options for API-only application permissions" do
+        filter = UsersFilter.new(User.all, @current_user, {})
+        options = filter.permission_option_select_options
+
+        app2_option = options.detect { |o| o[:value] == @app2.signin_permission.to_param }
+        assert_not app2_option
+      end
+    end
   end
 
   context "when filtering by organisation" do
