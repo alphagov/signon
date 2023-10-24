@@ -5,6 +5,8 @@ class SSOPushCredential
 
   class << self
     def credentials(application)
+      return if application.retired?
+
       user.grant_application_signin_permission(application)
       user.grant_application_permissions(application, PERMISSIONS)
 

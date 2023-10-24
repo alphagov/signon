@@ -81,6 +81,22 @@ class SSOPushCredentialTest < ActiveSupport::TestCase
     end
   end
 
+  context "given a retired application" do
+    setup do
+      @application.update!(retired: true)
+    end
+
+    should "not return a token" do
+      assert_nil SSOPushCredential.credentials(@application)
+    end
+
+    should "not create a new authorisation" do
+      SSOPushCredential.credentials(@application)
+
+      assert_empty @user.authorisations
+    end
+  end
+
   should "create an authorisation if one does not already exist" do
     assert_equal 0, @user.authorisations.count
 
