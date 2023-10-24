@@ -242,6 +242,20 @@ class UsersFilterTest < ActiveSupport::TestCase
         assert_equal expected_options, options
       end
     end
+
+    context "when App 2 is retired" do
+      setup do
+        @app2.update!(retired: true)
+      end
+
+      should "return not include options for retired application permissions" do
+        filter = UsersFilter.new(User.all, @current_user, {})
+        options = filter.permission_option_select_options
+
+        app2_option = options.detect { |o| o[:value] == @app2.signin_permission.to_param }
+        assert_not app2_option
+      end
+    end
   end
 
   context "when filtering by organisation" do
