@@ -73,7 +73,7 @@ class KubernetesTaskTest < ActiveSupport::TestCase
       })
     end
 
-    should "raise an exception about missing user, but not skip other existing users" do
+    should "raise an exception about missing app, but not skip other existing apps" do
       apps = [create(:application), create(:application)]
       names = [apps[0].name, "Do Not Exist", apps[1].name]
 
