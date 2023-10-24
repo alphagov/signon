@@ -15,7 +15,7 @@
     {
       id: "retired",
       label: "Retired applications",
-      content: render("application_list", applications: @applications.unscoped.retired)
+      content: render("application_list", applications: @applications.unscoped.retired.ordered_by_name)
     }
   ]
 } %>

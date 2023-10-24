@@ -26,6 +26,16 @@ class DoorkeeperApplicationsControllerTest < ActionController::TestCase
       assert_select "#api-only td", text: /My retired app/, count: 0
       assert_select "#retired td", text: /My retired app/
     end
+
+    should "list retired apps in alphabetical order" do
+      create(:application, name: "My retired app B", retired: true)
+      create(:application, name: "My retired app A", retired: true)
+
+      get :index
+
+      assert_select "#retired tr:first-child td:first-child", text: /My retired app A/
+      assert_select "#retired tr:last-child td:first-child", text: /My retired app B/
+    end
   end
 
   context "GET edit" do
