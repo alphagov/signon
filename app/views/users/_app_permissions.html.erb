@@ -14,11 +14,7 @@
     %>
       <tr>
         <td>
-          <% if application.retired? %>
-              <del><%= application.name %></del>
-          <% else %>
-              <%= application.name %>
-          <% end %>
+          <%= application.name %>
         </td>
         <% unless user_object.api_user? %>
           <td>
