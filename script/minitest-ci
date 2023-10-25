@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+# This script is used during the GitHub Actions workflow
+# defined in .github/workflows/ci.yml.
+# It splits the MiniTest suite into randomly-allocated groups
+# which are executed across multiple GitHub Actions 'matrix' nodes.
+
+tests = Dir["test/**/*_test.rb"]
+  .sort
+  .shuffle(random: Random.new(ENV["GITHUB_SHA"].to_i(16)))
+  .select
+  .with_index do |_el, i|
+    i % ENV["CI_NODE_TOTAL"].to_i == ENV["CI_NODE_INDEX"].to_i
+  end
+
+exec "bundle exec rails test #{tests.join(' ')}"
