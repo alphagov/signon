@@ -51,29 +51,6 @@ namespace :users do
     User.find_each { |user| PermissionUpdater.perform_on(user) }
   end
 
-  desc "Exports users which have been auto-suspended since the given date, and details of their unsuspension"
-  task export_auto_suspended_users: :environment do
-    raise "Requires ENV variable EXPORT_DIR to be set to a valid directory path" if ENV["EXPORT_DIR"].blank?
-
-    if ENV["DATE"].blank?
-      raise "Requires ENV variable USERS_SINCE to be set to a valid date" if ENV["USERS_SINCE"].blank?
-
-      users_since_date = Date.parse(ENV["USERS_SINCE"])
-
-      raise "Requires ENV variable SUSPENSIONS_SINCE to be set to a valid date" if ENV["SUSPENSIONS_SINCE"].blank?
-
-      suspensions_since_date = Date.parse(ENV["SUSPENSIONS_SINCE"])
-    else
-      users_since_date = Date.parse(ENV["DATE"])
-      suspensions_since_date = Date.parse(ENV["DATE"])
-    end
-
-    raise "Requires ENV variable USERS_SINCE to be set to a valid date" unless users_since_date
-    raise "Requires ENV variable SUSPENSIONS_SINCE to be set to a valid date" unless suspensions_since_date
-
-    UserSuspensionsExporter.call(ENV["EXPORT_DIR"], users_since_date, suspensions_since_date, Logger.new($stdout))
-  end
-
   desc "Grant all active and suspended users access to an application, who don't have access"
   task :grant_application_access, [:application] => :environment do |_t, args|
     application = Doorkeeper::Application.find_by(name: args.application)
