@@ -14,6 +14,8 @@ module Devise
         scope(:current, proc { |current| current == "t" ? active : suspended })
       end
 
+      # Overrides Devise::Models::Authenticatable#active_for_authentication?
+      # See https://www.rubydoc.info/github/plataformatec/devise/Devise/Models/Authenticatable
       def active_for_authentication?
         if super
           return true unless suspended?
@@ -23,6 +25,8 @@ module Devise
         false
       end
 
+      # Overrides Devise::Models::Authenticatable#inactive_message
+      # See https://www.rubydoc.info/github/plataformatec/devise/Devise/Models/Authenticatable
       def inactive_message
         suspended? ? :suspended : super
       end
