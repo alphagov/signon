@@ -5,26 +5,12 @@ class UsersController < ApplicationController
 
   layout "admin_layout", only: %w[index event_logs require_2sv]
 
-  before_action :authenticate_user!, except: :show
-  before_action :load_and_authorize_user, except: %i[index show]
+  before_action :authenticate_user!
+  before_action :load_and_authorize_user, except: %i[index]
   before_action :allow_no_application_access, only: [:update]
   before_action :redirect_legacy_filters, only: [:index]
   helper_method :applications_and_permissions, :filter_params
   respond_to :html
-
-  before_action :doorkeeper_authorize!, only: :show
-  before_action :validate_token_matches_client_id, only: :show
-  skip_after_action :verify_authorized, only: :show
-
-  def show
-    current_resource_owner.permissions_synced!(application_making_request)
-    respond_to do |format|
-      format.json do
-        presenter = UserOAuthPresenter.new(current_resource_owner, application_making_request)
-        render json: presenter.as_hash.to_json
-      end
-    end
-  end
 
   def index
     authorize User
@@ -106,14 +92,6 @@ private
 
   def should_include_permissions?
     params[:format] == "csv"
-  end
-
-  def validate_token_matches_client_id
-    # FIXME: Once gds-sso is updated everywhere, this should always validate
-    # the client_id param.  It should 401 if no client_id is given.
-    if params[:client_id].present? && (params[:client_id] != doorkeeper_token.application.uid)
-      head :unauthorized
-    end
   end
 
   def export

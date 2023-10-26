@@ -46,7 +46,7 @@ Rails.application.routes.draw do
       get :require_2sv
     end
   end
-  resource :user, only: [:show]
+  get "user", to: "oauth_users#show"
 
   resource :account, only: [:show]
   namespace :account do
