@@ -272,15 +272,6 @@ Devise.setup do |config|
   # default devise_zxcvbn minimum password score
   # config.min_password_score = 4
 
-  # Metrics!
-  Warden::Manager.after_authentication do |_user, _auth, _opts|
-    GovukStatsd.increment("logins.success")
-  end
-
-  Warden::Manager.before_failure do |_env, _opts|
-    GovukStatsd.increment("logins.failure")
-  end
-
   # ==> Security Extension
   # Configure security extension for devise
 

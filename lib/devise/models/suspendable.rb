@@ -31,7 +31,6 @@ module Devise
       # error on validation failures
       # rubocop:disable Rails/SaveBang
       def suspend(reason)
-        GovukStatsd.increment("users.suspend")
         update(reason_for_suspension: reason,
                suspended_at: Time.zone.now)
         revoke_all_authorisations

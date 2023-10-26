@@ -28,7 +28,6 @@ private
   def record_password_reset_request
     user = User.find_by(email: params[:user][:email]) if params[:user].present?
     EventLog.record_event(user, EventLog::PASSWORD_RESET_REQUEST, ip_address: user_ip_address) if user
-    GovukStatsd.increment("users.password_reset_request")
   end
 
   def record_reset_page_loaded

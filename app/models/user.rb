@@ -64,7 +64,6 @@ class User < ApplicationRecord
 
   before_validation :fix_apostrophe_in_email
   after_initialize :generate_uid
-  after_create :update_stats
   before_save :set_2sv_for_admin_roles
   before_save :reset_2sv_exemption_reason
   before_save :mark_two_step_mandated_changed
@@ -277,10 +276,6 @@ class User < ApplicationRecord
 
   def invited_but_not_yet_accepted?
     invitation_sent_at.present? && invitation_accepted_at.nil?
-  end
-
-  def update_stats
-    GovukStatsd.increment("users.created")
   end
 
   # Override Devise::Model::Lockable#lock_access! to add event logging
