@@ -73,7 +73,7 @@ class KubernetesTaskTest < ActiveSupport::TestCase
       })
     end
 
-    should "raise an exception about missing user, but not skip other existing users" do
+    should "raise an exception about missing app, but not skip other existing apps" do
       apps = [create(:application), create(:application)]
       names = [apps[0].name, "Do Not Exist", apps[1].name]
 
@@ -87,6 +87,21 @@ class KubernetesTaskTest < ActiveSupport::TestCase
       end
 
       assert_match(/Do Not Exist/, err.message)
+    end
+
+    should "raise an exception about retired app" do
+      app = create(:application, retired: true)
+
+      stub_config_map(@client, [app.name], [])
+      expect_secrets_created_for_only_apps(@client, [])
+
+      err = assert_raises StandardError do
+        Rake::Task["kubernetes:sync_app_secrets"].execute({
+          config_map_name: "config_map_name",
+        })
+      end
+
+      assert_match(/#{app.name}/, err.message)
     end
   end
 

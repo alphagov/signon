@@ -61,6 +61,14 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
         PermissionUpdater.new.perform(@user.uid, @application.id + 42)
       end
 
+      should "do nothing if the application is retired" do
+        @application = create(:application, retired: true)
+
+        SSOPushClient.expects(:new).never
+
+        PermissionUpdater.new.perform(@user.uid, @application.id)
+      end
+
       should "do nothing if the application doesn't support push updates" do
         @application = create(:application, supports_push_updates: false)
 

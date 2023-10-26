@@ -11,10 +11,20 @@ class PushUserUpdatesJobTest < ActiveSupport::TestCase
       user = create(:user)
       foo_app, _bar_app = *create_list(:application, 2)
 
-      # authenticate access
-      Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: foo_app.id, token: "1234")
+      create(:access_token, resource_owner_id: user.id, application: foo_app)
 
       assert_enqueued_with(job: TestJob, args: [user.uid, foo_app.id]) do
+        TestJob.perform_on(user)
+      end
+    end
+
+    should "not perform_async updates on user's retired applications" do
+      user = create(:user)
+      retired_app = create(:application, retired: true)
+
+      create(:access_token, resource_owner_id: user.id, application: retired_app)
+
+      assert_no_enqueued_jobs do
         TestJob.perform_on(user)
       end
     end
