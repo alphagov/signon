@@ -21,7 +21,7 @@ class UserResearchRecruitmentBannerTest < ActionDispatch::IntegrationTest
     visit new_user_session_path
     signin_with(user)
 
-    click_on "Change your email or password"
+    click_on "Change your email"
 
     assert_not has_content?(user_research_recruitment_banner_title)
   end

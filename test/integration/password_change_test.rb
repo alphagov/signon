@@ -73,7 +73,7 @@ class PasswordChangeTest < ActionDispatch::IntegrationTest
       visit root_path
       signin_with(@user)
 
-      click_link "Change your email or password"
+      click_link "Change your password"
       fill_in "Current password", with: @original_password
 
       refute_response_contains("The new password")

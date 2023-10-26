@@ -100,7 +100,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         visit new_user_session_path
         signin_with(@user)
 
-        click_link "Change your email or password"
+        click_link "Change your email"
         fill_in "Email", with: "new@email.com"
         click_button "Change email"
 
@@ -117,7 +117,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         visit new_user_session_path
         signin_with(@user)
 
-        click_link "Change your email or password"
+        click_link "Change your email"
         fill_in "Email", with: "new@email.com"
         click_button "Change email"
 
@@ -135,7 +135,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin_with(@user)
 
-      click_link "Change your email or password"
+      click_link "Change your email"
       fill_in "Email", with: ""
       click_button "Change email"
 
@@ -150,13 +150,13 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin_with(@user)
 
-      click_link "Change your email or password"
+      click_link "Change your email"
       fill_in "Email", with: "new@email.com"
       click_button "Change email"
 
       confirmation_token = token_sent_to(@user)
 
-      click_link "Change your email or password"
+      click_link "Change your email"
       click_link "Cancel change"
       signout
 

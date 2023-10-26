@@ -1,7 +1,7 @@
 require "test_helper"
 require "support/policy_helpers"
 
-class Account::EmailPasswordsPolicyTest < ActiveSupport::TestCase
+class Account::EmailsPolicyTest < ActiveSupport::TestCase
   include PolicyHelpers
 
   should "allow logged in users to see show irrespective of their role" do

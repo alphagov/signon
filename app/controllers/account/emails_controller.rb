@@ -1,4 +1,4 @@
-class Account::EmailPasswordsController < ApplicationController
+class Account::EmailsController < ApplicationController
   layout "admin_layout"
 
   before_action :authenticate_user!
@@ -21,24 +21,12 @@ class Account::EmailPasswordsController < ApplicationController
     end
   end
 
-  def update_password
-    if current_user.update_with_password(password_params)
-      EventLog.record_event(current_user, EventLog::SUCCESSFUL_PASSWORD_CHANGE, ip_address: user_ip_address)
-      flash[:notice] = t(:updated, scope: "devise.passwords")
-      bypass_sign_in(current_user)
-      redirect_to account_path
-    else
-      EventLog.record_event(current_user, EventLog::UNSUCCESSFUL_PASSWORD_CHANGE, ip_address: user_ip_address)
-      render :show
-    end
-  end
-
   def resend_email_change
     current_user.resend_confirmation_instructions
     if current_user.errors.empty?
       redirect_to account_path, notice: email_change_notice
     else
-      redirect_to account_email_password_path, alert: "Failed to send email change email"
+      redirect_to account_email_path, alert: "Failed to send email change email"
     end
   end
 
@@ -51,15 +39,7 @@ class Account::EmailPasswordsController < ApplicationController
 private
 
   def authorise_user
-    authorize %i[account email_passwords]
-  end
-
-  def password_params
-    params.require(:user).permit(
-      :current_password,
-      :password,
-      :password_confirmation,
-    )
+    authorize %i[account emails]
   end
 
   def email_change_notice

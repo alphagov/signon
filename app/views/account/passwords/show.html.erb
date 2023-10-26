@@ -1,0 +1,43 @@
+<% content_for :title, "Change your password" %>
+
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "Settings",
+         url: account_path,
+       },
+       {
+         title: "Change your password",
+       }
+     ]
+   })
+%>
+
+
+<% if current_user.errors.count > 0 %>
+  <% content_for :error_summary do %>
+    <%= render "govuk_publishing_components/components/error_summary", {
+      title: "There is a problem",
+      items: current_user.errors.map do |error|
+        {
+          text: error.full_message,
+          href: "#user_#{error.attribute}",
+        }
+      end,
+    } %>
+  <% end %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for current_user, :url => update_password_account_password_path do |f| %>
+      <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: current_user, updating_password: true } %>
+    <% end %>
+  </div>
+</div>
