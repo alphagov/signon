@@ -60,7 +60,7 @@ class UsersFilter
   end
 
   def permission_option_select_options(aria_controls_id: nil)
-    Doorkeeper::Application.includes(:supported_permissions).flat_map do |application|
+    Doorkeeper::Application.not_api_only.includes(:supported_permissions).flat_map do |application|
       application.supported_permissions.map do |permission|
         {
           label: "#{application.name} #{permission.name}",
