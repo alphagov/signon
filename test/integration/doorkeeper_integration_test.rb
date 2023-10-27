@@ -47,6 +47,26 @@ class DoorkeeperIntegrationTest < ActionDispatch::IntegrationTest
     end
   end
 
+  test "successful authorization is logged" do
+    without_csrf_protection do
+      app = create(:application)
+      password = SecureRandom.urlsafe_base64
+      user = create(:user, with_signin_permissions_for: [app], password:)
+
+      sign_in user.email, password
+
+      auth_code = request_authorization_code(app)
+
+      reset!
+
+      request_access_token(app, auth_code)
+
+      event = EventLog.find_by(event_id: EventLog::SUCCESSFUL_USER_APPLICATION_AUTHORIZATION.id)
+      assert_equal user.uid, event.uid
+      assert_equal app.id, event.application_id
+    end
+  end
+
 private
 
   def without_csrf_protection

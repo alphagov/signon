@@ -344,6 +344,10 @@ Doorkeeper.configure do
   #       .logout_uri
   # end
 
+  after_successful_authorization do |controller, context|
+    Doorkeeper::AfterSuccessfulAuthorizationProcessor.new(controller, context).process
+  end
+
   # Under some circumstances you might want to have applications auto-approved,
   # so that the user skips the authorization step.
   # For example if dealing with a trusted application.
