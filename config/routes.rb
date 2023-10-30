@@ -63,7 +63,7 @@ Rails.application.routes.draw do
     end
     resource :password, only: %i[edit update]
     resource :manage_permissions, only: %i[show update]
-    resource :organisation, only: %i[show update]
+    resource :organisation, only: %i[edit update]
     resource :role, only: [:show] do
       patch :update_role
     end

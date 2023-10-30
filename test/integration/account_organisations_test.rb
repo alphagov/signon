@@ -9,7 +9,7 @@ class AccountRoleOrganisationsTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin_with non_govuk_admin_user
 
-      visit account_organisation_path
+      visit edit_account_organisation_path
 
       assert has_text? "Department for Viability"
     end
@@ -23,7 +23,7 @@ class AccountRoleOrganisationsTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin_with user
 
-      visit account_organisation_path
+      visit edit_account_organisation_path
 
       select "Postage", from: "Organisation"
       click_button "Change organisation"
@@ -31,7 +31,7 @@ class AccountRoleOrganisationsTest < ActionDispatch::IntegrationTest
       assert_current_url account_path
       assert page.has_text? "Your organisation is now Postage"
 
-      visit account_organisation_path
+      visit edit_account_organisation_path
 
       assert page.has_select? "Organisation", selected: "Postage"
     end

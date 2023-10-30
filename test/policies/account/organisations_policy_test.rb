@@ -4,13 +4,13 @@ require "support/policy_helpers"
 class Account::OrganisationsPolicyTest < ActiveSupport::TestCase
   include PolicyHelpers
 
-  context "show?" do
-    should "allow logged in users to see show irrespective of their role" do
-      assert permit?(build(:user), nil, :show)
+  context "edit?" do
+    should "allow logged in users to see edit irrespective of their role" do
+      assert permit?(build(:user), nil, :edit)
     end
 
-    should "not allow anonymous visitors to see show" do
-      assert forbid?(nil, nil, :show)
+    should "not allow anonymous visitors to see edit" do
+      assert forbid?(nil, nil, :edit)
     end
   end
 

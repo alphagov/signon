@@ -1,5 +1,5 @@
 class Account::OrganisationsPolicy < BasePolicy
-  def show?
+  def edit?
     current_user.present?
   end
 

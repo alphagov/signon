@@ -23,7 +23,7 @@ class AccountTest < ActionDispatch::IntegrationTest
       assert page.has_link?("Manage permissions", href: account_manage_permissions_path)
       assert page.has_link?("Change your 2-step verification phone", href: two_step_verification_path)
       assert page.has_link?("View your role", href: account_role_path)
-      assert page.has_link?("Change your organisation", href: account_organisation_path)
+      assert page.has_link?("Change your organisation", href: edit_account_organisation_path)
       assert page.has_link?("Your account access log", href: account_activity_path)
     end
 
@@ -40,7 +40,7 @@ class AccountTest < ActionDispatch::IntegrationTest
       assert page.has_link?("Change your password", href: edit_account_password_path)
       assert page.has_link?("Change your 2-step verification phone", href: two_step_verification_path)
       assert page.has_link?("View your role", href: account_role_path)
-      assert page.has_link?("View your organisation", href: account_organisation_path)
+      assert page.has_link?("View your organisation", href: edit_account_organisation_path)
       assert page.has_link?("Your account access log", href: account_activity_path)
 
       assert_not page.has_link?("Manage permissions")

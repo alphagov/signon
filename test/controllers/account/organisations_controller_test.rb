@@ -8,9 +8,9 @@ class Account::OrganisationsControllerTest < ActionController::TestCase
     sign_in @superadmin_user
   end
 
-  context "GET show" do
+  context "GET edit" do
     should "display form with current organisation" do
-      get :show
+      get :edit
 
       assert_select "form[action='#{account_organisation_path}']" do
         assert_select "select[name='user[organisation_id]']", value: @superadmin_user.organisation_id
@@ -24,7 +24,7 @@ class Account::OrganisationsControllerTest < ActionController::TestCase
 
       put :update, params: { user: { organisation_id: @organisation } }
 
-      assert_template :show
+      assert_template :edit
       assert_select "*[role='alert']", text: "There was a problem changing your organisation."
     end
   end

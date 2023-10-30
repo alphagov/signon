@@ -4,7 +4,7 @@ class Account::OrganisationsController < ApplicationController
   before_action :authenticate_user!
   before_action :authorise_user
 
-  def show; end
+  def edit; end
 
   def update
     organisation_id = params[:user][:organisation_id]
@@ -14,7 +14,7 @@ class Account::OrganisationsController < ApplicationController
       redirect_to account_path, notice: "Your organisation is now #{organisation.name}"
     else
       flash[:alert] = "There was a problem changing your organisation."
-      render :show
+      render :edit
     end
   end
 
