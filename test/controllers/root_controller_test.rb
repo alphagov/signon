@@ -36,6 +36,16 @@ class RootControllerTest < ActionController::TestCase
     assert_select "h3", count: 1
   end
 
+  test "do not display application with no home URI on dashboard even if you have signin permission" do
+    application = create(:application, name: "App without home page", home_uri: nil)
+    user = create(:user, with_signin_permissions_for: [application])
+    sign_in user
+
+    get :index
+
+    assert_select "h3", text: "App without home page", count: 0
+  end
+
   test "do not display retired application on dashboard even if you have signin permission" do
     application = create(:application, name: "Retired app", retired: true)
     user = create(:user, with_signin_permissions_for: [application])

@@ -11,6 +11,7 @@ class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/Appli
   scope :not_retired, -> { where(retired: false) }
   scope :api_only, -> { where(api_only: true) }
   scope :not_api_only, -> { where(api_only: false) }
+  scope :with_home_uri, -> { where.not(home_uri: nil).where.not(home_uri: "") }
   scope :can_signin, ->(user) { with_signin_permission_for(user) }
   scope :with_signin_delegatable,
         lambda {
@@ -77,6 +78,8 @@ class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/Appli
 private
 
   def substituted_uri(uri)
+    return if uri.blank?
+
     uri_pattern = Rails.configuration.oauth_apps_uri_sub_pattern
     uri_sub = Rails.configuration.oauth_apps_uri_sub_replacement
 

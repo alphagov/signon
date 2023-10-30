@@ -96,22 +96,29 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       assert_equal "https://app.com/", application.home_uri
     end
 
-    should "return application substituted home uri if match" do
-      Rails.application.config.stubs(oauth_apps_uri_sub_pattern: "replace.me")
-      Rails.application.config.stubs(oauth_apps_uri_sub_replacement: "new.domain")
+    context "when URI substitution is enabled" do
+      setup do
+        Rails.application.config.stubs(oauth_apps_uri_sub_pattern: "replace.me")
+        Rails.application.config.stubs(oauth_apps_uri_sub_replacement: "new.domain")
+      end
 
-      application = create(:application, home_uri: "https://app.replace.me/")
+      should "return nil if application home uri is nil" do
+        application = create(:application, home_uri: nil)
 
-      assert_equal "https://app.new.domain/", application.home_uri
-    end
+        assert_nil application.home_uri
+      end
 
-    should "return application original home uri if not matched" do
-      Rails.application.config.stubs(oauth_apps_uri_sub_pattern: "replace.me")
-      Rails.application.config.stubs(oauth_apps_uri_sub_replacement: "new.domain")
+      should "return application substituted home uri if match" do
+        application = create(:application, home_uri: "https://app.replace.me/")
 
-      application = create(:application, home_uri: "https://app.keep.me/")
+        assert_equal "https://app.new.domain/", application.home_uri
+      end
 
-      assert_equal "https://app.keep.me/", application.home_uri
+      should "return application original home uri if not matched" do
+        application = create(:application, home_uri: "https://app.keep.me/")
+
+        assert_equal "https://app.keep.me/", application.home_uri
+      end
     end
   end
 
@@ -221,6 +228,27 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     should "exclude apps that are api only" do
       @app.update!(api_only: true)
       assert_equal [], Doorkeeper::Application.not_api_only
+    end
+  end
+
+  context ".with_home_uri" do
+    setup do
+      @app = create(:application)
+    end
+
+    should "include apps that have a home URI" do
+      @app.update!(home_uri: "http://gov.uk")
+      assert_equal [@app], Doorkeeper::Application.with_home_uri
+    end
+
+    should "exclude apps that has a nil home URI" do
+      @app.update!(home_uri: nil)
+      assert_equal [], Doorkeeper::Application.with_home_uri
+    end
+
+    should "exclude apps that has a blank home URI" do
+      @app.update!(home_uri: "")
+      assert_equal [], Doorkeeper::Application.with_home_uri
     end
   end
 
