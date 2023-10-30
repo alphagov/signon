@@ -4,20 +4,20 @@ class Account::EmailsController < ApplicationController
   before_action :authenticate_user!
   before_action :authorise_user
 
-  def show; end
+  def edit; end
 
   def update
     current_email = current_user.email
     new_email = params[:user][:email]
     if current_email == new_email.strip
       flash[:alert] = "Nothing to update."
-      render :show
+      render :edit
     elsif current_user.update(email: new_email)
       EventLog.record_email_change(current_user, current_email, new_email)
       UserMailer.email_changed_notification(current_user).deliver_later
       redirect_to account_path, notice: email_change_notice
     else
-      render :show
+      render :edit
     end
   end
 
@@ -26,7 +26,7 @@ class Account::EmailsController < ApplicationController
     if current_user.errors.empty?
       redirect_to account_path, notice: email_change_notice
     else
-      redirect_to account_email_path, alert: "Failed to send email change email"
+      redirect_to edit_account_email_path, alert: "Failed to send email change email"
     end
   end
 

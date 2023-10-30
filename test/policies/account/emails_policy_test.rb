@@ -5,10 +5,10 @@ class Account::EmailsPolicyTest < ActiveSupport::TestCase
   include PolicyHelpers
 
   should "allow logged in users to see show irrespective of their role" do
-    assert permit?(build(:user), nil, :show)
+    assert permit?(build(:user), nil, :edit)
   end
 
-  should "not allow anonymous visitors to see show" do
-    assert forbid?(nil, nil, :show)
+  should "not allow anonymous visitors to see edit" do
+    assert forbid?(nil, nil, :edit)
   end
 end

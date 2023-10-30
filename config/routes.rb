@@ -57,7 +57,7 @@ Rails.application.routes.draw do
         get :delete
       end
     end
-    resource :email, only: %i[show update] do
+    resource :email, only: %i[edit update] do
       put :resend_email_change
       delete :cancel_email_change
     end
