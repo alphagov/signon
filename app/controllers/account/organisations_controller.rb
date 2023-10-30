@@ -6,7 +6,7 @@ class Account::OrganisationsController < ApplicationController
 
   def show; end
 
-  def update_organisation
+  def update
     organisation_id = params[:user][:organisation_id]
     organisation = Organisation.find(organisation_id)
 

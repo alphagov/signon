@@ -16,7 +16,7 @@ module AccountHelper
   end
 
   def organisation_page_title
-    if policy(%i[account organisations]).update_organisation?
+    if policy(%i[account organisations]).update?
       "Change your organisation"
     else
       "View your organisation"

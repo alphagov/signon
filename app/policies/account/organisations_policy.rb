@@ -3,7 +3,7 @@ class Account::OrganisationsPolicy < BasePolicy
     current_user.present?
   end
 
-  def update_organisation?
+  def update?
     current_user.govuk_admin?
   end
 end

@@ -21,8 +21,8 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <% if policy(%i[account organisations]).update_organisation? %>
-      <%= form_for current_user, url: update_organisation_account_organisation_path do |f| %>
+    <% if policy(%i[account organisations]).update? %>
+      <%= form_for current_user, url: account_organisation_path do |f| %>
         <%= render "govuk_publishing_components/components/select", {
             id: "user_organisation_id",
             name: "user[organisation_id]",
