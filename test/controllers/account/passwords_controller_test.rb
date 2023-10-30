@@ -71,6 +71,16 @@ class Account::PasswordsControllerTest < ActionController::TestCase
         assert_select "a", href: "#user_password", text: /Password not strong enough/
         assert_select "a", href: "#user_password_confirmation", text: "Password confirmation doesn't match Password"
       end
+      assert_select ".govuk-form-group" do
+        assert_select ".govuk-error-message", text: "Error: Current password can't be blank"
+        assert_select "input[name='user[current_password]'].govuk-input--error"
+
+        assert_select ".govuk-error-message", text: /Error: Password not strong enough/
+        assert_select "input[name='user[password]'].govuk-input--error"
+
+        assert_select ".govuk-error-message", text: "Error: Password confirmation doesn't match Password"
+        assert_select "input[name='user[password_confirmation]'].govuk-input--error"
+      end
     end
   end
 end
