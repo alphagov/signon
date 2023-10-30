@@ -21,13 +21,6 @@ Used to configure Mail::Notify for use by ActionMailer in sending emails.
 * `GOVUK_NOTIFY_API_KEY`
 * `GOVUK_NOTIFY_TEMPLATE_ID`
 
-## Rewrite URIs for OAuth Applications
-
-Used by `Doorkeeper::Application#substituted_uri`.
-
-* `SIGNON_APPS_URI_SUB_PATTERN`
-* `SIGNON_APPS_URI_SUB_REPLACEMENT`
-
 ## GOV.UK app domain
 
 Used to configure Google Analytics in the new `app/views/layouts/admin_layout.html.erb`.
