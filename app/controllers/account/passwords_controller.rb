@@ -6,7 +6,7 @@ class Account::PasswordsController < ApplicationController
 
   def show; end
 
-  def update_password
+  def update
     if current_user.update_with_password(password_params)
       EventLog.record_event(current_user, EventLog::SUCCESSFUL_PASSWORD_CHANGE, ip_address: user_ip_address)
       flash[:notice] = t(:updated, scope: "devise.passwords")

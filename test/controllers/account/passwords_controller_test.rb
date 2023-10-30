@@ -7,7 +7,7 @@ class Account::PasswordsControllerTest < ActionController::TestCase
     original_password_hash = user.encrypted_password
     sign_in user
 
-    post :update_password,
+    post :update,
          params: {
            user: {
              current_password: original_password,
@@ -19,7 +19,7 @@ class Account::PasswordsControllerTest < ActionController::TestCase
     [user, original_password_hash]
   end
 
-  context "PUT update_password" do
+  context "PUT update" do
     should "changing passwords to something strong should succeed" do
       user, orig_password = change_user_password(:user, "destabilizers842}orthophosphate")
 

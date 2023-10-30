@@ -36,7 +36,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_for current_user, :url => update_password_account_password_path do |f| %>
+    <%= form_for current_user, :url => account_password_path do |f| %>
       <%= render partial: "devise/passwords/change_password_panel", locals: { f: f, user: current_user, updating_password: true } %>
     <% end %>
   </div>
