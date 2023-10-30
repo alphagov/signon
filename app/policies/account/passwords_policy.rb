@@ -1,6 +1,6 @@
 class Account::PasswordsPolicy < BasePolicy
-  def show?
+  def edit?
     current_user.present?
   end
-  alias_method :update?, :show?
+  alias_method :update?, :edit?
 end

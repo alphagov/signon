@@ -61,7 +61,7 @@ Rails.application.routes.draw do
       put :resend_email_change
       delete :cancel_email_change
     end
-    resource :password, only: %i[show update]
+    resource :password, only: %i[edit update]
     resource :manage_permissions, only: %i[show update]
     resource :role_organisation, only: [:show] do
       patch :update_organisation

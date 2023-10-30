@@ -4,7 +4,7 @@ class Account::PasswordsController < ApplicationController
   before_action :authenticate_user!
   before_action :authorise_user
 
-  def show; end
+  def edit; end
 
   def update
     if current_user.update_with_password(password_params)
@@ -14,7 +14,7 @@ class Account::PasswordsController < ApplicationController
       redirect_to account_path
     else
       EventLog.record_event(current_user, EventLog::UNSUCCESSFUL_PASSWORD_CHANGE, ip_address: user_ip_address)
-      render :show
+      render :edit
     end
   end
 
