@@ -68,6 +68,10 @@ class Account::EmailsControllerTest < ActionController::TestCase
       assert_select ".govuk-error-summary" do
         assert_select "a", href: "#user_email", text: "Email can't be blank"
       end
+      assert_select ".govuk-form-group" do
+        assert_select ".govuk-error-message", text: "Error: Email can't be blank"
+        assert_select "input[name='user[email]'].govuk-input--error"
+      end
     end
   end
 

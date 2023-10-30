@@ -57,7 +57,8 @@
         id: "user_email",
         value: current_user.email,
         hint: "Changing your email address doesn’t take effect until you follow the link in a confirmation email sent to the new address.",
-        autocomplete: "email"
+        autocomplete: "email",
+        error_items: current_user.errors.full_messages_for(:email).map { |message| { text: message } }
       } %>
       <%= render "govuk_publishing_components/components/button", {
         text: "Change email"
