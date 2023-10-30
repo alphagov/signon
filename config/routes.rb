@@ -64,9 +64,7 @@ Rails.application.routes.draw do
     resource :password, only: %i[edit update]
     resource :manage_permissions, only: %i[show update]
     resource :organisation, only: %i[edit update]
-    resource :role, only: [:show] do
-      patch :update_role
-    end
+    resource :role, only: %i[show update]
   end
 
   resources :batch_invitations, only: %i[new create show] do

@@ -8,7 +8,7 @@ module AccountHelper
   end
 
   def role_page_title
-    if policy(%i[account roles]).update_role?
+    if policy(%i[account roles]).update?
       "Change your role"
     else
       "View your role"

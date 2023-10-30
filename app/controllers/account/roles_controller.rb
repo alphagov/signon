@@ -6,7 +6,7 @@ class Account::RolesController < ApplicationController
 
   def show; end
 
-  def update_role
+  def update
     role = params[:user][:role]
 
     if UserUpdate.new(current_user, { role: }, current_user, user_ip_address).call

@@ -14,12 +14,12 @@ class Account::RolesPolicyTest < ActiveSupport::TestCase
     end
   end
 
-  context "update_role?" do
+  context "update?" do
     %i[superadmin].each do |user_role|
       should "be permitted for #{user_role} users" do
         user = FactoryBot.build(:"#{user_role}_user")
 
-        assert permit?(user, nil, :update_role)
+        assert permit?(user, nil, :update)
       end
     end
 
@@ -27,7 +27,7 @@ class Account::RolesPolicyTest < ActiveSupport::TestCase
       should "be forbidden for #{user_role} users" do
         user = FactoryBot.build(:"#{user_role}_user")
 
-        assert forbid?(user, nil, :update_role)
+        assert forbid?(user, nil, :update)
       end
     end
   end

@@ -3,7 +3,7 @@ class Account::RolesPolicy < BasePolicy
     current_user.present?
   end
 
-  def update_role?
+  def update?
     current_user.superadmin?
   end
 end
