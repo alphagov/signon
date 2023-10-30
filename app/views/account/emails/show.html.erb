@@ -47,7 +47,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_for current_user, url: update_email_account_email_path do |f| %>
+    <%= form_for current_user, url: account_email_path do |f| %>
       <%= render "govuk_publishing_components/components/input", {
         label: {
           text: "Email address"

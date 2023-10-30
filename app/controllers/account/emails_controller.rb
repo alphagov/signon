@@ -6,7 +6,7 @@ class Account::EmailsController < ApplicationController
 
   def show; end
 
-  def update_email
+  def update
     current_email = current_user.email
     new_email = params[:user][:email]
     if current_email == new_email.strip
