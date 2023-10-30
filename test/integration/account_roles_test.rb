@@ -8,7 +8,7 @@ class AccountRolesTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin_with non_govuk_admin_user
 
-      visit account_role_path
+      visit edit_account_role_path
 
       assert has_text? "Super organisation admin"
     end
@@ -19,7 +19,7 @@ class AccountRolesTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin_with user
 
-      visit account_role_path
+      visit edit_account_role_path
 
       select "Normal", from: "Role"
       click_button "Change role"
@@ -27,7 +27,7 @@ class AccountRolesTest < ActionDispatch::IntegrationTest
       assert_current_url account_path
       assert page.has_text? "Your role is now Normal"
 
-      visit account_role_path
+      visit edit_account_role_path
 
       assert has_text? "Normal"
     end

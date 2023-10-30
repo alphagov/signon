@@ -4,7 +4,7 @@ class Account::RolesController < ApplicationController
   before_action :authenticate_user!
   before_action :authorise_user
 
-  def show; end
+  def edit; end
 
   def update
     role = params[:user][:role]
@@ -13,7 +13,7 @@ class Account::RolesController < ApplicationController
       redirect_to account_path, notice: "Your role is now #{role.humanize}"
     else
       flash[:alert] = "There was a problem changing your role."
-      render :show
+      render :edit
     end
   end
 

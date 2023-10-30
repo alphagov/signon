@@ -6,9 +6,9 @@ class Account::RolesControllerTest < ActionController::TestCase
     sign_in @superadmin_user
   end
 
-  context "GET show" do
+  context "GET edit" do
     should "display form with current role" do
-      get :show
+      get :edit
 
       assert_select "form[action='#{account_role_path}']" do
         assert_select "select[name='user[role]']", value: @superadmin_user.role
@@ -22,7 +22,7 @@ class Account::RolesControllerTest < ActionController::TestCase
 
       put :update, params: { user: { role: Roles::Normal.role_name } }
 
-      assert_template :show
+      assert_template :edit
       assert_select "*[role='alert']", text: "There was a problem changing your role."
     end
   end

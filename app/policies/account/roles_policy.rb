@@ -1,5 +1,5 @@
 class Account::RolesPolicy < BasePolicy
-  def show?
+  def edit?
     current_user.present?
   end
 
