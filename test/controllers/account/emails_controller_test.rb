@@ -3,6 +3,21 @@ require "test_helper"
 class Account::EmailsControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
 
+  context "GET edit" do
+    setup do
+      @user = create(:user, email: "old@email.com")
+      sign_in @user
+    end
+
+    should "display form with current email address" do
+      get :edit
+
+      assert_select "form[action='#{account_email_path}']" do
+        assert_select "input[name='user[email]']", value: @user.email
+      end
+    end
+  end
+
   context "PUT update" do
     setup do
       @user = create(:user, email: "old@email.com")
@@ -43,6 +58,15 @@ class Account::EmailsControllerTest < ActionController::TestCase
       should "redirect to account page" do
         put :update, params: { user: { email: "new@email.com" } }
         assert_redirected_to account_path
+      end
+    end
+
+    should "display error when validation fails" do
+      put :update, params: { user: { email: "" } }
+
+      assert_template :edit
+      assert_select ".govuk-error-summary" do
+        assert_select "a", href: "#user_email", text: "Email can't be blank"
       end
     end
   end
