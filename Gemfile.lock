@@ -127,7 +127,7 @@ GEM
       warden (~> 1.2.3)
     devise-encryptable (0.2.0)
       devise (>= 2.1.0)
-    devise_invitable (2.0.8)
+    devise_invitable (2.0.9)
       actionmailer (>= 5.0)
       devise (>= 4.6)
     devise_zxcvbn (1.1.2)
@@ -282,7 +282,7 @@ GEM
     msgpack (1.7.2)
     multi_json (1.15.0)
     mysql2 (0.5.5)
-    net-imap (0.4.2)
+    net-imap (0.4.3)
       date
       net-protocol
     net-pop (0.1.2)
