@@ -3,7 +3,7 @@
 <% if resource.errors.count > 0 %>
   <% content_for :error_summary do %>
     <%= render "govuk_publishing_components/components/error_summary", {
-      title: "There was a problem changing your password",
+      title: "There was a problem setting your password",
       items: resource.errors.map do |error|
         {
           text: error.full_message,
