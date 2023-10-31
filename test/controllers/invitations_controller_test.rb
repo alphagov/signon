@@ -658,7 +658,7 @@ class InvitationsControllerTest < ActionController::TestCase
         put :update, params: { user: { invitation_token: @token, password: new_password, password_confirmation: new_password } }
 
         assert_select ".govuk-error-summary" do
-          assert_select "li", text: /Password not strong enough/
+          assert_select "a", href: "user_password", text: /Password not strong enough/
         end
         assert_select ".govuk-form-group" do
           assert_select ".govuk-error-message", text: /Error: Password not strong enough/
@@ -684,7 +684,7 @@ class InvitationsControllerTest < ActionController::TestCase
         put :update, params: { user: { invitation_token: @token, password: @password, password_confirmation: "does-not-match" } }
 
         assert_select ".govuk-error-summary" do
-          assert_select "li", text: "Password confirmation doesn't match Password"
+          assert_select "a", href: "user_password_confirmation", text: "Password confirmation doesn't match Password"
         end
         assert_select ".govuk-form-group" do
           assert_select ".govuk-error-message", text: "Error: Password confirmation doesn't match Password"
