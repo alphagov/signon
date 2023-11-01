@@ -333,7 +333,7 @@ GEM
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
       ruby2_keywords
-    opentelemetry-instrumentation-active_support (0.4.3)
+    opentelemetry-instrumentation-active_support (0.4.4)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-all (0.50.1)
