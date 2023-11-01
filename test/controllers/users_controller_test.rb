@@ -762,4 +762,31 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
   end
+
+  context "as normal user" do
+    setup do
+      @user = create(:user, email: "normal@gov.uk")
+      sign_in @user
+    end
+
+    context "GET edit" do
+      context "when current user tries to edit their own user" do
+        should "redirect to the account page" do
+          get :edit, params: { id: @user }
+
+          assert_redirected_to account_path
+        end
+      end
+
+      context "when current user tries to edit another user" do
+        should "redirect to the account page" do
+          another_user = create(:user)
+
+          get :edit, params: { id: another_user }
+
+          assert_redirected_to account_path
+        end
+      end
+    end
+  end
 end
