@@ -779,12 +779,13 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       context "when current user tries to edit another user" do
-        should "redirect to the account page" do
+        should "redirect to the dashboard and explain user does not have permission" do
           another_user = create(:user)
 
           get :edit, params: { id: another_user }
 
-          assert_redirected_to account_path
+          assert_redirected_to root_path
+          assert_equal "You do not have permission to perform this action.", flash[:alert]
         end
       end
     end

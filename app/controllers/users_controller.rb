@@ -84,7 +84,7 @@ class UsersController < ApplicationController
 private
 
   def load_and_authorize_user
-    @user = current_user.normal? ? current_user : User.find(params[:id])
+    @user = User.find(params[:id])
     redirect_to(account_path) and return if current_user == @user && action_name == "edit"
 
     authorize @user
