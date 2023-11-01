@@ -183,7 +183,7 @@ GEM
     govuk_personalisation (0.15.0)
       plek (>= 1.9.0)
       rails (>= 6, < 8)
-    govuk_publishing_components (35.21.0)
+    govuk_publishing_components (35.21.2)
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
@@ -333,7 +333,7 @@ GEM
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
       ruby2_keywords
-    opentelemetry-instrumentation-active_support (0.4.3)
+    opentelemetry-instrumentation-active_support (0.4.4)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-all (0.50.1)
@@ -401,7 +401,7 @@ GEM
       opentelemetry-api (~> 1.0)
       opentelemetry-common (~> 0.20.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-grape (0.1.4)
+    opentelemetry-instrumentation-grape (0.1.5)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
       opentelemetry-instrumentation-rack (~> 0.21)
@@ -518,7 +518,7 @@ GEM
       nio4r (~> 2.0)
     pundit (2.3.1)
       activesupport (>= 3.0.0)
-    racc (1.7.1)
+    racc (1.7.2)
     rack (2.2.8)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
