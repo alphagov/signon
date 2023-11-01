@@ -57,12 +57,11 @@ Rails.application.routes.draw do
         get :delete
       end
     end
-    resource :email_password, only: [:show] do
-      patch :update_email
-      patch :update_password
+    resource :email, only: %i[edit update] do
       put :resend_email_change
       delete :cancel_email_change
     end
+    resource :password, only: %i[edit update]
     resource :manage_permissions, only: %i[show update]
     resource :role_organisation, only: [:show] do
       patch :update_organisation

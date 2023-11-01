@@ -554,6 +554,23 @@ class InvitationsControllerTest < ActionController::TestCase
     end
   end
 
+  context "GET edit" do
+    setup do
+      @invitee = User.invite!(attributes_for(:user))
+      @token = @invitee.raw_invitation_token
+    end
+
+    should "render form for setting password" do
+      get :edit, params: { invitation_token: @token }
+
+      assert_template :edit
+      assert_select "form[action='#{user_invitation_path}']" do
+        assert_select "input[type='password'][name='user[password]']"
+        assert_select "input[type='password'][name='user[password_confirmation]']"
+      end
+    end
+  end
+
   context "PUT update" do
     setup do
       organisation = create(:organisation)
@@ -616,8 +633,37 @@ class InvitationsControllerTest < ActionController::TestCase
       should "display error message" do
         put :update, params: { user: { invitation_token: "invalid", password: @password, password_confirmation: @password } }
 
-        assert_select ".govuk-error-summary__title", text: "There was a problem changing your password"
-        assert_select ".govuk-error-summary__body", text: "Invitation token is invalid"
+        assert_select ".govuk-error-summary" do
+          assert_select "li", text: "Invitation token is invalid"
+        end
+      end
+    end
+
+    context "when passwords is not strong enough" do
+      should "not set invitation accepted timestamp on invitee" do
+        put :update, params: { user: { invitation_token: @token, password: @password, password_confirmation: "does-not-match" } }
+
+        assert @invitee.reload.invitation_accepted_at.nil?
+      end
+
+      should "re-render edit page" do
+        put :update, params: { user: { invitation_token: @token, password: @password, password_confirmation: "does-not-match" } }
+
+        assert_template :edit
+      end
+
+      should "display error message" do
+        new_password = "zymophosphate"
+
+        put :update, params: { user: { invitation_token: @token, password: new_password, password_confirmation: new_password } }
+
+        assert_select ".govuk-error-summary" do
+          assert_select "a", href: "user_password", text: /Password not strong enough/
+        end
+        assert_select ".govuk-form-group" do
+          assert_select ".govuk-error-message", text: /Error: Password not strong enough/
+          assert_select "input[name='user[password]'].govuk-input--error"
+        end
       end
     end
 
@@ -637,8 +683,13 @@ class InvitationsControllerTest < ActionController::TestCase
       should "display error message" do
         put :update, params: { user: { invitation_token: @token, password: @password, password_confirmation: "does-not-match" } }
 
-        assert_select ".govuk-error-summary__title", text: "There was a problem changing your password"
-        assert_select ".govuk-error-summary__body", text: "Password confirmation doesn't match Password"
+        assert_select ".govuk-error-summary" do
+          assert_select "a", href: "user_password_confirmation", text: "Password confirmation doesn't match Password"
+        end
+        assert_select ".govuk-form-group" do
+          assert_select ".govuk-error-message", text: "Error: Password confirmation doesn't match Password"
+          assert_select "input[name='user[password_confirmation]'].govuk-input--error"
+        end
       end
     end
   end

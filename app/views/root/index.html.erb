@@ -63,7 +63,10 @@
       } %>
       <ul class="govuk-list">
         <li>
-          <%= link_to "Change your email or password", account_email_password_path, class: "govuk-link" %>
+          <%= link_to "Change your email", edit_account_email_path, class: "govuk-link" %>
+        </li>
+        <li>
+          <%= link_to "Change your password", edit_account_password_path, class: "govuk-link" %>
         </li>
 
         <li><%= link_to two_step_verification_page_title, two_step_verification_path, class: "govuk-link" %></li>
