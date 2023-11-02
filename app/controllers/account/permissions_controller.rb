@@ -3,7 +3,7 @@ class Account::PermissionsController < ApplicationController
 
   before_action :authenticate_user!
 
-  def index
+  def show
     @application = Doorkeeper::Application.not_api_only.find(params[:application_id])
 
     authorize [:account, @application], :view_permissions?

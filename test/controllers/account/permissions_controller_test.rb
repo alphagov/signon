@@ -1,11 +1,11 @@
 require "test_helper"
 
 class Account::PermissionsControllerTest < ActionController::TestCase
-  context "#index" do
+  context "#show" do
     should "prevent unauthenticated users" do
       application = create(:application)
 
-      get :index, params: { application_id: application.id }
+      get :show, params: { application_id: application.id }
 
       assert_redirected_to "/users/sign_in"
     end
@@ -18,7 +18,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
       sign_in user
 
-      get :index, params: { application_id: application.id }
+      get :show, params: { application_id: application.id }
 
       assert_select "td", text: "perm-1"
       assert_select "td", text: "perm-2", count: 0
@@ -30,7 +30,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       application = create(:application, retired: true)
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        get :index, params: { application_id: application.id }
+        get :show, params: { application_id: application.id }
       end
     end
 
@@ -40,7 +40,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       application = create(:application, api_only: true)
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        get :index, params: { application_id: application.id }
+        get :show, params: { application_id: application.id }
       end
     end
 
@@ -53,7 +53,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
       sign_in user
 
-      get :index, params: { application_id: application.id }
+      get :show, params: { application_id: application.id }
 
       assert_equal %w[signin aaa ttt bbb uuu], assigns(:permissions).map(&:name)
     end
