@@ -8,7 +8,7 @@ class AccountTest < ActionDispatch::IntegrationTest
       assert_current_url new_user_session_path
     end
 
-    should "link to Change email/password, Manage permissions, Change 2SV and Role/org for admin users" do
+    should "link to Change email/password, Manage permissions, Change 2SV, role & org for admin users" do
       user = FactoryBot.create(:admin_user, otp_secret_key: "2SVenabled")
 
       visit new_user_session_path
@@ -22,11 +22,12 @@ class AccountTest < ActionDispatch::IntegrationTest
       assert page.has_link?("Change your password", href: edit_account_password_path)
       assert page.has_link?("Manage permissions", href: account_manage_permissions_path)
       assert page.has_link?("Change your 2-step verification phone", href: two_step_verification_path)
-      assert page.has_link?("View your role and organisation", href: account_role_organisation_path)
+      assert page.has_link?("View your role", href: account_role_path)
+      assert page.has_link?("Change your organisation", href: account_organisation_path)
       assert page.has_link?("Your account access log", href: account_activity_path)
     end
 
-    should "link to Change email/password, Change 2SV and Role/org for normal users" do
+    should "link to Change email/password, Change 2SV, role & org for normal users" do
       user = FactoryBot.create(:user, otp_secret_key: "2SVenabled")
 
       visit new_user_session_path
@@ -38,7 +39,8 @@ class AccountTest < ActionDispatch::IntegrationTest
       assert page.has_link?("Change your email address", href: edit_account_email_path)
       assert page.has_link?("Change your password", href: edit_account_password_path)
       assert page.has_link?("Change your 2-step verification phone", href: two_step_verification_path)
-      assert page.has_link?("View your role and organisation", href: account_role_organisation_path)
+      assert page.has_link?("View your role", href: account_role_path)
+      assert page.has_link?("View your organisation", href: account_organisation_path)
       assert page.has_link?("Your account access log", href: account_activity_path)
 
       assert_not page.has_link?("Manage permissions")

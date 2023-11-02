@@ -1,7 +1,7 @@
 require "test_helper"
 require "support/policy_helpers"
 
-class Account::RoleOrganisationsPolicyTest < ActiveSupport::TestCase
+class Account::OrganisationsPolicyTest < ActiveSupport::TestCase
   include PolicyHelpers
 
   context "show?" do
@@ -28,24 +28,6 @@ class Account::RoleOrganisationsPolicyTest < ActiveSupport::TestCase
         user = FactoryBot.build(:"#{user_role}_user")
 
         assert forbid?(user, nil, :update_organisation)
-      end
-    end
-  end
-
-  context "update_role?" do
-    %i[superadmin].each do |user_role|
-      should "be permitted for #{user_role} users" do
-        user = FactoryBot.build(:"#{user_role}_user")
-
-        assert permit?(user, nil, :update_role)
-      end
-    end
-
-    %i[admin super_organisation_admin organisation_admin normal].each do |user_role|
-      should "be forbidden for #{user_role} users" do
-        user = FactoryBot.build(:"#{user_role}_user")
-
-        assert forbid?(user, nil, :update_role)
       end
     end
   end
