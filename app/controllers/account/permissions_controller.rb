@@ -2,10 +2,9 @@ class Account::PermissionsController < ApplicationController
   layout "admin_layout"
 
   before_action :authenticate_user!
+  before_action :set_application
 
   def show
-    @application = Doorkeeper::Application.not_api_only.find(params[:application_id])
-
     authorize [:account, @application], :view_permissions?
 
     @permissions = @application
@@ -14,8 +13,12 @@ class Account::PermissionsController < ApplicationController
   end
 
   def edit
-    @application = Doorkeeper::Application.not_api_only.find(params[:application_id])
-
     authorize [:account, @application], :edit_permissions?
+  end
+
+private
+
+  def set_application
+    @application = Doorkeeper::Application.not_api_only.find(params[:application_id])
   end
 end
