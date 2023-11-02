@@ -215,6 +215,19 @@ class User < ApplicationRecord
     end
   end
 
+  def replace_application_permissions(application, supported_permission_names)
+    return if application.retired?
+
+    ActiveRecord::Base.transaction do
+      application_permissions
+        .joins(:supported_permission)
+        .where(application_id: application.id)
+        .destroy_all
+
+      grant_application_permissions(application, supported_permission_names)
+    end
+  end
+
   def grant_permission(supported_permission)
     if persisted?
       application_permissions.where(supported_permission_id: supported_permission.id).first_or_create!

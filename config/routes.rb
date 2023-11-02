@@ -53,7 +53,7 @@ Rails.application.routes.draw do
   namespace :account do
     resource :activity, only: [:show]
     resources :applications, only: %i[show index] do
-      resource :permissions, only: %i[show edit]
+      resource :permissions, only: %i[show edit update]
       resource :signin_permission, only: %i[create destroy] do
         get :delete
       end

@@ -18,3 +18,15 @@
      ]
    })
 %>
+
+<%= form_tag account_application_permissions_path(@application), method: :patch do |f| %>
+  <%= render "govuk_publishing_components/components/checkboxes", {
+      name: "application[permissions][]",
+      heading: "Permissions",
+      items: @permissions.map { |permission| { label: permission.name, value: permission.name, checked: current_user.has_permission?(permission) } },
+  } %>
+
+  <%= render "govuk_publishing_components/components/button", {
+      text: "Update permissions"
+  } %>
+<% end %>

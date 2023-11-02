@@ -14,6 +14,15 @@ class Account::PermissionsController < ApplicationController
 
   def edit
     authorize [:account, @application], :edit_permissions?
+
+    @permissions = @application.sorted_supported_permissions_grantable_from_ui
+  end
+
+  def update
+    authorize [:account, @application], :edit_permissions?
+
+    current_user.replace_application_permissions(@application, params[:application][:permissions])
+    redirect_to account_applications_path
   end
 
 private

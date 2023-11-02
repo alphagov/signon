@@ -671,6 +671,28 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#replace_application_permissions" do
+    setup do
+      @user = create(:user)
+      @application = create(:application, with_supported_permissions: %w[old new])
+    end
+
+    should "replace existing permissions with new ones" do
+      @user.grant_application_permission(@application, "old")
+
+      @user.replace_application_permissions(@application, %w[new])
+
+      assert_user_has_permissions %w[new], @application, @user
+    end
+
+    should "not replace existing permissions if the application is retired" do
+      @application.update!(retired: true)
+      @user.replace_application_permissions(@application, %w[new])
+
+      assert_user_has_permissions [], @application, @user
+    end
+  end
+
   context "#has_permission?" do
     setup do
       @app = create(:application)
