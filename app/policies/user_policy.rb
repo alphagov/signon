@@ -13,8 +13,6 @@ class UserPolicy < BasePolicy
   alias_method :create?, :new?
 
   def edit?
-    return false if current_user == record
-
     case current_user.role
     when Roles::Superadmin.role_name
       true
