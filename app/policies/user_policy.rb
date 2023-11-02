@@ -13,8 +13,6 @@ class UserPolicy < BasePolicy
   alias_method :create?, :new?
 
   def edit?
-    return false if current_user == record
-
     case current_user.role
     when Roles::Superadmin.role_name
       true
@@ -24,8 +22,10 @@ class UserPolicy < BasePolicy
       can_manage? && (record_in_own_organisation? || record_in_child_organisation?)
     when Roles::OrganisationAdmin.role_name
       can_manage? && record_in_own_organisation?
-    else # 'normal'
+    when Roles::Normal.role_name
       false
+    else
+      raise "Unknown role: #{current_user.role}"
     end
   end
   alias_method :update?, :edit?

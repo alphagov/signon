@@ -41,12 +41,6 @@ class UserPolicyTest < ActiveSupport::TestCase
         assert permit?(user, build(:admin_user), permission)
         assert permit?(user, build(:superadmin_user), permission)
       end
-
-      should "not allow for #{permission} for the logged in user" do
-        user = create(:superadmin_user)
-
-        assert forbid?(user, user, permission)
-      end
     end
 
     superadmin_actions.each do |permission|
@@ -99,12 +93,6 @@ class UserPolicyTest < ActiveSupport::TestCase
         assert permit?(user, build(:admin_user), permission)
         assert forbid?(user, build(:superadmin_user), permission)
       end
-
-      should "not allow for #{permission} for the logged in user" do
-        user = create(:admin_user)
-
-        assert forbid?(user, user, permission)
-      end
     end
 
     superadmin_actions.each do |permission|
@@ -143,10 +131,6 @@ class UserPolicyTest < ActiveSupport::TestCase
     end
 
     super_org_admin_actions.each do |permission|
-      should "not allow for #{permission} for the logged in user" do
-        assert forbid?(@super_org_admin, @super_org_admin, permission)
-      end
-
       should "allow for #{permission} and users of similar permissions or below from within their own organisation" do
         assert permit?(@super_org_admin, build(:user_in_organisation, organisation: @super_org_admin.organisation), permission)
         assert permit?(@super_org_admin, build(:organisation_admin_user, organisation: @super_org_admin.organisation), permission)
@@ -200,10 +184,6 @@ class UserPolicyTest < ActiveSupport::TestCase
     end
 
     org_admin_actions.each do |permission|
-      should "not allow for #{permission} for the logged in user" do
-        assert forbid?(@organisation_admin, @organisation_admin, permission)
-      end
-
       should "allow for #{permission} and users of similar permissions or below from within their own organisation" do
         assert permit?(@organisation_admin, build(:user_in_organisation, organisation: @organisation_admin.organisation), permission)
         assert permit?(@organisation_admin, build(:organisation_admin_user, organisation: @organisation_admin.organisation), permission)

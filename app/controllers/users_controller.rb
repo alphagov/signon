@@ -6,7 +6,9 @@ class UsersController < ApplicationController
   layout "admin_layout", only: %w[index event_logs require_2sv]
 
   before_action :authenticate_user!
-  before_action :load_and_authorize_user, except: %i[index]
+  before_action :load_user, except: %i[index]
+  before_action :redirect_to_account_page_if_acting_on_own_user, only: %i[edit]
+  before_action :authorize_user, except: %i[index]
   before_action :allow_no_application_access, only: [:update]
   before_action :redirect_legacy_filters, only: [:index]
   helper_method :applications_and_permissions, :filter_params
@@ -83,10 +85,11 @@ class UsersController < ApplicationController
 
 private
 
-  def load_and_authorize_user
-    @user = current_user.normal? ? current_user : User.find(params[:id])
-    redirect_to(account_path) and return if current_user == @user && action_name == "edit"
+  def load_user
+    @user = User.find(params[:id])
+  end
 
+  def authorize_user
     authorize @user
   end
 
@@ -140,5 +143,9 @@ private
     if filter.redirect?
       redirect_to users_path(filter.options)
     end
+  end
+
+  def redirect_to_account_page_if_acting_on_own_user
+    redirect_to account_path if current_user == @user
   end
 end
