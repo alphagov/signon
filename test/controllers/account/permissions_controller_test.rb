@@ -58,4 +58,34 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       assert_equal %w[signin aaa ttt bbb uuu], assigns(:permissions).map(&:name)
     end
   end
+
+  context "#edit" do
+    should "prevent unauthenticated users" do
+      application = create(:application)
+
+      get :edit, params: { application_id: application.id }
+
+      assert_redirected_to "/users/sign_in"
+    end
+
+    should "exclude retired applications" do
+      sign_in create(:admin_user)
+
+      application = create(:application, retired: true)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :edit, params: { application_id: application.id }
+      end
+    end
+
+    should "exclude API-only applications" do
+      sign_in create(:admin_user)
+
+      application = create(:application, api_only: true)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :edit, params: { application_id: application.id }
+      end
+    end
+  end
 end

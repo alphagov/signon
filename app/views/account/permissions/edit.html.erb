@@ -1,0 +1,20 @@
+<% content_for :title, "Update permissions for #{@application.name}" %>
+
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "GOV.UK apps",
+         url: account_applications_path,
+       },
+       {
+         title: "Update permissions for #{@application.name}",
+       },
+     ]
+   })
+%>
