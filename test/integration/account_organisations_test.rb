@@ -9,36 +9,9 @@ class AccountRoleOrganisationsTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin_with non_govuk_admin_user
 
-      visit account_role_organisation_path
+      visit edit_account_organisation_path
 
-      within "section", text: "Your role" do
-        assert has_text? "Super organisation admin"
-      end
-
-      within "section", text: "Your organisation" do
-        assert has_text? "Department for Viability"
-      end
-    end
-
-    should "allow Superadmin users to change their role" do
-      user = FactoryBot.create(:superadmin_user)
-
-      visit new_user_session_path
-      signin_with user
-
-      visit account_role_organisation_path
-
-      select "Normal", from: "Role"
-      click_button "Change role"
-
-      assert_current_url account_path
-      assert page.has_text? "Your role is now Normal"
-
-      visit account_role_organisation_path
-
-      within "section", text: "Your role" do
-        assert has_text? "Normal"
-      end
+      assert has_text? "Department for Viability"
     end
 
     should "allow GOVUK Admin users to change their organisation" do
@@ -50,7 +23,7 @@ class AccountRoleOrganisationsTest < ActionDispatch::IntegrationTest
       visit new_user_session_path
       signin_with user
 
-      visit account_role_organisation_path
+      visit edit_account_organisation_path
 
       select "Postage", from: "Organisation"
       click_button "Change organisation"
@@ -58,7 +31,7 @@ class AccountRoleOrganisationsTest < ActionDispatch::IntegrationTest
       assert_current_url account_path
       assert page.has_text? "Your organisation is now Postage"
 
-      visit account_role_organisation_path
+      visit edit_account_organisation_path
 
       assert page.has_select? "Organisation", selected: "Postage"
     end

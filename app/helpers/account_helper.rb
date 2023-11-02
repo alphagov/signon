@@ -7,12 +7,19 @@ module AccountHelper
     end
   end
 
-  def role_organisation_page_title
-    if policy(%i[account role_organisations]).update_role? &&
-        policy(%i[account role_organisations]).update_organisation?
-      "Change your role or organisation"
+  def role_page_title
+    if policy(%i[account roles]).update?
+      "Change your role"
     else
-      "View your role and organisation"
+      "View your role"
+    end
+  end
+
+  def organisation_page_title
+    if policy(%i[account organisations]).update?
+      "Change your organisation"
+    else
+      "View your organisation"
     end
   end
 
