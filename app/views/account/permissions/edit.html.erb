@@ -28,7 +28,11 @@
 
   <%= hidden_field_tag "application[permissions][]", @application.signin_permission.name, id: "checkboxes-signin" %>
 
-  <%= render "govuk_publishing_components/components/button", {
-      text: "Update permissions"
-  } %>
+  <div class="govuk-button-group">
+    <%= render "govuk_publishing_components/components/button", {
+        text: "Update permissions"
+    } %>
+
+    <%= link_to "Cancel", account_applications_path, class: "govuk-link govuk-link--no-visited-state" %>
+  </div>
 <% end %>
