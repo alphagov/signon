@@ -262,10 +262,20 @@ class UsersControllerTest < ActionController::TestCase
         end
       end
 
-      should "show the form" do
+      should "show the form with a name field" do
         not_an_admin = create(:user)
         get :edit, params: { id: not_an_admin.id }
-        assert_select "input[name='user[email]'][value='#{not_an_admin.email}']"
+        assert_select "form[action='#{user_path(not_an_admin)}']" do
+          assert_select "input[name='user[name]'][value='#{not_an_admin.name}']"
+        end
+      end
+
+      should "show the form with an email field" do
+        not_an_admin = create(:user)
+        get :edit, params: { id: not_an_admin.id }
+        assert_select "form[action='#{user_path(not_an_admin)}']" do
+          assert_select "input[name='user[email]'][value='#{not_an_admin.email}']"
+        end
       end
 
       should "show the pending email if applicable" do
@@ -584,7 +594,7 @@ class UsersControllerTest < ActionController::TestCase
         sign_in @user
       end
 
-      should "update the user" do
+      should "update the user name" do
         another_user = create(:user, name: "Old Name")
         put :update, params: { id: another_user.id, user: { name: "New Name" } }
 
@@ -614,6 +624,16 @@ class UsersControllerTest < ActionController::TestCase
         another_user = create(:user)
         put :update, params: { id: another_user.id, user: { name: "" } }
         assert_select "form#edit_user_#{another_user.id}"
+      end
+
+      should "display errors if name is not valid" do
+        user = create(:user)
+
+        put :update, params: { id: user.id, user: { name: "" } }
+
+        assert_select ".govuk-error-summary" do
+          assert_select "li", text: "Name can't be blank"
+        end
       end
 
       should "not let you set the role" do
