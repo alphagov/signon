@@ -3,13 +3,13 @@ require "test_helper"
 class UsersControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
 
-  context "as Admin" do
-    setup do
-      @user = create(:admin_user, email: "admin@gov.uk")
-      sign_in @user
-    end
+  context "GET index" do
+    context "as Admin" do
+      setup do
+        @user = create(:admin_user, email: "admin@gov.uk")
+        sign_in @user
+      end
 
-    context "GET index" do
       should "display 'Create user' button" do
         get :index
 
@@ -206,7 +206,51 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
 
-    context "GET edit" do
+    context "as Organisation Admin" do
+      setup do
+        @user = create(:organisation_admin_user)
+        sign_in @user
+      end
+
+      should "not display 'Create user' button" do
+        get :index
+
+        assert_select "a", text: "Create user", count: 0
+      end
+
+      should "not display 'Upload a batch of users' button" do
+        get :index
+
+        assert_select "a", text: "Upload a batch of users", count: 0
+      end
+
+      should "not display organisations filter" do
+        get :index
+
+        assert_select "#organisations_filter", count: 0
+      end
+    end
+
+    context "as Normal user" do
+      setup do
+        @user = create(:normal_user)
+        sign_in @user
+      end
+
+      should "disallow access" do
+        get :index
+        assert_redirected_to root_path
+      end
+    end
+  end
+
+  context "GET edit" do
+    context "as Admin" do
+      setup do
+        @user = create(:admin_user, email: "admin@gov.uk")
+        sign_in @user
+      end
+
       context "for the currently logged in user" do
         should "redirect to the account page" do
           get :edit, params: { id: @user.id }
@@ -500,7 +544,42 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
 
-    context "PUT update" do
+    context "as normal user" do
+      setup do
+        @user = create(:user, email: "normal@gov.uk")
+        sign_in @user
+      end
+
+      context "GET edit" do
+        context "when current user tries to edit their own user" do
+          should "redirect to the account page" do
+            get :edit, params: { id: @user }
+
+            assert_redirected_to account_path
+          end
+        end
+
+        context "when current user tries to edit another user" do
+          should "redirect to the dashboard and explain user does not have permission" do
+            another_user = create(:user)
+
+            get :edit, params: { id: another_user }
+
+            assert_redirected_to root_path
+            assert_equal "You do not have permission to perform this action.", flash[:alert]
+          end
+        end
+      end
+    end
+  end
+
+  context "PUT update" do
+    context "as Admin" do
+      setup do
+        @user = create(:admin_user, email: "admin@gov.uk")
+        sign_in @user
+      end
+
       should "update the user" do
         another_user = create(:user, name: "Old Name")
         put :update, params: { id: another_user.id, user: { name: "New Name" } }
@@ -686,8 +765,15 @@ class UsersControllerTest < ActionController::TestCase
         end
       end
     end
+  end
 
-    context "PUT resend_email_change" do
+  context "PUT resend_email_change" do
+    context "as Admin" do
+      setup do
+        @user = create(:admin_user, email: "admin@gov.uk")
+        sign_in @user
+      end
+
       should "send an email change confirmation email" do
         perform_enqueued_jobs do
           another_user = create(:user_with_pending_email_change)
@@ -708,9 +794,14 @@ class UsersControllerTest < ActionController::TestCase
         assert_not_equal "old token", another_user.reload.confirmation_token
       end
     end
+  end
 
-    context "DELETE cancel_email_change" do
+  context "DELETE cancel_email_change" do
+    context "as Admin" do
       setup do
+        @user = create(:admin_user, email: "admin@gov.uk")
+        sign_in @user
+
         @another_user = create(:user_with_pending_email_change)
         request.env["HTTP_REFERER"] = edit_user_path(@another_user)
       end
@@ -726,67 +817,6 @@ class UsersControllerTest < ActionController::TestCase
       should "redirect to the edit user admin page" do
         delete :cancel_email_change, params: { id: @another_user.id }
         assert_redirected_to edit_user_path(@another_user)
-      end
-    end
-
-    should "disallow access to non-admins" do
-      @user.update_column(:role, "normal")
-      get :index
-      assert_redirected_to root_path
-    end
-  end
-
-  context "as Organisation Admin" do
-    setup do
-      @user = create(:organisation_admin_user)
-      sign_in @user
-    end
-
-    context "GET index" do
-      should "not display 'Create user' button" do
-        get :index
-
-        assert_select "a", text: "Create user", count: 0
-      end
-
-      should "not display 'Upload a batch of users' button" do
-        get :index
-
-        assert_select "a", text: "Upload a batch of users", count: 0
-      end
-
-      should "not display organisations filter" do
-        get :index
-
-        assert_select "#organisations_filter", count: 0
-      end
-    end
-  end
-
-  context "as normal user" do
-    setup do
-      @user = create(:user, email: "normal@gov.uk")
-      sign_in @user
-    end
-
-    context "GET edit" do
-      context "when current user tries to edit their own user" do
-        should "redirect to the account page" do
-          get :edit, params: { id: @user }
-
-          assert_redirected_to account_path
-        end
-      end
-
-      context "when current user tries to edit another user" do
-        should "redirect to the dashboard and explain user does not have permission" do
-          another_user = create(:user)
-
-          get :edit, params: { id: another_user }
-
-          assert_redirected_to root_path
-          assert_equal "You do not have permission to perform this action.", flash[:alert]
-        end
       end
     end
   end
