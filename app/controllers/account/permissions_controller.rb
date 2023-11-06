@@ -15,7 +15,7 @@ class Account::PermissionsController < ApplicationController
   def edit
     authorize [:account, @application], :edit_permissions?
 
-    @permissions = @application.sorted_supported_permissions_grantable_from_ui
+    @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false)
   end
 
   def update

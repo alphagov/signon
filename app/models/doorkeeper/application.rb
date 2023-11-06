@@ -50,8 +50,15 @@ class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/Appli
     supported_permissions.signin.first
   end
 
-  def sorted_supported_permissions_grantable_from_ui
-    ([signin_permission] + (supported_permissions.grantable_from_ui.order(:name) - [signin_permission])).compact
+  def sorted_supported_permissions_grantable_from_ui(include_signin: true)
+    sorted_permissions = supported_permissions.grantable_from_ui.order(:name)
+    sorted_permissions_without_signin = sorted_permissions - [signin_permission]
+
+    if include_signin
+      ([signin_permission] + sorted_permissions_without_signin).compact
+    else
+      sorted_permissions_without_signin
+    end
   end
 
   def url_without_path

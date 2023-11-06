@@ -149,6 +149,18 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
 
       assert_equal [SupportedPermission::SIGNIN_NAME, "Editor", "Writer"], permission_names
     end
+
+    should "remove the signin permission if requested" do
+      application = create(
+        :application,
+        name: "Whitehall",
+        with_supported_permissions: ["Writer", "Editor", SupportedPermission::SIGNIN_NAME],
+      )
+
+      permission_names = application.sorted_supported_permissions_grantable_from_ui(include_signin: false).map(&:name)
+
+      assert_equal %w[Editor Writer], permission_names
+    end
   end
 
   context ".all (default scope)" do
