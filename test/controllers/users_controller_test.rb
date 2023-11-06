@@ -4,7 +4,7 @@ class UsersControllerTest < ActionController::TestCase
   include ActiveJob::TestHelper
 
   context "GET index" do
-    context "as Admin" do
+    context "signed in as Admin user" do
       setup do
         @user = create(:admin_user, email: "admin@gov.uk")
         sign_in @user
@@ -195,7 +195,7 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
 
-    context "as superadmin" do
+    context "signed in as Superadmin user" do
       setup do
         @user = create(:superadmin_user, email: "superadmin@gov.uk")
         sign_in @user
@@ -210,7 +210,7 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
 
-    context "as Organisation Admin" do
+    context "signed in as Organisation Admin user" do
       setup do
         @user = create(:organisation_admin_user)
         sign_in @user
@@ -235,7 +235,7 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
 
-    context "as Normal user" do
+    context "signed in as Normal user" do
       setup do
         @user = create(:normal_user)
         sign_in @user
@@ -249,7 +249,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   context "GET edit" do
-    context "as Admin" do
+    context "signed in as Admin user" do
       setup do
         @user = create(:admin_user, email: "admin@gov.uk")
         sign_in @user
@@ -324,7 +324,7 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
 
-    context "organisation admin" do
+    context "signed in as Organisation Admin user" do
       setup do
         @organisation_admin = create(:organisation_admin_user)
         sign_in @organisation_admin
@@ -407,7 +407,7 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
 
-    context "super organisation admin" do
+    context "signed in as Super Organisation Admin user" do
       setup do
         @super_organisation_admin = create(:super_organisation_admin_user)
         sign_in @super_organisation_admin
@@ -519,7 +519,7 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
 
-    context "superadmin" do
+    context "signed in as Superadmin user" do
       setup do
         @superadmin = create(:superadmin_user)
         sign_in @superadmin
@@ -550,7 +550,7 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
 
-    context "as normal user" do
+    context "signed in as Normal user" do
       setup do
         @user = create(:user, email: "normal@gov.uk")
         sign_in @user
@@ -580,7 +580,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   context "PUT update" do
-    context "as Admin" do
+    context "signed in as Admin user" do
       setup do
         @user = create(:admin_user, email: "admin@gov.uk")
         sign_in @user
@@ -730,7 +730,7 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
 
-    context "organisation admin" do
+    context "signed in as Organisation Admin user" do
       setup do
         @organisation_admin = create(:organisation_admin_user)
         sign_in(@organisation_admin)
@@ -758,7 +758,7 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
 
-    context "super organisation admin" do
+    context "signed in as Super Organisation Admin user" do
       setup do
         @super_organisation_admin = create(:super_organisation_admin_user)
         sign_in(@super_organisation_admin)
@@ -776,7 +776,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   context "PUT resend_email_change" do
-    context "as Admin" do
+    context "signed in as Admin user" do
       setup do
         @user = create(:admin_user, email: "admin@gov.uk")
         sign_in @user
@@ -805,7 +805,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   context "DELETE cancel_email_change" do
-    context "as Admin" do
+    context "signed in as Admin user" do
       setup do
         @user = create(:admin_user, email: "admin@gov.uk")
         sign_in @user
