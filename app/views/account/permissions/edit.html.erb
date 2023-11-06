@@ -26,6 +26,8 @@
       items: @permissions.map { |permission| { label: permission.name, value: permission.name, checked: current_user.has_permission?(permission) } },
   } %>
 
+  <%= hidden_field_tag "application[permissions][]", @application.signin_permission.name, id: "checkboxes-signin" %>
+
   <%= render "govuk_publishing_components/components/button", {
       text: "Update permissions"
   } %>

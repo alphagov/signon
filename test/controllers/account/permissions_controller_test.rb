@@ -102,6 +102,16 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       assert_select "input[type='checkbox'][name='application[permissions][]'][value='perm-3']", count: 0
       assert_select "input[type='checkbox'][name='application[permissions][]'][value='signin']", count: 0
     end
+
+    should "include a hidden field for the signin permission so that it is not removed" do
+      application = create(:application, with_supported_permissions: ["perm-1", SupportedPermission::SIGNIN_NAME])
+      user = create(:admin_user, with_permissions: { application => ["perm-1", SupportedPermission::SIGNIN_NAME] })
+      sign_in user
+
+      get :edit, params: { application_id: application.id }
+
+      assert_select "input[type='hidden'][value='signin']"
+    end
   end
 
   context "#update" do
