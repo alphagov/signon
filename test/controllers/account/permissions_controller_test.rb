@@ -133,5 +133,15 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       assert_equal %w[new], user.permissions_for(application)
       assert_redirected_to account_applications_path
     end
+
+    should "assign the application id to the success flash" do
+      application = create(:application, with_supported_permissions: %w[new])
+      user = create(:admin_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+      sign_in user
+
+      patch :update, params: { application_id: application.id, application: { permissions: %w[new] } }
+
+      assert_equal application.id, flash[:success]
+    end
   end
 end

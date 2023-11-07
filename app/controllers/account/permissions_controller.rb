@@ -22,6 +22,7 @@ class Account::PermissionsController < ApplicationController
     authorize [:account, @application], :edit_permissions?
 
     current_user.replace_application_permissions(@application, params[:application][:permissions])
+    flash[:success] = @application.id
     redirect_to account_applications_path
   end
 

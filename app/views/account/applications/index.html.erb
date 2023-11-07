@@ -15,6 +15,13 @@
    })
 %>
 
+<% if flash[:success] %>
+<%= render "govuk_publishing_components/components/success_alert", {
+    message: "Permissions updated",
+    description: message_for_success(flash[:success]),
+} %>
+<% end %>
+
 <table class="govuk-table">
   <caption class="govuk-table__caption govuk-table__caption--m">Apps you have access to</caption>
   <thead class="govuk-table__head">
