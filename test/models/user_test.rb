@@ -1238,6 +1238,15 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#permitted_params" do
+    should "return the params editable by the user's role" do
+      user = build(:user, role: Roles::Admin.role_name)
+      Roles::Admin.stubs(:permitted_user_params).returns(%i[abc xyz])
+
+      assert_equal %i[abc xyz], user.permitted_params
+    end
+  end
+
   def authenticate_access(user, app)
     Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end
