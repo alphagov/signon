@@ -556,24 +556,22 @@ class UsersControllerTest < ActionController::TestCase
         sign_in @user
       end
 
-      context "GET edit" do
-        context "when current user tries to edit their own user" do
-          should "redirect to the account page" do
-            get :edit, params: { id: @user }
+      context "when current user tries to edit their own user" do
+        should "redirect to the account page" do
+          get :edit, params: { id: @user }
 
-            assert_redirected_to account_path
-          end
+          assert_redirected_to account_path
         end
+      end
 
-        context "when current user tries to edit another user" do
-          should "redirect to the dashboard and explain user does not have permission" do
-            another_user = create(:user)
+      context "when current user tries to edit another user" do
+        should "redirect to the dashboard and explain user does not have permission" do
+          another_user = create(:user)
 
-            get :edit, params: { id: another_user }
+          get :edit, params: { id: another_user }
 
-            assert_redirected_to root_path
-            assert_equal "You do not have permission to perform this action.", flash[:alert]
-          end
+          assert_redirected_to root_path
+          assert_equal "You do not have permission to perform this action.", flash[:alert]
         end
       end
     end
