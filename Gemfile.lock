@@ -117,7 +117,7 @@ GEM
     crack (0.4.5)
       rexml
     crass (1.0.6)
-    date (3.3.3)
+    date (3.3.4)
     debug_inspector (1.1.0)
     devise (4.9.3)
       bcrypt (~> 3.0)
