@@ -262,12 +262,11 @@ class UsersControllerTest < ActionController::TestCase
         end
       end
 
-      should "show the form with a name field" do
-        not_an_admin = create(:user)
+      should "display the user's name and a link to change the name" do
+        not_an_admin = create(:user, name: "user-name")
         get :edit, params: { id: not_an_admin.id }
-        assert_select "form[action='#{user_path(not_an_admin)}']" do
-          assert_select "input[name='user[name]'][value='#{not_an_admin.name}']"
-        end
+        assert_select "*", text: /Name: user-name/
+        assert_select "a", href: edit_user_name_path(not_an_admin), text: "Change name"
       end
 
       should "show the form with an email field" do
@@ -594,15 +593,6 @@ class UsersControllerTest < ActionController::TestCase
         sign_in @user
       end
 
-      should "update the user name" do
-        another_user = create(:user, name: "Old Name")
-        put :update, params: { id: another_user.id, user: { name: "New Name" } }
-
-        assert_equal "New Name", another_user.reload.name
-        assert_redirected_to users_path
-        assert_equal "Updated user #{another_user.email} successfully", flash[:notice]
-      end
-
       should "not be able to update superadmins" do
         superadmin = create(:superadmin_user)
 
@@ -618,22 +608,6 @@ class UsersControllerTest < ActionController::TestCase
         assert_not_nil user.organisation
         put :update, params: { id: user.id, user: { organisation_id: nil } }
         assert_nil user.reload.organisation
-      end
-
-      should "redisplay the form if save fails" do
-        another_user = create(:user)
-        put :update, params: { id: another_user.id, user: { name: "" } }
-        assert_select "form#edit_user_#{another_user.id}"
-      end
-
-      should "display errors if name is not valid" do
-        user = create(:user)
-
-        put :update, params: { id: user.id, user: { name: "" } }
-
-        assert_select ".govuk-error-summary" do
-          assert_select "li", text: "Name can't be blank"
-        end
       end
 
       should "not let you set the role" do
@@ -770,7 +744,7 @@ class UsersControllerTest < ActionController::TestCase
         organisation = @organisation_admin.organisation
         organisation_admin_for_same_organisation = create(:organisation_admin_user, organisation:)
 
-        put :update, params: { id: organisation_admin_for_same_organisation.id, user: { name: "" } }
+        put :update, params: { id: organisation_admin_for_same_organisation.id, user: { email: "" } }
 
         assert_select "form#edit_user_#{organisation_admin_for_same_organisation.id}"
       end
@@ -786,7 +760,7 @@ class UsersControllerTest < ActionController::TestCase
         organisation = @super_organisation_admin.organisation
         super_organisation_admin_for_same_organisation = create(:super_organisation_admin_user, organisation:)
 
-        put :update, params: { id: super_organisation_admin_for_same_organisation.id, user: { name: "" } }
+        put :update, params: { id: super_organisation_admin_for_same_organisation.id, user: { email: "" } }
 
         assert_select "form#edit_user_#{super_organisation_admin_for_same_organisation.id}"
       end
