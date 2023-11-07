@@ -43,14 +43,8 @@ private
   end
 
   def user_params
-    UserParameterSanitiser.new(
-      user_params: permitted_user_params,
-      current_user_role: current_user.role.to_sym,
-    ).sanitise
-  end
-
-  def permitted_user_params
-    @permitted_user_params ||= params.require(:user).permit(:email).to_h
+    permitted_user_params = current_user.role_class.permitted_user_params
+    params.require(:user).permit(*permitted_user_params.intersection([:email]))
   end
 
   def redirect_to_account_page_if_acting_on_own_user
