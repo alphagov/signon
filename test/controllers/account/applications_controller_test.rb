@@ -37,7 +37,6 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
       should "display the button to remove access to an application" do
         application = create(:application, name: "app-name")
-        application.signin_permission.update!(delegatable: false)
         user = create(:admin_user, with_signin_permissions_for: [application])
 
         sign_in user
