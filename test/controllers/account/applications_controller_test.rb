@@ -72,10 +72,11 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
     context "logged in as a publishing manager" do
       setup do
         @application = create(:application, name: "app-name")
+        @user = create(:organisation_admin_user)
       end
 
       should "not display the button to grant access to an application" do
-        sign_in create(:organisation_admin_user)
+        sign_in @user
 
         get :index
 
@@ -83,16 +84,20 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
         assert_select "form[action='#{account_application_signin_permission_path(@application)}']", count: 0
       end
 
-      should "not display the button to remove access to an application" do
-        @application.signin_permission.update!(delegatable: false)
-        user = create(:organisation_admin_user, with_signin_permissions_for: [@application])
+      context "when the user has signin permissions for the application" do
+        setup do
+          @user.grant_application_signin_permission(@application)
+        end
 
-        sign_in user
+        should "not display the button to remove access to an application" do
+          @application.signin_permission.update!(delegatable: false)
+          sign_in @user
 
-        get :index
+          get :index
 
-        assert_select "tr td", text: "app-name"
-        assert_select "a[href='#{delete_account_application_signin_permission_path(@application)}']", count: 0
+          assert_select "tr td", text: "app-name"
+          assert_select "a[href='#{delete_account_application_signin_permission_path(@application)}']", count: 0
+        end
       end
     end
   end
