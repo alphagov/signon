@@ -89,14 +89,28 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
           @user.grant_application_signin_permission(@application)
         end
 
-        should "not display the button to remove access to an application" do
-          @application.signin_permission.update!(delegatable: false)
+        should "display the button to remove access to an application" do
           sign_in @user
 
           get :index
 
           assert_select "tr td", text: "app-name"
-          assert_select "a[href='#{delete_account_application_signin_permission_path(@application)}']", count: 0
+          assert_select "a[href='#{delete_account_application_signin_permission_path(@application)}']"
+        end
+
+        context "when the application does not have a delegatable signin permission" do
+          setup do
+            @application.signin_permission.update!(delegatable: false)
+          end
+
+          should "not display the button to remove access to an application" do
+            sign_in @user
+
+            get :index
+
+            assert_select "tr td", text: "app-name"
+            assert_select "a[href='#{delete_account_application_signin_permission_path(@application)}']", count: 0
+          end
         end
       end
     end
