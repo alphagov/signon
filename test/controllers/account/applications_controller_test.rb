@@ -25,9 +25,13 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
   context "#index" do
     context "logged in as a GOV.UK admin" do
+      setup do
+        @user = create(:admin_user)
+      end
+
       should "display the button to grant access to an application" do
         application = create(:application, name: "app-name")
-        sign_in create(:admin_user)
+        sign_in @user
 
         get :index
 
@@ -37,9 +41,8 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
       should "display the button to remove access to an application" do
         application = create(:application, name: "app-name")
-        user = create(:admin_user, with_signin_permissions_for: [application])
-
-        sign_in user
+        @user.grant_application_signin_permission(application)
+        sign_in @user
 
         get :index
 
@@ -49,7 +52,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
       should "not display a retired application" do
         create(:application, name: "retired-app-name", retired: true)
-        sign_in create(:admin_user)
+        sign_in @user
 
         get :index
 
@@ -58,7 +61,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
       should "not display an API-only application" do
         create(:application, name: "api-only-app-name", api_only: true)
-        sign_in create(:admin_user)
+        sign_in @user
 
         get :index
 
