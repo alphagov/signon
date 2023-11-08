@@ -125,28 +125,65 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
 
   context "viewing permissions for an app" do
     setup do
-      application = create(:application, name: "app-name", description: "app-description", with_supported_permissions: %w[perm1 perm2])
-      @user = create(:admin_user)
-      @user.grant_application_signin_permission(application)
-      @user.grant_application_permission(application, "perm1")
+      @application = create(:application, name: "app-name", description: "app-description", with_supported_permissions: %w[perm1 perm2])
+      @application.signin_permission.update!(delegatable: false)
     end
 
-    should "allow admins to view their permissions for apps" do
-      visit new_user_session_path
-      signin_with @user
+    %i[super_organisation_admin organisation_admin].each do |user_role|
+      context "for #{user_role} users" do
+        setup do
+          @user = create(:"#{user_role}_user")
+          @user.grant_application_signin_permission(@application)
+          @user.grant_application_permission(@application, "perm1")
+        end
 
-      visit account_applications_path
+        should "allow user to view their permissions for apps" do
+          visit new_user_session_path
+          signin_with @user
 
-      click_on "View permissions for app-name"
+          visit account_applications_path
 
-      signin_permission_row = find("table tr td:nth-child(1)", text: "signin").ancestor("tr")
-      assert signin_permission_row.has_content?("Yes")
+          click_on "View permissions for app-name"
 
-      perm1_permission_row = find("table tr td:nth-child(1)", text: "perm1").ancestor("tr")
-      assert perm1_permission_row.has_content?("Yes")
+          signin_permission_row = find("table tr td:nth-child(1)", text: "signin").ancestor("tr")
+          assert signin_permission_row.has_content?("Yes")
 
-      perm2_permission_row = find("table tr td:nth-child(1)", text: "perm2").ancestor("tr")
-      assert perm2_permission_row.has_content?("No")
+          perm1_permission_row = find("table tr td:nth-child(1)", text: "perm1").ancestor("tr")
+          assert perm1_permission_row.has_content?("Yes")
+
+          perm2_permission_row = find("table tr td:nth-child(1)", text: "perm2").ancestor("tr")
+          assert perm2_permission_row.has_content?("No")
+        end
+      end
+    end
+  end
+
+  context "updating permissions for an app" do
+    setup do
+      @application = create(:application, name: "app-name", description: "app-description", with_supported_permissions: %w[perm1 perm2])
+      @application.signin_permission.update!(delegatable: true)
+    end
+
+    %i[superadmin admin super_organisation_admin organisation_admin].each do |user_role|
+      context "for #{user_role} users" do
+        setup do
+          @user = create(:"#{user_role}_user")
+          @user.grant_application_signin_permission(@application)
+          @user.grant_application_permission(@application, "perm1")
+        end
+
+        should "allow user to update their permissions for apps" do
+          visit new_user_session_path
+          signin_with @user
+
+          visit account_applications_path
+
+          click_on "Update permissions for app-name"
+
+          assert page.has_checked_field?("perm1")
+          assert page.has_unchecked_field?("perm2")
+        end
+      end
     end
   end
 end

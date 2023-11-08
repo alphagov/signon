@@ -50,6 +50,17 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
         assert_select "a[href='#{delete_account_application_signin_permission_path(application)}']"
       end
 
+      should "display a link to update permissions" do
+        application = create(:application, name: "app-name")
+        @user.grant_application_signin_permission(application)
+        sign_in @user
+
+        get :index
+
+        assert_select "tr td", text: "app-name"
+        assert_select "a[href='#{edit_account_application_permissions_path(application)}']"
+      end
+
       should "not display a retired application" do
         create(:application, name: "retired-app-name", retired: true)
         sign_in @user
@@ -98,6 +109,15 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
           assert_select "a[href='#{delete_account_application_signin_permission_path(@application)}']"
         end
 
+        should "display a link to update permissions" do
+          sign_in @user
+
+          get :index
+
+          assert_select "tr td", text: "app-name"
+          assert_select "a[href='#{edit_account_application_permissions_path(@application)}']"
+        end
+
         context "when the application does not have a delegatable signin permission" do
           setup do
             @application.signin_permission.update!(delegatable: false)
@@ -110,6 +130,15 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
             assert_select "tr td", text: "app-name"
             assert_select "a[href='#{delete_account_application_signin_permission_path(@application)}']", count: 0
+          end
+
+          should "display a link to view permissions" do
+            sign_in @user
+
+            get :index
+
+            assert_select "tr td", text: "app-name"
+            assert_select "a[href='#{account_application_permissions_path(@application)}']"
           end
         end
       end
