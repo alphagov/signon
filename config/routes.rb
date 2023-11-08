@@ -63,7 +63,6 @@ Rails.application.routes.draw do
       delete :cancel_email_change
     end
     resource :password, only: %i[edit update]
-    resource :manage_permissions, only: %i[show update]
     resource :organisation, only: %i[edit update]
     resource :role, only: %i[edit update]
   end
