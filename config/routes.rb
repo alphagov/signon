@@ -45,6 +45,7 @@ Rails.application.routes.draw do
       patch :reset_two_step_verification
       get :require_2sv
     end
+    resource :name, only: %i[edit update], controller: "users/names"
   end
   get "user", to: "oauth_users#show"
 

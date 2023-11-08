@@ -127,7 +127,7 @@ private
   end
 
   def permitted_user_params
-    @permitted_user_params ||= params.require(:user).permit(:user, :name, :email, :organisation_id, :require_2sv, :role, :skip_update_user_permissions, supported_permission_ids: []).to_h
+    @permitted_user_params ||= params.require(:user).permit(:user, :email, :organisation_id, :require_2sv, :role, :skip_update_user_permissions, supported_permission_ids: []).to_h
   end
 
   def filter_params

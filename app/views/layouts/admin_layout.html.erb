@@ -37,6 +37,9 @@
 
       <div class="govuk-grid-row">
         <div class="<%= yield(:top_right).present? ? 'govuk-grid-column-one-third' : 'govuk-grid-column-two-thirds' %>">
+          <% if yield(:title_caption).present? %>
+            <span class="govuk-caption-l"><%= yield(:title_caption) %></span>
+          <% end %>
           <h1 class="govuk-heading-l">
             <% if yield(:page_heading).present? %>
               <%= yield(:page_heading) %>

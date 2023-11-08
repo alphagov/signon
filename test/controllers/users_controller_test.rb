@@ -262,10 +262,19 @@ class UsersControllerTest < ActionController::TestCase
         end
       end
 
-      should "show the form" do
+      should "display the user's name and a link to change the name" do
+        not_an_admin = create(:user, name: "user-name")
+        get :edit, params: { id: not_an_admin.id }
+        assert_select "*", text: /Name: user-name/
+        assert_select "a", href: edit_user_name_path(not_an_admin), text: "Change name"
+      end
+
+      should "show the form with an email field" do
         not_an_admin = create(:user)
         get :edit, params: { id: not_an_admin.id }
-        assert_select "input[name='user[email]'][value='#{not_an_admin.email}']"
+        assert_select "form[action='#{user_path(not_an_admin)}']" do
+          assert_select "input[name='user[email]'][value='#{not_an_admin.email}']"
+        end
       end
 
       should "show the pending email if applicable" do
@@ -556,24 +565,22 @@ class UsersControllerTest < ActionController::TestCase
         sign_in @user
       end
 
-      context "GET edit" do
-        context "when current user tries to edit their own user" do
-          should "redirect to the account page" do
-            get :edit, params: { id: @user }
+      context "when current user tries to edit their own user" do
+        should "redirect to the account page" do
+          get :edit, params: { id: @user }
 
-            assert_redirected_to account_path
-          end
+          assert_redirected_to account_path
         end
+      end
 
-        context "when current user tries to edit another user" do
-          should "redirect to the dashboard and explain user does not have permission" do
-            another_user = create(:user)
+      context "when current user tries to edit another user" do
+        should "redirect to the dashboard and explain user does not have permission" do
+          another_user = create(:user)
 
-            get :edit, params: { id: another_user }
+          get :edit, params: { id: another_user }
 
-            assert_redirected_to root_path
-            assert_equal "You do not have permission to perform this action.", flash[:alert]
-          end
+          assert_redirected_to root_path
+          assert_equal "You do not have permission to perform this action.", flash[:alert]
         end
       end
     end
@@ -584,15 +591,6 @@ class UsersControllerTest < ActionController::TestCase
       setup do
         @user = create(:admin_user, email: "admin@gov.uk")
         sign_in @user
-      end
-
-      should "update the user" do
-        another_user = create(:user, name: "Old Name")
-        put :update, params: { id: another_user.id, user: { name: "New Name" } }
-
-        assert_equal "New Name", another_user.reload.name
-        assert_redirected_to users_path
-        assert_equal "Updated user #{another_user.email} successfully", flash[:notice]
       end
 
       should "not be able to update superadmins" do
@@ -610,12 +608,6 @@ class UsersControllerTest < ActionController::TestCase
         assert_not_nil user.organisation
         put :update, params: { id: user.id, user: { organisation_id: nil } }
         assert_nil user.reload.organisation
-      end
-
-      should "redisplay the form if save fails" do
-        another_user = create(:user)
-        put :update, params: { id: another_user.id, user: { name: "" } }
-        assert_select "form#edit_user_#{another_user.id}"
       end
 
       should "not let you set the role" do
@@ -752,7 +744,7 @@ class UsersControllerTest < ActionController::TestCase
         organisation = @organisation_admin.organisation
         organisation_admin_for_same_organisation = create(:organisation_admin_user, organisation:)
 
-        put :update, params: { id: organisation_admin_for_same_organisation.id, user: { name: "" } }
+        put :update, params: { id: organisation_admin_for_same_organisation.id, user: { email: "" } }
 
         assert_select "form#edit_user_#{organisation_admin_for_same_organisation.id}"
       end
@@ -768,7 +760,7 @@ class UsersControllerTest < ActionController::TestCase
         organisation = @super_organisation_admin.organisation
         super_organisation_admin_for_same_organisation = create(:super_organisation_admin_user, organisation:)
 
-        put :update, params: { id: super_organisation_admin_for_same_organisation.id, user: { name: "" } }
+        put :update, params: { id: super_organisation_admin_for_same_organisation.id, user: { email: "" } }
 
         assert_select "form#edit_user_#{super_organisation_admin_for_same_organisation.id}"
       end
