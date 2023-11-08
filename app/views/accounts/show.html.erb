@@ -33,10 +33,10 @@
       {
         link: {
           text: "Manage permissions",
-          path: account_manage_permissions_path,
+          path: account_applications_path,
         },
         description: "Make changes to your permissions across different apps.",
-      } if policy(%i[account manage_permissions]).show?
+      } if policy([:account, Doorkeeper::Application]).show?
     ),
     {
       link: {

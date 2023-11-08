@@ -20,7 +20,7 @@ class AccountTest < ActionDispatch::IntegrationTest
 
       assert page.has_link?("Change your email address", href: edit_account_email_path)
       assert page.has_link?("Change your password", href: edit_account_password_path)
-      assert page.has_link?("Manage permissions", href: account_manage_permissions_path)
+      assert page.has_link?("Manage permissions", href: account_applications_path)
       assert page.has_link?("Change your 2-step verification phone", href: two_step_verification_path)
       assert page.has_link?("View your role", href: edit_account_role_path)
       assert page.has_link?("Change your organisation", href: edit_account_organisation_path)
