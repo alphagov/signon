@@ -1,5 +1,5 @@
 <% content_for :title_caption, "Manage other users" %>
-<% content_for :title, "Change name for #{@user.name}" %>
+<% content_for :title, "Change name for #{@user.name_was}" %>
 
 <% content_for :breadcrumbs,
    render("govuk_publishing_components/components/breadcrumbs", {
@@ -14,7 +14,7 @@
          url: users_path,
        },
        {
-         title: @user.name,
+         title: @user.name_was,
          url: edit_user_path(@user),
        },
        {

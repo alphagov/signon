@@ -138,6 +138,16 @@ class Users::NamesControllerTest < ActionController::TestCase
         end
       end
 
+      should "use original name in page title, heading & breadcrumbs if new name was not valid" do
+        user = create(:user, name: "user-name")
+
+        put :update, params: { user_id: user, user: { name: "" } }
+
+        assert_select "head title", text: /^Change name for user-name/
+        assert_select "h1", text: "Change name for user-name"
+        assert_select ".govuk-breadcrumbs li", text: "user-name"
+      end
+
       should "display errors if name is not valid" do
         user = create(:user)
 
