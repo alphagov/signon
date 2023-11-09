@@ -168,7 +168,7 @@ class Users::NamesControllerTest < ActionController::TestCase
         sign_in(create(:user))
       end
 
-      should "update user name" do
+      should "not be authorized" do
         user = create(:user, name: "user-name")
 
         put :update, params: { user_id: user, user: { name: "new-user-name" } }
