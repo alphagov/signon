@@ -803,7 +803,6 @@ class UsersControllerTest < ActionController::TestCase
         sign_in @user
 
         @another_user = create(:user_with_pending_email_change)
-        request.env["HTTP_REFERER"] = edit_user_path(@another_user)
       end
 
       should "clear the unconfirmed_email and the confirmation_token" do
