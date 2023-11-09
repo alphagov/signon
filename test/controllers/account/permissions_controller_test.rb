@@ -151,7 +151,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       assert_equal %w[other], user.permissions_for(other_application)
     end
 
-    should "assign the application id to the success flash" do
+    should "assign the application id to the application_id flash" do
       application = create(:application, with_supported_permissions: %w[new])
       user = create(:admin_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
       sign_in user
@@ -160,7 +160,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
       patch :update, params: { application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
 
-      assert_equal application.id, flash[:success]
+      assert_equal application.id, flash[:application_id]
     end
   end
 end

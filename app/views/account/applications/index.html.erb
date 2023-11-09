@@ -15,10 +15,10 @@
    })
 %>
 
-<% if flash[:success] %>
+<% if flash[:application_id] %>
 <%= render "govuk_publishing_components/components/success_alert", {
     message: "Permissions updated",
-    description: message_for_success(flash[:success]),
+    description: message_for_success(flash[:application_id]),
 } %>
 <% end %>
 

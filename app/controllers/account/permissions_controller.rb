@@ -25,7 +25,7 @@ class Account::PermissionsController < ApplicationController
     user_update_params = { supported_permission_ids: permission_ids_for_other_applications + params[:application][:supported_permission_ids] }
     UserUpdate.new(current_user, user_update_params, current_user, user_ip_address).call
 
-    flash[:success] = @application.id
+    flash[:application_id] = @application.id
     redirect_to account_applications_path
   end
 
