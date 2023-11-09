@@ -21,7 +21,10 @@ class Account::PermissionsController < ApplicationController
   def update
     authorize [:account, @application], :edit_permissions?
 
-    current_user.replace_application_permissions(@application, params[:application][:permissions])
+    permission_ids_for_other_applications = current_user.supported_permissions.reject { |p| p.application == @application }.map(&:id)
+    user_update_params = { supported_permission_ids: permission_ids_for_other_applications + params[:application][:supported_permission_ids] }
+    UserUpdate.new(current_user, user_update_params, current_user, user_ip_address).call
+
     flash[:success] = @application.id
     redirect_to account_applications_path
   end

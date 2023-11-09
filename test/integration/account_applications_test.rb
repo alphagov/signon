@@ -182,6 +182,13 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
 
           assert page.has_checked_field?("perm1")
           assert page.has_unchecked_field?("perm2")
+
+          check "perm2"
+          click_button "Update permissions"
+
+          success_flash = find("div[role='alert']")
+          assert success_flash.has_content?("perm1")
+          assert success_flash.has_content?("perm2")
         end
       end
     end
