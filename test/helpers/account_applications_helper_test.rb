@@ -25,5 +25,16 @@ class AccountApplicationsHelperTest < ActionView::TestCase
         assert_nil message_for_success(:made_up_id)
       end
     end
+
+    context "when the user has no additional permissions" do
+      setup do
+        user = create(:user, with_permissions: { @application => [SupportedPermission::SIGNIN_NAME] })
+        stubs(:current_user).returns(user)
+      end
+
+      should "indicate that the user has no additional permissions" do
+        assert_includes message_for_success(@application.id), "You can access but have no additional permissions for Whitehall."
+      end
+    end
   end
 end

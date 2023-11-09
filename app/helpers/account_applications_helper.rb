@@ -3,13 +3,16 @@ module AccountApplicationsHelper
     application = Doorkeeper::Application.find_by(id: application_id)
     return nil unless application
 
-    paragraph = tag.p("You now have the following permissions for #{application.name}:", class: "govuk-body")
-    list = tag.ul(class: "govuk-list govuk-list--bullet")
+    additional_permissions = current_user.permissions_for(application).reject { |permission| permission == SupportedPermission::SIGNIN_NAME }
 
-    current_user
-      .permissions_for(application)
-      .reject { |permission| permission == SupportedPermission::SIGNIN_NAME }
-      .map { |permission| list << tag.li(permission) }
+    if additional_permissions.any?
+      paragraph = tag.p("You now have the following permissions for #{application.name}:", class: "govuk-body")
+      list = tag.ul(class: "govuk-list govuk-list--bullet")
+      additional_permissions.map { |permission| list << tag.li(permission) }
+    else
+      paragraph = tag.p("You can access but have no additional permissions for #{application.name}.", class: "govuk-body")
+      list = nil
+    end
 
     paragraph + list
   end
