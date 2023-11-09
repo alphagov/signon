@@ -135,7 +135,7 @@ class InvitationsControllerTest < ActionController::TestCase
       should "disallow access" do
         get :new
 
-        assert_redirected_to root_path
+        assert_not_authorised
       end
     end
 
@@ -147,7 +147,7 @@ class InvitationsControllerTest < ActionController::TestCase
       should "disallow access" do
         get :new
 
-        assert_redirected_to root_path
+        assert_not_authorised
       end
     end
 
@@ -159,7 +159,7 @@ class InvitationsControllerTest < ActionController::TestCase
       should "disallow access" do
         get :new
 
-        assert_redirected_to root_path
+        assert_not_authorised
       end
     end
 
@@ -452,7 +452,7 @@ class InvitationsControllerTest < ActionController::TestCase
       should "disallow access" do
         post :create, params: { user: { name: "invitee", email: "invitee@gov.uk" } }
 
-        assert_redirected_to root_path
+        assert_not_authorised
       end
     end
 
@@ -464,7 +464,7 @@ class InvitationsControllerTest < ActionController::TestCase
       should "disallow access" do
         post :create, params: { user: { name: "org-admin-invitee", email: "org-admin-invitee@gov.uk" } }
 
-        assert_redirected_to root_path
+        assert_not_authorised
       end
     end
 
@@ -476,7 +476,7 @@ class InvitationsControllerTest < ActionController::TestCase
       should "disallow access" do
         post :create, params: { user: { name: "super-org-admin-invitee", email: "super-org-admin-invitee@gov.uk" } }
 
-        assert_redirected_to root_path
+        assert_not_authorised
       end
     end
 
@@ -516,7 +516,7 @@ class InvitationsControllerTest < ActionController::TestCase
       should "disallow access" do
         post :resend, params: { id: @user_to_resend_for }
 
-        assert_redirected_to root_path
+        assert_not_authorised
       end
     end
 
@@ -528,7 +528,7 @@ class InvitationsControllerTest < ActionController::TestCase
       should "disallow access" do
         post :resend, params: { id: @user_to_resend_for }
 
-        assert_redirected_to root_path
+        assert_not_authorised
       end
     end
 
@@ -540,7 +540,7 @@ class InvitationsControllerTest < ActionController::TestCase
       should "disallow access" do
         post :resend, params: { id: @user_to_resend_for }
 
-        assert_redirected_to root_path
+        assert_not_authorised
       end
     end
 

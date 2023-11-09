@@ -243,7 +243,7 @@ class UsersControllerTest < ActionController::TestCase
 
       should "disallow access" do
         get :index
-        assert_redirected_to root_path
+        assert_not_authorised
       end
     end
   end
@@ -303,8 +303,7 @@ class UsersControllerTest < ActionController::TestCase
 
         get :edit, params: { id: superadmin.id }
 
-        assert_redirected_to root_path
-        assert_match(/You do not have permission to perform this action./, flash[:alert])
+        assert_not_authorised
       end
 
       should "can give permissions to all applications" do
@@ -579,8 +578,7 @@ class UsersControllerTest < ActionController::TestCase
 
           get :edit, params: { id: another_user }
 
-          assert_redirected_to root_path
-          assert_equal "You do not have permission to perform this action.", flash[:alert]
+          assert_not_authorised
         end
       end
     end
@@ -598,8 +596,7 @@ class UsersControllerTest < ActionController::TestCase
 
         put :edit, params: { id: superadmin.id, user: { email: "normal_user@example.com" } }
 
-        assert_redirected_to root_path
-        assert_match(/You do not have permission to perform this action./, flash[:alert])
+        assert_not_authorised
       end
 
       should "update the user's organisation" do
@@ -736,8 +733,7 @@ class UsersControllerTest < ActionController::TestCase
 
         put :update, params: { id: user.id, user: { organisation_id: @organisation_admin.organisation.id } }
 
-        assert_redirected_to root_path
-        assert_match(/You do not have permission to perform this action./, flash[:alert])
+        assert_not_authorised
       end
 
       should "redisplay the form if save fails" do
