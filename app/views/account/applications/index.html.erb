@@ -15,6 +15,13 @@
    })
 %>
 
+<% if flash[:application_id] %>
+<%= render "govuk_publishing_components/components/success_alert", {
+    message: "Permissions updated",
+    description: message_for_success(flash[:application_id]),
+} %>
+<% end %>
+
 <table class="govuk-table">
   <caption class="govuk-table__caption govuk-table__caption--m">Apps you have access to</caption>
   <thead class="govuk-table__head">
@@ -31,8 +38,14 @@
         <td class="govuk-table__cell"><%= application.name %></td>
         <td class="govuk-table__cell"><%= application.description %></td>
         <td class="govuk-table__cell govuk-!-text-align-right">
-          <%= link_to account_application_permissions_path(application), class: "govuk-link" do %>
-              View permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
+          <% if policy([:account, application]).edit_permissions? %>
+            <%= link_to edit_account_application_permissions_path(application), class: "govuk-link" do %>
+                Update permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
+            <% end %>
+          <% elsif policy([:account, application]).view_permissions? %>
+            <%= link_to account_application_permissions_path(application), class: "govuk-link" do %>
+                View permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
+            <% end %>
           <% end %>
         </td>
         <td class="govuk-table__cell govuk-!-text-align-right">

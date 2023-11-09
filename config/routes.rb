@@ -53,7 +53,7 @@ Rails.application.routes.draw do
   namespace :account do
     resource :activity, only: [:show]
     resources :applications, only: %i[show index] do
-      resources :permissions, only: [:index]
+      resource :permissions, only: %i[show edit update]
       resource :signin_permission, only: %i[create destroy] do
         get :delete
       end
@@ -63,7 +63,6 @@ Rails.application.routes.draw do
       delete :cancel_email_change
     end
     resource :password, only: %i[edit update]
-    resource :manage_permissions, only: %i[show update]
     resource :organisation, only: %i[edit update]
     resource :role, only: %i[edit update]
   end
