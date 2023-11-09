@@ -814,9 +814,9 @@ class UsersControllerTest < ActionController::TestCase
         assert_nil @another_user.confirmation_token
       end
 
-      should "redirect to the edit user admin page" do
+      should "redirect to the users page" do
         delete :cancel_email_change, params: { id: @another_user.id }
-        assert_redirected_to edit_user_path(@another_user)
+        assert_redirected_to users_path
       end
     end
   end
