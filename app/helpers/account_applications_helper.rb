@@ -1,6 +1,7 @@
 module AccountApplicationsHelper
   def message_for_success(application_id)
-    application = Doorkeeper::Application.find(application_id)
+    application = Doorkeeper::Application.find_by(id: application_id)
+    return nil unless application
 
     paragraph = tag.p("You now have the following permissions for #{application.name}:", class: "govuk-body")
     list = tag.ul(class: "govuk-list govuk-list--bullet")
