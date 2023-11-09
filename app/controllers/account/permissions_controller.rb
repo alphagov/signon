@@ -21,7 +21,7 @@ class Account::PermissionsController < ApplicationController
   def update
     authorize [:account, @application], :edit_permissions?
 
-    permission_ids_for_other_applications = current_user.supported_permissions.reject { |p| p.application == @application }.map(&:id)
+    permission_ids_for_other_applications = current_user.supported_permissions.excluding_application(@application).pluck(:id)
     user_update_params = { supported_permission_ids: permission_ids_for_other_applications + params[:application][:supported_permission_ids] }
     UserUpdate.new(current_user, user_update_params, current_user, user_ip_address).call
 

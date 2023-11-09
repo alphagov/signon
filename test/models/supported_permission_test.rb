@@ -70,4 +70,11 @@ class SupportedPermissionTest < ActiveSupport::TestCase
 
     assert_same_elements [app1.signin_permission, app2.signin_permission], SupportedPermission.signin
   end
+
+  test ".excluding_application returns all permissions except for the provided application" do
+    create(:application, with_supported_permissions: %w[included-permission])
+    excluded_application = create(:application, with_supported_permissions: %w[excluded-permission])
+
+    assert_same_elements ["included-permission", SupportedPermission::SIGNIN_NAME], SupportedPermission.excluding_application(excluded_application).pluck(:name)
+  end
 end

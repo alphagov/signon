@@ -14,6 +14,7 @@ class SupportedPermission < ApplicationRecord
   scope :grantable_from_ui, -> { where(grantable_from_ui: true) }
   scope :default, -> { where(default: true) }
   scope :signin, -> { where(name: SIGNIN_NAME) }
+  scope :excluding_application, ->(application) { where.not(application:) }
 
   def signin?
     name.try(:downcase) == SIGNIN_NAME
