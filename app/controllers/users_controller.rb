@@ -51,13 +51,13 @@ class UsersController < ApplicationController
     EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK, initiator: current_user, ip_address: user_ip_address)
     @user.unlock_access!
     flash[:notice] = "Unlocked #{@user.email}"
-    redirect_back_or_to(root_path)
+    redirect_to users_path
   end
 
   def resend_email_change
     @user.resend_confirmation_instructions
     if @user.errors.empty?
-      redirect_to root_path, notice: "Successfully resent email change email to #{@user.unconfirmed_email}"
+      redirect_to users_path, notice: "Successfully resent email change email to #{@user.unconfirmed_email}"
     else
       redirect_to edit_user_path(@user), alert: "Failed to send email change email"
     end
@@ -66,7 +66,7 @@ class UsersController < ApplicationController
   def cancel_email_change
     @user.cancel_email_change!
 
-    redirect_back_or_to(root_path)
+    redirect_to users_path
   end
 
   def event_logs
@@ -78,7 +78,7 @@ class UsersController < ApplicationController
     @user.reset_2sv!(current_user)
     UserMailer.two_step_reset(@user).deliver_later
 
-    redirect_to :root, notice: "Reset 2-step verification for #{@user.email}"
+    redirect_to users_path, notice: "Reset 2-step verification for #{@user.email}"
   end
 
   def require_2sv; end
