@@ -100,8 +100,8 @@ class Account::EmailsControllerTest < ActionController::TestCase
       perform_enqueued_jobs do
         @user = create(
           :user_with_pending_email_change,
+          :with_expired_confirmation_token,
           confirmation_token: "old token",
-          confirmation_sent_at: 15.days.ago,
         )
         sign_in @user
 

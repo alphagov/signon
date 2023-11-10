@@ -782,8 +782,8 @@ class UsersControllerTest < ActionController::TestCase
       should "use a new token if it's expired" do
         another_user = create(
           :user_with_pending_email_change,
+          :with_expired_confirmation_token,
           confirmation_token: "old token",
-          confirmation_sent_at: 15.days.ago,
         )
         put :resend_email_change, params: { id: another_user.id }
 
