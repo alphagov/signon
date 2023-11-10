@@ -15,7 +15,7 @@ class TwoStepVerificationControllerTest < ActionController::TestCase
     should "redirect to login upon attempted prompt" do
       get :prompt
 
-      assert_redirected_to new_user_session_path
+      assert_not_authenticated
     end
   end
 

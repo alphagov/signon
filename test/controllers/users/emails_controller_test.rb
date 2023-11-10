@@ -82,7 +82,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
 
         get :edit, params: { user_id: user }
 
-        assert_redirected_to new_user_session_path
+        assert_not_authenticated
       end
     end
   end
@@ -244,7 +244,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
 
         get :edit, params: { user_id: user }
 
-        assert_redirected_to new_user_session_path
+        assert_not_authenticated
       end
     end
   end
@@ -340,7 +340,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
 
         get :resend_email_change, params: { user_id: user }
 
-        assert_redirected_to new_user_session_path
+        assert_not_authenticated
       end
     end
   end
@@ -413,7 +413,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
 
         get :cancel_email_change, params: { user_id: user }
 
-        assert_redirected_to new_user_session_path
+        assert_not_authenticated
       end
     end
   end

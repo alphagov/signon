@@ -68,7 +68,7 @@ class Users::NamesControllerTest < ActionController::TestCase
 
         get :edit, params: { user_id: user }
 
-        assert_redirected_to new_user_session_path
+        assert_not_authenticated
       end
     end
   end
@@ -190,7 +190,7 @@ class Users::NamesControllerTest < ActionController::TestCase
 
         get :edit, params: { user_id: user }
 
-        assert_redirected_to new_user_session_path
+        assert_not_authenticated
       end
     end
   end

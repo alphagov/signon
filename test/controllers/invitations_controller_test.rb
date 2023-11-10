@@ -167,7 +167,7 @@ class InvitationsControllerTest < ActionController::TestCase
       should "require inviter to be signed in" do
         get :new
 
-        assert_redirected_to new_user_session_path
+        assert_not_authenticated
       end
     end
   end
@@ -484,7 +484,7 @@ class InvitationsControllerTest < ActionController::TestCase
       should "require inviter to be signed in" do
         post :create
 
-        assert_redirected_to new_user_session_path
+        assert_not_authenticated
       end
     end
   end
@@ -549,7 +549,7 @@ class InvitationsControllerTest < ActionController::TestCase
         user_to_resend_for = create(:user)
         post :resend, params: { id: user_to_resend_for }
 
-        assert_redirected_to new_user_session_path
+        assert_not_authenticated
       end
     end
   end

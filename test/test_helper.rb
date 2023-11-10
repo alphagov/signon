@@ -48,6 +48,10 @@ class ActionController::TestCase
     @controller.unstub(:current_user)
   end
 
+  def assert_not_authenticated
+    assert_redirected_to new_user_session_path
+  end
+
   def assert_not_authorised
     assert_redirected_to root_path
     assert_equal "You do not have permission to perform this action.", flash[:alert]
