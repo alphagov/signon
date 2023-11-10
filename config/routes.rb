@@ -46,6 +46,8 @@ Rails.application.routes.draw do
       get :require_2sv
     end
     resource :name, only: %i[edit update], controller: "users/names"
+    resource :email, only: %i[edit update], controller: "users/emails" do
+    end
   end
   get "user", to: "oauth_users#show"
 

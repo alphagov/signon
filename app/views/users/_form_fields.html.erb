@@ -2,12 +2,8 @@
   <strong>Name:</strong> <%= @user.name %> <%= link_to 'Change<span class="invisible"> name</span>'.html_safe, edit_user_name_path(@user) %>
 </p>
 
-<p class="form-group">
-  <%= f.label :email %>
-  <%= f.text_field :email, autocomplete: "off", class: 'form-control input-md-6 add-label-margin' %>
-  <% if f.object.invited_but_not_yet_accepted? %>
-    <span class="help-block">Changes will trigger a new signup email.</span>
-  <% end %>
+<p>
+  <strong>Email:</strong> <%= @user.email %> <%= link_to 'Change<span class="invisible"> email</span>'.html_safe, edit_user_email_path(@user) %>
 </p>
 
 <% if f.object.unconfirmed_email.present? %>
