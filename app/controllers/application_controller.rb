@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
 
   include TwoStepVerificationHelper
 
+  before_action :set_current_user_and_ip, if: :user_signed_in?
   before_action :handle_two_step_verification
   after_action :verify_authorized, unless: :devise_controller?
 
@@ -29,6 +30,11 @@ class ApplicationController < ActionController::Base
   end
 
 private
+
+  def set_current_user_and_ip
+    Current.user = current_user
+    Current.user_ip = user_ip_address
+  end
 
   def user_ip_address
     request.remote_ip

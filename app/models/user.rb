@@ -69,6 +69,7 @@ class User < ApplicationRecord
   before_save :mark_two_step_mandated_changed
   before_save :update_password_changed
   before_save :strip_whitespace_from_name
+  after_update :record_update
 
   scope :web_users, -> { where(api_user: false) }
 
@@ -459,5 +460,14 @@ private
 
   def update_password_changed
     self.password_changed_at = Time.zone.now if (new_record? || encrypted_password_changed?) && !password_changed_at_changed?
+  end
+
+  def record_update
+    EventLog.record_event(
+      self,
+      EventLog::ACCOUNT_UPDATED,
+      initiator: Current.user,
+      ip_address: Current.user_ip,
+    )
   end
 end

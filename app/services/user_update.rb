@@ -15,7 +15,6 @@ class UserUpdate
 
     user.application_permissions.reload
 
-    record_update
     record_permission_changes(old_permissions)
     record_role_change
     record_organisation_change
@@ -67,15 +66,6 @@ private
         ip_address: user_ip,
       )
     end
-  end
-
-  def record_update
-    EventLog.record_event(
-      user,
-      EventLog::ACCOUNT_UPDATED,
-      initiator: current_user,
-      ip_address: user_ip,
-    )
   end
 
   def record_role_change
