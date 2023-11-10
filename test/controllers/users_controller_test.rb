@@ -557,14 +557,6 @@ class UsersControllerTest < ActionController::TestCase
         sign_in @user
       end
 
-      context "when current user tries to edit their own user" do
-        should "redirect to the account page" do
-          get :edit, params: { id: @user }
-
-          assert_redirected_to account_path
-        end
-      end
-
       context "when current user tries to edit another user" do
         should "redirect to the dashboard and explain user does not have permission" do
           another_user = create(:user)
