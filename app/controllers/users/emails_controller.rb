@@ -14,6 +14,21 @@ class Users::EmailsController < ApplicationController
     end
   end
 
+  def resend_email_change
+    @user.resend_confirmation_instructions
+    if @user.errors.empty?
+      redirect_to edit_user_path(@user), notice: "Successfully resent email change email to #{@user.unconfirmed_email}"
+    else
+      redirect_to edit_user_email_path(@user), alert: "Failed to send email change email"
+    end
+  end
+
+  def cancel_email_change
+    @user.cancel_email_change!
+
+    redirect_to edit_user_path(@user)
+  end
+
 private
 
   def load_user

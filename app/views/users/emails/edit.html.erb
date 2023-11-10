@@ -23,5 +23,17 @@
     <% end %>
   </p>
 
+  <% if f.object.unconfirmed_email.present? %>
+    <p class="form-group">
+      <%= f.label :unconfirmed_email, "Pending email" %>
+      <%= f.text_field :unconfirmed_email, readonly: "readonly", disabled: "disabled", class: 'form-control' %>
+
+      <div class="help-block add-bottom-margin">
+        <%= link_to "Resend confirmation email", resend_email_change_user_email_path(f.object), :method => :put, :class => "btn btn-primary add-right-margin" %>
+        <%= link_to "Cancel change", cancel_email_change_user_email_path(f.object), :method => :delete, :class => "btn btn-danger" %>
+      </div>
+    </p>
+  <% end %>
+
   <%= f.submit :class => 'btn btn-primary' %>
 <% end %>

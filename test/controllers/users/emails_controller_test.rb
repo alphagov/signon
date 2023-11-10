@@ -21,6 +21,16 @@ class Users::EmailsControllerTest < ActionController::TestCase
         end
       end
 
+      should "show the pending email & action links if applicable" do
+        user = create(:user_with_pending_email_change)
+
+        get :edit, params: { user_id: user }
+
+        assert_select "input[name='user[unconfirmed_email]']", value: user.unconfirmed_email
+        assert_select "a", href: resend_email_change_user_email_path(user), text: "Resend confirmation email"
+        assert_select "a", href: cancel_email_change_user_email_path(user), text: "Cancel change"
+      end
+
       should "authorize access if UserPolicy#edit? returns true" do
         user = create(:user)
 
@@ -221,6 +231,175 @@ class Users::EmailsControllerTest < ActionController::TestCase
         user = create(:user)
 
         get :edit, params: { user_id: user }
+
+        assert_redirected_to new_user_session_path
+      end
+    end
+  end
+
+  context "PUT resend_email_change" do
+    context "signed in as Admin user" do
+      setup do
+        sign_in(create(:admin_user))
+      end
+
+      should "send an email change confirmation email" do
+        perform_enqueued_jobs do
+          user = create(:user_with_pending_email_change)
+
+          put :resend_email_change, params: { user_id: user }
+
+          assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+        end
+      end
+
+      should "use a new token if the old one has expired" do
+        user = create(
+          :user_with_pending_email_change,
+          :with_expired_confirmation_token,
+          confirmation_token: "old-token",
+        )
+
+        put :resend_email_change, params: { user_id: user }
+
+        assert_not_equal "old-token", user.reload.confirmation_token
+      end
+
+      should "redirect to edit user page and display success notice" do
+        user = create(:user_with_pending_email_change)
+
+        put :resend_email_change, params: { user_id: user }
+
+        assert_redirected_to edit_user_path(user)
+        assert_equal "Successfully resent email change email to #{user.unconfirmed_email}", flash[:notice]
+      end
+
+      should "redirect to edit user email page and display failure alert if resending fails" do
+        user = create(:user)
+
+        put :resend_email_change, params: { user_id: user }
+
+        assert_redirected_to edit_user_email_path(user)
+        assert_equal "Failed to send email change email", flash[:alert]
+      end
+
+      should "send an email change confirmation email if UserPolicy#resend_email_change? returns true" do
+        user = create(:user_with_pending_email_change)
+
+        user_policy = stub_everything("user-policy", resend_email_change?: true)
+        UserPolicy.stubs(:new).returns(user_policy)
+
+        assert_enqueued_emails 1 do
+          put :resend_email_change, params: { user_id: user }
+        end
+        assert_redirected_to edit_user_path(user)
+      end
+
+      should "not send an email change confirmation email if UserPolicy#resend_email_change? returns false" do
+        user = create(:user_with_pending_email_change)
+
+        user_policy = stub_everything("user-policy", resend_email_change?: false)
+        UserPolicy.stubs(:new).returns(user_policy)
+
+        assert_no_enqueued_emails do
+          put :resend_email_change, params: { user_id: user }
+        end
+        assert_not_authorised
+      end
+    end
+
+    context "signed in as Normal user" do
+      setup do
+        sign_in(create(:user))
+      end
+
+      should "not be authorized" do
+        user = create(:user_with_pending_email_change)
+
+        put :resend_email_change, params: { user_id: user }
+
+        assert_not_authorised
+      end
+    end
+
+    context "not signed in" do
+      should "not be allowed access" do
+        user = create(:user_with_pending_email_change)
+
+        get :resend_email_change, params: { user_id: user }
+
+        assert_redirected_to new_user_session_path
+      end
+    end
+  end
+
+  context "DELETE cancel_email_change" do
+    context "signed in as Admin user" do
+      setup do
+        sign_in(create(:admin_user))
+      end
+
+      should "clear unconfirmed_email & confirmation_token" do
+        user = create(:user_with_pending_email_change)
+
+        delete :cancel_email_change, params: { user_id: user }
+
+        user.reload
+        assert user.unconfirmed_email.blank?
+        assert user.confirmation_token.blank?
+      end
+
+      should "redirect to the edit user page" do
+        user = create(:user_with_pending_email_change)
+
+        delete :cancel_email_change, params: { user_id: user }
+
+        assert_redirected_to edit_user_path(user)
+      end
+
+      should "clear email & token if UserPolicy#cancel_email_change? returns true" do
+        user = create(:user_with_pending_email_change)
+
+        user_policy = stub_everything("user-policy", cancel_email_change?: true)
+        UserPolicy.stubs(:new).returns(user_policy)
+
+        put :cancel_email_change, params: { user_id: user }
+
+        assert user.reload.unconfirmed_email.blank?
+      end
+
+      should "not clear email & token if UserPolicy#cancel_email_change? returns false" do
+        user = create(:user_with_pending_email_change)
+
+        user_policy = stub_everything("user-policy", cancel_email_change?: false)
+        UserPolicy.stubs(:new).returns(user_policy)
+
+        put :cancel_email_change, params: { user_id: user }
+
+        assert user.reload.unconfirmed_email.present?
+        assert_not_authorised
+      end
+    end
+
+    context "signed in as Normal user" do
+      setup do
+        sign_in(create(:user))
+      end
+
+      should "not be authorized" do
+        user = create(:user_with_pending_email_change)
+
+        put :cancel_email_change, params: { user_id: user }
+
+        assert_not_authorised
+      end
+    end
+
+    context "not signed in" do
+      should "not be allowed access" do
+        user = create(:user_with_pending_email_change)
+
+        get :cancel_email_change, params: { user_id: user }
 
         assert_redirected_to new_user_session_path
       end

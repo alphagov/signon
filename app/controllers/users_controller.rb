@@ -54,21 +54,6 @@ class UsersController < ApplicationController
     redirect_to users_path
   end
 
-  def resend_email_change
-    @user.resend_confirmation_instructions
-    if @user.errors.empty?
-      redirect_to users_path, notice: "Successfully resent email change email to #{@user.unconfirmed_email}"
-    else
-      redirect_to edit_user_path(@user), alert: "Failed to send email change email"
-    end
-  end
-
-  def cancel_email_change
-    @user.cancel_email_change!
-
-    redirect_to users_path
-  end
-
   def event_logs
     authorize @user
     @logs = @user.event_logs.page(params[:page]).per(100) if @user
