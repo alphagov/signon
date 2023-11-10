@@ -4,6 +4,7 @@ class Users::EmailsController < ApplicationController
   before_action :authenticate_user!
   before_action :load_user
   before_action :authorize_user
+  before_action :redirect_to_account_page_if_acting_on_own_user, only: %i[edit]
 
   def edit; end
 
@@ -50,5 +51,9 @@ private
 
   def permitted_user_params
     @permitted_user_params ||= params.require(:user).permit(:email).to_h
+  end
+
+  def redirect_to_account_page_if_acting_on_own_user
+    redirect_to edit_account_email_path if current_user == @user
   end
 end
