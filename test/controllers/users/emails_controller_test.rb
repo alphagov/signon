@@ -26,7 +26,8 @@ class Users::EmailsControllerTest < ActionController::TestCase
 
         get :edit, params: { user_id: user }
 
-        assert_select "input[name='user[unconfirmed_email]']", value: user.unconfirmed_email
+        expected_text = /An email has been sent to #{user.unconfirmed_email} with a link to confirm the change./
+        assert_select ".govuk-notification-banner", text: expected_text
         assert_select "a", href: resend_email_change_user_email_path(user), text: "Resend confirmation email"
         assert_select "a", href: cancel_email_change_user_email_path(user), text: "Cancel change"
       end
@@ -207,7 +208,11 @@ class Users::EmailsControllerTest < ActionController::TestCase
         put :update, params: { user_id: user, user: { email: "" } }
 
         assert_select ".govuk-error-summary" do
-          assert_select "li", text: "Email can't be blank"
+          assert_select "a", href: "#user_email", text: "Email can't be blank"
+        end
+        assert_select ".govuk-form-group" do
+          assert_select ".govuk-error-message", text: "Error: Email can't be blank"
+          assert_select "input[name='user[email]'].govuk-input--error"
         end
       end
     end
