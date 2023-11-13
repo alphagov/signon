@@ -18,7 +18,7 @@ class ExpiredOauthAccessRecordsDeleter
 
   def delete_expired
     @record_class.expired.in_batches do |relation|
-      records_by_user_id = relation.includes(:application).group_by(&:resource_owner_id)
+      records_by_user_id = Doorkeeper::Application.unscoped { relation.includes(:application).group_by(&:resource_owner_id) }
       all_users = User.where(id: records_by_user_id.keys)
 
       all_users.each do |user|
