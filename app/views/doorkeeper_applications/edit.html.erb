@@ -93,6 +93,14 @@
         <label>
           <%= f.check_box :supports_push_updates %> Send push updates to this app
         </label>
+        <p>Should Signon notify this application when user details are updated, users are suspended/unsuspended, or when users sign out?</p>
+        <p>The application needs to implement the following routes in order to support push updates (these are normally provided by gds-sso):
+          <ul>
+            <ol><%= h "PUT /auth/gds/api/users/<id>" %></ol>
+            <ol><%= h "POST /auth/gds/api/users/<id>/reauth" %></ol>
+          </ul>
+        </p>
+        <p>See <%= link_to "Overlaying Permissions in this document", "https://docs.publishing.service.gov.uk/repos/signon/oauth.html#overlaying-permissions" %> for more information.</p>
       </div>
 
       <div class="govuk-body">
