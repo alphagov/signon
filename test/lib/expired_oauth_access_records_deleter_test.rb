@@ -19,6 +19,19 @@ class ExpiredOauthAccessRecordsDeleterTest < ActiveSupport::TestCase
       assert_equal [one_hour_grant], Doorkeeper::AccessGrant.where(resource_owner_id: user.id)
     end
 
+    should "delete expired `Doorkeeper::AccessGrant`s for retired applications" do
+      user = create(:user)
+      grant = create(:access_grant, resource_owner_id: user.id, expires_in: 0)
+      grant.application.update!(retired: true)
+
+      Timecop.travel(5.minutes.from_now)
+
+      deleter = ExpiredOauthAccessRecordsDeleter.new(record_type: :access_grant)
+      deleter.delete_expired
+
+      assert_equal [], Doorkeeper::AccessGrant.where(resource_owner_id: user.id)
+    end
+
     should "provide a count of the total number of records deleted" do
       user = create(:user)
       create(:access_grant, resource_owner_id: user.id, expires_in: 0)
@@ -58,6 +71,19 @@ class ExpiredOauthAccessRecordsDeleterTest < ActiveSupport::TestCase
       deleter.delete_expired
 
       assert_equal [one_hour_token], user.authorisations
+    end
+
+    should "delete expired `Doorkeeper::AccessToken`s for retired applications" do
+      user = create(:user)
+      token = create(:access_token, resource_owner_id: user.id, expires_in: 0)
+      token.application.update!(retired: true)
+
+      Timecop.travel(5.minutes.from_now)
+
+      deleter = ExpiredOauthAccessRecordsDeleter.new(record_type: :access_token)
+      deleter.delete_expired
+
+      assert_equal [], user.authorisations
     end
 
     should "provide a count of the total number of records deleted" do
