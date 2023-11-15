@@ -134,8 +134,7 @@ GEM
       devise
       zxcvbn-ruby (>= 0.0.2)
     docile (1.4.0)
-    domain_name (0.5.20190701)
-      unf (>= 0.0.5, < 1.0.0)
+    domain_name (0.6.20231109)
     doorkeeper (5.6.6)
       railties (>= 5)
     erubi (1.12.0)
@@ -672,9 +671,6 @@ GEM
       concurrent-ruby (~> 1.0)
     uglifier (4.2.0)
       execjs (>= 0.3.0, < 3)
-    unf (0.1.4)
-      unf_ext
-    unf_ext (0.0.9)
     unicode-display_width (2.5.0)
     uuid (2.3.9)
       macaddr (~> 1.0)
