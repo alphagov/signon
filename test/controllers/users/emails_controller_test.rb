@@ -67,12 +67,12 @@ class Users::EmailsControllerTest < ActionController::TestCase
         sign_in(create(:user))
       end
 
-      should "not be authorized" do
+      should "not find the user" do
         user = create(:user)
 
-        get :edit, params: { user_id: user }
-
-        assert_not_authorised
+        assert_raises ActiveRecord::RecordNotFound do
+          get :edit, params: { user_id: user }
+        end
       end
     end
 
@@ -236,12 +236,12 @@ class Users::EmailsControllerTest < ActionController::TestCase
         sign_in(create(:user))
       end
 
-      should "not be authorized" do
+      should "not find the user" do
         user = create(:user)
 
-        put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
-
-        assert_not_authorised
+        assert_raises ActiveRecord::RecordNotFound do
+          put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
+        end
       end
     end
 
@@ -332,12 +332,12 @@ class Users::EmailsControllerTest < ActionController::TestCase
         sign_in(create(:user))
       end
 
-      should "not be authorized" do
+      should "not find the user" do
         user = create(:user_with_pending_email_change)
 
-        put :resend_email_change, params: { user_id: user }
-
-        assert_not_authorised
+        assert_raises ActiveRecord::RecordNotFound do
+          put :resend_email_change, params: { user_id: user }
+        end
       end
     end
 
@@ -405,12 +405,12 @@ class Users::EmailsControllerTest < ActionController::TestCase
         sign_in(create(:user))
       end
 
-      should "not be authorized" do
+      should "not find the user" do
         user = create(:user_with_pending_email_change)
 
-        put :cancel_email_change, params: { user_id: user }
-
-        assert_not_authorised
+        assert_raises ActiveRecord::RecordNotFound do
+          put :cancel_email_change, params: { user_id: user }
+        end
       end
     end
 
