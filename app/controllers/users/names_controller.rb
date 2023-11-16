@@ -5,6 +5,7 @@ class Users::NamesController < ApplicationController
   before_action :load_user
   before_action :authorize_user
   before_action :redirect_to_account_page_if_acting_on_own_user, only: %i[edit]
+  after_action :verify_policy_scoped
 
   def edit; end
 
@@ -20,7 +21,7 @@ class Users::NamesController < ApplicationController
 private
 
   def load_user
-    @user = User.find(params[:user_id])
+    @user = policy_scope(User).find(params[:user_id])
   end
 
   def authorize_user
