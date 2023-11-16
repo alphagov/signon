@@ -103,6 +103,13 @@ class Users::NamesControllerTest < ActionController::TestCase
         put :update, params: { user_id: user, user: { name: "new-user-name" } }
       end
 
+      should "push changes out to apps" do
+        user = create(:user)
+        PermissionUpdater.expects(:perform_on).with(user).once
+
+        put :update, params: { user_id: user, user: { name: "new-user-name" } }
+      end
+
       should "redirect to user page and display success notice" do
         user = create(:user, email: "user@gov.uk")
 

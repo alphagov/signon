@@ -9,8 +9,8 @@ class Users::NamesController < ApplicationController
   def edit; end
 
   def update
-    if @user.update(user_params)
-      EventLog.record_event(@user, EventLog::ACCOUNT_UPDATED, initiator: current_user, ip_address: user_ip_address)
+    updater = UserUpdate.new(@user, user_params, current_user, user_ip_address)
+    if updater.call
       redirect_to edit_user_path(@user), notice: "Updated user #{@user.email} successfully"
     else
       render :edit
