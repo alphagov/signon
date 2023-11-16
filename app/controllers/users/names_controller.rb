@@ -32,6 +32,6 @@ private
   end
 
   def redirect_to_account_page_if_acting_on_own_user
-    redirect_to edit_account_email_path if current_user == @user
+    redirect_to account_path if current_user == @user
   end
 end

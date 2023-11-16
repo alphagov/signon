@@ -41,10 +41,10 @@ class Users::NamesControllerTest < ActionController::TestCase
         assert_not_authorised
       end
 
-      should "redirect to account edit email page if admin is acting on their own user" do
+      should "redirect to account page if admin is acting on their own user" do
         get :edit, params: { user_id: @admin }
 
-        assert_redirected_to edit_account_email_path
+        assert_redirected_to account_path
       end
     end
 
