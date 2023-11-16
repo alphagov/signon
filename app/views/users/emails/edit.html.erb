@@ -1,0 +1,72 @@
+<% content_for :title_caption, "Manage other users" %>
+<% content_for :title, "Change email for #{@user.name}" %>
+
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "Users",
+         url: users_path,
+       },
+       {
+         title: @user.name,
+         url: edit_user_path(@user),
+       },
+       {
+         title: "Change email",
+       }
+     ]
+   })
+%>
+
+<% if @user.unconfirmed_email.present? %>
+  <%= render "govuk_publishing_components/components/notice", {
+    title: "A request has been made to change the email address"
+  } do %>
+    <p class="govuk-body">An email has been sent to <strong><%= @user.unconfirmed_email %></strong> with a link to confirm the change. If they haven't received this email, we can send it again:</p>
+
+    <%= link_to "Resend confirmation email", resend_email_change_user_email_path(@user), method: :put, class: "govuk-button app-button--no-margin" %>
+    <%= link_to "Cancel change", cancel_email_change_user_email_path(@user), method: :delete, class: "govuk-link app-link--inline" %>
+  <% end %>
+<% end %>
+
+<% if @user.errors.count > 0 %>
+  <% content_for :error_summary do %>
+    <%= render "govuk_publishing_components/components/error_summary", {
+      title: "There is a problem",
+      items: @user.errors.map do |error|
+        {
+          text: error.full_message,
+          href: "#user_#{error.attribute}",
+        }
+      end,
+    } %>
+  <% end %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @user, url: user_email_path do %>
+      <%= render "govuk_publishing_components/components/input", {
+        label: {
+          text: "Email"
+        },
+        name: "user[email]",
+        id: "user_email",
+        type: "email",
+        value: @user.email,
+        hint: @user.invited_but_not_yet_accepted? ? "Changes will trigger a new signup email." : nil,
+        autocomplete: "off",
+        error_items: @user.errors.full_messages_for(:email).map { |message| { text: message } }
+      } %>
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Change email"
+      } %>
+    <% end %>
+  </div>
+</div>

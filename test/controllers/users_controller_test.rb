@@ -269,18 +269,11 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a", href: edit_user_name_path(not_an_admin), text: "Change name"
       end
 
-      should "show the form with an email field" do
-        not_an_admin = create(:user)
+      should "display the user's email and a link to change the email" do
+        not_an_admin = create(:user, email: "user-name@gov.uk")
         get :edit, params: { id: not_an_admin.id }
-        assert_select "form[action='#{user_path(not_an_admin)}']" do
-          assert_select "input[name='user[email]'][value='#{not_an_admin.email}']"
-        end
-      end
-
-      should "show the pending email if applicable" do
-        another_user = create(:user_with_pending_email_change)
-        get :edit, params: { id: another_user.id }
-        assert_select "input[name='user[unconfirmed_email]'][value='#{another_user.unconfirmed_email}']"
+        assert_select "*", text: /Email: user-name@gov.uk/
+        assert_select "a", href: edit_user_email_path(not_an_admin), text: "Change email"
       end
 
       should "show the organisation to which the user belongs" do
@@ -592,9 +585,10 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "not be able to update superadmins" do
+        organisation = create(:organisation)
         superadmin = create(:superadmin_user)
 
-        put :edit, params: { id: superadmin.id, user: { email: "normal_user@example.com" } }
+        put :edit, params: { id: superadmin.id, user: { organisation_id: organisation.id } }
 
         assert_not_authorised
       end
@@ -611,50 +605,6 @@ class UsersControllerTest < ActionController::TestCase
         not_an_admin = create(:user)
         put :update, params: { id: not_an_admin.id, user: { role: Roles::Admin.role_name } }
         assert_equal "normal", not_an_admin.reload.role
-      end
-
-      context "changing an email" do
-        should "not re-confirm email" do
-          normal_user = create(:user, email: "old@email.com")
-          put :update, params: { id: normal_user.id, user: { email: "new@email.com" } }
-
-          assert_nil normal_user.reload.unconfirmed_email
-          assert_equal "new@email.com", normal_user.email
-        end
-
-        should "log an event" do
-          normal_user = create(:user, email: "old@email.com")
-          put :update, params: { id: normal_user.id, user: { email: "new@email.com" } }
-
-          assert_equal 1, EventLog.where(event_id: EventLog::EMAIL_CHANGED.id, uid: normal_user.uid, initiator_id: @user.id).count
-        end
-
-        should "send email change notifications to old and new email address" do
-          perform_enqueued_jobs do
-            normal_user = create(:user, email: "old@email.com")
-            put :update, params: { id: normal_user.id, user: { email: "new@email.com" } }
-
-            email_change_notifications = ActionMailer::Base.deliveries[-2..]
-            assert_equal email_change_notifications.map(&:subject).uniq.count, 1
-            assert_match(/Your .* Signon development email address has been updated/, email_change_notifications.map(&:subject).first)
-            assert_equal(%w[old@email.com new@email.com], email_change_notifications.map { |mail| mail.to.first })
-          end
-        end
-
-        context "an invited-but-not-yet-accepted user" do
-          should "change the email, and send an invitation email" do
-            perform_enqueued_jobs do
-              another_user = User.invite!(name: "Ali", email: "old@email.com")
-              put :update, params: { id: another_user.id, user: { email: "new@email.com" } }
-
-              another_user.reload
-              assert_equal "new@email.com", another_user.reload.email
-              invitation_email = ActionMailer::Base.deliveries[-3]
-              assert_equal "Please confirm your account", invitation_email.subject
-              assert_equal "new@email.com", invitation_email.to.first
-            end
-          end
-        end
       end
 
       should "push changes out to apps" do
@@ -739,8 +689,9 @@ class UsersControllerTest < ActionController::TestCase
       should "redisplay the form if save fails" do
         organisation = @organisation_admin.organisation
         organisation_admin_for_same_organisation = create(:organisation_admin_user, organisation:)
+        UserUpdate.stubs(:new).returns(stub("UserUpdate", call: false))
 
-        put :update, params: { id: organisation_admin_for_same_organisation.id, user: { email: "" } }
+        put :update, params: { id: organisation_admin_for_same_organisation.id, user: {} }
 
         assert_select "form#edit_user_#{organisation_admin_for_same_organisation.id}"
       end
@@ -755,63 +706,11 @@ class UsersControllerTest < ActionController::TestCase
       should "redisplay the form if save fails" do
         organisation = @super_organisation_admin.organisation
         super_organisation_admin_for_same_organisation = create(:super_organisation_admin_user, organisation:)
+        UserUpdate.stubs(:new).returns(stub("UserUpdate", call: false))
 
-        put :update, params: { id: super_organisation_admin_for_same_organisation.id, user: { email: "" } }
+        put :update, params: { id: super_organisation_admin_for_same_organisation.id, user: {} }
 
         assert_select "form#edit_user_#{super_organisation_admin_for_same_organisation.id}"
-      end
-    end
-  end
-
-  context "PUT resend_email_change" do
-    context "signed in as Admin user" do
-      setup do
-        @user = create(:admin_user, email: "admin@gov.uk")
-        sign_in @user
-      end
-
-      should "send an email change confirmation email" do
-        perform_enqueued_jobs do
-          another_user = create(:user_with_pending_email_change)
-          put :resend_email_change, params: { id: another_user.id }
-
-          assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
-        end
-      end
-
-      should "use a new token if it's expired" do
-        another_user = create(
-          :user_with_pending_email_change,
-          confirmation_token: "old token",
-          confirmation_sent_at: 15.days.ago,
-        )
-        put :resend_email_change, params: { id: another_user.id }
-
-        assert_not_equal "old token", another_user.reload.confirmation_token
-      end
-    end
-  end
-
-  context "DELETE cancel_email_change" do
-    context "signed in as Admin user" do
-      setup do
-        @user = create(:admin_user, email: "admin@gov.uk")
-        sign_in @user
-
-        @another_user = create(:user_with_pending_email_change)
-      end
-
-      should "clear the unconfirmed_email and the confirmation_token" do
-        delete :cancel_email_change, params: { id: @another_user.id }
-
-        @another_user.reload
-        assert_nil @another_user.unconfirmed_email
-        assert_nil @another_user.confirmation_token
-      end
-
-      should "redirect to the users page" do
-        delete :cancel_email_change, params: { id: @another_user.id }
-        assert_redirected_to users_path
       end
     end
   end

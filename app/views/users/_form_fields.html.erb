@@ -2,25 +2,9 @@
   <strong>Name:</strong> <%= @user.name %> <%= link_to 'Change<span class="invisible"> name</span>'.html_safe, edit_user_name_path(@user) %>
 </p>
 
-<p class="form-group">
-  <%= f.label :email %>
-  <%= f.text_field :email, autocomplete: "off", class: 'form-control input-md-6 add-label-margin' %>
-  <% if f.object.invited_but_not_yet_accepted? %>
-    <span class="help-block">Changes will trigger a new signup email.</span>
-  <% end %>
+<p>
+  <strong>Email:</strong> <%= @user.email %> <%= link_to 'Change<span class="invisible"> email</span>'.html_safe, edit_user_email_path(@user) %>
 </p>
-
-<% if f.object.unconfirmed_email.present? %>
-  <p class="form-group">
-    <%= f.label :unconfirmed_email, "Pending email" %>
-    <%= f.text_field :unconfirmed_email, readonly: "readonly", disabled: "disabled", class: 'form-control' %>
-
-    <div class="help-block add-bottom-margin">
-      <%= link_to "Resend confirmation email", resend_email_change_user_path(f.object), :method => :put, :class => "btn btn-primary add-right-margin" %>
-      <%= link_to "Cancel change", cancel_email_change_user_path(f.object), :method => :delete, :class => "btn btn-danger" %>
-    </div>
-  </p>
-<% end %>
 
 <% if policy(User).assign_role? %>
   <% if @user.reason_for_2sv_exemption.blank? %>

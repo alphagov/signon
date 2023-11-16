@@ -4,7 +4,8 @@ class Users::NamesControllerTest < ActionController::TestCase
   context "GET edit" do
     context "signed in as Admin user" do
       setup do
-        sign_in(create(:admin_user))
+        @admin = create(:admin_user)
+        sign_in(@admin)
       end
 
       should "display form with name field" do
@@ -39,6 +40,12 @@ class Users::NamesControllerTest < ActionController::TestCase
 
         assert_not_authorised
       end
+
+      should "redirect to account page if admin is acting on their own user" do
+        get :edit, params: { user_id: @admin }
+
+        assert_redirected_to account_path
+      end
     end
 
     context "signed in as Normal user" do
@@ -61,7 +68,7 @@ class Users::NamesControllerTest < ActionController::TestCase
 
         get :edit, params: { user_id: user }
 
-        assert_redirected_to new_user_session_path
+        assert_not_authenticated
       end
     end
   end
@@ -183,7 +190,7 @@ class Users::NamesControllerTest < ActionController::TestCase
 
         get :edit, params: { user_id: user }
 
-        assert_redirected_to new_user_session_path
+        assert_not_authenticated
       end
     end
   end

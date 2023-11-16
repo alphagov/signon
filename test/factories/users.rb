@@ -65,6 +65,11 @@ FactoryBot.define do
     confirmation_sent_at { Time.zone.now }
   end
 
+  trait :with_expired_confirmation_token do
+    confirmation_token { "expired-token" }
+    confirmation_sent_at { Devise.confirm_within.ago - 1.day }
+  end
+
   factory :superadmin_user, parent: :user do
     sequence(:email) { |n| "superadmin#{n}@example.com" }
     role { Roles::Superadmin.role_name }

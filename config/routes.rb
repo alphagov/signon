@@ -39,13 +39,15 @@ Rails.application.routes.draw do
   resources :users, except: [:show] do
     member do
       post :unlock
-      put :resend_email_change
-      delete :cancel_email_change
       get :event_logs
       patch :reset_two_step_verification
       get :require_2sv
     end
     resource :name, only: %i[edit update], controller: "users/names"
+    resource :email, only: %i[edit update], controller: "users/emails" do
+      put :resend_email_change
+      delete :cancel_email_change
+    end
   end
   get "user", to: "oauth_users#show"
 

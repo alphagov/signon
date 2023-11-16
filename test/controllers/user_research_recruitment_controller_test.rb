@@ -7,7 +7,7 @@ class UserResearchRecruitmentControllerTest < ActionController::TestCase
     should "require users to be signed in" do
       put :update
 
-      assert_redirected_to new_user_session_path
+      assert_not_authenticated
     end
 
     context "when user clicks the button to dismiss the banner" do
