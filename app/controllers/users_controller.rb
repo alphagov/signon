@@ -71,7 +71,7 @@ class UsersController < ApplicationController
 private
 
   def load_user
-    @user = User.find(params[:id])
+    @user = policy_scope(User).find(params[:id])
   end
 
   def authorize_user
