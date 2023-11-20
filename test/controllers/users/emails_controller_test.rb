@@ -251,7 +251,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "not be allowed access" do
         user = create(:user)
 
-        get :edit, params: { user_id: user }
+        put :update, params: { user_id: user }
 
         assert_not_authenticated
       end
@@ -347,7 +347,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "not be allowed access" do
         user = create(:user_with_pending_email_change)
 
-        get :resend_email_change, params: { user_id: user }
+        put :resend_email_change, params: { user_id: user }
 
         assert_not_authenticated
       end
@@ -384,7 +384,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
         user_policy = stub_everything("user-policy", cancel_email_change?: true)
         UserPolicy.stubs(:new).returns(user_policy)
 
-        put :cancel_email_change, params: { user_id: user }
+        delete :cancel_email_change, params: { user_id: user }
 
         assert user.reload.unconfirmed_email.blank?
       end
@@ -395,7 +395,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
         user_policy = stub_everything("user-policy", cancel_email_change?: false)
         UserPolicy.stubs(:new).returns(user_policy)
 
-        put :cancel_email_change, params: { user_id: user }
+        delete :cancel_email_change, params: { user_id: user }
 
         assert user.reload.unconfirmed_email.present?
         assert_not_authorised
@@ -410,7 +410,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "not be authorized" do
         user = create(:user_with_pending_email_change)
 
-        put :cancel_email_change, params: { user_id: user }
+        delete :cancel_email_change, params: { user_id: user }
 
         assert_not_authorised
       end
@@ -420,7 +420,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "not be allowed access" do
         user = create(:user_with_pending_email_change)
 
-        get :cancel_email_change, params: { user_id: user }
+        delete :cancel_email_change, params: { user_id: user }
 
         assert_not_authenticated
       end
