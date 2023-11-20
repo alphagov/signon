@@ -19,6 +19,8 @@ class Users::EmailsControllerTest < ActionController::TestCase
         assert_template :edit
         assert_select "form[action='#{user_email_path(user)}']" do
           assert_select "input[name='user[email]']", value: "user@gov.uk"
+          assert_select "button[type='submit']", text: "Change email"
+          assert_select "a[href='#{edit_user_path(user)}']", text: "Cancel"
         end
       end
 
