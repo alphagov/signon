@@ -64,9 +64,12 @@
         autocomplete: "off",
         error_items: @user.errors.full_messages_for(:email).map { |message| { text: message } }
       } %>
-      <%= render "govuk_publishing_components/components/button", {
-        text: "Change email"
-      } %>
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Change email",
+        } %>
+        <%= link_to "Cancel", edit_user_path(@user), class: "govuk-link govuk-link--no-visited-state" %>
+      </div>
     <% end %>
   </div>
 </div>

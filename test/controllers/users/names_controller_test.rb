@@ -16,6 +16,8 @@ class Users::NamesControllerTest < ActionController::TestCase
         assert_template :edit
         assert_select "form[action='#{user_name_path(user)}']" do
           assert_select "input[name='user[name]']", value: "user-name"
+          assert_select "button[type='submit']", text: "Change name"
+          assert_select "a[href='#{edit_user_path(user)}']", text: "Cancel"
         end
       end
 
