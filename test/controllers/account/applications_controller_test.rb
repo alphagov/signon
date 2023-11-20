@@ -50,8 +50,8 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
         assert_select "a[href='#{delete_account_application_signin_permission_path(application)}']"
       end
 
-      should "display a link to update permissions" do
-        application = create(:application, name: "app-name")
+      should "display a link to update permissions when the application has more than just a signin permission" do
+        application = create(:application, name: "app-name", with_supported_permissions: %w[permission])
         @user.grant_application_signin_permission(application)
         sign_in @user
 
@@ -59,6 +59,17 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
         assert_select "tr td", text: "app-name"
         assert_select "a[href='#{edit_account_application_permissions_path(application)}']"
+      end
+
+      should "not display a link to update permissions when the application has just a signin permission" do
+        application = create(:application, name: "app-name")
+        @user.grant_application_signin_permission(application)
+        sign_in @user
+
+        get :index
+
+        assert_select "tr td", text: "app-name"
+        assert_select "a[href='#{edit_account_application_permissions_path(application)}']", count: 0
       end
 
       should "not display a retired application" do
@@ -109,13 +120,24 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
           assert_select "a[href='#{delete_account_application_signin_permission_path(@application)}']"
         end
 
-        should "display a link to update permissions" do
+        should "display a link to update permissions when the application has more than just a signin permission" do
+          create(:supported_permission, application: @application, name: "permission")
+
           sign_in @user
 
           get :index
 
           assert_select "tr td", text: "app-name"
           assert_select "a[href='#{edit_account_application_permissions_path(@application)}']"
+        end
+
+        should "not display a link to update permissions when the application has just a signin permission" do
+          sign_in @user
+
+          get :index
+
+          assert_select "tr td", text: "app-name"
+          assert_select "a[href='#{edit_account_application_permissions_path(@application)}']", count: 0
         end
 
         context "when the application does not have a delegatable signin permission" do
