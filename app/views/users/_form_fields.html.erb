@@ -1,9 +1,15 @@
 <p>
-  <strong>Name:</strong> <%= @user.name %> <%= link_to 'Change<span class="invisible"> name</span>'.html_safe, edit_user_name_path(@user) %>
+  <strong>Name:</strong> <%= @user.name %>
+  <%= link_to edit_user_name_path(@user) do %>
+    Change<span class="invisible"> name</span>
+  <% end %>
 </p>
 
 <p>
-  <strong>Email:</strong> <%= @user.email %> <%= link_to 'Change<span class="invisible"> email</span>'.html_safe, edit_user_email_path(@user) %>
+  <strong>Email:</strong> <%= @user.email %>
+  <%= link_to edit_user_email_path(@user) do %>
+    Change<span class="invisible"> email</span>
+  <% end %>
 </p>
 
 <% if policy(User).assign_role? %>
