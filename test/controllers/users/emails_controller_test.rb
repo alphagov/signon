@@ -166,6 +166,13 @@ class Users::EmailsControllerTest < ActionController::TestCase
         put :update, params: { user_id: user, user: { email: "user@gov.uk" } }
       end
 
+      should "push changes out to apps" do
+        user = create(:user)
+        PermissionUpdater.expects(:perform_on).with(user).once
+
+        put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
+      end
+
       should "redirect to edit user page and display success notice" do
         user = create(:user, email: "user@gov.uk")
 
