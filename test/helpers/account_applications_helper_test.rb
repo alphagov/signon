@@ -33,7 +33,7 @@ class AccountApplicationsHelperTest < ActionView::TestCase
       end
 
       should "indicate that the user has no additional permissions" do
-        assert_includes message_for_success(@application.id), "You can access but have no additional permissions for Whitehall."
+        assert_includes message_for_success(@application.id), "You can access Whitehall but you do not have any additional permissions."
       end
     end
   end

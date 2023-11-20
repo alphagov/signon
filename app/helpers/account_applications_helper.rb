@@ -10,7 +10,7 @@ module AccountApplicationsHelper
       list = tag.ul(class: "govuk-list govuk-list--bullet")
       additional_permissions.map { |permission| list << tag.li(permission) }
     else
-      paragraph = tag.p("You can access but have no additional permissions for #{application.name}.", class: "govuk-body")
+      paragraph = tag.p("You can access #{application.name} but you do not have any additional permissions.", class: "govuk-body")
       list = nil
     end
 

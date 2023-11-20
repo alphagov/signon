@@ -39,8 +39,10 @@
         <td class="govuk-table__cell"><%= application.description %></td>
         <td class="govuk-table__cell govuk-!-text-align-right">
           <% if policy([:account, application]).edit_permissions? %>
-            <%= link_to edit_account_application_permissions_path(application), class: "govuk-link" do %>
+            <% unless application.sorted_supported_permissions_grantable_from_ui(include_signin: false).empty? %>
+              <%= link_to edit_account_application_permissions_path(application), class: "govuk-link" do %>
                 Update permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
+              <% end %>
             <% end %>
           <% elsif policy([:account, application]).view_permissions? %>
             <%= link_to account_application_permissions_path(application), class: "govuk-link" do %>
