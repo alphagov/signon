@@ -7,7 +7,9 @@
 </p>
 
 <% if policy(User).assign_role? %>
-  <% if !@user.exempt_from_2sv? %>
+  <% if @user.exempt_from_2sv? %>
+    <p>This user's role is set to <%= @user.role %>. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification.</p>
+  <% else %>
     <p class="form-group">
       <%= f.label :role %><br />
       <%= f.select :role, options_for_select(assignable_user_roles.map(&:humanize).zip(assignable_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
@@ -18,8 +20,6 @@
         <strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.
       </span>
     </p>
-  <% else %>
-    <p>This user's role is set to <%= @user.role %>. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification.</p>
   <% end %>
 <% end %>
 
