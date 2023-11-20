@@ -197,7 +197,7 @@ class Users::NamesControllerTest < ActionController::TestCase
       should "not be allowed access" do
         user = create(:user)
 
-        get :edit, params: { user_id: user }
+        put :update, params: { user_id: user }
 
         assert_not_authenticated
       end
