@@ -51,7 +51,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_for @user, url: user_email_path do %>
+    <%= form_for @user, url: user_email_path(@user) do %>
       <%= render "govuk_publishing_components/components/input", {
         label: {
           text: "Email"
