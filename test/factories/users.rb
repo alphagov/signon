@@ -106,9 +106,11 @@ FactoryBot.define do
     locked_at { Time.zone.now }
   end
 
-  factory :user_in_organisation, parent: :user do
+  trait :in_organisation do
     association :organisation, factory: :organisation
   end
+
+  factory :user_in_organisation, parent: :user, traits: [:in_organisation]
 
   factory :api_user do
     transient do
