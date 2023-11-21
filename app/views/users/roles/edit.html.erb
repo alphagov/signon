@@ -1,34 +1,77 @@
-<% content_for :title, "Edit [#{@user.name}]" %>
+<% content_for :title_caption, "Manage other users" %>
+<% content_for :title, "Change role for #{@user.name}" %>
 
-<h1>Edit &ldquo;<%= @user.name %>&rdquo;</h1>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "Users",
+         url: users_path,
+       },
+       {
+         title: @user.name,
+         url: edit_user_path(@user),
+       },
+       {
+         title: "Change role",
+       }
+     ]
+   })
+%>
 
-<%= form_for @user, :url => user_role_path(@user), :html => {:class => 'well add-top-margin'} do |f| %>
-  <% if @user.errors.count > 0 %>
-    <div class="govuk-error-summary alert alert-danger" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
-      <div class="govuk-error-summary__body">
-        <ul class="govuk-list govuk-error-summary__list">
-          <% @user.errors.full_messages.each do |message| %>
-            <%= content_tag :li, message %>
-          <% end %>
-        </ul>
-      </div>
-    </div>
+<% if @user.errors.count > 0 %>
+  <% content_for :error_summary do %>
+    <%= render "govuk_publishing_components/components/error_summary", {
+      title: "There is a problem",
+      items: @user.errors.map do |error|
+        {
+          text: error.full_message,
+          href: "#user_#{error.attribute}",
+        }
+      end,
+    } %>
   <% end %>
-
-  <% if @user.exempt_from_2sv? %>
-    <p>This user's role is set to <%= @user.role %>. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification.</p>
-  <% else %>
-    <p class="form-group">
-      <%= f.label :role %><br />
-      <%= f.select :role, options_for_select(assignable_user_roles.map(&:humanize).zip(assignable_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
-      <span class="help-block">
-        <strong>Superadmins</strong> can create and edit all user types and edit applications.<br />
-        <strong>Admins</strong> can create and edit normal users.<br />
-        <strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.<br />
-        <strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.
-      </span>
-    </p>
-  <% end %>
-
-  <%= f.submit :class => 'btn btn-primary' %>
 <% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @user, url: user_role_path(@user) do %>
+      <% if @user.exempt_from_2sv? %>
+        <%= render "govuk_publishing_components/components/inset_text", {
+          text: "This user's role is set to #{@user.role.humanize}. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification.",
+        } %>
+      <% else %>
+        <% role_hint = capture do %>
+          <%= render "govuk_publishing_components/components/list", {
+            visible_counters: true,
+            items: [
+              "<strong>Superadmins</strong> can create and edit all user types and edit applications.",
+              "<strong>Admins</strong> can create and edit normal users.",
+              "<strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.",
+              "<strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.",
+            ]
+          } %>
+        <% end %>
+        <%= render "govuk_publishing_components/components/select", {
+          id: "user_role",
+          name: "user[role]",
+          label: "Role",
+          hint: role_hint,
+          options: current_user.manageable_roles.map { |role| { text: role.humanize, value: role, selected: @user.role == role } },
+          error_message: @user.errors[:role].any? ? @user.errors.full_messages_for(:role).to_sentence : nil
+        } %>
+        <div class="govuk-button-group">
+          <%= render "govuk_publishing_components/components/button", {
+            text: "Change role",
+          } %>
+          <%= link_to "Cancel", edit_user_path(@user), class: "govuk-link govuk-link--no-visited-state" %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>

@@ -16,18 +16,19 @@ class Users::RolesControllerTest < ActionController::TestCase
         assert_template :edit
         assert_select "form[action='#{user_role_path(user)}']" do
           assert_select "select[name='user[role]'] option", value: Roles::Normal.role_name
-          assert_select "input[type='submit']"
+          assert_select "button[type='submit']", text: "Change role"
+          assert_select "a[href='#{edit_user_path(user)}']", text: "Cancel"
         end
       end
 
-      should "not display role field if user is exempt from 2SV" do
+      should "not display form if user is exempt from 2SV" do
         user = create(:two_step_exempted_user, role: Roles::Normal.role_name)
 
         get :edit, params: { user_id: user }
 
         assert_select "form[action='#{user_role_path(user)}']" do
           assert_select "select[name='user[role]'] option", count: 0
-          assert_select "p", text: /their role cannot be changed/
+          assert_select ".govuk-inset-text", text: /their role cannot be changed/
         end
       end
 
@@ -221,7 +222,11 @@ class Users::RolesControllerTest < ActionController::TestCase
         put :update, params: { user_id: user, user: { role: "invalid-role" } }
 
         assert_select ".govuk-error-summary" do
-          assert_select "li", text: "Role is not included in the list"
+          assert_select "a", href: "#user_role", text: "Role is not included in the list"
+        end
+        assert_select ".govuk-form-group" do
+          assert_select ".govuk-error-message", text: "Error: Role is not included in the list"
+          assert_select "select[name='user[role]'].govuk-select--error"
         end
       end
     end

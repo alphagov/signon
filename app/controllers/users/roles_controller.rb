@@ -1,4 +1,6 @@
 class Users::RolesController < ApplicationController
+  layout "admin_layout"
+
   before_action :authenticate_user!
   before_action :load_user
   before_action :authorize_user
