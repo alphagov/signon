@@ -117,7 +117,8 @@ class Users::NamesControllerTest < ActionController::TestCase
 
         put :update, params: { user_id: user, user: { name: "new-user-name" } }
 
-        assert_redirected_to edit_user_path(user), notice: "Updated name of user@gov.uk successfully"
+        assert_redirected_to edit_user_path(user)
+        assert_equal "Updated user user@gov.uk successfully", flash[:notice]
       end
 
       should "update user name if UserPolicy#update? returns true" do
