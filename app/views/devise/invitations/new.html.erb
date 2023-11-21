@@ -60,23 +60,11 @@
       } %>
 
       <% if policy(User).assign_role? %>
-        <% role_hint = capture do %>
-          <%= render "govuk_publishing_components/components/list", {
-            visible_counters: true,
-            items: [
-              "<strong>Superadmins</strong> can create and edit all user types and edit applications.",
-              "<strong>Admins</strong> can create and edit normal users.",
-              "<strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.",
-              "<strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.",
-            ]
-          } %>
-        <% end %>
-
         <%= render "govuk_publishing_components/components/select", {
           id: "user_role",
           name: "user[role]",
           label: "Role",
-          hint: role_hint,
+          hint: user_role_select_hint,
           options: options_for_role_select(selected: f.object.role),
         } %>
       <% end %>

@@ -92,4 +92,16 @@ module UsersHelper
       permission_name
     end
   end
+
+  def user_role_select_hint
+    render "govuk_publishing_components/components/list", {
+      visible_counters: true,
+      items: [
+        "<strong>Superadmins</strong> can create and edit all user types and edit applications.",
+        "<strong>Admins</strong> can create and edit normal users.",
+        "<strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.",
+        "<strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.",
+      ],
+    }
+  end
 end

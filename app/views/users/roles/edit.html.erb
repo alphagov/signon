@@ -46,22 +46,11 @@
           text: "This user's role is set to #{@user.role.humanize}. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification.",
         } %>
       <% else %>
-        <% role_hint = capture do %>
-          <%= render "govuk_publishing_components/components/list", {
-            visible_counters: true,
-            items: [
-              "<strong>Superadmins</strong> can create and edit all user types and edit applications.",
-              "<strong>Admins</strong> can create and edit normal users.",
-              "<strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.",
-              "<strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.",
-            ]
-          } %>
-        <% end %>
         <%= render "govuk_publishing_components/components/select", {
           id: "user_role",
           name: "user[role]",
           label: "Role",
-          hint: role_hint,
+          hint: user_role_select_hint,
           options: current_user.manageable_roles.map { |role| { text: role.humanize, value: role, selected: @user.role == role } },
           error_message: @user.errors[:role].any? ? @user.errors.full_messages_for(:role).to_sentence : nil
         } %>
