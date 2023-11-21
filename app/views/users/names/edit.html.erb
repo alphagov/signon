@@ -40,7 +40,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_for @user, url: user_name_path do |f| %>
+    <%= form_for @user, url: user_name_path(@user) do |f| %>
       <%= render "govuk_publishing_components/components/input", {
         label: {
           text: "Name"
