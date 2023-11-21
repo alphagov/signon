@@ -48,6 +48,7 @@ Rails.application.routes.draw do
       put :resend_email_change
       delete :cancel_email_change
     end
+    resource :role, only: %i[edit update], controller: "users/roles"
   end
   get "user", to: "oauth_users#show"
 

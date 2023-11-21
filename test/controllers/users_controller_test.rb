@@ -601,12 +601,6 @@ class UsersControllerTest < ActionController::TestCase
         assert_nil user.reload.organisation
       end
 
-      should "not let you set the role" do
-        not_an_admin = create(:user)
-        put :update, params: { id: not_an_admin.id, user: { role: Roles::Admin.role_name } }
-        assert_equal "normal", not_an_admin.reload.role
-      end
-
       should "push changes out to apps" do
         another_user = create(:user, name: "Old Name")
         PermissionUpdater.expects(:perform_on).with(another_user).once
@@ -643,28 +637,6 @@ class UsersControllerTest < ActionController::TestCase
           )
 
           assert_equal 1, @another_user.reload.application_permissions.count
-        end
-      end
-    end
-
-    context "signed in as a Superadmin user" do
-      setup do
-        @superadmin = create(:superadmin_user)
-        sign_in @superadmin
-      end
-
-      should "update the user's role" do
-        not_an_admin = create(:user)
-        put :update, params: { id: not_an_admin.id, user: { role: Roles::Admin.role_name } }
-        assert_equal Roles::Admin.role_name, not_an_admin.reload.role
-      end
-
-      context "changing a role" do
-        should "log an event" do
-          another_user = create(:admin_user)
-          put :update, params: { id: another_user.id, user: { role: "normal" } }
-
-          assert_equal 1, EventLog.where(event_id: EventLog::ROLE_CHANGED.id, uid: another_user.uid, initiator_id: @superadmin.id).count
         end
       end
     end

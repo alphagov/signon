@@ -1,0 +1,34 @@
+<% content_for :title, "Edit [#{@user.name}]" %>
+
+<h1>Edit &ldquo;<%= @user.name %>&rdquo;</h1>
+
+<%= form_for @user, :url => user_role_path(@user), :html => {:class => 'well add-top-margin'} do |f| %>
+  <% if @user.errors.count > 0 %>
+    <div class="govuk-error-summary alert alert-danger" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+      <div class="govuk-error-summary__body">
+        <ul class="govuk-list govuk-error-summary__list">
+          <% @user.errors.full_messages.each do |message| %>
+            <%= content_tag :li, message %>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @user.exempt_from_2sv? %>
+    <p>This user's role is set to <%= @user.role %>. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification.</p>
+  <% else %>
+    <p class="form-group">
+      <%= f.label :role %><br />
+      <%= f.select :role, options_for_select(assignable_user_roles.map(&:humanize).zip(assignable_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
+      <span class="help-block">
+        <strong>Superadmins</strong> can create and edit all user types and edit applications.<br />
+        <strong>Admins</strong> can create and edit normal users.<br />
+        <strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.<br />
+        <strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.
+      </span>
+    </p>
+  <% end %>
+
+  <%= f.submit :class => 'btn btn-primary' %>
+<% end %>

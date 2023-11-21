@@ -12,22 +12,14 @@
   <% end %>
 </p>
 
-<% if policy(User).assign_role? %>
-  <% if @user.exempt_from_2sv? %>
-    <p>This user's role is set to <%= @user.role %>. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification.</p>
-  <% else %>
-    <p class="form-group">
-      <%= f.label :role %><br />
-      <%= f.select :role, options_for_select(assignable_user_roles.map(&:humanize).zip(assignable_user_roles), f.object.role), {}, class: "chosen-select form-control", 'data-module' => 'chosen' %>
-      <span class="help-block">
-        <strong>Superadmins</strong> can create and edit all user types and edit applications.<br />
-        <strong>Admins</strong> can create and edit normal users.<br />
-        <strong>Super Organisation Admins</strong> can unlock and unsuspend their organisation and related organisation accounts.<br />
-        <strong>Organisation Admins</strong> can unlock and unsuspend their organisation accounts.
-      </span>
-    </p>
+<p>
+  <strong>Role:</strong> <%= @user.role.humanize %>
+  <% if policy(User).assign_role? %>
+    <%= link_to edit_user_role_path(@user) do %>
+      Change<span class="invisible"> role</span>
+    <% end %>
   <% end %>
-<% end %>
+</p>
 
 <% if policy(@user).mandate_2sv? %>
   <dl>
