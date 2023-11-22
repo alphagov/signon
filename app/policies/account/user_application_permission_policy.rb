@@ -10,6 +10,7 @@ class Account::UserApplicationPermissionPolicy < BasePolicy
       current_user.publishing_manager? && application.signin_permission.delegatable?
     )
   end
+  alias_method :edit?, :delete?
 
   private
 
