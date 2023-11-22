@@ -44,7 +44,7 @@
                 Update permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
               <% end %>
             <% end %>
-          <% elsif policy([:account, application]).view_permissions? %>
+          <% elsif policy([:account, current_user.signin_permission_for(application)]).show? %>
             <%= link_to account_application_permissions_path(application), class: "govuk-link" do %>
                 View permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
             <% end %>
