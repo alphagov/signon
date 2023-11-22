@@ -78,10 +78,12 @@
   </dl>
 <% end %>
 
-<h2 class="add-vertical-margins"> <%= "Editable " if (current_user.publishing_manager? ) %>Permissions</h2>
-<%= render partial: "shared/user_permissions", locals: { user_object: f.object }%>
-
-<% if current_user.publishing_manager? %>
-    <h2 class="add-vertical-margins">All Permissions for this user</h2>
-    <%= render partial: "app_permissions", locals: { user_object: f.object }%>
+<% if policy(User).assign_organisations? %>
+  <p class="form-group">
+    <%= f.label :organisation_id, "Organisation" %><br />
+    <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control", 'data-module' => 'chosen' } %>
+  </p>
 <% end %>
+
+<h2 class="add-vertical-margins">Permissions</h2>
+<%= link_to "Manage permissions", user_applications_path(f.object) %>
