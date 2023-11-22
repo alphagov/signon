@@ -276,6 +276,13 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a", href: edit_user_email_path(not_an_admin), text: "Change email"
       end
 
+      should "display the user's role but no link to change the role" do
+        user = create(:user, role: Roles::Normal.role_name)
+        get :edit, params: { id: user.id }
+        assert_select "*", text: /Role: Normal/
+        assert_select "a", href: edit_user_role_path(user), text: "Change role", count: 0
+      end
+
       should "show the organisation to which the user belongs" do
         user_in_org = create(:user_in_organisation)
         org_with_user = user_in_org.organisation
@@ -329,6 +336,14 @@ class UsersControllerTest < ActionController::TestCase
       setup do
         @organisation_admin = create(:organisation_admin_user)
         sign_in @organisation_admin
+      end
+
+      should "not display a link to change the user's role" do
+        user = create(:user, organisation: @organisation_admin.organisation)
+
+        get :edit, params: { id: user.id }
+
+        assert_select "a", href: edit_user_role_path(user), text: "Change role", count: 0
       end
 
       should "not be able to assign organisations" do
@@ -412,6 +427,14 @@ class UsersControllerTest < ActionController::TestCase
       setup do
         @super_organisation_admin = create(:super_organisation_admin_user)
         sign_in @super_organisation_admin
+      end
+
+      should "not display a link to change the user's role" do
+        user = create(:user, organisation: @super_organisation_admin.organisation)
+
+        get :edit, params: { id: user.id }
+
+        assert_select "a", href: edit_user_role_path(user), text: "Change role", count: 0
       end
 
       should "not be able to assign organisations" do
@@ -524,6 +547,12 @@ class UsersControllerTest < ActionController::TestCase
       setup do
         @superadmin = create(:superadmin_user)
         sign_in @superadmin
+      end
+
+      should "display a link to change the user's role" do
+        user = create(:user, role: Roles::Normal.role_name)
+        get :edit, params: { id: user.id }
+        assert_select "a", href: edit_user_role_path(user), text: "Change role"
       end
 
       should "not be able to see all permissions to applications for a user" do
