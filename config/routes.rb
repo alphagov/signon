@@ -50,6 +50,12 @@ Rails.application.routes.draw do
     end
     resource :role, only: %i[edit update], controller: "users/roles"
     resource :organisation, only: %i[edit update], controller: "users/organisations"
+    resources :applications, only: %i[index], controller: "users/applications" do
+      resource :permissions, only: %i[show edit update], controller: "users/permissions"
+      resource :signin_permission, only: %i[create destroy], controller: "users/signin_permissions" do
+        get :delete
+      end
+    end
   end
   get "user", to: "oauth_users#show"
 
