@@ -1,0 +1,47 @@
+<% content_for :title_caption, "Manage other users" %>
+<% content_for :title, "Update #{@user.name}'s permissions for #{@application.name}" %>
+
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "Users",
+         url: users_path,
+       },
+       {
+         title: @user.name,
+         url: edit_user_path(@user),
+       },
+       {
+         title: "GOV.UK apps",
+         url: user_applications_path(@user),
+       },
+       {
+        title: "Update #{@user.name}'s permissions for #{@application.name}"
+       }
+     ]
+   })
+%>
+
+<%= form_tag user_application_permissions_path(@user, @application), method: :patch do |f| %>
+  <%= render "govuk_publishing_components/components/checkboxes", {
+      name: "application[supported_permission_ids][]",
+      heading: "Permissions",
+      items: @permissions.map { |permission| { label: permission.name, value: permission.id, checked: @user.has_permission?(permission) } },
+  } %>
+
+  <%= hidden_field_tag "application[supported_permission_ids][]", @application.signin_permission.id, id: "checkboxes-signin" %>
+
+  <div class="govuk-button-group">
+    <%= render "govuk_publishing_components/components/button", {
+        text: "Update permissions"
+    } %>
+
+    <%= link_to "Cancel", account_applications_path, class: "govuk-link govuk-link--no-visited-state" %>
+  </div>
+<% end %>
