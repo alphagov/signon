@@ -22,7 +22,8 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
         assert_template :edit
         assert_select "form[action='#{user_organisation_path(user)}']" do
           assert_select "select[name='user[organisation_id]'] option", value: organisation.id
-          assert_select "input[type='submit']"
+          assert_select "button[type='submit']", text: "Change organisation"
+          assert_select "a[href='#{edit_user_path(user)}']", text: "Cancel"
         end
       end
 
@@ -211,7 +212,11 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
         put :update, params: { user_id: user, user: { organisation_id: nil } }
 
         assert_select ".govuk-error-summary" do
-          assert_select "li", text: "Organisation can't be 'None' for Organisation Admin"
+          assert_select "a", href: "#user_organisation_id", text: "Organisation can't be 'None' for Organisation Admin"
+        end
+        assert_select ".govuk-form-group" do
+          assert_select ".govuk-error-message", text: "Error: Organisation can't be 'None' for Organisation Admin"
+          assert_select "select[name='user[organisation_id]'].govuk-select--error"
         end
       end
     end

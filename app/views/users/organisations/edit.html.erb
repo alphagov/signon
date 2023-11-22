@@ -1,24 +1,59 @@
-<% content_for :title, "Edit [#{@user.name}]" %>
+<% content_for :title_caption, "Manage other users" %>
+<% content_for :title, "Change organisation for #{@user.name}" %>
 
-<h1>Edit &ldquo;<%= @user.name %>&rdquo;</h1>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "Users",
+         url: users_path,
+       },
+       {
+         title: @user.name,
+         url: edit_user_path(@user),
+       },
+       {
+         title: "Change organisation",
+       }
+     ]
+   })
+%>
 
-<%= form_for @user, :url => user_organisation_path(@user), :html => {:class => 'well add-top-margin'} do |f| %>
-  <% if @user.errors.count > 0 %>
-    <div class="govuk-error-summary alert alert-danger" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
-      <div class="govuk-error-summary__body">
-        <ul class="govuk-list govuk-error-summary__list">
-          <% @user.errors.full_messages.each do |message| %>
-            <%= content_tag :li, message %>
-          <% end %>
-        </ul>
-      </div>
-    </div>
+<% if @user.errors.count > 0 %>
+  <% content_for :error_summary do %>
+    <%= render "govuk_publishing_components/components/error_summary", {
+      title: "There is a problem",
+      items: @user.errors.map do |error|
+        {
+          text: error.full_message,
+          href: "#user_#{error.attribute}",
+        }
+      end,
+    } %>
   <% end %>
-
-  <p class="form-group">
-    <%= f.label :organisation_id, "Organisation" %><br />
-    <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control", 'data-module' => 'chosen' } %>
-  </p>
-
-  <%= f.submit :class => 'btn btn-primary' %>
 <% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @user, url: user_organisation_path(@user) do %>
+      <%= render "govuk_publishing_components/components/select", {
+        id: "user_organisation_id",
+        name: "user[organisation_id]",
+        label: "Organisation",
+        options: options_for_organisation_select(selected: @user.organisation_id),
+        error_message: @user.errors[:organisation_id].any? ? @user.errors.full_messages_for(:organisation_id).to_sentence : nil
+      } %>
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Change organisation",
+        } %>
+        <%= link_to "Cancel", edit_user_path(@user), class: "govuk-link govuk-link--no-visited-state" %>
+      </div>
+    <% end %>
+  </div>
+</div>
