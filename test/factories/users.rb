@@ -37,6 +37,10 @@ FactoryBot.define do
       confirmation_token { "expired-token" }
       confirmation_sent_at { Devise.confirm_within.ago - 1.day }
     end
+
+    trait :in_organisation do
+      association :organisation, factory: :organisation
+    end
   end
 
   factory :two_step_enabled_user, parent: :user do
@@ -104,10 +108,6 @@ FactoryBot.define do
 
   factory :locked_user, parent: :user do
     locked_at { Time.zone.now }
-  end
-
-  trait :in_organisation do
-    association :organisation, factory: :organisation
   end
 
   factory :user_in_organisation, parent: :user, traits: [:in_organisation]
