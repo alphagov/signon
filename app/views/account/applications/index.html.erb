@@ -80,7 +80,7 @@
         <td class="govuk-table__cell"><%= application.name %></td>
         <td class="govuk-table__cell"><%= application.description %></td>
         <td class="govuk-table__cell govuk-!-text-align-right">
-          <% if policy([:account, Doorkeeper::Application]).grant_signin_permission? %>
+          <% if policy([:account, SigninPermission]).create? %>
             <%= button_to account_application_signin_permission_path(application),
                           class: "govuk-button govuk-!-margin-0",
                           data: { module: "govuk-button" } do %>
