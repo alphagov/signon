@@ -5,7 +5,7 @@ class Account::PermissionsController < ApplicationController
   before_action :set_application
 
   def show
-    authorize [:account, @application], :view_permissions?
+    authorize [:account, UserApplicationPermission]
 
     @permissions = @application
       .sorted_supported_permissions_grantable_from_ui

@@ -4,7 +4,6 @@ class Account::ApplicationPolicy < BasePolicy
   end
 
   alias_method :show?, :index?
-  alias_method :view_permissions?, :index?
 
   def remove_signin_permission?
     current_user.has_access_to?(record) &&
