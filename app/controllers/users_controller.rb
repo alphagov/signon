@@ -36,8 +36,6 @@ class UsersController < ApplicationController
   end
 
   def update
-    raise Pundit::NotAuthorizedError if params[:user][:organisation_id].present? && !policy(@user).assign_organisations?
-
     updater = UserUpdate.new(@user, user_params, current_user, user_ip_address)
     if updater.call
       redirect_to users_path, notice: "Updated user #{@user.email} successfully"
@@ -112,7 +110,7 @@ private
   end
 
   def permitted_user_params
-    @permitted_user_params ||= params.require(:user).permit(:user, :organisation_id, :require_2sv, :skip_update_user_permissions, supported_permission_ids: []).to_h
+    @permitted_user_params ||= params.require(:user).permit(:user, :require_2sv, :skip_update_user_permissions, supported_permission_ids: []).to_h
   end
 
   def filter_params

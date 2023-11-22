@@ -283,19 +283,14 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a", href: edit_user_role_path(user), text: "Change role", count: 0
       end
 
-      should "show the organisation to which the user belongs" do
+      should "display the user's organisation and a link to change the organisation" do
         user_in_org = create(:user_in_organisation)
         org_with_user = user_in_org.organisation
-        other_organisation = create(:organisation, abbreviation: "ABBR")
 
         get :edit, params: { id: user_in_org.id }
 
-        assert_select "select[name='user[organisation_id]']" do
-          assert_select "option", count: 3
-          assert_select "option[selected=selected]", count: 1
-          assert_select %(option[value="#{org_with_user.id}"][selected=selected]), text: org_with_user.name_with_abbreviation
-          assert_select %(option[value="#{other_organisation.id}"]), text: other_organisation.name_with_abbreviation
-        end
+        assert_select "*", text: /Organisation: #{org_with_user.name}/
+        assert_select "a", href: edit_user_organisation_path(user_in_org), text: "Change organisation"
       end
 
       should "not be able to edit superadmins" do
@@ -346,14 +341,12 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a", href: edit_user_role_path(user), text: "Change role", count: 0
       end
 
-      should "not be able to assign organisations" do
-        create(:organisation)
-
+      should "not display a link to change the user's organisation" do
         user = create(:user_in_organisation, organisation: @organisation_admin.organisation)
 
         get :edit, params: { id: user.id }
 
-        assert_select "select[name='user[organisation_id]']", count: 0
+        assert_select "a", href: edit_user_organisation_path(user), text: "Change organisation", count: 0
       end
 
       should "be able to give permissions only to applications they themselves have access to and that also have delegatable signin permissions" do
@@ -437,15 +430,12 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a", href: edit_user_role_path(user), text: "Change role", count: 0
       end
 
-      should "not be able to assign organisations" do
-        outside_organisation = create(:organisation)
-
+      should "not display a link to change the user's organisation" do
         user = create(:user_in_organisation, organisation: @super_organisation_admin.organisation)
 
         get :edit, params: { id: user.id }
 
-        assert_select "select[name='user[organisation_id]']", count: 0
-        assert_select "td", count: 0, text: outside_organisation.id
+        assert_select "a", href: edit_user_organisation_path(user), text: "Change organisation", count: 0
       end
 
       should "be able to give permissions only to applications they themselves have access to and that also have delegatable signin permissions" do
@@ -614,20 +604,11 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "not be able to update superadmins" do
-        organisation = create(:organisation)
         superadmin = create(:superadmin_user)
 
-        put :edit, params: { id: superadmin.id, user: { organisation_id: organisation.id } }
+        put :edit, params: { id: superadmin.id, user: {} }
 
         assert_not_authorised
-      end
-
-      should "update the user's organisation" do
-        user = create(:user_in_organisation)
-
-        assert_not_nil user.organisation
-        put :update, params: { id: user.id, user: { organisation_id: nil } }
-        assert_nil user.reload.organisation
       end
 
       should "push changes out to apps" do
@@ -674,17 +655,6 @@ class UsersControllerTest < ActionController::TestCase
       setup do
         @organisation_admin = create(:organisation_admin_user)
         sign_in(@organisation_admin)
-      end
-
-      should "not be able to assign organisation ids" do
-        sub_organisation = create(:organisation, parent: @organisation_admin.organisation)
-
-        user = create(:user_in_organisation, organisation: sub_organisation)
-        assert_not_nil user.organisation
-
-        put :update, params: { id: user.id, user: { organisation_id: @organisation_admin.organisation.id } }
-
-        assert_not_authorised
       end
 
       should "redisplay the form if save fails" do

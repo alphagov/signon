@@ -21,6 +21,15 @@
   <% end %>
 </p>
 
+<p>
+  <strong>Organisation:</strong> <%= @user.organisation.present? ? @user.organisation.name : Organisation::NONE %>
+  <% if policy(User).assign_organisations? %>
+    <%= link_to edit_user_organisation_path(@user) do %>
+      Change<span class="invisible"> organisation</span>
+    <% end %>
+  <% end %>
+</p>
+
 <% if policy(@user).mandate_2sv? %>
   <dl>
     <dt>Account security</dt>
@@ -67,13 +76,6 @@
       <%end %>
     </dd>
   </dl>
-<% end %>
-
-<% if policy(User).assign_organisations? %>
-  <p class="form-group">
-    <%= f.label :organisation_id, "Organisation" %><br />
-    <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control", 'data-module' => 'chosen' } %>
-  </p>
 <% end %>
 
 <h2 class="add-vertical-margins"> <%= "Editable " if (current_user.publishing_manager? ) %>Permissions</h2>

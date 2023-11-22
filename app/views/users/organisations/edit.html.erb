@@ -1,0 +1,24 @@
+<% content_for :title, "Edit [#{@user.name}]" %>
+
+<h1>Edit &ldquo;<%= @user.name %>&rdquo;</h1>
+
+<%= form_for @user, :url => user_organisation_path(@user), :html => {:class => 'well add-top-margin'} do |f| %>
+  <% if @user.errors.count > 0 %>
+    <div class="govuk-error-summary alert alert-danger" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+      <div class="govuk-error-summary__body">
+        <ul class="govuk-list govuk-error-summary__list">
+          <% @user.errors.full_messages.each do |message| %>
+            <%= content_tag :li, message %>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  <% end %>
+
+  <p class="form-group">
+    <%= f.label :organisation_id, "Organisation" %><br />
+    <%= f.select :organisation_id, organisation_options(f), organisation_select_options, { class: "chosen-select form-control", 'data-module' => 'chosen' } %>
+  </p>
+
+  <%= f.submit :class => 'btn btn-primary' %>
+<% end %>
