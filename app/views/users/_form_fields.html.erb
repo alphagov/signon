@@ -23,7 +23,7 @@
 
 <p>
   <strong>Organisation:</strong> <%= @user.organisation.present? ? @user.organisation.name : Organisation::NONE %>
-  <% if policy(User).assign_organisations? %>
+  <% if policy(User).assign_organisation? %>
     <%= link_to edit_user_organisation_path(@user) do %>
       Change<span class="invisible"> organisation</span>
     <% end %>

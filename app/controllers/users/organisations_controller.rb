@@ -25,7 +25,7 @@ private
 
   def authorize_user
     authorize(@user)
-    authorize(@user, :assign_organisations?)
+    authorize(@user, :assign_organisation?)
   end
 
   def user_params

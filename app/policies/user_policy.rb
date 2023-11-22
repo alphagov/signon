@@ -7,7 +7,7 @@ class UserPolicy < BasePolicy
   def new?
     %w[superadmin admin].include? current_user.role
   end
-  alias_method :assign_organisations?, :new?
+  alias_method :assign_organisation?, :new?
 
   # invitations#create
   alias_method :create?, :new?
