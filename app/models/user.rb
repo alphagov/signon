@@ -173,8 +173,12 @@ class User < ApplicationRecord
     application_permissions.select { |ap| ap.application_id == application.id }.map(&:supported_permission_id)
   end
 
-  def has_access_to?(application)
+  def signin_permission_for(application)
     application_permissions.detect { |permission| permission.supported_permission_id == application.signin_permission.id }
+  end
+
+  def has_access_to?(application)
+    signin_permission_for(application).present?
   end
 
   def has_permission?(supported_permission)
