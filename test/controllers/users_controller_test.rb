@@ -602,10 +602,10 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "push changes out to apps" do
-        another_user = create(:user, name: "Old Name")
+        another_user = create(:user)
         PermissionUpdater.expects(:perform_on).with(another_user).once
 
-        put :update, params: { id: another_user.id, user: { name: "New Name" } }
+        put :update, params: { id: another_user.id, user: {} }
       end
 
       context "update application access" do
