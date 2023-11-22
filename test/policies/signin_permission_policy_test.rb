@@ -1,7 +1,7 @@
 require "test_helper"
 require "support/policy_helpers"
 
-class Account::SigninPermissionPolicyTest < ActiveSupport::TestCase
+class SigninPermissionPolicyTest < ActiveSupport::TestCase
   include PolicyHelpers
 
   context "#create?" do
