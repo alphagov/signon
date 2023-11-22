@@ -32,6 +32,11 @@ FactoryBot.define do
         user.grant_application_signin_permission(app)
       end
     end
+
+    trait :with_expired_confirmation_token do
+      confirmation_token { "expired-token" }
+      confirmation_sent_at { Devise.confirm_within.ago - 1.day }
+    end
   end
 
   factory :two_step_enabled_user, parent: :user do
@@ -63,11 +68,6 @@ FactoryBot.define do
     unconfirmed_email { "new@email.com" }
     sequence(:confirmation_token) { |n| "#{n}a1s2d3" } # see `token_sent_to` in ConfirmationTokenHelper
     confirmation_sent_at { Time.zone.now }
-  end
-
-  trait :with_expired_confirmation_token do
-    confirmation_token { "expired-token" }
-    confirmation_sent_at { Devise.confirm_within.ago - 1.day }
   end
 
   factory :superadmin_user, parent: :user do
