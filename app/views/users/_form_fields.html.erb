@@ -42,7 +42,7 @@
           <%= link_to 'Edit reason or expiry date for 2-step verification exemption', edit_two_step_verification_exemption_path(@user) %>
         <% end %>
         </p>
-      <% elsif f.object.has_2sv? %>
+      <% elsif @user.has_2sv? %>
         <p>2-step verification enabled</p>
         <p>
           <%= link_to 'Reset 2-step verification',
@@ -53,7 +53,7 @@
           Allows user to sign in without a verification code.<br/>
           User will be prompted to set up 2-step verification again the next time they sign in.
         </p>
-      <% elsif f.object.require_2sv? %>
+      <% elsif @user.require_2sv? %>
         <p>2-step verification required but not set up</p>
       <% else %>
         <p>2-step verification not set up</p>
@@ -79,9 +79,9 @@
 <% end %>
 
 <h2 class="add-vertical-margins"> <%= "Editable " if (current_user.publishing_manager? ) %>Permissions</h2>
-<%= render partial: "shared/user_permissions", locals: { user_object: f.object }%>
+<%= render partial: "shared/user_permissions", locals: { user_object: @user }%>
 
 <% if current_user.publishing_manager? %>
     <h2 class="add-vertical-margins">All Permissions for this user</h2>
-    <%= render partial: "app_permissions", locals: { user_object: f.object }%>
+    <%= render partial: "app_permissions", locals: { user_object: @user }%>
 <% end %>
