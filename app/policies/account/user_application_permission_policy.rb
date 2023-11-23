@@ -1,14 +1,13 @@
 class Account::UserApplicationPermissionPolicy < BasePolicy
   def show?
-    current_user.govuk_admin? || current_user.publishing_manager?
+    Pundit.policy(current_user, user).edit?
   end
 
   def delete?
-    current_user.has_access_to?(application) &&
-    (
-      current_user.govuk_admin? ||
-      current_user.publishing_manager? && application.signin_permission.delegatable?
-    )
+    return false unless show?
+    return true if current_user.govuk_admin?
+
+    current_user.has_access_to?(application) && application.signin_permission.delegatable?
   end
   alias_method :edit?, :delete?
 
