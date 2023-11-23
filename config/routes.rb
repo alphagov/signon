@@ -40,7 +40,6 @@ Rails.application.routes.draw do
     member do
       post :unlock
       get :event_logs
-      patch :reset_two_step_verification
       get :require_2sv
     end
     resource :name, only: %i[edit update], controller: "users/names"
@@ -50,6 +49,7 @@ Rails.application.routes.draw do
     end
     resource :role, only: %i[edit update], controller: "users/roles"
     resource :organisation, only: %i[edit update], controller: "users/organisations"
+    resource :two_step_verification_reset, only: %i[edit update], controller: "users/two_step_verification_resets"
   end
   get "user", to: "oauth_users#show"
 
