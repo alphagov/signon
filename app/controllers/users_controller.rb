@@ -57,13 +57,6 @@ class UsersController < ApplicationController
     @logs = @user.event_logs.page(params[:page]).per(100) if @user
   end
 
-  def reset_two_step_verification
-    @user.reset_2sv!(current_user)
-    UserMailer.two_step_reset(@user).deliver_later
-
-    redirect_to users_path, notice: "Reset 2-step verification for #{@user.email}"
-  end
-
   def require_2sv; end
 
 private

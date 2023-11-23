@@ -1,0 +1,42 @@
+<% content_for :title_caption, "Manage other users" %>
+<% content_for :title, "Reset 2-step verification for #{@user.name}" %>
+
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "Users",
+         url: users_path,
+       },
+       {
+         title: @user.name,
+         url: edit_user_path(@user),
+       },
+       {
+         title: "Reset 2-step verification",
+       }
+     ]
+   })
+%>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @user, url: user_two_step_verification_reset_path(@user) do %>
+      <%= render "govuk_publishing_components/components/hint", {
+        text: "Allows user to sign in without a verification code. User will be prompted to set up 2-step verification again the next time they sign in."
+      } %>
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Reset 2-step verification",
+          destructive: true,
+        } %>
+        <%= link_to "Cancel", edit_user_path(@user), class: "govuk-link govuk-link--no-visited-state" %>
+      </div>
+    <% end %>
+  </div>
+</div>

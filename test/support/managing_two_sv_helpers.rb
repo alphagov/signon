@@ -61,9 +61,8 @@ module ManagingTwoSvHelpers
     perform_enqueued_jobs do
       assert_response_contains "2-step verification enabled"
 
-      accept_alert do
-        click_link "Reset 2-step verification"
-      end
+      click_link "Reset 2-step verification"
+      click_button "Reset 2-step verification"
 
       assert_response_contains "Reset 2-step verification for #{user_to_be_reset.email}"
 
