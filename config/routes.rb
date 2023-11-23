@@ -50,6 +50,7 @@ Rails.application.routes.draw do
     resource :role, only: %i[edit update], controller: "users/roles"
     resource :organisation, only: %i[edit update], controller: "users/organisations"
     resource :two_step_verification_reset, only: %i[edit update], controller: "users/two_step_verification_resets"
+    resource :two_step_verification_mandation, only: %i[edit update], controller: "users/two_step_verification_mandations"
   end
   get "user", to: "oauth_users#show"
 

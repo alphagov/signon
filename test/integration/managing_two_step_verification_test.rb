@@ -132,7 +132,7 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         sign_in_as_and_edit_user(@org_admin, user)
 
         assert page.has_text? "2-step verification enabled"
-        assert page.has_no_text? "Mandate 2-step verification for this user"
+        assert page.has_no_text? "Change 2-step verification requirement for this user"
       end
 
       should "be able to see an appropriate message reflecting the user's 2sv status when 2sv set up" do
