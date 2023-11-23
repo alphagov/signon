@@ -67,7 +67,7 @@
         <br/>
         User will be prompted to set up 2-step verification again the next time they sign in.</p>
       <% end %>
-      <% if policy(@user).exempt_from_two_step_verification? && @user.reason_for_2sv_exemption.nil? %>
+      <% if policy(@user).exempt_from_two_step_verification? && !@user.exempt_from_2sv? %>
           <p>
             <%= link_to 'Exempt user from 2-step verification', edit_two_step_verification_exemption_path(@user) %>
             <br/>
