@@ -1,5 +1,5 @@
 <% content_for :title_caption, "Manage other users" %>
-<% content_for :title, "Change name for #{@user.name_was}" %>
+<% content_for :title, "Change organisation for #{@user.name}" %>
 
 <% content_for :breadcrumbs,
    render("govuk_publishing_components/components/breadcrumbs", {
@@ -14,11 +14,11 @@
          url: users_path,
        },
        {
-         title: @user.name_was,
+         title: @user.name,
          url: edit_user_path(@user),
        },
        {
-         title: "Change name",
+         title: "Change organisation",
        }
      ]
    })
@@ -40,20 +40,17 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_for @user, url: user_name_path(@user) do %>
-      <%= render "govuk_publishing_components/components/input", {
-        label: {
-          text: "Name"
-        },
-        name: "user[name]",
-        id: "user_name",
-        value: @user.name,
-        autocomplete: "off",
-        error_items: @user.errors.full_messages_for(:name).map { |message| { text: message } }
+    <%= form_for @user, url: user_organisation_path(@user) do %>
+      <%= render "govuk_publishing_components/components/select", {
+        id: "user_organisation_id",
+        name: "user[organisation_id]",
+        label: "Organisation",
+        options: options_for_organisation_select(selected: @user.organisation_id),
+        error_message: @user.errors[:organisation_id].any? ? @user.errors.full_messages_for(:organisation_id).to_sentence : nil
       } %>
       <div class="govuk-button-group">
         <%= render "govuk_publishing_components/components/button", {
-          text: "Change name",
+          text: "Change organisation",
         } %>
         <%= link_to "Cancel", edit_user_path(@user), class: "govuk-link govuk-link--no-visited-state" %>
       </div>
