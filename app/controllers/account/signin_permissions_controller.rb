@@ -13,11 +13,11 @@ class Account::SigninPermissionsController < ApplicationController
   end
 
   def delete
-    authorize [:account, current_user.signin_permission_for(application)]
+    authorize [:account, SigninPermission.new(current_user.signin_permission_for(application))]
   end
 
   def destroy
-    authorize [:account, current_user.signin_permission_for(application)], :delete?
+    authorize [:account, SigninPermission.new(current_user.signin_permission_for(application))], :delete?
 
     params = { supported_permission_ids: current_user.supported_permissions.map(&:id) - [application.signin_permission.id] }
     UserUpdate.new(current_user, params, current_user, user_ip_address).call
