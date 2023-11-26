@@ -53,8 +53,6 @@ module ManagingTwoSvHelpers
   end
 
   def admin_can_reset_2sv_on_user(logged_in_as, user_to_be_reset)
-    use_javascript_driver
-
     visit edit_user_path(user_to_be_reset)
     signin_with(logged_in_as)
 
@@ -72,8 +70,6 @@ module ManagingTwoSvHelpers
   end
 
   def user_cannot_reset_2sv(logged_in_as, user_to_be_reset)
-    use_javascript_driver
-
     visit edit_user_path(user_to_be_reset)
     signin_with(logged_in_as)
 
