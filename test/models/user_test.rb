@@ -672,6 +672,26 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#signin_permission_for" do
+    setup do
+      @user = create(:user)
+      @app = create(:application)
+    end
+
+    should "return the user's signin permission if they have access to the app" do
+      @user.grant_application_signin_permission(@app)
+
+      user_application_permission = @user.signin_permission_for(@app)
+      assert_equal @user, user_application_permission.user
+      assert_equal @app.signin_permission, user_application_permission.supported_permission
+      assert_equal @app, user_application_permission.application
+    end
+
+    should "return nil if the user doesn't have access to the app" do
+      assert_nil @user.signin_permission_for(@app)
+    end
+  end
+
   context "#has_permission?" do
     setup do
       @app = create(:application)
