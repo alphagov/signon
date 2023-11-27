@@ -68,7 +68,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
           click_button "Create user and send email"
 
           assert_equal "fred@example.com", last_email.to[0]
-          assert_match "Please confirm your account", last_email.subject
+          assert_match I18n.t("devise.mailer.invitation_instructions.subject"), last_email.subject
 
           assert has_field?("Mandate 2-step verification for this user")
           check "Mandate 2-step verification for this user"
@@ -94,7 +94,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
           assert_not_nil User.where(email: "fred@example.com", role: "normal").last
           assert_equal "fred@example.com", last_email.to[0]
-          assert_match "Please confirm your account", last_email.subject
+          assert_match I18n.t("devise.mailer.invitation_instructions.subject"), last_email.subject
           assert_equal false, User.where(email: "fred@example.com", role: "normal").last.require_2sv?
         end
       end
@@ -114,7 +114,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
             assert_not_nil User.where(email: "fred@example.com", role: "normal").last
             assert_equal "fred@example.com", last_email.to[0]
-            assert_match "Please confirm your account", last_email.subject
+            assert_match I18n.t("devise.mailer.invitation_instructions.subject"), last_email.subject
             assert User.where(email: "fred@example.com", role: "normal").last.require_2sv?
           end
         end
@@ -136,7 +136,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
         click_button "Resend signup email"
 
         assert page.has_content?("Resent account signup email")
-        emails_received = all_emails.count { |email| email.subject == "Please confirm your account" }
+        emails_received = all_emails.count { |email| email.subject == I18n.t("devise.mailer.invitation_instructions.subject") }
         assert_equal 2, emails_received
       end
     end
@@ -219,7 +219,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
           click_button "Create user and send email"
 
           assert_equal "fred_admin@example.com", last_email.to[0]
-          assert_match "Please confirm your account", last_email.subject
+          assert_match I18n.t("devise.mailer.invitation_instructions.subject"), last_email.subject
 
           assert has_field?("Mandate 2-step verification for this user")
           check "Mandate 2-step verification for this user"
@@ -252,7 +252,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
           assert_not_nil User.where(email: "fred@example.com", role: Roles::Superadmin.role_name).last
           assert_equal "fred@example.com", last_email.to[0]
-          assert_match "Please confirm your account", last_email.subject
+          assert_match I18n.t("devise.mailer.invitation_instructions.subject"), last_email.subject
           assert User.where(email: "fred@example.com", role: Roles::Superadmin.role_name).last.require_2sv?
         end
       end
@@ -268,7 +268,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
           assert_not_nil User.where(email: "fred@example.com", role: Roles::Admin.role_name).last
           assert_equal "fred@example.com", last_email.to[0]
-          assert_match "Please confirm your account", last_email.subject
+          assert_match I18n.t("devise.mailer.invitation_instructions.subject"), last_email.subject
           assert User.where(email: "fred@example.com", role: Roles::Admin.role_name).last.require_2sv?
         end
       end
@@ -290,7 +290,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
           assert_not_nil User.where(email: "fred@example.com", role: Roles::Superadmin.role_name).last
           assert_equal "fred@example.com", last_email.to[0]
-          assert_match "Please confirm your account", last_email.subject
+          assert_match I18n.t("devise.mailer.invitation_instructions.subject"), last_email.subject
           assert User.where(email: "fred@example.com", role: Roles::Superadmin.role_name).last.require_2sv?
         end
       end
@@ -306,7 +306,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
 
           assert_not_nil User.where(email: "fred@example.com", role: Roles::Admin.role_name).last
           assert_equal "fred@example.com", last_email.to[0]
-          assert_match "Please confirm your account", last_email.subject
+          assert_match I18n.t("devise.mailer.invitation_instructions.subject"), last_email.subject
           assert User.where(email: "fred@example.com", role: Roles::Admin.role_name).last.require_2sv?
         end
       end

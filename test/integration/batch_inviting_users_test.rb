@@ -147,7 +147,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
     assert_equal "noreply-signon-development@digital.cabinet-office.gov.uk", invite_email.from[0]
     assert_nil invite_email.reply_to
 
-    assert_match "Please confirm your account", invite_email.subject
+    assert_match I18n.t("devise.mailer.invitation_instructions.subject"), invite_email.subject
   end
 
   def assert_user_not_created(email)

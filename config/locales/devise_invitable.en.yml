@@ -7,4 +7,4 @@ en:
       no_invitations_remaining: "No invitations remaining"
     mailer:
       invitation_instructions:
-        subject: 'Please confirm your account'
+        subject: 'Set up your GOV.UK publishing account'
