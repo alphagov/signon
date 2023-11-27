@@ -410,7 +410,7 @@ GEM
     opentelemetry-instrumentation-gruf (0.1.1)
       opentelemetry-api (>= 1.0.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-http (0.23.1)
+    opentelemetry-instrumentation-http (0.23.2)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-http_client (0.22.2)
