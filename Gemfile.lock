@@ -388,7 +388,7 @@ GEM
     opentelemetry-instrumentation-delayed_job (0.22.0)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-ethon (0.21.2)
+    opentelemetry-instrumentation-ethon (0.21.3)
       opentelemetry-api (~> 1.0)
       opentelemetry-common (~> 0.20.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
