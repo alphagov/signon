@@ -378,7 +378,7 @@ GEM
     opentelemetry-instrumentation-bunny (0.21.1)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-concurrent_ruby (0.21.1)
+    opentelemetry-instrumentation-concurrent_ruby (0.21.2)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-dalli (0.25.0)
