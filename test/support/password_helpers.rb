@@ -16,9 +16,14 @@ module PasswordHelpers
   end
 
   def complete_password_reset(email, options)
-    email.find_link(href: false).click
+    visit_password_reset_url_in(email)
     fill_in "New password", with: options[:new_password]
     fill_in "Confirm new password", with: options[:new_password]
     click_button "Save password"
+  end
+
+  def visit_password_reset_url_in(email)
+    reset_password_url = /\[Reset your password\.\]\((?<url>http.*)\)/.match(email.body).named_captures["url"]
+    visit reset_password_url
   end
 end

@@ -17,7 +17,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
 
       open_email(user.email)
       assert current_email
-      assert_equal "Reset password instructions", current_email.subject
+      assert_equal I18n.t("devise.mailer.reset_password_instructions.subject"), current_email.subject
 
       complete_password_reset(current_email, new_password:)
       assert_response_contains("Your password was changed successfully")
@@ -67,7 +67,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
 
       open_email(user.email)
       assert current_email
-      assert_equal "Reset password instructions", current_email.subject
+      assert_equal I18n.t("devise.mailer.reset_password_instructions.subject"), current_email.subject
 
       complete_password_reset(current_email, new_password:)
       assert_response_contains("Your password was changed successfully")
@@ -94,10 +94,10 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
 
       open_email(user.email)
       assert current_email
-      assert_equal "Reset password instructions", current_email.subject
+      assert_equal I18n.t("devise.mailer.reset_password_instructions.subject"), current_email.subject
 
       # simulate something following the link in the email.
-      current_email.find_link(href: false).click
+      visit_password_reset_url_in(current_email)
 
       complete_password_reset(current_email, new_password:)
       assert_response_contains("Your password was changed successfully")
@@ -111,7 +111,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
 
       open_email(user.email)
 
-      current_email.find_link(href: false).click
+      visit_password_reset_url_in(current_email)
       fill_in "New password", with: "A Password"
       fill_in "Confirm new password", with: "Not That Password"
       click_button "Save password"
