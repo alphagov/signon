@@ -54,13 +54,13 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
           user = User.invite!(name: "Jim", email: "jim@web.com")
 
           open_email("jim@web.com")
-          assert_equal "Please confirm your account", current_email.subject
+          assert_equal I18n.t("devise.mailer.invitation_instructions.subject"), current_email.subject
 
           visit new_user_session_path
           signin_with(@admin)
           admin_changes_email_address(user:, new_email: "new@email.com")
 
-          email = emails_sent_to("new@email.com").detect { |mail| mail.subject == "Please confirm your account" }
+          email = emails_sent_to("new@email.com").detect { |mail| mail.subject == I18n.t("devise.mailer.invitation_instructions.subject") }
           assert email
           assert email.body.include?("/users/invitation/accept?invitation_token=")
           assert user.accept_invitation!

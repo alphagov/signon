@@ -109,7 +109,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
 
         email = ActionMailer::Base.deliveries.last
         assert_not_nil email
-        assert_equal "Please confirm your account", email.subject
+        assert_equal I18n.t("devise.mailer.invitation_instructions.subject"), email.subject
         assert_equal ["b@m.com"], email.to
       end
     end

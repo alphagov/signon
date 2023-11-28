@@ -55,7 +55,7 @@ en:
       confirmation_instructions:
         subject: 'Confirm your email change'
       reset_password_instructions:
-        subject: 'Reset password instructions'
+        subject: 'Reset password for GOV.UK publishing account'
       unlock_instructions:
         subject: 'Your %{app_name} account has been locked'
     links:
