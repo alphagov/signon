@@ -9,7 +9,7 @@ class Users::InvitationResendsController < ApplicationController
   def edit; end
 
   def update
-    @user.invite!
+    @user.invite!(current_user)
     EventLog.record_account_invitation(@user, current_user)
     flash[:notice] = "Resent account signup email to #{@user.email}"
     redirect_to edit_user_path(@user)

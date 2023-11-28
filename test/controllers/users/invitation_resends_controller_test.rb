@@ -109,6 +109,14 @@ class Users::InvitationResendsControllerTest < ActionController::TestCase
         end
       end
 
+      should "update User#invited_by" do
+        user = create(:invited_user)
+
+        put :update, params: { user_id: user }
+
+        assert_equal @admin, user.reload.invited_by
+      end
+
       should "record account invitation event" do
         user = create(:invited_user)
 
