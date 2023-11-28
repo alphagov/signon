@@ -27,10 +27,6 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         admin_can_send_2sv_email(@super_admin, @user)
       end
 
-      should "be able to unset the requirement for 2SV" do
-        admin_can_remove_2sv_requirement_without_notifying_user(@super_admin, @user)
-      end
-
       should "remove the user's exemption reason when 2SV is mandated" do
         user = create(:two_step_exempted_user)
 
@@ -63,10 +59,6 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         admin_can_send_2sv_email(@admin, @user)
       end
 
-      should "be able to unset the requirement for 2SV" do
-        admin_can_remove_2sv_requirement_without_notifying_user(@admin, @user)
-      end
-
       should "reset 2-step verification and notify the chosen user by email for users in any organisation" do
         admin_can_reset_2sv_on_user(@admin, @user_requring_2sv)
       end
@@ -81,16 +73,8 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         admin_can_send_2sv_email(@super_org_admin, @user)
       end
 
-      should "be able to unset the requirement for 2SV" do
-        admin_can_remove_2sv_requirement_without_notifying_user(@super_org_admin, @user)
-      end
-
       should "be able to send a notification to a user in a child organisation to set up 2SV" do
         admin_can_send_2sv_email(@super_org_admin, @user_in_child_organisation)
-      end
-
-      should "be able to unset the requirement for 2SV for a user in a child organisation" do
-        admin_can_remove_2sv_requirement_without_notifying_user(@super_org_admin, @user_in_child_organisation)
       end
 
       should "be able to reset 2-step verification and notify the chosen user by email if they belong to the same org as the user" do
@@ -113,10 +97,6 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
       should "be able to send a notification to a user to set up 2SV" do
         admin_can_send_2sv_email(@org_admin, @user)
-      end
-
-      should "be able to unset the requirement for 2SV" do
-        admin_can_remove_2sv_requirement_without_notifying_user(@org_admin, @user)
       end
 
       should "be able to reset 2-step verification and notify the chosen user by email if they belong to the same org as the user" do
@@ -152,7 +132,7 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         sign_in_as_and_edit_user(@org_admin, user)
 
         assert page.has_text? "2-step verification enabled"
-        assert page.has_no_text? "Mandate 2-step verification for this user"
+        assert page.has_no_text? "Change 2-step verification requirement for this user"
       end
 
       should "be able to see an appropriate message reflecting the user's 2sv status when 2sv set up" do

@@ -54,12 +54,11 @@
 
     <% unless @user.require_2sv? %>
       <% if policy(@user).mandate_2sv? %>
-        <p class="checkbox">
-          <%= f.label :require_2sv do %>
-            <%= f.check_box :require_2sv %> Mandate 2-step verification for this user <%= "(this will remove their exemption)" if @user.exempt_from_2sv? %>
-          <% end %>
-          <br/>
-          User will be prompted to set up 2-step verification again the next time they sign in.
+        <p>
+          <%= link_to(
+            "Mandate 2-step verification for this user#{@user.exempt_from_2sv? ? ' (this will remove their exemption)' : nil}",
+            edit_user_two_step_verification_mandation_path(@user)
+          ) %>
         </p>
       <% end %>
     <% end %>

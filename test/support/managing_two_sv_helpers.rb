@@ -19,8 +19,8 @@ module ManagingTwoSvHelpers
   end
 
   def mandate_2sv_for_exempted_user
-    check "Mandate 2-step verification for this user (this will remove their exemption)"
-    click_button "Update User"
+    click_link "Mandate 2-step verification for this user (this will remove their exemption)"
+    click_button "Turn on 2-step verification"
   end
 
   def admin_can_send_2sv_email(admin, user)
@@ -29,8 +29,8 @@ module ManagingTwoSvHelpers
     assert page.has_text? "2-step verification not set up"
 
     perform_enqueued_jobs do
-      check "Mandate 2-step verification for this user"
-      click_button "Update User"
+      click_link "Mandate 2-step verification for this user"
+      click_button "Turn on 2-step verification"
 
       assert last_email
       assert_equal "Make your Signon account more secure", last_email.subject
@@ -39,22 +39,7 @@ module ManagingTwoSvHelpers
     assert user.reload.require_2sv
   end
 
-  def admin_can_remove_2sv_requirement_without_notifying_user(admin, user)
-    sign_in_as_and_edit_user(admin, user)
-
-    perform_enqueued_jobs do
-      uncheck "Mandate 2-step verification for this user"
-      click_button "Update User"
-
-      assert_not last_email
-    end
-
-    assert_not user.reload.require_2sv
-  end
-
   def admin_can_reset_2sv_on_user(logged_in_as, user_to_be_reset)
-    use_javascript_driver
-
     visit edit_user_path(user_to_be_reset)
     signin_with(logged_in_as)
 
@@ -72,8 +57,6 @@ module ManagingTwoSvHelpers
   end
 
   def user_cannot_reset_2sv(logged_in_as, user_to_be_reset)
-    use_javascript_driver
-
     visit edit_user_path(user_to_be_reset)
     signin_with(logged_in_as)
 
