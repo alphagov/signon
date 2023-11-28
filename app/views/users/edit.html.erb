@@ -8,7 +8,7 @@
   <%= link_to "#{@user.suspended? ? "Uns" : "S"}uspend user", edit_suspension_path(@user) %>
 </p>
 
-<% if @user.invited_but_not_accepted %>
+<% if @user.invited_but_not_yet_accepted? %>
   <div class="alert alert-warning">
     <strong>Invitation not accepted yet</strong>.<br/>
     This user hasn't clicked on the link in their signup mail yet.
