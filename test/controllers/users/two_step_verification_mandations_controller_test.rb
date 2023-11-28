@@ -18,7 +18,7 @@ class Users::TwoStepVerificationMandationsControllerTest < ActionController::Tes
 
         assert_template :edit
         assert_select "form[action='#{user_two_step_verification_mandation_path(user)}']" do
-          assert_select "button[type='submit']", text: "Mandate 2-step verification"
+          assert_select "button[type='submit']", text: "Turn on 2-step verification"
           assert_select "a[href='#{edit_user_path(user)}']", text: "Cancel"
         end
       end

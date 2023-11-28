@@ -20,7 +20,7 @@ module ManagingTwoSvHelpers
 
   def mandate_2sv_for_exempted_user
     click_link "Mandate 2-step verification for this user (this will remove their exemption)"
-    click_button "Mandate 2-step verification"
+    click_button "Turn on 2-step verification"
   end
 
   def admin_can_send_2sv_email(admin, user)
@@ -30,7 +30,7 @@ module ManagingTwoSvHelpers
 
     perform_enqueued_jobs do
       click_link "Mandate 2-step verification for this user"
-      click_button "Mandate 2-step verification"
+      click_button "Turn on 2-step verification"
 
       assert last_email
       assert_equal "Make your Signon account more secure", last_email.subject

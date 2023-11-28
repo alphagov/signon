@@ -1,5 +1,5 @@
 <% content_for :title_caption, "Manage other users" %>
-<% content_for :title, "Mandate 2-step verification for #{@user.name}" %>
+<% content_for :title, "Turn on 2-step verification for #{@user.name}" %>
 
 <% content_for :breadcrumbs,
    render("govuk_publishing_components/components/breadcrumbs", {
@@ -18,7 +18,7 @@
          url: edit_user_path(@user),
        },
        {
-         title: "Mandate 2-step verification",
+         title: "Turn on 2-step verification",
        }
      ]
    })
@@ -42,15 +42,14 @@
   <div class="govuk-grid-column-two-thirds">
     <%= form_for @user, url: user_two_step_verification_mandation_path(@user) do |f| %>
       <%= render "govuk_publishing_components/components/hint", {
-        text: [
-          "Mandate 2-step verification for this user#{@user.exempt_from_2sv? ? ' (this will remove their exemption)' : nil}.",
-          "They will be prompted to set up 2-step verification again the next time they sign in.",
-        ].join(" ")
+        text: @user.exempt_from_2sv? ?
+          "This will remove the user's exemption from 2-step verification. They will have to set up 2-step verification the next time they sign in." :
+          "This forces the user to set up 2-step verification the next time they sign in."
       } %>
 
       <div class="govuk-button-group">
         <%= render "govuk_publishing_components/components/button", {
-          text: "Mandate 2-step verification",
+          text: "Turn on 2-step verification",
           destructive: @user.exempt_from_2sv?,
         } %>
         <%= link_to "Cancel", edit_user_path(@user), class: "govuk-link govuk-link--no-visited-state" %>
