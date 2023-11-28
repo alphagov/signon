@@ -51,7 +51,7 @@ class InvitationsController < Devise::InvitationsController
 
   def resend
     user = User.find(params[:id])
-    authorize user
+    authorize(user, :resend_invitation?)
 
     user.invite!
     flash[:notice] = "Resent account signup email to #{user.email}"

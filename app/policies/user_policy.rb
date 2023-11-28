@@ -31,7 +31,7 @@ class UserPolicy < BasePolicy
   alias_method :update?, :edit?
   alias_method :unlock?, :edit?
   alias_method :suspension?, :edit?
-  alias_method :resend?, :edit?
+  alias_method :resend_invitation?, :edit?
   alias_method :event_logs?, :edit?
   alias_method :mandate_2sv?, :edit?
   alias_method :require_2sv?, :edit?
