@@ -109,6 +109,14 @@ class Users::InvitationResendsControllerTest < ActionController::TestCase
         end
       end
 
+      should "record account invitation event" do
+        user = create(:invited_user)
+
+        EventLog.expects(:record_account_invitation).with(user, @admin)
+
+        put :update, params: { user_id: user }
+      end
+
       should "redirect to edit user page and display success notice" do
         user = create(:invited_user, email: "user@gov.uk")
 
