@@ -133,6 +133,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
         user = User.find_by(email: "fred@example.com")
         visit edit_user_path(user)
 
+        click_link "Resend signup email"
         click_button "Resend signup email"
 
         assert page.has_content?("Resent account signup email")

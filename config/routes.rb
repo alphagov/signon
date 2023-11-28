@@ -22,7 +22,6 @@ Rails.application.routes.draw do
              }
 
   devise_scope :user do
-    post "/users/invitation/resend/:id" => "invitations#resend", :as => "resend_user_invitation"
     put "/users/confirmation" => "confirmations#update"
     resource :two_step_verification_session,
              only: %i[new create],
@@ -51,6 +50,7 @@ Rails.application.routes.draw do
     resource :organisation, only: %i[edit update], controller: "users/organisations"
     resource :two_step_verification_reset, only: %i[edit update], controller: "users/two_step_verification_resets"
     resource :two_step_verification_mandation, only: %i[edit update], controller: "users/two_step_verification_mandations"
+    resource :invitation_resend, only: %i[edit update], controller: "users/invitation_resends"
   end
   get "user", to: "oauth_users#show"
 
