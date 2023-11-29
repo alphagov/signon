@@ -190,11 +190,11 @@ GEM
       rails (>= 6)
       rouge
       sprockets (>= 3)
-    govuk_sidekiq (7.1.4)
+    govuk_sidekiq (7.1.5)
       gds-api-adapters (>= 19.1.0)
       govuk_app_config (>= 1.1)
       redis-namespace (~> 1.6)
-      sidekiq (> 6.5.10, < 7)
+      sidekiq (~> 6.5, >= 6.5.12)
     govuk_test (4.0.1)
       brakeman (>= 5.0.2)
       capybara (>= 3.36)
