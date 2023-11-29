@@ -107,6 +107,16 @@ class Users::UnlockingsControllerTest < ActionController::TestCase
         put :update, params: { user_id: user }
       end
 
+      should "not record manual account unlock event if User#unlock! raises an exception" do
+        user = build(:locked_user, id: 123)
+        User.stubs(:find).returns(user)
+        user.stubs(:unlock_access!).raises("boom!")
+
+        EventLog.expects(:record_event).never
+
+        assert_raises { put :update, params: { user_id: user } }
+      end
+
       should "redirect to edit user page and display success notice" do
         user = create(:locked_user, email: "user@gov.uk")
 
