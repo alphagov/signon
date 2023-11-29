@@ -53,7 +53,9 @@ Rails.application.routes.draw do
     resource :invitation_resend, only: %i[edit update], controller: "users/invitation_resends"
     resource :unlocking, only: %i[edit update], controller: "users/unlockings"
     resources :applications, only: %i[index show], controller: "users/applications" do
-      resource :signin_permission, only: %i[create destroy], controller: "users/signin_permissions"
+      resource :signin_permission, only: %i[create destroy], controller: "users/signin_permissions" do
+        get :delete
+      end
     end
   end
   get "user", to: "oauth_users#show"

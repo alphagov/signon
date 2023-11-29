@@ -14,6 +14,13 @@ class Users::SigninPermissionsController < ApplicationController
     redirect_to user_applications_path(user)
   end
 
+  def delete
+    @user = User.find(params[:user_id])
+    signin_permission = @user.application_permissions.find_by!(supported_permission: application.signin_permission)
+
+    authorize signin_permission
+  end
+
   def destroy
     user = User.find(params[:user_id])
     signin_permission = user.application_permissions.find_by!(supported_permission: application.signin_permission)
