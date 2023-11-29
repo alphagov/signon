@@ -14,6 +14,18 @@ class Users::SigninPermissionsController < ApplicationController
     redirect_to user_applications_path(user)
   end
 
+  def destroy
+    user = User.find(params[:user_id])
+    signin_permission = user.application_permissions.find_by!(supported_permission: application.signin_permission)
+
+    authorize signin_permission
+
+    params = { supported_permission_ids: user.supported_permissions.map(&:id) - [application.signin_permission.id] }
+    UserUpdate.new(user, params, current_user, user_ip_address).call
+
+    redirect_to user_applications_path(user)
+  end
+
 private
 
   def application

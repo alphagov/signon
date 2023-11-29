@@ -6,6 +6,7 @@ class UserApplicationPermissionPolicy < BasePolicy
 
     current_user.publishing_manager? && current_user.has_access_to?(application) && application.signin_permission.delegatable?
   end
+  alias_method :destroy?, :create?
 
   delegate :user, :application, to: :record
 end
