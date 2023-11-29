@@ -152,10 +152,6 @@ class User < ApplicationRecord
     self.uid ||= UUID.generate
   end
 
-  def invited_but_not_accepted
-    !invitation_sent_at.nil? && invitation_accepted_at.nil?
-  end
-
   def permissions_for(application)
     application_permissions
       .joins(:supported_permission)

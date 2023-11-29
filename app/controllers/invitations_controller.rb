@@ -1,7 +1,7 @@
 # https://raw.github.com/scambra/devise_invitable/master/app/controllers/devise/invitations_controller.rb
 class InvitationsController < Devise::InvitationsController
-  before_action :authenticate_inviter!, only: %i[new create resend]
-  after_action :verify_authorized, only: %i[new create resend]
+  before_action :authenticate_inviter!, only: %i[new create]
+  after_action :verify_authorized, only: %i[new create]
 
   before_action :redirect_if_invitee_already_exists, only: :create
   before_action :configure_permitted_parameters, only: :create
@@ -48,15 +48,6 @@ class InvitationsController < Devise::InvitationsController
     super
   end
   # rubocop:enable Lint/UselessMethodDefinition
-
-  def resend
-    user = User.find(params[:id])
-    authorize user
-
-    user.invite!
-    flash[:notice] = "Resent account signup email to #{user.email}"
-    redirect_to users_path
-  end
 
 private
 

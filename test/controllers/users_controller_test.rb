@@ -293,6 +293,22 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a", href: edit_user_organisation_path(user_in_org), text: "Change organisation"
       end
 
+      should "display link to resend invitation page for user who has been invited but has not accepted" do
+        user = create(:invited_user)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_user_invitation_resend_path(user)}']", text: "Resend signup email"
+      end
+
+      should "not display link to resend invitation page for user who has accepted invitation" do
+        user = create(:active_user)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_user_invitation_resend_path(user)}']", count: 0
+      end
+
       should "not be able to edit superadmins" do
         superadmin = create(:superadmin_user)
 
@@ -347,6 +363,14 @@ class UsersControllerTest < ActionController::TestCase
         get :edit, params: { id: user.id }
 
         assert_select "a", href: edit_user_organisation_path(user), text: "Change organisation", count: 0
+      end
+
+      should "display link to resend invitation page for user who has been invited but has not accepted" do
+        user = create(:invited_user, organisation: @organisation_admin.organisation)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_user_invitation_resend_path(user)}']"
       end
 
       should "be able to give permissions only to applications they themselves have access to and that also have delegatable signin permissions" do
@@ -436,6 +460,14 @@ class UsersControllerTest < ActionController::TestCase
         get :edit, params: { id: user.id }
 
         assert_select "a", href: edit_user_organisation_path(user), text: "Change organisation", count: 0
+      end
+
+      should "display link to resend invitation page for user who has been invited but has not accepted" do
+        user = create(:invited_user, organisation: @super_organisation_admin.organisation)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_user_invitation_resend_path(user)}']"
       end
 
       should "be able to give permissions only to applications they themselves have access to and that also have delegatable signin permissions" do
@@ -543,6 +575,14 @@ class UsersControllerTest < ActionController::TestCase
         user = create(:user, role: Roles::Normal.role_name)
         get :edit, params: { id: user.id }
         assert_select "a", href: edit_user_role_path(user), text: "Change role"
+      end
+
+      should "display link to resend invitation page for user who has been invited but has not accepted" do
+        user = create(:invited_user)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_user_invitation_resend_path(user)}']"
       end
 
       should "not be able to see all permissions to applications for a user" do
