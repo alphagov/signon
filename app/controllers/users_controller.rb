@@ -45,13 +45,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def unlock
-    EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK, initiator: current_user, ip_address: user_ip_address)
-    @user.unlock_access!
-    flash[:notice] = "Unlocked #{@user.email}"
-    redirect_to users_path
-  end
-
   def event_logs
     authorize @user
     @logs = @user.event_logs.page(params[:page]).per(100) if @user

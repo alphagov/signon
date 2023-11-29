@@ -309,22 +309,20 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a[href='#{edit_user_invitation_resend_path(user)}']", count: 0
       end
 
-      should "display button to unlock user" do
+      should "display link to unlock user page" do
         user = create(:locked_user)
 
         get :edit, params: { id: user }
 
-        assert_select "form[action='#{unlock_user_path(user)}']" do
-          assert_select "input[type='submit']", value: "Unlock account"
-        end
+        assert_select "a[href='#{edit_user_unlocking_path(user)}']", text: "Unlock account"
       end
 
-      should "not display button to unlock user that has not been locked" do
+      should "not display link to unlock user page for user that has not been locked" do
         user = create(:active_user)
 
         get :edit, params: { id: user }
 
-        assert_select "form[action='#{unlock_user_path(user)}']", count: 0
+        assert_select "a[href='#{edit_user_unlocking_path(user)}']", count: 0
       end
 
       should "not be able to edit superadmins" do
@@ -391,12 +389,12 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a[href='#{edit_user_invitation_resend_path(user)}']"
       end
 
-      should "display button to unlock user" do
+      should "display link to unlock user page" do
         user = create(:locked_user, organisation: @organisation_admin.organisation)
 
         get :edit, params: { id: user }
 
-        assert_select "form[action='#{unlock_user_path(user)}']"
+        assert_select "a[href='#{edit_user_unlocking_path(user)}']"
       end
 
       should "be able to give permissions only to applications they themselves have access to and that also have delegatable signin permissions" do
@@ -496,12 +494,12 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a[href='#{edit_user_invitation_resend_path(user)}']"
       end
 
-      should "display button to unlock user" do
+      should "display link to unlock user page" do
         user = create(:locked_user, organisation: @super_organisation_admin.organisation)
 
         get :edit, params: { id: user }
 
-        assert_select "form[action='#{unlock_user_path(user)}']"
+        assert_select "a[href='#{edit_user_unlocking_path(user)}']"
       end
 
       should "be able to give permissions only to applications they themselves have access to and that also have delegatable signin permissions" do
@@ -619,12 +617,12 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a[href='#{edit_user_invitation_resend_path(user)}']"
       end
 
-      should "display button to unlock user" do
+      should "display link to unlock user page" do
         user = create(:locked_user)
 
         get :edit, params: { id: user }
 
-        assert_select "form[action='#{unlock_user_path(user)}']"
+        assert_select "a[href='#{edit_user_unlocking_path(user)}']"
       end
 
       should "not be able to see all permissions to applications for a user" do

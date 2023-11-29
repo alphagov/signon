@@ -26,9 +26,10 @@
     <div class="alert alert-warning">
       <strong>Account has been locked after too many unsuccessful login attempts.</strong><br/>
       Locked accounts are automatically unlocked after 1 hour.
-      <%= form_tag unlock_user_path(@user), class: 'unlock-account-form' do %>
-        <%= submit_tag "Unlock account", :class => 'btn btn-default add-top-margin' %>
-      <% end %>
+
+      <p>
+        <%= link_to "Unlock account", edit_user_unlocking_path(@user) %>
+      </p>
     </div>
   <% end %>
 <% end %>
