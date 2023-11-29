@@ -84,6 +84,131 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     end
   end
 
+  context "#update" do
+    should "prevent unauthenticated users" do
+      application = create(:application)
+      user = create(:user)
+
+      patch :update, params: { user_id: user, application_id: application.id }
+
+      assert_redirected_to "/users/sign_in"
+    end
+
+    should "replace the users permissions with new ones" do
+      application = create(:application, with_supported_permissions: %w[new old])
+      user = create(:user, with_permissions: { application => %w[old] })
+      signin_permission = user.grant_application_signin_permission(application)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, signin_permission, update?: true
+
+      new_permission = application.supported_permissions.find_by(name: "new")
+
+      expected_params = { supported_permission_ids: [new_permission.id] }
+      user_update = stub("user-update").responds_like_instance_of(UserUpdate)
+      user_update.expects(:call)
+      UserUpdate.stubs(:new).with(user, expected_params, current_user, anything).returns(user_update)
+
+      patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
+    end
+
+    should "redirect once the permissions have been updated" do
+      application = create(:application, with_supported_permissions: %w[new old])
+      user = create(:user, with_permissions: { application => %w[old] })
+      signin_permission = user.grant_application_signin_permission(application)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, signin_permission, update?: true
+
+      new_permission = application.supported_permissions.find_by(name: "new")
+
+      patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
+
+      assert_redirected_to user_applications_path(user)
+    end
+
+    should "retain permissions for other apps" do
+      other_application = create(:application, with_supported_permissions: %w[other])
+      application = create(:application, with_supported_permissions: %w[new old])
+      user = create(:user, with_permissions: { application => %w[old], other_application => %w[other] })
+      signin_permission = user.grant_application_signin_permission(application)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, signin_permission, update?: true
+
+      new_permission = application.supported_permissions.find_by(name: "new")
+      other_permission = other_application.supported_permissions.find_by(name: "other")
+
+      expected_params = { supported_permission_ids: [other_permission.id, new_permission.id] }
+      user_update = stub("user-update").responds_like_instance_of(UserUpdate)
+      user_update.expects(:call)
+      UserUpdate.stubs(:new).with(user, expected_params, current_user, anything).returns(user_update)
+
+      patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
+    end
+
+    should "assign the application id to the application_id flash" do
+      application = create(:application, with_supported_permissions: %w[new old])
+      user = create(:user, with_permissions: { application => %w[old] })
+      signin_permission = user.grant_application_signin_permission(application)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, signin_permission, update?: true
+
+      new_permission = application.supported_permissions.find_by(name: "new")
+
+      patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
+
+      assert_equal application.id, flash[:application_id]
+    end
+
+    should "raise an exception if the user cannot be found" do
+      application = create(:application)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        patch :update, params: { user_id: "unknown-id", application_id: application.id, application: { supported_permission_ids: %w[id] } }
+      end
+    end
+
+    should "raise an exception if the signin permission cannot be found" do
+      application = create(:application)
+      user = create(:user)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: %w[id] } }
+      end
+    end
+
+    should "prevent unauthorised users" do
+      application = create(:application)
+      user = create(:user)
+      signin_permission = user.grant_application_signin_permission(application)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, signin_permission, update?: false
+
+      patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [] } }
+
+      assert_not_authorised
+    end
+  end
+
 private
 
   def stub_policy_for_navigation_links(current_user)

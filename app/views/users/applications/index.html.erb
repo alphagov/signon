@@ -24,6 +24,13 @@
    })
 %>
 
+<% if flash[:application_id] %>
+<%= render "govuk_publishing_components/components/success_alert", {
+    message: "Permissions updated",
+    description: message_for_success(flash[:application_id], @user),
+} %>
+<% end %>
+
 <table class="govuk-table">
   <caption class="govuk-table__caption govuk-table__caption--m">Apps <%= @user.name %> has access to</caption>
   <thead class="govuk-table__head">

@@ -5,7 +5,7 @@ class UserApplicationPermissionPolicyTest < ActiveSupport::TestCase
   include PolicyHelpers
   include PunditHelpers
 
-  %i[create destroy delete].each do |policy_method|
+  %i[create destroy delete update].each do |policy_method|
     context "#{policy_method}?" do
       setup do
         @user = create(:user)
