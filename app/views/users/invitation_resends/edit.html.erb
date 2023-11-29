@@ -28,7 +28,7 @@
   <div class="govuk-grid-column-two-thirds">
     <%= form_for @user, url: user_invitation_resend_path(@user) do %>
       <%= render "govuk_publishing_components/components/hint", {
-        text: "Invitation not accepted yet. This user hasn't clicked on the link in their signup mail yet."
+        text: "Invitation not accepted. This user hasn't clicked on the link in their signup mail yet."
       } %>
 
       <div class="govuk-button-group">
