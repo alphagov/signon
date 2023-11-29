@@ -64,11 +64,11 @@
     <% end %>
 
     <% if policy(@user).exempt_from_two_step_verification? && !@user.exempt_from_2sv? %>
-        <p>
-          <%= link_to 'Exempt user from 2-step verification', edit_two_step_verification_exemption_path(@user) %>
-          <br/>
-          Exempt a user from 2-step verification (requires a reason to be supplied).
-        </p>
+      <p>
+        <%= link_to 'Exempt user from 2-step verification', edit_two_step_verification_exemption_path(@user) %>
+        <br/>
+        Exempt a user from 2-step verification (requires a reason to be supplied).
+      </p>
     <% end %>
   </dd>
 </dl>
@@ -77,6 +77,6 @@
 <%= render partial: "shared/user_permissions", locals: { user_object: @user }%>
 
 <% if current_user.publishing_manager? %>
-    <h2 class="add-vertical-margins">All Permissions for this user</h2>
-    <%= render partial: "app_permissions", locals: { user_object: @user }%>
+  <h2 class="add-vertical-margins">All Permissions for this user</h2>
+  <%= render partial: "app_permissions", locals: { user_object: @user }%>
 <% end %>
