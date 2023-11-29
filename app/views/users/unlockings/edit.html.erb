@@ -30,7 +30,7 @@
       <%= render "govuk_publishing_components/components/hint", {
         text: %{
           Account has been locked after too many unsuccessful login attempts.
-          Locked accounts are automatically unlocked after 1 hour.
+          Locked accounts are automatically unlocked after #{User.unlock_in.inspect}.
         }
       } %>
 

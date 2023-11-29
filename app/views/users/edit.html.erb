@@ -25,7 +25,7 @@
   <% if @user.access_locked? %>
     <div class="alert alert-warning">
       <strong>Account has been locked after too many unsuccessful login attempts.</strong><br/>
-      Locked accounts are automatically unlocked after 1 hour.
+      Locked accounts are automatically unlocked after <%= User.unlock_in.inspect %>.
 
       <p>
         <%= link_to "Unlock account", edit_user_unlocking_path(@user) %>
