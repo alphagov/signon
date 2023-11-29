@@ -21,14 +21,16 @@
   <% end %>
 <% end %>
 
-<% if @user.access_locked? %>
-  <div class="alert alert-warning">
-    <strong>Account has been locked after too many unsuccessful login attempts.</strong><br/>
-    Locked accounts are automatically unlocked after 1 hour.
-    <%= form_tag unlock_user_path(@user), class: 'unlock-account-form' do %>
-      <%= submit_tag "Unlock account", :class => 'btn btn-default add-top-margin' %>
-    <% end %>
-  </div>
+<% if policy(@user).unlock? %>
+  <% if @user.access_locked? %>
+    <div class="alert alert-warning">
+      <strong>Account has been locked after too many unsuccessful login attempts.</strong><br/>
+      Locked accounts are automatically unlocked after 1 hour.
+      <%= form_tag unlock_user_path(@user), class: 'unlock-account-form' do %>
+        <%= submit_tag "Unlock account", :class => 'btn btn-default add-top-margin' %>
+      <% end %>
+    </div>
+  <% end %>
 <% end %>
 
 <% if @user.suspended? and @user.reason_for_suspension.present? %>
