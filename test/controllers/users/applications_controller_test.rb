@@ -132,12 +132,6 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
 
 private
 
-  def stub_policy(current_user, record, method_and_return_value)
-    policy_class = Pundit::PolicyFinder.new(record).policy
-    policy = stub("policy", method_and_return_value).responds_like_instance_of(policy_class)
-    policy_class.stubs(:new).with(current_user, record).returns(policy)
-  end
-
   def stub_policy_for_navigation_links(current_user)
     stub_policy(current_user, User, index?: true)
   end
