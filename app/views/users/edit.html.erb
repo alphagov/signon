@@ -64,6 +64,14 @@
     <% if @user.has_2sv? && policy(@user).reset_2sv? %>
       <li><%= link_to 'Reset 2-step verification', edit_user_two_step_verification_reset_path(@user) %></li>
     <% end %>
+    <% if !@user.require_2sv? && policy(@user).mandate_2sv? %>
+      <li>
+        <%= link_to(
+          "Mandate 2-step verification for this user#{@user.exempt_from_2sv? ? ' (this will remove their exemption)' : nil}",
+          edit_user_two_step_verification_mandation_path(@user)
+        ) %>
+      </li>
+    <% end %>
   </ul>
 </section>
 
@@ -100,17 +108,6 @@
       <p>2-step verification required but not set up</p>
     <% else %>
       <p>2-step verification not set up</p>
-    <% end %>
-
-    <% unless @user.require_2sv? %>
-      <% if policy(@user).mandate_2sv? %>
-        <p>
-          <%= link_to(
-            "Mandate 2-step verification for this user#{@user.exempt_from_2sv? ? ' (this will remove their exemption)' : nil}",
-            edit_user_two_step_verification_mandation_path(@user)
-          ) %>
-        </p>
-      <% end %>
     <% end %>
   </dd>
 </dl>
