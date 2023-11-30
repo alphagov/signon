@@ -59,6 +59,8 @@ class User < ApplicationRecord
   has_many :authorisations, -> { joins(:application) }, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id
   has_many :application_permissions, -> { joins(:application) }, class_name: "UserApplicationPermission", inverse_of: :user, dependent: :destroy
   has_many :supported_permissions, -> { joins(:application) }, through: :application_permissions
+  has_many :signin_permissions, -> { merge(SupportedPermission.signin) }, source: "supported_permission", through: :application_permissions
+  has_many :applications, through: :signin_permissions
   has_many :batch_invitations
   belongs_to :organisation
 

@@ -1276,6 +1276,24 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#applications" do
+    should "include apps that the user has signin permission for" do
+      user = create(:user)
+      application = create(:application)
+      user.grant_application_signin_permission(application)
+
+      assert_equal [application], user.applications
+    end
+
+    should "exclude apps that the user does not have the signin permission for" do
+      user = create(:user)
+      application = create(:application, with_supported_permissions: %w[app-permission])
+      user.grant_application_permission(application, "app-permission")
+
+      assert_equal [], user.applications
+    end
+  end
+
   def authenticate_access(user, app)
     Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end
