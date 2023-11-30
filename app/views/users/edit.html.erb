@@ -80,13 +80,6 @@
   </ul>
 </section>
 
-<% if @user.access_locked? %>
-  <div class="alert alert-warning">
-    <strong>Account has been locked after too many unsuccessful login attempts.</strong><br/>
-    Locked accounts are automatically unlocked after <%= User.unlock_in.inspect %>.
-  </div>
-<% end %>
-
 <p>
   <%= link_to "Manage permissions", manage_permissions_user_path(@user) %>
 </p>
