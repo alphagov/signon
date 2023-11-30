@@ -52,6 +52,7 @@ Rails.application.routes.draw do
     resource :two_step_verification_mandation, only: %i[edit update], controller: "users/two_step_verification_mandations"
     resource :invitation_resend, only: %i[edit update], controller: "users/invitation_resends"
     resource :unlocking, only: %i[edit update], controller: "users/unlockings"
+    resources :applications, only: %i[index], controller: "users/applications"
   end
   get "user", to: "oauth_users#show"
 
