@@ -1265,6 +1265,17 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#organisation_name" do
+    should "return organisation name if user has organisation" do
+      organisation = build(:organisation, name: "organisation-name")
+      assert_equal "organisation-name", build(:user, organisation:).organisation_name
+    end
+
+    should "return 'None' if user has no organisation" do
+      assert_equal Organisation::NONE, build(:user).organisation_name
+    end
+  end
+
   def authenticate_access(user, app)
     Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end

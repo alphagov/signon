@@ -17,7 +17,7 @@
     </div>
     <div>
       <dt>Organisation</dt>
-      <dd><%= @user.organisation.present? ? @user.organisation.name : Organisation::NONE %></dd>
+      <dd><%= @user.organisation_name %></dd>
       <dd>
         <% if policy(@user).assign_organisation? %>
           <%= link_to edit_user_organisation_path(@user) do %>Change<span class="invisible"> Organisation</span><% end %>

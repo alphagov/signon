@@ -38,7 +38,7 @@
       { text: formatted_user_name(user), format: user_name_format(user) },
       { text: user.email, format: 'email' },
       { text: user.role.humanize },
-      { text: user.organisation.try(:name) },
+      { text: user.organisation_name },
       { text: user.sign_in_count },
       { text: formatted_last_sign_in(user) },
       { text: status(user) },

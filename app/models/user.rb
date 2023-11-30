@@ -415,6 +415,10 @@ class User < ApplicationRecord
     organisation.try(:content_id).to_s == Organisation::GDS_ORG_CONTENT_ID
   end
 
+  def organisation_name
+    organisation.present? ? organisation.name : Organisation::NONE
+  end
+
 private
 
   def two_step_mandated_changed?
