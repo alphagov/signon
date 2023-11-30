@@ -6,6 +6,11 @@
   <h2>User details</h2>
   <dl>
     <div>
+      <dt>Name</dt>
+      <dd><%= @user.name %></dd>
+      <dd><%= link_to edit_user_name_path(@user) do %>Change<span class="invisible"> Name</span><% end %></dd>
+    </div>
+    <div>
       <dt>Status</dt>
       <dd><%= status(@user) %></dd>
       <dd></dd>
@@ -48,13 +53,6 @@
     <strong>User suspended:</strong> <em><%= @user.reason_for_suspension %></em>
   </p>
 <% end %>
-
-<p>
-  <strong>Name:</strong> <%= @user.name %>
-  <%= link_to edit_user_name_path(@user) do %>
-    Change<span class="invisible"> name</span>
-  <% end %>
-</p>
 
 <p>
   <strong>Email:</strong> <%= @user.email %>

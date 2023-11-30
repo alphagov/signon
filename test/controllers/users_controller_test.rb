@@ -265,8 +265,8 @@ class UsersControllerTest < ActionController::TestCase
       should "display the user's name and a link to change the name" do
         not_an_admin = create(:user, name: "user-name")
         get :edit, params: { id: not_an_admin.id }
-        assert_select "*", text: /Name: user-name/
-        assert_select "a", href: edit_user_name_path(not_an_admin), text: "Change name"
+        assert_select "*", text: /Name\s+user-name/
+        assert_select "a", href: edit_user_name_path(not_an_admin), text: /Change\s+Name/
       end
 
       should "display the user's email and a link to change the email" do
