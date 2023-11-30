@@ -23,17 +23,17 @@
   </div>
 <% end %>
 
-<% if policy(@user).unlock? %>
-  <% if @user.access_locked? %>
-    <div class="alert alert-warning">
-      <strong>Account has been locked after too many unsuccessful login attempts.</strong><br/>
-      Locked accounts are automatically unlocked after <%= User.unlock_in.inspect %>.
+<% if @user.access_locked? %>
+  <div class="alert alert-warning">
+    <strong>Account has been locked after too many unsuccessful login attempts.</strong><br/>
+    Locked accounts are automatically unlocked after <%= User.unlock_in.inspect %>.
 
+    <% if policy(@user).unlock? %>
       <p>
         <%= link_to "Unlock account", edit_user_unlocking_path(@user) %>
       </p>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 <% end %>
 
 <% if @user.suspended? and @user.reason_for_suspension.present? %>
