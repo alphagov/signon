@@ -18,14 +18,18 @@ class UsersHelperTest < ActionView::TestCase
 
   test "two_step_status should reflect the user's status accurately when the user is exempted from 2sv" do
     assert_equal "Exempted", two_step_status(create(:two_step_exempted_user))
+    assert_equal "Exempted", two_step_status_with_requirement(create(:two_step_exempted_user))
   end
 
   test "two_step_status should reflect the user's status accurately when the user has 2sv set up" do
     assert_equal "Enabled", two_step_status(create(:two_step_enabled_user))
+    assert_equal "Enabled", two_step_status_with_requirement(create(:two_step_enabled_user))
   end
 
   test "two_step_status should reflect the user's status accurately when the user does not have 2sv set up" do
     assert_equal "Not set up", two_step_status(create(:user))
+    assert_equal "Not set up", two_step_status_with_requirement(create(:user))
+    assert_equal "Required but not set up", two_step_status_with_requirement(create(:two_step_mandated_user))
   end
 
   context "#filtered_users_heading" do

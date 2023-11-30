@@ -9,6 +9,14 @@ module UsersHelper
     user.two_step_status.humanize.capitalize
   end
 
+  def two_step_status_with_requirement(user)
+    if user.not_setup_2sv? && user.require_2sv?
+      "Required but #{two_step_status(user).downcase}"
+    else
+      two_step_status(user)
+    end
+  end
+
   def organisation_options(form_builder)
     accessible_organisations = policy_scope(Organisation)
     options_from_collection_for_select(
