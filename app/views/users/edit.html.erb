@@ -94,12 +94,6 @@
   </div>
 <% end %>
 
-<% if @user.suspended? and @user.reason_for_suspension.present? %>
-  <p class="alert alert-warning">
-    <strong>User suspended:</strong> <em><%= @user.reason_for_suspension %></em>
-  </p>
-<% end %>
-
 <p>
   <%= link_to "Manage permissions", manage_permissions_user_path(@user) %>
 </p>
