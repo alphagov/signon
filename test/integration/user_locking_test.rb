@@ -43,6 +43,7 @@ class UserLockingTest < ActionDispatch::IntegrationTest
     signin_with(admin)
     visit edit_user_path(user)
 
+    click_link "Unlock account"
     click_button "Unlock account"
 
     user.reload

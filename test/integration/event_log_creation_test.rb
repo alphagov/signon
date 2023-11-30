@@ -130,7 +130,8 @@ class EventLogCreationIntegrationTest < ActionDispatch::IntegrationTest
     visit root_path
     signin_with(@admin)
     visit user_path(@user)
-    click_on "Unlock account"
+    click_link "Unlock account"
+    click_button "Unlock account"
 
     visit event_logs_user_path(@user)
     assert page.has_content?("#{EventLog::MANUAL_ACCOUNT_UNLOCK.description} by #{@admin.name}")

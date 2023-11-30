@@ -1,7 +1,7 @@
 require "ipaddr"
 
 class EventLog < ApplicationRecord
-  LOCKED_DURATION = "#{Devise.unlock_in / 1.hour} #{'hour'.pluralize(Devise.unlock_in / 1.hour)}".freeze
+  LOCKED_DURATION = User.unlock_in.inspect.freeze
 
   EVENTS = [
     ACCOUNT_LOCKED = LogEntry.new(id: 1, description: "Password verification failed too many times, account locked for #{LOCKED_DURATION}", require_uid: true),

@@ -1,0 +1,45 @@
+<% content_for :title_caption, "Manage other users" %>
+<% content_for :title, "Unlock account for #{@user.name}" %>
+
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "Users",
+         url: users_path,
+       },
+       {
+         title: @user.name,
+         url: edit_user_path(@user),
+       },
+       {
+         title: "Unlock account",
+       }
+     ]
+   })
+%>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_for @user, url: user_unlocking_path(@user) do %>
+      <%= render "govuk_publishing_components/components/hint", {
+        text: %{
+          Account has been locked after too many unsuccessful login attempts.
+          Locked accounts are automatically unlocked after #{User.unlock_in.inspect}.
+        }
+      } %>
+
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Unlock account",
+        } %>
+        <%= link_to "Cancel", edit_user_path(@user), class: "govuk-link govuk-link--no-visited-state" %>
+      </div>
+    <% end %>
+  </div>
+</div>

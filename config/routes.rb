@@ -37,7 +37,6 @@ Rails.application.routes.draw do
 
   resources :users, except: [:show] do
     member do
-      post :unlock
       get :event_logs
       get :require_2sv
     end
@@ -51,6 +50,7 @@ Rails.application.routes.draw do
     resource :two_step_verification_reset, only: %i[edit update], controller: "users/two_step_verification_resets"
     resource :two_step_verification_mandation, only: %i[edit update], controller: "users/two_step_verification_mandations"
     resource :invitation_resend, only: %i[edit update], controller: "users/invitation_resends"
+    resource :unlocking, only: %i[edit update], controller: "users/unlockings"
   end
   get "user", to: "oauth_users#show"
 
