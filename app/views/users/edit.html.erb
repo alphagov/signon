@@ -80,13 +80,6 @@
   </ul>
 </section>
 
-<% if @user.invited_but_not_yet_accepted? %>
-  <div class="alert alert-warning">
-    <strong>Invitation not accepted yet</strong>.<br/>
-    This user hasn't clicked on the link in their signup mail yet.
-  </div>
-<% end %>
-
 <% if @user.access_locked? %>
   <div class="alert alert-warning">
     <strong>Account has been locked after too many unsuccessful login attempts.</strong><br/>
