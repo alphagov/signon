@@ -41,7 +41,7 @@
       { text: user.organisation.try(:name) },
       { text: user.sign_in_count },
       { text: formatted_last_sign_in(user) },
-      { text: user.status.humanize },
+      { text: status(user) },
       { text: user.eager_loaded_permission_for(@application).to_sentence },
     ]
   end,

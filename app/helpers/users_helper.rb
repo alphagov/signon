@@ -1,6 +1,10 @@
 module UsersHelper
   include Pundit::Authorization
 
+  def status(user)
+    user.status.humanize
+  end
+
   def two_step_status(user)
     user.two_step_status.humanize.capitalize
   end

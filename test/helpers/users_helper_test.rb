@@ -9,6 +9,13 @@ class UsersHelperTest < ActionView::TestCase
     assert_nothing_raised { sync_needed?(user.application_permissions) }
   end
 
+  test "status should humanize User#status" do
+    assert_equal "Invited", status(build(:invited_user))
+    assert_equal "Active", status(build(:active_user))
+    assert_equal "Locked", status(build(:locked_user))
+    assert_equal "Suspended", status(build(:suspended_user))
+  end
+
   test "two_step_status should reflect the user's status accurately when the user is exempted from 2sv" do
     assert_equal "Exempted", two_step_status(create(:two_step_exempted_user))
   end
