@@ -14,6 +14,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       app = create(:application, name: "MyApp")
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       check "Has access to MyApp?"
       click_button "Update User"
 
@@ -29,6 +30,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       @user.grant_application_permission(app, "pre-existing")
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       select "adding", from: "Permissions for MyApp"
       click_button "Update User"
 
@@ -41,6 +43,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       create(:application, name: "MyApp", with_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       assert page.has_no_select?("Permissions for MyApp", options: %w[user_update_permission])
     end
   end
@@ -58,6 +61,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       app = create(:application, name: "MyApp")
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       check "Has access to MyApp?"
       click_button "Update User"
 
@@ -73,6 +77,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       @user.grant_application_permission(app, "pre-existing")
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       select "adding", from: "Permissions for MyApp"
       click_button "Update User"
 
@@ -85,6 +90,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       create(:application, name: "MyApp", with_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       assert page.has_no_select?("Permissions for MyApp", options: %w[user_update_permission])
     end
   end
@@ -103,6 +109,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       @super_org_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       check "Has access to MyApp?"
       click_button "Update User"
 
@@ -116,6 +123,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       @super_org_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       assert page.has_no_field? "Has access to MyApp?"
     end
 
@@ -123,6 +131,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       create(:application, name: "MyApp", with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       assert page.has_no_field? "Has access to MyApp?"
     end
 
@@ -131,6 +140,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       @user.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       click_button "Update User"
 
       assert @user.reload.has_access_to?(app)
@@ -143,6 +153,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       @user.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       click_button "Update User"
 
       assert @user.reload.has_access_to?(app)
@@ -158,6 +169,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       @user.grant_application_permission(app, "pre-existing")
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       select "adding", from: "Permissions for MyApp"
       click_button "Update User"
 
@@ -171,6 +183,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       @super_org_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       assert page.has_no_select?("Permissions for MyApp", options: %w[user_update_permission])
     end
   end
@@ -189,6 +202,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       @organisation_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       check "Has access to MyApp?"
       click_button "Update User"
 
@@ -202,6 +216,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       @organisation_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       assert page.has_no_field? "Has access to MyApp?"
     end
 
@@ -209,6 +224,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       create(:application, name: "MyApp", with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       assert page.has_no_field? "Has access to MyApp?"
     end
 
@@ -217,6 +233,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       @user.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       click_button "Update User"
 
       assert @user.reload.has_access_to?(app)
@@ -229,6 +246,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       @user.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       click_button "Update User"
 
       assert @user.reload.has_access_to?(app)
@@ -244,6 +262,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       @user.grant_application_permission(app, "pre-existing")
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       select "adding", from: "Permissions for MyApp"
       click_button "Update User"
 
@@ -257,6 +276,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       @organisation_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
+      click_link "Manage permissions"
       assert page.has_no_select?("Permissions for MyApp", options: %w[user_update_permission])
     end
   end

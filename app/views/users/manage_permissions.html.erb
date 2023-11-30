@@ -1,0 +1,29 @@
+<% content_for :title, "Manage permissions [#{@user.name}]" %>
+
+<h1>Manage permissions for &ldquo;<%= @user.name %>&rdquo;</h1>
+
+<% if @user.errors.count > 0 %>
+  <div class="govuk-error-summary alert alert-danger" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
+    <div class="govuk-error-summary__body">
+      <ul class="govuk-list govuk-error-summary__list">
+        <% @user.errors.full_messages.each do |message| %>
+          <%= content_tag :li, message %>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+<% end %>
+
+<%= form_for @user, :html => {:class => 'well add-top-margin'} do |f| %>
+  <h2 class="add-vertical-margins"> <%= "Editable " if (current_user.publishing_manager? ) %>Permissions</h2>
+  <%= render partial: "shared/user_permissions", locals: { user_object: @user }%>
+
+  <% if current_user.publishing_manager? %>
+    <h2 class="add-vertical-margins">All Permissions for this user</h2>
+    <%= render partial: "app_permissions", locals: { user_object: @user }%>
+  <% end %>
+
+  <hr>
+
+  <%= f.submit :class => 'btn btn-primary' %>
+<% end %>
