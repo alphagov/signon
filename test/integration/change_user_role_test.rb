@@ -16,7 +16,7 @@ class ChangeUserRoleTest < ActionDispatch::IntegrationTest
     should "be able to change the role of a user who is not exempt from 2SV" do
       user = create(:user)
       sign_in_as_and_edit_user(@super_admin, user)
-      click_link "Change role"
+      click_link "Change Role"
 
       select "Admin", from: "Role"
       click_button "Change role"
@@ -27,7 +27,7 @@ class ChangeUserRoleTest < ActionDispatch::IntegrationTest
     should "not be able to change the role of a user who is exempt from 2SV" do
       user = create(:two_step_exempted_user)
       sign_in_as_and_edit_user(@super_admin, user)
-      click_link "Change role"
+      click_link "Change Role"
 
       assert page.has_no_select?("Role")
 

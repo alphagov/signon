@@ -279,8 +279,8 @@ class UsersControllerTest < ActionController::TestCase
       should "display the user's role but no link to change the role" do
         user = create(:user, role: Roles::Normal.role_name)
         get :edit, params: { id: user.id }
-        assert_select "*", text: /Role: Normal/
-        assert_select "a", href: edit_user_role_path(user), text: "Change role", count: 0
+        assert_select "*", text: /Role\s+Normal/
+        assert_select "a", href: edit_user_role_path(user), text: /Change\s+Role/, count: 0
       end
 
       should "display the user's organisation and a link to change the organisation" do
@@ -377,7 +377,7 @@ class UsersControllerTest < ActionController::TestCase
 
         get :edit, params: { id: user.id }
 
-        assert_select "a", href: edit_user_role_path(user), text: "Change role", count: 0
+        assert_select "a", href: edit_user_role_path(user), text: /Change\s+Role/, count: 0
       end
 
       should "not display a link to change the user's organisation" do
@@ -432,7 +432,7 @@ class UsersControllerTest < ActionController::TestCase
 
         get :edit, params: { id: user.id }
 
-        assert_select "a", href: edit_user_role_path(user), text: "Change role", count: 0
+        assert_select "a", href: edit_user_role_path(user), text: /Change\s+Role/, count: 0
       end
 
       should "not display a link to change the user's organisation" do
@@ -485,7 +485,7 @@ class UsersControllerTest < ActionController::TestCase
       should "display a link to change the user's role" do
         user = create(:user, role: Roles::Normal.role_name)
         get :edit, params: { id: user.id }
-        assert_select "a", href: edit_user_role_path(user), text: "Change role"
+        assert_select "a", href: edit_user_role_path(user), text: /Change\s+Role/
       end
 
       should "display link to resend invitation page for user who has been invited but has not accepted" do
