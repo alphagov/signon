@@ -99,6 +99,38 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
       end
     end
 
+    should "display a button allowing the user to grant access to applications if they're authorised to grant access" do
+      user = create(:user)
+      application = create(:application, name: "app-name")
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, user, edit?: true
+      stub_policy_for_navigation_links current_user
+
+      get :index, params: { user_id: user }
+
+      assert_select "form[action='#{user_application_signin_permission_path(user, application)}']" do
+        assert_select "button", "Grant access to app-name"
+      end
+    end
+
+    should "not display a button allowing the user to grant access to applications if they're not authorised to grant access" do
+      user = create(:user)
+      create(:application, name: "app-name")
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, user, edit?: false
+      stub_policy_for_navigation_links current_user
+
+      get :index, params: { user_id: user }
+
+      assert_select "button", { text: "Grant access to app-name", count: 0 }
+    end
+
     should "not display a retired application" do
       user = create(:user)
       create(:application, name: "retired-app-name", retired: true)
