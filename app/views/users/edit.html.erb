@@ -61,7 +61,7 @@
         <li><%= link_to 'Exempt user from 2-step verification', edit_two_step_verification_exemption_path(@user) %> (requires a reason to be supplied)</li>
       <% end %>
     <% end %>
-    <% if !@user.exempt_from_2sv? && @user.has_2sv? && policy(@user).reset_2sv? %>
+    <% if @user.has_2sv? && policy(@user).reset_2sv? %>
       <li><%= link_to 'Reset 2-step verification', edit_user_two_step_verification_reset_path(@user) %></li>
     <% end %>
   </ul>
