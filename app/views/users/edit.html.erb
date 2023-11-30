@@ -17,14 +17,11 @@
   <h2>Actions</h2>
   <ul>
     <li><%= link_to "Account access log", event_logs_user_path(@user) %></li>
+    <% if policy(@user).suspension? %>
+      <li><%= link_to @user.suspended? ? "Unsuspend user" : "Suspend user", edit_suspension_path(@user) %></li>
+    <% end %>
   </ul>
 </section>
-
-<p class="suspenders">
-  <% if policy(@user).suspension? %>
-    <%= link_to @user.suspended? ? "Unsuspend user" : "Suspend user", edit_suspension_path(@user) %>
-  <% end %>
-</p>
 
 <% if @user.invited_but_not_yet_accepted? %>
   <div class="alert alert-warning">
