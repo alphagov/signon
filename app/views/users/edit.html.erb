@@ -54,6 +54,13 @@
     <% if @user.access_locked? && policy(@user).unlock? %>
       <li><%= link_to "Unlock account", edit_user_unlocking_path(@user) %></li>
     <% end %>
+    <% if policy(@user).exempt_from_two_step_verification? %>
+      <% if @user.exempt_from_2sv? %>
+        <li><%= link_to 'Edit reason or expiry date for 2-step verification exemption', edit_two_step_verification_exemption_path(@user) %><li>
+      <% else %>
+        <li><%= link_to 'Exempt user from 2-step verification', edit_two_step_verification_exemption_path(@user) %> (requires a reason to be supplied)</li>
+      <% end %>
+    <% end %>
   </ul>
 </section>
 
@@ -83,10 +90,6 @@
     <% if @user.exempt_from_2sv? %>
       <p>
         The user has been made exempt from 2-step verification for the following reason: <%= @user.reason_for_2sv_exemption %>
-        <% if policy(@user).exempt_from_two_step_verification? %>
-          <br>
-          <%= link_to 'Edit reason or expiry date for 2-step verification exemption', edit_two_step_verification_exemption_path(@user) %>
-        <% end %>
       </p>
     <% elsif @user.has_2sv? %>
       <p>2-step verification enabled</p>
@@ -110,14 +113,6 @@
           ) %>
         </p>
       <% end %>
-    <% end %>
-
-    <% if policy(@user).exempt_from_two_step_verification? && !@user.exempt_from_2sv? %>
-      <p>
-        <%= link_to 'Exempt user from 2-step verification', edit_two_step_verification_exemption_path(@user) %>
-        <br/>
-        Exempt a user from 2-step verification (requires a reason to be supplied).
-      </p>
     <% end %>
   </dd>
 </dl>
