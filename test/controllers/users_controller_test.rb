@@ -289,8 +289,8 @@ class UsersControllerTest < ActionController::TestCase
 
         get :edit, params: { id: user_in_org.id }
 
-        assert_select "*", text: /Organisation: #{org_with_user.name}/
-        assert_select "a", href: edit_user_organisation_path(user_in_org), text: "Change organisation"
+        assert_select "*", text: /Organisation\s+#{org_with_user.name}/
+        assert_select "a", href: edit_user_organisation_path(user_in_org), text: /Change\s+Organisation/
       end
 
       should "display link to resend invitation page for user who has been invited but has not accepted" do
@@ -385,7 +385,7 @@ class UsersControllerTest < ActionController::TestCase
 
         get :edit, params: { id: user.id }
 
-        assert_select "a", href: edit_user_organisation_path(user), text: "Change organisation", count: 0
+        assert_select "a", href: edit_user_organisation_path(user), text: /Change\s+Organisation/, count: 0
       end
 
       should "display link to resend invitation page for user who has been invited but has not accepted" do
@@ -440,7 +440,7 @@ class UsersControllerTest < ActionController::TestCase
 
         get :edit, params: { id: user.id }
 
-        assert_select "a", href: edit_user_organisation_path(user), text: "Change organisation", count: 0
+        assert_select "a", href: edit_user_organisation_path(user), text: /Change\s+Organisation/, count: 0
       end
 
       should "display link to resend invitation page for user who has been invited but has not accepted" do

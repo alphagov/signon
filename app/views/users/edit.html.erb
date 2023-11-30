@@ -16,6 +16,15 @@
       <dd><%= link_to edit_user_email_path(@user) do %>Change<span class="invisible"> Email</span><% end %></dd>
     </div>
     <div>
+      <dt>Organisation</dt>
+      <dd><%= @user.organisation.present? ? @user.organisation.name : Organisation::NONE %></dd>
+      <dd>
+        <% if policy(@user).assign_organisation? %>
+          <%= link_to edit_user_organisation_path(@user) do %>Change<span class="invisible"> Organisation</span><% end %>
+        <% end %>
+      </dd>
+    </div>
+    <div>
       <dt>Status</dt>
       <dd><%= status(@user) %></dd>
       <dd></dd>
@@ -64,15 +73,6 @@
   <% if policy(@user).assign_role? %>
     <%= link_to edit_user_role_path(@user) do %>
       Change<span class="invisible"> role</span>
-    <% end %>
-  <% end %>
-</p>
-
-<p>
-  <strong>Organisation:</strong> <%= @user.organisation.present? ? @user.organisation.name : Organisation::NONE %>
-  <% if policy(@user).assign_organisation? %>
-    <%= link_to edit_user_organisation_path(@user) do %>
-      Change<span class="invisible"> organisation</span>
     <% end %>
   <% end %>
 </p>
