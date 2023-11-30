@@ -13,8 +13,14 @@
   </dl>
 </section>
 
+<section>
+  <h2>Actions</h2>
+  <ul>
+    <li><%= link_to "Account access log", event_logs_user_path(@user) %></li>
+  </ul>
+</section>
+
 <p class="suspenders">
-  <%= link_to "Account access log", event_logs_user_path(@user) %> &bull;
   <% if policy(@user).suspension? %>
     <%= link_to @user.suspended? ? "Unsuspend user" : "Suspend user", edit_suspension_path(@user) %>
   <% end %>
