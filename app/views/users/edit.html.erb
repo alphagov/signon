@@ -38,6 +38,11 @@
       <dd><%= status(@user) %></dd>
       <dd></dd>
     </div>
+    <div>
+      <dt>2-step verification</dt>
+      <dd><%= two_step_status_with_requirement(@user) %></dd>
+      <dd></dd>
+    </div>
   </dl>
 </section>
 
@@ -94,23 +99,6 @@
     <strong>User suspended:</strong> <em><%= @user.reason_for_suspension %></em>
   </p>
 <% end %>
-
-<dl>
-  <dt>Account security</dt>
-  <dd>
-    <% if @user.exempt_from_2sv? %>
-      <p>
-        The user has been made exempt from 2-step verification for the following reason: <%= @user.reason_for_2sv_exemption %>
-      </p>
-    <% elsif @user.has_2sv? %>
-      <p>2-step verification enabled</p>
-    <% elsif @user.require_2sv? %>
-      <p>2-step verification required but not set up</p>
-    <% else %>
-      <p>2-step verification not set up</p>
-    <% end %>
-  </dd>
-</dl>
 
 <p>
   <%= link_to "Manage permissions", manage_permissions_user_path(@user) %>

@@ -131,7 +131,7 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         user = create(:two_step_enabled_user, organisation: @organisation)
         sign_in_as_and_edit_user(@org_admin, user)
 
-        assert page.has_text? "2-step verification enabled"
+        assert page.has_text?(/2-step verification\s+Enabled/)
         assert page.has_no_text? "Change 2-step verification requirement for this user"
       end
 
@@ -139,7 +139,7 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         user = create(:two_step_mandated_user, organisation: @organisation)
         sign_in_as_and_edit_user(@org_admin, user)
 
-        assert page.has_text? "2-step verification required but not set up"
+        assert page.has_text?(/2-step verification\s+Required but not set up/)
         assert page.has_no_text? "Mandate 2-step verification for this user"
       end
     end
@@ -264,7 +264,7 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
 
           sign_in_as_and_edit_user(@super_admin, user_requiring_2sv)
 
-          assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{user_requiring_2sv.reason_for_2sv_exemption}"
+          assert page.has_text?(/2-step verification\s+Exempt/)
           assert page.has_no_link? "Edit reason or expiry date for 2-step verification exemption"
         end
       end
