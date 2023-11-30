@@ -23,6 +23,9 @@
     <% if @user.invited_but_not_yet_accepted? && policy(@user).resend_invitation? %>
       <li><%= link_to "Resend signup email", edit_user_invitation_resend_path(@user) %></li>
     <% end %>
+    <% if @user.access_locked? && policy(@user).unlock? %>
+      <li><%= link_to "Unlock account", edit_user_unlocking_path(@user) %></li>
+    <% end %>
   </ul>
 </section>
 
@@ -37,12 +40,6 @@
   <div class="alert alert-warning">
     <strong>Account has been locked after too many unsuccessful login attempts.</strong><br/>
     Locked accounts are automatically unlocked after <%= User.unlock_in.inspect %>.
-
-    <% if policy(@user).unlock? %>
-      <p>
-        <%= link_to "Unlock account", edit_user_unlocking_path(@user) %>
-      </p>
-    <% end %>
   </div>
 <% end %>
 
