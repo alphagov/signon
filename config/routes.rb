@@ -53,7 +53,7 @@ Rails.application.routes.draw do
     resource :invitation_resend, only: %i[edit update], controller: "users/invitation_resends"
     resource :unlocking, only: %i[edit update], controller: "users/unlockings"
     resources :applications, only: %i[index show], controller: "users/applications" do
-      resource :permissions, only: %i[show update], controller: "users/permissions"
+      resource :permissions, only: %i[show edit update], controller: "users/permissions"
       resource :signin_permission, only: %i[create destroy], controller: "users/signin_permissions" do
         get :delete
       end

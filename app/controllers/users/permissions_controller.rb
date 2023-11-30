@@ -13,6 +13,15 @@ class Users::PermissionsController < ApplicationController
       .sort_by { |permission| @user.has_permission?(permission) ? 0 : 1 }
   end
 
+  def edit
+    @user = User.find(params[:user_id])
+    signin_permission = @user.application_permissions.find_by!(supported_permission: @application.signin_permission)
+
+    authorize signin_permission
+
+    @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false)
+  end
+
   def update
     user = User.find(params[:user_id])
     signin_permission = user.application_permissions.find_by!(supported_permission: @application.signin_permission)
