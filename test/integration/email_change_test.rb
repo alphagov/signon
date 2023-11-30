@@ -80,7 +80,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         visit new_user_session_path
         signin_with(@admin)
         visit edit_user_path(user)
-        click_link "Change email"
+        click_link "Change Email"
         click_link "Cancel change"
         signout
 

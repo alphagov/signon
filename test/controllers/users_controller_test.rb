@@ -272,8 +272,8 @@ class UsersControllerTest < ActionController::TestCase
       should "display the user's email and a link to change the email" do
         not_an_admin = create(:user, email: "user-name@gov.uk")
         get :edit, params: { id: not_an_admin.id }
-        assert_select "*", text: /Email: user-name@gov.uk/
-        assert_select "a", href: edit_user_email_path(not_an_admin), text: "Change email"
+        assert_select "*", text: /Email\s+user-name@gov.uk/
+        assert_select "a", href: edit_user_email_path(not_an_admin), text: /Change\s+Email/
       end
 
       should "display the user's role but no link to change the role" do
