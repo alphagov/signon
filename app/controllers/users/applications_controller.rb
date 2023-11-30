@@ -3,6 +3,13 @@ class Users::ApplicationsController < ApplicationController
 
   before_action :authenticate_user!
 
+  def show
+    user = User.find(params[:user_id])
+    authorize user, :edit?
+
+    redirect_to user_applications_path(user)
+  end
+
   def index
     @user = User.find(params[:user_id])
     authorize @user, :edit?

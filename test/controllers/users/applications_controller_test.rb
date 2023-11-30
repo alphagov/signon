@@ -1,6 +1,46 @@
 require "test_helper"
 
 class Users::ApplicationsControllerTest < ActionController::TestCase
+  context "#show" do
+    setup do
+      @application = create(:application)
+    end
+
+    should "prevent unauthenticated users" do
+      user = create(:user)
+
+      get :show, params: { user_id: user, id: @application.id }
+
+      assert_redirected_to "/users/sign_in"
+    end
+
+    should "prevent unauthorised users" do
+      user = create(:user)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, user, edit?: false
+
+      get :show, params: { user_id: user, id: @application.id }
+
+      assert_not_authorised
+    end
+
+    should "redirect authorised users to /accounts/applications" do
+      user = create(:user)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, user, edit?: true
+
+      get :show, params: { user_id: user, id: @application.id }
+
+      assert_redirected_to user_applications_path(user)
+    end
+  end
+
   context "#index" do
     should "prevent unauthenticated users" do
       user = create(:user)
