@@ -325,6 +325,22 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a[href='#{edit_user_unlocking_path(user)}']", count: 0
       end
 
+      should "display suspend link for user that is not suspended" do
+        user = create(:active_user)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_suspension_path(user)}']", text: "Suspend user"
+      end
+
+      should "display unsuspend link for user that is suspended" do
+        user = create(:suspended_user)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_suspension_path(user)}']", text: "Unsuspend user"
+      end
+
       should "not be able to edit superadmins" do
         superadmin = create(:superadmin_user)
 
@@ -371,6 +387,14 @@ class UsersControllerTest < ActionController::TestCase
 
         assert_select "a[href='#{edit_user_unlocking_path(user)}']"
       end
+
+      should "display suspend link for user that is not suspended" do
+        user = create(:active_user, organisation: @organisation_admin.organisation)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_suspension_path(user)}']", text: "Suspend user"
+      end
     end
 
     context "signed in as Super Organisation Admin user" do
@@ -410,6 +434,14 @@ class UsersControllerTest < ActionController::TestCase
 
         assert_select "a[href='#{edit_user_unlocking_path(user)}']"
       end
+
+      should "display suspend link for user that is not suspended" do
+        user = create(:active_user, organisation: @super_organisation_admin.organisation)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_suspension_path(user)}']", text: "Suspend user"
+      end
     end
 
     context "signed in as Superadmin user" do
@@ -438,6 +470,14 @@ class UsersControllerTest < ActionController::TestCase
         get :edit, params: { id: user }
 
         assert_select "a[href='#{edit_user_unlocking_path(user)}']"
+      end
+
+      should "display suspend link for user that is not suspended" do
+        user = create(:active_user)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_suspension_path(user)}']", text: "Suspend user"
       end
     end
 

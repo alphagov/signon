@@ -5,7 +5,9 @@
 <p class="suspenders">
   User <strong><%= @user.status %></strong> &bull;
   <%= link_to "Account access log", event_logs_user_path(@user) %> &bull;
-  <%= link_to "#{@user.suspended? ? "Uns" : "S"}uspend user", edit_suspension_path(@user) %>
+  <% if policy(@user).suspension? %>
+    <%= link_to "#{@user.suspended? ? "Uns" : "S"}uspend user", edit_suspension_path(@user) %>
+  <% end %>
 </p>
 
 <% if policy(@user).resend_invitation? %>
