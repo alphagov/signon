@@ -30,6 +30,7 @@
     <tr class="govuk-table__row">
       <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
       <th scope="col" class="govuk-table__header govuk-!-width-one-third">Description</th>
+      <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Remove access</span></th>
     </tr>
   </thead>
   <tbody class="govuk-table__body">
@@ -37,6 +38,16 @@
       <tr class="govuk-table__row">
         <td class="govuk-table__cell"><%= application.name %></td>
         <td class="govuk-table__cell"><%= application.description %></td>
+        <td class="govuk-table__cell govuk-!-text-align-right">
+          <% signin_permission = @user.application_permissions.find_by!(supported_permission: application.signin_permission) %>
+          <% if policy(signin_permission).delete? %>
+            <%= link_to delete_user_application_signin_permission_path(@user, application),
+                        class: "govuk-button govuk-button--warning govuk-!-margin-0",
+                        data: { module: "govuk-button" } do %>
+                Remove access<span class="govuk-visually-hidden"> to <%= application.name %></span>
+            <% end %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

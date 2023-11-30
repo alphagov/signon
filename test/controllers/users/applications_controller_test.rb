@@ -131,6 +131,40 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
       assert_select "button", { text: "Grant access to app-name", count: 0 }
     end
 
+    should "display a button allowing the user to remove access to applications if they're authorised to remove access" do
+      user = create(:user)
+      application = create(:application, name: "app-name")
+      signin_permission = user.grant_application_signin_permission(application)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, user, edit?: true
+      stub_policy current_user, signin_permission, delete?: true
+      stub_policy_for_navigation_links current_user
+
+      get :index, params: { user_id: user }
+
+      assert_select "a[href='#{delete_user_application_signin_permission_path(user, application)}']", text: "Remove access to app-name"
+    end
+
+    should "not display a button allowing the user to remove access to applications if they're not authorised to remove access" do
+      user = create(:user)
+      application = create(:application, name: "app-name")
+      signin_permission = user.grant_application_signin_permission(application)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, user, edit?: true
+      stub_policy current_user, signin_permission, delete?: false
+      stub_policy_for_navigation_links current_user
+
+      get :index, params: { user_id: user }
+
+      assert_select "a[href='#{delete_user_application_signin_permission_path(user, application)}']", count: 0
+    end
+
     should "not display a retired application" do
       user = create(:user)
       create(:application, name: "retired-app-name", retired: true)
