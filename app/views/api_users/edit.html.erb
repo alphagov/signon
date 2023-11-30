@@ -12,15 +12,15 @@
   <h2>Actions</h2>
   <ul>
     <li><%= link_to "Account access log", event_logs_user_path(@api_user) %></li>
+    <% if policy(@api_user).suspension? %>
+      <li><%= link_to @api_user.suspended? ? "Unsuspend user" : "Suspend user", edit_suspension_path(@api_user) %></li>
+    <% end %>
   </ul>
 </section>
 
 <p class="suspenders">
   User <strong><%= @api_user.status %></strong> &bull;
-  Created <%= time_ago_in_words(@api_user.created_at) %> ago &bull;
-  <% if policy(@api_user).suspension? %>
-    <%= link_to "#{@api_user.suspended? ? "Uns" : "S"}uspend user", edit_suspension_path(@api_user) %>
-  <% end %>
+  Created <%= time_ago_in_words(@api_user.created_at) %> ago
 </p>
 
 <% if @api_user.suspended? and @api_user.reason_for_suspension.present? %>
