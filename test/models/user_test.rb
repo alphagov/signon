@@ -841,6 +841,23 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#not_setup_2sv?" do
+    should "return false when user has 2SV" do
+      user = build(:two_step_enabled_user)
+      assert_not user.not_setup_2sv?
+    end
+
+    should "return false when user has been exempted from 2SV" do
+      user = build(:two_step_exempted_user)
+      assert_not user.not_setup_2sv?
+    end
+
+    should "return true when user does not have 2SV and has not been exempted" do
+      user = build(:user)
+      assert user.not_setup_2sv?
+    end
+  end
+
   context "#role_class" do
     should "return the role class" do
       assert_equal Roles::Normal, build(:user).role_class

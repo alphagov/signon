@@ -304,6 +304,10 @@ class User < ApplicationRecord
     end
   end
 
+  def not_setup_2sv?
+    two_step_status == TWO_STEP_STATUS_NOT_SET_UP
+  end
+
   def role_class
     Roles.const_get(role.classify)
   end
