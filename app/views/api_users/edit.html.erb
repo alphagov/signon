@@ -8,10 +8,16 @@
 
 <h1>Edit API User <%= @api_user.name %></h1>
 
+<section>
+  <h2>Actions</h2>
+  <ul>
+    <li><%= link_to "Account access log", event_logs_user_path(@api_user) %></li>
+  </ul>
+</section>
+
 <p class="suspenders">
   User <strong><%= @api_user.status %></strong> &bull;
   Created <%= time_ago_in_words(@api_user.created_at) %> ago &bull;
-  <%= link_to "Account access log", event_logs_user_path(@api_user) %> &bull;
   <% if policy(@api_user).suspension? %>
     <%= link_to "#{@api_user.suspended? ? "Uns" : "S"}uspend user", edit_suspension_path(@api_user) %>
   <% end %>
