@@ -58,7 +58,7 @@
 
 <p>
   <strong>Role:</strong> <%= @user.role.humanize %>
-  <% if policy(User).assign_role? %>
+  <% if policy(@user).assign_role? %>
     <%= link_to edit_user_role_path(@user) do %>
       Change<span class="invisible"> role</span>
     <% end %>
@@ -67,7 +67,7 @@
 
 <p>
   <strong>Organisation:</strong> <%= @user.organisation.present? ? @user.organisation.name : Organisation::NONE %>
-  <% if policy(User).assign_organisation? %>
+  <% if policy(@user).assign_organisation? %>
     <%= link_to edit_user_organisation_path(@user) do %>
       Change<span class="invisible"> organisation</span>
     <% end %>
