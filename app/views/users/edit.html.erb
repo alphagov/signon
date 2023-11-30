@@ -61,6 +61,9 @@
         <li><%= link_to 'Exempt user from 2-step verification', edit_two_step_verification_exemption_path(@user) %> (requires a reason to be supplied)</li>
       <% end %>
     <% end %>
+    <% if !@user.exempt_from_2sv? && @user.has_2sv? && policy(@user).reset_2sv? %>
+      <li><%= link_to 'Reset 2-step verification', edit_user_two_step_verification_reset_path(@user) %></li>
+    <% end %>
   </ul>
 </section>
 
@@ -93,11 +96,6 @@
       </p>
     <% elsif @user.has_2sv? %>
       <p>2-step verification enabled</p>
-      <% if policy(@user).reset_2sv? %>
-        <p>
-          <%= link_to 'Reset 2-step verification', edit_user_two_step_verification_reset_path(@user) %>
-        </p>
-      <% end %>
     <% elsif @user.require_2sv? %>
       <p>2-step verification required but not set up</p>
     <% else %>
