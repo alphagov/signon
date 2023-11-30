@@ -10,17 +10,17 @@
   <% end %>
 </p>
 
-<% if policy(@user).resend_invitation? %>
-  <% if @user.invited_but_not_yet_accepted? %>
-    <div class="alert alert-warning">
-      <strong>Invitation not accepted yet</strong>.<br/>
-      This user hasn't clicked on the link in their signup mail yet.
+<% if @user.invited_but_not_yet_accepted? %>
+  <div class="alert alert-warning">
+    <strong>Invitation not accepted yet</strong>.<br/>
+    This user hasn't clicked on the link in their signup mail yet.
 
+    <% if policy(@user).resend_invitation? %>
       <p>
         <%= link_to "Resend signup email", edit_user_invitation_resend_path(@user) %>
       </p>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 <% end %>
 
 <% if policy(@user).unlock? %>
