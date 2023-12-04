@@ -47,8 +47,7 @@
         <td class="govuk-table__cell"><%= application.name %></td>
         <td class="govuk-table__cell"><%= application.description %></td>
         <td class="govuk-table__cell govuk-!-text-align-right">
-          <% signin_permission = @user.application_permissions.find_by!(supported_permission: application.signin_permission) %>
-          <% if policy(signin_permission).edit? %>
+          <% if policy(@user.signin_permission_for(application)).edit? %>
             <% unless application.sorted_supported_permissions_grantable_from_ui(include_signin: false).empty? %>
               <%= link_to edit_user_application_permissions_path(@user, application), class: "govuk-link" do %>
                 Update permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
@@ -61,8 +60,7 @@
           <% end %>
         </td>
         <td class="govuk-table__cell govuk-!-text-align-right">
-          <% signin_permission = @user.application_permissions.find_by!(supported_permission: application.signin_permission) %>
-          <% if policy(signin_permission).delete? %>
+          <% if policy(@user.signin_permission_for(application)).delete? %>
             <%= link_to delete_user_application_signin_permission_path(@user, application),
                         class: "govuk-button govuk-button--warning govuk-!-margin-0",
                         data: { module: "govuk-button" } do %>
