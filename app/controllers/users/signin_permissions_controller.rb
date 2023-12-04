@@ -3,12 +3,13 @@ class Users::SigninPermissionsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :set_user
-  before_action :set_application
+  before_action :set_application, except: [:create]
 
   def create
-    authorize UserApplicationPermission.for(@user, @application)
+    application = Doorkeeper::Application.find(params[:application_id])
+    authorize UserApplicationPermission.for(@user, application)
 
-    params = { supported_permission_ids: @user.supported_permissions.map(&:id) + [@application.signin_permission.id] }
+    params = { supported_permission_ids: @user.supported_permissions.map(&:id) + [application.signin_permission.id] }
     UserUpdate.new(@user, params, current_user, user_ip_address).call
 
     redirect_to user_applications_path(@user)
@@ -38,6 +39,6 @@ private
   end
 
   def set_application
-    @application = Doorkeeper::Application.find(params[:application_id])
+    @application = Doorkeeper::Application.with_signin_permission_for(@user).find(params[:application_id])
   end
 end
