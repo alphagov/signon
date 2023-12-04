@@ -1,6 +1,6 @@
 require "test_helper"
 
-class AccountApplicationsHelperTest < ActionView::TestCase
+class ApplicationPermissionsHelperTest < ActionView::TestCase
   context "#message_for_success" do
     setup do
       @application = create(:application, name: "Whitehall", with_supported_permissions: ["Permission 1"])

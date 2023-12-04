@@ -1,4 +1,4 @@
-module AccountApplicationsHelper
+module ApplicationPermissionsHelper
   def message_for_success(application_id)
     application = Doorkeeper::Application.find_by(id: application_id)
     return nil unless application
