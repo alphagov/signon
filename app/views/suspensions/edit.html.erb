@@ -1,4 +1,6 @@
-<% content_for :title, "Suspend [#{@user.name}]" %>
+<% content_for :title_caption, "Manage other users" %>
+<% content_for :title, "Suspend or unsuspend #{@user.name}" %>
+
 <% content_for :breadcrumbs,
    render("govuk_publishing_components/components/breadcrumbs", {
      collapse_on_mobile: true,
@@ -16,7 +18,7 @@
          url: user_path(@user),
        },
        {
-         title: "Suspend",
+         title: "Suspend or unsuspend",
        },
      ]
    })
