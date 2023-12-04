@@ -338,7 +338,7 @@ class UsersControllerTest < ActionController::TestCase
 
         get :edit, params: { id: user }
 
-        assert_select "a[href='#{edit_user_two_step_verification_mandation_path(user)}']", text: "Mandate 2-step verification for this user"
+        assert_select "a[href='#{edit_user_two_step_verification_mandation_path(user)}']", text: "Turn on 2-step verification for this user"
       end
 
       should "not be able to edit superadmins" do

@@ -19,7 +19,7 @@ module ManagingTwoSvHelpers
   end
 
   def mandate_2sv_for_exempted_user
-    click_link "Mandate 2-step verification for this user (this will remove their exemption)"
+    click_link "Turn on 2-step verification for this user (this will remove their exemption)"
     click_button "Turn on 2-step verification"
   end
 
@@ -29,7 +29,7 @@ module ManagingTwoSvHelpers
     assert page.has_text?(/2-step verification\s+Not set up/)
 
     perform_enqueued_jobs do
-      click_link "Mandate 2-step verification for this user"
+      click_link "Turn on 2-step verification for this user"
       click_button "Turn on 2-step verification"
 
       assert last_email

@@ -409,7 +409,7 @@ class UsersHelperTest < ActionView::TestCase
         user = build(:user, id: 123)
         html = link_to_mandate_2sv(user)
         node = Nokogiri::HTML5.fragment(html)
-        expected_link_text = "Mandate 2-step verification for this user"
+        expected_link_text = "Turn on 2-step verification for this user"
         assert_select node, "a[href='#{edit_user_two_step_verification_mandation_path(user)}']", text: expected_link_text
       end
 

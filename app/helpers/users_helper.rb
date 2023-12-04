@@ -187,7 +187,7 @@ module UsersHelper
     return unless policy(user).mandate_2sv?
     return if user.require_2sv?
 
-    text = "Mandate 2-step verification for this user"
+    text = "Turn on 2-step verification for this user"
     text += " (this will remove their exemption)" if user.exempt_from_2sv?
     link_to text, edit_user_two_step_verification_mandation_path(user)
   end

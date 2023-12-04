@@ -117,7 +117,7 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         non_admin_user = create(:user, organisation: @user.organisation)
         sign_in_as_and_edit_user(non_admin_user, @user)
 
-        assert page.has_no_text? "Mandate 2-step verification for this user"
+        assert page.has_no_text? "Turn on 2-step verification for this user"
         assert page.has_no_link? "Reset 2-step verification"
       end
     end
@@ -140,7 +140,7 @@ class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
         sign_in_as_and_edit_user(@org_admin, user)
 
         assert page.has_text?(/2-step verification\s+Required but not set up/)
-        assert page.has_no_text? "Mandate 2-step verification for this user"
+        assert page.has_no_text? "Turn on 2-step verification for this user"
       end
     end
   end
