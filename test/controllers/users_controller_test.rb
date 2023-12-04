@@ -333,6 +333,14 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a[href='#{edit_user_two_step_verification_reset_path(user)}']", text: "Reset 2-step verification"
       end
 
+      should "display mandate 2SV link for user for whom 2SV is not required" do
+        user = create(:user)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_user_two_step_verification_mandation_path(user)}']", text: "Mandate 2-step verification for this user"
+      end
+
       should "not be able to edit superadmins" do
         superadmin = create(:superadmin_user)
 
