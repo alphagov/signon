@@ -46,11 +46,11 @@
       <%= render "govuk_publishing_components/components/list", {
         items: [
           link_to_access_log(@user),
-          link_to_suspension(@user),
           link_to_resend_invitation(@user),
           link_to_unlock(@user),
-          link_to_2sv_exemption(@user),
+          link_to_suspension(@user),
           link_to_reset_2sv(@user),
+          link_to_2sv_exemption(@user),
           link_to_mandate_2sv(@user),
         ].compact
       } %>
