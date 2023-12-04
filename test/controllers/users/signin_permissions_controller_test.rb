@@ -76,8 +76,6 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
       user = create(:user)
       application = create(:application, retired: true)
 
-      stub_policy current_user, UserApplicationPermission, create?: true
-
       assert_raises(ActiveRecord::RecordNotFound) do
         post :create, params: { user_id: user, application_id: application.id }
       end
