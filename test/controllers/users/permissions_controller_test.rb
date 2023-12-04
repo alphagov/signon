@@ -29,6 +29,17 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       assert_select "td", text: "perm-2", count: 0
     end
 
+    should "exclude applications that the user doesn't have access to" do
+      sign_in create(:admin_user)
+
+      application = create(:application)
+      user = create(:user)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :show, params: { user_id: user, application_id: application.id }
+      end
+    end
+
     should "exclude retired applications" do
       sign_in create(:admin_user)
 
@@ -72,6 +83,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     should "prevent unauthorised users" do
       application = create(:application)
       user = create(:user)
+      user.grant_application_signin_permission(application)
 
       current_user = create(:admin_user)
       sign_in current_user
