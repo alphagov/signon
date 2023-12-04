@@ -350,6 +350,21 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
 
+    context "signed in as GDS Admin user" do
+      setup do
+        @user = create(:admin_user, :in_gds_organisation, email: "admin@gov.uk")
+        sign_in @user
+      end
+
+      should "display 2SV exemption link for user" do
+        user = create(:user)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_two_step_verification_exemption_path(user)}']", text: "Exempt user from 2-step verification"
+      end
+    end
+
     context "signed in as Organisation Admin user" do
       setup do
         @organisation_admin = create(:organisation_admin_user)
