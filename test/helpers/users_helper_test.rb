@@ -233,4 +233,39 @@ class UsersHelperTest < ActionView::TestCase
       end
     end
   end
+
+  context "#link_to_2sv_exemption" do
+    context "when current user has permission to exempt a user from 2SV" do
+      setup do
+        stubs(:policy).returns(stub("policy", exempt_from_two_step_verification?: true))
+      end
+
+      should "returns link to create 2SV exemption for user who does not have exemption" do
+        user = build(:user, id: 123)
+        html = link_to_2sv_exemption(user)
+        node = Nokogiri::HTML5.fragment(html)
+        expected_link_text = "Exempt user from 2-step verification"
+        assert_select node, "a[href='#{edit_two_step_verification_exemption_path(user)}']", text: expected_link_text
+      end
+
+      should "returns link to update 2SV exemption for user who has exemption" do
+        user = build(:two_step_exempted_user, id: 123)
+        html = link_to_2sv_exemption(user)
+        node = Nokogiri::HTML5.fragment(html)
+        expected_link_text = "Edit reason or expiry date for 2-step verification exemption"
+        assert_select node, "a[href='#{edit_two_step_verification_exemption_path(user)}']", text: expected_link_text
+      end
+    end
+
+    context "when current user does not have permission to exempt a user from 2SV" do
+      setup do
+        stubs(:policy).returns(stub("policy", exempt_from_two_step_verification?: false))
+      end
+
+      should "returns nil" do
+        user = build(:user, id: 123)
+        assert_nil link_to_2sv_exemption(user)
+      end
+    end
+  end
 end

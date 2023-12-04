@@ -49,13 +49,6 @@
 <section>
   <h2>Actions</h2>
   <ul>
-    <% if policy(@user).exempt_from_two_step_verification? %>
-      <% if @user.exempt_from_2sv? %>
-        <li><%= link_to 'Edit reason or expiry date for 2-step verification exemption', edit_two_step_verification_exemption_path(@user) %><li>
-      <% else %>
-        <li><%= link_to 'Exempt user from 2-step verification', edit_two_step_verification_exemption_path(@user) %> (requires a reason to be supplied)</li>
-      <% end %>
-    <% end %>
     <% if @user.has_2sv? && policy(@user).reset_2sv? %>
       <li><%= link_to 'Reset 2-step verification', edit_user_two_step_verification_reset_path(@user) %></li>
     <% end %>
@@ -71,6 +64,7 @@
     <li><%= link_to_suspension(@user) %></li>
     <li><%= link_to_resend_invitation(@user) %></li>
     <li><%= link_to_unlock(@user) %></li>
+    <li><%= link_to_2sv_exemption(@user) %></li>
   </ul>
 </section>
 
