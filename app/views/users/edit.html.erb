@@ -49,9 +49,6 @@
 <section>
   <h2>Actions</h2>
   <ul>
-    <% if @user.access_locked? && policy(@user).unlock? %>
-      <li><%= link_to "Unlock account", edit_user_unlocking_path(@user) %></li>
-    <% end %>
     <% if policy(@user).exempt_from_two_step_verification? %>
       <% if @user.exempt_from_2sv? %>
         <li><%= link_to 'Edit reason or expiry date for 2-step verification exemption', edit_two_step_verification_exemption_path(@user) %><li>
@@ -73,6 +70,7 @@
     <li><%= link_to_access_log(@user) %></li>
     <li><%= link_to_suspension(@user) %></li>
     <li><%= link_to_resend_invitation(@user) %></li>
+    <li><%= link_to_unlock(@user) %></li>
   </ul>
 </section>
 

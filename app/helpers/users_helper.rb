@@ -133,4 +133,11 @@ module UsersHelper
 
     link_to "Resend signup email", edit_user_invitation_resend_path(user)
   end
+
+  def link_to_unlock(user)
+    return unless policy(user).unlock?
+    return unless user.access_locked?
+
+    link_to "Unlock account", edit_user_unlocking_path(user)
+  end
 end

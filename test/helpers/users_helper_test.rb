@@ -202,4 +202,35 @@ class UsersHelperTest < ActionView::TestCase
       end
     end
   end
+
+  context "#link_to_unlock" do
+    context "when current user has permission to unlock a user" do
+      setup do
+        stubs(:policy).returns(stub("policy", unlock?: true))
+      end
+
+      should "returns link to unlock user for locked user" do
+        user = build(:locked_user, id: 123)
+        html = link_to_unlock(user)
+        node = Nokogiri::HTML5.fragment(html)
+        assert_select node, "a[href='#{edit_user_unlocking_path(user)}']", text: "Unlock account"
+      end
+
+      should "returns nil for user who is not locked" do
+        user = build(:user, id: 123)
+        assert_nil link_to_unlock(user)
+      end
+    end
+
+    context "when current user does not have permission to unlock a user" do
+      setup do
+        stubs(:policy).returns(stub("policy", unlock?: false))
+      end
+
+      should "returns nil" do
+        user = build(:locked_user, id: 123)
+        assert_nil link_to_unlock(user)
+      end
+    end
+  end
 end
