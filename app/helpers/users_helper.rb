@@ -172,7 +172,7 @@ module UsersHelper
   def link_to_2sv_exemption(user)
     return unless policy(user).exempt_from_two_step_verification?
 
-    text = user.exempt_from_2sv? ? "Edit reason or expiry date for 2-step verification exemption" : "Exempt user from 2-step verification"
+    text = user.exempt_from_2sv? ? "Edit 2-step verification exemption" : "Exempt user from 2-step verification"
     link_to text, edit_two_step_verification_exemption_path(user)
   end
 

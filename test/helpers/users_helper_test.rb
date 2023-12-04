@@ -350,7 +350,7 @@ class UsersHelperTest < ActionView::TestCase
         user = build(:two_step_exempted_user, id: 123)
         html = link_to_2sv_exemption(user)
         node = Nokogiri::HTML5.fragment(html)
-        expected_link_text = "Edit reason or expiry date for 2-step verification exemption"
+        expected_link_text = "Edit 2-step verification exemption"
         assert_select node, "a[href='#{edit_two_step_verification_exemption_path(user)}']", text: expected_link_text
       end
     end
