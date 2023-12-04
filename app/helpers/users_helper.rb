@@ -120,4 +120,10 @@ module UsersHelper
   def link_to_access_log(user)
     link_to "Account access log", event_logs_user_path(user)
   end
+
+  def link_to_suspension(user)
+    return unless policy(user).suspension?
+
+    link_to user.suspended? ? "Unsuspend user" : "Suspend user", edit_suspension_path(user)
+  end
 end

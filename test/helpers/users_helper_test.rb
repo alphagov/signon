@@ -138,4 +138,37 @@ class UsersHelperTest < ActionView::TestCase
       assert_select node, "a[href='#{event_logs_user_path(user)}']", text: "Account access log"
     end
   end
+
+  context "#link_to_suspension" do
+    context "when current user has permission to suspend a user" do
+      setup do
+        stubs(:policy).returns(stub("policy", suspension?: true))
+      end
+
+      should "returns link to suspend user for non-suspended user" do
+        user = build(:user, id: 123)
+        html = link_to_suspension(user)
+        node = Nokogiri::HTML5.fragment(html)
+        assert_select node, "a[href='#{edit_suspension_path(user)}']", text: "Suspend user"
+      end
+
+      should "returns link to unsuspend user for suspended user" do
+        user = build(:suspended_user, id: 123)
+        html = link_to_suspension(user)
+        node = Nokogiri::HTML5.fragment(html)
+        assert_select node, "a[href='#{edit_suspension_path(user)}']", text: "Unsuspend user"
+      end
+    end
+
+    context "when current user does not have permission to suspend a user" do
+      setup do
+        stubs(:policy).returns(stub("policy", suspension?: false))
+      end
+
+      should "returns nil" do
+        user = build(:user, id: 123)
+        assert_nil link_to_suspension(user)
+      end
+    end
+  end
 end

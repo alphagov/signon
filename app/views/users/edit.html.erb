@@ -49,9 +49,6 @@
 <section>
   <h2>Actions</h2>
   <ul>
-    <% if policy(@user).suspension? %>
-      <li><%= link_to @user.suspended? ? "Unsuspend user" : "Suspend user", edit_suspension_path(@user) %></li>
-    <% end %>
     <% if @user.invited_but_not_yet_accepted? && policy(@user).resend_invitation? %>
       <li><%= link_to "Resend signup email", edit_user_invitation_resend_path(@user) %></li>
     <% end %>
@@ -77,6 +74,7 @@
       </li>
     <% end %>
     <li><%= link_to_access_log(@user) %></li>
+    <li><%= link_to_suspension(@user) %></li>
   </ul>
 </section>
 
