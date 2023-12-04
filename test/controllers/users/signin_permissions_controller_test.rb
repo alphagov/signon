@@ -80,6 +80,18 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
         post :create, params: { user_id: user, application_id: application.id }
       end
     end
+
+    should "exclude API-only applications" do
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      user = create(:user)
+      application = create(:application, api_only: true)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        post :create, params: { user_id: user, application_id: application.id }
+      end
+    end
   end
 
   context "#delete" do
@@ -152,6 +164,18 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
 
       user = create(:user)
       application = create(:application, retired: true)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :delete, params: { user_id: user, application_id: application.id }
+      end
+    end
+
+    should "exclude API-only applications" do
+      sign_in create(:admin_user)
+
+      user = create(:user)
+      application = create(:application, api_only: true)
+      user.grant_application_signin_permission(application)
 
       assert_raises(ActiveRecord::RecordNotFound) do
         get :delete, params: { user_id: user, application_id: application.id }
@@ -243,6 +267,18 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
 
       user = create(:user)
       application = create(:application, retired: true)
+      user.grant_application_signin_permission(application)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        delete :destroy, params: { user_id: user, application_id: application.id }
+      end
+    end
+
+    should "exclude API-only applications" do
+      sign_in create(:admin_user)
+
+      user = create(:user)
+      application = create(:application, api_only: true)
       user.grant_application_signin_permission(application)
 
       assert_raises(ActiveRecord::RecordNotFound) do
