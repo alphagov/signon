@@ -116,4 +116,8 @@ module UsersHelper
       ],
     }
   end
+
+  def link_to_access_log(user)
+    link_to "Account access log", event_logs_user_path(user)
+  end
 end

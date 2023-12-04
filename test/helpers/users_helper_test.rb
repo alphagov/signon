@@ -129,4 +129,13 @@ class UsersHelperTest < ActionView::TestCase
       assert_equal "Has access to Whitehall?", formatted_permission_name("Whitehall", SupportedPermission::SIGNIN_NAME)
     end
   end
+
+  context "#link_to_access_log" do
+    should "returns link to access log for user" do
+      user = build(:user, id: 123)
+      html = link_to_access_log(user)
+      node = Nokogiri::HTML5.fragment(html)
+      assert_select node, "a[href='#{event_logs_user_path(user)}']", text: "Account access log"
+    end
+  end
 end
