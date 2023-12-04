@@ -126,4 +126,11 @@ module UsersHelper
 
     link_to user.suspended? ? "Unsuspend user" : "Suspend user", edit_suspension_path(user)
   end
+
+  def link_to_resend_invitation(user)
+    return unless policy(user).resend_invitation?
+    return unless user.invited_but_not_yet_accepted?
+
+    link_to "Resend signup email", edit_user_invitation_resend_path(user)
+  end
 end

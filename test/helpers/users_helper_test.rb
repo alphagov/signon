@@ -171,4 +171,35 @@ class UsersHelperTest < ActionView::TestCase
       end
     end
   end
+
+  context "#link_to_resend_invitation" do
+    context "when current user has permission to resend signup email to a user" do
+      setup do
+        stubs(:policy).returns(stub("policy", resend_invitation?: true))
+      end
+
+      should "returns link to resend signup email to user for invited user" do
+        user = build(:invited_user, id: 123)
+        html = link_to_resend_invitation(user)
+        node = Nokogiri::HTML5.fragment(html)
+        assert_select node, "a[href='#{edit_user_invitation_resend_path(user)}']", text: "Resend signup email"
+      end
+
+      should "returns nil for user who has accepted invitation" do
+        user = build(:active_user, id: 123)
+        assert_nil link_to_resend_invitation(user)
+      end
+    end
+
+    context "when current user does not have permission to resend signup email to a user" do
+      setup do
+        stubs(:policy).returns(stub("policy", resend_invitation?: false))
+      end
+
+      should "returns nil" do
+        user = build(:invited_user, id: 123)
+        assert_nil link_to_resend_invitation(user)
+      end
+    end
+  end
 end
