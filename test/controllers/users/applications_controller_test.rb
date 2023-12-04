@@ -165,6 +165,22 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
       assert_select "a[href='#{delete_user_application_signin_permission_path(user, application)}']", count: 0
     end
 
+    should "display a link to view permissions" do
+      user = create(:user)
+      application = create(:application, name: "app-name")
+      signin_permission = user.grant_application_signin_permission(application)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, user, edit?: true
+      stub_policy_for_navigation_links current_user
+
+      get :index, params: { user_id: user }
+
+      assert_select "a[href='#{user_application_permissions_path(user, application)}']", text: "View permissions for app-name"
+    end
+
     should "not display a retired application" do
       user = create(:user)
       create(:application, name: "retired-app-name", retired: true)
