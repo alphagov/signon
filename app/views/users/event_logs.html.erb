@@ -1,4 +1,6 @@
-<% content_for :title, "Account access log" %>
+<% content_for :title_caption, "Manage other users" %>
+<% content_for :title, "Account access log for #{@user.name}" %>
+
 <% content_for :breadcrumbs,
    render("govuk_publishing_components/components/breadcrumbs", {
      collapse_on_mobile: true,
