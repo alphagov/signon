@@ -165,7 +165,7 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
       assert_select "a[href='#{delete_user_application_signin_permission_path(user, application)}']", count: 0
     end
 
-    should "display a link to view permissions" do
+    should "not display a link to edit permissions if the user is authorised to edit permissions but the app only has the signin permission" do
       user = create(:user)
       application = create(:application, name: "app-name")
       signin_permission = user.grant_application_signin_permission(application)
@@ -174,6 +174,41 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
       sign_in current_user
 
       stub_policy current_user, user, edit?: true
+      stub_policy current_user, signin_permission, edit?: true
+      stub_policy_for_navigation_links current_user
+
+      get :index, params: { user_id: user }
+
+      assert_select "a[href='#{edit_user_application_permissions_path(user, application)}']", count: 0
+    end
+
+    should "display a link to edit permissions if the user is authorised to edit permissions" do
+      user = create(:user)
+      application = create(:application, name: "app-name", with_supported_permissions: %w[foo])
+      signin_permission = user.grant_application_signin_permission(application)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, user, edit?: true
+      stub_policy current_user, signin_permission, edit?: true
+      stub_policy_for_navigation_links current_user
+
+      get :index, params: { user_id: user }
+
+      assert_select "a[href='#{edit_user_application_permissions_path(user, application)}']", text: "Update permissions for app-name"
+    end
+
+    should "display a link to view permissions if the user is not authorised to edit permissions" do
+      user = create(:user)
+      application = create(:application, name: "app-name")
+      signin_permission = user.grant_application_signin_permission(application)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, user, edit?: true
+      stub_policy current_user, signin_permission, edit?: false
       stub_policy_for_navigation_links current_user
 
       get :index, params: { user_id: user }

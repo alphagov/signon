@@ -42,4 +42,31 @@ class UserApplicationsTest < ActionDispatch::IntegrationTest
     table = find("table[aria-labelledby='#{heading['id']}']")
     assert table.has_content?("app-name")
   end
+
+  should "allow admins to update users' permissions for apps" do
+    application = create(:application, name: "app-name", with_supported_permissions: %w[perm1 perm2])
+    application.signin_permission.update!(delegatable: true)
+
+    user = create(:admin_user)
+    user.grant_application_signin_permission(application)
+    user.grant_application_permission(application, "perm1")
+
+    admin_user = create(:admin_user)
+    visit new_user_session_path
+    signin_with admin_user
+
+    visit user_applications_path(user)
+
+    click_on "Update permissions for app-name"
+
+    assert page.has_checked_field?("perm1")
+    assert page.has_unchecked_field?("perm2")
+
+    check "perm2"
+    click_button "Update permissions"
+
+    success_flash = find("div[role='alert']")
+    assert success_flash.has_content?("perm1")
+    assert success_flash.has_content?("perm2")
+  end
 end

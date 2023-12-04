@@ -47,8 +47,17 @@
         <td class="govuk-table__cell"><%= application.name %></td>
         <td class="govuk-table__cell"><%= application.description %></td>
         <td class="govuk-table__cell govuk-!-text-align-right">
-          <%= link_to user_application_permissions_path(@user, application), class: "govuk-link" do %>
-            View permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
+          <% signin_permission = @user.application_permissions.find_by!(supported_permission: application.signin_permission) %>
+          <% if policy(signin_permission).edit? %>
+            <% unless application.sorted_supported_permissions_grantable_from_ui(include_signin: false).empty? %>
+              <%= link_to edit_user_application_permissions_path(@user, application), class: "govuk-link" do %>
+                Update permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
+              <% end %>
+            <% end %>
+          <% else %>
+            <%= link_to user_application_permissions_path(@user, application), class: "govuk-link" do %>
+              View permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
+            <% end %>
           <% end %>
         </td>
         <td class="govuk-table__cell govuk-!-text-align-right">
