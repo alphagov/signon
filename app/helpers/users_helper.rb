@@ -117,6 +117,34 @@ module UsersHelper
     }
   end
 
+  def summary_list_item_for_name(user)
+    { field: "Name", value: user.name, edit: { href: edit_user_name_path(user) } }
+  end
+
+  def summary_list_item_for_email(user)
+    { field: "Email", value: user.email, edit: { href: edit_user_email_path(user) } }
+  end
+
+  def summary_list_item_for_organisation(user)
+    item = { field: "Organisation", value: user.organisation_name }
+    item[:edit] = { href: edit_user_organisation_path(user) } if policy(user).assign_organisation?
+    item
+  end
+
+  def summary_list_item_for_role(user)
+    item = { field: "Role", value: user.role.humanize.capitalize }
+    item[:edit] = { href: edit_user_role_path(user) } if policy(user).assign_role?
+    item
+  end
+
+  def summary_list_item_for_status(user)
+    { field: "Status", value: status(user) }
+  end
+
+  def summary_list_item_for_2sv_status(user)
+    { field: "2-step verification", value: two_step_status_with_requirement(user) }
+  end
+
   def link_to_access_log(user)
     link_to "Account access log", event_logs_user_path(user)
   end

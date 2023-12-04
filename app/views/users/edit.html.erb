@@ -1,64 +1,65 @@
+<% content_for :title_caption, "Manage other users" %>
 <% content_for :title, "Edit #{@user.name}" %>
 
-<h1>Edit <%= @user.name %></h1>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "Users",
+         url: users_path,
+       },
+       {
+         title: "Edit #{@user.name}",
+       }
+     ]
+   })
+%>
 
-<section>
-  <h2>User details</h2>
-  <dl>
-    <div>
-      <dt>Name</dt>
-      <dd><%= @user.name %></dd>
-      <dd><%= link_to edit_user_name_path(@user) do %>Change<span class="invisible"> Name</span><% end %></dd>
-    </div>
-    <div>
-      <dt>Email</dt>
-      <dd><%= @user.email %></dd>
-      <dd><%= link_to edit_user_email_path(@user) do %>Change<span class="invisible"> Email</span><% end %></dd>
-    </div>
-    <div>
-      <dt>Organisation</dt>
-      <dd><%= @user.organisation_name %></dd>
-      <dd>
-        <% if policy(@user).assign_organisation? %>
-          <%= link_to edit_user_organisation_path(@user) do %>Change<span class="invisible"> Organisation</span><% end %>
-        <% end %>
-      </dd>
-    </div>
-    <div>
-      <dt>Role</dt>
-      <dd><%= @user.role.humanize %></dd>
-      <dd>
-        <% if policy(@user).assign_role? %>
-          <%= link_to edit_user_role_path(@user) do %>Change<span class="invisible"> Role</span><% end %>
-        <% end %>
-      </dd>
-    </div>
-    <div>
-      <dt>Status</dt>
-      <dd><%= status(@user) %></dd>
-      <dd></dd>
-    </div>
-    <div>
-      <dt>2-step verification</dt>
-      <dd><%= two_step_status_with_requirement(@user) %></dd>
-      <dd></dd>
-    </div>
-  </dl>
-</section>
-
-<section>
-  <h2>Actions</h2>
-  <ul>
-    <li><%= link_to_access_log(@user) %></li>
-    <li><%= link_to_suspension(@user) %></li>
-    <li><%= link_to_resend_invitation(@user) %></li>
-    <li><%= link_to_unlock(@user) %></li>
-    <li><%= link_to_2sv_exemption(@user) %></li>
-    <li><%= link_to_reset_2sv(@user) %></li>
-    <li><%= link_to_mandate_2sv(@user) %></li>
-  </ul>
-</section>
-
-<p>
-  <%= link_to "Manage permissions", manage_permissions_user_path(@user) %>
-</p>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <section>
+      <%= render "govuk_publishing_components/components/summary_list", {
+        title: "User details",
+        heading_level: 2,
+        heading_size: "l",
+        items: [
+          summary_list_item_for_name(@user),
+          summary_list_item_for_email(@user),
+          summary_list_item_for_organisation(@user),
+          summary_list_item_for_role(@user),
+          summary_list_item_for_status(@user),
+          summary_list_item_for_2sv_status(@user),
+        ]
+      } %>
+    </section>
+    <section>
+      <%= render "govuk_publishing_components/components/heading", {
+        text: "Actions",
+        font_size: "l",
+        padding: true,
+      } %>
+      <%= render "govuk_publishing_components/components/list", {
+        items: [
+          link_to_access_log(@user),
+          link_to_suspension(@user),
+          link_to_resend_invitation(@user),
+          link_to_unlock(@user),
+          link_to_2sv_exemption(@user),
+          link_to_reset_2sv(@user),
+          link_to_mandate_2sv(@user),
+        ].compact
+      } %>
+    </section>
+    <section>
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Manage permissions",
+        href: manage_permissions_user_path(@user)
+      } %>
+    </section>
+  </div>
+</div>

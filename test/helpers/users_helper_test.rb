@@ -130,6 +130,104 @@ class UsersHelperTest < ActionView::TestCase
     end
   end
 
+  context "#summary_list_item_for_name" do
+    should "return item options with edit link to change name" do
+      user = build(:user, id: 123, name: "user-name")
+      item = summary_list_item_for_name(user)
+      assert_equal item[:field], "Name"
+      assert_equal item[:value], "user-name"
+      assert_equal item.dig(:edit, :href), edit_user_name_path(user)
+    end
+  end
+
+  context "#summary_list_item_for_email" do
+    should "return item options with edit link to change email" do
+      user = build(:user, id: 123, email: "user@gov.uk")
+      item = summary_list_item_for_email(user)
+      assert_equal item[:field], "Email"
+      assert_equal item[:value], "user@gov.uk"
+      assert_equal item.dig(:edit, :href), edit_user_email_path(user)
+    end
+  end
+
+  context "#summary_list_item_for_organisation" do
+    context "when current user has permission to assign organisation" do
+      setup do
+        stubs(:policy).returns(stub("policy", assign_organisation?: true))
+      end
+
+      should "return item options with edit link to change organisation" do
+        organisation = build(:organisation, name: "organisation-name")
+        user = build(:user, id: 123, organisation:)
+        item = summary_list_item_for_organisation(user)
+        assert_equal item[:field], "Organisation"
+        assert_equal item[:value], "organisation-name"
+        assert_equal item.dig(:edit, :href), edit_user_organisation_path(user)
+      end
+    end
+
+    context "when current user does not have permission to assign organisation" do
+      setup do
+        stubs(:policy).returns(stub("policy", assign_organisation?: false))
+      end
+
+      should "return item options without edit link" do
+        organisation = build(:organisation, name: "organisation-name")
+        user = build(:user, id: 123, organisation:)
+        item = summary_list_item_for_organisation(user)
+        assert_nil item[:edit]
+      end
+    end
+  end
+
+  context "#summary_list_item_for_role" do
+    context "when current user has permission to assign role" do
+      setup do
+        stubs(:policy).returns(stub("policy", assign_role?: true))
+      end
+
+      should "return item options with edit link to change role" do
+        user = build(:admin_user, id: 123)
+        item = summary_list_item_for_role(user)
+        assert_equal item[:field], "Role"
+        assert_equal item[:value], "Admin"
+        assert_equal item.dig(:edit, :href), edit_user_role_path(user)
+      end
+    end
+
+    context "when current user does not have permission to assign role" do
+      setup do
+        stubs(:policy).returns(stub("policy", assign_role?: false))
+      end
+
+      should "return item options without edit link" do
+        user = build(:admin_user, id: 123)
+        item = summary_list_item_for_role(user)
+        assert_nil item[:edit]
+      end
+    end
+  end
+
+  context "#summary_list_item_for_status" do
+    should "return item options without edit link" do
+      user = build(:active_user, id: 123)
+      item = summary_list_item_for_status(user)
+      assert_equal item[:field], "Status"
+      assert_equal item[:value], "Active"
+      assert_nil item[:edit]
+    end
+  end
+
+  context "#summary_list_item_for_2sv_status" do
+    should "return item options without edit link" do
+      user = build(:two_step_enabled_user, id: 123)
+      item = summary_list_item_for_2sv_status(user)
+      assert_equal item[:field], "2-step verification"
+      assert_equal item[:value], "Enabled"
+      assert_nil item[:edit]
+    end
+  end
+
   context "#link_to_access_log" do
     should "returns link to access log for user" do
       user = build(:user, id: 123)

@@ -365,62 +365,10 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
 
-    context "signed in as Organisation Admin user" do
-      setup do
-        @organisation_admin = create(:organisation_admin_user)
-        sign_in @organisation_admin
-      end
-
-      should "not display a link to change the user's role" do
-        user = create(:user, organisation: @organisation_admin.organisation)
-
-        get :edit, params: { id: user.id }
-
-        assert_select "a", href: edit_user_role_path(user), text: /Change\s+Role/, count: 0
-      end
-
-      should "not display a link to change the user's organisation" do
-        user = create(:user_in_organisation, organisation: @organisation_admin.organisation)
-
-        get :edit, params: { id: user.id }
-
-        assert_select "a", href: edit_user_organisation_path(user), text: /Change\s+Organisation/, count: 0
-      end
-    end
-
-    context "signed in as Super Organisation Admin user" do
-      setup do
-        @super_organisation_admin = create(:super_organisation_admin_user)
-        sign_in @super_organisation_admin
-      end
-
-      should "not display a link to change the user's role" do
-        user = create(:user, organisation: @super_organisation_admin.organisation)
-
-        get :edit, params: { id: user.id }
-
-        assert_select "a", href: edit_user_role_path(user), text: /Change\s+Role/, count: 0
-      end
-
-      should "not display a link to change the user's organisation" do
-        user = create(:user_in_organisation, organisation: @super_organisation_admin.organisation)
-
-        get :edit, params: { id: user.id }
-
-        assert_select "a", href: edit_user_organisation_path(user), text: /Change\s+Organisation/, count: 0
-      end
-    end
-
     context "signed in as Superadmin user" do
       setup do
         @superadmin = create(:superadmin_user)
         sign_in @superadmin
-      end
-
-      should "display a link to change the user's role" do
-        user = create(:user, role: Roles::Normal.role_name)
-        get :edit, params: { id: user.id }
-        assert_select "a", href: edit_user_role_path(user), text: /Change\s+Role/
       end
     end
 
