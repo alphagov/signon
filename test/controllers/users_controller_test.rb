@@ -293,6 +293,14 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a", href: edit_user_organisation_path(user_in_org), text: /Change\s+Organisation/
       end
 
+      should "display link to access log page for user" do
+        user = create(:user)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{event_logs_user_path(user)}']", text: "Account access log"
+      end
+
       should "display link to resend invitation page for user who has been invited but has not accepted" do
         user = create(:invited_user)
 
