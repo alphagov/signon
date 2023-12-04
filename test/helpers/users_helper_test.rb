@@ -268,4 +268,36 @@ class UsersHelperTest < ActionView::TestCase
       end
     end
   end
+
+  context "#link_to_reset_2sv" do
+    context "when current user has permission to reset 2SV for a user" do
+      setup do
+        stubs(:policy).returns(stub("policy", reset_2sv?: true))
+      end
+
+      should "returns link to reset 2SV for user who has 2SV setup" do
+        user = build(:two_step_enabled_user, id: 123)
+        html = link_to_reset_2sv(user)
+        node = Nokogiri::HTML5.fragment(html)
+        expected_link_text = "Reset 2-step verification"
+        assert_select node, "a[href='#{edit_user_two_step_verification_reset_path(user)}']", text: expected_link_text
+      end
+
+      should "returns nil for user who does not have 2SV setup" do
+        user = build(:user, id: 123)
+        assert_nil link_to_reset_2sv(user)
+      end
+    end
+
+    context "when current user does not have permission to reset 2SV for a user" do
+      setup do
+        stubs(:policy).returns(stub("policy", reset_2sv?: false))
+      end
+
+      should "returns nil" do
+        user = build(:two_step_enabled_user, id: 123)
+        assert_nil link_to_reset_2sv(user)
+      end
+    end
+  end
 end

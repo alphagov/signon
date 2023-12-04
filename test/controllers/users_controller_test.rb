@@ -333,14 +333,6 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a[href='#{edit_user_two_step_verification_reset_path(user)}']", text: "Reset 2-step verification"
       end
 
-      should "not display reset 2SV link for user that does not have 2SV setup" do
-        user = create(:active_user)
-
-        get :edit, params: { id: user }
-
-        assert_select "a[href='#{edit_user_two_step_verification_reset_path(user)}']", count: 0
-      end
-
       should "not be able to edit superadmins" do
         superadmin = create(:superadmin_user)
 
@@ -386,14 +378,6 @@ class UsersControllerTest < ActionController::TestCase
 
         assert_select "a", href: edit_user_organisation_path(user), text: /Change\s+Organisation/, count: 0
       end
-
-      should "display reset 2SV link for user that has 2SV setup" do
-        user = create(:two_step_enabled_user, organisation: @organisation_admin.organisation)
-
-        get :edit, params: { id: user }
-
-        assert_select "a[href='#{edit_user_two_step_verification_reset_path(user)}']", text: "Reset 2-step verification"
-      end
     end
 
     context "signed in as Super Organisation Admin user" do
@@ -417,14 +401,6 @@ class UsersControllerTest < ActionController::TestCase
 
         assert_select "a", href: edit_user_organisation_path(user), text: /Change\s+Organisation/, count: 0
       end
-
-      should "display reset 2SV link for user that has 2SV setup" do
-        user = create(:two_step_enabled_user, organisation: @super_organisation_admin.organisation)
-
-        get :edit, params: { id: user }
-
-        assert_select "a[href='#{edit_user_two_step_verification_reset_path(user)}']", text: "Reset 2-step verification"
-      end
     end
 
     context "signed in as Superadmin user" do
@@ -437,14 +413,6 @@ class UsersControllerTest < ActionController::TestCase
         user = create(:user, role: Roles::Normal.role_name)
         get :edit, params: { id: user.id }
         assert_select "a", href: edit_user_role_path(user), text: /Change\s+Role/
-      end
-
-      should "display reset 2SV link for user that has 2SV setup" do
-        user = create(:two_step_enabled_user)
-
-        get :edit, params: { id: user }
-
-        assert_select "a[href='#{edit_user_two_step_verification_reset_path(user)}']", text: "Reset 2-step verification"
       end
     end
 
