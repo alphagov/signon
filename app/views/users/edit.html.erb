@@ -49,20 +49,13 @@
 <section>
   <h2>Actions</h2>
   <ul>
-    <% if !@user.require_2sv? && policy(@user).mandate_2sv? %>
-      <li>
-        <%= link_to(
-          "Mandate 2-step verification for this user#{@user.exempt_from_2sv? ? ' (this will remove their exemption)' : nil}",
-          edit_user_two_step_verification_mandation_path(@user)
-        ) %>
-      </li>
-    <% end %>
     <li><%= link_to_access_log(@user) %></li>
     <li><%= link_to_suspension(@user) %></li>
     <li><%= link_to_resend_invitation(@user) %></li>
     <li><%= link_to_unlock(@user) %></li>
     <li><%= link_to_2sv_exemption(@user) %></li>
     <li><%= link_to_reset_2sv(@user) %></li>
+    <li><%= link_to_mandate_2sv(@user) %></li>
   </ul>
 </section>
 

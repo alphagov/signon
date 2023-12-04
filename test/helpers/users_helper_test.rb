@@ -300,4 +300,36 @@ class UsersHelperTest < ActionView::TestCase
       end
     end
   end
+
+  context "#link_to_mandate_2sv" do
+    context "when current user has permission to mandate 2SV for a user" do
+      setup do
+        stubs(:policy).returns(stub("policy", mandate_2sv?: true))
+      end
+
+      should "returns link to mandate 2SV for user for whom 2SV is not required" do
+        user = build(:user, id: 123)
+        html = link_to_mandate_2sv(user)
+        node = Nokogiri::HTML5.fragment(html)
+        expected_link_text = "Mandate 2-step verification for this user"
+        assert_select node, "a[href='#{edit_user_two_step_verification_mandation_path(user)}']", text: expected_link_text
+      end
+
+      should "returns nil for user for whom 2SV is required" do
+        user = build(:two_step_mandated_user, id: 123)
+        assert_nil link_to_mandate_2sv(user)
+      end
+    end
+
+    context "when current user does not have permission to mandate 2SV for a user" do
+      setup do
+        stubs(:policy).returns(stub("policy", mandate_2sv?: false))
+      end
+
+      should "returns nil" do
+        user = build(:user, id: 123)
+        assert_nil link_to_mandate_2sv(user)
+      end
+    end
+  end
 end

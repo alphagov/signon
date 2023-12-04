@@ -154,4 +154,13 @@ module UsersHelper
 
     link_to "Reset 2-step verification", edit_user_two_step_verification_reset_path(user)
   end
+
+  def link_to_mandate_2sv(user)
+    return unless policy(user).mandate_2sv?
+    return if user.require_2sv?
+
+    text = "Mandate 2-step verification for this user"
+    text += " (this will remove their exemption)" if user.exempt_from_2sv?
+    link_to text, edit_user_two_step_verification_mandation_path(user)
+  end
 end
