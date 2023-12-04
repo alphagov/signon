@@ -13,7 +13,7 @@ module ManagingTwoSvHelpers
 
   def assert_user_access_log_contains_messages(user, messages)
     visit edit_user_path(user)
-    click_link "Account access log"
+    click_link "View account access log"
 
     messages.each { |message| assert page.has_text? message }
   end

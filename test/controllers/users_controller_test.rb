@@ -298,7 +298,7 @@ class UsersControllerTest < ActionController::TestCase
 
         get :edit, params: { id: user }
 
-        assert_select "a[href='#{event_logs_user_path(user)}']", text: "Account access log"
+        assert_select "a[href='#{event_logs_user_path(user)}']", text: "View account access log"
       end
 
       should "display link to resend invitation page for user who has been invited but has not accepted" do
