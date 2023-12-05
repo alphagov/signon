@@ -8,6 +8,28 @@ class Users::NamesControllerTest < ActionController::TestCase
         sign_in(@superadmin)
       end
 
+      should "display breadcrumb links back to edit user page & users page for non-API user" do
+        user = create(:user)
+
+        get :edit, params: { user_id: user }
+
+        assert_select ".govuk-breadcrumbs" do
+          assert_select "a[href='#{users_path}']"
+          assert_select "a[href='#{edit_user_path(user)}']"
+        end
+      end
+
+      should "display breadcrumb links back to edit API user page & API users page for API user" do
+        user = create(:api_user)
+
+        get :edit, params: { user_id: user }
+
+        assert_select ".govuk-breadcrumbs" do
+          assert_select "a[href='#{api_users_path}']"
+          assert_select "a[href='#{edit_api_user_path(user)}']"
+        end
+      end
+
       should "display form with name field" do
         user = create(:user, name: "user-name")
 
@@ -17,7 +39,26 @@ class Users::NamesControllerTest < ActionController::TestCase
         assert_select "form[action='#{user_name_path(user)}']" do
           assert_select "input[name='user[name]']", value: "user-name"
           assert_select "button[type='submit']", text: "Change name"
+        end
+      end
+
+      should "display cancel link to edit user page for non-API user" do
+        user = create(:user, name: "user-name")
+
+        get :edit, params: { user_id: user }
+
+        assert_select "form[action='#{user_name_path(user)}']" do
           assert_select "a[href='#{edit_user_path(user)}']", text: "Cancel"
+        end
+      end
+
+      should "display cancel link to edit API user page for API user" do
+        user = create(:api_user, name: "user-name")
+
+        get :edit, params: { user_id: user }
+
+        assert_select "form[action='#{user_name_path(user)}']" do
+          assert_select "a[href='#{edit_api_user_path(user)}']", text: "Cancel"
         end
       end
 
@@ -112,12 +153,21 @@ class Users::NamesControllerTest < ActionController::TestCase
         put :update, params: { user_id: user, user: { name: "new-user-name" } }
       end
 
-      should "redirect to user page and display success notice" do
+      should "redirect to user page and display success notice for non-API user" do
         user = create(:user, email: "user@gov.uk")
 
         put :update, params: { user_id: user, user: { name: "new-user-name" } }
 
         assert_redirected_to edit_user_path(user)
+        assert_equal "Updated user user@gov.uk successfully", flash[:notice]
+      end
+
+      should "redirect to API user page and display success notice for API user" do
+        user = create(:api_user, email: "user@gov.uk")
+
+        put :update, params: { user_id: user, user: { name: "new-user-name" } }
+
+        assert_redirected_to edit_api_user_path(user)
         assert_equal "Updated user user@gov.uk successfully", flash[:notice]
       end
 

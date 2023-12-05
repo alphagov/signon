@@ -1,4 +1,4 @@
-<% content_for :title_caption, "Manage other users" %>
+<% content_for :title_caption, @user.api_user? ? "Manage API users" : "Manage other users" %>
 <% content_for :title, "Change name for #{@user.name_was}" %>
 
 <% content_for :breadcrumbs,
@@ -10,12 +10,12 @@
          url: root_path,
        },
        {
-         title: "Users",
-         url: users_path,
+         title: @user.api_user? ? "API users" : "Users",
+         url: @user.api_user? ? api_users_path : users_path,
        },
        {
          title: @user.name_was,
-         url: edit_user_path(@user),
+         url: return_path,
        },
        {
          title: "Change name",
@@ -55,7 +55,7 @@
         <%= render "govuk_publishing_components/components/button", {
           text: "Change name",
         } %>
-        <%= link_to "Cancel", edit_user_path(@user), class: "govuk-link govuk-link--no-visited-state" %>
+        <%= link_to "Cancel", return_path, class: "govuk-link govuk-link--no-visited-state" %>
       </div>
     <% end %>
   </div>
