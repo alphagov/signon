@@ -113,65 +113,6 @@ class ApiUsersControllerTest < ActionController::TestCase
           assert_select "input[name='api_user[email]'][value='#{@api_user.email}']"
         end
       end
-
-      should "show API user's access tokens" do
-        application = create(:application)
-        token = create(:access_token, resource_owner_id: @api_user.id, application:)
-
-        get :edit, params: { id: @api_user }
-
-        assert_select "table#authorisations tbody td", text: application.name do |td|
-          assert_select td.first.parent, "code", text: /^#{token[0..7]}/
-        end
-      end
-
-      should "show button for regenerating API user's access token for an application" do
-        application = create(:application)
-        token = create(:access_token, resource_owner_id: @api_user.id, application:)
-
-        get :edit, params: { id: @api_user }
-
-        regenerate_token_path = revoke_api_user_authorisation_path(@api_user, token, regenerate: true)
-
-        assert_select "table#authorisations tbody td", text: application.name do |td|
-          assert_select td.first.parent, "form[action='#{regenerate_token_path}']" do
-            assert_select "input[type='submit']", value: "Re-generate"
-          end
-        end
-      end
-
-      should "show button for revoking API user's access token for an application" do
-        application = create(:application)
-        token = create(:access_token, resource_owner_id: @api_user.id, application:)
-
-        get :edit, params: { id: @api_user }
-
-        revoke_token_path = revoke_api_user_authorisation_path(@api_user, token)
-
-        assert_select "table#authorisations tbody td", text: application.name do |td|
-          assert_select td.first.parent, "form[action='#{revoke_token_path}']" do
-            assert_select "input[type='submit']", value: "Revoke"
-          end
-        end
-      end
-
-      should "not show API user's revoked access tokens" do
-        application = create(:application)
-        create(:access_token, resource_owner_id: @api_user.id, application:, revoked_at: Time.current)
-
-        get :edit, params: { id: @api_user }
-
-        assert_select "table#authorisations tbody td", text: application.name, count: 0
-      end
-
-      should "not show API user's access tokens for retired applications" do
-        application = create(:application, retired: true)
-        create(:access_token, resource_owner_id: @api_user.id, application:)
-
-        get :edit, params: { id: @api_user }
-
-        assert_select "table#authorisations tbody td", text: application.name, count: 0
-      end
     end
 
     context "GET manage_permissions" do
@@ -225,6 +166,71 @@ class ApiUsersControllerTest < ActionController::TestCase
         assert_select "table#editable-permissions tr" do
           assert_select "td", text: "api-only-app-name"
         end
+      end
+    end
+
+    context "GET manage_tokens" do
+      setup do
+        @api_user = create(:api_user)
+      end
+
+      should "show API user's access tokens" do
+        application = create(:application)
+        token = create(:access_token, resource_owner_id: @api_user.id, application:)
+
+        get :manage_tokens, params: { id: @api_user }
+
+        assert_select "table#authorisations tbody td", text: application.name do |td|
+          assert_select td.first.parent, "code", text: /^#{token[0..7]}/
+        end
+      end
+
+      should "show button for regenerating API user's access token for an application" do
+        application = create(:application)
+        token = create(:access_token, resource_owner_id: @api_user.id, application:)
+
+        get :manage_tokens, params: { id: @api_user }
+
+        regenerate_token_path = revoke_api_user_authorisation_path(@api_user, token, regenerate: true)
+
+        assert_select "table#authorisations tbody td", text: application.name do |td|
+          assert_select td.first.parent, "form[action='#{regenerate_token_path}']" do
+            assert_select "input[type='submit']", value: "Re-generate"
+          end
+        end
+      end
+
+      should "show button for revoking API user's access token for an application" do
+        application = create(:application)
+        token = create(:access_token, resource_owner_id: @api_user.id, application:)
+
+        get :manage_tokens, params: { id: @api_user }
+
+        revoke_token_path = revoke_api_user_authorisation_path(@api_user, token)
+
+        assert_select "table#authorisations tbody td", text: application.name do |td|
+          assert_select td.first.parent, "form[action='#{revoke_token_path}']" do
+            assert_select "input[type='submit']", value: "Revoke"
+          end
+        end
+      end
+
+      should "not show API user's revoked access tokens" do
+        application = create(:application)
+        create(:access_token, resource_owner_id: @api_user.id, application:, revoked_at: Time.current)
+
+        get :manage_tokens, params: { id: @api_user }
+
+        assert_select "table#authorisations tbody td", text: application.name, count: 0
+      end
+
+      should "not show API user's access tokens for retired applications" do
+        application = create(:application, retired: true)
+        create(:access_token, resource_owner_id: @api_user.id, application:)
+
+        get :manage_tokens, params: { id: @api_user }
+
+        assert_select "table#authorisations tbody td", text: application.name, count: 0
       end
     end
 

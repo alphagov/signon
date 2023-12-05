@@ -93,6 +93,7 @@ Rails.application.routes.draw do
   resources :api_users, only: %i[new create index edit update] do
     member do
       get :manage_permissions
+      get :manage_tokens
     end
     resources :authorisations, only: %i[new create] do
       member do
