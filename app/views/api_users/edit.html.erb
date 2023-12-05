@@ -24,16 +24,12 @@
 <%= form_for @api_user, :html => {:class => 'well add-top-margin'} do |f| %>
   <%= render partial: "form_fields", locals: { f: f } %>
 
-  <% if applications_and_permissions(@api_user).any? %>
-    <hr />
-    <h2 class="add-vertical-margins">Permissions</h2>
-    <%= render partial: "shared/user_permissions", locals: { user_object: f.object }%>
-  <% end %>
-
-  <hr>
-
   <%= f.submit 'Update API user', :class => 'btn btn-primary' %>
 <% end %>
+
+<p>
+  <%= link_to "Manage permissions", manage_permissions_api_user_path(@api_user) %>
+</p>
 
 <h2 class="add-vertical-margins">Tokens</h2>
 

@@ -51,10 +51,12 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       assert_not page.has_selector?("code", text: (token[9..-9]).to_s)
       assert page.has_selector?("code", text: (token[-8..]).to_s)
 
+      click_link "Manage permissions"
       select "Managing Editor", from: "Permissions for Whitehall"
       click_button "Update API user"
 
       click_link @api_user.name
+      click_link "Manage permissions"
 
       assert_has_signin_permission_for("Whitehall")
       assert_has_other_permissions("Whitehall", ["Managing Editor"])
@@ -63,9 +65,11 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       click_button "Update API user"
 
       click_link @api_user.name
+      click_link "Manage permissions"
 
       assert_has_signin_permission_for("Whitehall")
 
+      click_link @api_user.name
       click_link "Account access log"
       assert page.has_text?("Access token generated for Whitehall by #{@superadmin.name}")
     end

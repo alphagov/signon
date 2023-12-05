@@ -91,6 +91,9 @@ Rails.application.routes.draw do
   end
 
   resources :api_users, only: %i[new create index edit update] do
+    member do
+      get :manage_permissions
+    end
     resources :authorisations, only: %i[new create] do
       member do
         post :revoke

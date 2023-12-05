@@ -114,54 +114,6 @@ class ApiUsersControllerTest < ActionController::TestCase
         end
       end
 
-      should "allow editing permissions for application which user has access to" do
-        application = create(:application, name: "app-name", with_supported_permissions: %w[edit])
-        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
-        create(:access_token, resource_owner_id: api_user.id, application:)
-
-        get :edit, params: { id: api_user.id }
-
-        assert_select "table#editable-permissions tr" do
-          assert_select "td", text: "app-name"
-          assert_select "td" do
-            assert_select "select[name='api_user[supported_permission_ids][]']" do
-              assert_select "option", text: "edit"
-            end
-          end
-        end
-      end
-
-      should "not allow editing permissions for application which user does not have access to" do
-        application = create(:application, name: "app-name", with_supported_permissions: %w[edit])
-        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
-
-        get :edit, params: { id: api_user.id }
-
-        assert_select "table#editable-permissions", count: 0
-      end
-
-      should "not allow editing permissions for retired application" do
-        application = create(:application, name: "retired-app-name", retired: true)
-        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
-        create(:access_token, resource_owner_id: api_user.id, application:)
-
-        get :edit, params: { id: api_user.id }
-
-        assert_select "table#editable-permissions", count: 0
-      end
-
-      should "allow editing permissions for API-only application" do
-        application = create(:application, name: "api-only-app-name", api_only: true)
-        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
-        create(:access_token, resource_owner_id: api_user.id, application:)
-
-        get :edit, params: { id: api_user.id }
-
-        assert_select "table#editable-permissions tr" do
-          assert_select "td", text: "api-only-app-name"
-        end
-      end
-
       should "show API user's access tokens" do
         application = create(:application)
         token = create(:access_token, resource_owner_id: @api_user.id, application:)
@@ -219,6 +171,60 @@ class ApiUsersControllerTest < ActionController::TestCase
         get :edit, params: { id: @api_user }
 
         assert_select "table#authorisations tbody td", text: application.name, count: 0
+      end
+    end
+
+    context "GET manage_permissions" do
+      setup do
+        @api_user = create(:api_user)
+      end
+
+      should "allow editing permissions for application which user has access to" do
+        application = create(:application, name: "app-name", with_supported_permissions: %w[edit])
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :manage_permissions, params: { id: api_user.id }
+
+        assert_select "table#editable-permissions tr" do
+          assert_select "td", text: "app-name"
+          assert_select "td" do
+            assert_select "select[name='api_user[supported_permission_ids][]']" do
+              assert_select "option", text: "edit"
+            end
+          end
+        end
+      end
+
+      should "not allow editing permissions for application which user does not have access to" do
+        application = create(:application, name: "app-name", with_supported_permissions: %w[edit])
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+
+        get :manage_permissions, params: { id: api_user.id }
+
+        assert_select "table#editable-permissions", count: 0
+      end
+
+      should "not allow editing permissions for retired application" do
+        application = create(:application, name: "retired-app-name", retired: true)
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :manage_permissions, params: { id: api_user.id }
+
+        assert_select "table#editable-permissions", count: 0
+      end
+
+      should "allow editing permissions for API-only application" do
+        application = create(:application, name: "api-only-app-name", api_only: true)
+        api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :manage_permissions, params: { id: api_user.id }
+
+        assert_select "table#editable-permissions tr" do
+          assert_select "td", text: "api-only-app-name"
+        end
       end
     end
 
