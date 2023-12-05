@@ -52,8 +52,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ci_node_total: [4]
-        ci_node_index: [0, 1, 2, 3]
+        ci_node_total: [6]
+        ci_node_index: [0, 1, 2, 3, 4, 5]
     steps:
       - name: Setup MySQL
         id: setup-mysql
