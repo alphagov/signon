@@ -277,7 +277,7 @@ class UsersControllerTest < ActionController::TestCase
       end
 
       should "display the user's role but no link to change the role" do
-        user = create(:user, role: Roles::Normal.role_name)
+        user = create(:normal_user)
         get :edit, params: { id: user.id }
         assert_select "*", text: /Role\s+Normal/
         assert_select "a", href: edit_user_role_path(user), text: /Change\s+Role/, count: 0
