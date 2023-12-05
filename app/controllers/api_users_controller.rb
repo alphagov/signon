@@ -64,7 +64,8 @@ private
     ).sanitise
   end
 
-  def permitted_user_params(params)
-    params.permit(:email, :name, supported_permission_ids: [])
+  def permitted_user_params(filtered_params)
+    string_attribute_names = %i[email name]
+    filtered_params.permit(*string_attribute_names, supported_permission_ids: [])
   end
 end
