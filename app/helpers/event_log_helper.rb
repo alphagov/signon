@@ -26,7 +26,7 @@ module EventLogHelper
 
   def formatted_initiator(log)
     if log.initiator
-      "by #{content_tag(:strong, link_to(log.initiator.name, users_path(filter: log.initiator.email), title: log.initiator.email))}"
+      "by #{content_tag(:strong, link_to(log.initiator.name, users_path(filter: log.initiator.email), title: log.initiator.email, class: 'govuk-link'))}"
     end
   end
 
