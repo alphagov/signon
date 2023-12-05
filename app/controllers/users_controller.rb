@@ -7,7 +7,7 @@ class UsersController < ApplicationController
 
   before_action :authenticate_user!
   before_action :load_user, except: %i[index]
-  before_action :redirect_to_account_page_if_acting_on_own_user, only: %i[edit manage_permissions]
+  before_action :redirect_to_account_page_if_acting_on_own_user, only: %i[edit]
   before_action :authorize_user, except: %i[index]
   before_action :allow_no_application_access, only: [:update]
   before_action :redirect_legacy_filters, only: [:index]
@@ -33,17 +33,10 @@ class UsersController < ApplicationController
 
   def edit; end
 
-  def manage_permissions
-    @application_permissions = all_applications_and_permissions_for(@user)
-  end
-
   def update
     updater = UserUpdate.new(@user, user_params, current_user, user_ip_address)
     if updater.call
       redirect_to users_path, notice: "Updated user #{@user.email} successfully"
-    else
-      @application_permissions = all_applications_and_permissions_for(@user)
-      render :manage_permissions
     end
   end
 
