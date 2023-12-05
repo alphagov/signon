@@ -13,7 +13,7 @@ class UserPolicyTest < ActiveSupport::TestCase
   end
 
   primary_management_actions = %i[new create assign_organisation]
-  user_management_actions = %i[edit update unlock suspension cancel_email_change resend_email_change event_logs reset_2sv mandate_2sv resend_invitation]
+  user_management_actions = %i[edit update unlock suspension cancel_email_change resend_email_change event_logs reset_2sv mandate_2sv resend_invitation manage_permissions]
   superadmin_actions = %i[assign_role]
   two_step_verification_exemption_actions = %i[exempt_from_two_step_verification]
 

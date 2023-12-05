@@ -37,6 +37,7 @@ Rails.application.routes.draw do
 
   resources :users, except: [:show] do
     member do
+      get :manage_permissions
       get :event_logs
       get :require_2sv
     end

@@ -14,7 +14,7 @@ class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
     signin_with(@user)
 
     visit edit_user_path(@user)
-    assert page.has_no_link? "Account access log"
+    assert page.has_no_link? "View account access log"
   end
 
   test "admins have permission to view account access log" do
@@ -22,7 +22,7 @@ class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
     visit root_path
     signin_with(@admin)
     visit edit_user_path(@user)
-    click_on "Account access log"
+    click_on "View account access log"
 
     assert_account_access_log_page_content(@user)
   end
@@ -34,7 +34,7 @@ class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
     visit root_path
     signin_with(super_nintendo_chalmers)
     visit edit_user_path(@user)
-    click_on "Account access log"
+    click_on "View account access log"
 
     assert_account_access_log_page_content(@user)
   end
@@ -47,7 +47,7 @@ class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
     visit root_path
     signin_with(super_org_admin)
     visit edit_user_path(user)
-    click_on "Account access log"
+    click_on "View account access log"
 
     assert_account_access_log_page_content(user)
   end
@@ -61,7 +61,7 @@ class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
     visit root_path
     signin_with(super_org_admin)
     visit edit_user_path(user)
-    click_on "Account access log"
+    click_on "View account access log"
 
     assert_account_access_log_page_content(user)
   end
@@ -84,7 +84,7 @@ class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
     visit root_path
     signin_with(organisation_admin)
     visit edit_user_path(user)
-    click_on "Account access log"
+    click_on "View account access log"
 
     assert_account_access_log_page_content(user)
   end

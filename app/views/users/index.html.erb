@@ -55,7 +55,7 @@
             { text: user_name(user) },
             { text: user.email },
             { text: user.role.humanize },
-            { text: user.status.humanize },
+            { text: status(user) },
             { text: two_step_status(user) },
           ]
         end,

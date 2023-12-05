@@ -13,23 +13,23 @@ module ManagingTwoSvHelpers
 
   def assert_user_access_log_contains_messages(user, messages)
     visit edit_user_path(user)
-    click_link "Account access log"
+    click_link "View account access log"
 
     messages.each { |message| assert page.has_text? message }
   end
 
   def mandate_2sv_for_exempted_user
-    click_link "Mandate 2-step verification for this user (this will remove their exemption)"
+    click_link "Turn on 2-step verification for this user (this will remove their exemption)"
     click_button "Turn on 2-step verification"
   end
 
   def admin_can_send_2sv_email(admin, user)
     sign_in_as_and_edit_user(admin, user)
 
-    assert page.has_text? "2-step verification not set up"
+    assert page.has_text?(/2-step verification\s+Not set up/)
 
     perform_enqueued_jobs do
-      click_link "Mandate 2-step verification for this user"
+      click_link "Turn on 2-step verification for this user"
       click_button "Turn on 2-step verification"
 
       assert last_email
@@ -44,7 +44,7 @@ module ManagingTwoSvHelpers
     signin_with(logged_in_as)
 
     perform_enqueued_jobs do
-      assert_response_contains "2-step verification enabled"
+      assert page.has_text?(/2-step verification\s+Enabled/)
 
       click_link "Reset 2-step verification"
       click_button "Reset 2-step verification"
@@ -90,8 +90,7 @@ module ManagingTwoSvHelpers
     assert_equal reason, user.reason_for_2sv_exemption
     assert_equal expiry_date, user.expiry_date_for_2sv_exemption
 
-    assert page.has_text? "User exempted from 2-step verification"
-    assert page.has_text? "The user has been made exempt from 2-step verification for the following reason: #{reason}"
+    assert page.has_text?(/2-step verification\s+Exempt/)
   end
 
   def assert_user_has_not_been_exempted_from_2sv(user)

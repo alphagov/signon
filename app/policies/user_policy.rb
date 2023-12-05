@@ -39,6 +39,7 @@ class UserPolicy < BasePolicy
   alias_method :reset_two_step_verification?, :edit?
   alias_method :resend_email_change?, :edit?
   alias_method :cancel_email_change?, :edit?
+  alias_method :manage_permissions?, :edit?
 
   def assign_role?
     current_user.superadmin?

@@ -41,6 +41,10 @@ FactoryBot.define do
     trait :in_organisation do
       association :organisation, factory: :organisation
     end
+
+    trait :in_gds_organisation do
+      association :organisation, factory: :gds_organisation
+    end
   end
 
   factory :two_step_enabled_user, parent: :user do

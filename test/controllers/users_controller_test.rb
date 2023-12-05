@@ -265,22 +265,22 @@ class UsersControllerTest < ActionController::TestCase
       should "display the user's name and a link to change the name" do
         not_an_admin = create(:user, name: "user-name")
         get :edit, params: { id: not_an_admin.id }
-        assert_select "*", text: /Name: user-name/
-        assert_select "a", href: edit_user_name_path(not_an_admin), text: "Change name"
+        assert_select "*", text: /Name\s+user-name/
+        assert_select "a", href: edit_user_name_path(not_an_admin), text: /Change\s+Name/
       end
 
       should "display the user's email and a link to change the email" do
         not_an_admin = create(:user, email: "user-name@gov.uk")
         get :edit, params: { id: not_an_admin.id }
-        assert_select "*", text: /Email: user-name@gov.uk/
-        assert_select "a", href: edit_user_email_path(not_an_admin), text: "Change email"
+        assert_select "*", text: /Email\s+user-name@gov.uk/
+        assert_select "a", href: edit_user_email_path(not_an_admin), text: /Change\s+Email/
       end
 
       should "display the user's role but no link to change the role" do
-        user = create(:user, role: Roles::Normal.role_name)
+        user = create(:normal_user)
         get :edit, params: { id: user.id }
-        assert_select "*", text: /Role: Normal/
-        assert_select "a", href: edit_user_role_path(user), text: "Change role", count: 0
+        assert_select "*", text: /Role\s+Normal/
+        assert_select "a", href: edit_user_role_path(user), text: /Change\s+Role/, count: 0
       end
 
       should "display the user's organisation and a link to change the organisation" do
@@ -289,8 +289,16 @@ class UsersControllerTest < ActionController::TestCase
 
         get :edit, params: { id: user_in_org.id }
 
-        assert_select "*", text: /Organisation: #{org_with_user.name}/
-        assert_select "a", href: edit_user_organisation_path(user_in_org), text: "Change organisation"
+        assert_select "*", text: /Organisation\s+#{org_with_user.name}/
+        assert_select "a", href: edit_user_organisation_path(user_in_org), text: /Change\s+Organisation/
+      end
+
+      should "display link to access log page for user" do
+        user = create(:user)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{event_logs_user_path(user)}']", text: "View account access log"
       end
 
       should "display link to resend invitation page for user who has been invited but has not accepted" do
@@ -301,14 +309,6 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a[href='#{edit_user_invitation_resend_path(user)}']", text: "Resend signup email"
       end
 
-      should "not display link to resend invitation page for user who has accepted invitation" do
-        user = create(:active_user)
-
-        get :edit, params: { id: user }
-
-        assert_select "a[href='#{edit_user_invitation_resend_path(user)}']", count: 0
-      end
-
       should "display link to unlock user page" do
         user = create(:locked_user)
 
@@ -317,18 +317,105 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "a[href='#{edit_user_unlocking_path(user)}']", text: "Unlock account"
       end
 
-      should "not display link to unlock user page for user that has not been locked" do
+      should "display suspend link for user that is not suspended" do
         user = create(:active_user)
 
         get :edit, params: { id: user }
 
-        assert_select "a[href='#{edit_user_unlocking_path(user)}']", count: 0
+        assert_select "a[href='#{edit_suspension_path(user)}']", text: "Suspend user"
+      end
+
+      should "display reset 2SV link for user that has 2SV setup" do
+        user = create(:two_step_enabled_user)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_user_two_step_verification_reset_path(user)}']", text: "Reset 2-step verification"
+      end
+
+      should "display mandate 2SV link for user for whom 2SV is not required" do
+        user = create(:user)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_user_two_step_verification_mandation_path(user)}']", text: "Turn on 2-step verification for this user"
       end
 
       should "not be able to edit superadmins" do
         superadmin = create(:superadmin_user)
 
         get :edit, params: { id: superadmin.id }
+
+        assert_not_authorised
+      end
+    end
+
+    context "signed in as GDS Admin user" do
+      setup do
+        @user = create(:admin_user, :in_gds_organisation, email: "admin@gov.uk")
+        sign_in @user
+      end
+
+      should "display 2SV exemption link for user" do
+        user = create(:user)
+
+        get :edit, params: { id: user }
+
+        assert_select "a[href='#{edit_two_step_verification_exemption_path(user)}']", text: "Exempt user from 2-step verification"
+      end
+    end
+
+    context "signed in as Superadmin user" do
+      setup do
+        @superadmin = create(:superadmin_user)
+        sign_in @superadmin
+      end
+    end
+
+    context "signed in as Normal user" do
+      setup do
+        @user = create(:user, email: "normal@gov.uk")
+        sign_in @user
+      end
+
+      context "when current user tries to edit their own user" do
+        should "redirect to the account page" do
+          get :edit, params: { id: @user }
+
+          assert_redirected_to account_path
+        end
+      end
+
+      context "when current user tries to edit another user" do
+        should "redirect to the dashboard and explain user does not have permission" do
+          another_user = create(:user)
+
+          get :edit, params: { id: another_user }
+
+          assert_not_authorised
+        end
+      end
+    end
+  end
+
+  context "GET manage_permissions" do
+    context "signed in as Admin user" do
+      setup do
+        @user = create(:admin_user, email: "admin@gov.uk")
+        sign_in @user
+      end
+
+      context "for the currently logged in user" do
+        should "redirect to the account page" do
+          get :manage_permissions, params: { id: @user.id }
+          assert_redirected_to account_path
+        end
+      end
+
+      should "not be able to manage permissions for superadmins" do
+        superadmin = create(:superadmin_user)
+
+        get :manage_permissions, params: { id: superadmin.id }
 
         assert_not_authorised
       end
@@ -344,7 +431,7 @@ class UsersControllerTest < ActionController::TestCase
 
         user = create(:user_in_organisation)
 
-        get :edit, params: { id: user.id }
+        get :manage_permissions, params: { id: user.id }
 
         assert_select ".container" do
           # can give permissions to a delegatable app
@@ -365,38 +452,6 @@ class UsersControllerTest < ActionController::TestCase
         sign_in @organisation_admin
       end
 
-      should "not display a link to change the user's role" do
-        user = create(:user, organisation: @organisation_admin.organisation)
-
-        get :edit, params: { id: user.id }
-
-        assert_select "a", href: edit_user_role_path(user), text: "Change role", count: 0
-      end
-
-      should "not display a link to change the user's organisation" do
-        user = create(:user_in_organisation, organisation: @organisation_admin.organisation)
-
-        get :edit, params: { id: user.id }
-
-        assert_select "a", href: edit_user_organisation_path(user), text: "Change organisation", count: 0
-      end
-
-      should "display link to resend invitation page for user who has been invited but has not accepted" do
-        user = create(:invited_user, organisation: @organisation_admin.organisation)
-
-        get :edit, params: { id: user }
-
-        assert_select "a[href='#{edit_user_invitation_resend_path(user)}']"
-      end
-
-      should "display link to unlock user page" do
-        user = create(:locked_user, organisation: @organisation_admin.organisation)
-
-        get :edit, params: { id: user }
-
-        assert_select "a[href='#{edit_user_unlocking_path(user)}']"
-      end
-
       should "be able to give permissions only to applications they themselves have access to and that also have delegatable signin permissions" do
         delegatable_app = create(:application, with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
         non_delegatable_app = create(:application, with_supported_permissions: [SupportedPermission::SIGNIN_NAME])
@@ -408,7 +463,7 @@ class UsersControllerTest < ActionController::TestCase
 
         user = create(:user_in_organisation, organisation: @organisation_admin.organisation)
 
-        get :edit, params: { id: user.id }
+        get :manage_permissions, params: { id: user.id }
 
         assert_select "#editable-permissions" do
           # can give access to a delegatable app they have access to
@@ -440,7 +495,7 @@ class UsersControllerTest < ActionController::TestCase
                               non_delegatable_no_access_to_app => [SupportedPermission::SIGNIN_NAME, "Import CSVs"] },
         )
 
-        get :edit, params: { id: user.id }
+        get :manage_permissions, params: { id: user.id }
 
         assert_select "h2", "All Permissions for this user"
         assert_select "#all-permissions" do
@@ -470,38 +525,6 @@ class UsersControllerTest < ActionController::TestCase
         sign_in @super_organisation_admin
       end
 
-      should "not display a link to change the user's role" do
-        user = create(:user, organisation: @super_organisation_admin.organisation)
-
-        get :edit, params: { id: user.id }
-
-        assert_select "a", href: edit_user_role_path(user), text: "Change role", count: 0
-      end
-
-      should "not display a link to change the user's organisation" do
-        user = create(:user_in_organisation, organisation: @super_organisation_admin.organisation)
-
-        get :edit, params: { id: user.id }
-
-        assert_select "a", href: edit_user_organisation_path(user), text: "Change organisation", count: 0
-      end
-
-      should "display link to resend invitation page for user who has been invited but has not accepted" do
-        user = create(:invited_user, organisation: @super_organisation_admin.organisation)
-
-        get :edit, params: { id: user }
-
-        assert_select "a[href='#{edit_user_invitation_resend_path(user)}']"
-      end
-
-      should "display link to unlock user page" do
-        user = create(:locked_user, organisation: @super_organisation_admin.organisation)
-
-        get :edit, params: { id: user }
-
-        assert_select "a[href='#{edit_user_unlocking_path(user)}']"
-      end
-
       should "be able to give permissions only to applications they themselves have access to and that also have delegatable signin permissions" do
         delegatable_app = create(:application, with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
         non_delegatable_app = create(:application, with_supported_permissions: [SupportedPermission::SIGNIN_NAME])
@@ -513,7 +536,7 @@ class UsersControllerTest < ActionController::TestCase
 
         user = create(:user_in_organisation, organisation: @super_organisation_admin.organisation)
 
-        get :edit, params: { id: user.id }
+        get :manage_permissions, params: { id: user.id }
 
         assert_select "#editable-permissions" do
           # can give access to a delegatable app they have access to
@@ -545,7 +568,7 @@ class UsersControllerTest < ActionController::TestCase
                               non_delegatable_no_access_to_app => [SupportedPermission::SIGNIN_NAME, "Import CSVs"] },
         )
 
-        get :edit, params: { id: user.id }
+        get :manage_permissions, params: { id: user.id }
 
         assert_select "h2", "All Permissions for this user"
         assert_select "#all-permissions" do
@@ -574,7 +597,7 @@ class UsersControllerTest < ActionController::TestCase
         user = create(:user_in_organisation, organisation: @super_organisation_admin.organisation)
         create(:user_application_permission, application: retired_app, user:)
 
-        get :edit, params: { id: user.id }
+        get :manage_permissions, params: { id: user.id }
 
         assert_select "h2", "All Permissions for this user"
         assert_select "#all-permissions" do
@@ -588,7 +611,7 @@ class UsersControllerTest < ActionController::TestCase
         user = create(:user_in_organisation, organisation: @super_organisation_admin.organisation)
         create(:user_application_permission, application: api_only_app, user:)
 
-        get :edit, params: { id: user.id }
+        get :manage_permissions, params: { id: user.id }
 
         assert_select "h2", "All Permissions for this user"
         assert_select "#all-permissions" do
@@ -601,28 +624,6 @@ class UsersControllerTest < ActionController::TestCase
       setup do
         @superadmin = create(:superadmin_user)
         sign_in @superadmin
-      end
-
-      should "display a link to change the user's role" do
-        user = create(:user, role: Roles::Normal.role_name)
-        get :edit, params: { id: user.id }
-        assert_select "a", href: edit_user_role_path(user), text: "Change role"
-      end
-
-      should "display link to resend invitation page for user who has been invited but has not accepted" do
-        user = create(:invited_user)
-
-        get :edit, params: { id: user }
-
-        assert_select "a[href='#{edit_user_invitation_resend_path(user)}']"
-      end
-
-      should "display link to unlock user page" do
-        user = create(:locked_user)
-
-        get :edit, params: { id: user }
-
-        assert_select "a[href='#{edit_user_unlocking_path(user)}']"
       end
 
       should "not be able to see all permissions to applications for a user" do
@@ -643,7 +644,7 @@ class UsersControllerTest < ActionController::TestCase
                               non_delegatable_no_access_to_app => [SupportedPermission::SIGNIN_NAME, "Import CSVs"] },
         )
 
-        get :edit, params: { id: user.id }
+        get :manage_permissions, params: { id: user.id }
 
         assert_select "h2", count: 0, text: "All Permissions for this user"
         assert_select "#all-permissions", count: 0
@@ -656,19 +657,19 @@ class UsersControllerTest < ActionController::TestCase
         sign_in @user
       end
 
-      context "when current user tries to edit their own user" do
+      context "when current user tries to manage their own permissions" do
         should "redirect to the account page" do
-          get :edit, params: { id: @user }
+          get :manage_permissions, params: { id: @user }
 
           assert_redirected_to account_path
         end
       end
 
-      context "when current user tries to edit another user" do
+      context "when current user tries to manage another user's permissions" do
         should "redirect to the dashboard and explain user does not have permission" do
           another_user = create(:user)
 
-          get :edit, params: { id: another_user }
+          get :manage_permissions, params: { id: another_user }
 
           assert_not_authorised
         end

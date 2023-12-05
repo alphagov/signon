@@ -841,6 +841,23 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#not_setup_2sv?" do
+    should "return false when user has 2SV" do
+      user = build(:two_step_enabled_user)
+      assert_not user.not_setup_2sv?
+    end
+
+    should "return false when user has been exempted from 2SV" do
+      user = build(:two_step_exempted_user)
+      assert_not user.not_setup_2sv?
+    end
+
+    should "return true when user does not have 2SV and has not been exempted" do
+      user = build(:user)
+      assert user.not_setup_2sv?
+    end
+  end
+
   context "#role_class" do
     should "return the role class" do
       assert_equal Roles::Normal, build(:user).role_class
@@ -1245,6 +1262,17 @@ class UserTest < ActiveSupport::TestCase
       Roles::Admin.stubs(:permitted_user_params).returns(%i[abc xyz])
 
       assert_equal %i[abc xyz], user.permitted_params
+    end
+  end
+
+  context "#organisation_name" do
+    should "return organisation name if user has organisation" do
+      organisation = build(:organisation, name: "organisation-name")
+      assert_equal "organisation-name", build(:user, organisation:).organisation_name
+    end
+
+    should "return 'None' if user has no organisation" do
+      assert_equal Organisation::NONE, build(:user).organisation_name
     end
   end
 

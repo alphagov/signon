@@ -11,7 +11,7 @@ class ChangeUserNameTest < ActionDispatch::IntegrationTest
       visit root_path
       signin_with(@superadmin)
       visit edit_user_path(@user)
-      click_link "Change name"
+      click_link "Change Name"
       fill_in "Name", with: "new-user-name"
       click_button "Change name"
       assert_equal "new-user-name", @user.reload.name

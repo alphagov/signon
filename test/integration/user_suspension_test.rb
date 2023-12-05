@@ -19,6 +19,6 @@ class UserSuspensionTest < ActionDispatch::IntegrationTest
     signin_with(admin)
 
     visit edit_user_path(@user)
-    assert_response_contains("gross misconduct")
+    assert_response_contains(/Status\s+Suspended/)
   end
 end

@@ -14,6 +14,6 @@ class UserStatusTest < ActionDispatch::IntegrationTest
     signin_with(@admin)
     visit user_path(@user)
 
-    assert page.has_content?("suspended")
+    assert page.has_content?("Suspended")
   end
 end

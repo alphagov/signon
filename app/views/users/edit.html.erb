@@ -1,62 +1,65 @@
-<% content_for :title, "Edit [#{@user.name}]" %>
+<% content_for :title_caption, "Manage other users" %>
+<% content_for :title, "Edit #{@user.name}" %>
 
-<h1>Edit &ldquo;<%= @user.name %>&rdquo;</h1>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "Users",
+         url: users_path,
+       },
+       {
+         title: "Edit #{@user.name}",
+       }
+     ]
+   })
+%>
 
-<p class="suspenders">
-  User <strong><%= @user.status %></strong> &bull;
-  <%= link_to "Account access log", event_logs_user_path(@user) %> &bull;
-  <%= link_to "#{@user.suspended? ? "Uns" : "S"}uspend user", edit_suspension_path(@user) %>
-</p>
-
-<% if policy(@user).resend_invitation? %>
-  <% if @user.invited_but_not_yet_accepted? %>
-    <div class="alert alert-warning">
-      <strong>Invitation not accepted yet</strong>.<br/>
-      This user hasn't clicked on the link in their signup mail yet.
-
-      <p>
-        <%= link_to "Resend signup email", edit_user_invitation_resend_path(@user) %>
-      </p>
-    </div>
-  <% end %>
-<% end %>
-
-<% if policy(@user).unlock? %>
-  <% if @user.access_locked? %>
-    <div class="alert alert-warning">
-      <strong>Account has been locked after too many unsuccessful login attempts.</strong><br/>
-      Locked accounts are automatically unlocked after <%= User.unlock_in.inspect %>.
-
-      <p>
-        <%= link_to "Unlock account", edit_user_unlocking_path(@user) %>
-      </p>
-    </div>
-  <% end %>
-<% end %>
-
-<% if @user.suspended? and @user.reason_for_suspension.present? %>
-  <p class="alert alert-warning">
-    <strong>User suspended:</strong> <em><%= @user.reason_for_suspension %></em>
-  </p>
-<% end %>
-
-<%= form_for @user, :html => {:class => 'well add-top-margin'} do |f| %>
-
-  <% if @user.errors.count > 0 %>
-    <div class="govuk-error-summary alert alert-danger" aria-labelledby="error-summary-title" role="alert" tabindex="-1" data-module="error-summary">
-      <div class="govuk-error-summary__body">
-        <ul class="govuk-list govuk-error-summary__list">
-          <% @user.errors.full_messages.each do |message| %>
-            <%= content_tag :li, message %>
-          <% end %>
-        </ul>
-      </div>
-    </div>
-  <% end %>
-
-  <%= render partial: "form_fields", locals: { f: f } %>
-
-  <hr>
-
-  <%= f.submit :class => 'btn btn-primary' %>
-<% end %>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <section>
+      <%= render "govuk_publishing_components/components/summary_list", {
+        title: "User details",
+        heading_level: 2,
+        heading_size: "l",
+        items: [
+          summary_list_item_for_name(@user),
+          summary_list_item_for_email(@user),
+          summary_list_item_for_organisation(@user),
+          summary_list_item_for_role(@user),
+          summary_list_item_for_status(@user),
+          summary_list_item_for_2sv_status(@user),
+        ]
+      } %>
+    </section>
+    <section>
+      <%= render "govuk_publishing_components/components/heading", {
+        text: "Actions",
+        font_size: "l",
+        padding: true,
+      } %>
+      <%= render "govuk_publishing_components/components/list", {
+        items: [
+          link_to_access_log(@user),
+          link_to_resend_invitation(@user),
+          link_to_unlock(@user),
+          link_to_suspension(@user),
+          link_to_reset_2sv(@user),
+          link_to_2sv_exemption(@user),
+          link_to_mandate_2sv(@user),
+        ].compact
+      } %>
+    </section>
+    <section>
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Manage permissions",
+        href: manage_permissions_user_path(@user)
+      } %>
+    </section>
+  </div>
+</div>

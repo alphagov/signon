@@ -3,11 +3,11 @@ require "csv"
 class UsersController < ApplicationController
   include UserPermissionsControllerMethods
 
-  layout "admin_layout", only: %w[index event_logs require_2sv]
+  layout "admin_layout", only: %w[index edit event_logs require_2sv]
 
   before_action :authenticate_user!
   before_action :load_user, except: %i[index]
-  before_action :redirect_to_account_page_if_acting_on_own_user, only: %i[edit]
+  before_action :redirect_to_account_page_if_acting_on_own_user, only: %i[edit manage_permissions]
   before_action :authorize_user, except: %i[index]
   before_action :allow_no_application_access, only: [:update]
   before_action :redirect_legacy_filters, only: [:index]
@@ -31,7 +31,9 @@ class UsersController < ApplicationController
     end
   end
 
-  def edit
+  def edit; end
+
+  def manage_permissions
     @application_permissions = all_applications_and_permissions_for(@user)
   end
 
@@ -41,7 +43,7 @@ class UsersController < ApplicationController
       redirect_to users_path, notice: "Updated user #{@user.email} successfully"
     else
       @application_permissions = all_applications_and_permissions_for(@user)
-      render :edit
+      render :manage_permissions
     end
   end
 
