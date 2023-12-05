@@ -249,6 +249,20 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   context "GET edit" do
+    should "display link to manage applications" do
+      user = create(:user)
+
+      current_user = create(:user)
+      sign_in current_user
+
+      stub_policy_for_navigation_links current_user
+      stub_policy current_user, user, edit?: true
+
+      get :edit, params: { id: user }
+
+      assert_select "a[href='#{user_applications_path(user)}']"
+    end
+
     context "signed in as Admin user" do
       setup do
         @user = create(:admin_user, email: "admin@gov.uk")
@@ -765,5 +779,11 @@ class UsersControllerTest < ActionController::TestCase
         assert_select "form#edit_user_#{super_organisation_admin_for_same_organisation.id}"
       end
     end
+  end
+
+private
+
+  def stub_policy_for_navigation_links(current_user)
+    stub_policy(current_user, User, index?: true)
   end
 end
