@@ -8,8 +8,8 @@
          url: root_path,
        },
        {
-         title: "Users",
-         url: users_path,
+         title: @user.api_user? ? "API users" : "Users",
+         url: @user.api_user? ? api_users_path : users_path,
        },
        {
          title: @user.name,
