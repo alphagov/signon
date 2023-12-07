@@ -33,10 +33,8 @@ class UsersController < ApplicationController
   def edit; end
 
   def update
-    updater = UserUpdate.new(@user, user_params, current_user, user_ip_address)
-    if updater.call
-      redirect_to users_path, notice: "Updated user #{@user.email} successfully"
-    end
+    UserUpdate.new(@user, user_params, current_user, user_ip_address).call
+    redirect_to users_path, notice: "Updated user #{@user.email} successfully"
   end
 
   def event_logs
