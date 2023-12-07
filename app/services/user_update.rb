@@ -14,7 +14,6 @@ class UserUpdate
     user.application_permissions.reload
 
     record_permission_changes(old_permissions)
-    record_role_change
     record_organisation_change
     record_2sv_exemption_removed
     record_2sv_mandated
@@ -64,17 +63,6 @@ private
         ip_address: true,
       )
     end
-  end
-
-  def record_role_change
-    role_change = user.previous_changes[:role]
-    return unless role_change
-
-    EventLog.record_role_change(
-      user,
-      role_change.first,
-      role_change.last,
-    )
   end
 
   def record_organisation_change
