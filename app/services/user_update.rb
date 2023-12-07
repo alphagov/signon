@@ -14,7 +14,6 @@ class UserUpdate
     user.application_permissions.reload
 
     record_permission_changes(old_permissions)
-    record_organisation_change
     record_2sv_exemption_removed
     record_2sv_mandated
     send_two_step_mandated_notification
@@ -63,17 +62,6 @@ private
         ip_address: true,
       )
     end
-  end
-
-  def record_organisation_change
-    organisation_change = user.previous_changes[:organisation_id]
-    return unless organisation_change
-
-    EventLog.record_organisation_change(
-      user,
-      Organisation.find_by(id: organisation_change.first)&.name || Organisation::NONE,
-      Organisation.find_by(id: organisation_change.last)&.name || Organisation::NONE,
-    )
   end
 
   def record_2sv_exemption_removed

@@ -71,6 +71,7 @@ class User < ApplicationRecord
   before_save :strip_whitespace_from_name
   after_update :record_update
   after_update :record_role_change
+  after_update :record_organisation_change
 
   scope :web_users, -> { where(api_user: false) }
 
@@ -479,5 +480,15 @@ private
     return unless role_previously_changed?
 
     EventLog.record_role_change(self, *role_previous_change)
+  end
+
+  def record_organisation_change
+    return if Current.user.blank?
+    return unless organisation_id_previously_changed?
+
+    organisations = organisation_id_previous_change.map do |organisation_id|
+      Organisation.find_by(id: organisation_id)&.name || Organisation::NONE
+    end
+    EventLog.record_organisation_change(self, *organisations)
   end
 end
