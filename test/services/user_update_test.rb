@@ -132,7 +132,7 @@ class UserUpdateTest < ActionView::TestCase
 
   should "record email change if value of email attribute has changed" do
     params = { email: "new@gov.uk" }
-    EventLog.expects(:record_email_change).with(affected_user, affected_user.email, "new@gov.uk", current_user)
+    EventLog.expects(:record_email_change).with(affected_user, affected_user.email, "new@gov.uk")
 
     with_current(user: current_user, user_ip: ip_address) do
       UserUpdate.new(affected_user, params).call

@@ -37,7 +37,9 @@ class EventLogTest < ActiveSupport::TestCase
   context ".record_email_change" do
     should "record event EMAIL_CHANGED when initiator is an admin" do
       user = create(:user, email: "new@example.com")
-      EventLog.record_email_change(user, "old@example.com", user.email, create(:admin_user))
+      with_current(user: create(:admin_user)) do
+        EventLog.record_email_change(user, "old@example.com", user.email)
+      end
 
       assert_equal EventLog::EMAIL_CHANGED, EventLog.last.entry
     end
@@ -62,7 +64,9 @@ class EventLogTest < ActiveSupport::TestCase
     should "record the initiator when initiator is other than the user" do
       user = create(:user, email: "new@example.com")
       admin = create(:admin_user)
-      EventLog.record_email_change(user, "old@example.com", user.email, admin)
+      with_current(user: admin) do
+        EventLog.record_email_change(user, "old@example.com", user.email)
+      end
 
       assert_equal admin.id, EventLog.last.initiator_id
     end
