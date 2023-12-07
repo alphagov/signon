@@ -46,14 +46,18 @@ class EventLogTest < ActiveSupport::TestCase
 
     should "record event EMAIL_CHANGE_INITIATED when a user is changing their own email" do
       user = create(:user, email: "new@example.com")
-      EventLog.record_email_change(user, "old@example.com", user.email)
+      with_current(user:) do
+        EventLog.record_email_change(user, "old@example.com", user.email)
+      end
 
       assert_equal EventLog::EMAIL_CHANGE_INITIATED, EventLog.last.entry
     end
 
     should "record email change events with a trailing message" do
       user = create(:user, email: "new@example.com")
-      EventLog.record_email_change(user, "old@example.com", user.email)
+      with_current(user:) do
+        EventLog.record_email_change(user, "old@example.com", user.email)
+      end
 
       event_log = EventLog.last
       assert_equal user.uid, event_log.uid
