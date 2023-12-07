@@ -72,10 +72,6 @@ private
   end
 
   def user_params
-    if permitted_user_params[:skip_update_user_permissions]
-      permitted_user_params[:supported_permission_ids] = @user.supported_permission_ids
-    end
-
     UserParameterSanitiser.new(
       user_params: permitted_user_params,
       current_user_role: current_user.role.to_sym,
@@ -83,7 +79,7 @@ private
   end
 
   def permitted_user_params
-    @permitted_user_params ||= params.require(:user).permit(:require_2sv, :skip_update_user_permissions, supported_permission_ids: []).to_h
+    @permitted_user_params ||= params.require(:user).permit(:require_2sv).to_h
   end
 
   def filter_params
