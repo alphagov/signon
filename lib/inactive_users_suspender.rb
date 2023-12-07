@@ -7,7 +7,6 @@ class InactiveUsersSuspender
 
       user.revoke_all_authorisations
 
-      PermissionUpdater.perform_on(user)
       ReauthEnforcer.perform_on(user)
 
       EventLog.record_event(user, EventLog::ACCOUNT_AUTOSUSPENDED)

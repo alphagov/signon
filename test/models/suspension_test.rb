@@ -69,7 +69,7 @@ class SuspensionTest < ActiveSupport::TestCase
   end
 
   should "call the PermissionUpdater when saving" do
-    user = stub(unsuspend: true)
+    user = create(:suspended_user)
 
     PermissionUpdater.expects(:perform_on).with(user)
     suspension = Suspension.new(suspend: false, user:)

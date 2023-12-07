@@ -41,7 +41,6 @@ class ApiUsersController < ApplicationController
   def update
     if @api_user.update(api_user_params_for_update)
       @api_user.application_permissions.reload
-      PermissionUpdater.perform_on(@api_user)
 
       redirect_to api_users_path, notice: "Updated API user #{@api_user.email} successfully"
     else

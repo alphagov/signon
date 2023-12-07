@@ -20,7 +20,6 @@ class Suspension
     end
 
     EventLog.record_event(user, action, initiator: true, ip_address: true)
-    PermissionUpdater.perform_on(user)
     ReauthEnforcer.perform_on(user)
   end
   alias_method :save!, :save

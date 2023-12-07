@@ -279,18 +279,6 @@ class ApiUsersControllerTest < ActionController::TestCase
         assert_template :manage_permissions
         assert_select "div.alert ul li", "Supported permission ids error"
       end
-
-      should "push permission changes out to apps" do
-        api_user = create(:api_user)
-
-        PermissionUpdater.expects(:perform_on).with(api_user).once
-
-        put :update,
-            params: {
-              "id" => api_user.id,
-              "api_user" => { "email" => api_user.email },
-            }
-      end
     end
   end
 end

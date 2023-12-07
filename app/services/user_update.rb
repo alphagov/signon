@@ -15,7 +15,6 @@ class UserUpdate
 
     record_permission_changes(old_permissions)
     send_two_step_mandated_notification
-    perform_permissions_update
     record_email_change_and_notify
     true
   end
@@ -60,10 +59,6 @@ private
         ip_address: true,
       )
     end
-  end
-
-  def perform_permissions_update
-    PermissionUpdater.perform_on(user)
   end
 
   def send_two_step_mandated_notification

@@ -512,7 +512,7 @@ class UserTest < ActiveSupport::TestCase
 
     @user.suspend("Nothing personal, just needed to suspend a user for testing")
 
-    assert @user.authorisations.all?(&:revoked?)
+    assert @user.authorisations.reload.all?(&:revoked?)
   end
 
   context "#revoke_all_authorisations" do

@@ -74,6 +74,7 @@ class User < ApplicationRecord
   after_update :record_organisation_change
   after_update :record_2sv_exemption_removed
   after_update :record_2sv_mandated
+  after_update :perform_permissions_update
 
   scope :web_users, -> { where(api_user: false) }
 
@@ -506,5 +507,11 @@ private
     return unless require_2sv && require_2sv_previously_changed?
 
     EventLog.record_event(self, EventLog::TWO_STEP_MANDATED, initiator: true, ip_address: true)
+  end
+
+  def perform_permissions_update
+    return if previous_changes.none?
+
+    PermissionUpdater.perform_on(self)
   end
 end
