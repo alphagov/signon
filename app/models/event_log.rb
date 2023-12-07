@@ -97,7 +97,7 @@ class EventLog < ApplicationRecord
   end
 
   def self.record_email_change(user, email_was, email_is)
-    initiator = Current.user || user
+    initiator = Current.user
     event = user == initiator ? EMAIL_CHANGE_INITIATED : EMAIL_CHANGED
     record_event(user, event, initiator:, trailing_message: "from #{email_was} to #{email_is}")
   end

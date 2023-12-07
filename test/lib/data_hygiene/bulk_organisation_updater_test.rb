@@ -7,7 +7,9 @@ class DataHygiene::BulkOrganisationUpdaterTest < ActiveSupport::TestCase
     file.close
 
     begin
-      DataHygiene::BulkOrganisationUpdater.call(file.path, logger: Rails.logger)
+      with_current(user: create(:admin_user)) do
+        DataHygiene::BulkOrganisationUpdater.call(file.path, logger: Rails.logger)
+      end
     ensure
       file.unlink
     end
