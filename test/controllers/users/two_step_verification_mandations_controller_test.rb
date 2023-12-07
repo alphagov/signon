@@ -92,14 +92,14 @@ class Users::TwoStepVerificationMandationsControllerTest < ActionController::Tes
         EventLog.expects(:record_event).with(
           user,
           EventLog::ACCOUNT_UPDATED,
-          initiator: @admin,
+          initiator: true,
           ip_address: true,
         )
 
         EventLog.expects(:record_event).with(
           user,
           EventLog::TWO_STEP_MANDATED,
-          initiator: @admin,
+          initiator: true,
           ip_address: true,
         )
 

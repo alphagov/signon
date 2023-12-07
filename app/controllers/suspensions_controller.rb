@@ -12,8 +12,7 @@ class SuspensionsController < ApplicationController
   def update
     @suspension = Suspension.new(suspend: params[:user][:suspended] == "1",
                                  reason_for_suspension: params[:user][:reason_for_suspension],
-                                 user: @user,
-                                 initiator: current_user)
+                                 user: @user)
 
     if @suspension.save
       flash[:notice] = "#{@user.email} is now #{@user.suspended? ? 'suspended' : 'active'}."

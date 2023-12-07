@@ -48,7 +48,7 @@ private
       EventLog.record_event(
         user,
         EventLog::PERMISSIONS_ADDED,
-        initiator: current_user,
+        initiator: true,
         application_id:,
         trailing_message: "(#{permissions.map(&:name).join(', ')})",
         ip_address: true,
@@ -59,7 +59,7 @@ private
       EventLog.record_event(
         user,
         EventLog::PERMISSIONS_REMOVED,
-        initiator: current_user,
+        initiator: true,
         application_id:,
         trailing_message: "(#{permissions.map(&:name).join(', ')})",
         ip_address: true,
@@ -71,7 +71,7 @@ private
     EventLog.record_event(
       user,
       EventLog::ACCOUNT_UPDATED,
-      initiator: current_user,
+      initiator: true,
       ip_address: true,
     )
   end
@@ -104,7 +104,7 @@ private
     EventLog.record_event(
       user,
       EventLog::TWO_STEP_EXEMPTION_REMOVED,
-      initiator: current_user,
+      initiator: true,
       ip_address: true,
     )
   end
@@ -115,7 +115,7 @@ private
     EventLog.record_event(
       user,
       EventLog::TWO_STEP_MANDATED,
-      initiator: current_user,
+      initiator: true,
       ip_address: true,
     )
   end

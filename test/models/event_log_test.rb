@@ -96,7 +96,9 @@ class EventLogTest < ActiveSupport::TestCase
 
   test "records the initiator of the event passed as an option" do
     initiator = create(:admin_user)
-    EventLog.record_event(create(:user), EventLog::EMAIL_CHANGED, initiator:)
+    with_current(user: initiator) do
+      EventLog.record_event(create(:user), EventLog::EMAIL_CHANGED, initiator: true)
+    end
 
     assert_equal initiator, EventLog.last.initiator
   end

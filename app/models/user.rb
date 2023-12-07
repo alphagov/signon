@@ -398,7 +398,7 @@ class User < ApplicationRecord
       EventLog.record_event(
         self,
         EventLog::TWO_STEP_RESET,
-        initiator: Current.user,
+        initiator: true,
       )
     end
   end

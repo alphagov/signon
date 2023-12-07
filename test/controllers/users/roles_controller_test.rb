@@ -107,7 +107,7 @@ class Users::RolesControllerTest < ActionController::TestCase
         EventLog.expects(:record_event).with(
           user,
           EventLog::ACCOUNT_UPDATED,
-          initiator: @superadmin,
+          initiator: true,
           ip_address: true,
         )
 
