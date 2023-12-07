@@ -14,8 +14,11 @@ require "mocha/minitest"
 
 GovukTest.configure
 
+require "support/current_helpers"
+
 class ActiveSupport::TestCase
   include FactoryBot::Syntax::Methods
+  include CurrentHelpers
 
   teardown do
     Timecop.return
