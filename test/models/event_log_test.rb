@@ -85,6 +85,13 @@ class EventLogTest < ActiveSupport::TestCase
     assert_equal "from admin to superadmin", EventLog.last.trailing_message
   end
 
+  test "records organisation changes with the details of the organisations" do
+    user = create(:user)
+    EventLog.record_organisation_change(user, "org-name-1", "org-name-2", create(:admin_user))
+
+    assert_equal "from org-name-1 to org-name-2", EventLog.last.trailing_message
+  end
+
   test "records the initiator of the event passed as an option" do
     initiator = create(:admin_user)
     EventLog.record_event(create(:user), EventLog::EMAIL_CHANGED, initiator:)
