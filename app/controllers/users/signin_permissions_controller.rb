@@ -16,11 +16,11 @@ class Users::SigninPermissionsController < ApplicationController
   end
 
   def delete
-    authorize @user.signin_permission_for(@application)
+    authorize UserApplicationPermission.for(@user, @application)
   end
 
   def destroy
-    authorize @user.signin_permission_for(@application)
+    authorize UserApplicationPermission.for(@user, @application)
 
     params = { supported_permission_ids: @user.supported_permissions.map(&:id) - [@application.signin_permission.id] }
     UserUpdate.new(@user, params, current_user, user_ip_address).call

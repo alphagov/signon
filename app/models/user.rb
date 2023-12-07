@@ -172,7 +172,6 @@ class User < ApplicationRecord
   def has_access_to?(application)
     application_permissions.detect { |permission| permission.supported_permission_id == application.signin_permission.id }
   end
-  alias_method :signin_permission_for, :has_access_to?
 
   def has_permission?(supported_permission)
     if persisted?

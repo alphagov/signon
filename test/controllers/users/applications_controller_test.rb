@@ -134,13 +134,14 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
     should "display a button allowing the user to remove access to applications if they're authorised to remove access" do
       user = create(:user)
       application = create(:application, name: "app-name")
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
       current_user = create(:admin_user)
       sign_in current_user
 
+      permission = stub_user_application_permission(user, application)
       stub_policy current_user, user, edit?: true
-      stub_policy current_user, signin_permission, delete?: true
+      stub_policy current_user, permission, delete?: true
       stub_policy_for_navigation_links current_user
 
       get :index, params: { user_id: user }
@@ -151,13 +152,14 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
     should "not display a button allowing the user to remove access to applications if they're not authorised to remove access" do
       user = create(:user)
       application = create(:application, name: "app-name")
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
       current_user = create(:admin_user)
       sign_in current_user
 
+      permission = stub_user_application_permission(user, application)
       stub_policy current_user, user, edit?: true
-      stub_policy current_user, signin_permission, delete?: false
+      stub_policy current_user, permission, delete?: false
       stub_policy_for_navigation_links current_user
 
       get :index, params: { user_id: user }
@@ -168,13 +170,14 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
     should "not display a link to edit permissions if the user is authorised to edit permissions but the app only has the signin permission" do
       user = create(:user)
       application = create(:application, name: "app-name")
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
       current_user = create(:admin_user)
       sign_in current_user
 
+      permission = stub_user_application_permission(user, application)
       stub_policy current_user, user, edit?: true
-      stub_policy current_user, signin_permission, edit?: true
+      stub_policy current_user, permission, edit?: true
       stub_policy_for_navigation_links current_user
 
       get :index, params: { user_id: user }
@@ -185,13 +188,14 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
     should "display a link to edit permissions if the user is authorised to edit permissions" do
       user = create(:user)
       application = create(:application, name: "app-name", with_supported_permissions: %w[foo])
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
       current_user = create(:admin_user)
       sign_in current_user
 
+      permission = stub_user_application_permission(user, application)
       stub_policy current_user, user, edit?: true
-      stub_policy current_user, signin_permission, edit?: true
+      stub_policy current_user, permission, edit?: true
       stub_policy_for_navigation_links current_user
 
       get :index, params: { user_id: user }
@@ -202,13 +206,14 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
     should "display a link to view permissions if the user is not authorised to edit permissions" do
       user = create(:user)
       application = create(:application, name: "app-name")
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
       current_user = create(:admin_user)
       sign_in current_user
 
+      permission = stub_user_application_permission(user, application)
       stub_policy current_user, user, edit?: true
-      stub_policy current_user, signin_permission, edit?: false
+      stub_policy current_user, permission, edit?: false
       stub_policy_for_navigation_links current_user
 
       get :index, params: { user_id: user }
@@ -251,5 +256,11 @@ private
 
   def stub_policy_for_navigation_links(current_user)
     stub_policy(current_user, User, index?: true)
+  end
+
+  def stub_user_application_permission(user, application)
+    permission = UserApplicationPermission.new
+    UserApplicationPermission.stubs(:for).with(user, application).returns(permission)
+    permission
   end
 end

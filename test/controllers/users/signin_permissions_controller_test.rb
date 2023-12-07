@@ -101,9 +101,10 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
 
       user = create(:user)
       application = create(:application)
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
-      stub_policy current_user, signin_permission, delete?: true
+      permission = stub_user_application_permission(user, application)
+      stub_policy current_user, permission, delete?: true
 
       get :delete, params: { user_id: user, application_id: application.id }
 
@@ -129,9 +130,10 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
 
       user = create(:user)
       application = create(:application)
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
-      stub_policy current_user, signin_permission, delete?: false
+      permission = stub_user_application_permission(user, application)
+      stub_policy current_user, permission, delete?: false
 
       get :delete, params: { user_id: user, application_id: application.id }
 
@@ -190,9 +192,10 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
 
       user = create(:user)
       application = create(:application)
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
-      stub_policy current_user, signin_permission, destroy?: true
+      permission = stub_user_application_permission(user, application)
+      stub_policy current_user, permission, destroy?: true
 
       expected_params = { supported_permission_ids: [] }
       user_update = stub("user-update").responds_like_instance_of(UserUpdate)
@@ -208,9 +211,10 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
 
       user = create(:user)
       application = create(:application)
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
-      stub_policy current_user, signin_permission, destroy?: true
+      permission = stub_user_application_permission(user, application)
+      stub_policy current_user, permission, destroy?: true
 
       delete :destroy, params: { user_id: user, application_id: application.id }
 
@@ -232,9 +236,10 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
 
       user = create(:user)
       application = create(:application)
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
-      stub_policy current_user, signin_permission, destroy?: false
+      permission = stub_user_application_permission(user, application)
+      stub_policy current_user, permission, destroy?: false
 
       delete :destroy, params: { user_id: user, application_id: application.id }
 

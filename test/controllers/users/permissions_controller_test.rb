@@ -109,12 +109,13 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     should "prevent unauthorized users" do
       application = create(:application)
       user = create(:user)
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
       current_user = create(:admin_user)
       sign_in current_user
 
-      stub_policy current_user, signin_permission, edit?: false
+      permission = stub_user_application_permission(user, application)
+      stub_policy current_user, permission, edit?: false
 
       get :edit, params: { user_id: user, application_id: application.id }
 
@@ -127,12 +128,13 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       perm2 = create(:supported_permission, application:, name: "perm-2")
       perm3 = create(:supported_permission, application:, name: "perm-3", grantable_from_ui: false)
       user = create(:user, with_permissions: { application => %w[perm-1] })
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
       current_user = create(:admin_user)
       sign_in current_user
 
-      stub_policy current_user, signin_permission, edit?: true
+      permission = stub_user_application_permission(user, application)
+      stub_policy current_user, permission, edit?: true
 
       get :edit, params: { user_id: user.id, application_id: application.id }
 
@@ -145,12 +147,13 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     should "include a hidden field for the signin permission so that it is not removed" do
       application = create(:application, with_supported_permissions: ["perm-1", SupportedPermission::SIGNIN_NAME])
       user = create(:user, with_permissions: { application => %w[perm-1] })
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
       current_user = create(:admin_user)
       sign_in current_user
 
-      stub_policy current_user, signin_permission, edit?: true
+      permission = stub_user_application_permission(user, application)
+      stub_policy current_user, permission, edit?: true
 
       get :edit, params: { user_id: user.id, application_id: application.id }
 
@@ -205,12 +208,13 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     should "replace the users permissions with new ones" do
       application = create(:application, with_supported_permissions: %w[new old])
       user = create(:user, with_permissions: { application => %w[old] })
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
       current_user = create(:admin_user)
       sign_in current_user
 
-      stub_policy current_user, signin_permission, update?: true
+      permission = stub_user_application_permission(user, application)
+      stub_policy current_user, permission, update?: true
 
       new_permission = application.supported_permissions.find_by(name: "new")
 
@@ -225,12 +229,13 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     should "redirect once the permissions have been updated" do
       application = create(:application, with_supported_permissions: %w[new old])
       user = create(:user, with_permissions: { application => %w[old] })
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
       current_user = create(:admin_user)
       sign_in current_user
 
-      stub_policy current_user, signin_permission, update?: true
+      permission = stub_user_application_permission(user, application)
+      stub_policy current_user, permission, update?: true
 
       new_permission = application.supported_permissions.find_by(name: "new")
 
@@ -243,12 +248,13 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       other_application = create(:application, with_supported_permissions: %w[other])
       application = create(:application, with_supported_permissions: %w[new old])
       user = create(:user, with_permissions: { application => %w[old], other_application => %w[other] })
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
       current_user = create(:admin_user)
       sign_in current_user
 
-      stub_policy current_user, signin_permission, update?: true
+      permission = stub_user_application_permission(user, application)
+      stub_policy current_user, permission, update?: true
 
       new_permission = application.supported_permissions.find_by(name: "new")
       other_permission = other_application.supported_permissions.find_by(name: "other")
@@ -264,12 +270,13 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     should "assign the application id to the application_id flash" do
       application = create(:application, with_supported_permissions: %w[new old])
       user = create(:user, with_permissions: { application => %w[old] })
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
       current_user = create(:admin_user)
       sign_in current_user
 
-      stub_policy current_user, signin_permission, update?: true
+      permission = stub_user_application_permission(user, application)
+      stub_policy current_user, permission, update?: true
 
       new_permission = application.supported_permissions.find_by(name: "new")
 
@@ -304,12 +311,13 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     should "prevent unauthorised users" do
       application = create(:application)
       user = create(:user)
-      signin_permission = user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(application)
 
       current_user = create(:admin_user)
       sign_in current_user
 
-      stub_policy current_user, signin_permission, update?: false
+      permission = stub_user_application_permission(user, application)
+      stub_policy current_user, permission, update?: false
 
       patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [] } }
 
@@ -321,5 +329,11 @@ private
 
   def stub_policy_for_navigation_links(current_user)
     stub_policy(current_user, User, index?: true)
+  end
+
+  def stub_user_application_permission(user, application)
+    permission = UserApplicationPermission.new
+    UserApplicationPermission.stubs(:for).with(user, application).returns(permission)
+    permission
   end
 end

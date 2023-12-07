@@ -14,13 +14,13 @@ class Users::PermissionsController < ApplicationController
   end
 
   def edit
-    authorize @user.signin_permission_for(@application)
+    authorize UserApplicationPermission.for(@user, @application)
 
     @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false)
   end
 
   def update
-    authorize @user.signin_permission_for(@application)
+    authorize UserApplicationPermission.for(@user, @application)
 
     permission_ids_for_other_applications = @user.supported_permissions.excluding_application(@application).pluck(:id)
     user_update_params = { supported_permission_ids: permission_ids_for_other_applications + update_params[:supported_permission_ids].map(&:to_i) }
