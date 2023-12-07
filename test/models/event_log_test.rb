@@ -87,7 +87,9 @@ class EventLogTest < ActiveSupport::TestCase
 
   test "records organisation changes with the details of the organisations" do
     user = create(:user)
-    EventLog.record_organisation_change(user, "org-name-1", "org-name-2", create(:admin_user))
+    with_current(user: create(:admin_user)) do
+      EventLog.record_organisation_change(user, "org-name-1", "org-name-2")
+    end
 
     assert_equal "from org-name-1 to org-name-2", EventLog.last.trailing_message
   end
