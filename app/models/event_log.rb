@@ -102,8 +102,8 @@ class EventLog < ApplicationRecord
     record_event(user, event, initiator:, trailing_message: "from #{email_was} to #{email_is}")
   end
 
-  def self.record_role_change(user, previous_role, new_role, initiator)
-    record_event(user, ROLE_CHANGED, initiator:, trailing_message: "from #{previous_role} to #{new_role}")
+  def self.record_role_change(user, previous_role, new_role)
+    record_event(user, ROLE_CHANGED, initiator: Current.user, trailing_message: "from #{previous_role} to #{new_role}")
   end
 
   def self.record_organisation_change(user, previous_organisation, new_organisation, initiator)

@@ -84,7 +84,6 @@ private
       user,
       role_change.first,
       role_change.last,
-      current_user,
     )
   end
 

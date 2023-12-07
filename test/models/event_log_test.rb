@@ -78,10 +78,11 @@ class EventLogTest < ActiveSupport::TestCase
 
   test "records role changes with the details of the roles" do
     user = create(:user, email: "new@example.com")
-    admin = create(:admin_user)
-    event_log = EventLog.record_role_change(user, Roles::Admin.name, Roles::Superadmin.name, admin)
+    with_current(user: create(:admin_user)) do
+      EventLog.record_role_change(user, Roles::Admin.name, Roles::Superadmin.name)
+    end
 
-    assert_equal "from admin to superadmin", event_log.trailing_message
+    assert_equal "from admin to superadmin", EventLog.last.trailing_message
   end
 
   test "records the initiator of the event passed as an option" do

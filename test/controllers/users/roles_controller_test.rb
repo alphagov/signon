@@ -117,7 +117,6 @@ class Users::RolesControllerTest < ActionController::TestCase
           user,
           Roles::Normal.name,
           Roles::OrganisationAdmin.name,
-          @superadmin,
         )
 
         put :update, params: { user_id: user, user: { role: Roles::OrganisationAdmin.name } }
