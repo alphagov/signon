@@ -96,6 +96,7 @@ class Users::TwoStepVerificationResetsControllerTest < ActionController::TestCas
       should "record account updated event" do
         user = create(:two_step_enabled_user)
 
+        EventLog.stubs(:record_event).with(user, EventLog::ACCOUNT_UPDATED, anything)
         EventLog.expects(:record_event).with(user, EventLog::TWO_STEP_RESET, initiator: true)
 
         put :update, params: { user_id: user }

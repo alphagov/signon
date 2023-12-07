@@ -95,6 +95,7 @@ class Users::UnlockingsControllerTest < ActionController::TestCase
       should "record manual account unlock event" do
         user = create(:locked_user)
 
+        EventLog.stubs(:record_event).with(user, EventLog::ACCOUNT_UPDATED, anything)
         EventLog.expects(:record_event).with(
           user,
           EventLog::MANUAL_ACCOUNT_UNLOCK,
