@@ -9,7 +9,6 @@ class UsersController < ApplicationController
   before_action :load_user, except: %i[index]
   before_action :redirect_to_account_page_if_acting_on_own_user, only: %i[edit]
   before_action :authorize_user, except: %i[index]
-  before_action :allow_no_application_access, only: [:update]
   before_action :redirect_legacy_filters, only: [:index]
   helper_method :applications_and_permissions, :filter_params
   respond_to :html
@@ -70,13 +69,6 @@ private
         csv << presenter.row(user)
       end
     end
-  end
-
-  # When no permissions are selected for a user, we set the value to [] so
-  # a user can have no permissions
-  def allow_no_application_access
-    params[:user] ||= {}
-    params[:user][:supported_permission_ids] ||= []
   end
 
   def user_params
