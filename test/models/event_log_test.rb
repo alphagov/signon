@@ -104,7 +104,9 @@ class EventLogTest < ActiveSupport::TestCase
   test "records the IPv6 address of the user passed as an option" do
     raw_ip_address = "2001:0db8:0000:0000:0008:0800:200c:417a"
     parsed_ip_address = IPAddr.new(raw_ip_address, Socket::AF_INET6).to_s
-    EventLog.record_event(create(:user), EventLog::SUCCESSFUL_LOGIN, ip_address: raw_ip_address)
+    with_current(user_ip: raw_ip_address) do
+      EventLog.record_event(create(:user), EventLog::SUCCESSFUL_LOGIN, ip_address: true)
+    end
 
     assert_equal parsed_ip_address, EventLog.last.ip_address_string
   end
@@ -112,7 +114,9 @@ class EventLogTest < ActiveSupport::TestCase
   test "records the IP address of the user passed as an option" do
     raw_ip_address = "1.2.3.4"
     parsed_ip_address = IPAddr.new(raw_ip_address, Socket::AF_INET).to_s
-    EventLog.record_event(create(:user), EventLog::SUCCESSFUL_LOGIN, ip_address: raw_ip_address)
+    with_current(user_ip: raw_ip_address) do
+      EventLog.record_event(create(:user), EventLog::SUCCESSFUL_LOGIN, ip_address: true)
+    end
 
     assert_equal parsed_ip_address, EventLog.last.ip_address_string
   end

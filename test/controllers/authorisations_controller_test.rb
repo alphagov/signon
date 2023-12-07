@@ -205,7 +205,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
           EventLog::ACCESS_TOKEN_GENERATED,
           initiator: @superadmin,
           application: @application,
-          ip_address: "1.1.1.1",
+          ip_address: true,
         )
 
         post :create, params: { api_user_id: @api_user, authorisation: { application_id: @application } }
@@ -321,7 +321,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
           EventLog::ACCESS_TOKEN_REVOKED,
           initiator: @superadmin,
           application: @access_token.application,
-          ip_address: "1.1.1.1",
+          ip_address: true,
         )
 
         post :revoke, params: { api_user_id: @api_user, id: @access_token }

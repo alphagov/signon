@@ -6,12 +6,12 @@ class Account::PasswordsController < ApplicationController
 
   def update
     if current_user.update_with_password(password_params)
-      EventLog.record_event(current_user, EventLog::SUCCESSFUL_PASSWORD_CHANGE, ip_address: user_ip_address)
+      EventLog.record_event(current_user, EventLog::SUCCESSFUL_PASSWORD_CHANGE, ip_address: true)
       flash[:notice] = t(:updated, scope: "devise.passwords")
       bypass_sign_in(current_user)
       redirect_to account_path
     else
-      EventLog.record_event(current_user, EventLog::UNSUCCESSFUL_PASSWORD_CHANGE, ip_address: user_ip_address)
+      EventLog.record_event(current_user, EventLog::UNSUCCESSFUL_PASSWORD_CHANGE, ip_address: true)
       render :edit
     end
   end

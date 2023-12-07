@@ -104,13 +104,11 @@ class Users::RolesControllerTest < ActionController::TestCase
       should "record account updated & role change events" do
         user = create(:user_in_organisation, role: Roles::Normal.name)
 
-        @controller.stubs(:user_ip_address).returns("1.1.1.1")
-
         EventLog.expects(:record_event).with(
           user,
           EventLog::ACCOUNT_UPDATED,
           initiator: @superadmin,
-          ip_address: "1.1.1.1",
+          ip_address: true,
         )
 
         EventLog.expects(:record_role_change).with(

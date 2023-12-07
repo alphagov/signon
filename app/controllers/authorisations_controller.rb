@@ -14,7 +14,7 @@ class AuthorisationsController < ApplicationController
 
     if @authorisation.save
       @api_user.grant_application_signin_permission(@authorisation.application)
-      EventLog.record_event(@api_user, EventLog::ACCESS_TOKEN_GENERATED, initiator: current_user, application: @authorisation.application, ip_address: user_ip_address)
+      EventLog.record_event(@api_user, EventLog::ACCESS_TOKEN_GENERATED, initiator: current_user, application: @authorisation.application, ip_address: true)
       flash[:authorisation] = { application_name: @authorisation.application.name, token: @authorisation.token }
     else
       flash[:error] = "There was an error while creating the access token"
@@ -26,7 +26,7 @@ class AuthorisationsController < ApplicationController
 
   def revoke
     if @authorisation.revoke
-      EventLog.record_event(@api_user, EventLog::ACCESS_TOKEN_REVOKED, initiator: current_user, application: @authorisation.application, ip_address: user_ip_address)
+      EventLog.record_event(@api_user, EventLog::ACCESS_TOKEN_REVOKED, initiator: current_user, application: @authorisation.application, ip_address: true)
       flash[:notice] = "Access for #{@authorisation.application.name} was revoked"
     else
       flash[:error] = "There was an error while revoking access for #{@authorisation.application.name}"

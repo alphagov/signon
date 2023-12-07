@@ -150,13 +150,11 @@ class Users::NamesControllerTest < ActionController::TestCase
       should "record account updated event" do
         user = create(:user)
 
-        @controller.stubs(:user_ip_address).returns("1.1.1.1")
-
         EventLog.expects(:record_event).with(
           user,
           EventLog::ACCOUNT_UPDATED,
           initiator: @superadmin,
-          ip_address: "1.1.1.1",
+          ip_address: true,
         )
 
         put :update, params: { user_id: user, user: { name: "new-user-name" } }
