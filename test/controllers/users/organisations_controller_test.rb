@@ -118,7 +118,6 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
           user,
           organisation.name,
           another_organisation.name,
-          @admin,
         )
 
         put :update, params: { user_id: user, user: { organisation_id: another_organisation } }

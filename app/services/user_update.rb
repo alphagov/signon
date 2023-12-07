@@ -95,7 +95,6 @@ private
       user,
       Organisation.find_by(id: organisation_change.first)&.name || Organisation::NONE,
       Organisation.find_by(id: organisation_change.last)&.name || Organisation::NONE,
-      current_user,
     )
   end
 
