@@ -70,6 +70,7 @@ class User < ApplicationRecord
   before_save :update_password_changed
   before_save :strip_whitespace_from_name
   after_update :record_update
+  after_update :record_role_change
 
   scope :web_users, -> { where(api_user: false) }
 
@@ -471,5 +472,12 @@ private
     return if previous_changes.none?
 
     EventLog.record_event(self, EventLog::ACCOUNT_UPDATED, initiator: true, ip_address: true)
+  end
+
+  def record_role_change
+    return if Current.user.blank?
+    return unless role_previously_changed?
+
+    EventLog.record_role_change(self, *role_previous_change)
   end
 end
