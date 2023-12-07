@@ -413,7 +413,9 @@ class UserTest < ActiveSupport::TestCase
         @user = create(:two_step_enabled_user)
         @initiator = create(:superadmin_user)
         @expiry_date = Time.zone.today + 10
-        @user.exempt_from_2sv("accessibility reasons", @initiator, @expiry_date)
+        with_current(user: @initiator) do
+          @user.exempt_from_2sv("accessibility reasons", @initiator, @expiry_date)
+        end
       end
 
       should "set require 2sv to false and store the reason and expiry date" do

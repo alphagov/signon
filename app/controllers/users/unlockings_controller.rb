@@ -8,7 +8,7 @@ class Users::UnlockingsController < ApplicationController
 
   def update
     @user.unlock_access!
-    EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK, initiator: current_user, ip_address: true)
+    EventLog.record_event(@user, EventLog::MANUAL_ACCOUNT_UNLOCK, initiator: true, ip_address: true)
     flash[:notice] = "Unlocked #{@user.email}"
     redirect_to edit_user_path(@user)
   end

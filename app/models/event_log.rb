@@ -85,6 +85,9 @@ class EventLog < ApplicationRecord
   end
 
   def self.record_event(user, event, options = {})
+    if options[:initiator]
+      options[:initiator] = Current.user
+    end
     if options[:ip_address] && Current.user_ip
       options[:ip_address] = convert_ip_address_to_integer(Current.user_ip)
     end
@@ -97,21 +100,20 @@ class EventLog < ApplicationRecord
   end
 
   def self.record_email_change(user, email_was, email_is)
-    initiator = Current.user
-    event = user == initiator ? EMAIL_CHANGE_INITIATED : EMAIL_CHANGED
-    record_event(user, event, initiator:, trailing_message: "from #{email_was} to #{email_is}")
+    event = user == Current.user ? EMAIL_CHANGE_INITIATED : EMAIL_CHANGED
+    record_event(user, event, initiator: true, trailing_message: "from #{email_was} to #{email_is}")
   end
 
   def self.record_role_change(user, previous_role, new_role)
-    record_event(user, ROLE_CHANGED, initiator: Current.user, trailing_message: "from #{previous_role} to #{new_role}")
+    record_event(user, ROLE_CHANGED, initiator: true, trailing_message: "from #{previous_role} to #{new_role}")
   end
 
   def self.record_organisation_change(user, previous_organisation_name, new_organisation_name)
-    record_event(user, ORGANISATION_CHANGED, initiator: Current.user, trailing_message: "from #{previous_organisation_name} to #{new_organisation_name}")
+    record_event(user, ORGANISATION_CHANGED, initiator: true, trailing_message: "from #{previous_organisation_name} to #{new_organisation_name}")
   end
 
   def self.record_account_invitation(user)
-    record_event(user, ACCOUNT_INVITED, initiator: Current.user)
+    record_event(user, ACCOUNT_INVITED, initiator: true)
   end
 
   def self.for(user)

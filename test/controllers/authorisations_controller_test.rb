@@ -203,7 +203,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
         EventLog.expects(:record_event).with(
           @api_user,
           EventLog::ACCESS_TOKEN_GENERATED,
-          initiator: @superadmin,
+          initiator: true,
           application: @application,
           ip_address: true,
         )
@@ -319,7 +319,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
         EventLog.expects(:record_event).with(
           @api_user,
           EventLog::ACCESS_TOKEN_REVOKED,
-          initiator: @superadmin,
+          initiator: true,
           application: @access_token.application,
           ip_address: true,
         )

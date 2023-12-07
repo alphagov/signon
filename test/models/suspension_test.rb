@@ -52,20 +52,18 @@ class SuspensionTest < ActiveSupport::TestCase
 
   should "log unsuspend events" do
     user = stub(unsuspend: true)
-    initiator = mock
 
-    EventLog.expects(:record_event).with(user, EventLog::ACCOUNT_UNSUSPENDED, initiator:, ip_address: true)
-    suspension = Suspension.new(suspend: false, user:, initiator:)
+    EventLog.expects(:record_event).with(user, EventLog::ACCOUNT_UNSUSPENDED, initiator: true, ip_address: true)
+    suspension = Suspension.new(suspend: false, user:)
 
     suspension.save!
   end
 
   should "log suspend events" do
     user = stub(suspend: true)
-    initiator = mock
 
-    EventLog.expects(:record_event).with(user, EventLog::ACCOUNT_SUSPENDED, initiator:, ip_address: true)
-    suspension = Suspension.new(suspend: true, reason_for_suspension: "A reason", user:, initiator:)
+    EventLog.expects(:record_event).with(user, EventLog::ACCOUNT_SUSPENDED, initiator: true, ip_address: true)
+    suspension = Suspension.new(suspend: true, reason_for_suspension: "A reason", user:)
 
     suspension.save!
   end
