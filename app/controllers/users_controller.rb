@@ -71,13 +71,9 @@ private
 
   def user_params
     UserParameterSanitiser.new(
-      user_params: permitted_user_params,
+      user_params: params.require(:user).permit(:require_2sv).to_h,
       current_user_role: current_user.role.to_sym,
     ).sanitise
-  end
-
-  def permitted_user_params
-    @permitted_user_params ||= params.require(:user).permit(:require_2sv).to_h
   end
 
   def filter_params
