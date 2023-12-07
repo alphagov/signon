@@ -110,8 +110,8 @@ class EventLog < ApplicationRecord
     record_event(user, ORGANISATION_CHANGED, initiator: Current.user, trailing_message: "from #{previous_organisation_name} to #{new_organisation_name}")
   end
 
-  def self.record_account_invitation(user, initiator)
-    record_event(user, ACCOUNT_INVITED, initiator:)
+  def self.record_account_invitation(user)
+    record_event(user, ACCOUNT_INVITED, initiator: Current.user)
   end
 
   def self.for(user)

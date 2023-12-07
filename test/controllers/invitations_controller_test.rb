@@ -386,7 +386,7 @@ class InvitationsControllerTest < ActionController::TestCase
       end
 
       should "record account invitation in event log when invitation sent" do
-        EventLog.expects(:record_account_invitation).with(instance_of(User), @inviter)
+        EventLog.expects(:record_account_invitation).with(instance_of(User))
 
         post :create, params: { user: { name: "invitee", email: "invitee@gov.uk" } }
       end
