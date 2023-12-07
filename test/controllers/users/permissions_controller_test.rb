@@ -221,7 +221,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       expected_params = { supported_permission_ids: [new_permission.id, application.signin_permission.id].sort }
       user_update = stub("user-update").responds_like_instance_of(UserUpdate)
       user_update.expects(:call)
-      UserUpdate.stubs(:new).with(user, expected_params, current_user, anything).returns(user_update)
+      UserUpdate.stubs(:new).with(user, expected_params).returns(user_update)
 
       patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
     end
@@ -262,7 +262,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       expected_params = { supported_permission_ids: [other_permission.id, new_permission.id, application.signin_permission.id].sort }
       user_update = stub("user-update").responds_like_instance_of(UserUpdate)
       user_update.expects(:call)
-      UserUpdate.stubs(:new).with(user, expected_params, current_user, anything).returns(user_update)
+      UserUpdate.stubs(:new).with(user, expected_params).returns(user_update)
 
       patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
     end

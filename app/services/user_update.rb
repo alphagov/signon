@@ -1,11 +1,9 @@
 class UserUpdate
-  attr_reader :user, :user_params, :current_user, :user_ip
+  attr_reader :user, :user_params
 
-  def initialize(user, user_params, current_user, user_ip)
+  def initialize(user, user_params)
     @user = user
     @user_params = user_params
-    @current_user = current_user
-    @user_ip = user_ip
   end
 
   def call
@@ -156,4 +154,7 @@ private
       Permission.new(p.supported_permission.name, p.application_id)
     end
   end
+
+  def current_user = Current.user
+  def user_ip = Current.user_ip
 end

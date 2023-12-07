@@ -20,7 +20,7 @@ class Account::PermissionsController < ApplicationController
   def update
     authorize [:account, @application], :edit_permissions?
 
-    UserUpdate.new(current_user, build_user_update_params, current_user, user_ip_address).call
+    UserUpdate.new(current_user, build_user_update_params).call
 
     flash[:application_id] = @application.id
     redirect_to account_applications_path

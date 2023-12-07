@@ -11,7 +11,9 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "record an event" do
-    UserUpdate.new(affected_user, {}, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, {}).call
+    end
 
     assert_equal 1, EventLog.where(event_id: EventLog::ACCOUNT_UPDATED.id).count
   end
@@ -24,7 +26,9 @@ class UserUpdateTest < ActionView::TestCase
 
     perms = app.supported_permissions.first(2).map(&:id)
     params = { supported_permission_ids: perms }
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
 
     add_event = EventLog.where(event_id: EventLog::PERMISSIONS_ADDED.id).last
     assert ["(Editor, signin)", "(signin, Editor)"].include?(add_event.trailing_message)
@@ -44,7 +48,9 @@ class UserUpdateTest < ActionView::TestCase
     app = create(:application, name: "App", with_supported_permissions: permissions)
 
     params = { supported_permission_ids: app.supported_permissions.map(&:id) }
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
 
     add_event = EventLog.where(event_id: EventLog::PERMISSIONS_ADDED.id).last
     logged_permissions = add_event.trailing_message.sub(/^\(/, "").sub(/\)$/, "").gsub(/ /, "").split(",")
@@ -56,14 +62,18 @@ class UserUpdateTest < ActionView::TestCase
     @affected_user = create(:two_step_exempted_user)
 
     params = { require_2sv: "1" }
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
 
     assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_EXEMPTION_REMOVED.id).count
   end
 
   should "record when 2SV has been mandated" do
     params = { require_2sv: "1" }
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
 
     assert_equal 1, EventLog.where(event_id: EventLog::TWO_STEP_MANDATED.id).count
   end
@@ -73,7 +83,9 @@ class UserUpdateTest < ActionView::TestCase
     affected_user.grant_application_signin_permission(app)
     assert affected_user.has_access_to?(app)
 
-    UserUpdate.new(affected_user, {}, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, {}).call
+    end
 
     assert affected_user.has_access_to?(app)
   end
@@ -84,7 +96,9 @@ class UserUpdateTest < ActionView::TestCase
     affected_user = create(:user, organisation: organisation_1)
 
     params = { organisation_id: organisation_2.id }
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
 
     assert_equal 1, EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).count
     assert_equal "from organisation-1 to organisation-2", EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).last.trailing_message
@@ -95,7 +109,9 @@ class UserUpdateTest < ActionView::TestCase
     @affected_user = create(:user, organisation: nil)
 
     params = { organisation_id: organisation.id }
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
 
     assert_equal 1, EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).count
     assert_equal "from None to organisation-name", EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).last.trailing_message
@@ -106,7 +122,9 @@ class UserUpdateTest < ActionView::TestCase
     @affected_user = create(:user, organisation:)
 
     params = { organisation_id: nil }
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
 
     assert_equal 1, EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).count
     assert_equal "from organisation-name to None", EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).last.trailing_message
@@ -116,14 +134,18 @@ class UserUpdateTest < ActionView::TestCase
     params = { email: "new@gov.uk" }
     EventLog.expects(:record_email_change).with(affected_user, affected_user.email, "new@gov.uk", current_user)
 
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
   end
 
   should "not record email change if value of email attribute has not changed" do
     params = { email: affected_user.email }
     EventLog.expects(:record_email_change).never
 
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
   end
 
   should "invite user if email has changed, user has been invited, and user is a web user" do
@@ -131,7 +153,9 @@ class UserUpdateTest < ActionView::TestCase
     @affected_user = create(:invited_user)
     affected_user.expects(:invite!)
 
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
   end
 
   should "not invite user if email has changed and user is a web user, but user has not been invited" do
@@ -139,7 +163,9 @@ class UserUpdateTest < ActionView::TestCase
     @affected_user = create(:user)
     affected_user.expects(:invite!).never
 
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
   end
 
   should "not invite user if email has changed, user has been invited, but user is an API user" do
@@ -147,7 +173,9 @@ class UserUpdateTest < ActionView::TestCase
     @affected_user = create(:api_user, :invited)
     affected_user.expects(:invite!).never
 
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
   end
 
   should "notify user if email has changed and user is a web user" do
@@ -165,14 +193,18 @@ class UserUpdateTest < ActionView::TestCase
     ).returns(mail_to_new_email)
     mail_to_new_email.expects(:deliver_later)
 
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
   end
 
   should "not notify user if user is a web user, but email has not changed" do
     params = { email: affected_user.email }
     UserMailer.expects(:email_changed_by_admin_notification).never
 
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
   end
 
   should "not notify user if email has changed, but user is an API user" do
@@ -180,6 +212,23 @@ class UserUpdateTest < ActionView::TestCase
     @affected_user = create(:api_user)
     UserMailer.expects(:email_changed_by_admin_notification).never
 
-    UserUpdate.new(affected_user, params, current_user, ip_address).call
+    with_current(user: current_user, user_ip: ip_address) do
+      UserUpdate.new(affected_user, params).call
+    end
+  end
+
+private
+
+  def with_current(user: nil, user_ip: nil)
+    original_user = Current.user
+    original_user_ip = Current.user_ip
+    begin
+      Current.user = user
+      Current.user_ip = user_ip
+      yield
+    ensure
+      Current.user = original_user
+      Current.user_ip = original_user_ip
+    end
   end
 end

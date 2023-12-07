@@ -21,7 +21,7 @@ class Users::PermissionsController < ApplicationController
   def update
     authorize UserApplicationPermission.for(@user, @application)
 
-    UserUpdate.new(@user, build_user_update_params, current_user, user_ip_address).call
+    UserUpdate.new(@user, build_user_update_params).call
 
     flash[:application_id] = @application.id
     redirect_to user_applications_path(@user)
