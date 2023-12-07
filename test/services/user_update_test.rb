@@ -7,6 +7,7 @@ class UserUpdateTest < ActionView::TestCase
   setup do
     @current_user = create(:superadmin_user)
     @affected_user = create(:user)
+    @affected_user.name = "different-name"
     @ip_address = "1.2.3.4"
   end
 
