@@ -389,7 +389,7 @@ class User < ApplicationRecord
     end
   end
 
-  def reset_2sv!(initiator)
+  def reset_2sv!
     transaction do
       self.otp_secret_key = nil
       self.require_2sv = true
@@ -398,7 +398,7 @@ class User < ApplicationRecord
       EventLog.record_event(
         self,
         EventLog::TWO_STEP_RESET,
-        initiator:,
+        initiator: Current.user,
       )
     end
   end
