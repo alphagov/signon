@@ -37,22 +37,23 @@ class EventLogTest < ActiveSupport::TestCase
   context ".record_email_change" do
     should "record event EMAIL_CHANGED when initiator is an admin" do
       user = create(:user, email: "new@example.com")
-      event_log = EventLog.record_email_change(user, "old@example.com", user.email, create(:admin_user))
+      EventLog.record_email_change(user, "old@example.com", user.email, create(:admin_user))
 
-      assert_equal EventLog::EMAIL_CHANGED, event_log.entry
+      assert_equal EventLog::EMAIL_CHANGED, EventLog.last.entry
     end
 
     should "record event EMAIL_CHANGE_INITIATED when a user is changing their own email" do
       user = create(:user, email: "new@example.com")
-      event_log = EventLog.record_email_change(user, "old@example.com", user.email)
+      EventLog.record_email_change(user, "old@example.com", user.email)
 
-      assert_equal EventLog::EMAIL_CHANGE_INITIATED, event_log.entry
+      assert_equal EventLog::EMAIL_CHANGE_INITIATED, EventLog.last.entry
     end
 
     should "record email change events with a trailing message" do
       user = create(:user, email: "new@example.com")
-      event_log = EventLog.record_email_change(user, "old@example.com", user.email)
+      EventLog.record_email_change(user, "old@example.com", user.email)
 
+      event_log = EventLog.last
       assert_equal user.uid, event_log.uid
       assert_equal user.id, event_log.initiator_id
       assert_equal "from old@example.com to new@example.com", event_log.trailing_message
@@ -61,9 +62,9 @@ class EventLogTest < ActiveSupport::TestCase
     should "record the initiator when initiator is other than the user" do
       user = create(:user, email: "new@example.com")
       admin = create(:admin_user)
-      event_log = EventLog.record_email_change(user, "old@example.com", user.email, admin)
+      EventLog.record_email_change(user, "old@example.com", user.email, admin)
 
-      assert_equal admin.id, event_log.initiator_id
+      assert_equal admin.id, EventLog.last.initiator_id
     end
   end
 
