@@ -72,6 +72,7 @@ class User < ApplicationRecord
   after_update :record_update
   after_update :record_role_change
   after_update :record_organisation_change
+  after_update :record_2sv_exemption_removed
 
   scope :web_users, -> { where(api_user: false) }
 
@@ -490,5 +491,12 @@ private
       Organisation.find_by(id: organisation_id)&.name || Organisation::NONE
     end
     EventLog.record_organisation_change(self, *organisations)
+  end
+
+  def record_2sv_exemption_removed
+    return if Current.user.blank?
+    return unless require_2sv && reason_for_2sv_exemption_previously_changed?
+
+    EventLog.record_event(self, EventLog::TWO_STEP_EXEMPTION_REMOVED, initiator: true, ip_address: true)
   end
 end

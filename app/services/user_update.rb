@@ -14,7 +14,6 @@ class UserUpdate
     user.application_permissions.reload
 
     record_permission_changes(old_permissions)
-    record_2sv_exemption_removed
     record_2sv_mandated
     send_two_step_mandated_notification
     perform_permissions_update
@@ -62,17 +61,6 @@ private
         ip_address: true,
       )
     end
-  end
-
-  def record_2sv_exemption_removed
-    return unless user.require_2sv && user.previous_changes[:reason_for_2sv_exemption]
-
-    EventLog.record_event(
-      user,
-      EventLog::TWO_STEP_EXEMPTION_REMOVED,
-      initiator: true,
-      ip_address: true,
-    )
   end
 
   def record_2sv_mandated
