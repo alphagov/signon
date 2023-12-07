@@ -85,8 +85,8 @@ class EventLog < ApplicationRecord
   end
 
   def self.record_event(user, event, options = {})
-    if options[:ip_address]
-      options[:ip_address] = convert_ip_address_to_integer(options[:ip_address])
+    if options[:ip_address] && Current.user_ip
+      options[:ip_address] = convert_ip_address_to_integer(Current.user_ip)
     end
     attributes = {
       uid: user&.uid,

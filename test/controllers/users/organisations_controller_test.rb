@@ -105,13 +105,11 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
       should "record account updated & organisation change events" do
         user = create(:user, organisation:)
 
-        @controller.stubs(:user_ip_address).returns("1.1.1.1")
-
         EventLog.expects(:record_event).with(
           user,
           EventLog::ACCOUNT_UPDATED,
           initiator: @admin,
-          ip_address: "1.1.1.1",
+          ip_address: true,
         )
 
         EventLog.expects(:record_organisation_change).with(

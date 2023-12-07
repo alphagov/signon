@@ -26,7 +26,7 @@ private
       EventLog.record_event(
         current_user,
         EventLog::SUCCESSFUL_LOGIN,
-        ip_address: user_ip_address,
+        ip_address: true,
         user_agent_id: user_agent_record_id,
       )
     else
@@ -37,14 +37,14 @@ private
         EventLog.record_event(
           user,
           EventLog::UNSUCCESSFUL_LOGIN,
-          ip_address: user_ip_address,
+          ip_address: true,
           user_agent_string: user_agent,
         )
       else
         EventLog.record_event(
           nil,
           EventLog::NO_SUCH_ACCOUNT_LOGIN,
-          ip_address: user_ip_address,
+          ip_address: true,
           user_agent_string: user_agent,
           user_email_string: email,
         )

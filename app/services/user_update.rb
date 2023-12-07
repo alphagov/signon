@@ -51,7 +51,7 @@ private
         initiator: current_user,
         application_id:,
         trailing_message: "(#{permissions.map(&:name).join(', ')})",
-        ip_address: user_ip,
+        ip_address: true,
       )
     end
 
@@ -62,7 +62,7 @@ private
         initiator: current_user,
         application_id:,
         trailing_message: "(#{permissions.map(&:name).join(', ')})",
-        ip_address: user_ip,
+        ip_address: true,
       )
     end
   end
@@ -72,7 +72,7 @@ private
       user,
       EventLog::ACCOUNT_UPDATED,
       initiator: current_user,
-      ip_address: user_ip,
+      ip_address: true,
     )
   end
 
@@ -105,7 +105,7 @@ private
       user,
       EventLog::TWO_STEP_EXEMPTION_REMOVED,
       initiator: current_user,
-      ip_address: user_ip,
+      ip_address: true,
     )
   end
 
@@ -116,7 +116,7 @@ private
       user,
       EventLog::TWO_STEP_MANDATED,
       initiator: current_user,
-      ip_address: user_ip,
+      ip_address: true,
     )
   end
 
@@ -154,5 +154,4 @@ private
   end
 
   def current_user = Current.user
-  def user_ip = Current.user_ip
 end

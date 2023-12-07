@@ -95,13 +95,11 @@ class Users::UnlockingsControllerTest < ActionController::TestCase
       should "record manual account unlock event" do
         user = create(:locked_user)
 
-        @controller.stubs(:user_ip_address).returns("1.1.1.1")
-
         EventLog.expects(:record_event).with(
           user,
           EventLog::MANUAL_ACCOUNT_UNLOCK,
           initiator: @admin,
-          ip_address: "1.1.1.1",
+          ip_address: true,
         )
 
         put :update, params: { user_id: user }

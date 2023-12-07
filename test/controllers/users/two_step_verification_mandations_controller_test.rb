@@ -89,20 +89,18 @@ class Users::TwoStepVerificationMandationsControllerTest < ActionController::Tes
       should "record account updated & 2SV mandated events" do
         user = create(:user, require_2sv: false)
 
-        @controller.stubs(:user_ip_address).returns("1.1.1.1")
-
         EventLog.expects(:record_event).with(
           user,
           EventLog::ACCOUNT_UPDATED,
           initiator: @admin,
-          ip_address: "1.1.1.1",
+          ip_address: true,
         )
 
         EventLog.expects(:record_event).with(
           user,
           EventLog::TWO_STEP_MANDATED,
           initiator: @admin,
-          ip_address: "1.1.1.1",
+          ip_address: true,
         )
 
         put :update, params: { user_id: user, user: { require_2sv: true } }
