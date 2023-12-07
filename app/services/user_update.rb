@@ -136,7 +136,7 @@ private
     email_change = user.previous_changes[:email]
     return unless email_change
 
-    EventLog.record_email_change(user, email_change.first, email_change.last, current_user)
+    EventLog.record_email_change(user, email_change.first, email_change.last)
 
     return if user.api_user?
 

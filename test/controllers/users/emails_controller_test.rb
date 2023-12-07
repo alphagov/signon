@@ -228,7 +228,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "record email change" do
         user = create(:user, email: "user@gov.uk")
 
-        EventLog.expects(:record_email_change).with(user, "user@gov.uk", "new-user@gov.uk", @superadmin)
+        EventLog.expects(:record_email_change).with(user, "user@gov.uk", "new-user@gov.uk")
 
         put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
       end
