@@ -7,7 +7,7 @@ class Users::TwoStepVerificationResetsController < ApplicationController
   def edit; end
 
   def update
-    @user.reset_2sv!(current_user)
+    @user.reset_2sv!
     UserMailer.two_step_reset(@user).deliver_later
 
     redirect_to edit_user_path(@user), notice: "Reset 2-step verification for #{@user.email}"

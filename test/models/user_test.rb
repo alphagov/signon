@@ -191,7 +191,9 @@ class UserTest < ActiveSupport::TestCase
     setup do
       @super_admin   = create(:superadmin_user)
       @two_step_user = create(:two_step_enabled_user)
-      @two_step_user.reset_2sv!(@super_admin)
+      with_current(user: @super_admin) do
+        @two_step_user.reset_2sv!
+      end
     end
 
     should "persist the required attributes" do
