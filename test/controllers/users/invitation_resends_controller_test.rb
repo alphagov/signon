@@ -120,7 +120,7 @@ class Users::InvitationResendsControllerTest < ActionController::TestCase
       should "record account invitation event" do
         user = create(:invited_user)
 
-        EventLog.expects(:record_account_invitation).with(user, @admin)
+        EventLog.expects(:record_account_invitation).with(user)
 
         put :update, params: { user_id: user }
       end

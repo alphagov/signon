@@ -8,7 +8,7 @@ class Users::InvitationResendsController < ApplicationController
 
   def update
     @user.invite!(current_user)
-    EventLog.record_account_invitation(@user, current_user)
+    EventLog.record_account_invitation(@user)
     flash[:notice] = "Resent account invitation email to #{@user.email}"
     redirect_to edit_user_path(@user)
   end

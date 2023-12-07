@@ -24,7 +24,7 @@ class InvitationsController < Devise::InvitationsController
 
     self.resource = resource_class.invite!(all_params, current_inviter)
     if resource.errors.empty?
-      EventLog.record_account_invitation(resource, current_user)
+      EventLog.record_account_invitation(resource)
       set_flash_message :notice, :send_instructions, email: resource.email
       respond_with resource, location: after_invite_path_for(resource)
     else

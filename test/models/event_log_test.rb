@@ -145,7 +145,11 @@ class EventLogTest < ActiveSupport::TestCase
     user = create(:user)
     admin = create(:admin_user)
 
-    event_log = EventLog.record_account_invitation(user, admin)
+    with_current(user: admin) do
+      EventLog.record_account_invitation(user)
+    end
+
+    event_log = EventLog.last
     assert_equal admin, event_log.initiator
     assert_equal EventLog::ACCOUNT_INVITED, event_log.entry
   end
