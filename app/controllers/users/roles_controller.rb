@@ -7,7 +7,7 @@ class Users::RolesController < ApplicationController
   def edit; end
 
   def update
-    updater = UserUpdate.new(@user, user_params, current_user, user_ip_address)
+    updater = UserUpdate.new(@user, user_params)
     if updater.call
       redirect_to edit_user_path(@user), notice: "Updated user #{@user.email} successfully"
     else

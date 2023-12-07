@@ -25,7 +25,7 @@ class Users::PermissionsController < ApplicationController
       selected_permission_ids: update_params[:supported_permission_ids].map(&:to_i),
     ).build
 
-    UserUpdate.new(@user, { supported_permission_ids: }, current_user, user_ip_address).call
+    UserUpdate.new(@user, { supported_permission_ids: }).call
 
     flash[:application_id] = @application.id
     redirect_to user_applications_path(@user)

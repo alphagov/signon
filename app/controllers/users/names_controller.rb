@@ -10,7 +10,7 @@ class Users::NamesController < ApplicationController
   def edit; end
 
   def update
-    updater = UserUpdate.new(@user, user_params, current_user, user_ip_address)
+    updater = UserUpdate.new(@user, user_params)
     if updater.call
       redirect_to return_path, notice: "Updated user #{@user.email} successfully"
     else
