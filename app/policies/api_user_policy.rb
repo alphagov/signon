@@ -7,4 +7,6 @@ class ApiUserPolicy < BasePolicy
   alias_method :edit?, :new?
   alias_method :update?, :new?
   alias_method :revoke?, :new?
+  alias_method :manage_permissions?, :new?
+  alias_method :manage_tokens?, :new?
 end

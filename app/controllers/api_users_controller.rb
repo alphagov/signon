@@ -4,7 +4,7 @@ class ApiUsersController < ApplicationController
   layout "admin_layout", only: %w[index new create]
 
   before_action :authenticate_user!
-  before_action :load_and_authorize_api_user, only: %i[edit update]
+  before_action :load_and_authorize_api_user, only: %i[edit manage_permissions manage_tokens update]
   helper_method :applications_and_permissions, :visible_applications
 
   respond_to :html
@@ -20,6 +20,10 @@ class ApiUsersController < ApplicationController
   end
 
   def edit; end
+
+  def manage_permissions; end
+
+  def manage_tokens; end
 
   def create
     authorize ApiUser

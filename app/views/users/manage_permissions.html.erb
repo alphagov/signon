@@ -1,5 +1,12 @@
 <% content_for :title, "Manage permissions [#{@user.name}]" %>
 
+<ol class="breadcrumb">
+  <li><%= link_to "Dashboard", root_path %></li>
+  <li><%= link_to "Users", users_path %></li>
+  <li><%= link_to @user.name, edit_user_path(@user) %></li>
+  <li class="active">Manage permissions</li>
+</ol>
+
 <h1>Manage permissions for &ldquo;<%= @user.name %>&rdquo;</h1>
 
 <% if @user.errors.count > 0 %>

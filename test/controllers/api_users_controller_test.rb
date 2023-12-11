@@ -113,13 +113,19 @@ class ApiUsersControllerTest < ActionController::TestCase
           assert_select "input[name='api_user[email]'][value='#{@api_user.email}']"
         end
       end
+    end
+
+    context "GET manage_permissions" do
+      setup do
+        @api_user = create(:api_user)
+      end
 
       should "allow editing permissions for application which user has access to" do
         application = create(:application, name: "app-name", with_supported_permissions: %w[edit])
         api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
         create(:access_token, resource_owner_id: api_user.id, application:)
 
-        get :edit, params: { id: api_user.id }
+        get :manage_permissions, params: { id: api_user.id }
 
         assert_select "table#editable-permissions tr" do
           assert_select "td", text: "app-name"
@@ -135,7 +141,7 @@ class ApiUsersControllerTest < ActionController::TestCase
         application = create(:application, name: "app-name", with_supported_permissions: %w[edit])
         api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
 
-        get :edit, params: { id: api_user.id }
+        get :manage_permissions, params: { id: api_user.id }
 
         assert_select "table#editable-permissions", count: 0
       end
@@ -145,7 +151,7 @@ class ApiUsersControllerTest < ActionController::TestCase
         api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
         create(:access_token, resource_owner_id: api_user.id, application:)
 
-        get :edit, params: { id: api_user.id }
+        get :manage_permissions, params: { id: api_user.id }
 
         assert_select "table#editable-permissions", count: 0
       end
@@ -155,18 +161,24 @@ class ApiUsersControllerTest < ActionController::TestCase
         api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
         create(:access_token, resource_owner_id: api_user.id, application:)
 
-        get :edit, params: { id: api_user.id }
+        get :manage_permissions, params: { id: api_user.id }
 
         assert_select "table#editable-permissions tr" do
           assert_select "td", text: "api-only-app-name"
         end
+      end
+    end
+
+    context "GET manage_tokens" do
+      setup do
+        @api_user = create(:api_user)
       end
 
       should "show API user's access tokens" do
         application = create(:application)
         token = create(:access_token, resource_owner_id: @api_user.id, application:)
 
-        get :edit, params: { id: @api_user }
+        get :manage_tokens, params: { id: @api_user }
 
         assert_select "table#authorisations tbody td", text: application.name do |td|
           assert_select td.first.parent, "code", text: /^#{token[0..7]}/
@@ -177,7 +189,7 @@ class ApiUsersControllerTest < ActionController::TestCase
         application = create(:application)
         token = create(:access_token, resource_owner_id: @api_user.id, application:)
 
-        get :edit, params: { id: @api_user }
+        get :manage_tokens, params: { id: @api_user }
 
         regenerate_token_path = revoke_api_user_authorisation_path(@api_user, token, regenerate: true)
 
@@ -192,7 +204,7 @@ class ApiUsersControllerTest < ActionController::TestCase
         application = create(:application)
         token = create(:access_token, resource_owner_id: @api_user.id, application:)
 
-        get :edit, params: { id: @api_user }
+        get :manage_tokens, params: { id: @api_user }
 
         revoke_token_path = revoke_api_user_authorisation_path(@api_user, token)
 
@@ -207,7 +219,7 @@ class ApiUsersControllerTest < ActionController::TestCase
         application = create(:application)
         create(:access_token, resource_owner_id: @api_user.id, application:, revoked_at: Time.current)
 
-        get :edit, params: { id: @api_user }
+        get :manage_tokens, params: { id: @api_user }
 
         assert_select "table#authorisations tbody td", text: application.name, count: 0
       end
@@ -216,7 +228,7 @@ class ApiUsersControllerTest < ActionController::TestCase
         application = create(:application, retired: true)
         create(:access_token, resource_owner_id: @api_user.id, application:)
 
-        get :edit, params: { id: @api_user }
+        get :manage_tokens, params: { id: @api_user }
 
         assert_select "table#authorisations tbody td", text: application.name, count: 0
       end
