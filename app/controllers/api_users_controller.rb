@@ -65,6 +65,6 @@ private
   end
 
   def permitted_user_params(params)
-    params.permit(:email, :name, permissions_attributes: {}, supported_permission_ids: [])
+    params.permit(:email, :name, supported_permission_ids: [])
   end
 end

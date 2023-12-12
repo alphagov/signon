@@ -283,7 +283,6 @@ class ApiUsersControllerTest < ActionController::TestCase
       end
 
       should "push permission changes out to apps" do
-        application = create(:application)
         api_user = create(:api_user)
 
         PermissionUpdater.expects(:perform_on).with(api_user).once
@@ -292,8 +291,7 @@ class ApiUsersControllerTest < ActionController::TestCase
             params: {
               "id" => api_user.id,
               "api_user" => { "name" => api_user.name,
-                              "email" => api_user.email,
-                              "permissions_attributes" => { "0" => { "application_id" => application.id, "id" => "", "permissions" => %w[admin] } } },
+                              "email" => api_user.email },
             }
       end
     end
