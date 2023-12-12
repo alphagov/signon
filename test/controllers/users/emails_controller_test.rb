@@ -98,6 +98,28 @@ class Users::EmailsControllerTest < ActionController::TestCase
         assert_not_authorised
       end
 
+      should "authorize access if ApiUserPolicy#edit? returns true when user is an API user" do
+        user = create(:api_user)
+
+        api_user_policy = stub_everything("api-user-policy", edit?: true)
+        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+        get :edit, params: { user_id: user }
+
+        assert_template :edit
+      end
+
+      should "not authorize access if ApiUserPolicy#edit? returns false when user is an API user" do
+        user = create(:api_user)
+
+        api_user_policy = stub_everything("api-user-policy", edit?: false)
+        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+        get :edit, params: { user_id: user }
+
+        assert_not_authorised
+      end
+
       should "redirect to account edit email page if admin is acting on their own user" do
         get :edit, params: { user_id: @superadmin }
 
@@ -273,6 +295,29 @@ class Users::EmailsControllerTest < ActionController::TestCase
         assert_not_authorised
       end
 
+      should "update user email if ApiUserPolicy#update? returns true when user is an API user" do
+        user = create(:api_user, email: "user@gov.uk")
+
+        api_user_policy = stub_everything("api_user-policy", update?: true)
+        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+        put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
+
+        assert_equal "new-user@gov.uk", user.reload.email
+      end
+
+      should "not update user email if ApiUserPolicy#update? returns false when user is an API user" do
+        user = create(:api_user, email: "user@gov.uk")
+
+        api_user_policy = stub_everything("api_user-policy", update?: false)
+        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+        put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
+
+        assert_equal "user@gov.uk", user.reload.email
+        assert_not_authorised
+      end
+
       should "redisplay form if email is not valid" do
         user = create(:user, email: "user@gov.uk")
 
@@ -393,6 +438,32 @@ class Users::EmailsControllerTest < ActionController::TestCase
         end
         assert_not_authorised
       end
+
+      context "when user is an API user" do
+        should "send an email change confirmation email if ApiUserPolicy#resend_email_change? returns true" do
+          user = create(:api_user, :with_pending_email_change)
+
+          api_user_policy = stub_everything("api-user-policy", resend_email_change?: true)
+          ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+          assert_enqueued_emails 1 do
+            put :resend_email_change, params: { user_id: user }
+          end
+          assert_redirected_to edit_user_path(user)
+        end
+
+        should "not send an email change confirmation email if ApiUserPolicy#resend_email_change? returns false" do
+          user = create(:api_user, :with_pending_email_change)
+
+          api_user_policy = stub_everything("api-user-policy", resend_email_change?: false)
+          ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+          assert_no_enqueued_emails do
+            put :resend_email_change, params: { user_id: user }
+          end
+          assert_not_authorised
+        end
+      end
     end
 
     context "signed in as Normal user" do
@@ -465,6 +536,31 @@ class Users::EmailsControllerTest < ActionController::TestCase
 
         assert user.reload.unconfirmed_email.present?
         assert_not_authorised
+      end
+
+      context "when user is an API user" do
+        should "clear email & token if ApiUserPolicy#cancel_email_change? returns true" do
+          user = create(:api_user, :with_pending_email_change)
+
+          api_user_policy = stub_everything("api-user-policy", cancel_email_change?: true)
+          ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+          delete :cancel_email_change, params: { user_id: user }
+
+          assert user.reload.unconfirmed_email.blank?
+        end
+
+        should "not clear email & token if ApiUserPolicy#cancel_email_change? returns false" do
+          user = create(:api_user, :with_pending_email_change)
+
+          api_user_policy = stub_everything("api-user-policy", cancel_email_change?: false)
+          ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+          delete :cancel_email_change, params: { user_id: user }
+
+          assert user.reload.unconfirmed_email.present?
+          assert_not_authorised
+        end
       end
     end
 
