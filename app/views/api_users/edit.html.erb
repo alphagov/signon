@@ -12,6 +12,11 @@
   <h2>API user details</h2>
   <dl>
     <div>
+      <dt>Name</dt>
+      <dd><%= @api_user.name %></dd>
+      <dd><%= link_to edit_user_name_path(@api_user) do %>Change<span class="invisible"> Name</span><% end %></dd>
+    </div>
+    <div>
       <dt>Status</dt>
       <dd><%= status(@api_user) %></dd>
       <dd></dd>
@@ -48,13 +53,6 @@
     </ul>
   </div>
 <% end %>
-
-<p>
-  <strong>Name:</strong> <%= @api_user.name %>
-  <%= link_to edit_user_name_path(@api_user) do %>
-    Change<span class="invisible"> Name</span>
-  <% end %>
-</p>
 
 <p>
   <strong>Email:</strong> <%= @api_user.email %>
