@@ -11,6 +11,28 @@ class Users::EmailsControllerTest < ActionController::TestCase
         sign_in(@superadmin)
       end
 
+      should "display breadcrumb links back to edit user page & users page for non-API user" do
+        user = create(:user)
+
+        get :edit, params: { user_id: user }
+
+        assert_select ".govuk-breadcrumbs" do
+          assert_select "a[href='#{users_path}']"
+          assert_select "a[href='#{edit_user_path(user)}']"
+        end
+      end
+
+      should "display breadcrumb links back to edit API user page & API users page for API user" do
+        user = create(:api_user)
+
+        get :edit, params: { user_id: user }
+
+        assert_select ".govuk-breadcrumbs" do
+          assert_select "a[href='#{api_users_path}']"
+          assert_select "a[href='#{edit_api_user_path(user)}']"
+        end
+      end
+
       should "display form with email field" do
         user = create(:user, email: "user@gov.uk")
 
@@ -20,7 +42,26 @@ class Users::EmailsControllerTest < ActionController::TestCase
         assert_select "form[action='#{user_email_path(user)}']" do
           assert_select "input[name='user[email]']", value: "user@gov.uk"
           assert_select "button[type='submit']", text: "Change email"
+        end
+      end
+
+      should "display cancel link to edit user page for non-API user" do
+        user = create(:user, name: "user-name")
+
+        get :edit, params: { user_id: user }
+
+        assert_select "form[action='#{user_email_path(user)}']" do
           assert_select "a[href='#{edit_user_path(user)}']", text: "Cancel"
+        end
+      end
+
+      should "display cancel link to edit API user page for API user" do
+        user = create(:api_user, name: "user-name")
+
+        get :edit, params: { user_id: user }
+
+        assert_select "form[action='#{user_email_path(user)}']" do
+          assert_select "a[href='#{edit_api_user_path(user)}']", text: "Cancel"
         end
       end
 
@@ -132,6 +173,14 @@ class Users::EmailsControllerTest < ActionController::TestCase
         end
       end
 
+      should "not send email change notifications if user is API user" do
+        user = create(:api_user, email: "user@gov.uk")
+
+        assert_no_enqueued_emails do
+          put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
+        end
+      end
+
       should "also send an invitation email if user has not accepted invitation" do
         perform_enqueued_jobs do
           user = create(:invited_user, email: "user@gov.uk")
@@ -149,6 +198,14 @@ class Users::EmailsControllerTest < ActionController::TestCase
 
         assert_no_enqueued_emails do
           put :update, params: { user_id: user, user: { email: "user@gov.uk" } }
+        end
+      end
+
+      should "not send an invitation email if API user has not accepted invitation" do
+        user = create(:api_user, :invited, email: "user@gov.uk")
+
+        assert_no_enqueued_emails do
+          put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
         end
       end
 
@@ -175,12 +232,21 @@ class Users::EmailsControllerTest < ActionController::TestCase
         put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
       end
 
-      should "redirect to edit user page and display success notice" do
+      should "redirect to edit user page and display success notice for non-API user" do
         user = create(:user, email: "user@gov.uk")
 
         put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
 
         assert_redirected_to edit_user_path(user)
+        assert "Updated user new-user@gov.uk successfully", flash[:notice]
+      end
+
+      should "redirect to edit API user page and display success notice for API user" do
+        user = create(:api_user, email: "user@gov.uk")
+
+        put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
+
+        assert_redirected_to edit_api_user_path(user)
         assert "Updated user new-user@gov.uk successfully", flash[:notice]
       end
 
