@@ -32,7 +32,11 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
 
       assert page.has_text?("Successfully created API user")
 
+      click_link "Change Name"
       fill_in "Name", with: "Collections Application"
+      click_button "Change name"
+      assert page.has_text?("Updated user content.store@gov.uk successfully")
+
       fill_in "Email", with: "collections@gov.uk"
       click_button "Update API user"
 

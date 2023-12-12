@@ -102,14 +102,20 @@ class ApiUsersControllerTest < ActionController::TestCase
 
     context "GET edit" do
       setup do
-        @api_user = create(:api_user)
+        @api_user = create(:api_user, name: "api-user-name")
+      end
+
+      should "display the API user's name and a link to change the name" do
+        get :edit, params: { id: @api_user }
+
+        assert_select "*", text: /Name: api-user-name/
+        assert_select "a", href: edit_user_name_path(@api_user), text: /Change Name/
       end
 
       should "show the form for editing an API user" do
         get :edit, params: { id: @api_user }
 
         assert_select "form[action='#{api_user_path(@api_user)}']" do
-          assert_select "input[name='api_user[name]'][value='#{@api_user.name}']"
           assert_select "input[name='api_user[email]'][value='#{@api_user.email}']"
         end
       end
@@ -236,11 +242,11 @@ class ApiUsersControllerTest < ActionController::TestCase
 
     context "PUT update" do
       should "update the user" do
-        api_user = create(:api_user, name: "Old Name")
+        api_user = create(:api_user, email: "old@gov.uk")
 
-        put :update, params: { id: api_user.id, api_user: { name: "New Name" } }
+        put :update, params: { id: api_user.id, api_user: { email: "new@gov.uk" } }
 
-        assert_equal "New Name", api_user.reload.name
+        assert_equal "new@gov.uk", api_user.reload.email
         assert_redirected_to :api_users
         assert_equal "Updated API user #{api_user.email} successfully", flash[:notice]
       end
@@ -276,10 +282,10 @@ class ApiUsersControllerTest < ActionController::TestCase
       should "redisplay the form with errors if save fails" do
         api_user = create(:api_user)
 
-        put :update, params: { id: api_user.id, api_user: { name: "" } }
+        put :update, params: { id: api_user.id, api_user: { email: "" } }
 
         assert_template :edit
-        assert_select "div.alert ul li", "Name can't be blank"
+        assert_select "div.alert ul li", "Email can't be blank"
       end
 
       should "push permission changes out to apps" do
@@ -290,8 +296,7 @@ class ApiUsersControllerTest < ActionController::TestCase
         put :update,
             params: {
               "id" => api_user.id,
-              "api_user" => { "name" => api_user.name,
-                              "email" => api_user.email },
+              "api_user" => { "email" => api_user.email },
             }
       end
     end

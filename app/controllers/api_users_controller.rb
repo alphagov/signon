@@ -65,7 +65,7 @@ private
   end
 
   def permitted_user_params(filtered_params)
-    string_attribute_names = %i[email name]
+    string_attribute_names = params[:action] == "create" ? %i[email name] : %i[email]
     filtered_params.permit(*string_attribute_names, supported_permission_ids: [])
   end
 end
