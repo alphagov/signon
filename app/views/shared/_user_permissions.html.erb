@@ -2,10 +2,10 @@
   <thead>
     <tr class="table-header">
       <th>Application</th>
-      <% unless user_object.api_user? %>
+      <% if user_object.web_user? %>
         <th>Has access?</th>
       <% end %>
-      <th><%= "Other" unless user_object.api_user? %> Permissions</th>
+      <th><%= "Other" if user_object.web_user? %> Permissions</th>
       <% if user_object.persisted? %>
         <th>Last synced at</th>
       <% end %>
