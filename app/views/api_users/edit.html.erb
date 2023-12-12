@@ -40,14 +40,12 @@
   <% end %>
 </p>
 
-<%= form_for @api_user, :html => {:class => 'well add-top-margin'} do |f| %>
-  <p class="form-group">
-    <%= f.label :email %>
-    <%= f.text_field :email, autocomplete: "off", class: 'form-control input-md-6', required: true %>
-  </p>
-
-  <%= f.submit 'Update API user', :class => 'btn btn-primary' %>
-<% end %>
+<p>
+  <strong>Email:</strong> <%= @api_user.email %>
+  <%= link_to edit_user_email_path(@api_user) do %>
+    Change<span class="invisible"> Email</span>
+  <% end %>
+</p>
 
 <p>
   <%= link_to "Manage permissions", manage_permissions_api_user_path(@api_user) %>

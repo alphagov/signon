@@ -37,10 +37,10 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       click_button "Change name"
       assert page.has_text?("Updated user content.store@gov.uk successfully")
 
+      click_link "Change Email"
       fill_in "Email", with: "collections@gov.uk"
-      click_button "Update API user"
-
-      assert page.has_text?("Updated API user collections@gov.uk successfully")
+      click_button "Change email"
+      assert page.has_text?("Updated user collections@gov.uk successfully")
     end
 
     should "be able to authorise application access and manage permissions for an API user which should get recorded in event log" do

@@ -102,7 +102,7 @@ class ApiUsersControllerTest < ActionController::TestCase
 
     context "GET edit" do
       setup do
-        @api_user = create(:api_user, name: "api-user-name")
+        @api_user = create(:api_user, name: "api-user-name", email: "api-user@gov.uk")
       end
 
       should "display the API user's name and a link to change the name" do
@@ -112,12 +112,11 @@ class ApiUsersControllerTest < ActionController::TestCase
         assert_select "a", href: edit_user_name_path(@api_user), text: /Change Name/
       end
 
-      should "show the form for editing an API user" do
+      should "display the API user's email and a link to change the name" do
         get :edit, params: { id: @api_user }
 
-        assert_select "form[action='#{api_user_path(@api_user)}']" do
-          assert_select "input[name='api_user[email]'][value='#{@api_user.email}']"
-        end
+        assert_select "*", text: /Email: api-user@gov.uk/
+        assert_select "a", href: edit_user_email_path(@api_user), text: /Change Email/
       end
     end
 
@@ -241,12 +240,15 @@ class ApiUsersControllerTest < ActionController::TestCase
     end
 
     context "PUT update" do
-      should "update the user" do
+      should "redirect to the API users page & display flash notice when update is successful" do
         api_user = create(:api_user, email: "old@gov.uk")
+        ApiUser.stubs(:find).returns(api_user)
+        api_user.stubs(:save).returns(true)
 
-        put :update, params: { id: api_user.id, api_user: { email: "new@gov.uk" } }
+        permissions = [create(:supported_permission)]
 
-        assert_equal "new@gov.uk", api_user.reload.email
+        put :update, params: { id: api_user.id, api_user: { supported_permission_ids: permissions } }
+
         assert_redirected_to :api_users
         assert_equal "Updated API user #{api_user.email} successfully", flash[:notice]
       end
@@ -281,11 +283,16 @@ class ApiUsersControllerTest < ActionController::TestCase
 
       should "redisplay the form with errors if save fails" do
         api_user = create(:api_user)
+        ApiUser.stubs(:find).returns(api_user)
+        api_user.stubs(:save).returns(false)
+        api_user.errors.add(:supported_permission_ids, "error")
 
-        put :update, params: { id: api_user.id, api_user: { email: "" } }
+        permissions = [create(:supported_permission)]
+
+        put :update, params: { id: api_user.id, api_user: { supported_permission_ids: permissions } }
 
         assert_template :edit
-        assert_select "div.alert ul li", "Email can't be blank"
+        assert_select "div.alert ul li", "Supported permission ids error"
       end
 
       should "push permission changes out to apps" do

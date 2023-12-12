@@ -39,7 +39,6 @@ class ApiUsersController < ApplicationController
   end
 
   def update
-    @api_user.skip_reconfirmation!
     if @api_user.update(api_user_params)
       @api_user.application_permissions.reload
       PermissionUpdater.perform_on(@api_user)
@@ -65,7 +64,7 @@ private
   end
 
   def permitted_user_params(filtered_params)
-    string_attribute_names = params[:action] == "create" ? %i[email name] : %i[email]
+    string_attribute_names = params[:action] == "create" ? %i[email name] : []
     filtered_params.permit(*string_attribute_names, supported_permission_ids: [])
   end
 end
