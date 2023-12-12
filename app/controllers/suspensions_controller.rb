@@ -28,7 +28,9 @@ class SuspensionsController < ApplicationController
 private
 
   def load_and_authorize_user
-    @user = User.find(params[:id])
+    @user = ApiUser.find_by(id: params[:id]) || User.find_by(id: params[:id])
+    raise ActiveRecord::RecordNotFound if @user.blank?
+
     authorize @user, :suspension?
   end
 end

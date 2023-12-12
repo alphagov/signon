@@ -12,7 +12,9 @@
   User <strong><%= @api_user.status %></strong> &bull;
   Created <%= time_ago_in_words(@api_user.created_at) %> ago &bull;
   <%= link_to "Account access log", event_logs_user_path(@api_user) %> &bull;
-  <%= link_to "#{@api_user.suspended? ? "Uns" : "S"}uspend user", edit_suspension_path(@api_user) %>
+  <% if policy(@api_user).suspension? %>
+    <%= link_to "#{@api_user.suspended? ? "Uns" : "S"}uspend user", edit_suspension_path(@api_user) %>
+  <% end %>
 </p>
 
 <% if @api_user.suspended? and @api_user.reason_for_suspension.present? %>

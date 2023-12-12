@@ -74,6 +74,14 @@ class SuspensionsControllerTest < ActionController::TestCase
       assert_equal "Negligence", another_user.reason_for_suspension
     end
 
+    should "not be able to control suspension of an API user" do
+      api_user = create(:api_user)
+      put :update, params: { id: api_user.id, user: { suspended: "1", reason_for_suspension: "Negligence" } }
+
+      assert_not_authorised
+      assert_not api_user.reload.suspended?
+    end
+
     should "redisplay the form if the reason is blank" do
       another_user = create(:user)
       put :update, params: { id: another_user.id, user: { suspended: "1", reason_for_suspension: "" } }
