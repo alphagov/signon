@@ -23,7 +23,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       assert page.has_selector?("td:last-child", text: "No") # suspended?
     end
 
-    should "be able to create an API user" do
+    should "be able to create and edit an API user" do
       click_link "Create API user"
 
       fill_in "Name", with: "Content Store Application"
@@ -31,6 +31,12 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       click_button "Create API user"
 
       assert page.has_text?("Successfully created API user")
+
+      fill_in "Name", with: "Collections Application"
+      fill_in "Email", with: "collections@gov.uk"
+      click_button "Update API user"
+
+      assert page.has_text?("Updated API user collections@gov.uk successfully")
     end
 
     should "be able to authorise application access and manage permissions for an API user which should get recorded in event log" do
