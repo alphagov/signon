@@ -5,10 +5,10 @@ class Users::EmailsControllerTest < ActionController::TestCase
   include ActionMailer::TestHelper
 
   context "GET edit" do
-    context "signed in as Admin user" do
+    context "signed in as Superadmin user" do
       setup do
-        @admin = create(:admin_user)
-        sign_in(@admin)
+        @superadmin = create(:superadmin_user)
+        sign_in(@superadmin)
       end
 
       should "display form with email field" do
@@ -58,7 +58,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       end
 
       should "redirect to account edit email page if admin is acting on their own user" do
-        get :edit, params: { user_id: @admin }
+        get :edit, params: { user_id: @superadmin }
 
         assert_redirected_to edit_account_email_path
       end
@@ -90,10 +90,10 @@ class Users::EmailsControllerTest < ActionController::TestCase
   end
 
   context "PUT update" do
-    context "signed in as Admin user" do
+    context "signed in as Superadmin user" do
       setup do
-        @admin = create(:admin_user)
-        sign_in(@admin)
+        @superadmin = create(:superadmin_user)
+        sign_in(@superadmin)
       end
 
       should "update user email" do
@@ -155,7 +155,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "record email change" do
         user = create(:user, email: "user@gov.uk")
 
-        EventLog.expects(:record_email_change).with(user, "user@gov.uk", "new-user@gov.uk", @admin)
+        EventLog.expects(:record_email_change).with(user, "user@gov.uk", "new-user@gov.uk", @superadmin)
 
         put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
       end
@@ -259,9 +259,9 @@ class Users::EmailsControllerTest < ActionController::TestCase
   end
 
   context "PUT resend_email_change" do
-    context "signed in as Admin user" do
+    context "signed in as Superadmin user" do
       setup do
-        sign_in(create(:admin_user))
+        sign_in(create(:superadmin_user))
       end
 
       should "send an email change confirmation email" do
@@ -355,9 +355,9 @@ class Users::EmailsControllerTest < ActionController::TestCase
   end
 
   context "DELETE cancel_email_change" do
-    context "signed in as Admin user" do
+    context "signed in as Superadmin user" do
       setup do
-        sign_in(create(:admin_user))
+        sign_in(create(:superadmin_user))
       end
 
       should "clear unconfirmed_email & confirmation_token" do
