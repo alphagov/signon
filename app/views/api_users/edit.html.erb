@@ -39,10 +39,6 @@
   </ul>
 </section>
 
-<p class="suspenders">
-  Created <%= time_ago_in_words(@api_user.created_at) %> ago
-</p>
-
 <% if @api_user.errors.present? %>
   <div class="alert alert-danger">
     <ul>
