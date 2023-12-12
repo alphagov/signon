@@ -43,12 +43,6 @@
   Created <%= time_ago_in_words(@api_user.created_at) %> ago
 </p>
 
-<% if @api_user.suspended? and @api_user.reason_for_suspension.present? %>
-  <p class="alert alert-warning">
-    <strong>User suspended:</strong> <em><%= @api_user.reason_for_suspension %></em>
-  </p>
-<% end %>
-
 <% if @api_user.errors.present? %>
   <div class="alert alert-danger">
     <ul>
