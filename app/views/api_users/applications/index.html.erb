@@ -1,0 +1,43 @@
+<% content_for :title_caption, "Manage API users" %>
+<% content_for :title, "#{@api_user.name}'s applications" %>
+
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "API users",
+         url: api_users_path,
+       },
+       {
+         title: @api_user.name,
+         url: edit_api_user_path(@api_user),
+       },
+       {
+        title: "#{@api_user.name}'s applications",
+       }
+     ]
+   })
+%>
+
+<table class="govuk-table">
+  <caption class="govuk-table__caption govuk-table__caption--m">Apps <%= @api_user.name %> has access to</caption>
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
+      <th scope="col" class="govuk-table__header govuk-!-width-one-third">Description</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+    <% @applications.each do |application| %>
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell"><%= application.name %></td>
+        <td class="govuk-table__cell"><%= application.description %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

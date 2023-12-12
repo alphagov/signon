@@ -98,6 +98,7 @@ Rails.application.routes.draw do
   resources :api_users, only: %i[new create index edit update] do
     resource :name, only: %i[edit update], controller: "users/names"
     resource :email, only: %i[edit update], controller: "users/emails"
+    resources :applications, only: %i[index], controller: "api_users/applications"
     member do
       get :manage_permissions
       get :manage_tokens
