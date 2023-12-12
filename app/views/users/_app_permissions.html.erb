@@ -2,10 +2,10 @@
   <thead>
     <tr class="table-header">
       <th>Application</th>
-      <% unless user_object.api_user? %>
+      <% if user_object.web_user? %>
           <th>Has access?</th>
       <% end %>
-      <th><%= "Other" unless user_object.api_user? %> Permissions</th>
+      <th><%= "Other" if user_object.web_user? %> Permissions</th>
     </tr>
   </thead>
   <tbody>
@@ -16,7 +16,7 @@
         <td>
           <%= application.name %>
         </td>
-        <% unless user_object.api_user? %>
+        <% if user_object.web_user? %>
           <td>
             <%= permission_names.include?(SupportedPermission::SIGNIN_NAME) ? 'Yes' : 'No' %>
           </td>

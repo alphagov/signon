@@ -48,7 +48,7 @@ class UserPolicy < BasePolicy
     current_user.belongs_to_gds? &&
       current_user.govuk_admin? &&
       record.normal? &&
-      !record.api_user
+      record.web_user?
   end
 
 private

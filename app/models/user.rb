@@ -285,7 +285,7 @@ class User < ApplicationRecord
   def status
     return USER_STATUS_SUSPENDED if suspended?
 
-    if !api_user? && invited_but_not_yet_accepted?
+    if web_user? && invited_but_not_yet_accepted?
       return USER_STATUS_INVITED
     end
 
@@ -417,6 +417,10 @@ class User < ApplicationRecord
 
   def organisation_name
     organisation.present? ? organisation.name : Organisation::NONE
+  end
+
+  def web_user?
+    !api_user?
   end
 
 private

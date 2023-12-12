@@ -1276,6 +1276,16 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#web_user?" do
+    should "return true for non-API user" do
+      assert build(:user).web_user?
+    end
+
+    should "return false for API user" do
+      assert_not build(:api_user).web_user?
+    end
+  end
+
   def authenticate_access(user, app)
     Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end
