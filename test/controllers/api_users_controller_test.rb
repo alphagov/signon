@@ -115,8 +115,8 @@ class ApiUsersControllerTest < ActionController::TestCase
       should "display the API user's email and a link to change the name" do
         get :edit, params: { id: @api_user }
 
-        assert_select "*", text: /Email: api-user@gov.uk/
-        assert_select "a", href: edit_user_email_path(@api_user), text: /Change Email/
+        assert_select "*", text: /Email\s+api-user@gov.uk/
+        assert_select "a", href: edit_user_name_path(@api_user), text: /Change\s+Email/
       end
     end
 

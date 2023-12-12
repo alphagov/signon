@@ -16,6 +16,11 @@
       <dd><%= @api_user.name %></dd>
       <dd><%= link_to edit_user_name_path(@api_user) do %>Change<span class="invisible"> Name</span><% end %></dd>
     </div>
+   <div>
+      <dt>Email</dt>
+      <dd><%= @api_user.email %></dd>
+      <dd><%= link_to edit_user_email_path(@api_user) do %>Change<span class="invisible"> Email</span><% end %></dd>
+    </div>
     <div>
       <dt>Status</dt>
       <dd><%= status(@api_user) %></dd>
@@ -53,13 +58,6 @@
     </ul>
   </div>
 <% end %>
-
-<p>
-  <strong>Email:</strong> <%= @api_user.email %>
-  <%= link_to edit_user_email_path(@api_user) do %>
-    Change<span class="invisible"> Email</span>
-  <% end %>
-</p>
 
 <p>
   <%= link_to "Manage permissions", manage_permissions_api_user_path(@api_user) %>
