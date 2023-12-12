@@ -4,8 +4,8 @@ class Users::NamesControllerTest < ActionController::TestCase
   context "GET edit" do
     context "signed in as Admin user" do
       setup do
-        @admin = create(:admin_user)
-        sign_in(@admin)
+        @superadmin = create(:superadmin_user)
+        sign_in(@superadmin)
       end
 
       should "display form with name field" do
@@ -44,7 +44,7 @@ class Users::NamesControllerTest < ActionController::TestCase
       end
 
       should "redirect to account page if admin is acting on their own user" do
-        get :edit, params: { user_id: @admin }
+        get :edit, params: { user_id: @superadmin }
 
         assert_redirected_to account_path
       end
@@ -78,8 +78,8 @@ class Users::NamesControllerTest < ActionController::TestCase
   context "PUT update" do
     context "signed in as Admin user" do
       setup do
-        @admin = create(:admin_user)
-        sign_in(@admin)
+        @superadmin = create(:superadmin_user)
+        sign_in(@superadmin)
       end
 
       should "update user name" do
@@ -98,7 +98,7 @@ class Users::NamesControllerTest < ActionController::TestCase
         EventLog.expects(:record_event).with(
           user,
           EventLog::ACCOUNT_UPDATED,
-          initiator: @admin,
+          initiator: @superadmin,
           ip_address: "1.1.1.1",
         )
 
