@@ -96,10 +96,12 @@ FactoryBot.define do
     role { Roles::OrganisationAdmin.role_name }
   end
 
-  factory :invited_user, parent: :user do
+  trait :invited do
     invitation_sent_at { 1.minute.ago }
     invitation_accepted_at { nil }
   end
+
+  factory :invited_user, parent: :user, traits: [:invited]
 
   factory :active_user, parent: :invited_user do
     invitation_accepted_at { Time.zone.now }
