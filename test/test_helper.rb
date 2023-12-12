@@ -27,10 +27,12 @@ end
 WebMock.disable_net_connect!(allow_localhost: true)
 
 require "support/confirmation_token_helpers"
+require "support/pundit_helpers"
 
 class ActionController::TestCase
   include Devise::Test::ControllerHelpers
   include ConfirmationTokenHelpers
+  include PunditHelpers
 
   def sign_in(user, passed_mfa: true)
     warden.stubs(authenticate!: user)

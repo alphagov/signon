@@ -1,11 +1,11 @@
 <% content_for :title, "2-step verification settings for new user" %>
 
 <%= form_for @user do |f| %>
-  <%= f.hidden_field :skip_update_user_permissions, value: "true" %>
   <%= render "govuk_publishing_components/components/hint", {
     text: "User will be prompted to set up 2-step verification again the next time they sign in."
   } %>
 
+  <%= f.hidden_field :require_2sv, value: 0 %>
   <%= render "govuk_publishing_components/components/checkboxes", {
     name: "user[require_2sv]",
     items: [

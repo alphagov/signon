@@ -8,6 +8,10 @@ class UserApplicationPermission < ApplicationRecord
 
   before_validation :assign_application_id
 
+  def self.for(user, application)
+    new(user:, application:)
+  end
+
 private
 
   # application_id is duplicated across supported_permissions and user_application_permissions

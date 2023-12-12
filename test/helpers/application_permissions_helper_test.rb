@@ -1,6 +1,6 @@
 require "test_helper"
 
-class AccountApplicationsHelperTest < ActionView::TestCase
+class ApplicationPermissionsHelperTest < ActionView::TestCase
   context "#message_for_success" do
     setup do
       @application = create(:application, name: "Whitehall", with_supported_permissions: ["Permission 1"])
@@ -34,6 +34,26 @@ class AccountApplicationsHelperTest < ActionView::TestCase
 
       should "indicate that the user has no additional permissions" do
         assert_includes message_for_success(@application.id), "You can access Whitehall but you do not have any additional permissions."
+      end
+    end
+
+    context "when the user isn't the current user" do
+      setup do
+        @user = create(:user, name: "user-name", with_permissions: { @application => ["Permission 1", SupportedPermission::SIGNIN_NAME] })
+      end
+
+      should "include the application name in the message" do
+        assert_includes message_for_success(@application.id, @user), "user-name now has the following permissions for Whitehall"
+      end
+    end
+
+    context "when the user isn't the current user and the user has no additional permissions" do
+      setup do
+        @user = create(:user, name: "user-name", with_permissions: { @application => [SupportedPermission::SIGNIN_NAME] })
+      end
+
+      should "indicate that the user has no additional permissions" do
+        assert_includes message_for_success(@application.id, @user), "user-name can access Whitehall but does not have any additional permissions."
       end
     end
   end

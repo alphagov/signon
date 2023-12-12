@@ -7,9 +7,8 @@ class UsersController < ApplicationController
 
   before_action :authenticate_user!
   before_action :load_user, except: %i[index]
-  before_action :redirect_to_account_page_if_acting_on_own_user, only: %i[edit manage_permissions]
+  before_action :redirect_to_account_page_if_acting_on_own_user, only: %i[edit]
   before_action :authorize_user, except: %i[index]
-  before_action :allow_no_application_access, only: [:update]
   before_action :redirect_legacy_filters, only: [:index]
   helper_method :applications_and_permissions, :filter_params
   respond_to :html
@@ -33,18 +32,9 @@ class UsersController < ApplicationController
 
   def edit; end
 
-  def manage_permissions
-    @application_permissions = all_applications_and_permissions_for(@user)
-  end
-
   def update
-    updater = UserUpdate.new(@user, user_params, current_user, user_ip_address)
-    if updater.call
-      redirect_to users_path, notice: "Updated user #{@user.email} successfully"
-    else
-      @application_permissions = all_applications_and_permissions_for(@user)
-      render :manage_permissions
-    end
+    UserUpdate.new(@user, user_params, current_user, user_ip_address).call
+    redirect_to users_path, notice: "Updated user #{@user.email} successfully"
   end
 
   def event_logs
@@ -79,26 +69,11 @@ private
     end
   end
 
-  # When no permissions are selected for a user, we set the value to [] so
-  # a user can have no permissions
-  def allow_no_application_access
-    params[:user] ||= {}
-    params[:user][:supported_permission_ids] ||= []
-  end
-
   def user_params
-    if permitted_user_params[:skip_update_user_permissions]
-      permitted_user_params[:supported_permission_ids] = @user.supported_permission_ids
-    end
-
     UserParameterSanitiser.new(
-      user_params: permitted_user_params,
+      user_params: params.require(:user).permit(:require_2sv).to_h,
       current_user_role: current_user.role.to_sym,
     ).sanitise
-  end
-
-  def permitted_user_params
-    @permitted_user_params ||= params.require(:user).permit(:require_2sv, :skip_update_user_permissions, supported_permission_ids: []).to_h
   end
 
   def filter_params
