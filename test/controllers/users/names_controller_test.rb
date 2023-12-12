@@ -84,6 +84,28 @@ class Users::NamesControllerTest < ActionController::TestCase
         assert_not_authorised
       end
 
+      should "authorize access if ApiUserPolicy#edit? returns true when user is an API user" do
+        user = create(:api_user)
+
+        api_user_policy = stub_everything("api-user-policy", edit?: true)
+        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+        get :edit, params: { user_id: user }
+
+        assert_template :edit
+      end
+
+      should "not authorize access if ApiUserPolicy#edit? returns false when user is an API user" do
+        user = create(:api_user)
+
+        api_user_policy = stub_everything("api-user-policy", edit?: false)
+        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+        get :edit, params: { user_id: user }
+
+        assert_not_authorised
+      end
+
       should "redirect to account page if admin is acting on their own user" do
         get :edit, params: { user_id: @superadmin }
 
@@ -187,6 +209,29 @@ class Users::NamesControllerTest < ActionController::TestCase
 
         user_policy = stub_everything("user-policy", update?: false)
         UserPolicy.stubs(:new).returns(user_policy)
+
+        put :update, params: { user_id: user, user: { name: "new-user-name" } }
+
+        assert_equal "user-name", user.reload.name
+        assert_not_authorised
+      end
+
+      should "update user name if ApiUserPolicy#update? returns true when user is an API user" do
+        user = create(:api_user, name: "user-name")
+
+        api_user_policy = stub_everything("api_user-policy", update?: true)
+        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+        put :update, params: { user_id: user, user: { name: "new-user-name" } }
+
+        assert_equal "new-user-name", user.reload.name
+      end
+
+      should "not update user name if ApiUserPolicy#update? returns false when user is an API user" do
+        user = create(:api_user, name: "user-name")
+
+        api_user_policy = stub_everything("api_user-policy", update?: false)
+        ApiUserPolicy.stubs(:new).returns(api_user_policy)
 
         put :update, params: { user_id: user, user: { name: "new-user-name" } }
 

@@ -22,7 +22,8 @@ class Users::NamesController < ApplicationController
 private
 
   def load_user
-    @user = User.find(params[:user_id])
+    @user = ApiUser.find_by(id: params[:user_id]) || User.find_by(id: params[:user_id])
+    raise ActiveRecord::RecordNotFound if @user.blank?
   end
 
   def authorize_user
