@@ -32,10 +32,8 @@
 <section>
   <h2>Actions</h2>
   <ul>
-    <% if policy(@api_user).suspension? %>
-      <li><%= link_to @api_user.suspended? ? "Unsuspend user" : "Suspend user", edit_suspension_path(@api_user) %></li>
-    <% end %>
     <li><%= link_to_access_log(@api_user) %></li>
+    <li><%= link_to_suspension(@api_user) %></li>
   </ul>
 </section>
 
