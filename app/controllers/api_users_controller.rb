@@ -28,7 +28,7 @@ class ApiUsersController < ApplicationController
   def create
     authorize ApiUser
 
-    @api_user = ApiUser.build(api_user_params)
+    @api_user = ApiUser.build(api_user_params_for_create)
 
     if @api_user.save
       EventLog.record_event(@api_user, EventLog::API_USER_CREATED, initiator: current_user, ip_address: user_ip_address)
@@ -39,7 +39,7 @@ class ApiUsersController < ApplicationController
   end
 
   def update
-    if @api_user.update(api_user_params)
+    if @api_user.update(api_user_params_for_update)
       @api_user.application_permissions.reload
       PermissionUpdater.perform_on(@api_user)
 
@@ -56,9 +56,17 @@ private
     authorize @api_user
   end
 
-  def api_user_params
-    string_attribute_names = params[:action] == "create" ? %i[email name] : []
-    permitted_user_params = params.require(:api_user).permit(*string_attribute_names, supported_permission_ids: [])
+  def api_user_params_for_create
+    permitted_user_params = params.require(:api_user).permit(:name, :email, supported_permission_ids: [])
+
+    UserParameterSanitiser.new(
+      user_params: permitted_user_params.to_h,
+      current_user_role: current_user.role.to_sym,
+    ).sanitise
+  end
+
+  def api_user_params_for_update
+    permitted_user_params = params.require(:api_user).permit(supported_permission_ids: [])
 
     UserParameterSanitiser.new(
       user_params: permitted_user_params.to_h,
