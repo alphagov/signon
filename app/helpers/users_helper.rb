@@ -118,7 +118,8 @@ module UsersHelper
   end
 
   def summary_list_item_for_name(user)
-    { field: "Name", value: user.name, edit: { href: edit_user_name_path(user) } }
+    href = user.api_user? ? edit_api_user_name_path(user) : edit_user_name_path(user)
+    { field: "Name", value: user.name, edit: { href: } }
   end
 
   def summary_list_item_for_email(user)

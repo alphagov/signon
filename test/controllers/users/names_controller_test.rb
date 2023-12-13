@@ -22,7 +22,7 @@ class Users::NamesControllerTest < ActionController::TestCase
       should "display breadcrumb links back to edit API user page & API users page for API user" do
         user = create(:api_user)
 
-        get :edit, params: { user_id: user }
+        get :edit, params: { api_user_id: user }
 
         assert_select ".govuk-breadcrumbs" do
           assert_select "a[href='#{api_users_path}']"
@@ -30,7 +30,7 @@ class Users::NamesControllerTest < ActionController::TestCase
         end
       end
 
-      should "display form with name field" do
+      should "display form with name field & cancel link for non-API user" do
         user = create(:user, name: "user-name")
 
         get :edit, params: { user_id: user }
@@ -39,25 +39,19 @@ class Users::NamesControllerTest < ActionController::TestCase
         assert_select "form[action='#{user_name_path(user)}']" do
           assert_select "input[name='user[name]']", value: "user-name"
           assert_select "button[type='submit']", text: "Change name"
-        end
-      end
-
-      should "display cancel link to edit user page for non-API user" do
-        user = create(:user, name: "user-name")
-
-        get :edit, params: { user_id: user }
-
-        assert_select "form[action='#{user_name_path(user)}']" do
           assert_select "a[href='#{edit_user_path(user)}']", text: "Cancel"
         end
       end
 
-      should "display cancel link to edit API user page for API user" do
+      should "display form with name field & cancel link for API user" do
         user = create(:api_user, name: "user-name")
 
         get :edit, params: { user_id: user }
 
-        assert_select "form[action='#{user_name_path(user)}']" do
+        assert_template :edit
+        assert_select "form[action='#{api_user_name_path(user)}']" do
+          assert_select "input[name='user[name]']", value: "user-name"
+          assert_select "button[type='submit']", text: "Change name"
           assert_select "a[href='#{edit_api_user_path(user)}']", text: "Cancel"
         end
       end
@@ -90,7 +84,7 @@ class Users::NamesControllerTest < ActionController::TestCase
         api_user_policy = stub_everything("api-user-policy", edit?: true)
         ApiUserPolicy.stubs(:new).returns(api_user_policy)
 
-        get :edit, params: { user_id: user }
+        get :edit, params: { api_user_id: user }
 
         assert_template :edit
       end
@@ -101,7 +95,7 @@ class Users::NamesControllerTest < ActionController::TestCase
         api_user_policy = stub_everything("api-user-policy", edit?: false)
         ApiUserPolicy.stubs(:new).returns(api_user_policy)
 
-        get :edit, params: { user_id: user }
+        get :edit, params: { api_user_id: user }
 
         assert_not_authorised
       end
@@ -187,7 +181,7 @@ class Users::NamesControllerTest < ActionController::TestCase
       should "redirect to API user page and display success notice for API user" do
         user = create(:api_user, email: "user@gov.uk")
 
-        put :update, params: { user_id: user, user: { name: "new-user-name" } }
+        put :update, params: { api_user_id: user, user: { name: "new-user-name" } }
 
         assert_redirected_to edit_api_user_path(user)
         assert_equal "Updated user user@gov.uk successfully", flash[:notice]
@@ -222,7 +216,7 @@ class Users::NamesControllerTest < ActionController::TestCase
         api_user_policy = stub_everything("api_user-policy", update?: true)
         ApiUserPolicy.stubs(:new).returns(api_user_policy)
 
-        put :update, params: { user_id: user, user: { name: "new-user-name" } }
+        put :update, params: { api_user_id: user, user: { name: "new-user-name" } }
 
         assert_equal "new-user-name", user.reload.name
       end
@@ -233,7 +227,7 @@ class Users::NamesControllerTest < ActionController::TestCase
         api_user_policy = stub_everything("api_user-policy", update?: false)
         ApiUserPolicy.stubs(:new).returns(api_user_policy)
 
-        put :update, params: { user_id: user, user: { name: "new-user-name" } }
+        put :update, params: { api_user_id: user, user: { name: "new-user-name" } }
 
         assert_equal "user-name", user.reload.name
         assert_not_authorised
