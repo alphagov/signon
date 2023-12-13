@@ -1,46 +1,63 @@
+<% content_for :title_caption, "Manage API users" %>
 <% content_for :title, "Edit #{@api_user.name}" %>
 
-<ol class="breadcrumb">
-  <li><%= link_to "Dashboard", root_path %></li>
-  <li><%= link_to "API users", api_users_path %></li>
-  <li><%= "Edit #{@api_user.name}" %></li>
-</ol>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "API users",
+         url: api_users_path,
+       },
+       {
+         title: "Edit #{@api_user.name}",
+       }
+     ]
+   })
+%>
 
-<h1>Edit API User <%= @api_user.name %></h1>
-
-<section>
-  <h2>API user details</h2>
-  <dl>
-    <div>
-      <dt>Name</dt>
-      <dd><%= @api_user.name %></dd>
-      <dd><%= link_to edit_user_name_path(@api_user) do %>Change<span class="invisible"> Name</span><% end %></dd>
-    </div>
-   <div>
-      <dt>Email</dt>
-      <dd><%= @api_user.email %></dd>
-      <dd><%= link_to edit_user_email_path(@api_user) do %>Change<span class="invisible"> Email</span><% end %></dd>
-    </div>
-    <div>
-      <dt>Status</dt>
-      <dd><%= status(@api_user) %></dd>
-      <dd></dd>
-    </div>
-  </dl>
-</section>
-
-<section>
-  <h2>Actions</h2>
-  <ul>
-    <li><%= link_to_access_log(@api_user) %></li>
-    <li><%= link_to_suspension(@api_user) %></li>
-  </ul>
-</section>
-
-<p>
-  <%= link_to "Manage permissions", manage_permissions_api_user_path(@api_user) %>
-</p>
-
-<p>
-  <%= link_to "Manage tokens", manage_tokens_api_user_path(@api_user) %>
-</p>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <section>
+      <%= render "govuk_publishing_components/components/summary_list", {
+        title: "API user details",
+        heading_level: 2,
+        heading_size: "l",
+        items: [
+          summary_list_item_for_name(@api_user),
+          summary_list_item_for_email(@api_user),
+          summary_list_item_for_status(@api_user),
+        ]
+      } %>
+    </section>
+    <section>
+      <%= render "govuk_publishing_components/components/heading", {
+        text: "Actions",
+        font_size: "l",
+        padding: true,
+      } %>
+      <%= render "govuk_publishing_components/components/list", {
+        items: [
+          link_to_access_log(@api_user),
+          link_to_suspension(@api_user),
+        ].compact
+      } %>
+    </section>
+    <section>
+      <div class="govuk-button-group">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Manage permissions",
+          href: manage_permissions_api_user_path(@api_user)
+        } %>
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Manage tokens",
+          href: manage_tokens_api_user_path(@api_user)
+        } %>
+      </div>
+    </section>
+  </div>
+</div>

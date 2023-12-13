@@ -82,7 +82,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       assert_has_signin_permission_for("Whitehall")
 
       click_link @api_user.name
-      click_link "Account access log"
+      click_link "View account access log"
       assert page.has_text?("Access token generated for Whitehall by #{@superadmin.name}")
     end
 
@@ -97,7 +97,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       assert_not page.has_selector?("td:first-child", text: @application.name)
 
       click_link @api_user.name
-      click_link "Account access log"
+      click_link "View account access log"
       assert page.has_text?("Access token revoked for #{@application.name} by #{@superadmin.name}")
     end
 
@@ -112,7 +112,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       assert page.has_selector?("div.alert-info", text: "Access token for #{@application.name}: #{@api_user.authorisations.last.token}")
 
       click_link @api_user.name
-      click_link "Account access log"
+      click_link "View account access log"
       assert page.has_text?("Access token re-generated for #{@application.name} by #{@superadmin.name}")
     end
 
@@ -124,13 +124,13 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       fill_in "Reason for suspension", with: "Stole data"
       click_button "Save"
 
-      assert page.has_selector?(".alert-success", text: "#{@api_user.email} is now suspended.")
+      assert page.has_selector?(".gem-c-success-alert__message", text: "#{@api_user.email} is now suspended.")
 
       click_link "Unsuspend user"
       uncheck "Suspended?"
       click_button "Save"
 
-      assert page.has_selector?(".alert-success", text: "#{@api_user.email} is now active.")
+      assert page.has_selector?(".gem-c-success-alert__message", text: "#{@api_user.email} is now active.")
     end
   end
 
