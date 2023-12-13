@@ -57,14 +57,12 @@ private
   end
 
   def api_user_params
+    string_attribute_names = params[:action] == "create" ? %i[email name] : []
+    permitted_user_params = params.require(:api_user).permit(*string_attribute_names, supported_permission_ids: [])
+
     UserParameterSanitiser.new(
-      user_params: permitted_user_params(params.require(:api_user)).to_h,
+      user_params: permitted_user_params.to_h,
       current_user_role: current_user.role.to_sym,
     ).sanitise
-  end
-
-  def permitted_user_params(filtered_params)
-    string_attribute_names = params[:action] == "create" ? %i[email name] : []
-    filtered_params.permit(*string_attribute_names, supported_permission_ids: [])
   end
 end
