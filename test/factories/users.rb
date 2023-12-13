@@ -71,12 +71,14 @@ FactoryBot.define do
     expiry_date_for_2sv_exemption { (Time.zone.today + 1).to_date }
   end
 
-  factory :user_with_pending_email_change, parent: :user do
+  trait :with_pending_email_change do
     email { "old@email.com" }
     unconfirmed_email { "new@email.com" }
     sequence(:confirmation_token) { |n| "#{n}a1s2d3" } # see `token_sent_to` in ConfirmationTokenHelper
     confirmation_sent_at { Time.zone.now }
   end
+
+  factory :user_with_pending_email_change, parent: :user, traits: [:with_pending_email_change]
 
   factory :superadmin_user, parent: :user do
     sequence(:email) { |n| "superadmin#{n}@example.com" }
@@ -96,10 +98,12 @@ FactoryBot.define do
     role { Roles::OrganisationAdmin.role_name }
   end
 
-  factory :invited_user, parent: :user do
+  trait :invited do
     invitation_sent_at { 1.minute.ago }
     invitation_accepted_at { nil }
   end
+
+  factory :invited_user, parent: :user, traits: [:invited]
 
   factory :active_user, parent: :invited_user do
     invitation_accepted_at { Time.zone.now }

@@ -2,22 +2,23 @@ require "test_helper"
 require "ipaddr"
 
 class UserUpdateTest < ActionView::TestCase
-  should "record an event" do
-    affected_user = create(:user)
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
+  attr_reader :current_user, :affected_user, :ip_address
 
+  setup do
+    @current_user = create(:superadmin_user)
+    @affected_user = create(:user)
+    @ip_address = "1.2.3.4"
+  end
+
+  should "record an event" do
     UserUpdate.new(affected_user, {}, current_user, ip_address).call
 
     assert_equal 1, EventLog.where(event_id: EventLog::ACCOUNT_UPDATED.id).count
   end
 
   should "records permission changes" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
     parsed_ip_address = IPAddr.new(ip_address, Socket::AF_INET).to_s
 
-    affected_user = create(:user)
     app = create(:application, name: "App", with_supported_permissions: ["Editor", SupportedPermission::SIGNIN_NAME, "Something Else"])
     affected_user.grant_application_permission(app, "Something Else")
 
@@ -39,10 +40,6 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "log the addition of a large number of permissions" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
-
-    affected_user = create(:user)
     permissions = (0..100).map { |i| "permission-#{i}" }
     app = create(:application, name: "App", with_supported_permissions: permissions)
 
@@ -56,10 +53,7 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "record when 2SV exemption has been removed" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
-
-    affected_user = create(:two_step_exempted_user)
+    @affected_user = create(:two_step_exempted_user)
 
     params = { require_2sv: "1" }
     UserUpdate.new(affected_user, params, current_user, ip_address).call
@@ -68,11 +62,6 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "record when 2SV has been mandated" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
-
-    affected_user = create(:user)
-
     params = { require_2sv: "1" }
     UserUpdate.new(affected_user, params, current_user, ip_address).call
 
@@ -80,10 +69,6 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "not lose permissions when supported_permissions are absent from params" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
-
-    affected_user = create(:user)
     app = create(:application)
     affected_user.grant_application_signin_permission(app)
     assert affected_user.has_access_to?(app)
@@ -94,9 +79,6 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "record when organisation has been changed" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
-
     organisation_1 = create(:organisation, name: "organisation-1")
     organisation_2 = create(:organisation, name: "organisation-2")
     affected_user = create(:user, organisation: organisation_1)
@@ -109,11 +91,8 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "record when organisation has been changed from 'None'" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
-
     organisation = create(:organisation, name: "organisation-name")
-    affected_user = create(:user, organisation: nil)
+    @affected_user = create(:user, organisation: nil)
 
     params = { organisation_id: organisation.id }
     UserUpdate.new(affected_user, params, current_user, ip_address).call
@@ -123,16 +102,84 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "record when organisation has been changed to 'None'" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
-
     organisation = create(:organisation, name: "organisation-name")
-    affected_user = create(:user, organisation:)
+    @affected_user = create(:user, organisation:)
 
     params = { organisation_id: nil }
     UserUpdate.new(affected_user, params, current_user, ip_address).call
 
     assert_equal 1, EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).count
     assert_equal "from organisation-name to None", EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).last.trailing_message
+  end
+
+  should "record email change if value of email attribute has changed" do
+    params = { email: "new@gov.uk" }
+    EventLog.expects(:record_email_change).with(affected_user, affected_user.email, "new@gov.uk", current_user)
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
+
+  should "not record email change if value of email attribute has not changed" do
+    params = { email: affected_user.email }
+    EventLog.expects(:record_email_change).never
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
+
+  should "invite user if email has changed, user has been invited, and user is a web user" do
+    params = { email: "new@gov.uk" }
+    @affected_user = create(:invited_user)
+    affected_user.expects(:invite!)
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
+
+  should "not invite user if email has changed and user is a web user, but user has not been invited" do
+    params = { email: "new@gov.uk" }
+    @affected_user = create(:user)
+    affected_user.expects(:invite!).never
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
+
+  should "not invite user if email has changed, user has been invited, but user is an API user" do
+    params = { email: "new@gov.uk" }
+    @affected_user = create(:api_user, :invited)
+    affected_user.expects(:invite!).never
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
+
+  should "notify user if email has changed and user is a web user" do
+    params = { email: "new@gov.uk" }
+
+    mail_to_old_email = mock("mail-to-old-email")
+    UserMailer.stubs(:email_changed_by_admin_notification).with(
+      affected_user, affected_user.email, affected_user.email
+    ).returns(mail_to_old_email)
+    mail_to_old_email.expects(:deliver_later)
+
+    mail_to_new_email = mock("mail-to-new-email")
+    UserMailer.stubs(:email_changed_by_admin_notification).with(
+      affected_user, affected_user.email, "new@gov.uk"
+    ).returns(mail_to_new_email)
+    mail_to_new_email.expects(:deliver_later)
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
+
+  should "not notify user if user is a web user, but email has not changed" do
+    params = { email: affected_user.email }
+    UserMailer.expects(:email_changed_by_admin_notification).never
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
+
+  should "not notify user if email has changed, but user is an API user" do
+    params = { email: "new@gov.uk" }
+    @affected_user = create(:api_user)
+    UserMailer.expects(:email_changed_by_admin_notification).never
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
   end
 end

@@ -140,6 +140,8 @@ private
 
     EventLog.record_email_change(user, email_change.first, email_change.last, current_user)
 
+    return if user.api_user?
+
     user.invite! if user.invited_but_not_yet_accepted?
 
     email_change.each do |to_address|

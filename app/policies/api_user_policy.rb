@@ -10,4 +10,7 @@ class ApiUserPolicy < BasePolicy
   alias_method :manage_permissions?, :new?
   alias_method :manage_tokens?, :new?
   alias_method :suspension?, :new?
+
+  def resend_email_change? = false
+  def cancel_email_change? = false
 end

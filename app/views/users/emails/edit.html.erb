@@ -1,4 +1,4 @@
-<% content_for :title_caption, "Manage other users" %>
+<% content_for :title_caption, @user.api_user? ? "Manage API users" : "Manage other users" %>
 <% content_for :title, "Change email for #{@user.name}" %>
 
 <% content_for :breadcrumbs,
@@ -10,12 +10,12 @@
          url: root_path,
        },
        {
-         title: "Users",
-         url: users_path,
+         title: @user.api_user? ? "API users" : "Users",
+         url: @user.api_user? ? api_users_path : users_path,
        },
        {
          title: @user.name,
-         url: edit_user_path(@user),
+         url: return_path,
        },
        {
          title: "Change email",
@@ -24,14 +24,16 @@
    })
 %>
 
-<% if @user.unconfirmed_email.present? %>
-  <%= render "govuk_publishing_components/components/notice", {
-    title: "A request has been made to change the email address"
-  } do %>
-    <p class="govuk-body">An email has been sent to <strong><%= @user.unconfirmed_email %></strong> with a link to confirm the change. If they haven't received this email, we can send it again:</p>
+<% if @user.web_user? %>
+  <% if @user.unconfirmed_email.present? %>
+    <%= render "govuk_publishing_components/components/notice", {
+      title: "A request has been made to change the email address"
+    } do %>
+      <p class="govuk-body">An email has been sent to <strong><%= @user.unconfirmed_email %></strong> with a link to confirm the change. If they haven't received this email, we can send it again:</p>
 
-    <%= link_to "Resend confirmation email", resend_email_change_user_email_path(@user), method: :put, class: "govuk-button app-button--no-margin" %>
-    <%= link_to "Cancel change", cancel_email_change_user_email_path(@user), method: :delete, class: "govuk-link app-link--inline" %>
+      <%= link_to "Resend confirmation email", resend_email_change_user_email_path(@user), method: :put, class: "govuk-button app-button--no-margin" %>
+      <%= link_to "Cancel change", cancel_email_change_user_email_path(@user), method: :delete, class: "govuk-link app-link--inline" %>
+    <% end %>
   <% end %>
 <% end %>
 
@@ -51,7 +53,7 @@
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <%= form_for @user, url: user_email_path(@user) do %>
+    <%= form_for @user, url: submit_path do %>
       <%= render "govuk_publishing_components/components/input", {
         label: {
           text: "Email"
@@ -60,7 +62,7 @@
         id: "user_email",
         type: "email",
         value: @user.email,
-        hint: @user.invited_but_not_yet_accepted? ? "Changes will trigger a new signup email." : nil,
+        hint: @user.web_user? && @user.invited_but_not_yet_accepted? ? "Changes will trigger a new signup email." : nil,
         autocomplete: "off",
         error_items: @user.errors.full_messages_for(:email).map { |message| { text: message } }
       } %>
@@ -68,7 +70,7 @@
         <%= render "govuk_publishing_components/components/button", {
           text: "Change email",
         } %>
-        <%= link_to "Cancel", edit_user_path(@user), class: "govuk-link govuk-link--no-visited-state" %>
+        <%= link_to "Cancel", return_path, class: "govuk-link govuk-link--no-visited-state" %>
       </div>
     <% end %>
   </div>

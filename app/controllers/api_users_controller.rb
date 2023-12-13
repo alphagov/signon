@@ -1,7 +1,7 @@
 class ApiUsersController < ApplicationController
   include UserPermissionsControllerMethods
 
-  layout "admin_layout", only: %w[index new create]
+  layout "admin_layout", only: %w[index new create edit]
 
   before_action :authenticate_user!
   before_action :load_and_authorize_api_user, only: %i[edit manage_permissions manage_tokens update]
@@ -28,25 +28,24 @@ class ApiUsersController < ApplicationController
   def create
     authorize ApiUser
 
-    @api_user = ApiUser.build(api_user_params)
+    @api_user = ApiUser.build(api_user_params_for_create)
 
     if @api_user.save
       EventLog.record_event(@api_user, EventLog::API_USER_CREATED, initiator: current_user, ip_address: user_ip_address)
-      redirect_to [:edit, @api_user], notice: "Successfully created API user"
+      redirect_to edit_api_user_path(@api_user), notice: "Successfully created API user"
     else
       render :new
     end
   end
 
   def update
-    @api_user.skip_reconfirmation!
-    if @api_user.update(api_user_params)
+    if @api_user.update(api_user_params_for_update)
       @api_user.application_permissions.reload
       PermissionUpdater.perform_on(@api_user)
 
-      redirect_to :api_users, notice: "Updated API user #{@api_user.email} successfully"
+      redirect_to api_users_path, notice: "Updated API user #{@api_user.email} successfully"
     else
-      render :edit
+      render :manage_permissions
     end
   end
 
@@ -57,14 +56,18 @@ private
     authorize @api_user
   end
 
-  def api_user_params
-    UserParameterSanitiser.new(
-      user_params: permitted_user_params(params.require(:api_user)).to_h,
-      current_user_role: current_user.role.to_sym,
-    ).sanitise
+  def api_user_params_for_create
+    sanitise(params.require(:api_user).permit(:name, :email))
   end
 
-  def permitted_user_params(params)
-    params.permit(:email, :name, supported_permission_ids: [])
+  def api_user_params_for_update
+    sanitise(params.require(:api_user).permit(supported_permission_ids: []))
+  end
+
+  def sanitise(permitted_user_params)
+    UserParameterSanitiser.new(
+      user_params: permitted_user_params.to_h,
+      current_user_role: current_user.role.to_sym,
+    ).sanitise
   end
 end

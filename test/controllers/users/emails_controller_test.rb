@@ -5,13 +5,35 @@ class Users::EmailsControllerTest < ActionController::TestCase
   include ActionMailer::TestHelper
 
   context "GET edit" do
-    context "signed in as Admin user" do
+    context "signed in as Superadmin user" do
       setup do
-        @admin = create(:admin_user)
-        sign_in(@admin)
+        @superadmin = create(:superadmin_user)
+        sign_in(@superadmin)
       end
 
-      should "display form with email field" do
+      should "display breadcrumb links back to edit user page & users page for non-API user" do
+        user = create(:user)
+
+        get :edit, params: { user_id: user }
+
+        assert_select ".govuk-breadcrumbs" do
+          assert_select "a[href='#{users_path}']"
+          assert_select "a[href='#{edit_user_path(user)}']"
+        end
+      end
+
+      should "display breadcrumb links back to edit API user page & API users page for API user" do
+        user = create(:api_user)
+
+        get :edit, params: { api_user_id: user }
+
+        assert_select ".govuk-breadcrumbs" do
+          assert_select "a[href='#{api_users_path}']"
+          assert_select "a[href='#{edit_api_user_path(user)}']"
+        end
+      end
+
+      should "display form with email field & cancel link for non-API user" do
         user = create(:user, email: "user@gov.uk")
 
         get :edit, params: { user_id: user }
@@ -21,6 +43,19 @@ class Users::EmailsControllerTest < ActionController::TestCase
           assert_select "input[name='user[email]']", value: "user@gov.uk"
           assert_select "button[type='submit']", text: "Change email"
           assert_select "a[href='#{edit_user_path(user)}']", text: "Cancel"
+        end
+      end
+
+      should "display form with email field & cancel link for API user" do
+        user = create(:api_user, name: "user-name")
+
+        get :edit, params: { api_user_id: user }
+
+        assert_template :edit
+        assert_select "form[action='#{api_user_email_path(user)}']" do
+          assert_select "input[name='user[email]']", value: "user@gov.uk"
+          assert_select "button[type='submit']", text: "Change email"
+          assert_select "a[href='#{edit_api_user_path(user)}']", text: "Cancel"
         end
       end
 
@@ -57,8 +92,30 @@ class Users::EmailsControllerTest < ActionController::TestCase
         assert_not_authorised
       end
 
+      should "authorize access if ApiUserPolicy#edit? returns true when user is an API user" do
+        user = create(:api_user)
+
+        api_user_policy = stub_everything("api-user-policy", edit?: true)
+        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+        get :edit, params: { api_user_id: user }
+
+        assert_template :edit
+      end
+
+      should "not authorize access if ApiUserPolicy#edit? returns false when user is an API user" do
+        user = create(:api_user)
+
+        api_user_policy = stub_everything("api-user-policy", edit?: false)
+        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+        get :edit, params: { api_user_id: user }
+
+        assert_not_authorised
+      end
+
       should "redirect to account edit email page if admin is acting on their own user" do
-        get :edit, params: { user_id: @admin }
+        get :edit, params: { user_id: @superadmin }
 
         assert_redirected_to edit_account_email_path
       end
@@ -90,10 +147,10 @@ class Users::EmailsControllerTest < ActionController::TestCase
   end
 
   context "PUT update" do
-    context "signed in as Admin user" do
+    context "signed in as Superadmin user" do
       setup do
-        @admin = create(:admin_user)
-        sign_in(@admin)
+        @superadmin = create(:superadmin_user)
+        sign_in(@superadmin)
       end
 
       should "update user email" do
@@ -132,6 +189,14 @@ class Users::EmailsControllerTest < ActionController::TestCase
         end
       end
 
+      should "not send email change notifications if user is API user" do
+        user = create(:api_user, email: "user@gov.uk")
+
+        assert_no_enqueued_emails do
+          put :update, params: { api_user_id: user, user: { email: "new-user@gov.uk" } }
+        end
+      end
+
       should "also send an invitation email if user has not accepted invitation" do
         perform_enqueued_jobs do
           user = create(:invited_user, email: "user@gov.uk")
@@ -152,10 +217,18 @@ class Users::EmailsControllerTest < ActionController::TestCase
         end
       end
 
+      should "not send an invitation email if API user has not accepted invitation" do
+        user = create(:api_user, :invited, email: "user@gov.uk")
+
+        assert_no_enqueued_emails do
+          put :update, params: { api_user_id: user, user: { email: "new-user@gov.uk" } }
+        end
+      end
+
       should "record email change" do
         user = create(:user, email: "user@gov.uk")
 
-        EventLog.expects(:record_email_change).with(user, "user@gov.uk", "new-user@gov.uk", @admin)
+        EventLog.expects(:record_email_change).with(user, "user@gov.uk", "new-user@gov.uk", @superadmin)
 
         put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
       end
@@ -175,12 +248,21 @@ class Users::EmailsControllerTest < ActionController::TestCase
         put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
       end
 
-      should "redirect to edit user page and display success notice" do
+      should "redirect to edit user page and display success notice for non-API user" do
         user = create(:user, email: "user@gov.uk")
 
         put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
 
         assert_redirected_to edit_user_path(user)
+        assert "Updated user new-user@gov.uk successfully", flash[:notice]
+      end
+
+      should "redirect to edit API user page and display success notice for API user" do
+        user = create(:api_user, email: "user@gov.uk")
+
+        put :update, params: { api_user_id: user, user: { email: "new-user@gov.uk" } }
+
+        assert_redirected_to edit_api_user_path(user)
         assert "Updated user new-user@gov.uk successfully", flash[:notice]
       end
 
@@ -202,6 +284,29 @@ class Users::EmailsControllerTest < ActionController::TestCase
         UserPolicy.stubs(:new).returns(user_policy)
 
         put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
+
+        assert_equal "user@gov.uk", user.reload.email
+        assert_not_authorised
+      end
+
+      should "update user email if ApiUserPolicy#update? returns true when user is an API user" do
+        user = create(:api_user, email: "user@gov.uk")
+
+        api_user_policy = stub_everything("api_user-policy", update?: true)
+        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+        put :update, params: { api_user_id: user, user: { email: "new-user@gov.uk" } }
+
+        assert_equal "new-user@gov.uk", user.reload.email
+      end
+
+      should "not update user email if ApiUserPolicy#update? returns false when user is an API user" do
+        user = create(:api_user, email: "user@gov.uk")
+
+        api_user_policy = stub_everything("api_user-policy", update?: false)
+        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+
+        put :update, params: { api_user_id: user, user: { email: "new-user@gov.uk" } }
 
         assert_equal "user@gov.uk", user.reload.email
         assert_not_authorised
@@ -259,9 +364,9 @@ class Users::EmailsControllerTest < ActionController::TestCase
   end
 
   context "PUT resend_email_change" do
-    context "signed in as Admin user" do
+    context "signed in as Superadmin user" do
       setup do
-        sign_in(create(:admin_user))
+        sign_in(create(:superadmin_user))
       end
 
       should "send an email change confirmation email" do
@@ -355,9 +460,9 @@ class Users::EmailsControllerTest < ActionController::TestCase
   end
 
   context "DELETE cancel_email_change" do
-    context "signed in as Admin user" do
+    context "signed in as Superadmin user" do
       setup do
-        sign_in(create(:admin_user))
+        sign_in(create(:superadmin_user))
       end
 
       should "clear unconfirmed_email & confirmation_token" do

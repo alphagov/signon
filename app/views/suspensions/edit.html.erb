@@ -1,4 +1,4 @@
-<% content_for :title_caption, "Manage other users" %>
+<% content_for :title_caption, @user.api_user? ? "Manage API users" : "Manage other users" %>
 <% content_for :title, "Suspend or unsuspend #{@user.name}" %>
 
 <% content_for :breadcrumbs,
