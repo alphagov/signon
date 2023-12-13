@@ -2,22 +2,23 @@ require "test_helper"
 require "ipaddr"
 
 class UserUpdateTest < ActionView::TestCase
-  should "record an event" do
-    affected_user = create(:user)
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
+  attr_reader :current_user, :affected_user, :ip_address
 
+  setup do
+    @current_user = create(:superadmin_user)
+    @affected_user = create(:user)
+    @ip_address = "1.2.3.4"
+  end
+
+  should "record an event" do
     UserUpdate.new(affected_user, {}, current_user, ip_address).call
 
     assert_equal 1, EventLog.where(event_id: EventLog::ACCOUNT_UPDATED.id).count
   end
 
   should "records permission changes" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
     parsed_ip_address = IPAddr.new(ip_address, Socket::AF_INET).to_s
 
-    affected_user = create(:user)
     app = create(:application, name: "App", with_supported_permissions: ["Editor", SupportedPermission::SIGNIN_NAME, "Something Else"])
     affected_user.grant_application_permission(app, "Something Else")
 
@@ -39,10 +40,6 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "log the addition of a large number of permissions" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
-
-    affected_user = create(:user)
     permissions = (0..100).map { |i| "permission-#{i}" }
     app = create(:application, name: "App", with_supported_permissions: permissions)
 
@@ -56,10 +53,7 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "record when 2SV exemption has been removed" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
-
-    affected_user = create(:two_step_exempted_user)
+    @affected_user = create(:two_step_exempted_user)
 
     params = { require_2sv: "1" }
     UserUpdate.new(affected_user, params, current_user, ip_address).call
@@ -68,11 +62,6 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "record when 2SV has been mandated" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
-
-    affected_user = create(:user)
-
     params = { require_2sv: "1" }
     UserUpdate.new(affected_user, params, current_user, ip_address).call
 
@@ -80,10 +69,6 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "not lose permissions when supported_permissions are absent from params" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
-
-    affected_user = create(:user)
     app = create(:application)
     affected_user.grant_application_signin_permission(app)
     assert affected_user.has_access_to?(app)
@@ -94,9 +79,6 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "record when organisation has been changed" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
-
     organisation_1 = create(:organisation, name: "organisation-1")
     organisation_2 = create(:organisation, name: "organisation-2")
     affected_user = create(:user, organisation: organisation_1)
@@ -109,11 +91,8 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "record when organisation has been changed from 'None'" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
-
     organisation = create(:organisation, name: "organisation-name")
-    affected_user = create(:user, organisation: nil)
+    @affected_user = create(:user, organisation: nil)
 
     params = { organisation_id: organisation.id }
     UserUpdate.new(affected_user, params, current_user, ip_address).call
@@ -123,11 +102,8 @@ class UserUpdateTest < ActionView::TestCase
   end
 
   should "record when organisation has been changed to 'None'" do
-    current_user = create(:superadmin_user)
-    ip_address = "1.2.3.4"
-
     organisation = create(:organisation, name: "organisation-name")
-    affected_user = create(:user, organisation:)
+    @affected_user = create(:user, organisation:)
 
     params = { organisation_id: nil }
     UserUpdate.new(affected_user, params, current_user, ip_address).call
