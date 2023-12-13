@@ -186,7 +186,7 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
       should "not update user organisation if UserPolicy#assign_organisation? returns false" do
         user = create(:user, organisation:)
 
-        user_policy = stub_everything("user-policy", update?: true, assign_role?: false)
+        user_policy = stub_everything("user-policy", update?: true, assign_organisation?: false)
         UserPolicy.stubs(:new).returns(user_policy)
 
         put :update, params: { user_id: user, user: { organisation_id: another_organisation } }
