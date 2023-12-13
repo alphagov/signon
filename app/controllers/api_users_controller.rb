@@ -57,7 +57,7 @@ private
   end
 
   def api_user_params_for_create
-    permitted_user_params = params.require(:api_user).permit(:name, :email, supported_permission_ids: [])
+    permitted_user_params = params.require(:api_user).permit(:name, :email)
 
     UserParameterSanitiser.new(
       user_params: permitted_user_params.to_h,
