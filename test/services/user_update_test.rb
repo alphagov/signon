@@ -111,4 +111,75 @@ class UserUpdateTest < ActionView::TestCase
     assert_equal 1, EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).count
     assert_equal "from organisation-name to None", EventLog.where(event_id: EventLog::ORGANISATION_CHANGED.id).last.trailing_message
   end
+
+  should "record email change if value of email attribute has changed" do
+    params = { email: "new@gov.uk" }
+    EventLog.expects(:record_email_change).with(affected_user, affected_user.email, "new@gov.uk", current_user)
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
+
+  should "not record email change if value of email attribute has not changed" do
+    params = { email: affected_user.email }
+    EventLog.expects(:record_email_change).never
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
+
+  should "invite user if email has changed, user has been invited, and user is a web user" do
+    params = { email: "new@gov.uk" }
+    @affected_user = create(:invited_user)
+    affected_user.expects(:invite!)
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
+
+  should "not invite user if email has changed and user is a web user, but user has not been invited" do
+    params = { email: "new@gov.uk" }
+    @affected_user = create(:user)
+    affected_user.expects(:invite!).never
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
+
+  should "not invite user if email has changed, user has been invited, but user is an API user" do
+    params = { email: "new@gov.uk" }
+    @affected_user = create(:api_user, :invited)
+    affected_user.expects(:invite!).never
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
+
+  should "notify user if email has changed and user is a web user" do
+    params = { email: "new@gov.uk" }
+
+    mail_to_old_email = mock("mail-to-old-email")
+    UserMailer.stubs(:email_changed_by_admin_notification).with(
+      affected_user, affected_user.email, affected_user.email
+    ).returns(mail_to_old_email)
+    mail_to_old_email.expects(:deliver_later)
+
+    mail_to_new_email = mock("mail-to-new-email")
+    UserMailer.stubs(:email_changed_by_admin_notification).with(
+      affected_user, affected_user.email, "new@gov.uk"
+    ).returns(mail_to_new_email)
+    mail_to_new_email.expects(:deliver_later)
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
+
+  should "not notify user if user is a web user, but email has not changed" do
+    params = { email: affected_user.email }
+    UserMailer.expects(:email_changed_by_admin_notification).never
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
+
+  should "not notify user if email has changed, but user is an API user" do
+    params = { email: "new@gov.uk" }
+    @affected_user = create(:api_user)
+    UserMailer.expects(:email_changed_by_admin_notification).never
+
+    UserUpdate.new(affected_user, params, current_user, ip_address).call
+  end
 end
