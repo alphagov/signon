@@ -23,7 +23,7 @@ class Users::PermissionsController < ApplicationController
     authorize UserApplicationPermission.for(@user, @application)
 
     permission_ids_for_other_applications = @user.supported_permissions.excluding_application(@application).pluck(:id)
-    user_update_params = { supported_permission_ids: permission_ids_for_other_applications + update_params[:supported_permission_ids].map(&:to_i) }
+    user_update_params = { supported_permission_ids: permission_ids_for_other_applications + update_params[:supported_permission_ids].map(&:to_i) + [@application.signin_permission.id] }
     UserUpdate.new(@user, user_update_params, current_user, user_ip_address).call
 
     flash[:application_id] = @application.id
