@@ -24,7 +24,6 @@ private
   end
 
   def authorize_user
-    authorize(@user)
     authorize(@user, :assign_organisation?)
   end
 
