@@ -153,12 +153,24 @@ class UsersHelperTest < ActionView::TestCase
   end
 
   context "#summary_list_item_for_email" do
-    should "return item options with edit link to change email" do
-      user = build(:user, id: 123, email: "user@gov.uk")
-      item = summary_list_item_for_email(user)
-      assert_equal item[:field], "Email"
-      assert_equal item[:value], "user@gov.uk"
-      assert_equal item.dig(:edit, :href), edit_user_email_path(user)
+    context "when user is non-API user" do
+      should "return item options with edit link to change email" do
+        user = build(:user, id: 123, email: "user@gov.uk")
+        item = summary_list_item_for_email(user)
+        assert_equal item[:field], "Email"
+        assert_equal item[:value], "user@gov.uk"
+        assert_equal item.dig(:edit, :href), edit_user_email_path(user)
+      end
+    end
+
+    context "when user is API user" do
+      should "return item options with edit link to change email" do
+        user = build(:api_user, id: 123, email: "user@gov.uk")
+        item = summary_list_item_for_email(user)
+        assert_equal item[:field], "Email"
+        assert_equal item[:value], "user@gov.uk"
+        assert_equal item.dig(:edit, :href), edit_api_user_email_path(user)
+      end
     end
   end
 

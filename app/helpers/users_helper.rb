@@ -123,7 +123,8 @@ module UsersHelper
   end
 
   def summary_list_item_for_email(user)
-    { field: "Email", value: user.email, edit: { href: edit_user_email_path(user) } }
+    href = user.api_user? ? edit_api_user_email_path(user) : edit_user_email_path(user)
+    { field: "Email", value: user.email, edit: { href: } }
   end
 
   def summary_list_item_for_organisation(user)

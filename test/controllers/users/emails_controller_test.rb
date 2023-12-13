@@ -25,7 +25,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "display breadcrumb links back to edit API user page & API users page for API user" do
         user = create(:api_user)
 
-        get :edit, params: { user_id: user }
+        get :edit, params: { api_user_id: user }
 
         assert_select ".govuk-breadcrumbs" do
           assert_select "a[href='#{api_users_path}']"
@@ -33,7 +33,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
         end
       end
 
-      should "display form with email field" do
+      should "display form with email field & cancel link for non-API user" do
         user = create(:user, email: "user@gov.uk")
 
         get :edit, params: { user_id: user }
@@ -42,25 +42,19 @@ class Users::EmailsControllerTest < ActionController::TestCase
         assert_select "form[action='#{user_email_path(user)}']" do
           assert_select "input[name='user[email]']", value: "user@gov.uk"
           assert_select "button[type='submit']", text: "Change email"
-        end
-      end
-
-      should "display cancel link to edit user page for non-API user" do
-        user = create(:user, name: "user-name")
-
-        get :edit, params: { user_id: user }
-
-        assert_select "form[action='#{user_email_path(user)}']" do
           assert_select "a[href='#{edit_user_path(user)}']", text: "Cancel"
         end
       end
 
-      should "display cancel link to edit API user page for API user" do
+      should "display form with email field & cancel link for API user" do
         user = create(:api_user, name: "user-name")
 
-        get :edit, params: { user_id: user }
+        get :edit, params: { api_user_id: user }
 
-        assert_select "form[action='#{user_email_path(user)}']" do
+        assert_template :edit
+        assert_select "form[action='#{api_user_email_path(user)}']" do
+          assert_select "input[name='user[email]']", value: "user@gov.uk"
+          assert_select "button[type='submit']", text: "Change email"
           assert_select "a[href='#{edit_api_user_path(user)}']", text: "Cancel"
         end
       end
@@ -104,7 +98,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
         api_user_policy = stub_everything("api-user-policy", edit?: true)
         ApiUserPolicy.stubs(:new).returns(api_user_policy)
 
-        get :edit, params: { user_id: user }
+        get :edit, params: { api_user_id: user }
 
         assert_template :edit
       end
@@ -115,7 +109,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
         api_user_policy = stub_everything("api-user-policy", edit?: false)
         ApiUserPolicy.stubs(:new).returns(api_user_policy)
 
-        get :edit, params: { user_id: user }
+        get :edit, params: { api_user_id: user }
 
         assert_not_authorised
       end
@@ -199,7 +193,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
         user = create(:api_user, email: "user@gov.uk")
 
         assert_no_enqueued_emails do
-          put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
+          put :update, params: { api_user_id: user, user: { email: "new-user@gov.uk" } }
         end
       end
 
@@ -227,7 +221,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
         user = create(:api_user, :invited, email: "user@gov.uk")
 
         assert_no_enqueued_emails do
-          put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
+          put :update, params: { api_user_id: user, user: { email: "new-user@gov.uk" } }
         end
       end
 
@@ -266,7 +260,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "redirect to edit API user page and display success notice for API user" do
         user = create(:api_user, email: "user@gov.uk")
 
-        put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
+        put :update, params: { api_user_id: user, user: { email: "new-user@gov.uk" } }
 
         assert_redirected_to edit_api_user_path(user)
         assert "Updated user new-user@gov.uk successfully", flash[:notice]
@@ -301,7 +295,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
         api_user_policy = stub_everything("api_user-policy", update?: true)
         ApiUserPolicy.stubs(:new).returns(api_user_policy)
 
-        put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
+        put :update, params: { api_user_id: user, user: { email: "new-user@gov.uk" } }
 
         assert_equal "new-user@gov.uk", user.reload.email
       end
@@ -312,7 +306,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
         api_user_policy = stub_everything("api_user-policy", update?: false)
         ApiUserPolicy.stubs(:new).returns(api_user_policy)
 
-        put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
+        put :update, params: { api_user_id: user, user: { email: "new-user@gov.uk" } }
 
         assert_equal "user@gov.uk", user.reload.email
         assert_not_authorised
@@ -438,32 +432,6 @@ class Users::EmailsControllerTest < ActionController::TestCase
         end
         assert_not_authorised
       end
-
-      context "when user is an API user" do
-        should "send an email change confirmation email if ApiUserPolicy#resend_email_change? returns true" do
-          user = create(:api_user, :with_pending_email_change)
-
-          api_user_policy = stub_everything("api-user-policy", resend_email_change?: true)
-          ApiUserPolicy.stubs(:new).returns(api_user_policy)
-
-          assert_enqueued_emails 1 do
-            put :resend_email_change, params: { user_id: user }
-          end
-          assert_redirected_to edit_user_path(user)
-        end
-
-        should "not send an email change confirmation email if ApiUserPolicy#resend_email_change? returns false" do
-          user = create(:api_user, :with_pending_email_change)
-
-          api_user_policy = stub_everything("api-user-policy", resend_email_change?: false)
-          ApiUserPolicy.stubs(:new).returns(api_user_policy)
-
-          assert_no_enqueued_emails do
-            put :resend_email_change, params: { user_id: user }
-          end
-          assert_not_authorised
-        end
-      end
     end
 
     context "signed in as Normal user" do
@@ -536,31 +504,6 @@ class Users::EmailsControllerTest < ActionController::TestCase
 
         assert user.reload.unconfirmed_email.present?
         assert_not_authorised
-      end
-
-      context "when user is an API user" do
-        should "clear email & token if ApiUserPolicy#cancel_email_change? returns true" do
-          user = create(:api_user, :with_pending_email_change)
-
-          api_user_policy = stub_everything("api-user-policy", cancel_email_change?: true)
-          ApiUserPolicy.stubs(:new).returns(api_user_policy)
-
-          delete :cancel_email_change, params: { user_id: user }
-
-          assert user.reload.unconfirmed_email.blank?
-        end
-
-        should "not clear email & token if ApiUserPolicy#cancel_email_change? returns false" do
-          user = create(:api_user, :with_pending_email_change)
-
-          api_user_policy = stub_everything("api-user-policy", cancel_email_change?: false)
-          ApiUserPolicy.stubs(:new).returns(api_user_policy)
-
-          delete :cancel_email_change, params: { user_id: user }
-
-          assert user.reload.unconfirmed_email.present?
-          assert_not_authorised
-        end
       end
     end
 

@@ -116,7 +116,7 @@ class ApiUsersControllerTest < ActionController::TestCase
         get :edit, params: { id: @api_user }
 
         assert_select "*", text: /Email\s+api-user@gov.uk/
-        assert_select "a[href='#{edit_user_email_path(@api_user)}']", text: /Change\s+Email/
+        assert_select "a[href='#{edit_api_user_email_path(@api_user)}']", text: /Change\s+Email/
       end
     end
 
