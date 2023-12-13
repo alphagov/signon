@@ -39,16 +39,6 @@
   </ul>
 </section>
 
-<% if @api_user.errors.present? %>
-  <div class="alert alert-danger">
-    <ul>
-      <% @api_user.errors.full_messages.each do |error| %>
-        <li><%= error %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
-
 <p>
   <%= link_to "Manage permissions", manage_permissions_api_user_path(@api_user) %>
 </p>

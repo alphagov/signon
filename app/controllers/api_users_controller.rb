@@ -45,7 +45,7 @@ class ApiUsersController < ApplicationController
 
       redirect_to api_users_path, notice: "Updated API user #{@api_user.email} successfully"
     else
-      render :edit
+      render :manage_permissions
     end
   end
 

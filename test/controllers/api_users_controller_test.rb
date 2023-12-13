@@ -291,7 +291,7 @@ class ApiUsersControllerTest < ActionController::TestCase
 
         put :update, params: { id: api_user.id, api_user: { supported_permission_ids: permissions } }
 
-        assert_template :edit
+        assert_template :manage_permissions
         assert_select "div.alert ul li", "Supported permission ids error"
       end
 

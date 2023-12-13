@@ -7,6 +7,16 @@
   <li class="active">Manage permissions</li>
 </ol>
 
+<% if @api_user.errors.present? %>
+  <div class="alert alert-danger">
+    <ul>
+      <% @api_user.errors.full_messages.each do |error| %>
+        <li><%= error %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
 <h1>Manage permissions for API User <%= @api_user.name %></h1>
 
 <%= form_for @api_user, :html => {:class => 'well add-top-margin'} do |f| %>
