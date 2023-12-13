@@ -57,6 +57,7 @@ class User < ApplicationRecord
   validate :organisation_has_mandatory_2sv, on: :create
 
   has_many :authorisations, -> { joins(:application) }, class_name: "Doorkeeper::AccessToken", foreign_key: :resource_owner_id
+  has_many :authorised_applications, -> { distinct(:application) }, through: :authorisations, source: :application
   has_many :application_permissions, -> { joins(:application) }, class_name: "UserApplicationPermission", inverse_of: :user, dependent: :destroy
   has_many :supported_permissions, -> { joins(:application) }, through: :application_permissions
   has_many :batch_invitations
@@ -184,11 +185,6 @@ class User < ApplicationRecord
   def permissions_synced!(application)
     application_permissions.where(application_id: application.id).update_all(last_synced_at: Time.zone.now)
   end
-
-  def authorised_applications
-    authorisations.group_by(&:application).keys
-  end
-  alias_method :applications_used, :authorised_applications
 
   def revoke_all_authorisations
     authorisations.not_revoked.find_each(&:revoke)
