@@ -1,7 +1,29 @@
 {
   "ignored_warnings": [
-
+    {
+      "warning_type": "Mass Assignment",
+      "warning_code": 105,
+      "fingerprint": "767cb68f550b9a322a8dc311cf19b77e058eac5a546698967b4245c64cb8c32f",
+      "check_name": "PermitAttributes",
+      "message": "Potentially dangerous key allowed for mass assignment",
+      "file": "app/controllers/users/roles_controller.rb",
+      "line": 31,
+      "link": "https://brakemanscanner.org/docs/warning_types/mass_assignment/",
+      "code": "params.require(:user).permit(:role)",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "Users::RolesController",
+        "method": "user_params"
+      },
+      "user_input": ":role",
+      "confidence": "Medium",
+      "cwe_id": [
+        915
+      ],
+      "note": "Changing the user's role is the whole point of this controller"
+    }
   ],
-  "updated": "2023-10-10 13:35:33 +0000",
-  "brakeman_version": "6.0.1"
+  "updated": "2023-12-13 15:23:04 +0000",
+  "brakeman_version": "6.1.0"
 }
