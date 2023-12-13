@@ -267,6 +267,31 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
     end
 
+    should "prevent permissions being added for apps that the current user does not have access to" do
+      organisation = create(:organisation)
+
+      application1 = create(:application)
+      application2 = create(:application, with_supported_permissions: %w[app2-permission])
+
+      user = create(:user, organisation:)
+      user.grant_application_signin_permission(application1)
+
+      current_user = create(:organisation_admin_user, organisation:)
+      current_user.grant_application_signin_permission(application1)
+      sign_in current_user
+
+      permission = stub_user_application_permission(user, application1)
+      stub_policy current_user, permission, update?: true
+
+      app2_permission = application2.supported_permissions.find_by!(name: "app2-permission")
+
+      patch :update, params: { user_id: user, application_id: application1, application: { supported_permission_ids: [app2_permission.id] } }
+
+      user.reload
+
+      assert_equal [], user.supported_permissions
+    end
+
     should "assign the application id to the application_id flash" do
       application = create(:application, with_supported_permissions: %w[new old])
       user = create(:user, with_permissions: { application => %w[old] })
