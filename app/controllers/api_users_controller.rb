@@ -32,7 +32,7 @@ class ApiUsersController < ApplicationController
 
     if @api_user.save
       EventLog.record_event(@api_user, EventLog::API_USER_CREATED, initiator: current_user, ip_address: user_ip_address)
-      redirect_to [:edit, @api_user], notice: "Successfully created API user"
+      redirect_to edit_api_user_path(@api_user), notice: "Successfully created API user"
     else
       render :new
     end
@@ -43,7 +43,7 @@ class ApiUsersController < ApplicationController
       @api_user.application_permissions.reload
       PermissionUpdater.perform_on(@api_user)
 
-      redirect_to :api_users, notice: "Updated API user #{@api_user.email} successfully"
+      redirect_to api_users_path, notice: "Updated API user #{@api_user.email} successfully"
     else
       render :edit
     end
