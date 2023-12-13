@@ -320,10 +320,6 @@ class User < ApplicationRecord
     role_class.manageable_organisations_for(self).order(:name)
   end
 
-  def permitted_params
-    role_class.permitted_user_params
-  end
-
   # Make devise send all emails using ActiveJob
   def send_devise_notification(notification, *args)
     devise_mailer.send(notification, self, *args).deliver_later
