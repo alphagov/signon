@@ -133,7 +133,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
       patch :update, params: { application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
 
-      assert_equal %w[new], user.permissions_for(application)
+      assert_equal %w[new signin], user.permissions_for(application)
       assert_redirected_to account_applications_path
     end
 
@@ -147,8 +147,104 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
       patch :update, params: { application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
 
-      assert_equal %w[new], user.permissions_for(application)
+      assert_equal %w[new signin], user.permissions_for(application)
       assert_equal %w[other], user.permissions_for(other_application)
+    end
+
+    should "prevent permissions being added for apps that the current user does not have access to" do
+      application1 = create(:application)
+      application2 = create(:application, with_supported_permissions: %w[app2-permission])
+
+      current_user = create(:organisation_admin_user)
+      current_user.grant_application_signin_permission(application1)
+      sign_in current_user
+
+      stub_policy current_user, [:account, Doorkeeper::Application], index?: true
+      stub_policy current_user, [:account, application1], edit_permissions?: true
+
+      app2_permission = application2.supported_permissions.find_by!(name: "app2-permission")
+
+      patch :update, params: { application_id: application1, application: { supported_permission_ids: [app2_permission.id] } }
+
+      current_user.reload
+
+      assert_equal [application1.signin_permission], current_user.supported_permissions
+    end
+
+    should "not remove the signin permission from the app when updating other permissions" do
+      application = create(:application, with_supported_permissions: %w[other])
+
+      current_user = create(:admin_user)
+      current_user.grant_application_signin_permission(application)
+      sign_in current_user
+
+      stub_policy current_user, [:account, application], edit_permissions?: true
+
+      other_permission = application.supported_permissions.find_by(name: "other")
+
+      patch :update, params: { application_id: application.id, application: { supported_permission_ids: [other_permission.id] } }
+
+      current_user.reload
+      assert_same_elements [application.signin_permission, other_permission], current_user.supported_permissions
+    end
+
+    should "not remove permissions the user already has that are not grantable from ui" do
+      application = create(:application, with_supported_permissions: %w[other], with_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
+
+      current_user = create(:admin_user)
+      current_user.grant_application_signin_permission(application)
+      current_user.grant_application_permission(application, "not_from_ui")
+
+      sign_in current_user
+
+      stub_policy current_user, [:account, application], edit_permissions?: true
+
+      other_permission = application.supported_permissions.find_by(name: "other")
+      not_from_ui_permission = application.supported_permissions.find_by(name: "not_from_ui")
+
+      patch :update, params: { application_id: application.id, application: { supported_permission_ids: [other_permission.id] } }
+
+      current_user.reload
+
+      assert_same_elements [other_permission, application.signin_permission, not_from_ui_permission], current_user.supported_permissions
+    end
+
+    should "prevent permissions being added for other apps" do
+      other_application = create(:application, with_supported_permissions: %w[other])
+      application = create(:application)
+
+      current_user = create(:admin_user)
+      current_user.grant_application_signin_permission(application)
+
+      sign_in current_user
+
+      stub_policy current_user, [:account, application], edit_permissions?: true
+
+      other_permission = other_application.supported_permissions.find_by(name: "other")
+
+      patch :update, params: { application_id: application.id, application: { supported_permission_ids: [other_permission.id] } }
+
+      current_user.reload
+
+      assert_equal [application.signin_permission], current_user.supported_permissions
+    end
+
+    should "prevent permissions being added that are not grantable from the ui" do
+      application = create(:application, with_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
+
+      current_user = create(:admin_user)
+      current_user.grant_application_signin_permission(application)
+      sign_in current_user
+
+      stub_policy current_user, [:account, application], edit_permissions?: true
+
+      not_from_ui_permission = application.supported_permissions.find_by(name: "not_from_ui")
+
+      patch :update, params: { application_id: application.id, application: { supported_permission_ids: [not_from_ui_permission.id] } }
+
+      current_user.reload
+
+      assert_equal [application.signin_permission], current_user.supported_permissions
     end
 
     should "assign the application id to the application_id flash" do
