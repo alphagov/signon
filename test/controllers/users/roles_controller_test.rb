@@ -32,10 +32,10 @@ class Users::RolesControllerTest < ActionController::TestCase
         end
       end
 
-      should "authorize access if UserPolicy#edit? and UserPolicy#assign_role? return true" do
+      should "authorize access if UserPolicy#assign_role? returns true" do
         user = create(:user)
 
-        user_policy = stub_everything("user-policy", edit?: true, assign_role?: true)
+        user_policy = stub_everything("user-policy", assign_role?: true)
         UserPolicy.stubs(:new).returns(user_policy)
 
         get :edit, params: { user_id: user }
@@ -43,21 +43,10 @@ class Users::RolesControllerTest < ActionController::TestCase
         assert_response :success
       end
 
-      should "not authorize access if UserPolicy#edit? returns false" do
-        user = create(:user)
-
-        user_policy = stub_everything("user-policy", edit?: false, assign_role?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
-
-        get :edit, params: { user_id: user }
-
-        assert_not_authorised
-      end
-
       should "not authorize access if UserPolicy#assign_role? returns false" do
         user = create(:user)
 
-        user_policy = stub_everything("user-policy", edit?: true, assign_role?: false)
+        user_policy = stub_everything("user-policy", assign_role?: false)
         UserPolicy.stubs(:new).returns(user_policy)
 
         get :edit, params: { user_id: user }
@@ -158,10 +147,10 @@ class Users::RolesControllerTest < ActionController::TestCase
         assert_equal "Updated user user@gov.uk successfully", flash[:notice]
       end
 
-      should "update user role if UserPolicy#update? and UserPolicy#assign_role? return true" do
+      should "update user role if UserPolicy#assign_role? returns true" do
         user = create(:user_in_organisation, role: Roles::Normal.role_name)
 
-        user_policy = stub_everything("user-policy", update?: true, assign_role?: true)
+        user_policy = stub_everything("user-policy", assign_role?: true)
         UserPolicy.stubs(:new).returns(user_policy)
 
         put :update, params: { user_id: user, user: { role: Roles::OrganisationAdmin.role_name } }
@@ -169,22 +158,10 @@ class Users::RolesControllerTest < ActionController::TestCase
         assert_equal Roles::OrganisationAdmin.role_name, user.reload.role
       end
 
-      should "not update user role if UserPolicy#update? returns false" do
-        user = create(:user_in_organisation, role: Roles::Normal.role_name)
-
-        user_policy = stub_everything("user-policy", update?: false, assign_role?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
-
-        put :update, params: { user_id: user, user: { role: Roles::OrganisationAdmin.role_name } }
-
-        assert_equal Roles::Normal.role_name, user.reload.role
-        assert_not_authorised
-      end
-
       should "not update user role if UserPolicy#assign_role? returns false" do
         user = create(:user_in_organisation, role: Roles::Normal.role_name)
 
-        user_policy = stub_everything("user-policy", update?: true, assign_role?: false)
+        user_policy = stub_everything("user-policy", assign_role?: false)
         UserPolicy.stubs(:new).returns(user_policy)
 
         put :update, params: { user_id: user, user: { role: Roles::OrganisationAdmin.role_name } }

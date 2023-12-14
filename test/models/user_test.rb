@@ -1256,15 +1256,6 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context "#permitted_params" do
-    should "return the params editable by the user's role" do
-      user = build(:user, role: Roles::Admin.role_name)
-      Roles::Admin.stubs(:permitted_user_params).returns(%i[abc xyz])
-
-      assert_equal %i[abc xyz], user.permitted_params
-    end
-  end
-
   context "#organisation_name" do
     should "return organisation name if user has organisation" do
       organisation = build(:organisation, name: "organisation-name")

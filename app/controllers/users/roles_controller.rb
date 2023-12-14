@@ -24,12 +24,11 @@ private
   end
 
   def authorize_user
-    authorize(@user)
     authorize(@user, :assign_role?)
   end
 
   def user_params
-    params.require(:user).permit(*current_user.permitted_params.intersection([:role]))
+    params.require(:user).permit(:role)
   end
 
   def redirect_to_account_page_if_acting_on_own_user

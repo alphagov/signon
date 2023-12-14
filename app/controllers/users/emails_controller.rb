@@ -46,7 +46,7 @@ private
   end
 
   def user_params
-    params.require(:user).permit(*current_user.permitted_params.intersection([:email]))
+    params.require(:user).permit(:email)
   end
 
   def redirect_to_account_page_if_acting_on_own_user

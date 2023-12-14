@@ -27,10 +27,10 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
         end
       end
 
-      should "authorize access if UserPolicy#edit? and UserPolicy#assign_organisation? return true" do
+      should "authorize access if UserPolicy#assign_organisation? returns true" do
         user = create(:user)
 
-        user_policy = stub_everything("user-policy", edit?: true, assign_organisation?: true)
+        user_policy = stub_everything("user-policy", assign_organisation?: true)
         UserPolicy.stubs(:new).returns(user_policy)
 
         get :edit, params: { user_id: user }
@@ -38,21 +38,10 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
         assert_response :success
       end
 
-      should "not authorize access if UserPolicy#edit? returns false" do
-        user = create(:user)
-
-        user_policy = stub_everything("user-policy", edit?: false, assign_organisation?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
-
-        get :edit, params: { user_id: user }
-
-        assert_not_authorised
-      end
-
       should "not authorize access if UserPolicy#assign_organisation? returns false" do
         user = create(:user)
 
-        user_policy = stub_everything("user-policy", edit?: true, assign_organisation?: false)
+        user_policy = stub_everything("user-policy", assign_organisation?: false)
         UserPolicy.stubs(:new).returns(user_policy)
 
         get :edit, params: { user_id: user }
@@ -160,10 +149,10 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
         assert_equal "Updated user user@gov.uk successfully", flash[:notice]
       end
 
-      should "update user organisation if UserPolicy#update? and UserPolicy#assign_organisation? return true" do
+      should "update user organisation if UserPolicy#assign_organisation? returns true" do
         user = create(:user, organisation:)
 
-        user_policy = stub_everything("user-policy", update?: true, assign_organisation?: true)
+        user_policy = stub_everything("user-policy", assign_organisation?: true)
         UserPolicy.stubs(:new).returns(user_policy)
 
         put :update, params: { user_id: user, user: { organisation_id: another_organisation } }
@@ -171,22 +160,10 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
         assert_equal another_organisation, user.reload.organisation
       end
 
-      should "not update user organisation if UserPolicy#update? returns false" do
-        user = create(:user, organisation:)
-
-        user_policy = stub_everything("user-policy", update?: false, assign_organisation?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
-
-        put :update, params: { user_id: user, user: { organisation_id: another_organisation } }
-
-        assert_equal organisation, user.reload.organisation
-        assert_not_authorised
-      end
-
       should "not update user organisation if UserPolicy#assign_organisation? returns false" do
         user = create(:user, organisation:)
 
-        user_policy = stub_everything("user-policy", update?: true, assign_role?: false)
+        user_policy = stub_everything("user-policy", assign_organisation?: false)
         UserPolicy.stubs(:new).returns(user_policy)
 
         put :update, params: { user_id: user, user: { organisation_id: another_organisation } }
