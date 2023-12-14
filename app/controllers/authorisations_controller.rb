@@ -23,7 +23,7 @@ class AuthorisationsController < ApplicationController
     else
       flash[:error] = "There was an error while creating the access token"
     end
-    redirect_to [:manage_tokens, @api_user]
+    redirect_to manage_tokens_api_user_path(@api_user)
   end
 
   def revoke
@@ -34,7 +34,7 @@ class AuthorisationsController < ApplicationController
     else
       flash[:error] = "There was an error while revoking access for #{authorisation.application.name}"
     end
-    redirect_to [:manage_tokens, @api_user]
+    redirect_to manage_tokens_api_user_path(@api_user)
   end
 
 private

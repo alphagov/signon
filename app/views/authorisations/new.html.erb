@@ -26,7 +26,7 @@
    })
 %>
 
-<%= form_for @authorisation, url: [:api_user, :authorisations] do |_| %>
+<%= form_tag api_user_authorisations_path(@api_user), method: :post do %>
   <%= render "govuk_publishing_components/components/select", {
     id: "doorkeeper_access_token_application_id",
     label: "Application",

@@ -58,7 +58,7 @@
   </tbody>
 </table>
 <p>
-  <%= link_to [:new, @api_user, :authorisation], class: "btn btn-default" do %>
+  <%= link_to new_api_user_authorisation_path(@api_user), class: "btn btn-default" do %>
     <span class="glyphicon glyphicon-plus glyphicon-smaller-than-text"></span> Add application token
   <% end %>
 </p>
