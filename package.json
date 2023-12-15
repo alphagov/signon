@@ -38,7 +38,7 @@
     "postcss": "^8.4.32",
     "standardx": "^7.0.0",
     "stylelint": "^15.11.0",
-    "stylelint-config-gds": "^1.1.0"
+    "stylelint-config-gds": "^1.1.1"
   },
   "resolutions": {
     "stylelint/strip-ansi": "6.0.1",
