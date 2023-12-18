@@ -201,7 +201,7 @@ GEM
       capybara (>= 3.36)
       puma
       selenium-webdriver (>= 4.0)
-    hashdiff (1.0.1)
+    hashdiff (1.1.0)
     http (5.1.1)
       addressable (~> 2.8)
       http-cookie (~> 1.0)
