@@ -25,8 +25,8 @@ class Users::TwoStepVerificationResetsControllerTest < ActionController::TestCas
       should "authorize access if UserPolicy#reset_2sv? returns true" do
         user = create(:two_step_enabled_user)
 
-        user_policy = stub_everything("user-policy", reset_2sv?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, reset_2sv?: true)
+        stub_policy_for_navigation_links(@admin)
 
         get :edit, params: { user_id: user }
 
@@ -36,8 +36,8 @@ class Users::TwoStepVerificationResetsControllerTest < ActionController::TestCas
       should "not authorize access if UserPolicy#reset_2sv? returns false" do
         user = create(:two_step_enabled_user)
 
-        user_policy = stub_everything("user-policy", reset_2sv?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, reset_2sv?: false)
+        stub_policy_for_navigation_links(@admin)
 
         get :edit, params: { user_id: user }
 
@@ -125,8 +125,7 @@ class Users::TwoStepVerificationResetsControllerTest < ActionController::TestCas
       should "reset 2SV for user if UserPolicy#reset_2sv? returns true" do
         user = create(:two_step_enabled_user)
 
-        user_policy = stub_everything("user-policy", reset_2sv?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, reset_2sv?: true)
 
         put :update, params: { user_id: user }
 
@@ -136,8 +135,7 @@ class Users::TwoStepVerificationResetsControllerTest < ActionController::TestCas
       should "not reset 2SV for user if UserPolicy#reset_2sv? returns false" do
         user = create(:two_step_enabled_user)
 
-        user_policy = stub_everything("user-policy", reset_2sv?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, reset_2sv?: false)
 
         put :update, params: { user_id: user }
 
