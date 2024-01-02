@@ -1,4 +1,4 @@
-<% content_for :title, "Create new access token for \"#{@api_user.name}\"" %>
+<% content_for :title, "Create new access token for #{@api_user.name}" %>
 <% content_for :breadcrumbs,
    render("govuk_publishing_components/components/breadcrumbs", {
      collapse_on_mobile: true,
@@ -12,7 +12,7 @@
          url: api_users_path,
        },
        {
-         title: "Edit API user",
+         title: @api_user.name,
          url: edit_api_user_path(@api_user),
        },
        {
