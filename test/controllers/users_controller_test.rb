@@ -435,10 +435,4 @@ class UsersControllerTest < ActionController::TestCase
       end
     end
   end
-
-private
-
-  def stub_policy_for_navigation_links(current_user)
-    stub_policy(current_user, User, index?: true)
-  end
 end
