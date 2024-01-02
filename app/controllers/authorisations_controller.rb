@@ -12,7 +12,7 @@ class AuthorisationsController < ApplicationController
   def new; end
 
   def create
-    @authorisation.application_id = params[:doorkeeper_access_token][:application_id]
+    @authorisation.application_id = params[:authorisation][:application_id]
 
     if @authorisation.save
       @api_user.grant_application_signin_permission(@authorisation.application)

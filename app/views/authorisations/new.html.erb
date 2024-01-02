@@ -30,9 +30,9 @@
 
 <%= form_tag api_user_authorisations_path(@api_user), method: :post do %>
   <%= render "govuk_publishing_components/components/select", {
-    id: "doorkeeper_access_token_application_id",
+    id: "authorisation_application_id",
     label: "Application",
-    name: "doorkeeper_access_token[application_id]",
+    name: "authorisation[application_id]",
     options: Doorkeeper::Application.all.map { |application| { text: application.name, value: application.id } }
   } %>
 
