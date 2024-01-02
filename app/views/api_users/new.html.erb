@@ -1,6 +1,25 @@
 <% content_for :title_caption, "Manage API users" %>
 <% content_for :title, "Create new API user" %>
 
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "API users",
+         url: api_users_path,
+       },
+       {
+         title: "New API user",
+       }
+     ]
+   })
+%>
+
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <%= form_for @api_user do |f| %>
