@@ -11,7 +11,7 @@ class UserPermissionMigrator
 
     permission_mappings = permissions.to_h
 
-    User.all.each do |user|
+    User.all.find_each do |user|
       next unless user.has_access_to?(source_app)
 
       permissions = user.permissions_for(source_app)
