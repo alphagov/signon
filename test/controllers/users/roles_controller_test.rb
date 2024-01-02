@@ -35,8 +35,8 @@ class Users::RolesControllerTest < ActionController::TestCase
       should "authorize access if UserPolicy#assign_role? returns true" do
         user = create(:user)
 
-        user_policy = stub_everything("user-policy", assign_role?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, assign_role?: true)
+        stub_policy_for_navigation_links(@superadmin)
 
         get :edit, params: { user_id: user }
 
@@ -46,8 +46,8 @@ class Users::RolesControllerTest < ActionController::TestCase
       should "not authorize access if UserPolicy#assign_role? returns false" do
         user = create(:user)
 
-        user_policy = stub_everything("user-policy", assign_role?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, assign_role?: false)
+        stub_policy_for_navigation_links(@superadmin)
 
         get :edit, params: { user_id: user }
 
@@ -150,8 +150,7 @@ class Users::RolesControllerTest < ActionController::TestCase
       should "update user role if UserPolicy#assign_role? returns true" do
         user = create(:user_in_organisation, role: Roles::Normal.role_name)
 
-        user_policy = stub_everything("user-policy", assign_role?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, assign_role?: true)
 
         put :update, params: { user_id: user, user: { role: Roles::OrganisationAdmin.role_name } }
 
@@ -161,8 +160,7 @@ class Users::RolesControllerTest < ActionController::TestCase
       should "not update user role if UserPolicy#assign_role? returns false" do
         user = create(:user_in_organisation, role: Roles::Normal.role_name)
 
-        user_policy = stub_everything("user-policy", assign_role?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, assign_role?: false)
 
         put :update, params: { user_id: user, user: { role: Roles::OrganisationAdmin.role_name } }
 
