@@ -8,5 +8,8 @@ module PunditHelpers
 
   def stub_policy_for_navigation_links(current_user)
     stub_policy(current_user, User, index?: true)
+    stub_policy(current_user, ApiUser, index?: true)
+    stub_policy(current_user, Doorkeeper::Application, index?: true)
+    stub_policy(current_user, Organisation, index?: true)
   end
 end
