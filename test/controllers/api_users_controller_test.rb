@@ -190,18 +190,16 @@ class ApiUsersControllerTest < ActionController::TestCase
         end
       end
 
-      should "show button for revoking API user's access token for an application" do
+      should "show link for revoking API user's access token for an application" do
         application = create(:application)
         token = create(:access_token, resource_owner_id: @api_user.id, application:)
 
         get :manage_tokens, params: { id: @api_user }
 
-        revoke_token_path = revoke_api_user_authorisation_path(@api_user, token)
+        edit_token_path = edit_api_user_authorisation_path(@api_user, token)
 
         assert_select "table#authorisations tbody td", text: application.name do |td|
-          assert_select td.first.parent, "form[action='#{revoke_token_path}']" do
-            assert_select "input[type='submit']", value: "Revoke"
-          end
+          assert_select td.first.parent, "a[href='#{edit_token_path}']", text: "Revoke"
         end
       end
 

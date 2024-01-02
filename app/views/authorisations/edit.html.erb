@@ -1,0 +1,56 @@
+<% content_for :title, "Revoke token giving #{@api_user.name} access to #{@authorisation.application.name}" %>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Home",
+         url: root_path,
+       },
+       {
+         title: "API users",
+         url: api_users_path,
+       },
+       {
+         title: @api_user.name,
+         url: edit_api_user_path(@api_user),
+       },
+       {
+         title: "Manage tokens",
+         url: manage_tokens_api_user_path(@api_user),
+       },
+       {
+         title: "Revoke access token",
+       }
+     ]
+   })
+%>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <section>
+      <%= render "govuk_publishing_components/components/summary_list", {
+        title: "Access token details",
+        items: [
+          { field: "Application", value: @authorisation.application.name },
+          { field: "Token (hidden)", value: content_tag(:code) { truncate_access_token(@authorisation.token) } },
+          { field: "Generated", value: @authorisation.created_at.to_date.to_fs(:govuk_date) },
+          { field: "Expires", value: @authorisation.expires_at.to_date.to_fs(:govuk_date) },
+        ]
+      } %>
+    </section>
+    <section>
+      <div class="govuk-button-group">
+        <%= form_tag(revoke_api_user_authorisation_path(@api_user, @authorisation), method: :post) do %>
+          <div class="govuk-button-group">
+            <%= render "govuk_publishing_components/components/button", {
+              text: "Revoke token",
+              destructive: true,
+            } %>
+            <%= link_to "Cancel", manage_tokens_api_user_path(@api_user), class: "govuk-link govuk-link--no-visited-state" %>
+          </div>
+        <% end %>
+      </div>
+    </section>
+  </div>
+</div>

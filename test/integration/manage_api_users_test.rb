@@ -91,6 +91,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       click_link "Manage tokens"
 
       assert page.has_selector?("td:first-child", text: @application.name)
+      click_link "Revoke"
       click_button "Revoke"
 
       assert page.has_text?("Access for #{@application.name} was revoked")

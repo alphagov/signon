@@ -48,11 +48,7 @@
           <% end %>
         </td>
         <td>
-          <div class="btn-group">
-            <%= form_tag(revoke_api_user_authorisation_path(@api_user.id, authorisation.id), method: "post") do %>
-            <%= submit_tag("Revoke", class: "btn btn-default") %>
-            <% end %>
-          </div>
+          <%= link_to "Revoke", edit_api_user_authorisation_path(@api_user, authorisation) %>
         </td>
     <% end %>
   </tbody>

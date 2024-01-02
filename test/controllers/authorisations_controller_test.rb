@@ -79,6 +79,87 @@ class AuthorisationsControllerTest < ActionController::TestCase
     end
   end
 
+  context "GET edit" do
+    context "signed in as Superadmin user" do
+      setup do
+        @superadmin = create(:superadmin_user)
+        sign_in @superadmin
+
+        @access_token = create(:access_token, resource_owner_id: @api_user.id)
+      end
+
+      should "display breadcrumb links" do
+        get :edit, params: { api_user_id: @api_user, id: @access_token }
+
+        assert_select ".govuk-breadcrumbs" do
+          assert_select "a[href='#{root_path}']"
+          assert_select "a[href='#{api_users_path}']"
+          assert_select "a[href='#{edit_api_user_path(@api_user)}']"
+          assert_select "a[href='#{manage_tokens_api_user_path(@api_user)}']"
+        end
+      end
+
+      should "should show button to revoke API access to a particular application" do
+        get :edit, params: { api_user_id: @api_user, id: @access_token }
+
+        assert_select "form[action='#{revoke_api_user_authorisation_path(@api_user, @access_token)}']" do
+          assert_select "button[type='submit']", text: "Revoke token"
+        end
+      end
+
+      should "should show cancel link to return to manage tokens page" do
+        get :edit, params: { api_user_id: @api_user, id: @access_token }
+
+        assert_select "a[href='#{manage_tokens_api_user_path(@api_user)}']", text: "Cancel"
+      end
+
+      should "authorize access if AuthorisationPolicy#edit? returns true" do
+        stub_policy(@superadmin, @access_token, policy_class: AuthorisationPolicy, edit?: true)
+        stub_policy_for_navigation_links(@superadmin)
+
+        get :edit, params: { api_user_id: @api_user, id: @access_token }
+
+        assert_template :edit
+      end
+
+      should "not authorize access if AuthorisationPolicy#edit? returns false" do
+        stub_policy(@superadmin, @access_token, policy_class: AuthorisationPolicy, edit?: false)
+        stub_policy_for_navigation_links(@superadmin)
+
+        get :edit, params: { api_user_id: @api_user, id: @access_token }
+
+        assert_not_authorised
+      end
+    end
+
+    context "signed in as Admin user" do
+      setup do
+        @admin = create(:admin_user)
+        sign_in @admin
+
+        @access_token = create(:access_token, resource_owner_id: @api_user.id)
+      end
+
+      should "not be able to revoke API user's authorisations" do
+        get :edit, params: { api_user_id: @api_user, id: @access_token }
+
+        assert_not_authorised
+      end
+    end
+
+    context "not signed in" do
+      setup do
+        @access_token = create(:access_token, resource_owner_id: @api_user.id)
+      end
+
+      should "not be allowed access" do
+        get :edit, params: { api_user_id: @api_user, id: @access_token }
+
+        assert_not_authenticated
+      end
+    end
+  end
+
   context "POST create" do
     context "signed in as Superadmin user" do
       setup do

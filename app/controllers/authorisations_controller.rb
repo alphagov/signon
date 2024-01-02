@@ -1,10 +1,10 @@
 class AuthorisationsController < ApplicationController
-  layout "admin_layout", only: %w[new]
+  layout "admin_layout"
 
   before_action :authenticate_user!
   before_action :load_api_user
   before_action :build_authorisation, only: %i[new create]
-  before_action :load_authorisation, only: %i[revoke]
+  before_action :load_authorisation, only: %i[edit revoke]
   before_action :authorize_authorisation
 
   respond_to :html
@@ -23,6 +23,8 @@ class AuthorisationsController < ApplicationController
     end
     redirect_to manage_tokens_api_user_path(@api_user)
   end
+
+  def edit; end
 
   def revoke
     if @authorisation.revoke
