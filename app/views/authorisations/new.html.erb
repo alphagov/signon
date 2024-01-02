@@ -32,9 +32,9 @@
     label: "Application",
     name: "doorkeeper_access_token[application_id]",
     options: Doorkeeper::Application.all.map { |application| { text: application.name, value: application.id } }
-    } %>
+  } %>
 
   <%= render "govuk_publishing_components/components/button", {
     text: "Create access token"
-    } %>
+  } %>
 <% end %>

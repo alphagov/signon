@@ -8,40 +8,33 @@
           id: "error-summary",
           title: "There was a problem with your new API user",
           items: @api_user.errors.map do |error|
-          {
-            text: error.full_message,
-            href: "#api_user_#{error.attribute}",
-          }
+            { text: error.full_message, href: "#api_user_#{error.attribute}" }
           end
-          } %>
+        } %>
       <% end %>
 
       <%= render "govuk_publishing_components/components/input", {
-        label: {
-          text: "Name"
-        },
+        label: { text: "Name" },
         name: "api_user[name]",
         id: "api_user_name",
-        error_items: @api_user.errors.full_messages_for(:name).map {|message| { text: message } },
+        error_items: @api_user.errors.full_messages_for(:name).map { |message| { text: message } },
         value: @api_user.name,
         autocomplete: "off",
-        } %>
+      } %>
 
       <%= render "govuk_publishing_components/components/input", {
-        label: {
-          text: "Email"
-        },
+        label: { text: "Email" },
         name: "api_user[email]",
         id: "api_user_email",
         type: "email",
-        error_items: @api_user.errors.full_messages_for(:email).map {|message| { text: message } },
+        error_items: @api_user.errors.full_messages_for(:email).map { |message| { text: message } },
         value: @api_user.email,
         autocomplete: "off",
-        } %>
+      } %>
 
       <%= render "govuk_publishing_components/components/button", {
         text: "Create API user"
-        } %>
+      } %>
     <% end %>
   </div>
 </div>
