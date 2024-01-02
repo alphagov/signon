@@ -23,8 +23,8 @@ class Users::UnlockingsControllerTest < ActionController::TestCase
       should "authorize access if UserPolicy#unlock? returns true" do
         user = create(:locked_user)
 
-        user_policy = stub_everything("user-policy", unlock?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, unlock?: true)
+        stub_policy_for_navigation_links(@admin)
 
         get :edit, params: { user_id: user }
 
@@ -34,8 +34,8 @@ class Users::UnlockingsControllerTest < ActionController::TestCase
       should "not authorize access if UserPolicy#unlock? returns false" do
         user = create(:locked_user)
 
-        user_policy = stub_everything("user-policy", unlock?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, unlock?: false)
+        stub_policy_for_navigation_links(@admin)
 
         get :edit, params: { user_id: user }
 
@@ -129,8 +129,7 @@ class Users::UnlockingsControllerTest < ActionController::TestCase
       should "unlock user if UserPolicy#unlock? returns true" do
         user = create(:locked_user)
 
-        user_policy = stub_everything("user-policy", unlock?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, unlock?: true)
 
         put :update, params: { user_id: user }
 
@@ -140,8 +139,7 @@ class Users::UnlockingsControllerTest < ActionController::TestCase
       should "not unock user if UserPolicy#unlock? returns false" do
         user = create(:locked_user)
 
-        user_policy = stub_everything("user-policy", unlock?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, unlock?: false)
 
         put :update, params: { user_id: user }
 
