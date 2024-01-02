@@ -1,6 +1,4 @@
 class AuthorisationsController < ApplicationController
-  include UserPermissionsControllerMethods
-
   layout "admin_layout", only: %w[new]
 
   before_action :authenticate_user!
