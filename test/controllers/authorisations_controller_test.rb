@@ -206,18 +206,108 @@ class AuthorisationsControllerTest < ActionController::TestCase
   end
 
   context "POST revoke" do
+    context "signed in as Superadmin user" do
+      setup do
+        @superadmin = create(:superadmin_user)
+        sign_in @superadmin
+
+        @access_token = create(:access_token, resource_owner_id: @api_user.id)
+      end
+
+      should "revoke access token" do
+        post :revoke, params: { api_user_id: @api_user, id: @access_token }
+
+        assert @access_token.reload.revoked?
+      end
+
+      should "redirect to manage tokens page" do
+        post :revoke, params: { api_user_id: @api_user, id: @access_token }
+
+        assert_redirected_to manage_tokens_api_user_path(@api_user)
+      end
+
+      should "set flash notice" do
+        post :revoke, params: { api_user_id: @api_user, id: @access_token }
+
+        assert_equal "Access for #{@access_token.application.name} was revoked", flash[:notice]
+      end
+
+      should "record access token revoked event" do
+        @controller.stubs(:user_ip_address).returns("1.1.1.1")
+
+        EventLog.expects(:record_event).with(
+          @api_user,
+          EventLog::ACCESS_TOKEN_REVOKED,
+          initiator: @superadmin,
+          application: @access_token.application,
+          ip_address: "1.1.1.1",
+        )
+
+        post :revoke, params: { api_user_id: @api_user, id: @access_token }
+      end
+
+      should "authorize access if AuthorisationPolicy#revoke? returns true" do
+        stub_policy(@superadmin, @access_token, policy_class: AuthorisationPolicy, revoke?: true)
+
+        post :revoke, params: { api_user_id: @api_user, id: @access_token }
+
+        assert @access_token.reload.revoked?
+      end
+
+      should "not authorize access if AuthorisationPolicy#revoke? returns false" do
+        stub_policy(@superadmin, @access_token, policy_class: AuthorisationPolicy, revoke?: false)
+
+        post :revoke, params: { api_user_id: @api_user, id: @access_token }
+
+        assert_not_authorised
+      end
+
+      context "when revocation fails" do
+        setup do
+          @access_token.stubs(:revoke).returns(false)
+          authorisations = stub("authorisations", find: @access_token)
+          @api_user.stubs(:authorisations).returns(authorisations)
+          ApiUser.stubs(:find).returns(@api_user)
+        end
+
+        should "set flash error" do
+          post :revoke, params: { api_user_id: @api_user, id: @access_token }
+
+          assert_equal "There was an error while revoking access for #{@access_token.application.name}", flash[:error]
+        end
+
+        should "not record access token revoked event" do
+          EventLog.expects(:record_event).never
+
+          post :revoke, params: { api_user_id: @api_user, id: @access_token }
+        end
+      end
+    end
+
     context "signed in as Admin user" do
       setup do
         @admin = create(:admin_user)
         sign_in @admin
+
+        @access_token = create(:access_token, resource_owner_id: @api_user.id)
       end
 
       should "not be able to revoke API user's authorisations" do
-        access_token = create(:access_token, resource_owner_id: @api_user.id)
-
-        post :revoke, params: { api_user_id: @api_user, id: access_token }
+        post :revoke, params: { api_user_id: @api_user, id: @access_token }
 
         assert_not_authorised
+      end
+    end
+
+    context "not signed in" do
+      setup do
+        @access_token = create(:access_token, resource_owner_id: @api_user.id)
+      end
+
+      should "not be allowed access" do
+        post :revoke, params: { api_user_id: @api_user, id: @access_token }
+
+        assert_not_authenticated
       end
     end
   end
