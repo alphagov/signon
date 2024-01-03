@@ -48,7 +48,9 @@
           <% end %>
         </td>
         <td>
-          <%= link_to "Revoke", edit_api_user_authorisation_path(@api_user, authorisation) %>
+          <%= link_to edit_api_user_authorisation_path(@api_user, authorisation) do %>
+            Revoke<span class="invisible"> token giving <%= @api_user.name %> access to <%= authorisation.application.name %></span>
+          <% end %>
         </td>
     <% end %>
   </tbody>

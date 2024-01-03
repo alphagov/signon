@@ -198,9 +198,7 @@ class ApiUsersControllerTest < ActionController::TestCase
 
         edit_token_path = edit_api_user_authorisation_path(@api_user, token)
 
-        assert_select "table#authorisations tbody td", text: application.name do |td|
-          assert_select td.first.parent, "a[href='#{edit_token_path}']", text: "Revoke"
-        end
+        assert_select "a[href='#{edit_token_path}']", text: "Revoke token giving #{@api_user.name} access to #{application.name}"
       end
 
       should "not show API user's revoked access tokens" do
