@@ -100,7 +100,7 @@ class EventLogTest < ActiveSupport::TestCase
 
   test "records the application associated with the event passed as an option" do
     application = create(:application)
-    EventLog.record_event(create(:user), EventLog::ACCESS_TOKEN_REGENERATED, application:)
+    EventLog.record_event(create(:user), EventLog::SUCCESSFUL_PASSWORD_RESET, application:)
 
     assert_equal application, EventLog.last.application
   end

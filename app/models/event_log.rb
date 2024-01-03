@@ -30,7 +30,7 @@ class EventLog < ApplicationRecord
     TWO_STEP_CHANGE_FAILED = LogEntry.new(id: 25, description: "2-step verification phone change failed", require_uid: true),
     TWO_STEP_PROMPT_DEFERRED = LogEntry.new(id: 26, description: "2-step prompt deferred", require_uid: true),
     API_USER_CREATED = LogEntry.new(id: 27, description: "Account created", require_uid: true, require_initiator: true),
-    ACCESS_TOKEN_REGENERATED = LogEntry.new(id: 28, description: "Access token re-generated", require_uid: true, require_application: true),
+    ACCESS_TOKEN_REGENERATED = LogEntry.new(id: 28, description: "Access token re-generated", require_uid: true, require_application: true), # deprecated
     ACCESS_TOKEN_GENERATED = LogEntry.new(id: 29, description: "Access token generated", require_uid: true, require_application: true, require_initiator: true),
     ACCESS_TOKEN_REVOKED = LogEntry.new(id: 30, description: "Access token revoked", require_uid: true, require_application: true, require_initiator: true),
     PASSWORD_RESET_LOADED_BUT_TOKEN_EXPIRED = LogEntry.new(id: 31, description: "Password reset page loaded but the token has expired", require_uid: true),

@@ -49,9 +49,6 @@
         </td>
         <td>
           <div class="btn-group">
-            <%= form_tag(revoke_api_user_authorisation_path(@api_user.id, authorisation.id, regenerate: true), method: "post") do %>
-            <%= submit_tag("Re-generate", class: "btn btn-default") %>
-            <% end %>
             <%= form_tag(revoke_api_user_authorisation_path(@api_user.id, authorisation.id), method: "post") do %>
             <%= submit_tag("Revoke", class: "btn btn-default") %>
             <% end %>
