@@ -190,21 +190,6 @@ class ApiUsersControllerTest < ActionController::TestCase
         end
       end
 
-      should "show button for regenerating API user's access token for an application" do
-        application = create(:application)
-        token = create(:access_token, resource_owner_id: @api_user.id, application:)
-
-        get :manage_tokens, params: { id: @api_user }
-
-        regenerate_token_path = revoke_api_user_authorisation_path(@api_user, token, regenerate: true)
-
-        assert_select "table#authorisations tbody td", text: application.name do |td|
-          assert_select td.first.parent, "form[action='#{regenerate_token_path}']" do
-            assert_select "input[type='submit']", value: "Re-generate"
-          end
-        end
-      end
-
       should "show button for revoking API user's access token for an application" do
         application = create(:application)
         token = create(:access_token, resource_owner_id: @api_user.id, application:)

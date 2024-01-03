@@ -101,21 +101,6 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       assert page.has_text?("Access token revoked for #{@application.name} by #{@superadmin.name}")
     end
 
-    should "be able to regenerate application access token for an API user which should get recorded in event log" do
-      click_link @api_user.name
-      click_link "Manage tokens"
-
-      assert page.has_selector?("td:first-child", text: @application.name)
-      click_button "Re-generate"
-
-      assert page.has_selector?("div.alert-danger", text: "Make sure to copy the access token for #{@application.name} now. You won't be able to see it again!")
-      assert page.has_selector?("div.alert-info", text: "Access token for #{@application.name}: #{@api_user.authorisations.last.token}")
-
-      click_link @api_user.name
-      click_link "View account access log"
-      assert page.has_text?("Access token re-generated for #{@application.name} by #{@superadmin.name}")
-    end
-
     should "be able to suspend and unsuspend API user" do
       click_link @api_user.name
       click_link "Suspend user"
