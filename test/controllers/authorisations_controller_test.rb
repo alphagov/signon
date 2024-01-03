@@ -5,43 +5,44 @@ class AuthorisationsControllerTest < ActionController::TestCase
     @api_user = create(:api_user)
   end
 
-  context "as admin user" do
-    setup do
-      @admin = create(:admin_user)
-      sign_in @admin
-    end
+  context "GET new" do
+    context "signed in as Superadmin user" do
+      setup do
+        @superadmin = create(:superadmin_user)
+        sign_in @superadmin
 
-    should "not be able to authorise API users" do
-      get :new, params: { api_user_id: @api_user.id }
+        @application = create(:application)
+      end
 
-      assert_not_authorised
-    end
-
-    should "not be able to revoke API user's authorisations" do
-      access_token = create(:access_token, resource_owner_id: @api_user.id)
-
-      get :revoke, params: { api_user_id: @api_user.id, id: access_token.id }
-
-      assert_not_authorised
-    end
-  end
-
-  context "as superadmin" do
-    setup do
-      @superadmin = create(:superadmin_user)
-      sign_in @superadmin
-
-      @application = create(:application)
-    end
-
-    context "GET new" do
       should "should show a form to authorise api access to a particular application" do
         get :new, params: { api_user_id: @api_user.id }
         assert_select "option[value='#{@application.id}']", @application.name
       end
     end
 
-    context "POST create" do
+    context "signed in as Admin user" do
+      setup do
+        @admin = create(:admin_user)
+        sign_in @admin
+      end
+
+      should "not be able to authorise API users" do
+        get :new, params: { api_user_id: @api_user.id }
+
+        assert_not_authorised
+      end
+    end
+  end
+
+  context "POST create" do
+    context "signed in as Superadmin user" do
+      setup do
+        @superadmin = create(:superadmin_user)
+        sign_in @superadmin
+
+        @application = create(:application)
+      end
+
       should "create a new access token and populate flash with it" do
         assert_difference "Doorkeeper::AccessToken.count", 1 do
           post :create, params: { api_user_id: @api_user.id, authorisation: { application_id: @application.id } }
@@ -66,6 +67,21 @@ class AuthorisationsControllerTest < ActionController::TestCase
       end
     end
   end
-  # it is not possible to test non-restful routes GET /revoke here,
-  # so tested it in integration tests.
+
+  context "POST revoke" do
+    context "signed in as Admin user" do
+      setup do
+        @admin = create(:admin_user)
+        sign_in @admin
+      end
+
+      should "not be able to revoke API user's authorisations" do
+        access_token = create(:access_token, resource_owner_id: @api_user.id)
+
+        post :revoke, params: { api_user_id: @api_user.id, id: access_token.id }
+
+        assert_not_authorised
+      end
+    end
+  end
 end
