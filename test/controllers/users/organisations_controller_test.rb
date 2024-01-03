@@ -30,8 +30,8 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
       should "authorize access if UserPolicy#assign_organisation? returns true" do
         user = create(:user)
 
-        user_policy = stub_everything("user-policy", assign_organisation?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, assign_organisation?: true)
+        stub_policy_for_navigation_links(@admin)
 
         get :edit, params: { user_id: user }
 
@@ -41,8 +41,8 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
       should "not authorize access if UserPolicy#assign_organisation? returns false" do
         user = create(:user)
 
-        user_policy = stub_everything("user-policy", assign_organisation?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, assign_organisation?: false)
+        stub_policy_for_navigation_links(@admin)
 
         get :edit, params: { user_id: user }
 
@@ -152,8 +152,7 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
       should "update user organisation if UserPolicy#assign_organisation? returns true" do
         user = create(:user, organisation:)
 
-        user_policy = stub_everything("user-policy", assign_organisation?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, assign_organisation?: true)
 
         put :update, params: { user_id: user, user: { organisation_id: another_organisation } }
 
@@ -163,8 +162,7 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
       should "not update user organisation if UserPolicy#assign_organisation? returns false" do
         user = create(:user, organisation:)
 
-        user_policy = stub_everything("user-policy", assign_organisation?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, assign_organisation?: false)
 
         put :update, params: { user_id: user, user: { organisation_id: another_organisation } }
 

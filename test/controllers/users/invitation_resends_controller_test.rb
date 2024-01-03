@@ -26,8 +26,8 @@ class Users::InvitationResendsControllerTest < ActionController::TestCase
       should "authorize access if UserPolicy#resend_invitation? returns true" do
         user = create(:invited_user)
 
-        user_policy = stub_everything("user-policy", resend_invitation?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, resend_invitation?: true)
+        stub_policy_for_navigation_links(@admin)
 
         get :edit, params: { user_id: user }
 
@@ -37,8 +37,8 @@ class Users::InvitationResendsControllerTest < ActionController::TestCase
       should "not authorize access if UserPolicy#resend_invitation? returns false" do
         user = create(:invited_user)
 
-        user_policy = stub_everything("user-policy", resend_invitation?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, resend_invitation?: false)
+        stub_policy_for_navigation_links(@admin)
 
         get :edit, params: { user_id: user }
 
@@ -137,8 +137,7 @@ class Users::InvitationResendsControllerTest < ActionController::TestCase
       should "resend signup email if UserPolicy#resend_invitation? returns true" do
         user = create(:invited_user)
 
-        user_policy = stub_everything("user-policy", resend_invitation?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, resend_invitation?: true)
 
         assert_enqueued_emails(1) do
           put :update, params: { user_id: user }
@@ -148,8 +147,7 @@ class Users::InvitationResendsControllerTest < ActionController::TestCase
       should "not resend signup email if UserPolicy#resend_invitation? returns false" do
         user = create(:invited_user)
 
-        user_policy = stub_everything("user-policy", resend_invitation?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, resend_invitation?: false)
 
         put :update, params: { user_id: user }
 

@@ -26,8 +26,8 @@ class Users::TwoStepVerificationMandationsControllerTest < ActionController::Tes
       should "authorize access if UserPolicy#mandate_2sv? returns true" do
         user = create(:user, require_2sv: false)
 
-        user_policy = stub_everything("user-policy", mandate_2sv?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, mandate_2sv?: true)
+        stub_policy_for_navigation_links(@admin)
 
         get :edit, params: { user_id: user }
 
@@ -37,8 +37,8 @@ class Users::TwoStepVerificationMandationsControllerTest < ActionController::Tes
       should "not authorize access if UserPolicy#mandate_2sv? returns false" do
         user = create(:user, require_2sv: false)
 
-        user_policy = stub_everything("user-policy", mandate_2sv?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, mandate_2sv?: false)
+        stub_policy_for_navigation_links(@admin)
 
         get :edit, params: { user_id: user }
 
@@ -139,8 +139,7 @@ class Users::TwoStepVerificationMandationsControllerTest < ActionController::Tes
       should "mandate 2SV for user if UserPolicy#mandate_2sv? returns true" do
         user = create(:user, require_2sv: false)
 
-        user_policy = stub_everything("user-policy", mandate_2sv?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, mandate_2sv?: true)
 
         put :update, params: { user_id: user, user: { require_2sv: true } }
 
@@ -150,8 +149,7 @@ class Users::TwoStepVerificationMandationsControllerTest < ActionController::Tes
       should "not mandate 2SV for user if UserPolicy#mandate_2sv? returns false" do
         user = create(:user, require_2sv: false)
 
-        user_policy = stub_everything("user-policy", mandate_2sv?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@admin, user, mandate_2sv?: false)
 
         put :update, params: { user_id: user, user: { require_2sv: true } }
 

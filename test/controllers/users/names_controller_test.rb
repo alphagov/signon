@@ -59,8 +59,8 @@ class Users::NamesControllerTest < ActionController::TestCase
       should "authorize access if UserPolicy#edit? returns true" do
         user = create(:user)
 
-        user_policy = stub_everything("user-policy", edit?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, edit?: true)
+        stub_policy_for_navigation_links(@superadmin)
 
         get :edit, params: { user_id: user }
 
@@ -70,8 +70,8 @@ class Users::NamesControllerTest < ActionController::TestCase
       should "not authorize access if UserPolicy#edit? returns false" do
         user = create(:user)
 
-        user_policy = stub_everything("user-policy", edit?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, edit?: false)
+        stub_policy_for_navigation_links(@superadmin)
 
         get :edit, params: { user_id: user }
 
@@ -81,8 +81,8 @@ class Users::NamesControllerTest < ActionController::TestCase
       should "authorize access if ApiUserPolicy#edit? returns true when user is an API user" do
         user = create(:api_user)
 
-        api_user_policy = stub_everything("api-user-policy", edit?: true)
-        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+        stub_policy(@superadmin, user, edit?: true)
+        stub_policy_for_navigation_links(@superadmin)
 
         get :edit, params: { api_user_id: user }
 
@@ -92,8 +92,8 @@ class Users::NamesControllerTest < ActionController::TestCase
       should "not authorize access if ApiUserPolicy#edit? returns false when user is an API user" do
         user = create(:api_user)
 
-        api_user_policy = stub_everything("api-user-policy", edit?: false)
-        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+        stub_policy(@superadmin, user, edit?: false)
+        stub_policy_for_navigation_links(@superadmin)
 
         get :edit, params: { api_user_id: user }
 
@@ -190,8 +190,7 @@ class Users::NamesControllerTest < ActionController::TestCase
       should "update user name if UserPolicy#update? returns true" do
         user = create(:user, name: "user-name")
 
-        user_policy = stub_everything("user-policy", update?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, update?: true)
 
         put :update, params: { user_id: user, user: { name: "new-user-name" } }
 
@@ -201,8 +200,7 @@ class Users::NamesControllerTest < ActionController::TestCase
       should "not update user name if UserPolicy#update? returns false" do
         user = create(:user, name: "user-name")
 
-        user_policy = stub_everything("user-policy", update?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, update?: false)
 
         put :update, params: { user_id: user, user: { name: "new-user-name" } }
 
@@ -213,8 +211,7 @@ class Users::NamesControllerTest < ActionController::TestCase
       should "update user name if ApiUserPolicy#update? returns true when user is an API user" do
         user = create(:api_user, name: "user-name")
 
-        api_user_policy = stub_everything("api_user-policy", update?: true)
-        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+        stub_policy(@superadmin, user, update?: true)
 
         put :update, params: { api_user_id: user, user: { name: "new-user-name" } }
 
@@ -224,8 +221,7 @@ class Users::NamesControllerTest < ActionController::TestCase
       should "not update user name if ApiUserPolicy#update? returns false when user is an API user" do
         user = create(:api_user, name: "user-name")
 
-        api_user_policy = stub_everything("api_user-policy", update?: false)
-        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+        stub_policy(@superadmin, user, update?: false)
 
         put :update, params: { api_user_id: user, user: { name: "new-user-name" } }
 

@@ -254,10 +254,6 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
 
 private
 
-  def stub_policy_for_navigation_links(current_user)
-    stub_policy(current_user, User, index?: true)
-  end
-
   def stub_user_application_permission(user, application)
     permission = UserApplicationPermission.new
     UserApplicationPermission.stubs(:for).with(user, application).returns(permission)

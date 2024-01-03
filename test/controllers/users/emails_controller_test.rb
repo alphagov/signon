@@ -73,8 +73,8 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "authorize access if UserPolicy#edit? returns true" do
         user = create(:user)
 
-        user_policy = stub_everything("user-policy", edit?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, edit?: true)
+        stub_policy_for_navigation_links(@superadmin)
 
         get :edit, params: { user_id: user }
 
@@ -84,8 +84,8 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "not authorize access if UserPolicy#edit? returns false" do
         user = create(:user)
 
-        user_policy = stub_everything("user-policy", edit?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, edit?: false)
+        stub_policy_for_navigation_links(@superadmin)
 
         get :edit, params: { user_id: user }
 
@@ -95,8 +95,8 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "authorize access if ApiUserPolicy#edit? returns true when user is an API user" do
         user = create(:api_user)
 
-        api_user_policy = stub_everything("api-user-policy", edit?: true)
-        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+        stub_policy(@superadmin, user, edit?: true)
+        stub_policy_for_navigation_links(@superadmin)
 
         get :edit, params: { api_user_id: user }
 
@@ -106,8 +106,8 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "not authorize access if ApiUserPolicy#edit? returns false when user is an API user" do
         user = create(:api_user)
 
-        api_user_policy = stub_everything("api-user-policy", edit?: false)
-        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+        stub_policy(@superadmin, user, edit?: false)
+        stub_policy_for_navigation_links(@superadmin)
 
         get :edit, params: { api_user_id: user }
 
@@ -269,8 +269,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "update user email if UserPolicy#update? returns true" do
         user = create(:user, email: "user@gov.uk")
 
-        user_policy = stub_everything("user-policy", update?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, update?: true)
 
         put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
 
@@ -280,8 +279,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "not update user email if UserPolicy#update? returns false" do
         user = create(:user, email: "user@gov.uk")
 
-        user_policy = stub_everything("user-policy", update?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, update?: false)
 
         put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
 
@@ -292,8 +290,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "update user email if ApiUserPolicy#update? returns true when user is an API user" do
         user = create(:api_user, email: "user@gov.uk")
 
-        api_user_policy = stub_everything("api_user-policy", update?: true)
-        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+        stub_policy(@superadmin, user, update?: true)
 
         put :update, params: { api_user_id: user, user: { email: "new-user@gov.uk" } }
 
@@ -303,8 +300,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "not update user email if ApiUserPolicy#update? returns false when user is an API user" do
         user = create(:api_user, email: "user@gov.uk")
 
-        api_user_policy = stub_everything("api_user-policy", update?: false)
-        ApiUserPolicy.stubs(:new).returns(api_user_policy)
+        stub_policy(@superadmin, user, update?: false)
 
         put :update, params: { api_user_id: user, user: { email: "new-user@gov.uk" } }
 
@@ -366,7 +362,8 @@ class Users::EmailsControllerTest < ActionController::TestCase
   context "PUT resend_email_change" do
     context "signed in as Superadmin user" do
       setup do
-        sign_in(create(:superadmin_user))
+        @superadmin = create(:superadmin_user)
+        sign_in(@superadmin)
       end
 
       should "send an email change confirmation email" do
@@ -412,8 +409,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "send an email change confirmation email if UserPolicy#resend_email_change? returns true" do
         user = create(:user_with_pending_email_change)
 
-        user_policy = stub_everything("user-policy", resend_email_change?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, resend_email_change?: true)
 
         assert_enqueued_emails 1 do
           put :resend_email_change, params: { user_id: user }
@@ -424,8 +420,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "not send an email change confirmation email if UserPolicy#resend_email_change? returns false" do
         user = create(:user_with_pending_email_change)
 
-        user_policy = stub_everything("user-policy", resend_email_change?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, resend_email_change?: false)
 
         assert_no_enqueued_emails do
           put :resend_email_change, params: { user_id: user }
@@ -462,7 +457,8 @@ class Users::EmailsControllerTest < ActionController::TestCase
   context "DELETE cancel_email_change" do
     context "signed in as Superadmin user" do
       setup do
-        sign_in(create(:superadmin_user))
+        @superadmin = create(:superadmin_user)
+        sign_in(@superadmin)
       end
 
       should "clear unconfirmed_email & confirmation_token" do
@@ -486,8 +482,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "clear email & token if UserPolicy#cancel_email_change? returns true" do
         user = create(:user_with_pending_email_change)
 
-        user_policy = stub_everything("user-policy", cancel_email_change?: true)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, cancel_email_change?: true)
 
         delete :cancel_email_change, params: { user_id: user }
 
@@ -497,8 +492,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
       should "not clear email & token if UserPolicy#cancel_email_change? returns false" do
         user = create(:user_with_pending_email_change)
 
-        user_policy = stub_everything("user-policy", cancel_email_change?: false)
-        UserPolicy.stubs(:new).returns(user_policy)
+        stub_policy(@superadmin, user, cancel_email_change?: false)
 
         delete :cancel_email_change, params: { user_id: user }
 
