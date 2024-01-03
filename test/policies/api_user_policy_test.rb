@@ -4,7 +4,7 @@ require "support/policy_helpers"
 class ApiUserPolicyTest < ActiveSupport::TestCase
   include PolicyHelpers
 
-  %i[new create index edit update manage_permissions manage_tokens suspension].each do |permission_name|
+  %i[new create index edit update manage_tokens suspension].each do |permission_name|
     context permission_name do
       should "allow only for superadmins" do
         assert permit?(create(:superadmin_user), User, permission_name)

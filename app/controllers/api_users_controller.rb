@@ -4,7 +4,7 @@ class ApiUsersController < ApplicationController
   layout "admin_layout", only: %w[index new create edit manage_tokens]
 
   before_action :authenticate_user!
-  before_action :load_and_authorize_api_user, only: %i[edit manage_permissions manage_tokens update]
+  before_action :load_and_authorize_api_user, only: %i[edit manage_tokens]
   helper_method :api_user_applications_and_permissions, :visible_applications
 
   respond_to :html
@@ -21,8 +21,6 @@ class ApiUsersController < ApplicationController
 
   def edit; end
 
-  def manage_permissions; end
-
   def manage_tokens; end
 
   def create
@@ -38,17 +36,6 @@ class ApiUsersController < ApplicationController
     end
   end
 
-  def update
-    if @api_user.update(api_user_params_for_update)
-      @api_user.application_permissions.reload
-      PermissionUpdater.perform_on(@api_user)
-
-      redirect_to api_users_path, notice: "Updated API user #{@api_user.email} successfully"
-    else
-      render :manage_permissions
-    end
-  end
-
 private
 
   def load_and_authorize_api_user
@@ -58,10 +45,6 @@ private
 
   def api_user_params_for_create
     sanitise(params.require(:api_user).permit(:name, :email))
-  end
-
-  def api_user_params_for_update
-    sanitise(params.require(:api_user).permit(supported_permission_ids: []))
   end
 
   def sanitise(permitted_user_params)

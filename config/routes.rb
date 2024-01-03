@@ -95,14 +95,13 @@ Rails.application.routes.draw do
     resources :supported_permissions, only: %i[index new create edit update]
   end
 
-  resources :api_users, only: %i[new create index edit update] do
+  resources :api_users, only: %i[new create index edit] do
     resource :name, only: %i[edit update], controller: "users/names"
     resource :email, only: %i[edit update], controller: "users/emails"
     resources :applications, only: %i[index], controller: "api_users/applications" do
       resource :permissions, only: %i[edit update], controller: "api_users/permissions"
     end
     member do
-      get :manage_permissions
       get :manage_tokens
     end
     resources :authorisations, only: %i[new create edit] do
