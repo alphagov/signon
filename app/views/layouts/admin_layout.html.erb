@@ -33,6 +33,8 @@
         } %>
       <% end %>
 
+      <%= yield(:custom_alerts) %>
+
       <%= yield(:error_summary) %>
 
       <div class="govuk-grid-row">

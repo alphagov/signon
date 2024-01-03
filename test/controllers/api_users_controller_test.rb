@@ -185,8 +185,8 @@ class ApiUsersControllerTest < ActionController::TestCase
 
         get :manage_tokens, params: { id: @api_user }
 
-        assert_select "table#authorisations tbody td", text: application.name do |td|
-          assert_select td.first.parent, "code", text: /^#{token[0..7]}/
+        assert_select ".govuk-summary-card__title", text: application.name do |divs|
+          assert_select divs.first.parent.parent, "code", text: /^#{token[0..7]}/
         end
       end
 
@@ -207,7 +207,7 @@ class ApiUsersControllerTest < ActionController::TestCase
 
         get :manage_tokens, params: { id: @api_user }
 
-        assert_select "table#authorisations tbody td", text: application.name, count: 0
+        assert_select ".govuk-summary-card__title", text: application.name, count: 0
       end
 
       should "not show API user's access tokens for retired applications" do
@@ -216,7 +216,7 @@ class ApiUsersControllerTest < ActionController::TestCase
 
         get :manage_tokens, params: { id: @api_user }
 
-        assert_select "table#authorisations tbody td", text: application.name, count: 0
+        assert_select ".govuk-summary-card__title", text: application.name, count: 0
       end
     end
 
