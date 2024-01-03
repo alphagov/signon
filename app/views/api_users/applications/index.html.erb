@@ -37,6 +37,7 @@
     <tr class="govuk-table__row">
       <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
       <th scope="col" class="govuk-table__header govuk-!-width-one-third">Description</th>
+      <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Permissions</span></th>
     </tr>
   </thead>
   <tbody class="govuk-table__body">
@@ -44,6 +45,13 @@
       <tr class="govuk-table__row">
         <td class="govuk-table__cell"><%= application.name %></td>
         <td class="govuk-table__cell"><%= application.description %></td>
+        <td class="govuk-table__cell govuk-!-text-align-right">
+          <% unless application.sorted_supported_permissions_grantable_from_ui(include_signin: false).empty? %>
+            <%= link_to edit_api_user_application_permissions_path(@api_user, application), class: "govuk-link" do %>
+              Update permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
+            <% end %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>

@@ -88,5 +88,37 @@ class ApiUsers::ApplicationsControllerTest < ActionController::TestCase
 
       assert_select ".govuk-notification-banner--success"
     end
+
+    should "not display a link to edit permissions if the user is authorised to edit permissions but the app only has the signin permission" do
+      api_user = create(:api_user)
+      application = create(:application, name: "app-name")
+      create(:access_token, application:, resource_owner_id: api_user.id)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, api_user, index?: true
+      stub_policy_for_navigation_links current_user
+
+      get :index, params: { api_user_id: api_user }
+
+      assert_select "a[href='#{edit_api_user_application_permissions_path(api_user, application)}']", count: 0
+    end
+
+    should "display a link to edit permissions if the user is authorised to edit permissions" do
+      api_user = create(:api_user)
+      application = create(:application, name: "app-name", with_supported_permissions: %w[foo])
+      create(:access_token, application:, resource_owner_id: api_user.id)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, api_user, index?: true
+      stub_policy_for_navigation_links current_user
+
+      get :index, params: { api_user_id: api_user }
+
+      assert_select "a[href='#{edit_api_user_application_permissions_path(api_user, application)}']", text: "Update permissions for app-name"
+    end
   end
 end
