@@ -14,9 +14,40 @@ class AuthorisationsControllerTest < ActionController::TestCase
         @application = create(:application)
       end
 
+      should "display breadcrumb links" do
+        get :new, params: { api_user_id: @api_user.id }
+
+        assert_select ".govuk-breadcrumbs" do
+          assert_select "a[href='#{root_path}']"
+          assert_select "a[href='#{api_users_path}']"
+          assert_select "a[href='#{edit_api_user_path(@api_user)}']"
+          assert_select "a[href='#{manage_tokens_api_user_path(@api_user)}']"
+        end
+      end
+
       should "should show a form to authorise api access to a particular application" do
         get :new, params: { api_user_id: @api_user.id }
         assert_select "option[value='#{@application.id}']", @application.name
+      end
+
+      should "authorize access if AuthorisationPolicy#new? returns true" do
+        policy = stub_everything("policy", new?: true).responds_like_instance_of(AuthorisationPolicy)
+        AuthorisationPolicy.stubs(:new).returns(policy)
+        stub_policy_for_navigation_links(@superadmin)
+
+        get :new, params: { api_user_id: @api_user.id }
+
+        assert_template :new
+      end
+
+      should "not authorize access if AuthorisationPolicy#new? returns false" do
+        policy = stub_everything("policy", new?: false).responds_like_instance_of(AuthorisationPolicy)
+        AuthorisationPolicy.stubs(:new).returns(policy)
+        stub_policy_for_navigation_links(@superadmin)
+
+        get :new, params: { api_user_id: @api_user.id }
+
+        assert_not_authorised
       end
     end
 
@@ -30,6 +61,14 @@ class AuthorisationsControllerTest < ActionController::TestCase
         get :new, params: { api_user_id: @api_user.id }
 
         assert_not_authorised
+      end
+    end
+
+    context "not signed in" do
+      should "not be allowed access" do
+        get :new, params: { api_user_id: @api_user.id }
+
+        assert_not_authenticated
       end
     end
   end
