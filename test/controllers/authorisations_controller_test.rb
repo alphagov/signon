@@ -30,6 +30,12 @@ class AuthorisationsControllerTest < ActionController::TestCase
         assert_select "option[value='#{@application.id}']", @application.name
       end
 
+      should "should show cancel link to return to manage tokens page" do
+        get :new, params: { api_user_id: @api_user.id }
+
+        assert_select "a[href='#{manage_tokens_api_user_path(@api_user)}']", text: "Cancel"
+      end
+
       should "authorize access if AuthorisationPolicy#new? returns true" do
         policy = stub_everything("policy", new?: true).responds_like_instance_of(AuthorisationPolicy)
         AuthorisationPolicy.stubs(:new).returns(policy)
