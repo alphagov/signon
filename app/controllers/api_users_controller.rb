@@ -70,4 +70,8 @@ private
       current_user_role: current_user.role.to_sym,
     ).sanitise
   end
+
+  def api_user_applications_and_permissions(user)
+    zip_permissions(visible_applications(user).includes(:supported_permissions), user)
+  end
 end
