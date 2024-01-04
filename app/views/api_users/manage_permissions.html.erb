@@ -20,10 +20,61 @@
 <h1>Manage permissions for API User <%= @api_user.name %></h1>
 
 <%= form_for @api_user, :html => {:class => 'well add-top-margin'} do |f| %>
-  <% if applications_and_permissions(@api_user).any? %>
+  <% if api_user_applications_and_permissions(@api_user).any? %>
     <hr />
     <h2 class="add-vertical-margins">Permissions</h2>
-    <%= render partial: "shared/user_permissions", locals: { user_object: f.object }%>
+    <table id="editable-permissions" class="table table-bordered table-striped table-on-white">
+      <thead>
+        <tr class="table-header">
+          <th>Application</th>
+          <th>Permissions</th>
+          <th>Last synced at</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% api_user_applications_and_permissions(@api_user).each do |(application, permissions)|
+          supported_permission_field_name = "api_user[supported_permission_ids][]"
+          supported_permission_field_prefix = "api_user_application_#{application.id}_supported_permission" %>
+          <tr>
+            <td>
+              <%= application.name %>
+            </td>
+            <%
+              # Emulate form.check_box helper:
+              # http://api.rubyonrails.org/v3.1.3/classes/ActionView/Helpers/FormHelper.html#method-i-check_box
+              # API Users will always have a "signin" permission for apps for which they have access token.
+              # The hidden field ensures it is not lost.
+            %>
+            <%= hidden_field_tag supported_permission_field_name, application.signin_permission.id, id: "#{supported_permission_field_prefix}_#{SupportedPermission::SIGNIN_NAME}" %>
+            <td>
+              <%= label_tag "#{supported_permission_field_prefix}_ids", "Permissions for #{application.name}", class: "rm" %>
+              <% supported_permissions_options = application.supported_permissions.grantable_from_ui
+                                                  .inject({}) {|h, per| h.merge(per.name => per.id) }
+                supported_permissions_options.delete(SupportedPermission::SIGNIN_NAME) %>
+              <%= select_tag supported_permission_field_name,
+                              options_for_select(supported_permissions_options,
+                                @api_user.permission_ids_for(application) - [application.signin_permission.id]),
+                              multiple: true,
+                              class: "chosen-select",
+                              id: "#{supported_permission_field_prefix}_ids",
+                              'data-module' => 'chosen',
+                              'data-placeholder' => 'Start typing to search for permissions'
+              %>
+            </td>
+            <td>
+              <% synced_permissions = permissions.select { |p| p.last_synced_at.present? } %>
+              <% if synced_permissions.any? %>
+                <span class="label <%= sync_needed?(synced_permissions) ? "label-danger" : "label-success" %>">
+                  <%= time_ago_in_words(synced_permissions.map(&:last_synced_at).max) %> ago
+                </span>
+              <% else %>
+                <span class="label label-danger">Never</span>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
   <% end %>
 
   <%= f.submit 'Update API user', :class => 'btn btn-primary' %>

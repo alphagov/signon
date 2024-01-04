@@ -5,7 +5,7 @@ class ApiUsersController < ApplicationController
 
   before_action :authenticate_user!
   before_action :load_and_authorize_api_user, only: %i[edit manage_permissions manage_tokens update]
-  helper_method :applications_and_permissions, :visible_applications
+  helper_method :api_user_applications_and_permissions, :visible_applications
 
   respond_to :html
 
@@ -69,5 +69,14 @@ private
       user_params: permitted_user_params.to_h,
       current_user_role: current_user.role.to_sym,
     ).sanitise
+  end
+
+  def api_user_applications_and_permissions(user)
+    zip_permissions(visible_applications(user), user)
+  end
+
+  def visible_applications(user)
+    api_user_authorised_apps = user.authorisations.not_revoked.pluck(:application_id)
+    Doorkeeper::Application.includes(:supported_permissions).where(id: api_user_authorised_apps)
   end
 end
