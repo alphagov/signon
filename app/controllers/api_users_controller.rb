@@ -76,7 +76,6 @@ private
   end
 
   def visible_applications(user)
-    api_user_authorised_apps = user.authorisations.not_revoked.pluck(:application_id)
-    Doorkeeper::Application.includes(:supported_permissions).where(id: api_user_authorised_apps)
+    user.authorised_applications.merge(Doorkeeper::AccessToken.not_revoked).includes(:supported_permissions)
   end
 end
