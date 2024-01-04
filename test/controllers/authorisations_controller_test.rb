@@ -25,7 +25,7 @@ class AuthorisationsControllerTest < ActionController::TestCase
         end
       end
 
-      should "should show a form to authorise api access to a particular application" do
+      should "should show a form to authorise API access to a particular application" do
         get :new, params: { api_user_id: @api_user.id }
         assert_select "option[value='#{@application.id}']", @application.name
       end
