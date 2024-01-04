@@ -689,8 +689,6 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.6.12)
-    zeroclipboard-rails (0.1.2)
-      railties (>= 3.1)
     zxcvbn-ruby (1.2.0)
 
 PLATFORMS
@@ -754,7 +752,6 @@ DEPENDENCIES
   uuid
   webmock
   whenever
-  zeroclipboard-rails
 
 BUNDLED WITH
    2.4.10

@@ -185,24 +185,20 @@ class ApiUsersControllerTest < ActionController::TestCase
 
         get :manage_tokens, params: { id: @api_user }
 
-        assert_select "table#authorisations tbody td", text: application.name do |td|
-          assert_select td.first.parent, "code", text: /^#{token[0..7]}/
+        assert_select ".govuk-summary-card__title", text: application.name do |divs|
+          assert_select divs.first.parent.parent, "code", text: /^#{token[0..7]}/
         end
       end
 
-      should "show button for revoking API user's access token for an application" do
+      should "show link for revoking API user's access token for an application" do
         application = create(:application)
         token = create(:access_token, resource_owner_id: @api_user.id, application:)
 
         get :manage_tokens, params: { id: @api_user }
 
-        revoke_token_path = revoke_api_user_authorisation_path(@api_user, token)
+        edit_token_path = edit_api_user_authorisation_path(@api_user, token)
 
-        assert_select "table#authorisations tbody td", text: application.name do |td|
-          assert_select td.first.parent, "form[action='#{revoke_token_path}']" do
-            assert_select "input[type='submit']", value: "Revoke"
-          end
-        end
+        assert_select "a[href='#{edit_token_path}']", text: "Revoke token giving #{@api_user.name} access to #{application.name}"
       end
 
       should "not show API user's revoked access tokens" do
@@ -211,7 +207,7 @@ class ApiUsersControllerTest < ActionController::TestCase
 
         get :manage_tokens, params: { id: @api_user }
 
-        assert_select "table#authorisations tbody td", text: application.name, count: 0
+        assert_select ".govuk-summary-card__title", text: application.name, count: 0
       end
 
       should "not show API user's access tokens for retired applications" do
@@ -220,7 +216,7 @@ class ApiUsersControllerTest < ActionController::TestCase
 
         get :manage_tokens, params: { id: @api_user }
 
-        assert_select "table#authorisations tbody td", text: application.name, count: 0
+        assert_select ".govuk-summary-card__title", text: application.name, count: 0
       end
     end
 

@@ -1,7 +1,7 @@
 class ApiUsersController < ApplicationController
   include UserPermissionsControllerMethods
 
-  layout "admin_layout", only: %w[index new create edit]
+  layout "admin_layout", only: %w[index new create edit manage_tokens]
 
   before_action :authenticate_user!
   before_action :load_and_authorize_api_user, only: %i[edit manage_permissions manage_tokens update]

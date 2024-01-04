@@ -102,7 +102,7 @@ Rails.application.routes.draw do
       get :manage_permissions
       get :manage_tokens
     end
-    resources :authorisations, only: %i[new create] do
+    resources :authorisations, only: %i[new create edit] do
       member do
         post :revoke
       end

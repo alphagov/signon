@@ -32,7 +32,6 @@ gem "sprockets-rails"
 gem "uglifier"
 gem "uuid"
 gem "whenever"
-gem "zeroclipboard-rails"
 
 # GDS Gems
 gem "gds-api-adapters"

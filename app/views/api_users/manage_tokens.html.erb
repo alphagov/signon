@@ -1,70 +1,94 @@
+<% content_for :title_caption, "Manage API users" %>
 <% content_for :title, "Manage tokens for #{@api_user.name}" %>
 
-<ol class="breadcrumb">
-  <li><%= link_to "Dashboard", root_path %></li>
-  <li><%= link_to "API users", api_users_path %></li>
-  <li><%= link_to @api_user.name, edit_api_user_path(@api_user) %></li>
-  <li class="active">Manage tokens</li>
-</ol>
-
-<h1>Manage tokens for API User <%= @api_user.name %></h1>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "API users",
+         url: api_users_path,
+       },
+       {
+         title: @api_user.name,
+         url: edit_api_user_path(@api_user),
+       },
+       {
+         title: "Manage tokens",
+       }
+     ]
+   })
+%>
 
 <% if authorisation = flash[:authorisation] %>
-  <div class="alert alert-danger">
-    Make sure to copy the access token for <%= authorisation["application_name"] %> now. You won't be able to see it again!
-  </div>
-  <div class="alert alert-info">
-    Access token for <%= authorisation["application_name"] %>: <span id='access-token'><%= authorisation["token"] %></span>
-    <%= link_to 'Copy to clipboard', '#', class: 'btn btn-info add-left-margin', data: { 'clipboard-target' => 'access-token' }, id: 'clip-button', title: 'Click to copy access token' %>
-  </div>
-<% end %>
-<table id="authorisations" class="table table-bordered table-on-white">
-  <thead>
-    <tr class="table-header">
-      <th>Application</th>
-      <th>Token (hidden)</th>
-      <th>Generated</th>
-      <th>Expires</th>
-      <th>State</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @api_user.authorisations.not_revoked.ordered_by_application_name.ordered_by_expires_at.each do |authorisation| %>
-      <tr>
-        <td><%= authorisation.application.name %></td>
-        <td><code><%= truncate_access_token(authorisation.token) %></code></td>
-        <td>
-          <%= authorisation.created_at.to_date.to_fs(:govuk_date) %>
-        </td>
-        <td>
-          <%= authorisation.expires_at.to_date.to_fs(:govuk_date) %>
-        </td>
-        <td>
-          <% if authorisation.expired? %>
-            <span class="label label-danger">Expired</span>
-          <% else %>
-            <span class="label label-success">Valid</span>
-          <% end %>
-        </td>
-        <td>
-          <div class="btn-group">
-            <%= form_tag(revoke_api_user_authorisation_path(@api_user.id, authorisation.id), method: "post") do %>
-            <%= submit_tag("Revoke", class: "btn btn-default") %>
-            <% end %>
-          </div>
-        </td>
-    <% end %>
-  </tbody>
-</table>
-<p>
-  <%= link_to [:new, @api_user, :authorisation], class: "btn btn-default" do %>
-    <span class="glyphicon glyphicon-plus glyphicon-smaller-than-text"></span> Add application token
+  <% content_for :custom_alerts do %>
+    <%= render "govuk_publishing_components/components/success_alert", {
+      message: "Make sure to copy the access token for #{authorisation["application_name"]} now. You won't be able to see it again!",
+      description: render("govuk_publishing_components/components/copy_to_clipboard", {
+        label: "Access token for #{authorisation["application_name"]}",
+        copyable_content: authorisation["token"],
+        button_text: "Copy access token",
+      })
+    } %>
   <% end %>
-</p>
+<% end %>
 
-<script>
-  $(document).ready(function() {
-    new ZeroClipboard($("#clip-button"));
-  });
-</script>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-form-group">
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Add application token",
+        href: new_api_user_authorisation_path(@api_user),
+      } %>
+    </div>
+
+    <% @api_user.authorisations.not_revoked.ordered_by_application_name.ordered_by_expires_at.each do |authorisation| %>
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title"><%= authorisation.application.name %></h2>
+          <ul class="govuk-summary-card__actions">
+            <li class="govuk-summary-card__action">
+              <a class="govuk-link" href="<%= edit_api_user_authorisation_path(@api_user, authorisation) %>">
+                Revoke<span class="govuk-visually-hidden"> token giving <%= @api_user.name %> access to <%= authorisation.application.name %></span>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="govuk-summary-card__content">
+          <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                Token (hidden)
+              </dt>
+              <dd class="govuk-summary-list__value">
+                <code>
+                  <%= truncate_access_token(authorisation.token) %>
+                </code>
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                Generated
+              </dt>
+              <dd class="govuk-summary-list__value">
+                <%= authorisation.created_at.to_date.to_fs(:govuk_date) %>
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                Expires
+              </dt>
+              <dd class="govuk-summary-list__value">
+                <%= authorisation.expires_at.to_date.to_fs(:govuk_date) %>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

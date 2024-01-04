@@ -54,8 +54,9 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       click_button "Create access token"
 
       token = @api_user.authorisations.last.token
-      assert page.has_selector?("div.alert-danger", text: "Make sure to copy the access token for Whitehall now. You won't be able to see it again!")
-      assert page.has_selector?("div.alert-info", text: "Access token for Whitehall: #{token}")
+      assert page.has_selector?("div[role='alert']", text: /Make sure to copy the access token for Whitehall now. You won't be able to see it again!/)
+      assert page.has_selector?("div[role='alert'] label", text: /Access token for Whitehall/)
+      assert page.has_selector?("div[role='alert'] input[value='#{token}']")
 
       # shows truncated token
       assert page.has_selector?("code", text: (token[0..7]).to_s)
@@ -90,11 +91,12 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       click_link @api_user.name
       click_link "Manage tokens"
 
-      assert page.has_selector?("td:first-child", text: @application.name)
+      assert page.has_selector?(".govuk-summary-card__title", text: @application.name)
+      click_link "Revoke"
       click_button "Revoke"
 
       assert page.has_text?("Access for #{@application.name} was revoked")
-      assert_not page.has_selector?("td:first-child", text: @application.name)
+      assert_not page.has_selector?(".govuk-summary-card__title", text: @application.name)
 
       click_link @api_user.name
       click_link "View account access log"

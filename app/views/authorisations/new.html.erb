@@ -1,4 +1,6 @@
-<% content_for :title, "Create new access token for \"#{@api_user.name}\"" %>
+<% content_for :title_caption, "Manage API users" %>
+<% content_for :title, "Create new access token for #{@api_user.name}" %>
+
 <% content_for :breadcrumbs,
    render("govuk_publishing_components/components/breadcrumbs", {
      collapse_on_mobile: true,
@@ -12,7 +14,7 @@
          url: api_users_path,
        },
        {
-         title: "Edit API user",
+         title: @api_user.name,
          url: edit_api_user_path(@api_user),
        },
        {
@@ -26,15 +28,18 @@
    })
 %>
 
-<%= form_for @authorisation, url: [:api_user, :authorisations] do |_| %>
+<%= form_tag api_user_authorisations_path(@api_user), method: :post do %>
   <%= render "govuk_publishing_components/components/select", {
-    id: "doorkeeper_access_token_application_id",
+    id: "authorisation_application_id",
     label: "Application",
-    name: "doorkeeper_access_token[application_id]",
+    name: "authorisation[application_id]",
     options: Doorkeeper::Application.all.map { |application| { text: application.name, value: application.id } }
-    } %>
+  } %>
 
-  <%= render "govuk_publishing_components/components/button", {
-    text: "Create access token"
+  <div class="govuk-button-group">
+    <%= render "govuk_publishing_components/components/button", {
+      text: "Create access token"
     } %>
+    <%= link_to "Cancel", manage_tokens_api_user_path(@api_user), class: "govuk-link govuk-link--no-visited-state" %>
+  <div>
 <% end %>
