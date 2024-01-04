@@ -74,4 +74,14 @@ private
   def api_user_applications_and_permissions(user)
     zip_permissions(visible_applications(user).includes(:supported_permissions), user)
   end
+
+  def visible_applications(user)
+    applications = Doorkeeper::Application.includes(:supported_permissions)
+    if current_user.superadmin?
+      api_user_authorised_apps = user.authorisations.not_revoked.pluck(:application_id)
+      applications.where(id: api_user_authorised_apps)
+    else
+      applications.none
+    end
+  end
 end
