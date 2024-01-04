@@ -161,6 +161,29 @@ class ApiUsersControllerTest < ActionController::TestCase
         assert_select "table#editable-permissions", count: 0
       end
 
+      should "not allow editing permissions for an application where the access token has been revoked" do
+        application = create(:application)
+        api_user = create(:api_user)
+        create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.zone.now)
+
+        get :manage_permissions, params: { id: api_user.id }
+
+        assert_select "table#editable-permissions", count: 0
+      end
+
+      should "allow editing permissions for an application where one access token has been revoked but another is still active" do
+        application = create(:application, name: "app-name")
+        api_user = create(:api_user)
+        create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.zone.now)
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :manage_permissions, params: { id: api_user.id }
+
+        assert_select "table#editable-permissions tr" do
+          assert_select "td", text: "app-name"
+        end
+      end
+
       should "allow editing permissions for API-only application" do
         application = create(:application, name: "api-only-app-name", api_only: true)
         api_user = create(:api_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
