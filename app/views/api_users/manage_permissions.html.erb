@@ -33,9 +33,8 @@
       </thead>
       <tbody>
         <% applications_and_permissions(@api_user).each do |(application, permissions)|
-          attribute_name = 'api_user'
-          supported_permission_field_name = "#{attribute_name}[supported_permission_ids][]"
-          supported_permission_field_prefix = "#{attribute_name}_application_#{application.id}_supported_permission" %>
+          supported_permission_field_name = "api_user[supported_permission_ids][]"
+          supported_permission_field_prefix = "api_user_application_#{application.id}_supported_permission" %>
           <tr>
             <td>
               <%= application.name %>
