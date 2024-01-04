@@ -72,7 +72,7 @@ private
   end
 
   def api_user_applications_and_permissions(user)
-    zip_permissions(visible_applications(user).includes(:supported_permissions), user)
+    zip_permissions(visible_applications(user), user)
   end
 
   def visible_applications(user)
