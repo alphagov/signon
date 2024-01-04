@@ -77,11 +77,7 @@ private
 
   def visible_applications(user)
     applications = Doorkeeper::Application.includes(:supported_permissions)
-    if current_user.superadmin?
-      api_user_authorised_apps = user.authorisations.not_revoked.pluck(:application_id)
-      applications.where(id: api_user_authorised_apps)
-    else
-      applications.none
-    end
+    api_user_authorised_apps = user.authorisations.not_revoked.pluck(:application_id)
+    applications.where(id: api_user_authorised_apps)
   end
 end
