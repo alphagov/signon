@@ -19,6 +19,10 @@ private
     zip_permissions(visible_applications(user).includes(:supported_permissions), user)
   end
 
+  def api_user_applications_and_permissions(user)
+    zip_permissions(visible_applications(user).includes(:supported_permissions), user)
+  end
+
   def zip_permissions(applications, user)
     applications.map do |application|
       [application, user.application_permissions.where(application_id: application.id)]
