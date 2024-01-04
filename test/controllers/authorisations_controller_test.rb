@@ -88,12 +88,17 @@ class AuthorisationsControllerTest < ActionController::TestCase
         @application = create(:application)
       end
 
-      should "create a new access token and populate flash with it" do
-        assert_difference "Doorkeeper::AccessToken.count", 1 do
-          post :create, params: { api_user_id: @api_user, authorisation: { application_id: @application } }
-        end
+      should "create a new access token" do
+        post :create, params: { api_user_id: @api_user, authorisation: { application_id: @application } }
 
-        token = Doorkeeper::AccessToken.last
+        token = @api_user.authorisations.last
+        assert_equal @application, token.application
+      end
+
+      should "populate flash with access token details" do
+        post :create, params: { api_user_id: @api_user, authorisation: { application_id: @application } }
+
+        token = @api_user.authorisations.last
         assert_equal({ application_name: token.application.name, token: token.token }, flash[:authorisation])
       end
 
@@ -109,6 +114,93 @@ class AuthorisationsControllerTest < ActionController::TestCase
         post :create, params: { api_user_id: @api_user, authorisation: { application_id: @application } }
 
         assert_equal [SupportedPermission::SIGNIN_NAME], @api_user.permissions_for(@application)
+      end
+
+      should "record access token generated event" do
+        @controller.stubs(:user_ip_address).returns("1.1.1.1")
+
+        EventLog.expects(:record_event).with(
+          @api_user,
+          EventLog::ACCESS_TOKEN_GENERATED,
+          initiator: @superadmin,
+          application: @application,
+          ip_address: "1.1.1.1",
+        )
+
+        post :create, params: { api_user_id: @api_user, authorisation: { application_id: @application } }
+      end
+
+      should "authorize access if AuthorisationPolicy#create? returns true" do
+        policy = stub_everything("policy", create?: true).responds_like_instance_of(AuthorisationPolicy)
+        AuthorisationPolicy.stubs(:new).returns(policy)
+
+        assert_difference "Doorkeeper::AccessToken.count", 1 do
+          post :create, params: { api_user_id: @api_user, authorisation: { application_id: @application } }
+        end
+      end
+
+      should "not authorize access if AuthorisationPolicy#create? returns false" do
+        policy = stub_everything("policy", create?: false).responds_like_instance_of(AuthorisationPolicy)
+        AuthorisationPolicy.stubs(:new).returns(policy)
+
+        post :create, params: { api_user_id: @api_user, authorisation: { application_id: @application } }
+
+        assert_not_authorised
+      end
+
+      context "when creation fails" do
+        setup do
+          access_token = Doorkeeper::AccessToken.new
+          access_token.stubs(:save).returns(false)
+          authorisations = stub("authorisations", build: access_token)
+          @api_user.stubs(:authorisations).returns(authorisations)
+          ApiUser.stubs(:find).returns(@api_user)
+        end
+
+        should "do not add a 'signin' permission" do
+          post :create, params: { api_user_id: @api_user, authorisation: { application_id: @application } }
+
+          assert_not @api_user.has_access_to?(@application)
+        end
+
+        should "set flash error" do
+          post :create, params: { api_user_id: @api_user, authorisation: { application_id: @application } }
+
+          assert_equal "There was an error while creating the access token", flash[:error]
+        end
+
+        should "not record access token revoked event" do
+          EventLog.expects(:record_event).never
+
+          post :create, params: { api_user_id: @api_user, authorisation: { application_id: @application } }
+        end
+      end
+    end
+
+    context "signed in as Admin user" do
+      setup do
+        @admin = create(:admin_user)
+        sign_in @admin
+
+        @application = create(:application)
+      end
+
+      should "not be able to authorise API users" do
+        post :create, params: { api_user_id: @api_user, authorisation: { application_id: @application } }
+
+        assert_not_authorised
+      end
+    end
+
+    context "not signed in" do
+      setup do
+        @application = create(:application)
+      end
+
+      should "not be allowed access" do
+        post :create, params: { api_user_id: @api_user, authorisation: { application_id: @application } }
+
+        assert_not_authenticated
       end
     end
   end
