@@ -71,7 +71,8 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       click_link @api_user.name
       click_link "Manage permissions"
 
-      assert_has_signin_permission_for("Whitehall")
+      assert_user_has_signin_permission_for(@api_user, "Whitehall")
+      assert_has_access_token_for("Whitehall")
       assert_has_other_permissions("Whitehall", ["Managing Editor"])
 
       unselect "Managing Editor", from: "Permissions for Whitehall"
@@ -80,7 +81,8 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       click_link @api_user.name
       click_link "Manage permissions"
 
-      assert_has_signin_permission_for("Whitehall")
+      assert_user_has_signin_permission_for(@api_user, "Whitehall")
+      assert_has_access_token_for("Whitehall")
 
       click_link @api_user.name
       click_link "View account access log"
@@ -121,10 +123,12 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
     end
   end
 
-  def assert_has_signin_permission_for(application_name)
+  def assert_user_has_signin_permission_for(user, application_name)
+    assert user.has_access_to?(Doorkeeper::Application.find_by!(name: application_name))
+  end
+
+  def assert_has_access_token_for(application_name)
     within "table#editable-permissions" do
-      # The existence of the <tr> indicates that the API User has "singin"
-      # permission for the application
       assert has_selector?("tr", text: application_name)
     end
   end
