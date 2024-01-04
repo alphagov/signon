@@ -41,6 +41,22 @@ class ApiUsers::ApplicationsControllerTest < ActionController::TestCase
       end
     end
 
+    should "not include applications where the access token has been revoked" do
+      api_user = create(:api_user)
+      application = create(:application, name: "revoked-app-name")
+      create(:access_token, application:, resource_owner_id: api_user.id, revoked_at: Time.zone.now)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy_for_navigation_links(current_user)
+      stub_policy current_user, api_user, index?: true
+
+      get :index, params: { api_user_id: api_user }
+
+      assert_select "tr td", text: "revoked-app-name", count: 0
+    end
+
     should "not display a retired application" do
       api_user = create(:api_user)
       application = create(:application, name: "retired-app-name", retired: true)

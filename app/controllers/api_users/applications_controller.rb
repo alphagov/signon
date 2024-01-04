@@ -8,6 +8,6 @@ class ApiUsers::ApplicationsController < ApplicationController
 
     authorize @api_user
 
-    @applications = @api_user.authorised_applications
+    @applications = @api_user.authorised_applications.merge(Doorkeeper::AccessToken.not_revoked)
   end
 end
