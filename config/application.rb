@@ -13,7 +13,6 @@ require "action_mailer/railtie"
 require "action_view/railtie"
 # require "action_cable/engine"
 require "rails/test_unit/railtie"
-require_relative "../lib/same_site_security/middleware"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -63,8 +62,6 @@ module Signon
     config.eager_load_paths << Rails.root.join("lib")
 
     config.active_job.queue_adapter = :sidekiq
-
-    config.middleware.insert_before 0, SameSiteSecurity::Middleware
 
     config.action_dispatch.return_only_media_type_on_content_type = true
 
