@@ -87,6 +87,31 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       assert_response :success
     end
 
+    should "exclude applications with revoked access tokens" do
+      sign_in create(:superadmin_user)
+
+      application = create(:application)
+      api_user = create(:api_user)
+      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.zone.now)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :edit, params: { api_user_id: api_user, application_id: application }
+      end
+    end
+
+    should "include applications with revoked access tokens when there is at least one non-revoked access token" do
+      sign_in create(:superadmin_user)
+
+      application = create(:application)
+      api_user = create(:api_user)
+      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.zone.now)
+      create(:access_token, resource_owner_id: api_user.id, application:)
+
+      get :edit, params: { api_user_id: api_user, application_id: application }
+
+      assert_response :success
+    end
+
     should "raise an exception if the user does not have an access token for the application" do
       application = create(:application)
       api_user = create(:api_user)
@@ -342,6 +367,33 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       PermissionUpdater.expects(:perform_on).with(api_user).once
 
       patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [permission.id] } }
+    end
+
+    should "exclude applications with revoked access tokens" do
+      sign_in create(:superadmin_user)
+
+      application = create(:application)
+      api_user = create(:api_user)
+      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.zone.now)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [] } }
+      end
+    end
+
+    should "include applications with revoked access tokens when there is at least one non-revoked access token" do
+      sign_in create(:superadmin_user)
+
+      application = create(:application, with_supported_permissions: %w[permission])
+      api_user = create(:api_user)
+      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.zone.now)
+      create(:access_token, resource_owner_id: api_user.id, application:)
+
+      permission = application.supported_permissions.find_by(name: "permission")
+
+      assert_nothing_raised do
+        patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [permission.id] } }
+      end
     end
   end
 end

@@ -30,7 +30,7 @@ private
   end
 
   def set_application
-    @application = @api_user.authorised_applications.find(params[:application_id])
+    @application = @api_user.authorised_applications.merge(Doorkeeper::AccessToken.not_revoked).find(params[:application_id])
   end
 
   def set_permissions
