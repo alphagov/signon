@@ -72,5 +72,21 @@ class ApiUsers::ApplicationsControllerTest < ActionController::TestCase
 
       assert_select "tr td", text: "retired-app-name", count: 0
     end
+
+    should "display a flash message showing the permissions the user has" do
+      api_user = create(:api_user)
+      application = create(:application, name: "app-name", with_supported_permissions: %w[foo])
+      create(:access_token, application:, resource_owner_id: api_user.id)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, api_user, index?: true
+      stub_policy_for_navigation_links current_user
+
+      get :index, params: { api_user_id: api_user }, flash: { application_id: application.id }
+
+      assert_select ".govuk-notification-banner--success"
+    end
   end
 end
