@@ -1,6 +1,4 @@
 class AuthorisationsController < ApplicationController
-  layout "admin_layout"
-
   before_action :authenticate_user!
   before_action :load_api_user
   before_action :build_authorisation, only: %i[new create]

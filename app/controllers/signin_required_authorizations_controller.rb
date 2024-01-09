@@ -1,6 +1,4 @@
 class SigninRequiredAuthorizationsController < Doorkeeper::AuthorizationsController
-  layout "admin_layout"
-
   include Pundit::Authorization
   # This controller was based on (and inherits from)
   # https://github.com/doorkeeper-gem/doorkeeper/blob/main/app/controllers/doorkeeper/authorizations_controller.rb

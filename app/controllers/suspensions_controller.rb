@@ -2,8 +2,6 @@ class SuspensionsController < ApplicationController
   before_action :authenticate_user!, :load_and_authorize_user
   respond_to :html
 
-  layout "admin_layout"
-
   def edit
     @suspension = Suspension.new(suspend: @user.suspended?,
                                  reason_for_suspension: @user.reason_for_suspension)

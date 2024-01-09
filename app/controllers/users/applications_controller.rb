@@ -1,6 +1,4 @@
 class Users::ApplicationsController < ApplicationController
-  layout "admin_layout"
-
   before_action :authenticate_user!
 
   def show

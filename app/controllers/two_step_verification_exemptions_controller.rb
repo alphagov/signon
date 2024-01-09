@@ -1,6 +1,4 @@
 class TwoStepVerificationExemptionsController < ApplicationController
-  layout "admin_layout"
-
   before_action :authenticate_user!, :load_and_authorize_user
 
   def edit
