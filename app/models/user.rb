@@ -183,7 +183,7 @@ class User < ApplicationRecord
   end
 
   def permissions_synced!(application)
-    application_permissions.where(application_id: application.id).update_all(last_synced_at: Time.zone.now)
+    application_permissions.where(application_id: application.id).update_all(last_synced_at: Time.current)
   end
 
   def revoke_all_authorisations
@@ -244,7 +244,7 @@ class User < ApplicationRecord
     # It means that the password reset flow works when you've been invited but
     # not yet accepted.
     # Devise Invitable used to behave this way and then changed in v1.1.1
-    self.confirmed_at = Time.zone.now
+    self.confirmed_at = Time.current
     super(*args)
   end
 
@@ -458,6 +458,6 @@ private
   end
 
   def update_password_changed
-    self.password_changed_at = Time.zone.now if (new_record? || encrypted_password_changed?) && !password_changed_at_changed?
+    self.password_changed_at = Time.current if (new_record? || encrypted_password_changed?) && !password_changed_at_changed?
   end
 end

@@ -4,7 +4,7 @@ module Devise::Hooks::TwoStepVerification
       cookie = auth.env["action_dispatch.cookies"].signed["remember_2sv_session"]
       valid = cookie &&
         cookie["user_id"] == user.id &&
-        cookie["valid_until"] > Time.zone.now &&
+        cookie["valid_until"] > Time.current &&
         cookie["secret_hash"] == Digest::SHA256.hexdigest(user.otp_secret_key)
       unless valid
         auth.session(:user)["need_two_step_verification"] = user.need_two_step_verification?

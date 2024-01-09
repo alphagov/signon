@@ -12,7 +12,7 @@ User.create!(
   email: "test.superadmin@gov.uk",
   password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
   role: Roles::Superadmin.role_name,
-  confirmed_at: Time.zone.now,
+  confirmed_at: Time.current,
   organisation: gds,
 )
 
@@ -21,7 +21,7 @@ User.create!(
   email: "test.admin@gov.uk",
   password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
   role: Roles::Admin.role_name,
-  confirmed_at: Time.zone.now,
+  confirmed_at: Time.current,
   organisation: gds,
 )
 
@@ -30,7 +30,7 @@ User.create!(
   email: "test.super-organisation-admin@gov.uk",
   password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
   role: Roles::SuperOrganisationAdmin.role_name,
-  confirmed_at: Time.zone.now,
+  confirmed_at: Time.current,
   organisation: gds,
 )
 
@@ -39,7 +39,7 @@ User.create!(
   email: "test.organisation-admin@gov.uk",
   password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
   role: Roles::OrganisationAdmin.role_name,
-  confirmed_at: Time.zone.now,
+  confirmed_at: Time.current,
   organisation: gds,
 )
 
@@ -64,7 +64,7 @@ User.create!(
   email: "test.user@gov.uk",
   password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
   role: Roles::Normal.role_name,
-  confirmed_at: Time.zone.now,
+  confirmed_at: Time.current,
   organisation: test_organisation_without_2sv,
 )
 
@@ -100,7 +100,7 @@ User.create!(
   email: "test.user.2sv@gov.uk",
   password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
   role: Roles::Normal.role_name,
-  confirmed_at: Time.zone.now,
+  confirmed_at: Time.current,
   organisation: test_organisation_without_2sv,
   require_2sv: true,
   otp_secret_key: "I5X6Y3VN3CAATYQRBPAZ7KMFLK2RWYJ5",
@@ -111,7 +111,7 @@ User.create!(
   email: "test.user.2sv.organisation@gov.uk",
   password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
   role: Roles::Normal.role_name,
-  confirmed_at: Time.zone.now,
+  confirmed_at: Time.current,
   organisation: test_organisation_with_2sv,
   require_2sv: true,
   otp_secret_key: "I5X6Y3VN3CAATYQRBPAZ7KMFLK2RWYJ5",
@@ -123,7 +123,7 @@ User.create!(
   email: "test.apiuser@gov.uk",
   password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
   role: Roles::Normal.role_name,
-  confirmed_at: Time.zone.now,
+  confirmed_at: Time.current,
   require_2sv: false,
 )
 

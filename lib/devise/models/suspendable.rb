@@ -36,14 +36,14 @@ module Devise
       # rubocop:disable Rails/SaveBang
       def suspend(reason)
         update(reason_for_suspension: reason,
-               suspended_at: Time.zone.now)
+               suspended_at: Time.current)
         revoke_all_authorisations
       end
       # rubocop:enable Rails/SaveBang
 
       def unsuspend
         update(password: SecureRandom.hex,
-               unsuspended_at: Time.zone.now,
+               unsuspended_at: Time.current,
                suspended_at: nil,
                reason_for_suspension: nil)
       end

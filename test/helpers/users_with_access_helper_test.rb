@@ -45,7 +45,7 @@ class UsersWithAccessHelperTest < ActionView::TestCase
 
   test "formatted_last_sign_in returns the time in words when the user has signed in" do
     user = build(:user)
-    user.stubs(:current_sign_in_at).returns(Time.zone.now - 1.second)
+    user.stubs(:current_sign_in_at).returns(Time.current - 1.second)
 
     assert_equal "less than a minute ago", formatted_last_sign_in(user)
   end
