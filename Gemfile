@@ -7,7 +7,6 @@ gem "addressable"
 gem "alphabetical_paginate"
 gem "ancestry"
 gem "bootsnap", require: false
-gem "bootstrap-kaminari-views"
 gem "browser"
 gem "devise"
 gem "devise-encryptable"
