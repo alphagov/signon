@@ -297,8 +297,6 @@ class SignInTest < ActionDispatch::IntegrationTest
         edit_user_password_path,
         new_user_confirmation_path,
         user_confirmation_path,
-        new_user_unlock_path,
-        user_unlock_path,
         accept_user_invitation_path,
         remove_user_invitation_path,
         new_user_invitation_path,
