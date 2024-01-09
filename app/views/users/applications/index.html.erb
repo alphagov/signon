@@ -25,10 +25,12 @@
 %>
 
 <% if flash[:application_id] %>
-<%= render "govuk_publishing_components/components/success_alert", {
-    message: "Permissions updated",
-    description: message_for_success(flash[:application_id], @user),
-} %>
+  <% content_for(:custom_alerts) do %>
+    <%= render "govuk_publishing_components/components/success_alert", {
+        message: "Permissions updated",
+        description: message_for_success(flash[:application_id], @user),
+    } %>
+  <% end %>
 <% end %>
 
 <table class="govuk-table">
