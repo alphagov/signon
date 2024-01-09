@@ -5,7 +5,7 @@ class AdminUserIndexTest < ActionDispatch::IntegrationTest
     setup do
       use_javascript_driver
 
-      current_time = Time.zone.now
+      current_time = Time.current
       Timecop.freeze(current_time)
 
       @admin = create(:admin_user, name: "Admin User", email: "admin@example.com")

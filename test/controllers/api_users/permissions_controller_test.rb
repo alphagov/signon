@@ -80,7 +80,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
 
       application = create(:application)
       api_user = create(:api_user)
-      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.zone.now)
+      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
 
       assert_raises(ActiveRecord::RecordNotFound) do
         get :edit, params: { api_user_id: api_user, application_id: application }
@@ -92,7 +92,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
 
       application = create(:application)
       api_user = create(:api_user)
-      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.zone.now)
+      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
       create(:access_token, resource_owner_id: api_user.id, application:)
 
       get :edit, params: { api_user_id: api_user, application_id: application }
@@ -348,7 +348,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
 
       application = create(:application)
       api_user = create(:api_user)
-      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.zone.now)
+      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
 
       assert_raises(ActiveRecord::RecordNotFound) do
         patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [] } }
@@ -360,7 +360,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
 
       application = create(:application, with_supported_permissions: %w[permission])
       api_user = create(:api_user)
-      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.zone.now)
+      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
       create(:access_token, resource_owner_id: api_user.id, application:)
 
       permission = application.supported_permissions.find_by(name: "permission")

@@ -75,7 +75,7 @@ FactoryBot.define do
     email { "old@email.com" }
     unconfirmed_email { "new@email.com" }
     sequence(:confirmation_token) { |n| "#{n}a1s2d3" } # see `token_sent_to` in ConfirmationTokenHelper
-    confirmation_sent_at { Time.zone.now }
+    confirmation_sent_at { Time.current }
   end
 
   factory :user_with_pending_email_change, parent: :user, traits: [:with_pending_email_change]
@@ -106,16 +106,16 @@ FactoryBot.define do
   factory :invited_user, parent: :user, traits: [:invited]
 
   factory :active_user, parent: :invited_user do
-    invitation_accepted_at { Time.zone.now }
+    invitation_accepted_at { Time.current }
   end
 
   factory :suspended_user, parent: :user do
-    suspended_at { Time.zone.now }
+    suspended_at { Time.current }
     reason_for_suspension { "Testing" }
   end
 
   factory :locked_user, parent: :user do
-    locked_at { Time.zone.now }
+    locked_at { Time.current }
   end
 
   factory :user_in_organisation, parent: :user, traits: [:in_organisation]
