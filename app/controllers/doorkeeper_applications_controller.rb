@@ -4,8 +4,6 @@ class DoorkeeperApplicationsController < ApplicationController
 
   respond_to :html
 
-  layout "admin_layout"
-
   def index
     authorize Doorkeeper::Application
     @applications = Doorkeeper::Application.all

@@ -1,6 +1,4 @@
 class Account::OrganisationsController < ApplicationController
-  layout "admin_layout"
-
   before_action :authenticate_user!
   before_action :authorise_user
 

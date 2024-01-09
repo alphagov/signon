@@ -5,8 +5,6 @@ class BatchInvitationPermissionsController < ApplicationController
   before_action :authorise_to_manage_permissions
   before_action :prevent_updating
 
-  layout "admin_layout"
-
   def new; end
 
   def create

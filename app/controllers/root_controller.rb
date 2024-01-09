@@ -1,6 +1,4 @@
 class RootController < ApplicationController
-  layout "admin_layout"
-
   include UserPermissionsControllerMethods
   before_action :authenticate_user!, except: :privacy_notice
   skip_after_action :verify_authorized

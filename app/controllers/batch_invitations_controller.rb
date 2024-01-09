@@ -3,8 +3,6 @@ require "csv"
 class BatchInvitationsController < ApplicationController
   before_action :authenticate_user!
 
-  layout "admin_layout"
-
   def new
     @batch_invitation = BatchInvitation.new(organisation_id: current_user.organisation_id)
     authorize @batch_invitation
