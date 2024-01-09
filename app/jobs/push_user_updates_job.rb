@@ -7,7 +7,7 @@ class PushUserUpdatesJob < ApplicationJob
 
   class << self
     def perform_on(user)
-      user.applications_used
+      user.authorised_applications
         .each { |application| perform_later(user.uid, application.id) }
     end
   end

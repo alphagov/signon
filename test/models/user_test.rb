@@ -944,7 +944,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "only include each application once" do
       authenticate_access(@user, @app)
-      assert_equal 1, @user.authorised_applications.count(@app)
+      assert_equal 1, @user.authorised_applications.count
     end
   end
 

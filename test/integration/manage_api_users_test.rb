@@ -65,22 +65,25 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
 
       click_link @api_user.name
       click_link "Manage permissions"
-      select "Managing Editor", from: "Permissions for Whitehall"
-      click_button "Update API user"
+      click_link "Update permissions for Whitehall"
+      check "Managing Editor"
+      click_button "Update permissions"
 
       click_link @api_user.name
       click_link "Manage permissions"
 
-      assert_has_signin_permission_for("Whitehall")
-      assert_has_other_permissions("Whitehall", ["Managing Editor"])
+      assert_user_has_signin_permission_for(@api_user, "Whitehall")
+      assert_has_access_token_for("Whitehall")
+      assert_has_other_permissions("Whitehall", "Managing Editor")
 
-      unselect "Managing Editor", from: "Permissions for Whitehall"
-      click_button "Update API user"
+      uncheck "Managing Editor"
+      click_button "Update permissions"
 
       click_link @api_user.name
       click_link "Manage permissions"
 
-      assert_has_signin_permission_for("Whitehall")
+      assert_user_has_signin_permission_for(@api_user, "Whitehall")
+      assert_has_access_token_for("Whitehall")
 
       click_link @api_user.name
       click_link "View account access log"
@@ -121,15 +124,17 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
     end
   end
 
-  def assert_has_signin_permission_for(application_name)
-    within "table#editable-permissions" do
-      # The existence of the <tr> indicates that the API User has "singin"
-      # permission for the application
-      assert has_selector?("tr", text: application_name)
-    end
+  def assert_user_has_signin_permission_for(user, application_name)
+    assert user.has_access_to?(Doorkeeper::Application.find_by!(name: application_name))
   end
 
-  def assert_has_other_permissions(application_name, permission_names)
-    assert has_select?("Permissions for #{application_name}", selected: permission_names)
+  def assert_has_access_token_for(application_name)
+    table = find("table caption[text()='Apps #{@api_user.name} has access to']").ancestor("table")
+    assert table.has_content?(application_name)
+  end
+
+  def assert_has_other_permissions(application_name, permission_name)
+    click_link "Update permissions for #{application_name}"
+    assert page.has_checked_field?(permission_name)
   end
 end
