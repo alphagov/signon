@@ -33,22 +33,18 @@
   <% end %>
 <% end %>
 
-<table class="govuk-table">
-  <caption class="govuk-table__caption govuk-table__caption--m">Apps <%= @api_user.name %> has access to</caption>
-  <thead class="govuk-table__head">
-    <tr class="govuk-table__row">
-      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
-      <th scope="col" class="govuk-table__header govuk-!-width-one-third">Description</th>
-      <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Permissions</span></th>
-    </tr>
-  </thead>
-  <tbody class="govuk-table__body">
-    <% @applications.each do |application| %>
-      <tr class="govuk-table__row">
-        <td class="govuk-table__cell"><%= application.name %></td>
-        <td class="govuk-table__cell"><%= application.description %></td>
-        <td class="govuk-table__cell govuk-!-text-align-right"><%= update_permissions_link(application, @api_user) %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<%= render "govuk_publishing_components/components/table", {
+    caption: "Apps #{@api_user.name} has access to",
+    head: [
+      { text: "Name" },
+      { text: "Description" },
+      { text: content_tag(:span, "Permissions", class: "govuk-visually-hidden") },
+    ],
+    rows: @applications.map do |application|
+    [
+      { text: application.name },
+      { text: application.description },
+      { text: update_permissions_link(application, @api_user) || "" }
+    ]
+    end,
+} %>
