@@ -62,7 +62,7 @@ class InactiveUsersSuspensionReminderTest < ActiveSupport::TestCase
     end
 
     should "send an exception notification if retries fail" do
-      GovukError.expects(:notify).once
+      GovukError.expects(:notify)
       UserMailer.expects(:suspension_reminder).returns(@mailer).times(3)
 
       InactiveUsersSuspensionReminder.new(@users_to_remind, 1).send_reminders

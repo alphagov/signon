@@ -135,7 +135,7 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
       should "push changes out to apps" do
         user = create(:user, organisation:)
 
-        PermissionUpdater.expects(:perform_on).with(user).once
+        PermissionUpdater.expects(:perform_on).with(user)
 
         put :update, params: { user_id: user, user: { organisation_id: another_organisation } }
       end

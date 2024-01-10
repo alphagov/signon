@@ -338,7 +338,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
 
       permission = application.supported_permissions.find_by(name: "permission")
 
-      PermissionUpdater.expects(:perform_on).with(api_user).once
+      PermissionUpdater.expects(:perform_on).with(api_user)
 
       patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [permission.id] } }
     end

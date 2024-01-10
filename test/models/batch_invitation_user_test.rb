@@ -119,7 +119,7 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
       end
 
       should "log the error" do
-        GovukError.expects(:notify).once
+        GovukError.expects(:notify)
 
         user = create(:batch_invitation_user, batch_invitation: @batch_invitation)
         user.invite(@inviting_user, [])
@@ -136,7 +136,7 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
       end
 
       should "log the error" do
-        GovukError.expects(:notify).once
+        GovukError.expects(:notify)
 
         user = create(:batch_invitation_user, batch_invitation: @batch_invitation)
         user.email = nil
@@ -153,7 +153,7 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
       end
 
       should "log the error" do
-        GovukError.expects(:notify).once
+        GovukError.expects(:notify)
 
         user = create(:batch_invitation_user, batch_invitation: @batch_invitation, email: "foo@example.com", organisation_slug: "not-a-real-slug")
         user.invite(@inviting_user, [])

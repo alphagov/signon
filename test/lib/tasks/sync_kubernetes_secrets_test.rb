@@ -111,7 +111,7 @@ class KubernetesTaskTest < ActiveSupport::TestCase
         client.expects(:apply_secret).with(
           "signon-token-#{user.name}-#{authorisation.application.name}".parameterize,
           { bearer_token: authorisation.token },
-        ).once
+        )
       end
     end
   end
@@ -121,7 +121,7 @@ class KubernetesTaskTest < ActiveSupport::TestCase
       client.expects(:apply_secret).with(
         "signon-app-#{app.name}".parameterize,
         { oauth_id: app.uid, oauth_secret: app.secret },
-      ).once
+      )
     end
   end
 
@@ -134,6 +134,6 @@ class KubernetesTaskTest < ActiveSupport::TestCase
         data: { "app_names" => "[#{names_list}]",
                 "api_user_emails" => "[#{email_list}]" },
       }),
-    ).once
+    )
   end
 end

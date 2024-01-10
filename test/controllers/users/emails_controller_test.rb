@@ -243,7 +243,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
 
       should "push changes out to apps" do
         user = create(:user)
-        PermissionUpdater.expects(:perform_on).with(user).once
+        PermissionUpdater.expects(:perform_on).with(user)
 
         put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
       end

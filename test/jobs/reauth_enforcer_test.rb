@@ -7,8 +7,8 @@ class ReauthEnforcerTest < ActiveSupport::TestCase
       uid = "01aac80d-0bbf-4667-9892-3b304654f3de"
 
       mock_client = mock("sso_push_client")
-      mock_client.expects(:reauth_user).with(uid).once
-      SSOPushClient.expects(:new).with(app).returns(mock_client).once
+      mock_client.expects(:reauth_user).with(uid)
+      SSOPushClient.expects(:new).with(app).returns(mock_client)
 
       ReauthEnforcer.new.perform(uid, app.id)
     end

@@ -66,7 +66,6 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
     users.each do |user|
       EventLog.expects(:record_event)
         .with(responds_with(:email, user.email), EventLog::ACCOUNT_AUTOSUSPENDED)
-        .once
     end
 
     InactiveUsersSuspender.new.suspend
@@ -80,7 +79,7 @@ class InactiveUsersSuspenderTest < ActiveSupport::TestCase
     users.each do |user|
       UserMailer.expects(:suspension_notification)
         .with(responds_with(:email, user.email))
-        .returns(mailer).once
+        .returns(mailer)
     end
 
     InactiveUsersSuspender.new.suspend
