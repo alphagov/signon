@@ -1,3 +1,4 @@
+<% content_for :title_caption, @user.api_user? ? "Manage API users" : "Manage other users" %>
 <% content_for :title, "Exempt #{@user.name} from 2-step verification".html_safe %>
 
 <% content_for :breadcrumbs,
