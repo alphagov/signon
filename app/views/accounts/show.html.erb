@@ -1,17 +1,5 @@
 <% content_for :title, "Settings" %>
 
-<% content_for :breadcrumbs,
-   render("govuk_publishing_components/components/breadcrumbs", {
-     collapse_on_mobile: true,
-     breadcrumbs: [
-       {
-         title: "Dashboard",
-         url: root_path,
-       }
-     ]
-   })
-%>
-
 <%= render "govuk_publishing_components/components/cards", {
   items: [
     {
