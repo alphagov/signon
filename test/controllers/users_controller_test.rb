@@ -429,7 +429,7 @@ class UsersControllerTest < ActionController::TestCase
 
       should "push changes out to apps" do
         another_user = create(:user)
-        PermissionUpdater.expects(:perform_on).with(another_user).once
+        PermissionUpdater.expects(:perform_on).with(another_user)
 
         put :update, params: { id: another_user.id, user: { require_2sv: true } }
       end

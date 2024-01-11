@@ -122,7 +122,7 @@ class Users::TwoStepVerificationMandationsControllerTest < ActionController::Tes
 
       should "push changes out to apps" do
         user = create(:user, require_2sv: false)
-        PermissionUpdater.expects(:perform_on).with(user).once
+        PermissionUpdater.expects(:perform_on).with(user)
 
         put :update, params: { user_id: user, user: { require_2sv: true } }
       end

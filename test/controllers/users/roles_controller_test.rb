@@ -133,7 +133,7 @@ class Users::RolesControllerTest < ActionController::TestCase
 
       should "push changes out to apps" do
         user = create(:user_in_organisation)
-        PermissionUpdater.expects(:perform_on).with(user).once
+        PermissionUpdater.expects(:perform_on).with(user)
 
         put :update, params: { user_id: user, user: { role: Roles::OrganisationAdmin.role_name } }
       end
