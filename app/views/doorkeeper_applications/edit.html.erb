@@ -1,5 +1,19 @@
-<% content_for :title, "Edit ‘#{@application.name}’" %>
-<% content_for :back_link, doorkeeper_applications_path %>
+<% content_for :title, "Edit #{@application.name}" %>
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "Applications",
+         url: doorkeeper_applications_path,
+       }
+     ]
+   })
+%>
 
 <%= link_to "Users with access",
   users_with_access_doorkeeper_application_path(@application),

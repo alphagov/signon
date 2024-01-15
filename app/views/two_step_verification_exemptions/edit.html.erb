@@ -1,11 +1,12 @@
-<% content_for :title, "Exempt &ldquo;#{@user.name}&rdquo; from 2-step verification".html_safe %>
+<% content_for :title_caption, @user.api_user? ? "Manage API users" : "Manage other users" %>
+<% content_for :title, "Exempt #{@user.name} from 2-step verification".html_safe %>
 
 <% content_for :breadcrumbs,
    render("govuk_publishing_components/components/breadcrumbs", {
      collapse_on_mobile: true,
      breadcrumbs: [
        {
-         title: "Home",
+         title: "Dashboard",
          url: root_path,
        },
        {
@@ -15,9 +16,6 @@
        {
          title: @user.name,
          url: user_path(@user),
-       },
-       {
-         title: "Exempt user from 2-step verification",
        }
      ]
    })

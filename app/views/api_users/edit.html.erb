@@ -1,5 +1,5 @@
 <% content_for :title_caption, "Manage API users" %>
-<% content_for :title, "Edit #{@api_user.name}" %>
+<% content_for :title, @api_user.name %>
 
 <% content_for :breadcrumbs,
    render("govuk_publishing_components/components/breadcrumbs", {
@@ -12,9 +12,6 @@
        {
          title: "API users",
          url: api_users_path,
-       },
-       {
-         title: "Edit #{@api_user.name}",
        }
      ]
    })

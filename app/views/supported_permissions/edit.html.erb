@@ -1,11 +1,11 @@
-<% content_for :title, "Edit “#{@supported_permission.name_was}” permission for #{@application.name}" %>
+<% content_for :title, "Edit #{@supported_permission.name_was} permission for #{@application.name}" %>
 
 <% content_for :breadcrumbs,
    render("govuk_publishing_components/components/breadcrumbs", {
      collapse_on_mobile: true,
      breadcrumbs: [
        {
-         title: "Home",
+         title: "Dashboard",
          url: root_path,
        },
        {
@@ -19,10 +19,7 @@
        {
          title: "Permissions",
          url: doorkeeper_application_supported_permissions_path(@application),
-       },
-       {
-         title: "Edit “#{@supported_permission.name_was}” permission",
-       },
+       }
      ]
    })
 %>

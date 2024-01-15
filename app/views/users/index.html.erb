@@ -1,19 +1,4 @@
 <% content_for :title, "Users" %>
-<% content_for :breadcrumbs,
-   render("govuk_publishing_components/components/breadcrumbs", {
-     collapse_on_mobile: true,
-     breadcrumbs: [
-       {
-         title: "Dashboard",
-         url: root_path,
-       },
-       {
-         title: "Users",
-       }
-     ]
-   })
-%>
-
 <% content_for :top_right do %>
   <div class="govuk-form-group users-index-button-group">
     <% if policy(User).new? %>
