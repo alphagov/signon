@@ -1,8 +1,6 @@
 require "devise/hooks/two_step_verification"
 
 class ApplicationController < ActionController::Base
-  layout "admin_layout"
-
   include Pundit::Authorization
   protect_from_forgery with: :exception
 
