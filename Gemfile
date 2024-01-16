@@ -4,7 +4,6 @@ gem "rails", "7.0.8"
 
 gem "activejob-retry"
 gem "addressable"
-gem "alphabetical_paginate"
 gem "ancestry"
 gem "bootsnap", require: false
 gem "browser"
