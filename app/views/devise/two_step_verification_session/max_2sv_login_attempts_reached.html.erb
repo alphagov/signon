@@ -1,17 +1,7 @@
 <% content_for :title, "Account locked" %>
-<% content_for :thin_form, true %>
 
-<div class="page-title">
-  <h1>Your account is locked</h1>
-</div>
-
-<div class="callout callout-danger">
-  <p class="lead">
-    Your account has been locked because an incorrect 2-step verification code was entered too many times.
-  </p>
-  <p>Your account will be unlocked at <%= User.unlock_in.from_now.to_fs(:govuk_time)%></p>
-  <p>
-    If you need your account unlocked sooner, please contact a managing <%= t('department.name') %> editor in your organisation
-    (or your parent organisation). They can use the support form to get help from the <%= t('department.name') %> team.
-  </p>
-</div>
+<%= render "govuk_publishing_components/components/error_alert", {
+  message: "Your account has been locked because an incorrect 2-step verification code was entered too many times.",
+  description: "Your account will be unlocked at #{User.unlock_in.from_now.to_fs(:govuk_time)}. If you need your account unlocked sooner, please contact a managing #{t('department.name')} editor in your organisation
+    (or your parent organisation). They can use the support form to get help from the #{t('department.name')} team."
+} %>

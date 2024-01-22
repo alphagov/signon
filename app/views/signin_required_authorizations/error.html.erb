@@ -1,0 +1,4 @@
+<%= render "govuk_publishing_components/components/error_alert", {
+  message: t('doorkeeper.authorizations.error.title'),
+  description: (respond_to?(:error_response) ? error_response : @pre_auth.error_response).body[:error_description]
+} %>

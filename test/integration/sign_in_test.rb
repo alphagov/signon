@@ -21,25 +21,21 @@ class SignInTest < ActionDispatch::IntegrationTest
 
   should "send a GA event including the users org slug when successfully signed-in" do
     use_javascript_driver
-    with_ga_enabled do
-      visit root_path
-      refute_dimension_is_set(8)
+    visit root_path
+    refute_dimension_is_set(8)
 
-      signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
-      assert_dimension_is_set(8, with_value: "ministry-of-lindy-hop")
-    end
+    signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
+    assert_dimension_is_set(8, with_value: "ministry-of-lindy-hop")
   end
 
   should "send a GA event including '(not set)' for the org slug when the user has no org" do
     use_javascript_driver
     @user.update!(organisation: nil)
-    with_ga_enabled do
-      visit root_path
-      refute_dimension_is_set(8)
+    visit root_path
+    refute_dimension_is_set(8)
 
-      signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
-      assert_dimension_is_set(8, with_value: "(not set)")
-    end
+    signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
+    assert_dimension_is_set(8, with_value: "(not set)")
   end
 
   should "display a rejection for unsuccessful sign-ins" do
@@ -50,13 +46,11 @@ class SignInTest < ActionDispatch::IntegrationTest
 
   should "not send a GA event including the users org slug for unsuccessful sign-ins" do
     use_javascript_driver
-    with_ga_enabled do
-      visit root_path
-      refute_dimension_is_set(8)
+    visit root_path
+    refute_dimension_is_set(8)
 
-      signin_with(email: "email@example.com", password: "some incorrect password with various $ymb0l$")
-      refute_dimension_is_set(8)
-    end
+    signin_with(email: "email@example.com", password: "some incorrect password with various $ymb0l$")
+    refute_dimension_is_set(8)
   end
 
   should "display the same rejection for failed logins, empty passwords, and missing accounts" do
@@ -297,8 +291,6 @@ class SignInTest < ActionDispatch::IntegrationTest
         edit_user_password_path,
         new_user_confirmation_path,
         user_confirmation_path,
-        new_user_unlock_path,
-        user_unlock_path,
         accept_user_invitation_path,
         remove_user_invitation_path,
         new_user_invitation_path,

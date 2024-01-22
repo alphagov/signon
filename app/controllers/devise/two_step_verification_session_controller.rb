@@ -1,6 +1,4 @@
 class Devise::TwoStepVerificationSessionController < DeviseController
-  layout "admin_layout"
-
   before_action { |c| c.authenticate_user! force: true }
   before_action :ensure_user_has_2sv_setup
 

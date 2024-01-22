@@ -1,5 +1,4 @@
 class PasswordsController < Devise::PasswordsController
-  layout "admin_layout"
   before_action :record_password_reset_request, only: :create # rubocop:disable Rails/LexicallyScopedActionFilter
   before_action :record_reset_page_loaded, only: :edit
 
@@ -9,7 +8,7 @@ class PasswordsController < Devise::PasswordsController
     user = user_from_params
     unless user && user.reset_password_period_valid?
       record_reset_page_loaded_token_expired
-      render "devise/passwords/reset_error", layout: "admin_layout"
+      render "devise/passwords/reset_error"
     end
   end
 

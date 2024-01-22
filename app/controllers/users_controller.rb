@@ -3,8 +3,6 @@ require "csv"
 class UsersController < ApplicationController
   include UserPermissionsControllerMethods
 
-  layout "admin_layout", only: %w[index edit event_logs require_2sv]
-
   before_action :authenticate_user!
   before_action :load_user, except: %i[index]
   before_action :redirect_to_account_page_if_acting_on_own_user, only: %i[edit]

@@ -1,6 +1,4 @@
 class ApiUsers::PermissionsController < ApplicationController
-  layout "admin_layout"
-
   before_action :authenticate_user!
   before_action :set_user
   before_action :set_application

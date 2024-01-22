@@ -4,10 +4,8 @@ gem "rails", "7.0.8"
 
 gem "activejob-retry"
 gem "addressable"
-gem "alphabetical_paginate"
 gem "ancestry"
 gem "bootsnap", require: false
-gem "bootstrap-kaminari-views"
 gem "browser"
 gem "devise"
 gem "devise-encryptable"
@@ -35,7 +33,6 @@ gem "whenever"
 
 # GDS Gems
 gem "gds-api-adapters"
-gem "govuk_admin_template"
 gem "govuk_app_config"
 gem "govuk_publishing_components"
 gem "govuk_sidekiq"

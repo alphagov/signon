@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   post "/oauth/access_token" => "doorkeeper/tokens#create" # compatibility with OAuth v1
 
   devise_for :users,
+             skip: :unlock,
              controllers: {
                invitations: "invitations",
                sessions: "sessions",

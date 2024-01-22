@@ -1,53 +1,111 @@
-<% content_for :app_title, "#{t('department.name')} Signon" %>
-<% content_for :page_title, "#{yield(:title)} | #{t('department.name')} Signon" %>
-<% content_for :head do %>
-  <%= csrf_meta_tags %>
-  <%= stylesheet_link_tag 'legacy_layout' %>
-  <%= javascript_include_tag 'legacy_layout' %>
-  <%= yield :content_for_head %>
-<% end %>
+<%= render 'govuk_publishing_components/components/layout_for_admin',
+  product_name: "Signon",
+  environment: GovukPublishingComponents::AppHelpers::Environment.current_acceptance_environment,
+  browser_title: yield(:title) do %>
 
-<% if sensitive_query_parameters? %>
-  <% content_for :custom_pageview_fullpath, sanitised_fullpath %>
-<% end %>
+  <%= render "govuk_publishing_components/components/skip_link" %>
 
-<% if user_signed_in? && params[:controller] !~ %r{doorkeeper/} %>
-  <% unless content_for :suppress_navbar_items %>
-    <% content_for :navbar_items do %>
-      <%= nav_link 'Dashboard', root_path %>
-      <% if policy(User).index? %>
-        <%= nav_link 'Users', users_path %>
-      <% end %>
-      <% if policy(ApiUser).index? %>
-        <%= nav_link 'API Users', api_users_path %>
-      <% end %>
-      <% if policy(Doorkeeper::Application).index? %>
-        <%= nav_link 'Applications', doorkeeper_applications_path %>
-      <% end %>
-      <% if policy(Organisation).index? %>
-        <%= nav_link 'Organisations', organisations_path %>
-      <% end %>
+  <%= render "govuk_publishing_components/components/layout_header", {
+    product_name: "Signon",
+    environment: GovukPublishingComponents::AppHelpers::Environment.current_acceptance_environment,
+    navigation_items: navigation_items,
+  }%>
+
+  <%= yield(:user_research_recruitment_banner) %>
+
+  <div class="govuk-width-container">
+    <% if yield(:back_link).present? %>
+      <%= render "govuk_publishing_components/components/back_link", href: yield(:back_link) %>
+    <% elsif yield(:breadcrumbs).present? %>
+      <%= yield(:breadcrumbs) %>
     <% end %>
-  <% end %>
 
-  <% content_for :navbar_right do %>
-    <%= link_to current_user.name, account_path %>
-    &bull; <%= link_to 'Sign out', destroy_user_session_path %>
-  <% end %>
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+      <% if flash["notice"].present? %>
+        <%= render "govuk_publishing_components/components/success_alert", {
+          message: flash["notice"]
+        } %>
+      <% end %>
 
-  <% content_for :before_pageview_js do %>
-    GOVUKAdmin.setDimension(8, "<%= current_user.organisation ? current_user.organisation.slug : '(not set)' %>")
-  <% end %>
+      <% if flash["alert"].present? %>
+        <%= render "govuk_publishing_components/components/error_alert", {
+          message: flash["alert"]
+        } %>
+      <% end %>
+
+      <%= yield(:custom_alerts) %>
+
+      <%= yield(:error_summary) %>
+
+      <div class="govuk-grid-row">
+        <div class="<%= yield(:top_right).present? ? 'govuk-grid-column-one-third' : 'govuk-grid-column-two-thirds' %>">
+          <% if yield(:title_caption).present? %>
+            <span class="govuk-caption-l"><%= yield(:title_caption) %></span>
+          <% end %>
+          <h1 class="govuk-heading-l">
+            <% if yield(:page_heading).present? %>
+              <%= yield(:page_heading) %>
+            <% else %>
+              <%= yield(:title) %>
+            <% end %>
+          </h1>
+        </div>
+        <% if yield(:top_right).present? %>
+          <div class="govuk-grid-column-two-thirds">
+            <%= yield(:top_right) %>
+          </div>
+        <% end %>
+      </div>
+      <%= yield %>
+    </main>
+  </div>
+
+  <%= render "govuk_publishing_components/components/layout_footer", {
+    navigation: [
+      {
+        title: "Support and feedback",
+        items: [
+          (
+            {
+              href: Plek.external_url_for("support"),
+              text: "Raise a support request"
+            } if user_signed_in?
+          ),
+          {
+            href: "https://www.gov.uk/government/content-publishing",
+            text: "How to write, publish, and improve content",
+          },
+          {
+            href: privacy_notice_path,
+            text: "Privacy notice",
+          },
+          {
+            href: "https://status.publishing.service.gov.uk/",
+            text: "Check if publishing apps are working or if there’s any maintenance planned",
+          }
+        ].compact
+      }
+    ]
+  } %>
+
+  <%# TODO: replace with component %>
+  <script class="analytics">
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-26179049-6', '<%= ENV['GOVUK_APP_DOMAIN'] %>');
+    ga('set', 'anonymizeIp', true);
+
+    <% if current_user %>
+      ga('set', 'dimension8', "<%= current_user.organisation ? current_user.organisation.slug : '(not set)' %>");
+    <% end %>
+
+    <% if sensitive_query_parameters? %>
+      ga('send', 'pageview', { page: '<%= sanitised_fullpath %>' });
+    <% else %>
+      ga('send', 'pageview');
+    <% end %>
+  </script>
 <% end %>
-
-<% content_for :content do %>
-  <% if content_for?(:thin_form) %><div class="thin-form"><% end %>
-  <%= render partial: 'shared/bootstrap_flash_messages' %>
-  <%= yield %>
-  <% if content_for?(:thin_form) %></div><% end %>
-<% end %>
-
-<% content_for :footer_version, ENV.fetch("SENTRY_RELEASE", "null") %>
-
-<%# use the govuk_admin_template layout %>
-<%= render :template => 'layouts/govuk_admin_template' %>
