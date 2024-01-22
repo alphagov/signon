@@ -22,13 +22,11 @@ class SignOutTest < ActionDispatch::IntegrationTest
 
   should "stop sending the user org slug to GA once signed out" do
     use_javascript_driver
-    with_ga_enabled do
-      visit root_path
-      signin_with(@user)
-      assert_dimension_is_set(8)
+    visit root_path
+    signin_with(@user)
+    assert_dimension_is_set(8)
 
-      signout
-      refute_dimension_is_set(8)
-    end
+    signout
+    refute_dimension_is_set(8)
   end
 end
