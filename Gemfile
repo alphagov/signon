@@ -33,7 +33,6 @@ gem "whenever"
 
 # GDS Gems
 gem "gds-api-adapters"
-gem "govuk_admin_template"
 gem "govuk_app_config"
 gem "govuk_publishing_components"
 gem "govuk_sidekiq"
