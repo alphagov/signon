@@ -11,7 +11,7 @@ class ApiUsers::PermissionsController < ApplicationController
   def update
     authorize @api_user
 
-    UserUpdate.new(@api_user, build_user_update_params, current_user, user_ip_address).call
+    UserUpdate.new(@api_user, build_user_update_params(@api_user), current_user, user_ip_address).call
 
     flash[:application_id] = @application.id
     redirect_to api_user_applications_path(@api_user)
@@ -35,8 +35,8 @@ private
     @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false)
   end
 
-  def build_user_update_params
-    permissions_user_has = @api_user.supported_permissions.pluck(:id)
+  def build_user_update_params(user)
+    permissions_user_has = user.supported_permissions.pluck(:id)
     updatable_permissions_for_this_app = @permissions.pluck(:id)
     selected_permissions = update_params[:supported_permission_ids].map(&:to_i)
     permissions_to_add = updatable_permissions_for_this_app.intersection(selected_permissions)

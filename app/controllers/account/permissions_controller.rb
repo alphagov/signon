@@ -18,7 +18,7 @@ class Account::PermissionsController < ApplicationController
   def update
     authorize [:account, @application], :edit_permissions?
 
-    UserUpdate.new(current_user, build_user_update_params, current_user, user_ip_address).call
+    UserUpdate.new(current_user, build_user_update_params(current_user), current_user, user_ip_address).call
 
     flash[:application_id] = @application.id
     redirect_to account_applications_path
@@ -38,8 +38,8 @@ private
     @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false)
   end
 
-  def build_user_update_params
-    permissions_user_has = current_user.supported_permissions.pluck(:id)
+  def build_user_update_params(user)
+    permissions_user_has = user.supported_permissions.pluck(:id)
     updatable_permissions_for_this_app = @permissions.pluck(:id)
     selected_permissions = update_params[:supported_permission_ids].map(&:to_i)
     permissions_to_add = updatable_permissions_for_this_app.intersection(selected_permissions)
