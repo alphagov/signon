@@ -18,7 +18,8 @@ class Account::PermissionsController < ApplicationController
   def update
     authorize [:account, @application], :edit_permissions?
 
-    UserUpdate.new(current_user, build_user_update_params(current_user, @permissions.pluck(:id), update_params[:supported_permission_ids].map(&:to_i)), current_user, user_ip_address).call
+    supported_permission_ids = build_user_update_params(current_user, @permissions.pluck(:id), update_params[:supported_permission_ids].map(&:to_i))
+    UserUpdate.new(current_user, { supported_permission_ids: }, current_user, user_ip_address).call
 
     flash[:application_id] = @application.id
     redirect_to account_applications_path
@@ -43,6 +44,6 @@ private
     permissions_to_add = updatable_permission_ids.intersection(selected_permission_ids)
     permissions_to_remove = updatable_permission_ids.difference(selected_permission_ids)
 
-    { supported_permission_ids: (permissions_user_has + permissions_to_add - permissions_to_remove).sort }
+    (permissions_user_has + permissions_to_add - permissions_to_remove).sort
   end
 end
