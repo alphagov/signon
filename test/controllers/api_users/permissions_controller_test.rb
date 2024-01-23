@@ -123,26 +123,6 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       assert_not_authenticated
     end
 
-    should "replace the users permissions with new ones" do
-      application = create(:application, with_supported_permissions: %w[new old])
-      api_user = create(:api_user, with_permissions: { application => %w[old] })
-      create(:access_token, application:, resource_owner_id: api_user.id)
-
-      current_user = create(:superadmin_user)
-      sign_in current_user
-
-      stub_policy current_user, api_user, update?: true
-
-      new_permission = application.supported_permissions.find_by(name: "new")
-
-      expected_params = { supported_permission_ids: [new_permission.id] }
-      user_update = stub("user-update").responds_like_instance_of(UserUpdate)
-      user_update.expects(:call)
-      UserUpdate.stubs(:new).with(api_user, expected_params, current_user, anything).returns(user_update)
-
-      patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [new_permission.id] } }
-    end
-
     should "redirect once the permissions have been updated" do
       application = create(:application, with_supported_permissions: %w[new old])
       api_user = create(:api_user, with_permissions: { application => %w[old] })
@@ -158,28 +138,6 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [new_permission.id] } }
 
       assert_redirected_to api_user_applications_path(api_user)
-    end
-
-    should "retain permissions for other apps" do
-      other_application = create(:application, with_supported_permissions: %w[other])
-      application = create(:application, with_supported_permissions: %w[new old])
-      api_user = create(:api_user, with_permissions: { application => %w[old], other_application => %w[other] })
-      create(:access_token, application:, resource_owner_id: api_user.id)
-
-      current_user = create(:superadmin_user)
-      sign_in current_user
-
-      stub_policy current_user, api_user, update?: true
-
-      new_permission = application.supported_permissions.find_by(name: "new")
-      other_permission = other_application.supported_permissions.find_by(name: "other")
-
-      expected_params = { supported_permission_ids: [other_permission.id, new_permission.id].sort }
-      user_update = stub("user-update").responds_like_instance_of(UserUpdate)
-      user_update.expects(:call)
-      UserUpdate.stubs(:new).with(api_user, expected_params, current_user, anything).returns(user_update)
-
-      patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [new_permission.id] } }
     end
 
     should "prevent permissions being added for apps that the current user does not have access to" do

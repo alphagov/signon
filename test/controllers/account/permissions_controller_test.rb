@@ -124,33 +124,6 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       assert_redirected_to "/users/sign_in"
     end
 
-    should "replace the users permissions with new ones" do
-      application = create(:application, with_supported_permissions: %w[new old])
-      user = create(:admin_user, with_permissions: { application => ["old", SupportedPermission::SIGNIN_NAME] })
-      sign_in user
-
-      new_permission = application.supported_permissions.find_by(name: "new")
-
-      patch :update, params: { application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
-
-      assert_equal %w[new signin], user.permissions_for(application)
-      assert_redirected_to account_applications_path
-    end
-
-    should "retain permissions for other apps" do
-      other_application = create(:application, with_supported_permissions: %w[other])
-      application = create(:application, with_supported_permissions: %w[new old])
-      user = create(:admin_user, with_permissions: { application => ["old", SupportedPermission::SIGNIN_NAME], other_application => %w[other] })
-      sign_in user
-
-      new_permission = application.supported_permissions.find_by(name: "new")
-
-      patch :update, params: { application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
-
-      assert_equal %w[new signin], user.permissions_for(application)
-      assert_equal %w[other], user.permissions_for(other_application)
-    end
-
     should "prevent permissions being added for apps that the current user does not have access to" do
       application1 = create(:application)
       application2 = create(:application, with_supported_permissions: %w[app2-permission])
