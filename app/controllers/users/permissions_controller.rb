@@ -19,7 +19,12 @@ class Users::PermissionsController < ApplicationController
   def update
     authorize UserApplicationPermission.for(@user, @application)
 
-    supported_permission_ids = build_user_update_params(@user, @permissions.pluck(:id), update_params[:supported_permission_ids].map(&:to_i))
+    supported_permission_ids = UserUpdatePermissionBuilder.new(
+      user: @user,
+      updatable_permission_ids: @permissions.pluck(:id),
+      selected_permission_ids: update_params[:supported_permission_ids].map(&:to_i),
+    ).build
+
     UserUpdate.new(@user, { supported_permission_ids: }, current_user, user_ip_address).call
 
     flash[:application_id] = @application.id
@@ -42,13 +47,5 @@ private
 
   def set_permissions
     @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false)
-  end
-
-  def build_user_update_params(user, updatable_permission_ids, selected_permission_ids)
-    permissions_user_has = user.supported_permissions.pluck(:id)
-    permissions_to_add = updatable_permission_ids.intersection(selected_permission_ids)
-    permissions_to_remove = updatable_permission_ids.difference(selected_permission_ids)
-
-    (permissions_user_has + permissions_to_add - permissions_to_remove).sort
   end
 end
