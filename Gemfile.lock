@@ -74,6 +74,7 @@ GEM
     ancestry (4.3.3)
       activerecord (>= 5.2.6)
     ast (2.4.2)
+    base64 (0.2.0)
     bcrypt (3.1.20)
     better_errors (2.10.1)
       erubi (>= 1.0.0)
@@ -613,7 +614,8 @@ GEM
       sprockets (> 3.0)
       sprockets-rails
       tilt
-    selenium-webdriver (4.16.0)
+    selenium-webdriver (4.17.0)
+      base64 (~> 0.2)
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
