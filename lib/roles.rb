@@ -23,19 +23,15 @@ module Roles
     all.map(&:role_name)
   end
 
-  def self.included(base)
-    base.extend ClassMethods
+  def self.admin_names
+    admin.map(&:role_name)
+  end
 
+  def self.included(base)
     Roles.names.each do |role_name|
       define_method("#{role_name}?") do
         role == role_name
       end
-    end
-  end
-
-  module ClassMethods
-    def admin_roles
-      Roles.admin.map(&:role_name)
     end
   end
 
