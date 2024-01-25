@@ -1,4 +1,9 @@
-Dir["#{File.dirname(__FILE__)}/roles/*.rb"].sort.each { |file| require file }
+require "roles/base"
+require "roles/superadmin"
+require "roles/admin"
+require "roles/super_organisation_admin"
+require "roles/organisation_admin"
+require "roles/normal"
 
 module Roles
   def self.included(base)
