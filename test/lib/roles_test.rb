@@ -35,7 +35,7 @@ class RolesTest < ActiveSupport::TestCase
     end
   end
 
-  context ".admin_roles" do
+  context "Roles.admin_names" do
     should "only include admin role names" do
       expected_role_names = [
         Roles::Admin.role_name,
@@ -44,7 +44,7 @@ class RolesTest < ActiveSupport::TestCase
         Roles::SuperOrganisationAdmin.role_name,
       ]
 
-      assert_same_elements expected_role_names, Subject.admin_roles
+      assert_same_elements expected_role_names, Roles.admin_names
     end
   end
 
