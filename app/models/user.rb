@@ -305,10 +305,6 @@ class User < ApplicationRecord
     two_step_status == TWO_STEP_STATUS_NOT_SET_UP
   end
 
-  def role_class
-    Roles.const_get(role.classify)
-  end
-
   def can_manage?(other_user)
     manageable_roles.include?(other_user.role)
   end

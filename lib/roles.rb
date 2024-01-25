@@ -29,6 +29,10 @@ module Roles
     end
   end
 
+  def role_class
+    Roles.const_get(role.classify)
+  end
+
   def govuk_admin?
     superadmin? || admin?
   end
