@@ -27,12 +27,24 @@ module Roles
     admin.map(&:role_name)
   end
 
-  def self.included(base)
-    Roles.names.each do |role_name|
-      define_method("#{role_name}?") do
-        role == role_name
-      end
-    end
+  def superadmin?
+    role == Roles::Superadmin.role_name
+  end
+
+  def admin?
+    role == Roles::Admin.role_name
+  end
+
+  def super_organisation_admin?
+    role == Roles::SuperOrganisationAdmin.role_name
+  end
+
+  def organisation_admin?
+    role == Roles::OrganisationAdmin.role_name
+  end
+
+  def normal?
+    role == Roles::Normal.role_name
   end
 
   def govuk_admin?
