@@ -22,10 +22,6 @@ module Roles
   def self.included(base)
     base.extend ClassMethods
 
-    base.instance_eval do
-      validates :role, inclusion: { in: Roles.names }
-    end
-
     Roles.names.each do |role_name|
       define_method("#{role_name}?") do
         role == role_name
