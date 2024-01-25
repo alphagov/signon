@@ -15,6 +15,10 @@ module Roles
     ]
   end
 
+  def self.admin
+    all - [Roles::Normal]
+  end
+
   def self.names
     all.map(&:role_name)
   end
@@ -30,12 +34,8 @@ module Roles
   end
 
   module ClassMethods
-    def admin_role_classes
-      role_classes - [Roles::Normal]
-    end
-
     def admin_roles
-      admin_role_classes.map(&:role_name)
+      Roles.admin.map(&:role_name)
     end
   end
 
