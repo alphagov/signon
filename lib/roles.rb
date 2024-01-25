@@ -13,16 +13,8 @@ module Roles
     Roles.const_get(role_name.classify)
   end
 
-  def self.admin
-    all - [Roles::Normal]
-  end
-
   def self.names
     all.map(&:role_name)
-  end
-
-  def self.admin_names
-    admin.map(&:role_name)
   end
 
   def role_class
