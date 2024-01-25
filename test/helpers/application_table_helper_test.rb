@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ApiUsersHelperTest < ActionView::TestCase
+class ApplicationTableHelperTest < ActionView::TestCase
   context "#update_permissions_link" do
     setup do
       @user = create(:api_user)
