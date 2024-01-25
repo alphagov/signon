@@ -22,6 +22,10 @@ module Roles
       %w[normal organisation_admin]
     end
 
+    def self.can_manage?(other_role)
+      manageable_roles.include?(other_role)
+    end
+
     def self.manageable_organisations_for(user)
       Organisation.where(id: user.organisation)
     end
