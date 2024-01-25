@@ -15,14 +15,18 @@ module Roles
     ]
   end
 
+  def self.names
+    all.map(&:role_name)
+  end
+
   def self.included(base)
     base.extend ClassMethods
 
     base.instance_eval do
-      validates :role, inclusion: { in: roles }
+      validates :role, inclusion: { in: Roles.names }
     end
 
-    base.roles.each do |role_name|
+    Roles.names.each do |role_name|
       define_method("#{role_name}?") do
         role == role_name
       end
@@ -36,10 +40,6 @@ module Roles
 
     def admin_roles
       admin_role_classes.map(&:role_name)
-    end
-
-    def roles
-      Roles.all.map(&:role_name)
     end
   end
 

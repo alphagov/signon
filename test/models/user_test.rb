@@ -874,7 +874,7 @@ class UserTest < ActiveSupport::TestCase
       assert_equal %w[normal organisation_admin], build(:organisation_admin_user).manageable_roles
       assert_equal %w[normal organisation_admin super_organisation_admin], build(:super_organisation_admin_user).manageable_roles
       assert_equal %w[normal organisation_admin super_organisation_admin admin], build(:admin_user).manageable_roles
-      assert_equal User.roles, build(:superadmin_user).manageable_roles
+      assert_equal Roles.names, build(:superadmin_user).manageable_roles
     end
   end
 

@@ -21,7 +21,7 @@ module Roles
     end
 
     def self.manageable_roles
-      User.roles
+      Roles.names
     end
 
     def self.manageable_organisations_for(_)
