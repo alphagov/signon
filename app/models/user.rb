@@ -325,7 +325,7 @@ class User < ApplicationRecord
   def set_2sv_for_admin_roles
     return unless GovukEnvironment.production?
 
-    self.require_2sv = true if role_changed? && (govuk_admin? || publishing_manager?)
+    self.require_2sv = true if role_changed? && role_class.require_2sv?
   end
 
   def reset_2sv_exemption_reason
@@ -424,7 +424,7 @@ private
   end
 
   def user_can_be_exempted_from_2sv
-    errors.add(:reason_for_2sv_exemption, "#{role} users cannot be exempted from 2SV. Remove the user's exemption to change their role.") if exempt_from_2sv? && !normal?
+    errors.add(:reason_for_2sv_exemption, "#{role} users cannot be exempted from 2SV. Remove the user's exemption to change their role.") if exempt_from_2sv? && role_class.require_2sv?
   end
 
   def organisation_admin_belongs_to_organisation

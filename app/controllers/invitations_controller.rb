@@ -62,7 +62,7 @@ private
   end
 
   def invitee_requires_2sv(params)
-    organisation(params)&.require_2sv? || Roles.admin_names.include?(params[:role])
+    organisation(params)&.require_2sv? || Roles.find(params[:role])&.require_2sv? || false
   end
 
   def redirect_if_invitee_already_exists
