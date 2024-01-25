@@ -29,5 +29,13 @@ class ApplicationTableHelperTest < ActionView::TestCase
         assert_includes update_permissions_link(application, @user), edit_user_application_permissions_path(@user, application)
       end
     end
+
+    context "when no user is provided" do
+      should "generate a link to edit the permissions" do
+        application = create(:application, with_supported_permissions: %w[permission])
+
+        assert_includes update_permissions_link(application), edit_account_application_permissions_path(application)
+      end
+    end
   end
 end
