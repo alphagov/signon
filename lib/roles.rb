@@ -5,6 +5,16 @@ require "roles/organisation_admin"
 require "roles/normal"
 
 module Roles
+  def self.all
+    [
+      Roles::Superadmin,
+      Roles::Admin,
+      Roles::SuperOrganisationAdmin,
+      Roles::OrganisationAdmin,
+      Roles::Normal,
+    ]
+  end
+
   def self.included(base)
     base.extend ClassMethods
 
@@ -20,16 +30,6 @@ module Roles
   end
 
   module ClassMethods
-    def role_classes
-      [
-        Roles::Superadmin,
-        Roles::Admin,
-        Roles::SuperOrganisationAdmin,
-        Roles::OrganisationAdmin,
-        Roles::Normal,
-      ]
-    end
-
     def admin_role_classes
       role_classes - [Roles::Normal]
     end
@@ -39,7 +39,7 @@ module Roles
     end
 
     def roles
-      role_classes.map(&:role_name)
+      Roles.all.map(&:role_name)
     end
   end
 
