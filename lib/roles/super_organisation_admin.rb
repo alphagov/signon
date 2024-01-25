@@ -25,5 +25,9 @@ module Roles
     def self.manageable_organisations_for(user)
       Organisation.where(id: user.organisation.subtree)
     end
+
+    def self.require_2sv?
+      true
+    end
   end
 end
