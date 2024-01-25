@@ -1,9 +1,3 @@
-require "roles/superadmin"
-require "roles/admin"
-require "roles/super_organisation_admin"
-require "roles/organisation_admin"
-require "roles/normal"
-
 module Roles
   def self.all
     [
