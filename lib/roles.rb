@@ -10,7 +10,7 @@ module Roles
   end
 
   def self.find(role_name)
-    Roles.const_get(role_name.classify)
+    all.find { |role| role.role_name == role_name }
   end
 
   def self.names
