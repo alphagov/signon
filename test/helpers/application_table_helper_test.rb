@@ -65,5 +65,17 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
       assert_includes remove_access_link(application), delete_account_application_signin_permission_path(application)
     end
+
+    context "when provided with a user" do
+      setup do
+        @user = create(:user)
+      end
+
+      should "generate a link to remove users access to the application" do
+        application = create(:application)
+
+        assert_includes remove_access_link(application, @user), delete_user_application_signin_permission_path(@user, application)
+      end
+    end
   end
 end

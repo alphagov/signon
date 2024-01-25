@@ -33,9 +33,15 @@ module ApplicationTableHelper
     end
   end
 
-  def remove_access_link(application)
+  def remove_access_link(application, user = nil)
+    link_path = if user
+                  delete_user_application_signin_permission_path(user, application)
+                else
+                  delete_account_application_signin_permission_path(application)
+                end
+
     link_to(
-      delete_account_application_signin_permission_path(application),
+      link_path,
       class: "govuk-button govuk-button--warning govuk-!-margin-0",
       data: { module: "govuk-button" },
     ) do
