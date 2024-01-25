@@ -1,5 +1,3 @@
-Dir["#{File.dirname(__FILE__)}/roles/*.rb"].sort.each { |file| require file }
-
 module Roles
   def self.included(base)
     base.extend ClassMethods
@@ -17,15 +15,17 @@ module Roles
 
   module ClassMethods
     def role_classes
-      class_names = Roles.constants.select { |c| Roles.const_get(c).is_a?(Class) && Roles.const_get(c) != Roles::Base }
-
-      class_names.map do |role_class|
-        "Roles::#{role_class}".constantize
-      end
+      [
+        Roles::Admin,
+        Roles::Normal,
+        Roles::OrganisationAdmin,
+        Roles::Superadmin,
+        Roles::SuperOrganisationAdmin,
+      ]
     end
 
     def admin_role_classes
-      role_classes - [Roles::Normal, Roles::Base]
+      role_classes - [Roles::Normal]
     end
 
     def admin_roles
