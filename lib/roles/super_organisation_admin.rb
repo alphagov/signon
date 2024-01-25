@@ -18,10 +18,6 @@ module Roles
       "super_organisation_admin"
     end
 
-    def self.level
-      2
-    end
-
     def self.manageable_roles
       %w[normal organisation_admin super_organisation_admin]
     end
