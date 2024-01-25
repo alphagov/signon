@@ -27,6 +27,10 @@ module Roles
     admin.map(&:role_name)
   end
 
+  def role_class
+    Roles.const_get(role.classify)
+  end
+
   def superadmin?
     role == Roles::Superadmin.role_name
   end
