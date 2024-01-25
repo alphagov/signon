@@ -38,4 +38,12 @@ class ApplicationTableHelperTest < ActionView::TestCase
       end
     end
   end
+
+  context "#view_permissions_link" do
+    should "generate a link to view the permissions" do
+      application = create(:application, with_supported_permissions: %w[permission])
+
+      assert_includes view_permissions_link(application), account_application_permissions_path(application)
+    end
+  end
 end

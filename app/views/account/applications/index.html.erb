@@ -44,9 +44,7 @@
           <% if policy([:account, application]).edit_permissions? %>
             <%= update_permissions_link(application) %>
           <% elsif policy([:account, application]).view_permissions? %>
-            <%= link_to account_application_permissions_path(application), class: "govuk-link" do %>
-                View permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
-            <% end %>
+            <%= view_permissions_link(application) %>
           <% end %>
         </td>
         <td class="govuk-table__cell govuk-!-text-align-right">

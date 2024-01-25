@@ -17,4 +17,13 @@ module ApplicationTableHelper
       end
     end
   end
+
+  def view_permissions_link(application)
+    link_to(account_application_permissions_path(application), class: "govuk-link") do
+      safe_join(
+        ["View permissions",
+         content_tag(:span, " for #{application.name}", class: "govuk-visually-hidden")],
+      )
+    end
+  end
 end
