@@ -42,6 +42,6 @@ module Roles
   end
 
   def publishing_manager?
-    [Roles::SuperOrganisationAdmin.role_name, Roles::OrganisationAdmin.role_name].include? role
+    super_organisation_admin? || organisation_admin?
   end
 end
