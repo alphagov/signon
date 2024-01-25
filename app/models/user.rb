@@ -431,7 +431,7 @@ private
   end
 
   def organisation_admin_belongs_to_organisation
-    if %w[organisation_admin super_organisation_admin].include?(role) && organisation_id.blank?
+    if publishing_manager? && organisation_id.blank?
       errors.add(:organisation_id, "can't be 'None' for #{role.titleize}")
     end
   end
