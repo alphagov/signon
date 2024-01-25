@@ -19,5 +19,9 @@ module Roles
     def self.manageable_organisations_for(_)
       Organisation.where("false")
     end
+
+    def self.require_2sv?
+      false
+    end
   end
 end

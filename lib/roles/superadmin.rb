@@ -27,5 +27,9 @@ module Roles
     def self.manageable_organisations_for(_)
       Organisation.all
     end
+
+    def self.require_2sv?
+      true
+    end
   end
 end
