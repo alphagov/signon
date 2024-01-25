@@ -1,4 +1,14 @@
 module Roles
+  def self.all
+    [
+      Roles::Admin,
+      Roles::Normal,
+      Roles::OrganisationAdmin,
+      Roles::Superadmin,
+      Roles::SuperOrganisationAdmin,
+    ].sort_by(&:level)
+  end
+
   def self.included(base)
     base.extend ClassMethods
 
@@ -14,18 +24,8 @@ module Roles
   end
 
   module ClassMethods
-    def role_classes
-      [
-        Roles::Admin,
-        Roles::Normal,
-        Roles::OrganisationAdmin,
-        Roles::Superadmin,
-        Roles::SuperOrganisationAdmin,
-      ].sort_by(&:level)
-    end
-
     def admin_role_classes
-      role_classes - [Roles::Normal]
+      Roles.all - [Roles::Normal]
     end
 
     def admin_roles
@@ -33,7 +33,7 @@ module Roles
     end
 
     def roles
-      role_classes.map(&:role_name)
+      Roles.all.map(&:role_name)
     end
   end
 

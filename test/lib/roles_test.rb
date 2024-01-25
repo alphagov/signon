@@ -8,7 +8,7 @@ class RolesTest < ActiveSupport::TestCase
     attr_accessor :role
   end
 
-  context ".role_classes" do
+  context "Roles.all" do
     should "include all role classes" do
       expected_role_classes = [
         Roles::Normal,
@@ -18,7 +18,7 @@ class RolesTest < ActiveSupport::TestCase
         Roles::SuperOrganisationAdmin,
       ]
 
-      assert_same_elements expected_role_classes, Subject.role_classes
+      assert_same_elements expected_role_classes, Roles.all
     end
   end
 
@@ -96,7 +96,7 @@ class RolesTest < ActiveSupport::TestCase
     end
 
     should "be false if role is anything else" do
-      other_role_classes = Subject.role_classes - [Roles::Superadmin, Roles::Admin]
+      other_role_classes = Roles.all - [Roles::Superadmin, Roles::Admin]
       other_role_classes.each do |role_class|
         @subject.role = role_class.role_name
         assert_not @subject.govuk_admin?
@@ -120,7 +120,7 @@ class RolesTest < ActiveSupport::TestCase
     end
 
     should "be false if role is anything else" do
-      other_role_classes = Subject.role_classes - [Roles::SuperOrganisationAdmin, Roles::OrganisationAdmin]
+      other_role_classes = Roles.all - [Roles::SuperOrganisationAdmin, Roles::OrganisationAdmin]
       other_role_classes.each do |role_class|
         @subject.role = role_class.role_name
         assert_not @subject.publishing_manager?
