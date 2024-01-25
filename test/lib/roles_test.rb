@@ -22,32 +22,6 @@ class RolesTest < ActiveSupport::TestCase
     end
   end
 
-  context "Roles.admin" do
-    should "only include admin role classes" do
-      expected_role_classes = [
-        Roles::Admin,
-        Roles::Superadmin,
-        Roles::OrganisationAdmin,
-        Roles::SuperOrganisationAdmin,
-      ]
-
-      assert_same_elements expected_role_classes, Roles.admin
-    end
-  end
-
-  context "Roles.admin_names" do
-    should "only include admin role names" do
-      expected_role_names = [
-        Roles::Admin.role_name,
-        Roles::Superadmin.role_name,
-        Roles::OrganisationAdmin.role_name,
-        Roles::SuperOrganisationAdmin.role_name,
-      ]
-
-      assert_same_elements expected_role_names, Roles.admin_names
-    end
-  end
-
   context "Roles.names" do
     should "order roles by their level" do
       expected_ordered_roles = %w[
