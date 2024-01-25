@@ -38,7 +38,7 @@ module Roles
   end
 
   def govuk_admin?
-    [Roles::Superadmin.role_name, Roles::Admin.role_name].include? role
+    superadmin? || admin?
   end
 
   def publishing_manager?
