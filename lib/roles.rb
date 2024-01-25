@@ -9,6 +9,10 @@ module Roles
     ].sort_by(&:level)
   end
 
+  def self.find(role_name)
+    Roles.const_get(role_name.classify)
+  end
+
   def self.admin
     all - [Roles::Normal]
   end
@@ -30,7 +34,7 @@ module Roles
   end
 
   def role_class
-    Roles.const_get(role.classify)
+    Roles.find(role)
   end
 
   def govuk_admin?
