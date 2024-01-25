@@ -1,5 +1,5 @@
 module Roles
-  class Superadmin
+  class Superadmin < Base
     def self.permitted_user_params
       [
         :uid,
@@ -22,10 +22,6 @@ module Roles
 
     def self.manageable_roles
       Roles.names
-    end
-
-    def self.can_manage?(other_role)
-      manageable_roles.include?(other_role)
     end
 
     def self.manageable_organisations_for(_)
