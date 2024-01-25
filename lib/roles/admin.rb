@@ -1,5 +1,5 @@
 module Roles
-  class Admin < Base
+  class Admin
     def self.permitted_user_params
       [
         :uid,

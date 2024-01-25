@@ -1,5 +1,5 @@
 module Roles
-  class Normal < Base
+  class Normal
     def self.permitted_user_params
       %i[uid name email password password_confirmation]
     end

@@ -1,5 +1,5 @@
 module Roles
-  class SuperOrganisationAdmin < Base
+  class SuperOrganisationAdmin
     def self.permitted_user_params
       [
         :uid,

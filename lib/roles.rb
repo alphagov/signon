@@ -1,4 +1,3 @@
-require "roles/base"
 require "roles/superadmin"
 require "roles/admin"
 require "roles/super_organisation_admin"
@@ -32,7 +31,7 @@ module Roles
     end
 
     def admin_role_classes
-      role_classes - [Roles::Normal, Roles::Base]
+      role_classes - [Roles::Normal]
     end
 
     def admin_roles
