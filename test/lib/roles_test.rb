@@ -48,7 +48,7 @@ class RolesTest < ActiveSupport::TestCase
     end
   end
 
-  context ".roles" do
+  context "Roles.names" do
     should "order roles by their level" do
       expected_ordered_roles = %w[
         superadmin
@@ -58,24 +58,24 @@ class RolesTest < ActiveSupport::TestCase
         normal
       ]
 
-      assert_equal expected_ordered_roles, Subject.roles
+      assert_equal expected_ordered_roles, Roles.names
     end
   end
 
-  Subject.roles.each do |role|
-    context "##{role}?" do
+  Roles.names.each do |role_name|
+    context "##{role_name}?" do
       setup do
         @subject = Subject.new
       end
 
-      should "return true if subject has the #{role} role" do
-        @subject.role = role
-        assert @subject.send("#{role}?")
+      should "return true if subject has the #{role_name} role" do
+        @subject.role = role_name
+        assert @subject.send("#{role_name}?")
       end
 
-      should "return false if subject does not have #{role} role" do
-        @subject.role = "not-#{role}"
-        assert_not @subject.send("#{role}?")
+      should "return false if subject does not have #{role_name} role" do
+        @subject.role = "not-#{role_name}"
+        assert_not @subject.send("#{role_name}?")
       end
     end
   end
