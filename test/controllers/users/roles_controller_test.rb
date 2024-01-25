@@ -98,7 +98,7 @@ class Users::RolesControllerTest < ActionController::TestCase
 
         put :update, params: { user_id: user, user: { role: Roles::OrganisationAdmin.role_name } }
 
-        assert_equal Roles::OrganisationAdmin.role_name, user.reload.role
+        assert_equal Roles::OrganisationAdmin, user.reload.role
       end
 
       should "record account updated & role change events" do
@@ -154,7 +154,7 @@ class Users::RolesControllerTest < ActionController::TestCase
 
         put :update, params: { user_id: user, user: { role: Roles::OrganisationAdmin.role_name } }
 
-        assert_equal Roles::OrganisationAdmin.role_name, user.reload.role
+        assert_equal Roles::OrganisationAdmin, user.reload.role
       end
 
       should "not update user role if UserPolicy#assign_role? returns false" do
@@ -164,7 +164,7 @@ class Users::RolesControllerTest < ActionController::TestCase
 
         put :update, params: { user_id: user, user: { role: Roles::OrganisationAdmin.role_name } }
 
-        assert_equal Roles::Normal.role_name, user.reload.role
+        assert_equal Roles::Normal, user.reload.role
         assert_not_authorised
       end
 
@@ -173,7 +173,7 @@ class Users::RolesControllerTest < ActionController::TestCase
 
         put :update, params: { user_id: user, user: { role: Roles::OrganisationAdmin.role_name } }
 
-        assert_equal Roles::Normal.role_name, user.reload.role
+        assert_equal Roles::Normal, user.reload.role
 
         assert_select ".govuk-error-summary" do
           assert_select "li", text: /#{Roles::OrganisationAdmin.role_name} users cannot be exempted from 2SV/

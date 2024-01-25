@@ -32,7 +32,7 @@
       <% end %>
     <% else %>
       <%= render "govuk_publishing_components/components/inset_text", {
-        text: current_user.role.humanize,
+        text: current_user.role.role_name.humanize,
       } %>
     <% end %>
   </div>

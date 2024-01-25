@@ -70,7 +70,7 @@ private
   def user_params
     UserParameterSanitiser.new(
       user_params: params.require(:user).permit(:require_2sv).to_h,
-      current_user_role: current_user.role.to_sym,
+      current_user_role: current_user.role.role_name.to_sym,
     ).sanitise
   end
 

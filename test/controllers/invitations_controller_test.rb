@@ -198,7 +198,7 @@ class InvitationsControllerTest < ActionController::TestCase
         assert_equal "invitee", invitee.name
         assert_equal "invitee@gov.uk", invitee.email
         assert_equal @organisation, invitee.organisation
-        assert_equal Roles::OrganisationAdmin.role_name, invitee.role
+        assert_equal Roles::OrganisationAdmin, invitee.role
         assert_equal [permission], invitee.supported_permissions
       end
 
@@ -439,7 +439,7 @@ class InvitationsControllerTest < ActionController::TestCase
 
         invitee = User.last
         assert invitee.present?
-        default_role = Roles::Normal.role_name
+        default_role = Roles::Normal
         assert_equal default_role, invitee.role
       end
     end

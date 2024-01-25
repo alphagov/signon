@@ -134,7 +134,7 @@ module UsersHelper
   end
 
   def summary_list_item_for_role(user)
-    item = { field: "Role", value: user.role.humanize.capitalize }
+    item = { field: "Role", value: user.role.role_name.humanize.capitalize }
     item[:edit] = { href: edit_user_role_path(user) } if policy(user).assign_role?
     item
   end

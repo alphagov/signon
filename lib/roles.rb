@@ -23,7 +23,7 @@ module Roles
 
   all.each do |role_class|
     define_method("#{role_class.role_name}?") do
-      role == role_class.role_name
+      role == role_class
     end
   end
 

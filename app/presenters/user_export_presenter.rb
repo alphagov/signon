@@ -35,7 +35,7 @@ class UserExportPresenter
     [
       user.name,
       user.email,
-      user.role.humanize,
+      user.role.role_name.humanize,
       user.organisation.try(:name),
       user.sign_in_count,
       user.current_sign_in_at.try(:to_formatted_s, :db),

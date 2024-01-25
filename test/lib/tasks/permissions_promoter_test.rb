@@ -36,7 +36,7 @@ class PermissionsPromoterTest < ActiveSupport::TestCase
 
     @task.invoke
 
-    assert non_gds_user.reload.role == "normal"
+    assert non_gds_user.reload.role == Roles::Normal
   end
 
   should "not update a non-GDS user who already has an admin role" do
@@ -44,7 +44,7 @@ class PermissionsPromoterTest < ActiveSupport::TestCase
 
     @task.invoke
 
-    assert admin_user.reload.role == Roles::Admin.role_name
+    assert admin_user.reload.role == Roles::Admin
   end
 
   should "not update a non-GDS user who is suspended" do
@@ -53,7 +53,7 @@ class PermissionsPromoterTest < ActiveSupport::TestCase
 
     @task.invoke
 
-    assert user.reload.role == "normal"
+    assert user.reload.role == Roles::Normal
   end
 
   should "not update GDS users" do
