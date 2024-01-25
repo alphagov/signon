@@ -32,4 +32,14 @@ module ApplicationTableHelper
       )
     end
   end
+
+  def remove_access_link(application)
+    link_to(
+      delete_account_application_signin_permission_path(application),
+      class: "govuk-button govuk-button--warning govuk-!-margin-0",
+      data: { module: "govuk-button" },
+    ) do
+      safe_join(["Remove access", content_tag(:span, " to #{application.name}", class: "govuk-visually-hidden")])
+    end
+  end
 end

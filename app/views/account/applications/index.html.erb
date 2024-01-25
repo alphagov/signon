@@ -49,11 +49,7 @@
         </td>
         <td class="govuk-table__cell govuk-!-text-align-right">
           <% if policy([:account, application]).remove_signin_permission? %>
-            <%= link_to delete_account_application_signin_permission_path(application),
-                        class: "govuk-button govuk-button--warning govuk-!-margin-0",
-                        data: { module: "govuk-button" } do %>
-                Remove access<span class="govuk-visually-hidden"> to <%= application.name %></span>
-            <% end %>
+            <%= remove_access_link(application) %>
           <% end %>
         </td>
       </tr>
