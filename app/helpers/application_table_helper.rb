@@ -72,4 +72,10 @@ module ApplicationTableHelper
       remove_access_link(application, user)
     end
   end
+
+  def account_applications_remove_access_link(application)
+    if policy([:account, application]).remove_signin_permission?
+      remove_access_link(application)
+    end
+  end
 end

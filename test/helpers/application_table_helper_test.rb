@@ -143,4 +143,22 @@ class ApplicationTableHelperTest < ActionView::TestCase
       assert_nil users_applications_remove_access_link(@application, user)
     end
   end
+
+  context "#account_applications_remove_access_link" do
+    setup do
+      @user = build(:user)
+      stubs(:current_user).returns(@user)
+      @application = create(:application)
+    end
+
+    should "generate an update link when the user can remove signing permissions" do
+      stub_policy @user, [:account, @application], remove_signin_permission?: true
+      assert_includes account_applications_remove_access_link(@application), "Remove access"
+    end
+
+    should "return nil when the user cannot remove sigin permissions" do
+      stub_policy @user, [:account, @application], remove_signin_permission?: false
+      assert_nil account_applications_remove_access_link(@application)
+    end
+  end
 end
