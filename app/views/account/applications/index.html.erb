@@ -40,13 +40,7 @@
       <tr class="govuk-table__row">
         <td class="govuk-table__cell"><%= application.name %></td>
         <td class="govuk-table__cell"><%= application.description %></td>
-        <td class="govuk-table__cell govuk-!-text-align-right">
-          <% if policy([:account, application]).edit_permissions? %>
-            <%= update_permissions_link(application) %>
-          <% elsif policy([:account, application]).view_permissions? %>
-            <%= view_permissions_link(application) %>
-          <% end %>
-        </td>
+        <td class="govuk-table__cell govuk-!-text-align-right"><%= account_applications_permissions_link(application) %></td>
         <td class="govuk-table__cell govuk-!-text-align-right">
           <% if policy([:account, application]).remove_signin_permission? %>
             <%= remove_access_link(application) %>

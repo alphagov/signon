@@ -1,4 +1,6 @@
 module ApplicationTableHelper
+  include Pundit::Authorization
+
   def update_permissions_link(application, user = nil)
     link_path = if user.nil?
                   edit_account_application_permissions_path(application)
@@ -46,6 +48,14 @@ module ApplicationTableHelper
       data: { module: "govuk-button" },
     ) do
       safe_join(["Remove access", content_tag(:span, " to #{application.name}", class: "govuk-visually-hidden")])
+    end
+  end
+
+  def account_applications_permissions_link(application)
+    if policy([:account, application]).edit_permissions?
+      update_permissions_link(application)
+    elsif policy([:account, application]).view_permissions?
+      view_permissions_link(application)
     end
   end
 end

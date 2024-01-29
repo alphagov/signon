@@ -1,6 +1,8 @@
 require "test_helper"
 
 class ApplicationTableHelperTest < ActionView::TestCase
+  include PunditHelpers
+
   context "#update_permissions_link" do
     setup do
       @user = create(:api_user)
@@ -76,6 +78,29 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
         assert_includes remove_access_link(application, @user), delete_user_application_signin_permission_path(@user, application)
       end
+    end
+  end
+
+  context "#account_applications_permissions_link" do
+    setup do
+      @user = build(:user)
+      stubs(:current_user).returns(@user)
+      @application = create(:application, with_supported_permissions: %w[permission])
+    end
+
+    should "generate an update link when the user can edit permissions" do
+      stub_policy @user, [:account, @application], edit_permissions?: true
+      assert_includes account_applications_permissions_link(@application), "Update permissions"
+    end
+
+    should "generate a view link when the user can view permissions" do
+      stub_policy @user, [:account, @application], view_permissions?: true
+      assert_includes account_applications_permissions_link(@application), "View permissions"
+    end
+
+    should "return nil when the user can do neither" do
+      stub_policy @user, [:account, @application]
+      assert_nil account_applications_permissions_link(@application)
     end
   end
 end
