@@ -123,4 +123,24 @@ class ApplicationTableHelperTest < ActionView::TestCase
       assert_includes users_applications_permissions_link(@application, user), "View permissions"
     end
   end
+
+  context "#users_applications_remove_access_link" do
+    setup do
+      @application = create(:application, with_supported_permissions: %w[permission])
+    end
+
+    should "generate a remove access link when the user can delete permissions" do
+      user = create(:superadmin_user)
+      stubs(:current_user).returns(user)
+
+      assert_includes users_applications_remove_access_link(@application, user), "Remove access"
+    end
+
+    should "return nil when the user cannot delete permissions" do
+      user = create(:user)
+      stubs(:current_user).returns(user)
+
+      assert_nil users_applications_remove_access_link(@application, user)
+    end
+  end
 end

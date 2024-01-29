@@ -66,4 +66,10 @@ module ApplicationTableHelper
       view_permissions_link(application, user)
     end
   end
+
+  def users_applications_remove_access_link(application, user)
+    if policy(UserApplicationPermission.for(user, application)).delete?
+      remove_access_link(application, user)
+    end
+  end
 end
