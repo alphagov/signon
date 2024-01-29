@@ -103,4 +103,24 @@ class ApplicationTableHelperTest < ActionView::TestCase
       assert_nil account_applications_permissions_link(@application)
     end
   end
+
+  context "#users_applications_permissions_link" do
+    setup do
+      @application = create(:application, with_supported_permissions: %w[permission])
+    end
+
+    should "generate an update link when the user can edit permissions" do
+      user = create(:superadmin_user)
+      stubs(:current_user).returns(user)
+
+      assert_includes users_applications_permissions_link(@application, user), "Update permissions"
+    end
+
+    should "generate a view link when the user cannot edit permissions" do
+      user = create(:user)
+      stubs(:current_user).returns(user)
+
+      assert_includes users_applications_permissions_link(@application, user), "View permissions"
+    end
+  end
 end

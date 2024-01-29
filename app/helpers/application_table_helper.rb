@@ -58,4 +58,12 @@ module ApplicationTableHelper
       view_permissions_link(application)
     end
   end
+
+  def users_applications_permissions_link(application, user)
+    if policy(UserApplicationPermission.for(user, application)).edit?
+      update_permissions_link(application, user)
+    else
+      view_permissions_link(application, user)
+    end
+  end
 end
