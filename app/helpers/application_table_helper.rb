@@ -94,4 +94,10 @@ module ApplicationTableHelper
       safe_join(["Grant access", content_tag(:span, " to #{application.name}", class: "govuk-visually-hidden")])
     end
   end
+
+  def users_applications_grant_access_link(application, user)
+    if policy(UserApplicationPermission.for(user, application)).create?
+      grant_access_link(application, user)
+    end
+  end
 end

@@ -178,4 +178,24 @@ class ApplicationTableHelperTest < ActionView::TestCase
       end
     end
   end
+
+  context "#users_applications_grant_access_link" do
+    setup do
+      @application = create(:application)
+    end
+
+    should "generate a grant access button when the user can create user application permissions" do
+      user = create(:superadmin_user)
+      stubs(:current_user).returns(user)
+
+      assert_includes users_applications_grant_access_link(@application, user), "Grant access"
+    end
+
+    should "return nil when the user cannot create user application permissions" do
+      user = create(:user)
+      stubs(:current_user).returns(user)
+
+      assert_nil users_applications_grant_access_link(@application, user)
+    end
+  end
 end
