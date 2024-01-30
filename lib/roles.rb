@@ -17,11 +17,9 @@ module Roles
     all.map(&:role_name)
   end
 
-  def self.included(base)
-    Roles.names.each do |role_name|
-      define_method("#{role_name}?") do
-        role == role_name
-      end
+  names.each do |role_name|
+    define_method("#{role_name}?") do
+      role == role_name
     end
   end
 
