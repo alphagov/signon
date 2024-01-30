@@ -79,9 +79,15 @@ module ApplicationTableHelper
     end
   end
 
-  def grant_access_link(application)
+  def grant_access_link(application, user = nil)
+    link_path = if user
+                  user_application_signin_permission_path(user, application)
+                else
+                  account_application_signin_permission_path(application)
+                end
+
     button_to(
-      account_application_signin_permission_path(application),
+      link_path,
       class: "govuk-button govuk-!-margin-0",
       data: { module: "govuk-button" },
     ) do

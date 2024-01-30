@@ -168,5 +168,14 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
       assert_includes grant_access_link(application), account_application_signin_permission_path(application)
     end
+
+    context "when given a user" do
+      should "generate a link to grant the user access to the application" do
+        application = create(:application)
+        user = create(:user)
+
+        assert_includes grant_access_link(application, user), user_application_signin_permission_path(user, application)
+      end
+    end
   end
 end
