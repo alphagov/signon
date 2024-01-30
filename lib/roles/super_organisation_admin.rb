@@ -22,10 +22,6 @@ module Roles
       2
     end
 
-    def self.manageable_roles
-      %w[normal organisation_admin super_organisation_admin]
-    end
-
     def self.manageable_organisations_for(user)
       Organisation.where(id: user.organisation.subtree)
     end
