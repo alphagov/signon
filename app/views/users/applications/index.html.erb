@@ -30,30 +30,31 @@
   <% end %>
 <% end %>
 
+<div class="govuk-table--with-actions">
 <%= render "govuk_publishing_components/components/table", {
     caption: "Apps #{@user.name} has access to",
     head: [
       { text: "Name" },
       { text: "Description" },
-      { text: content_tag(:span, "Permissions", class: "govuk-visually-hidden") },
-      { text: content_tag(:span, "Remove access", class: "govuk-visually-hidden") },
+      { text: content_tag(:span, "Actions", class: "govuk-visually-hidden") },
     ],
     rows: @applications_with_signin.map do |application|
     [
       { text: application.name },
       { text: application.description },
-      { text: users_applications_permissions_link(application, @user) },
-      { text: users_applications_remove_access_link(application, @user) }
+      { text: safe_join([users_applications_permissions_link(application, @user), users_applications_remove_access_link(application, @user)]) },
     ]
     end,
 } %>
+</div>
 
+<div class="govuk-table--with-actions">
 <%= render "govuk_publishing_components/components/table", {
     caption: "Apps #{@user.name} does not have access to",
     head: [
       { text: "Name" },
       { text: "Description" },
-      { text: content_tag(:span, "Grant access", class: "govuk-visually-hidden") }
+      { text: content_tag(:span, "Actions", class: "govuk-visually-hidden") }
     ],
     rows: @applications_without_signin.map do |application|
     [
@@ -63,3 +64,4 @@
     ]
     end,
 } %>
+</div>
