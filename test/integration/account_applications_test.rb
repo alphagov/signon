@@ -56,8 +56,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
 
       visit account_applications_path
 
-      heading = find("h2", text: "Apps you don't have access to")
-      table = find("table[aria-labelledby='#{heading['id']}']")
+      table = find("table caption[text()='Apps you don\\'t have access to']").ancestor("table")
 
       assert table.has_content?("app-name")
       assert table.has_content?("app-description")
@@ -117,8 +116,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
       click_on "Remove access to app-name"
       click_on "Confirm"
 
-      heading = find("h2", text: "Apps you don't have access to")
-      table = find("table[aria-labelledby='#{heading['id']}']")
+      table = find("table caption[text()='Apps you don\\'t have access to']").ancestor("table")
       assert table.has_content?("app-name")
     end
   end
