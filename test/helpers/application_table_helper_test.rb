@@ -198,4 +198,22 @@ class ApplicationTableHelperTest < ActionView::TestCase
       assert_nil users_applications_grant_access_link(@application, user)
     end
   end
+
+  context "#account_applications_grant_access_link" do
+    setup do
+      @user = build(:user)
+      stubs(:current_user).returns(@user)
+      @application = create(:application)
+    end
+
+    should "generate a grant access button when the user can grant siginin permission" do
+      stub_policy @user, [:account, Doorkeeper::Application], grant_signin_permission?: true
+      assert_includes account_applications_grant_access_link(@application), "Grant access"
+    end
+
+    should "return nil when the user cannot grant signin permission" do
+      stub_policy @user, [:account, Doorkeeper::Application], grant_signin_permission?: false
+      assert_nil account_applications_grant_access_link(@application)
+    end
+  end
 end

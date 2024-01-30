@@ -100,4 +100,10 @@ module ApplicationTableHelper
       grant_access_link(application, user)
     end
   end
+
+  def account_applications_grant_access_link(application)
+    if policy([:account, Doorkeeper::Application]).grant_signin_permission?
+      grant_access_link(application)
+    end
+  end
 end
