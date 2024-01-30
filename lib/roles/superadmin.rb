@@ -25,7 +25,7 @@ module Roles
     end
 
     def self.manageable_roles
-      %w[superadmin admin super_organisation_admin organisation_admin normal]
+      %w[normal organisation_admin super_organisation_admin admin superadmin]
     end
 
     def self.manageable_organisations_for(_)
