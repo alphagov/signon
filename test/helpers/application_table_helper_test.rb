@@ -161,4 +161,12 @@ class ApplicationTableHelperTest < ActionView::TestCase
       assert_nil account_applications_remove_access_link(@application)
     end
   end
+
+  context "#grant_access_link" do
+    should "generate a link to grant access to the application" do
+      application = create(:application)
+
+      assert_includes grant_access_link(application), account_application_signin_permission_path(application)
+    end
+  end
 end

@@ -78,4 +78,14 @@ module ApplicationTableHelper
       remove_access_link(application)
     end
   end
+
+  def grant_access_link(application)
+    button_to(
+      account_application_signin_permission_path(application),
+      class: "govuk-button govuk-!-margin-0",
+      data: { module: "govuk-button" },
+    ) do
+      safe_join(["Grant access", content_tag(:span, " to #{application.name}", class: "govuk-visually-hidden")])
+    end
+  end
 end
