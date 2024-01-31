@@ -30,18 +30,20 @@
   <% end %>
 <% end %>
 
+<div class="govuk-table--with-actions">
 <%= render "govuk_publishing_components/components/table", {
     caption: "Apps #{@api_user.name} has access to",
     head: [
       { text: "Name" },
       { text: "Description" },
-      { text: content_tag(:span, "Permissions", class: "govuk-visually-hidden") },
+      { text: content_tag(:span, "Actions", class: "govuk-visually-hidden") },
     ],
     rows: @applications.map do |application|
     [
       { text: application.name },
       { text: application.description },
-      { text: update_permissions_link(application, @api_user) || "" }
+      { text: update_permissions_link(application, @api_user) }
     ]
     end,
 } %>
+</div>

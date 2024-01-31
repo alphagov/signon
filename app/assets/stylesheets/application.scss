@@ -85,3 +85,12 @@ $govuk-page-width: 1140px;
     float: right;
   }
 }
+
+.govuk-table--with-actions {
+  .govuk-table__cell:last-child {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+  }
+}

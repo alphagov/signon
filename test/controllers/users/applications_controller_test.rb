@@ -93,8 +93,7 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
 
       get :index, params: { user_id: user }
 
-      heading_id = css_select("h2:contains('Apps #{user.name} does not have access to')").attribute("id").value
-      assert_select "table[aria-labelledby='#{heading_id}']" do
+      assert_select "table:has( > caption[text()='Apps #{user.name} does not have access to'])" do
         assert_select "tr td", text: "app-name"
       end
     end

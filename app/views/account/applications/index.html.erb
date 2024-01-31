@@ -25,73 +25,38 @@
   <% end %>
 <% end %>
 
-<table class="govuk-table">
-  <caption class="govuk-table__caption govuk-table__caption--m">Apps you have access to</caption>
-  <thead class="govuk-table__head">
-    <tr class="govuk-table__row">
-      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
-      <th scope="col" class="govuk-table__header govuk-!-width-one-third">Description</th>
-      <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Permissions</span></th>
-      <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Remove access</span></th>
-    </tr>
-  </thead>
-  <tbody class="govuk-table__body">
-    <% @applications_with_signin.each do |application| %>
-      <tr class="govuk-table__row">
-        <td class="govuk-table__cell"><%= application.name %></td>
-        <td class="govuk-table__cell"><%= application.description %></td>
-        <td class="govuk-table__cell govuk-!-text-align-right">
-          <% if policy([:account, application]).edit_permissions? %>
-            <% unless application.sorted_supported_permissions_grantable_from_ui(include_signin: false).empty? %>
-              <%= link_to edit_account_application_permissions_path(application), class: "govuk-link" do %>
-                Update permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
-              <% end %>
-            <% end %>
-          <% elsif policy([:account, application]).view_permissions? %>
-            <%= link_to account_application_permissions_path(application), class: "govuk-link" do %>
-                View permissions<span class="govuk-visually-hidden"> for <%= application.name %></span>
-            <% end %>
-          <% end %>
-        </td>
-        <td class="govuk-table__cell govuk-!-text-align-right">
-          <% if policy([:account, application]).remove_signin_permission? %>
-            <%= link_to delete_account_application_signin_permission_path(application),
-                        class: "govuk-button govuk-button--warning govuk-!-margin-0",
-                        data: { module: "govuk-button" } do %>
-                Remove access<span class="govuk-visually-hidden"> to <%= application.name %></span>
-            <% end %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="govuk-table--with-actions">
+<%= render "govuk_publishing_components/components/table", {
+    caption: "Apps you have access to",
+    head: [
+      { text: "Name" },
+      { text: "Description" },
+      { text: content_tag(:span, "Actions", class: "govuk-visually-hidden") },
+    ],
+    rows: @applications_with_signin.map do |application|
+    [
+      { text: application.name },
+      { text: application.description },
+      { text: safe_join([account_applications_permissions_link(application), account_applications_remove_access_link(application)]) },
+    ]
+    end,
+} %>
+</div>
 
-<h2 class="govuk-heading-m" id="other-apps-table-heading">Apps you don't have access to</h2>
-
-<table class="govuk-table" aria-labelledby="other-apps-table-heading">
-  <thead class="govuk-table__head">
-    <tr class="govuk-table__row">
-      <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Name</th>
-      <th scope="col" class="govuk-table__header govuk-!-width-one-third">Description</th>
-      <th scope="col" class="govuk-table__header"><span class="govuk-visually-hidden">Grant access</span></th>
-    </tr>
-  </thead>
-  <tbody class="govuk-table__body">
-    <% @applications_without_signin.each do |application| %>
-      <tr class="govuk-table__row">
-        <td class="govuk-table__cell"><%= application.name %></td>
-        <td class="govuk-table__cell"><%= application.description %></td>
-        <td class="govuk-table__cell govuk-!-text-align-right">
-          <% if policy([:account, Doorkeeper::Application]).grant_signin_permission? %>
-            <%= button_to account_application_signin_permission_path(application),
-                          class: "govuk-button govuk-!-margin-0",
-                          data: { module: "govuk-button" } do %>
-                Grant access<span class="govuk-visually-hidden"> to <%= application.name %></span>
-            <% end %>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="govuk-table--with-actions">
+<%= render "govuk_publishing_components/components/table", {
+    caption: "Apps you don't have access to",
+    head: [
+      { text: "Name" },
+      { text: "Description" },
+      { text: content_tag(:span, "Actions", class: "govuk-visually-hidden") }
+    ],
+    rows: @applications_without_signin.map do |application|
+    [
+      { text: application.name },
+      { text: application.description },
+      { text: account_applications_grant_access_link(application) }
+    ]
+    end,
+} %>
+</div>

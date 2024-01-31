@@ -11,8 +11,7 @@ class UserApplicationsTest < ActionDispatch::IntegrationTest
 
     visit user_applications_path(user)
 
-    heading = find("h2", text: "Apps user-name does not have access to")
-    table = find("table[aria-labelledby='#{heading['id']}']")
+    table = find("table caption[text()='Apps user-name does not have access to']").ancestor("table")
     assert table.has_content?("app-name")
 
     click_on "Grant access to app-name"
@@ -38,8 +37,7 @@ class UserApplicationsTest < ActionDispatch::IntegrationTest
     click_on "Remove access to app-name"
     click_on "Confirm"
 
-    heading = find("h2", text: "Apps user-name does not have access to")
-    table = find("table[aria-labelledby='#{heading['id']}']")
+    table = find("table caption[text()='Apps user-name does not have access to']").ancestor("table")
     assert table.has_content?("app-name")
   end
 
