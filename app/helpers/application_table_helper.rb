@@ -10,13 +10,15 @@ module ApplicationTableHelper
                   edit_user_application_permissions_path(user, application)
                 end
 
-    unless application.sorted_supported_permissions_grantable_from_ui(include_signin: false).empty?
+    if application.sorted_supported_permissions_grantable_from_ui(include_signin: false).any?
       link_to(link_path, class: "govuk-link") do
         safe_join(
           ["Update permissions",
            content_tag(:span, " for #{application.name}", class: "govuk-visually-hidden")],
         )
       end
+    else
+      ""
     end
   end
 
@@ -56,6 +58,8 @@ module ApplicationTableHelper
       update_permissions_link(application)
     elsif policy([:account, application]).view_permissions?
       view_permissions_link(application)
+    else
+      ""
     end
   end
 
@@ -70,12 +74,16 @@ module ApplicationTableHelper
   def users_applications_remove_access_link(application, user)
     if policy(UserApplicationPermission.for(user, application)).delete?
       remove_access_link(application, user)
+    else
+      ""
     end
   end
 
   def account_applications_remove_access_link(application)
     if policy([:account, application]).remove_signin_permission?
       remove_access_link(application)
+    else
+      ""
     end
   end
 
@@ -98,12 +106,16 @@ module ApplicationTableHelper
   def users_applications_grant_access_link(application, user)
     if policy(UserApplicationPermission.for(user, application)).create?
       grant_access_link(application, user)
+    else
+      ""
     end
   end
 
   def account_applications_grant_access_link(application)
     if policy([:account, Doorkeeper::Application]).grant_signin_permission?
       grant_access_link(application)
+    else
+      ""
     end
   end
 end

@@ -14,10 +14,10 @@ class ApplicationTableHelperTest < ActionView::TestCase
       assert_includes update_permissions_link(application, @user), edit_api_user_application_permissions_path(@user, application)
     end
 
-    should "return nil when the application has no grantable permissions" do
+    should "return an empty string when the application has no grantable permissions" do
       application = create(:application)
 
-      assert_nil update_permissions_link(application, @user)
+      assert update_permissions_link(application, @user).empty?
     end
 
     context "for a user" do
@@ -98,9 +98,9 @@ class ApplicationTableHelperTest < ActionView::TestCase
       assert_includes account_applications_permissions_link(@application), "View permissions"
     end
 
-    should "return nil when the user can do neither" do
+    should "return an empty string when the user can do neither" do
       stub_policy @user, [:account, @application]
-      assert_nil account_applications_permissions_link(@application)
+      assert account_applications_permissions_link(@application).empty?
     end
   end
 
@@ -136,11 +136,11 @@ class ApplicationTableHelperTest < ActionView::TestCase
       assert_includes users_applications_remove_access_link(@application, user), "Remove access"
     end
 
-    should "return nil when the user cannot delete permissions" do
+    should "return an empty string when the user cannot delete permissions" do
       user = create(:user)
       stubs(:current_user).returns(user)
 
-      assert_nil users_applications_remove_access_link(@application, user)
+      assert users_applications_remove_access_link(@application, user).empty?
     end
   end
 
@@ -156,9 +156,9 @@ class ApplicationTableHelperTest < ActionView::TestCase
       assert_includes account_applications_remove_access_link(@application), "Remove access"
     end
 
-    should "return nil when the user cannot remove sigin permissions" do
+    should "return an empty string when the user cannot remove sigin permissions" do
       stub_policy @user, [:account, @application], remove_signin_permission?: false
-      assert_nil account_applications_remove_access_link(@application)
+      assert account_applications_remove_access_link(@application).empty?
     end
   end
 
@@ -191,11 +191,11 @@ class ApplicationTableHelperTest < ActionView::TestCase
       assert_includes users_applications_grant_access_link(@application, user), "Grant access"
     end
 
-    should "return nil when the user cannot create user application permissions" do
+    should "return an empty string when the user cannot create user application permissions" do
       user = create(:user)
       stubs(:current_user).returns(user)
 
-      assert_nil users_applications_grant_access_link(@application, user)
+      assert users_applications_grant_access_link(@application, user).empty?
     end
   end
 
@@ -211,9 +211,9 @@ class ApplicationTableHelperTest < ActionView::TestCase
       assert_includes account_applications_grant_access_link(@application), "Grant access"
     end
 
-    should "return nil when the user cannot grant signin permission" do
+    should "return an empty string when the user cannot grant signin permission" do
       stub_policy @user, [:account, Doorkeeper::Application], grant_signin_permission?: false
-      assert_nil account_applications_grant_access_link(@application)
+      assert account_applications_grant_access_link(@application).empty?
     end
   end
 end
