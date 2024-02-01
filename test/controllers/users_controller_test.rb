@@ -320,7 +320,7 @@ class UsersControllerTest < ActionController::TestCase
 
         get :edit, params: { id: user }
 
-        assert_select "a[href='#{edit_user_invitation_resend_path(user)}']", text: "Resend signup email"
+        assert_select "a[href='#{edit_user_invitation_resend_path(user)}']", text: "Resend invitation email"
       end
 
       should "display link to unlock user page" do

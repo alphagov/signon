@@ -1,5 +1,5 @@
 <% content_for :title_caption, "Manage other users" %>
-<% content_for :title, "Resend signup email for #{@user.name}" %>
+<% content_for :title, "Resend invitation email for #{@user.name}" %>
 
 <% content_for :breadcrumbs,
    render("govuk_publishing_components/components/breadcrumbs", {
@@ -30,7 +30,7 @@
 
       <div class="govuk-button-group">
         <%= render "govuk_publishing_components/components/button", {
-          text: "Resend signup email",
+          text: "Resend invitation email",
         } %>
         <%= link_to "Cancel", edit_user_path(@user), class: "govuk-link govuk-link--no-visited-state" %>
       </div>

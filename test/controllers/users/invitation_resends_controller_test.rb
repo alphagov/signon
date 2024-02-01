@@ -18,7 +18,7 @@ class Users::InvitationResendsControllerTest < ActionController::TestCase
 
         assert_template :edit
         assert_select "form[action='#{user_invitation_resend_path(user)}']" do
-          assert_select "button[type='submit']", text: "Resend signup email"
+          assert_select "button[type='submit']", text: "Resend invitation email"
           assert_select "a[href='#{edit_user_path(user)}']", text: "Cancel"
         end
       end
@@ -87,7 +87,7 @@ class Users::InvitationResendsControllerTest < ActionController::TestCase
         sign_in(@admin)
       end
 
-      should "resend signup email" do
+      should "resend invitation email" do
         user = create(:invited_user)
 
         perform_enqueued_jobs do
@@ -131,10 +131,10 @@ class Users::InvitationResendsControllerTest < ActionController::TestCase
         put :update, params: { user_id: user }
 
         assert_redirected_to edit_user_path(user)
-        assert_equal "Resent account signup email to user@gov.uk", flash[:notice]
+        assert_equal "Resent account invitation email to user@gov.uk", flash[:notice]
       end
 
-      should "resend signup email if UserPolicy#resend_invitation? returns true" do
+      should "resend invitation email if UserPolicy#resend_invitation? returns true" do
         user = create(:invited_user)
 
         stub_policy(@admin, user, resend_invitation?: true)
@@ -144,7 +144,7 @@ class Users::InvitationResendsControllerTest < ActionController::TestCase
         end
       end
 
-      should "not resend signup email if UserPolicy#resend_invitation? returns false" do
+      should "not resend invitation email if UserPolicy#resend_invitation? returns false" do
         user = create(:invited_user)
 
         stub_policy(@admin, user, resend_invitation?: false)

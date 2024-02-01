@@ -10,7 +10,7 @@ In the first instance, a new email should be requested. The route is different d
 
 ### New user account
 
-As a superadmin user, in Signon, find the user and press the 'Resend signup email' button.
+As a superadmin user, in Signon, find the user and press the 'Resend invitation email' button.
 
 ### Password reset email
 

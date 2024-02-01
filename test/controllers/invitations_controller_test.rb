@@ -417,7 +417,7 @@ class InvitationsControllerTest < ActionController::TestCase
         post :create, params: { user: { name: existing_user.name, email: existing_user.email } }
 
         assert_redirected_to users_path
-        assert_equal "User already invited. If you want to, you can click 'Resend signup email'.", flash[:alert]
+        assert_equal "User already invited. If you want to, you can click 'Resend invitation email'.", flash[:alert]
       end
     end
 
