@@ -256,10 +256,10 @@ class Users::NamesControllerTest < ActionController::TestCase
         put :update, params: { user_id: user, user: { name: "" } }
 
         assert_select ".govuk-error-summary" do
-          assert_select "a", href: "#user_name", text: "Name can't be blank"
+          assert_select "a", href: "#user_name", text: "Enter a name for the user"
         end
         assert_select ".govuk-form-group" do
-          assert_select ".govuk-error-message", text: "Error: Name can't be blank"
+          assert_select ".govuk-error-message", text: "Error: Enter a name for the user"
           assert_select "input[name='user[name]'].govuk-input--error"
         end
       end
