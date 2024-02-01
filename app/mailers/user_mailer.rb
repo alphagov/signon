@@ -45,7 +45,7 @@ class UserMailer < Devise::Mailer
 
   def notify_reset_password_disallowed_due_to_unaccepted_invitation(user)
     @user = user
-    view_mail(template_id, to: @user.email, subject: "Your #{app_name} account has not been activated")
+    view_mail(template_id, to: @user.email, subject: "Cannot reset GOV.UK password on inactive Signon GOV.UK #{account_name}")
   end
 
   def email_changed_by_admin_notification(user, email_was, to_address)
