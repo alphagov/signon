@@ -118,6 +118,7 @@ Rails.application.routes.draw do
 
   get "/signin-required" => "root#signin_required"
   get "/privacy-notice" => "root#privacy_notice"
+  get "/accessibility-statement" => "root#accessibility_statement"
 
   root to: "root#index"
 

@@ -1,0 +1,123 @@
+<% content_for :title, "Accessibility statement" %>
+<% content_for :page_heading, "GOV.UK Publisher Signon ‒ Accessibility statement" %>
+
+<p class="govuk-body">This statement applies to content published on the signon.publishing.service.gov.uk domain. It does not apply to content on service.gov.uk subdomains (for example, www.registertovote.service.gov.uk) or on GOV.UK.</p>
+
+<p class="govuk-body">This website is run by the Government Digital Service. It is designed to be used by as many people as possible. The text should be clear and simple to understand. You should be able to:</p>
+
+<%= render "govuk_publishing_components/components/list", {
+  visible_counters: true,
+  items: [
+    "zoom in up to 300% without problems",
+    "navigate most of the website using just a keyboard",
+    "navigate most of the website using speech recognition software",
+    "use most of the website using a screen reader (including the most recent versions of JAWS, NVDA and VoiceOver)",
+  ]
+} %>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "How accessible this website is",
+  padding: true,
+} %>
+
+<p class="govuk-body">Parts of this website are not fully accessible. For example:</p>
+
+<%= render "govuk_publishing_components/components/list", {
+  visible_counters: true,
+  items: [
+    "pages with a contents section are incorrectly structured when viewed at 300% zoom",
+  ]
+} %>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "GOV.UK services",
+  padding: true,
+} %>
+
+<p class="govuk-body">Each service has its own accessibility page, with details of how accessible the service is, how to report problems and how to request information in an alternative format. You can access these pages from the footer inside the service.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Feedback and contact information",
+  padding: true,
+} %>
+
+<p class="govuk-body"><%= link_to "Tell us if you need information in a different format.", "https://www.gov.uk/contact/govuk", class: "govuk-link" %></p>
+
+<p class="govuk-body">In your message, include:</p>
+
+<%= render "govuk_publishing_components/components/list", {
+  visible_counters: true,
+  items: [
+    "the web address (URL) of the content",
+    "your email address and name",
+    "the format you need – for example, plain text, braille, BSL, large print or audio CD",
+  ]
+} %>
+
+<p class="govuk-body">You can request a PDF in an accessible format from its page. Click ‘Request an accessible format’ to contact the organisation that published the document.</p>
+
+<p class="govuk-body">You can also view the organisation’s <%= link_to "accessible document policy", "https://www.gov.uk/search/all?parent=&keywords=%22accessible+document+policy%22&level_one_taxon=a544d48b-1e9e-47fb-b427-7a987c658c14&level_two_taxon=&manual=&public_timestamp%5Bfrom%5D=&public_timestamp%5Bto%5D=&topical_events=&order=relevance" %> to report any problems or request documents in an alternative format.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Reporting accessibility problems with this website",
+  padding: true,
+} %>
+
+<p class="govuk-body">If you find any problems that are not listed on this page or you think we’re not meeting the accessibility requirements, <%= link_to "contact us", "https://www.gov.uk/contact/govuk" %>.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Enforcement procedure",
+  padding: true,
+} %>
+
+<p class="govuk-body">If you contact us with a complaint and you’re not happy with our response <%= link_to "contact the Equality Advisory and Support Service (EASS)", "https://www.equalityadvisoryservice.com/" %>.</p>
+
+<p class="govuk-body">The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018 (the ‘accessibility regulations’).</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Technical information about this website’s accessibility",
+  padding: true,
+} %>
+
+<p class="govuk-body">The Government Digital Service is committed to making its websites accessible, in accordance with the Public Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Compliance status",
+  padding: true,
+} %>
+
+<p class="govuk-body">This website is partially compliant with the <%= link_to "Web Content Accessibility Guidelines version 2.2", "https://www.w3.org/TR/WCAG22/" %> AA standard.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Non-accessible content",
+  padding: true,
+  heading_level: 3,
+  font_size: "s",
+} %>
+
+<p class="govuk-body">The content listed below is non-accessible for the following reasons.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Non-compliance with the accessibility regulations",
+  padding: true,
+  heading_level: 4,
+  font_size: "s",
+} %>
+
+<p class="govuk-body">The page contents list does not have correct semantic markup when viewed at 300%, or greater.</p>
+
+<p class="govuk-body">This fails WCAG 2.2 success criterion 1.3.1: (Info and Relationships).</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "What we’re doing to improve accessibility",
+  padding: true,
+} %>
+
+<p class="govuk-body">We are working with contractors to ensure that pages with a contents list are correctly structured. A fix is expected to be in place by spring 2024.</p>
+
+<%= render "govuk_publishing_components/components/heading", {
+  text: "Preparation of this accessibility statement",
+  padding: true,
+} %>
+
+<p class="govuk-body">This statement was prepared on 10 January 2024. It was last reviewed on 10 January 2024.</p>

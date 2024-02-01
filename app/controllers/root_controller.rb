@@ -1,6 +1,6 @@
 class RootController < ApplicationController
   include UserPermissionsControllerMethods
-  before_action :authenticate_user!, except: :privacy_notice
+  before_action :authenticate_user!, except: %i[privacy_notice accessibility_statement]
   skip_after_action :verify_authorized
 
   def index
@@ -14,6 +14,8 @@ class RootController < ApplicationController
   end
 
   def privacy_notice; end
+
+  def accessibility_statement; end
 
 private
 
