@@ -73,7 +73,7 @@ class UserMailer < Devise::Mailer
   def confirmation_instructions(user, token, _opts = {})
     @user = user
     @token = token
-    view_mail(template_id, to: @user.unconfirmed_email, subject: t("devise.mailer.confirmation_instructions.subject"))
+    view_mail(template_id, to: @user.unconfirmed_email, subject: t("devise.mailer.confirmation_instructions.subject", account_name:))
   end
 
   def email_changed(user, _opts = {})

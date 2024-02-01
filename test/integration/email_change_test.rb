@@ -107,7 +107,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
 
         confirmation_email, notification_email = *ActionMailer::Base.deliveries[-2..]
         assert_equal "new@email.com", confirmation_email.to.first
-        assert_equal "Confirm your email change", confirmation_email.subject
+        assert_equal "Confirm changes to your GOV.UK Signon development account", confirmation_email.subject
         assert_equal "original@email.com", notification_email.to.first
         assert_match(/Your .* Signon development email address is being changed/, notification_email.subject)
       end
@@ -121,8 +121,8 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         click_link "Change your email"
         fill_in "Email", with: "new@email.com"
         click_button "Change email"
-
-        first_email_sent_to("new@email.com").find_link(href: false).click
+        confirmation_url = first_email_sent_to("new@email.com").find_link(href: false)[:href].sub(/\)$/, "")
+        visit confirmation_url
 
         signout
         signin_with(create(:admin_user))

@@ -53,7 +53,7 @@ en:
       failure: 'Could not authorize you from %{kind} because "%{reason}".'
     mailer:
       confirmation_instructions:
-        subject: 'Confirm your email change'
+        subject: 'Confirm changes to your GOV.UK Signon %{account_name}'
       reset_password_instructions:
         subject: 'Reset password for GOV.UK publishing account'
       unlock_instructions:

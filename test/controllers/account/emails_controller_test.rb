@@ -35,7 +35,7 @@ class Account::EmailsControllerTest < ActionController::TestCase
           assert_equal "old@email.com", @user.email
 
           confirmation_email = ActionMailer::Base.deliveries[-2]
-          assert_equal "Confirm your email change", confirmation_email.subject
+          assert_equal "Confirm changes to your GOV.UK Signon development account", confirmation_email.subject
           assert_equal "new@email.com", confirmation_email.to.first
 
           email_changed_notification = ActionMailer::Base.deliveries.last
@@ -83,7 +83,7 @@ class Account::EmailsControllerTest < ActionController::TestCase
 
         put :resend_email_change
 
-        assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+        assert_equal "Confirm changes to your GOV.UK Signon development account", ActionMailer::Base.deliveries.last.subject
       end
     end
 

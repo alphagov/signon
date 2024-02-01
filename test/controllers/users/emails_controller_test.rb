@@ -372,7 +372,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
 
           put :resend_email_change, params: { user_id: user }
 
-          assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+          assert_equal "Confirm changes to your GOV.UK Signon development account", ActionMailer::Base.deliveries.last.subject
         end
       end
 
