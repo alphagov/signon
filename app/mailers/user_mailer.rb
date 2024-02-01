@@ -40,7 +40,7 @@ class UserMailer < Devise::Mailer
 
   def notify_reset_password_disallowed_due_to_suspension(user)
     @user = user
-    view_mail(template_id, to: @user.email, subject: suspension_notification_subject)
+    view_mail(template_id, to: @user.email, subject: "Cannot reset password on suspended Signon GOV.UK #{account_name}")
   end
 
   def notify_reset_password_disallowed_due_to_unaccepted_invitation(user)
