@@ -51,7 +51,7 @@ class UserMailer < Devise::Mailer
   def email_changed_by_admin_notification(user, email_was, to_address)
     @user = user
     @email_was = email_was
-    view_mail(template_id, to: to_address, subject: "Your #{app_name} email address has been updated")
+    view_mail(template_id, to: to_address, subject: "Your #{app_name} login details have changed")
   end
 
   def email_changed_notification(user)

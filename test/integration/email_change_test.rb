@@ -18,7 +18,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
           admin_changes_email_address(user:, new_email: "new@email.com")
 
           assert_equal "new@email.com", last_email.to[0]
-          assert_match(/Your .* Signon development email address has been updated/, last_email.subject)
+          assert_match(/Your .* Signon development login details have changed/, last_email.subject)
         end
       end
 
