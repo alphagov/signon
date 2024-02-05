@@ -5,6 +5,11 @@ class RootControllerTest < ActionController::TestCase
     create(:application, name: "Support")
   end
 
+  test "visiting root#accessibility_statement should succeed" do
+    get :accessibility_statement
+    assert_equal "200", response.code
+  end
+
   test "visiting root#index should require authentication" do
     get :index
     assert_equal "302", response.code
