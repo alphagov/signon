@@ -133,10 +133,10 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
         user = User.find_by(email: "fred@example.com")
         visit edit_user_path(user)
 
-        click_link "Resend signup email"
-        click_button "Resend signup email"
+        click_link "Resend invitation email"
+        click_button "Resend invitation email"
 
-        assert page.has_content?("Resent account signup email")
+        assert page.has_content?("Resent account invitation email")
         emails_received = all_emails.count { |email| email.subject == I18n.t("devise.mailer.invitation_instructions.subject") }
         assert_equal 2, emails_received
       end
@@ -195,7 +195,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       fill_in "Name", with: "Fred Bloggs"
       click_button "Create user and send email"
 
-      assert_response_contains("Email can't be blank")
+      assert_response_contains("Enter an email for the user")
     end
   end
 

@@ -47,7 +47,7 @@ class BatchInvitationUserTest < ActiveSupport::TestCase
       user = build(:batch_invitation_user, email: "piers.quinn@yahoo.co.uk")
 
       assert_not user.valid?
-      assert_includes user.errors[:email], "not accepted. Please enter a workplace email to continue."
+      assert_includes user.errors[:email], "Enter a valid workplace email address, like name@department.gov.uk"
     end
 
     should "not allow user to be updated with a known non-government email address" do

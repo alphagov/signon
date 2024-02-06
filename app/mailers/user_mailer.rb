@@ -40,18 +40,18 @@ class UserMailer < Devise::Mailer
 
   def notify_reset_password_disallowed_due_to_suspension(user)
     @user = user
-    view_mail(template_id, to: @user.email, subject: suspension_notification_subject)
+    view_mail(template_id, to: @user.email, subject: "Cannot reset password on suspended Signon GOV.UK #{account_name}")
   end
 
   def notify_reset_password_disallowed_due_to_unaccepted_invitation(user)
     @user = user
-    view_mail(template_id, to: @user.email, subject: "Your #{app_name} account has not been activated")
+    view_mail(template_id, to: @user.email, subject: "Cannot reset GOV.UK password on inactive Signon GOV.UK #{account_name}")
   end
 
   def email_changed_by_admin_notification(user, email_was, to_address)
     @user = user
     @email_was = email_was
-    view_mail(template_id, to: to_address, subject: "Your #{app_name} email address has been updated")
+    view_mail(template_id, to: to_address, subject: "Your #{app_name} login details have changed")
   end
 
   def email_changed_notification(user)
@@ -73,7 +73,7 @@ class UserMailer < Devise::Mailer
   def confirmation_instructions(user, token, _opts = {})
     @user = user
     @token = token
-    view_mail(template_id, to: @user.unconfirmed_email, subject: t("devise.mailer.confirmation_instructions.subject"))
+    view_mail(template_id, to: @user.unconfirmed_email, subject: t("devise.mailer.confirmation_instructions.subject", account_name:))
   end
 
   def email_changed(user, _opts = {})

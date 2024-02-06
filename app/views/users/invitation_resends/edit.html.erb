@@ -1,5 +1,5 @@
 <% content_for :title_caption, "Manage other users" %>
-<% content_for :title, "Resend signup email for #{@user.name}" %>
+<% content_for :title, "Resend invitation email for #{@user.name}" %>
 
 <% content_for :breadcrumbs,
    render("govuk_publishing_components/components/breadcrumbs", {
@@ -25,12 +25,12 @@
   <div class="govuk-grid-column-two-thirds">
     <%= form_for @user, url: user_invitation_resend_path(@user) do %>
       <%= render "govuk_publishing_components/components/hint", {
-        text: "Invitation not accepted. This user hasn't clicked on the link in their signup mail yet."
+        text: "This user has not activated their account. You can send a new invitation email."
       } %>
 
       <div class="govuk-button-group">
         <%= render "govuk_publishing_components/components/button", {
-          text: "Resend signup email",
+          text: "Resend invitation email",
         } %>
         <%= link_to "Cancel", edit_user_path(@user), class: "govuk-link govuk-link--no-visited-state" %>
       </div>

@@ -3,7 +3,7 @@ class RejectNonGovernmentalEmailAddressesValidator < ActiveModel::EachValidator
     aol btinternet gmail hotmail outlook yahoo
   ].freeze
 
-  MESSAGE = "not accepted. Please enter a workplace email to continue.".freeze
+  MESSAGE = "Enter a valid workplace email address, like name@department.gov.uk".freeze
 
   def validate_each(record, attribute, value)
     return if value.blank?

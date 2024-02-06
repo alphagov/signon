@@ -161,7 +161,7 @@ module UsersHelper
     return unless policy(user).resend_invitation?
     return unless user.invited_but_not_yet_accepted?
 
-    link_to "Resend signup email", edit_user_invitation_resend_path(user), class: "govuk-link"
+    link_to "Resend invitation email", edit_user_invitation_resend_path(user), class: "govuk-link"
   end
 
   def link_to_unlock(user)

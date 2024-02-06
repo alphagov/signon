@@ -68,7 +68,7 @@ private
   def redirect_if_invitee_already_exists
     if (resource = User.find_by(email: params[:user][:email]))
       authorize resource
-      flash[:alert] = "User already invited. If you want to, you can click 'Resend signup email'."
+      flash[:alert] = "User already invited. If you want to, you can click 'Resend invitation email'."
       respond_with resource, location: users_path
     end
   end

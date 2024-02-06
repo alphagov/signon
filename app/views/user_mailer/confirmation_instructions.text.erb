@@ -1,9 +1,5 @@
-You can confirm the email change through the link below:
+You asked to change the email address for your <%= GovukEnvironment.name %> Signon account to <%= @user.unconfirmed_email %>.
 
-<%= confirmation_url(@user, :confirmation_token => @token) %>
+[Confirm your new email address](<%= confirmation_url(@user, :confirmation_token => @token) %>) to complete this change. This link will expire in 2 weeks.
 
-If you believe this has reached you in error, please ignore this email.
-
-Until you follow the link above, your registered address will be unchanged.
-
-The link will be valid for two weeks.
+Ignore this message if you no longer want to change the email address for your Signon account.

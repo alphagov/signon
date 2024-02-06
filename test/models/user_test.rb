@@ -325,7 +325,16 @@ class UserTest < ActiveSupport::TestCase
       user = build(:user, email: nil)
 
       assert_not user.valid?
-      assert_equal ["can't be blank"], user.errors[:email]
+      assert_equal ["Enter an email for the user"], user.errors[:email]
+    end
+
+    should "require a unique email address" do
+      email = "user@example.com"
+      create(:user, email:)
+      user = build(:user, email:)
+
+      assert_not user.valid?
+      assert_equal ["That email address has been taken. Enter another in the correct format, like name@department.gov.uk"], user.errors[:email]
     end
 
     should "accept valid emails" do
@@ -346,7 +355,7 @@ class UserTest < ActiveSupport::TestCase
       user = build(:user, email: "piers.quinn@yahoo.co.uk")
 
       assert_not user.valid?
-      assert_equal ["not accepted. Please enter a workplace email to continue."],
+      assert_equal ["Enter a valid workplace email address, like name@department.gov.uk"],
                    user.errors[:email]
     end
 
@@ -368,7 +377,7 @@ class UserTest < ActiveSupport::TestCase
         user.email = email
 
         assert_not user.valid?, "Expected user to be invalid with email: '#{email}'"
-        assert_equal ["is invalid"], user.errors[:email]
+        assert_equal ["Enter an email address in the correct format, like name@department.gov.uk"], user.errors[:email]
       end
     end
 
@@ -384,6 +393,15 @@ class UserTest < ActiveSupport::TestCase
 
       assert_not user.valid?
       assert_equal ["can't contain non-ASCII characters"], user.errors[:email]
+    end
+  end
+
+  context "name validation" do
+    should "require a name" do
+      user = build(:user, name: "")
+
+      assert_not user.valid?
+      assert_equal ["Enter a name for the user"], user.errors[:name]
     end
   end
 

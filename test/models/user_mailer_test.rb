@@ -178,11 +178,7 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "mention that reset is disallowed because their account is suspended" do
-      assert_body_includes "You can't request a password reset on a suspended account."
-    end
-
-    should "include correct support links" do
-      assert_support_present_in_text "support form"
+      assert_body_includes "You cannot reset the GOV.UK Signon development password for user@example.com while the account is suspended."
     end
   end
 end

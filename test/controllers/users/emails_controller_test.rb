@@ -325,10 +325,10 @@ class Users::EmailsControllerTest < ActionController::TestCase
         put :update, params: { user_id: user, user: { email: "" } }
 
         assert_select ".govuk-error-summary" do
-          assert_select "a", href: "#user_email", text: "Email can't be blank"
+          assert_select "a", href: "#user_email", text: "Enter an email for the user"
         end
         assert_select ".govuk-form-group" do
-          assert_select ".govuk-error-message", text: "Error: Email can't be blank"
+          assert_select ".govuk-error-message", text: "Error: Enter an email for the user"
           assert_select "input[name='user[email]'].govuk-input--error"
         end
       end
@@ -372,7 +372,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
 
           put :resend_email_change, params: { user_id: user }
 
-          assert_equal "Confirm your email change", ActionMailer::Base.deliveries.last.subject
+          assert_equal "Confirm changes to your GOV.UK Signon development account", ActionMailer::Base.deliveries.last.subject
         end
       end
 

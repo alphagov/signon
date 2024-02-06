@@ -40,7 +40,7 @@
       title: "There is a problem",
       items: @user.errors.map do |error|
         {
-          text: error.full_message,
+          text: error.message,
           href: "#user_#{error.attribute}",
         }
       end,
@@ -59,9 +59,9 @@
         id: "user_email",
         type: "email",
         value: @user.email,
-        hint: @user.web_user? && @user.invited_but_not_yet_accepted? ? "Changes will trigger a new signup email." : nil,
+        hint: @user.web_user? && @user.invited_but_not_yet_accepted? ? "Changes will trigger a new invitation email." : nil,
         autocomplete: "off",
-        error_items: @user.errors.full_messages_for(:email).map { |message| { text: message } }
+        error_items: @user.errors.messages_for(:email).map { |message| { text: message } }
       } %>
       <div class="govuk-button-group">
         <%= render "govuk_publishing_components/components/button", {
