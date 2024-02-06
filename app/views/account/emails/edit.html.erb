@@ -53,7 +53,7 @@
         type: "email",
         id: "user_email",
         value: current_user.email,
-        hint: "Changing your email address doesn’t take effect until you follow the link in a confirmation email sent to the new address.",
+        hint: "Your email address will not update until you follow a link to confirm the new address.",
         autocomplete: "email",
         error_items: current_user.errors.full_messages_for(:email).map { |message| { text: message } }
       } %>
