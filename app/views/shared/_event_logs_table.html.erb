@@ -1,5 +1,5 @@
 <% if logs.any? %>
-  <%= render "govuk_publishing_components/components/table", {
+  <%= render "components/table", {
     caption: pluralize(number_with_delimiter(logs.total_count), "event"),
     caption_classes: "govuk-heading-m",
     head: [
