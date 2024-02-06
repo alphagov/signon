@@ -30,4 +30,9 @@ module ApplicationHelper
   def with_checked_options_at_top(options)
     options.sort_by { |o| o[:checked] ? 0 : 1 }
   end
+
+  def govuk_tag(text, classes = nil)
+    css_classes = ["govuk-tag", classes].compact.join(" ")
+    tag.strong(text, class: css_classes)
+  end
 end
