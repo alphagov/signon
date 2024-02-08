@@ -44,6 +44,7 @@ class User < ApplicationRecord
          :password_archivable # in signon/lib/devise/models/password_archivable.rb
 
   delegate :manageable_roles, to: :role_class
+  delegate :display_name, to: :role_class, prefix: :role
 
   encrypts :otp_secret_key
 
@@ -424,12 +425,12 @@ private
   end
 
   def user_can_be_exempted_from_2sv
-    errors.add(:reason_for_2sv_exemption, "cannot be blank for #{role.humanize} users. Remove the user's exemption to change their role.") if exempt_from_2sv? && role_class.require_2sv?
+    errors.add(:reason_for_2sv_exemption, "cannot be blank for #{role_display_name} users. Remove the user's exemption to change their role.") if exempt_from_2sv? && role_class.require_2sv?
   end
 
   def organisation_admin_belongs_to_organisation
     if publishing_manager? && organisation_id.blank?
-      errors.add(:organisation_id, "can't be 'None' for #{role.humanize}")
+      errors.add(:organisation_id, "can't be 'None' for #{role_display_name}")
     end
   end
 

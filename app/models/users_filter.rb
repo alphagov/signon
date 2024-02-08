@@ -51,7 +51,7 @@ class UsersFilter
   def role_option_select_options(aria_controls_id: nil)
     @current_user.manageable_roles.map do |role|
       {
-        label: role.humanize,
+        label: Roles.find(role).display_name,
         controls: aria_controls_id,
         value: role,
         checked: Array(options[:roles]).include?(role),

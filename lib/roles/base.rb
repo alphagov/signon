@@ -7,5 +7,9 @@ module Roles
     def self.can_manage?(role_name)
       manageable_roles.include?(role_name)
     end
+
+    def self.display_name
+      name.humanize
+    end
   end
 end

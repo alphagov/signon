@@ -73,7 +73,7 @@ module UsersHelper
 
   def options_for_role_select(selected: nil)
     assignable_user_roles.map do |role|
-      { text: role.humanize, value: role }.tap do |option|
+      { text: Roles.find(role).display_name, value: role }.tap do |option|
         option[:selected] = true if option[:value] == selected
       end
     end
@@ -134,7 +134,7 @@ module UsersHelper
   end
 
   def summary_list_item_for_role(user)
-    item = { field: "Role", value: user.role.humanize }
+    item = { field: "Role", value: user.role_display_name }
     item[:edit] = { href: edit_user_role_path(user) } if policy(user).assign_role?
     item
   end
