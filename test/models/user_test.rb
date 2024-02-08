@@ -897,6 +897,16 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#manageable_roles" do
+    should "return roles that the user is allowed to manage" do
+      assert_equal [], build(:user).manageable_roles
+      assert_equal [Roles::Normal, Roles::OrganisationAdmin], build(:organisation_admin_user).manageable_roles
+      assert_equal [Roles::Normal, Roles::OrganisationAdmin, Roles::SuperOrganisationAdmin], build(:super_organisation_admin_user).manageable_roles
+      assert_equal [Roles::Normal, Roles::OrganisationAdmin, Roles::SuperOrganisationAdmin, Roles::Admin], build(:admin_user).manageable_roles
+      assert_equal [Roles::Normal, Roles::OrganisationAdmin, Roles::SuperOrganisationAdmin, Roles::Admin, Roles::Superadmin], build(:superadmin_user).manageable_roles
+    end
+  end
+
   context "#can_manage?" do
     should "indicate whether user is allowed to manage another user" do
       assert_not build(:user).can_manage?(build(:user))

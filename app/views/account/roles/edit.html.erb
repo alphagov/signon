@@ -24,7 +24,7 @@
             id: "user_role",
             name: "user[role]",
             label: "Role",
-            options: current_user.manageable_role_names.map { |role| { text: Roles.find(role).display_name, value: role, selected: current_user.role == role } }
+            options: current_user.manageable_roles.map { |role| { text: role.display_name, value: role.name, selected: current_user.role == role.name } }
             } %>
         <%= render "govuk_publishing_components/components/button", {
           text: "Change role"

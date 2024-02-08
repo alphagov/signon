@@ -68,8 +68,8 @@ module UsersHelper
   end
 
   def options_for_role_select(selected: nil)
-    current_user.manageable_role_names.map do |role|
-      { text: Roles.find(role).display_name, value: role }.tap do |option|
+    current_user.manageable_roles.map do |role|
+      { text: role.display_name, value: role.name }.tap do |option|
         option[:selected] = true if option[:value] == selected
       end
     end

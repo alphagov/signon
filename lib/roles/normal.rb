@@ -12,6 +12,10 @@ module Roles
       4
     end
 
+    def self.manageable_roles
+      []
+    end
+
     def self.manageable_role_names
       []
     end

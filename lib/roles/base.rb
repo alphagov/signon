@@ -1,7 +1,11 @@
 module Roles
   class Base
+    def self.manageable_roles
+      Roles.all.select { |role_class| role_class.level >= level }.reverse
+    end
+
     def self.manageable_role_names
-      Roles.all.select { |role_class| role_class.level >= level }.reverse.map(&:name)
+      manageable_roles.map(&:name)
     end
 
     def self.can_manage?(role_name)
