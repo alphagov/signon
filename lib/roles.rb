@@ -19,12 +19,8 @@ module Roles
 
   all.each do |klass|
     define_method("#{klass.name}?") do
-      role == klass.name
+      role&.name == klass.name
     end
-  end
-
-  def role_class
-    Roles.find(role)
   end
 
   def govuk_admin?

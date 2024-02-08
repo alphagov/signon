@@ -43,12 +43,12 @@ class RolesTest < ActiveSupport::TestCase
       end
 
       should "return true if subject has the #{role.name} role" do
-        @subject.role = role.name
+        @subject.role = role
         assert @subject.send("#{role.name}?")
       end
 
       should "return false if subject does not have #{role.name} role" do
-        @subject.role = "not-#{role.name}"
+        @subject.role = Roles::Base
         assert_not @subject.send("#{role.name}?")
       end
     end
@@ -60,19 +60,19 @@ class RolesTest < ActiveSupport::TestCase
     end
 
     should "be true if the role is superadmin" do
-      @subject.role = Roles::Superadmin.name
+      @subject.role = Roles::Superadmin
       assert @subject.govuk_admin?
     end
 
     should "be true if role is admin" do
-      @subject.role = Roles::Admin.name
+      @subject.role = Roles::Admin
       assert @subject.govuk_admin?
     end
 
     should "be false if role is anything else" do
       other_role_classes = Roles.all - [Roles::Superadmin, Roles::Admin]
       other_role_classes.each do |role_class|
-        @subject.role = role_class.name
+        @subject.role = role_class
         assert_not @subject.govuk_admin?
       end
     end
@@ -84,19 +84,19 @@ class RolesTest < ActiveSupport::TestCase
     end
 
     should "be true if the role is super_organisation_admin" do
-      @subject.role = Roles::SuperOrganisationAdmin.name
+      @subject.role = Roles::SuperOrganisationAdmin
       assert @subject.publishing_manager?
     end
 
     should "be true if role is organisation_admin" do
-      @subject.role = Roles::OrganisationAdmin.name
+      @subject.role = Roles::OrganisationAdmin
       assert @subject.publishing_manager?
     end
 
     should "be false if role is anything else" do
       other_role_classes = Roles.all - [Roles::SuperOrganisationAdmin, Roles::OrganisationAdmin]
       other_role_classes.each do |role_class|
-        @subject.role = role_class.name
+        @subject.role = role_class
         assert_not @subject.publishing_manager?
       end
     end

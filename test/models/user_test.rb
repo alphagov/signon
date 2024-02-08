@@ -877,13 +877,13 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context "#role_class" do
+  context "#role" do
     should "return the role class" do
-      assert_equal Roles::Normal, build(:user).role_class
-      assert_equal Roles::OrganisationAdmin, build(:organisation_admin_user).role_class
-      assert_equal Roles::SuperOrganisationAdmin, build(:super_organisation_admin_user).role_class
-      assert_equal Roles::Admin, build(:admin_user).role_class
-      assert_equal Roles::Superadmin, build(:superadmin_user).role_class
+      assert_equal Roles::Normal, build(:user).role
+      assert_equal Roles::OrganisationAdmin, build(:organisation_admin_user).role
+      assert_equal Roles::SuperOrganisationAdmin, build(:super_organisation_admin_user).role
+      assert_equal Roles::Admin, build(:admin_user).role
+      assert_equal Roles::Superadmin, build(:superadmin_user).role
     end
   end
 
