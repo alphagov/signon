@@ -16,7 +16,7 @@ module Roles
       ]
     end
 
-    def self.role_name
+    def self.name
       "superadmin"
     end
 

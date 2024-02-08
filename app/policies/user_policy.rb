@@ -14,15 +14,15 @@ class UserPolicy < BasePolicy
 
   def edit?
     case current_user.role
-    when Roles::Superadmin.role_name
+    when Roles::Superadmin.name
       true
-    when Roles::Admin.role_name
+    when Roles::Admin.name
       can_manage?
-    when Roles::SuperOrganisationAdmin.role_name
+    when Roles::SuperOrganisationAdmin.name
       can_manage? && (record_in_own_organisation? || record_in_child_organisation?)
-    when Roles::OrganisationAdmin.role_name
+    when Roles::OrganisationAdmin.name
       can_manage? && record_in_own_organisation?
-    when Roles::Normal.role_name
+    when Roles::Normal.name
       false
     else
       raise "Unknown role: #{current_user.role}"

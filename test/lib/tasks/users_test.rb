@@ -75,7 +75,7 @@ class UsersTaskTest < ActiveSupport::TestCase
     end
 
     should "not require 2SV for normal user" do
-      user = create(:user, role: Roles::Normal.role_name)
+      user = create(:user, role: Roles::Normal.name)
 
       @task.invoke
 

@@ -82,37 +82,37 @@ class UserTest < ActiveSupport::TestCase
 
     should "default to true when a user is promoted to admin" do
       user = create(:user)
-      user.update!(role: Roles::Admin.role_name)
+      user.update!(role: Roles::Admin.name)
       assert user.require_2sv?
     end
 
     should "default to true when a user is promoted to superadmin" do
       user = create(:user)
-      user.update!(role: Roles::Superadmin.role_name)
+      user.update!(role: Roles::Superadmin.name)
       assert user.require_2sv?
     end
 
     should "default to true when an admin is promoted to superadmin" do
       user = create(:admin_user)
-      user.update!(role: Roles::Superadmin.role_name)
+      user.update!(role: Roles::Superadmin.name)
       assert user.require_2sv?
     end
 
     should "remain true when an admin is demoted" do
       user = create(:admin_user)
-      user.update!(role: Roles::Normal.role_name)
+      user.update!(role: Roles::Normal.name)
       assert user.require_2sv?
     end
 
     should "default to true when a user is promoted to organisation admin" do
       user = create(:user_in_organisation)
-      user.update!(role: Roles::OrganisationAdmin.role_name)
+      user.update!(role: Roles::OrganisationAdmin.name)
       assert user.require_2sv?
     end
 
     should "default to true when a user is promoted to super organisation admin" do
       user = create(:user_in_organisation)
-      user.update!(role: Roles::SuperOrganisationAdmin.role_name)
+      user.update!(role: Roles::SuperOrganisationAdmin.name)
       assert user.require_2sv?
     end
 
@@ -171,7 +171,7 @@ class UserTest < ActiveSupport::TestCase
 
       context "when promoting a user" do
         should "be true" do
-          @user.update!(role: Roles::Admin.role_name)
+          @user.update!(role: Roles::Admin.name)
 
           assert @user.send_two_step_mandated_notification?
         end
@@ -557,14 +557,14 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "organisation admin must belong to an organisation" do
-    user = build(:user, role: Roles::OrganisationAdmin.role_name, organisation_id: nil)
+    user = build(:user, role: Roles::OrganisationAdmin.name, organisation_id: nil)
 
     assert_not user.valid?
     assert_equal "can't be 'None' for Organisation admin", user.errors[:organisation_id].first
   end
 
   test "super organisation admin must belong to an organisation" do
-    user = build(:user, role: Roles::SuperOrganisationAdmin.role_name, organisation_id: nil)
+    user = build(:user, role: Roles::SuperOrganisationAdmin.name, organisation_id: nil)
 
     assert_not user.valid?
     assert_equal "can't be 'None' for Super organisation admin", user.errors[:organisation_id].first

@@ -188,7 +188,7 @@ class InvitationsControllerTest < ActionController::TestCase
             name: "invitee",
             email: "invitee@gov.uk",
             organisation_id: @organisation,
-            role: Roles::OrganisationAdmin.role_name,
+            role: Roles::OrganisationAdmin.name,
             supported_permission_ids: [permission.to_param],
           },
         }
@@ -198,7 +198,7 @@ class InvitationsControllerTest < ActionController::TestCase
         assert_equal "invitee", invitee.name
         assert_equal "invitee@gov.uk", invitee.email
         assert_equal @organisation, invitee.organisation
-        assert_equal Roles::OrganisationAdmin.role_name, invitee.role
+        assert_equal Roles::OrganisationAdmin.name, invitee.role
         assert_equal [permission], invitee.supported_permissions
       end
 
@@ -228,7 +228,7 @@ class InvitationsControllerTest < ActionController::TestCase
 
         context "when invitee role is set to superadmin" do
           setup do
-            @role = Roles::Superadmin.role_name
+            @role = Roles::Superadmin.name
           end
 
           should "set require_2sv on invitee to true" do
@@ -246,7 +246,7 @@ class InvitationsControllerTest < ActionController::TestCase
 
         context "when invitee role is set to admin" do
           setup do
-            @role = Roles::Admin.role_name
+            @role = Roles::Admin.name
           end
 
           should "set require_2sv on invitee to true" do
@@ -264,7 +264,7 @@ class InvitationsControllerTest < ActionController::TestCase
 
         context "when invitee role is set to organisation admin" do
           setup do
-            @role = Roles::OrganisationAdmin.role_name
+            @role = Roles::OrganisationAdmin.name
           end
 
           should "set require_2sv on invitee to true" do
@@ -282,7 +282,7 @@ class InvitationsControllerTest < ActionController::TestCase
 
         context "when invitee role is set to super organisation admin" do
           setup do
-            @role = Roles::SuperOrganisationAdmin.role_name
+            @role = Roles::SuperOrganisationAdmin.name
           end
 
           should "set require_2sv on invitee to true" do
@@ -343,14 +343,14 @@ class InvitationsControllerTest < ActionController::TestCase
       end
 
       should "keep selected organisation & role if there are validation errors" do
-        post :create, params: { user: { organisation_id: @organisation, role: Roles::Admin.role_name } }
+        post :create, params: { user: { organisation_id: @organisation, role: Roles::Admin.name } }
 
         assert_select "form" do
           assert_select "select[name='user[organisation_id]']" do
             assert_select "option[value='#{@organisation.to_param}'][selected]"
           end
           assert_select "select[name='user[role]']" do
-            assert_select "option[value='#{Roles::Admin.role_name}'][selected]"
+            assert_select "option[value='#{Roles::Admin.name}'][selected]"
           end
         end
       end
@@ -433,13 +433,13 @@ class InvitationsControllerTest < ActionController::TestCase
             name: "invitee",
             email: "invitee@gov.uk",
             organisation_id: @organisation,
-            role: Roles::OrganisationAdmin.role_name,
+            role: Roles::OrganisationAdmin.name,
           },
         }
 
         invitee = User.last
         assert invitee.present?
-        default_role = Roles::Normal.role_name
+        default_role = Roles::Normal.name
         assert_equal default_role, invitee.role
       end
     end
@@ -530,7 +530,7 @@ class InvitationsControllerTest < ActionController::TestCase
       end
 
       should "not allow invitee role to be changed" do
-        new_role = Roles::Superadmin.role_name
+        new_role = Roles::Superadmin.name
 
         put :update, params: { user: { invitation_token: @token, password: @password, password_confirmation: @password, role: new_role } }
 

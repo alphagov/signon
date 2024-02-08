@@ -10,11 +10,11 @@ module Roles
   end
 
   def self.find(role_name)
-    all.find { |role| role.role_name == role_name }
+    all.find { |role| role.name == role_name }
   end
 
   def self.names
-    all.map(&:role_name)
+    all.map(&:name)
   end
 
   names.each do |role_name|

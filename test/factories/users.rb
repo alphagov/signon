@@ -9,7 +9,7 @@ FactoryBot.define do
     password { "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z" }
     confirmed_at { 1.day.ago }
     sequence(:name) { |n| "user-name-#{n}" }
-    role { Roles::Normal.role_name }
+    role { Roles::Normal.name }
 
     after(:create) do |user, evaluator|
       if evaluator.with_permissions
@@ -82,20 +82,20 @@ FactoryBot.define do
 
   factory :superadmin_user, parent: :user do
     sequence(:email) { |n| "superadmin#{n}@example.com" }
-    role { Roles::Superadmin.role_name }
+    role { Roles::Superadmin.name }
   end
 
   factory :admin_user, parent: :user do
     sequence(:email) { |n| "admin#{n}@example.com" }
-    role { Roles::Admin.role_name }
+    role { Roles::Admin.name }
   end
 
   factory :super_organisation_admin_user, parent: :user_in_organisation do
-    role { Roles::SuperOrganisationAdmin.role_name }
+    role { Roles::SuperOrganisationAdmin.name }
   end
 
   factory :organisation_admin_user, parent: :user_in_organisation do
-    role { Roles::OrganisationAdmin.role_name }
+    role { Roles::OrganisationAdmin.name }
   end
 
   trait :invited do

@@ -28,8 +28,8 @@ class OrganisationPolicyTest < ActiveSupport::TestCase
 
   context "can_assign" do
     should "allow superadmins and admins to assign a user to any organisation" do
-      assert permit?(create(:user_in_organisation, role: Roles::Superadmin.role_name), build(:organisation), :can_assign)
-      assert permit?(create(:user_in_organisation, role: Roles::Admin.role_name), build(:organisation), :can_assign)
+      assert permit?(create(:user_in_organisation, role: Roles::Superadmin.name), build(:organisation), :can_assign)
+      assert permit?(create(:user_in_organisation, role: Roles::Admin.name), build(:organisation), :can_assign)
     end
 
     should "forbid for super organisation admins" do

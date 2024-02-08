@@ -4,7 +4,7 @@ module Roles
       %i[uid name email password password_confirmation]
     end
 
-    def self.role_name
+    def self.name
       "normal"
     end
 

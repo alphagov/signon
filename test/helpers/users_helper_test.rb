@@ -57,10 +57,10 @@ class UsersHelperTest < ActionView::TestCase
 
   context "#options_for_role_select" do
     should "return role options suitable for select component" do
-      roles = [Roles::Admin.role_name, Roles::Normal.role_name]
+      roles = [Roles::Admin.name, Roles::Normal.name]
       stubs(:assignable_user_roles).returns(roles)
 
-      options = options_for_role_select(selected: Roles::Normal.role_name)
+      options = options_for_role_select(selected: Roles::Normal.name)
 
       expected_options = [{ text: "Admin", value: "admin" }, { text: "Normal", value: "normal", selected: true }]
       assert_equal expected_options, options

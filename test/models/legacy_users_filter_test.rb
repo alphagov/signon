@@ -41,9 +41,9 @@ class LegacyUsersFilterTest < ActiveSupport::TestCase
     end
 
     should "transform role legacy filter -> roles array" do
-      filter = LegacyUsersFilter.new({ role: Roles::Admin.role_name })
+      filter = LegacyUsersFilter.new({ role: Roles::Admin.name })
 
-      assert_equal({ roles: [Roles::Admin.role_name] }, filter.options)
+      assert_equal({ roles: [Roles::Admin.name] }, filter.options)
     end
 
     should "transform organisation legacy filter -> organisations array" do
