@@ -59,7 +59,7 @@ class UsersHelperTest < ActionView::TestCase
     should "return role options suitable for select component" do
       roles = [Roles::Admin.name, Roles::Normal.name]
       current_user = build(:user)
-      current_user.stubs(:manageable_roles).returns(roles)
+      current_user.stubs(:manageable_role_names).returns(roles)
       stubs(:current_user).returns(current_user)
 
       options = options_for_role_select(selected: Roles::Normal.name)

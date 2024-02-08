@@ -887,13 +887,13 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context "#manageable_roles" do
+  context "#manageable_role_names" do
     should "return names of roles that the user is allowed to manage" do
-      assert_equal %w[], build(:user).manageable_roles
-      assert_equal %w[normal organisation_admin], build(:organisation_admin_user).manageable_roles
-      assert_equal %w[normal organisation_admin super_organisation_admin], build(:super_organisation_admin_user).manageable_roles
-      assert_equal %w[normal organisation_admin super_organisation_admin admin], build(:admin_user).manageable_roles
-      assert_equal %w[normal organisation_admin super_organisation_admin admin superadmin], build(:superadmin_user).manageable_roles
+      assert_equal %w[], build(:user).manageable_role_names
+      assert_equal %w[normal organisation_admin], build(:organisation_admin_user).manageable_role_names
+      assert_equal %w[normal organisation_admin super_organisation_admin], build(:super_organisation_admin_user).manageable_role_names
+      assert_equal %w[normal organisation_admin super_organisation_admin admin], build(:admin_user).manageable_role_names
+      assert_equal %w[normal organisation_admin super_organisation_admin admin superadmin], build(:superadmin_user).manageable_role_names
     end
   end
 
