@@ -429,7 +429,7 @@ private
 
   def organisation_admin_belongs_to_organisation
     if publishing_manager? && organisation_id.blank?
-      errors.add(:organisation_id, "can't be 'None' for #{role.titleize}")
+      errors.add(:organisation_id, "can't be 'None' for #{role.humanize}")
     end
   end
 

@@ -559,14 +559,14 @@ class UserTest < ActiveSupport::TestCase
     user = build(:user, role: Roles::OrganisationAdmin.role_name, organisation_id: nil)
 
     assert_not user.valid?
-    assert_equal "can't be 'None' for Organisation Admin", user.errors[:organisation_id].first
+    assert_equal "can't be 'None' for Organisation admin", user.errors[:organisation_id].first
   end
 
   test "super organisation admin must belong to an organisation" do
     user = build(:user, role: Roles::SuperOrganisationAdmin.role_name, organisation_id: nil)
 
     assert_not user.valid?
-    assert_equal "can't be 'None' for Super Organisation Admin", user.errors[:organisation_id].first
+    assert_equal "can't be 'None' for Super organisation admin", user.errors[:organisation_id].first
   end
 
   test "it doesn't migrate password unless correct one given" do

@@ -187,10 +187,10 @@ class Users::OrganisationsControllerTest < ActionController::TestCase
         put :update, params: { user_id: user, user: { organisation_id: nil } }
 
         assert_select ".govuk-error-summary" do
-          assert_select "a", href: "#user_organisation_id", text: "Organisation can't be 'None' for Organisation Admin"
+          assert_select "a", href: "#user_organisation_id", text: "Organisation can't be 'None' for Organisation admin"
         end
         assert_select ".govuk-form-group" do
-          assert_select ".govuk-error-message", text: "Error: Organisation can't be 'None' for Organisation Admin"
+          assert_select ".govuk-error-message", text: "Error: Organisation can't be 'None' for Organisation admin"
           assert_select "select[name='user[organisation_id]'].govuk-select--error"
         end
       end
