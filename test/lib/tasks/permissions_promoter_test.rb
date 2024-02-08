@@ -36,7 +36,7 @@ class PermissionsPromoterTest < ActiveSupport::TestCase
 
     @task.invoke
 
-    assert non_gds_user.reload.role == "normal"
+    assert non_gds_user.reload.normal?
   end
 
   should "not update a non-GDS user who already has an admin role" do
@@ -53,7 +53,7 @@ class PermissionsPromoterTest < ActiveSupport::TestCase
 
     @task.invoke
 
-    assert user.reload.role == "normal"
+    assert user.reload.normal?
   end
 
   should "not update GDS users" do
