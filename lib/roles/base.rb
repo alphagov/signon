@@ -4,10 +4,6 @@ module Roles
       Roles.all.select { |role_class| role_class.level >= level }.reverse
     end
 
-    def self.manageable_role_names
-      manageable_roles.map(&:name)
-    end
-
     def self.can_manage?(role_class)
       manageable_roles.include?(role_class)
     end

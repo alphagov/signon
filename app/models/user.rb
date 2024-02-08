@@ -43,7 +43,7 @@ class User < ApplicationRecord
          :confirmable,
          :password_archivable # in signon/lib/devise/models/password_archivable.rb
 
-  delegate :manageable_roles, :manageable_role_names, to: :role_class
+  delegate :manageable_roles, to: :role_class
   delegate :display_name, to: :role_class, prefix: :role
 
   encrypts :otp_secret_key

@@ -62,11 +62,11 @@ private
       if current_user.superadmin?
         scope.web_users
       elsif current_user.admin?
-        scope.web_users.where(role: current_user.manageable_role_names)
+        scope.web_users.where(role: current_user.manageable_roles.map(&:name))
       elsif current_user.super_organisation_admin?
-        scope.web_users.where(role: current_user.manageable_role_names).where(organisation: current_user.organisation.subtree)
+        scope.web_users.where(role: current_user.manageable_roles.map(&:name)).where(organisation: current_user.organisation.subtree)
       elsif current_user.organisation_admin?
-        scope.web_users.where(role: current_user.manageable_role_names).where(organisation: current_user.organisation)
+        scope.web_users.where(role: current_user.manageable_roles.map(&:name)).where(organisation: current_user.organisation)
       else
         scope.none
       end
