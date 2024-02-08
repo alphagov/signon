@@ -307,7 +307,7 @@ class User < ApplicationRecord
   end
 
   def can_manage?(other_user)
-    role_class.can_manage?(other_user.role)
+    role_class.can_manage?(other_user.role_class)
   end
 
   def manageable_organisations

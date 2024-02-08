@@ -8,8 +8,8 @@ module Roles
       manageable_roles.map(&:name)
     end
 
-    def self.can_manage?(role_name)
-      manageable_role_names.include?(role_name)
+    def self.can_manage?(role_class)
+      manageable_roles.include?(role_class)
     end
 
     def self.display_name
