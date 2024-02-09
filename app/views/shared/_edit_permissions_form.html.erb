@@ -1,0 +1,17 @@
+<%= form_tag action, method: :patch do |f| %>
+  <%= render "govuk_publishing_components/components/checkboxes", {
+      name: "application[supported_permission_ids][]",
+      heading: "Permissions",
+      items: permissions.map { |permission| { label: permission.name, value: permission.id, checked: user.has_permission?(permission) } },
+  } %>
+
+  <%= hidden_field_tag "application[supported_permission_ids][]", application.signin_permission.id, id: "checkboxes-signin" %>
+
+  <div class="govuk-button-group">
+    <%= render "govuk_publishing_components/components/button", {
+        text: "Update permissions"
+    } %>
+
+    <%= link_to "Cancel", cancel_path, class: "govuk-link govuk-link--no-visited-state" %>
+  </div>
+<% end %>
