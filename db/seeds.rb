@@ -136,3 +136,15 @@ SupportedPermission.create!(
   name: "Editor",
   application:,
 )
+
+application_with_9_permissions = Doorkeeper::Application.create!(
+  name: "Test Application with 9 Permissions",
+  redirect_uri: "https://www.gov.uk",
+)
+
+9.times do |index|
+  SupportedPermission.create!(
+    name: "permission-#{index}",
+    application: application_with_9_permissions,
+  )
+end
