@@ -31,7 +31,7 @@
 <% end %>
 
 <div class="govuk-table--with-actions">
-<%= render "govuk_publishing_components/components/table", {
+<%= render "components/table", {
     caption: "Apps #{@user.name} has access to",
     head: [
       { text: "Name" },
@@ -49,7 +49,7 @@
 </div>
 
 <div class="govuk-table--with-actions">
-<%= render "govuk_publishing_components/components/table", {
+<%= render "components/table", {
     caption: "Apps #{@user.name} does not have access to",
     head: [
       { text: "Name" },

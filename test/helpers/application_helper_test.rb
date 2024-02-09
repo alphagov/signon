@@ -45,4 +45,12 @@ class ApplicationHelperTest < ActionView::TestCase
       assert_equal expected_options, with_checked_options_at_top(options)
     end
   end
+
+  test "#govuk_tag returns a strong tag with the given text, and the class govuk-tag" do
+    assert_equal "<strong class=\"govuk-tag\">something</strong>", govuk_tag("something")
+  end
+
+  test "#govuk_tag returns a strong tag with the given text, and the classes govuk-tag plus any provided classes" do
+    assert_equal "<strong class=\"govuk-tag some-class another--class\">something</strong>", govuk_tag("something", "some-class another--class")
+  end
 end
