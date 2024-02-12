@@ -10,7 +10,7 @@ $vertical-on-smallscreen-breakpoint: 940px;
 $sort-link-active-colour: govuk-colour("white");
 $sort-link-arrow-size: 14px;
 $sort-link-arrow-size-small: 8px;
-$sort-link-arrow-spacing: $sort-link-arrow-size / 2;
+$sort-link-arrow-spacing: calc($sort-link-arrow-size / 2);
 $table-row-hover-background-colour: rgba(43, 140, 196, .2);
 $table-row-even-background-colour: govuk-colour("light-grey", $legacy: "grey-4");
 
