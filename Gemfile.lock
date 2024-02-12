@@ -172,7 +172,7 @@ GEM
     govuk_personalisation (0.15.0)
       plek (>= 1.9.0)
       rails (>= 6, < 8)
-    govuk_publishing_components (37.2.4)
+    govuk_publishing_components (37.3.0)
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
@@ -357,7 +357,7 @@ GEM
       opentelemetry-instrumentation-sidekiq (~> 0.25.0)
       opentelemetry-instrumentation-sinatra (~> 0.23.1)
       opentelemetry-instrumentation-trilogy (~> 0.58.0)
-    opentelemetry-instrumentation-aws_sdk (0.5.0)
+    opentelemetry-instrumentation-aws_sdk (0.5.1)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-base (0.22.3)
