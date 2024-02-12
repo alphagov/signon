@@ -44,7 +44,7 @@ private
           EventLog::NO_SUCH_ACCOUNT_LOGIN,
           ip_address: user_ip_address,
           user_agent_string: user_agent,
-          user_email_string: email,
+          user_email_string: email.truncate(255),
         )
       end
     end
