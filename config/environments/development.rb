@@ -63,6 +63,10 @@ Rails.application.configure do
   # Suppress logger output for asset requests.
   config.assets.quiet = true
 
+  # Disable digest to see the latest stylesheet changes when running Sass in watch mode
+  # See https://guides.rubyonrails.org/v7.1.3/asset_pipeline.html#turning-digests-off
+  config.assets.digest = false
+
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 

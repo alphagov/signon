@@ -30,3 +30,7 @@ yarn-error.log
 
 # Ignore compiled Rails assets
 /public/assets
+
+# For dartsass-rails
+/app/assets/builds/*
+!/app/assets/builds/.keep
