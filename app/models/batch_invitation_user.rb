@@ -94,7 +94,7 @@ private
   def sanitise_attributes_for_inviting_user_role(raw_attributes, inviting_user)
     UserParameterSanitiser.new(
       user_params: raw_attributes,
-      current_user_role: inviting_user.role.to_sym,
+      current_user_role: inviting_user.role_name.to_sym,
     ).sanitise
   end
 

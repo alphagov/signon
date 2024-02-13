@@ -887,6 +887,20 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#role_name" do
+    should "return the role name" do
+      assert_equal Roles::Normal.name, build(:user).role_name
+      assert_equal Roles::OrganisationAdmin.name, build(:organisation_admin_user).role_name
+      assert_equal Roles::SuperOrganisationAdmin.name, build(:super_organisation_admin_user).role_name
+      assert_equal Roles::Admin.name, build(:admin_user).role_name
+      assert_equal Roles::Superadmin.name, build(:superadmin_user).role_name
+    end
+
+    should "return nil if the role isn't set" do
+      assert_nil build(:user, role: nil).role_name
+    end
+  end
+
   context "#manageable_roles" do
     should "return roles that the user is allowed to manage" do
       assert_equal [], build(:user).manageable_roles

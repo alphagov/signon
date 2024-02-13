@@ -17,9 +17,9 @@ module Roles
     all.map(&:name)
   end
 
-  names.each do |role_name|
-    define_method("#{role_name}?") do
-      role == role_name
+  names.each do |name|
+    define_method("#{name}?") do
+      role == name
     end
   end
 

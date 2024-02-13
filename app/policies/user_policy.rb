@@ -13,7 +13,7 @@ class UserPolicy < BasePolicy
   alias_method :create?, :new?
 
   def edit?
-    case current_user.role
+    case current_user.role_name
     when Roles::Superadmin.name
       true
     when Roles::Admin.name
@@ -25,7 +25,7 @@ class UserPolicy < BasePolicy
     when Roles::Normal.name
       false
     else
-      raise "Unknown role: #{current_user.role}"
+      raise "Unknown role: #{current_user.role_name}"
     end
   end
   alias_method :update?, :edit?

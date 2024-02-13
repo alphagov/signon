@@ -45,6 +45,7 @@ class User < ApplicationRecord
 
   delegate :manageable_roles, to: :role_class
   delegate :display_name, to: :role_class, prefix: :role
+  delegate :name, to: :role_class, prefix: :role, allow_nil: true
 
   encrypts :otp_secret_key
 
@@ -237,7 +238,7 @@ class User < ApplicationRecord
 
   # Required for devise_invitable to set role and permissions
   def self.inviter_role(inviter)
-    inviter.nil? ? :default : inviter.role.to_sym
+    inviter.nil? ? :default : inviter.role_name.to_sym
   end
 
   def invite!(*args)
