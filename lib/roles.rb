@@ -13,10 +13,6 @@ module Roles
     all.find { |role| role.name == role_name }
   end
 
-  def self.names
-    all.map(&:name)
-  end
-
   all.each do |klass|
     define_method("#{klass.name}?") do
       role&.name == klass.name

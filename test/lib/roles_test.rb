@@ -22,20 +22,6 @@ class RolesTest < ActiveSupport::TestCase
     end
   end
 
-  context "Roles.names" do
-    should "order roles by their level" do
-      expected_ordered_roles = %w[
-        superadmin
-        admin
-        super_organisation_admin
-        organisation_admin
-        normal
-      ]
-
-      assert_equal expected_ordered_roles, Roles.names
-    end
-  end
-
   Roles.all.each do |role| # rubocop:disable Rails/FindEach
     context "##{role.name}?" do
       setup do
