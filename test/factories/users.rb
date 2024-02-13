@@ -9,7 +9,7 @@ FactoryBot.define do
     password { "this 1s 4 v3333ry s3cur3 p4ssw0rd.!Z" }
     confirmed_at { 1.day.ago }
     sequence(:name) { |n| "user-name-#{n}" }
-    role { "normal" }
+    role { Roles::Normal.role_name }
 
     after(:create) do |user, evaluator|
       if evaluator.with_permissions

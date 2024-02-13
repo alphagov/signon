@@ -74,10 +74,10 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
           check "Mandate 2-step verification for this user"
           click_button "Update user"
 
-          assert_not_nil User.where(email: "fred@example.com", role: "normal").last
+          assert_not_nil User.where(email: "fred@example.com", role: Roles::Normal.role_name).last
           assert_equal "fred@example.com", last_email.to[0]
           assert_match "Make your Signon account more secure", last_email.subject
-          assert User.where(email: "fred@example.com", role: "normal").last.require_2sv?
+          assert User.where(email: "fred@example.com", role: Roles::Normal.role_name).last.require_2sv?
         end
       end
 
@@ -92,10 +92,10 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
           assert has_field?("Mandate 2-step verification for this user")
           click_button "Update user"
 
-          assert_not_nil User.where(email: "fred@example.com", role: "normal").last
+          assert_not_nil User.where(email: "fred@example.com", role: Roles::Normal.role_name).last
           assert_equal "fred@example.com", last_email.to[0]
           assert_match I18n.t("devise.mailer.invitation_instructions.subject"), last_email.subject
-          assert_equal false, User.where(email: "fred@example.com", role: "normal").last.require_2sv?
+          assert_equal false, User.where(email: "fred@example.com", role: Roles::Normal.role_name).last.require_2sv?
         end
       end
 
@@ -112,10 +112,10 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
             select "Test Organisation with 2SV", from: "Organisation"
             click_button "Create user and send email"
 
-            assert_not_nil User.where(email: "fred@example.com", role: "normal").last
+            assert_not_nil User.where(email: "fred@example.com", role: Roles::Normal.role_name).last
             assert_equal "fred@example.com", last_email.to[0]
             assert_match I18n.t("devise.mailer.invitation_instructions.subject"), last_email.subject
-            assert User.where(email: "fred@example.com", role: "normal").last.require_2sv?
+            assert User.where(email: "fred@example.com", role: Roles::Normal.role_name).last.require_2sv?
           end
         end
       end

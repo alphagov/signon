@@ -100,7 +100,7 @@ class UserTest < ActiveSupport::TestCase
 
     should "remain true when an admin is demoted" do
       user = create(:admin_user)
-      user.update!(role: "normal")
+      user.update!(role: Roles::Normal.role_name)
       assert user.require_2sv?
     end
 
