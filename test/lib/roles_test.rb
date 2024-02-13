@@ -36,20 +36,20 @@ class RolesTest < ActiveSupport::TestCase
     end
   end
 
-  Roles.names.each do |role_name|
-    context "##{role_name}?" do
+  Roles.all.each do |role| # rubocop:disable Rails/FindEach
+    context "##{role.name}?" do
       setup do
         @subject = Subject.new
       end
 
-      should "return true if subject has the #{role_name} role" do
-        @subject.role = role_name
-        assert @subject.send("#{role_name}?")
+      should "return true if subject has the #{role.name} role" do
+        @subject.role = role.name
+        assert @subject.send("#{role.name}?")
       end
 
-      should "return false if subject does not have #{role_name} role" do
-        @subject.role = "not-#{role_name}"
-        assert_not @subject.send("#{role_name}?")
+      should "return false if subject does not have #{role.name} role" do
+        @subject.role = "not-#{role.name}"
+        assert_not @subject.send("#{role.name}?")
       end
     end
   end
