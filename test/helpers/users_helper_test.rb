@@ -1,6 +1,8 @@
 require "test_helper"
 
 class UsersHelperTest < ActionView::TestCase
+  include ApplicationHelper
+
   test "sync_needed? should work with user permissions not synced yet" do
     application = create(:application)
     user = create(:user)
@@ -14,6 +16,13 @@ class UsersHelperTest < ActionView::TestCase
     assert_equal "Active", status(build(:active_user))
     assert_equal "Locked", status(build(:locked_user))
     assert_equal "Suspended", status(build(:suspended_user))
+  end
+
+  test "status_with_tag should enclose the status in a govuk tag" do
+    assert_equal "<strong class=\"govuk-tag govuk-tag--grey\">Invited</strong>", status_with_tag(build(:invited_user))
+    assert_equal "<strong class=\"govuk-tag govuk-tag--green\">Active</strong>", status_with_tag(build(:active_user))
+    assert_equal "<strong class=\"govuk-tag govuk-tag--grey\">Locked</strong>", status_with_tag(build(:locked_user))
+    assert_equal "<strong class=\"govuk-tag govuk-tag--grey\">Suspended</strong>", status_with_tag(build(:suspended_user))
   end
 
   test "two_step_status should reflect the user's status accurately when the user is exempted from 2sv" do
