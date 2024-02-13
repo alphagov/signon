@@ -25,8 +25,8 @@ class PermissionsPromoterTest < ActiveSupport::TestCase
 
       users = [first_non_gds_user, second_non_gds_user].each(&:reload)
 
-      assert users.all? do |user|
-        user.role == Roles::OrganisationAdmin.role_name
+      users.each do |user|
+        assert user.role == Roles::OrganisationAdmin.role_name
       end
     end
   end
