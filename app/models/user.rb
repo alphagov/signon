@@ -444,7 +444,7 @@ private
   end
 
   def exemption_from_2sv_data_is_complete
-    errors.add(:expiry_date_for_2sv_exemption, "must be present if exemption reason is present") if reason_for_2sv_exemption.present? && expiry_date_for_2sv_exemption.nil?
+    errors.add(:expiry_date_for_2sv_exemption, :blank) if reason_for_2sv_exemption.present? && expiry_date_for_2sv_exemption.nil?
     errors.add(:reason_for_2sv_exemption, "must be present if exemption expiry date is present") if expiry_date_for_2sv_exemption.present? && reason_for_2sv_exemption.blank?
   end
 
