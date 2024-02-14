@@ -62,18 +62,14 @@ module UsersHelper
     end
   end
 
-  def assignable_user_roles
-    current_user.manageable_roles
-  end
-
   def user_name(user)
     anchor_tag = link_to(user.name, edit_user_path(user), class: "govuk-link")
     user.suspended? ? content_tag(:del, anchor_tag) : anchor_tag
   end
 
   def options_for_role_select(selected: nil)
-    assignable_user_roles.map do |role|
-      { text: role.humanize, value: role }.tap do |option|
+    current_user.manageable_roles.map do |role|
+      { text: role.display_name, value: role.name }.tap do |option|
         option[:selected] = true if option[:value] == selected
       end
     end
@@ -134,7 +130,7 @@ module UsersHelper
   end
 
   def summary_list_item_for_role(user)
-    item = { field: "Role", value: user.role.humanize.capitalize }
+    item = { field: "Role", value: user.role_display_name }
     item[:edit] = { href: edit_user_role_path(user) } if policy(user).assign_role?
     item
   end

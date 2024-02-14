@@ -82,37 +82,37 @@ class UserTest < ActiveSupport::TestCase
 
     should "default to true when a user is promoted to admin" do
       user = create(:user)
-      user.update!(role: Roles::Admin.role_name)
+      user.update!(role: Roles::Admin.name)
       assert user.require_2sv?
     end
 
     should "default to true when a user is promoted to superadmin" do
       user = create(:user)
-      user.update!(role: Roles::Superadmin.role_name)
+      user.update!(role: Roles::Superadmin.name)
       assert user.require_2sv?
     end
 
     should "default to true when an admin is promoted to superadmin" do
       user = create(:admin_user)
-      user.update!(role: Roles::Superadmin.role_name)
+      user.update!(role: Roles::Superadmin.name)
       assert user.require_2sv?
     end
 
     should "remain true when an admin is demoted" do
       user = create(:admin_user)
-      user.update!(role: "normal")
+      user.update!(role: Roles::Normal.name)
       assert user.require_2sv?
     end
 
     should "default to true when a user is promoted to organisation admin" do
       user = create(:user_in_organisation)
-      user.update!(role: Roles::OrganisationAdmin.role_name)
+      user.update!(role: Roles::OrganisationAdmin.name)
       assert user.require_2sv?
     end
 
     should "default to true when a user is promoted to super organisation admin" do
       user = create(:user_in_organisation)
-      user.update!(role: Roles::SuperOrganisationAdmin.role_name)
+      user.update!(role: Roles::SuperOrganisationAdmin.name)
       assert user.require_2sv?
     end
 
@@ -171,7 +171,7 @@ class UserTest < ActiveSupport::TestCase
 
       context "when promoting a user" do
         should "be true" do
-          @user.update!(role: Roles::Admin.role_name)
+          @user.update!(role: Roles::Admin.name)
 
           assert @user.send_two_step_mandated_notification?
         end
@@ -430,6 +430,7 @@ class UserTest < ActiveSupport::TestCase
           user = build(:admin_user, reason_for_2sv_exemption: "reason")
 
           assert_not user.valid?
+          assert_includes user.errors[:reason_for_2sv_exemption], "cannot be blank for Admin users. Remove the user's exemption to change their role."
         end
       end
     end
@@ -556,17 +557,17 @@ class UserTest < ActiveSupport::TestCase
   end
 
   test "organisation admin must belong to an organisation" do
-    user = build(:user, role: Roles::OrganisationAdmin.role_name, organisation_id: nil)
+    user = build(:user, role: Roles::OrganisationAdmin.name, organisation_id: nil)
 
     assert_not user.valid?
-    assert_equal "can't be 'None' for Organisation Admin", user.errors[:organisation_id].first
+    assert_equal "can't be 'None' for Organisation admin", user.errors[:organisation_id].first
   end
 
   test "super organisation admin must belong to an organisation" do
-    user = build(:user, role: Roles::SuperOrganisationAdmin.role_name, organisation_id: nil)
+    user = build(:user, role: Roles::SuperOrganisationAdmin.name, organisation_id: nil)
 
     assert_not user.valid?
-    assert_equal "can't be 'None' for Super Organisation Admin", user.errors[:organisation_id].first
+    assert_equal "can't be 'None' for Super organisation admin", user.errors[:organisation_id].first
   end
 
   test "it doesn't migrate password unless correct one given" do
@@ -876,23 +877,37 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
-  context "#role_class" do
+  context "#role" do
     should "return the role class" do
-      assert_equal Roles::Normal, build(:user).role_class
-      assert_equal Roles::OrganisationAdmin, build(:organisation_admin_user).role_class
-      assert_equal Roles::SuperOrganisationAdmin, build(:super_organisation_admin_user).role_class
-      assert_equal Roles::Admin, build(:admin_user).role_class
-      assert_equal Roles::Superadmin, build(:superadmin_user).role_class
+      assert_equal Roles::Normal, build(:user).role
+      assert_equal Roles::OrganisationAdmin, build(:organisation_admin_user).role
+      assert_equal Roles::SuperOrganisationAdmin, build(:super_organisation_admin_user).role
+      assert_equal Roles::Admin, build(:admin_user).role
+      assert_equal Roles::Superadmin, build(:superadmin_user).role
+    end
+  end
+
+  context "#role_name" do
+    should "return the role name" do
+      assert_equal Roles::Normal.name, build(:user).role_name
+      assert_equal Roles::OrganisationAdmin.name, build(:organisation_admin_user).role_name
+      assert_equal Roles::SuperOrganisationAdmin.name, build(:super_organisation_admin_user).role_name
+      assert_equal Roles::Admin.name, build(:admin_user).role_name
+      assert_equal Roles::Superadmin.name, build(:superadmin_user).role_name
+    end
+
+    should "return nil if the role isn't set" do
+      assert_nil build(:user, role: nil).role_name
     end
   end
 
   context "#manageable_roles" do
-    should "return names of roles that the user is allowed to manage" do
-      assert_equal %w[], build(:user).manageable_roles
-      assert_equal %w[normal organisation_admin], build(:organisation_admin_user).manageable_roles
-      assert_equal %w[normal organisation_admin super_organisation_admin], build(:super_organisation_admin_user).manageable_roles
-      assert_equal %w[normal organisation_admin super_organisation_admin admin], build(:admin_user).manageable_roles
-      assert_equal User.roles, build(:superadmin_user).manageable_roles
+    should "return roles that the user is allowed to manage" do
+      assert_equal [], build(:user).manageable_roles
+      assert_equal [Roles::Normal, Roles::OrganisationAdmin], build(:organisation_admin_user).manageable_roles
+      assert_equal [Roles::Normal, Roles::OrganisationAdmin, Roles::SuperOrganisationAdmin], build(:super_organisation_admin_user).manageable_roles
+      assert_equal [Roles::Normal, Roles::OrganisationAdmin, Roles::SuperOrganisationAdmin, Roles::Admin], build(:admin_user).manageable_roles
+      assert_equal [Roles::Normal, Roles::OrganisationAdmin, Roles::SuperOrganisationAdmin, Roles::Admin, Roles::Superadmin], build(:superadmin_user).manageable_roles
     end
   end
 

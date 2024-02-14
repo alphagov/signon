@@ -6,13 +6,13 @@ namespace :permissions_promoter do
     gds = Organisation.find_by(name: "Government Digital Service")
     users_to_update = user_application_permissions
                         .map { |user_application_permission| User.find(user_application_permission.user_id) }.uniq
-                        .filter { |user| user.role == "normal" && !user.suspended? && user.organisation != gds }
+                        .filter { |user| user.normal? && !user.suspended? && user.organisation != gds }
 
     puts "found #{users_to_update.size} users with managing editor positions to be updated to organisation admins"
     puts "user ids to update are #{users_to_update.map(&:id)}"
 
     users_to_update.each do |user|
-      user.update(role: Roles::OrganisationAdmin.role_name)
+      user.update(role: Roles::OrganisationAdmin.name)
     end
   end
 end

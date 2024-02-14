@@ -20,7 +20,7 @@ class Account::RolesControllerTest < ActionController::TestCase
     should "display error when validation fails" do
       UserUpdate.stubs(:new).returns(stub("UserUpdate", call: false))
 
-      put :update, params: { user: { role: Roles::Normal.role_name } }
+      put :update, params: { user: { role: Roles::Normal.name } }
 
       assert_template :edit
       assert_select "*[role='alert']", text: "There was a problem changing your role."

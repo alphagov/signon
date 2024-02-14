@@ -1,11 +1,11 @@
 class UserPolicy < BasePolicy
   def index?
-    %w[superadmin admin super_organisation_admin organisation_admin].include? current_user.role
+    current_user.govuk_admin? || current_user.publishing_manager?
   end
 
   # invitations#new
   def new?
-    %w[superadmin admin].include? current_user.role
+    current_user.govuk_admin?
   end
   alias_method :assign_organisation?, :new?
 
@@ -13,19 +13,19 @@ class UserPolicy < BasePolicy
   alias_method :create?, :new?
 
   def edit?
-    case current_user.role
-    when Roles::Superadmin.role_name
+    case current_user.role_name
+    when Roles::Superadmin.name
       true
-    when Roles::Admin.role_name
+    when Roles::Admin.name
       can_manage?
-    when Roles::SuperOrganisationAdmin.role_name
+    when Roles::SuperOrganisationAdmin.name
       can_manage? && (record_in_own_organisation? || record_in_child_organisation?)
-    when Roles::OrganisationAdmin.role_name
+    when Roles::OrganisationAdmin.name
       can_manage? && record_in_own_organisation?
-    when Roles::Normal.role_name
+    when Roles::Normal.name
       false
     else
-      raise "Unknown role: #{current_user.role}"
+      raise "Unknown role: #{current_user.role_name}"
     end
   end
   alias_method :update?, :edit?
@@ -62,11 +62,11 @@ private
       if current_user.superadmin?
         scope.web_users
       elsif current_user.admin?
-        scope.web_users.where(role: current_user.manageable_roles)
+        scope.web_users.where(role: current_user.manageable_roles.map(&:name))
       elsif current_user.super_organisation_admin?
-        scope.web_users.where(role: current_user.manageable_roles).where(organisation: current_user.organisation.subtree)
+        scope.web_users.where(role: current_user.manageable_roles.map(&:name)).where(organisation: current_user.organisation.subtree)
       elsif current_user.organisation_admin?
-        scope.web_users.where(role: current_user.manageable_roles).where(organisation: current_user.organisation)
+        scope.web_users.where(role: current_user.manageable_roles.map(&:name)).where(organisation: current_user.organisation)
       else
         scope.none
       end

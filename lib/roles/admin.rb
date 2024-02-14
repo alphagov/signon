@@ -15,7 +15,7 @@ module Roles
       ]
     end
 
-    def self.role_name
+    def self.name
       "admin"
     end
 
@@ -23,12 +23,12 @@ module Roles
       1
     end
 
-    def self.manageable_roles
-      %w[normal organisation_admin super_organisation_admin admin]
-    end
-
     def self.manageable_organisations_for(_)
       Organisation.all
+    end
+
+    def self.require_2sv?
+      true
     end
   end
 end

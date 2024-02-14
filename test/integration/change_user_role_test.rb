@@ -31,7 +31,7 @@ class ChangeUserRoleTest < ActionDispatch::IntegrationTest
 
       assert page.has_no_select?("Role")
 
-      assert page.has_text? "This user's role is set to #{user.role.humanize}. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification."
+      assert page.has_text? "This user's role is set to #{user.role_display_name}. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification."
     end
   end
 

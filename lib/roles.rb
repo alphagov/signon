@@ -1,47 +1,29 @@
-Dir["#{File.dirname(__FILE__)}/roles/*.rb"].sort.each { |file| require file }
-
 module Roles
-  def self.included(base)
-    base.extend ClassMethods
-
-    base.instance_eval do
-      validates :role, inclusion: { in: roles }
-    end
-
-    base.roles.each do |role_name|
-      define_method("#{role_name}?") do
-        role == role_name
-      end
-    end
+  def self.all
+    [
+      Roles::Admin,
+      Roles::Normal,
+      Roles::OrganisationAdmin,
+      Roles::Superadmin,
+      Roles::SuperOrganisationAdmin,
+    ].sort_by(&:level)
   end
 
-  module ClassMethods
-    def role_classes
-      class_names = Roles.constants.select { |c| Roles.const_get(c).is_a?(Class) && Roles.const_get(c) != Roles::Base }
+  def self.find(role_name)
+    all.find { |role| role.name == role_name }
+  end
 
-      class_names.map do |role_class|
-        "Roles::#{role_class}".constantize
-      end
-    end
-
-    def admin_role_classes
-      role_classes - [Roles::Normal, Roles::Base]
-    end
-
-    def admin_roles
-      admin_role_classes.map(&:role_name)
-    end
-
-    def roles
-      role_classes.sort_by(&:level).map(&:role_name)
+  all.each do |klass|
+    define_method("#{klass.name}?") do
+      role&.name == klass.name
     end
   end
 
   def govuk_admin?
-    [Roles::Superadmin.role_name, Roles::Admin.role_name].include? role
+    superadmin? || admin?
   end
 
   def publishing_manager?
-    [Roles::SuperOrganisationAdmin.role_name, Roles::OrganisationAdmin.role_name].include? role
+    super_organisation_admin? || organisation_admin?
   end
 end

@@ -48,7 +48,7 @@ private
   def sanitise(permitted_user_params)
     UserParameterSanitiser.new(
       user_params: permitted_user_params.to_h,
-      current_user_role: current_user.role.to_sym,
+      current_user_role: current_user.role_name.to_sym,
     ).sanitise
   end
 

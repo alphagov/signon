@@ -146,7 +146,7 @@ class UsersFilterTest < ActiveSupport::TestCase
   context "#role_option_select_options" do
     context "when no roles are selected" do
       should "return options for roles manageable by the current user with none checked" do
-        @current_user.stubs(:manageable_roles).returns(%w[normal organisation_admin])
+        @current_user.stubs(:manageable_roles).returns([Roles::Normal, Roles::OrganisationAdmin])
 
         filter = UsersFilter.new(User.all, @current_user, {})
         options = filter.role_option_select_options
@@ -161,7 +161,7 @@ class UsersFilterTest < ActiveSupport::TestCase
 
     context "when some roles are selected" do
       should "return options for roles manageable by the current user with relevant options checked" do
-        @current_user.stubs(:manageable_roles).returns(%w[normal organisation_admin super_organisation_admin])
+        @current_user.stubs(:manageable_roles).returns([Roles::Normal, Roles::OrganisationAdmin, Roles::SuperOrganisationAdmin])
 
         filter = UsersFilter.new(User.all, @current_user, roles: %w[normal super_organisation_admin])
         options = filter.role_option_select_options

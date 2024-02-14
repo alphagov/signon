@@ -16,7 +16,7 @@ module Roles
       ]
     end
 
-    def self.role_name
+    def self.name
       "superadmin"
     end
 
@@ -24,12 +24,12 @@ module Roles
       0
     end
 
-    def self.manageable_roles
-      User.roles
-    end
-
     def self.manageable_organisations_for(_)
       Organisation.all
+    end
+
+    def self.require_2sv?
+      true
     end
   end
 end

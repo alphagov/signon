@@ -40,7 +40,7 @@
     <%= form_for @user, url: user_role_path(@user) do %>
       <% if @user.exempt_from_2sv? %>
         <%= render "govuk_publishing_components/components/inset_text", {
-          text: "This user's role is set to #{@user.role.humanize}. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification.",
+          text: "This user's role is set to #{@user.role_display_name}. They are currently exempted from 2-step verification, meaning that their role cannot be changed as admins are required to have 2-step verification.",
         } %>
       <% else %>
         <%= render "govuk_publishing_components/components/select", {
@@ -48,7 +48,7 @@
           name: "user[role]",
           label: "Role",
           hint: user_role_select_hint,
-          options: current_user.manageable_roles.map { |role| { text: role.humanize, value: role, selected: @user.role == role } },
+          options: current_user.manageable_roles.map { |role| { text: role.display_name, value: role.name, selected: @user.role == role.name } },
           error_message: @user.errors[:role].any? ? @user.errors.full_messages_for(:role).to_sentence : nil
         } %>
         <div class="govuk-button-group">

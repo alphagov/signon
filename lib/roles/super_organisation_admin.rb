@@ -14,7 +14,7 @@ module Roles
       ]
     end
 
-    def self.role_name
+    def self.name
       "super_organisation_admin"
     end
 
@@ -22,12 +22,12 @@ module Roles
       2
     end
 
-    def self.manageable_roles
-      %w[normal organisation_admin super_organisation_admin]
-    end
-
     def self.manageable_organisations_for(user)
       Organisation.where(id: user.organisation.subtree)
+    end
+
+    def self.require_2sv?
+      true
     end
   end
 end
