@@ -20,10 +20,9 @@
    })
 %>
 
-<%= render "shared/edit_permissions_form", {
-    action: account_application_permissions_path(@application),
-    application: @application,
-    cancel_path: account_applications_path,
-    permissions: @permissions,
-    user: current_user,
+<%= render "shared/permissions_forms", {
+  current_permissions: @current_permissions,
+  new_permission_options: @new_permission_options,
+  permissions: @permissions,
+  shared_permissions_form_locals: @shared_permissions_form_locals
 } %>

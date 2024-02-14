@@ -193,6 +193,49 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         get :edit, params: { user_id: user, application_id: application.id }
       end
     end
+
+    context "for apps with greater than eight supported permissions" do
+      setup do
+        @application = create(:application)
+        @perm_granted_1 = create(:supported_permission, application: @application, name: "perm_granted_1")
+        @perm_granted_2 = create(:supported_permission, application: @application, name: "perm_granted_2")
+        @perm_ungranted_1 = create(:supported_permission, application: @application, name: "perm_ungranted_1")
+        @perm_ungranted_2 = create(:supported_permission, application: @application, name: "perm_ungranted_2")
+        @perm_ungranted_3 = create(:supported_permission, application: @application, name: "perm_ungranted_3")
+        @perm_ungranted_4 = create(:supported_permission, application: @application, name: "perm_ungranted_4")
+        @perm_ungranted_5 = create(:supported_permission, application: @application, name: "perm_ungranted_5")
+        @perm_ungranted_6 = create(:supported_permission, application: @application, name: "perm_ungranted_6")
+        @perm_ungranted_7 = create(:supported_permission, application: @application, name: "perm_ungranted_7")
+
+        user = create(:user, with_permissions: { @application => ["perm_granted_1", "perm_granted_2", SupportedPermission::SIGNIN_NAME] })
+        user.grant_application_signin_permission(@application)
+
+        current_user = create(:admin_user)
+        sign_in current_user
+
+        permission = stub_user_application_permission(user, @application)
+        stub_policy current_user, permission, edit?: true
+
+        get :edit, params: { user_id: user, application_id: @application.id }
+      end
+
+      should "display a select component for grantable but non-existing permissions" do
+        assert_select "select[name='application[new_permission_id]']"
+      end
+
+      should "display checkboxes for the existing permissions" do
+        assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{@perm_granted_1.id}']"
+        assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{@perm_granted_2.id}']"
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@perm_ungranted_1.id}']", count: 0
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@perm_ungranted_2.id}']", count: 0
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@perm_ungranted_3.id}']", count: 0
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@perm_ungranted_4.id}']", count: 0
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@perm_ungranted_5.id}']", count: 0
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@perm_ungranted_6.id}']", count: 0
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@perm_ungranted_7.id}']", count: 0
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@application.signin_permission.id}']", count: 0
+      end
+    end
   end
 
   context "#update" do
@@ -385,6 +428,30 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [] } }
 
       assert_not_authorised
+    end
+
+    context "when current_permission_ids and new_permission_id are provided instead of supported_permission_ids" do
+      should "use the relevant params to update permissions" do
+        application = create(:application)
+        perm_granted_1 = create(:supported_permission, application:, name: "perm_granted_1")
+        perm_granted_2 = create(:supported_permission, application:, name: "perm_granted_2")
+        perm_ungranted = create(:supported_permission, application:, name: "perm_ungranted")
+
+        user = create(:user, with_permissions: { application => ["perm_granted_1", "perm_granted_2", SupportedPermission::SIGNIN_NAME] })
+        user.grant_application_signin_permission(application)
+
+        current_user = create(:admin_user)
+        sign_in current_user
+
+        permission = stub_user_application_permission(user, application)
+        stub_policy current_user, permission, update?: true
+
+        patch :update, params: { user_id: user, application_id: application.id, application: { current_permission_ids: [perm_granted_1.id, perm_granted_2.id], new_permission_id: perm_ungranted.id } }
+
+        current_user.reload
+
+        assert_equal [perm_granted_1, perm_granted_2, perm_ungranted, application.signin_permission], user.supported_permissions
+      end
     end
   end
 
