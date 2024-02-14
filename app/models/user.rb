@@ -440,7 +440,7 @@ private
   end
 
   def email_is_ascii_only
-    errors.add(:email, "can't contain non-ASCII characters") unless email.blank? || email.ascii_only?
+    errors.add(:email, :non_ascii) unless email.blank? || email.ascii_only?
   end
 
   def exemption_from_2sv_data_is_complete
