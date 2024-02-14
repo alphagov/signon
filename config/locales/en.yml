@@ -22,6 +22,8 @@ en:
               blank: "must be present if exemption reason is present"
             name:
               blank: "Enter a name for the user"
+            organisation_id:
+              blank: "can't be 'None' for %{role_display_name}"
             password:
               blank: "can't be blank"
               too_long: "is too long (maximum is %{count} characters)"
