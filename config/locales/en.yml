@@ -24,6 +24,8 @@ en:
               blank: "Enter a name for the user"
             password:
               blank: "can't be blank"
+              too_long: "is too long (maximum is %{count} characters)"
+              too_short: "is too short (minimum is %{count} characters)"
             reason_for_2sv_exemption:
               blank: "must be present if exemption expiry date is present"
             require_2sv:

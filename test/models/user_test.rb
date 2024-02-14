@@ -493,7 +493,13 @@ class UserTest < ActiveSupport::TestCase
   test "it requires a password to be at least 10 characters long" do
     u = build(:user, password: "dNG.c0w5!")
     assert_not u.valid?
-    assert_not_empty u.errors[:password]
+    assert_includes u.errors[:password], "is too short (minimum is 10 characters)"
+  end
+
+  test "it requires a password to be at most 128 characters long" do
+    u = build(:user, password: ("4 l0nG sT!,ng " * 10)[0..128])
+    assert_not u.valid?
+    assert_includes u.errors[:password], "is too long (maximum is 128 characters)"
   end
 
   test "it allows very long passwords with spaces" do
