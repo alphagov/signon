@@ -16,6 +16,7 @@ en:
           attributes:
             email:
               blank: "Enter an email for the user"
+              confirmation_period_expired: "needs to be confirmed within %{period}, please request a new one"
               invalid: "Enter an email address in the correct format, like name@department.gov.uk"
               non_ascii: "can't contain non-ASCII characters"
               taken: "That email address has been taken. Enter another in the correct format, like name@department.gov.uk"
