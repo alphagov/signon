@@ -4,6 +4,7 @@ $govuk-page-width: 1140px;
 @import "user_research_recruitment_banner";
 
 // Components from this application
+@import "components/accessible-autocomplete";
 @import "components/contact-details";
 @import "components/table";
 
