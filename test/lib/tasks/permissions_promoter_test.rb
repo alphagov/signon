@@ -23,11 +23,8 @@ class PermissionsPromoterTest < ActiveSupport::TestCase
 
       @task.invoke
 
-      users = [first_non_gds_user, second_non_gds_user].each(&:reload)
-
-      users.each do |user|
-        assert user.organisation_admin?
-      end
+      assert first_non_gds_user.reload.organisation_admin?
+      assert second_non_gds_user.reload.organisation_admin?
     end
   end
 
