@@ -502,6 +502,12 @@ class UserTest < ActiveSupport::TestCase
     assert_includes u.errors[:password], "is too long (maximum is 128 characters)"
   end
 
+  test "it requires a password to be confirmed" do
+    u = build(:user, password: "dNG.c0w5!dNG.c0w5!", password_confirmation: "")
+    assert_not u.valid?
+    assert_includes u.errors[:password_confirmation], "doesn't match Password"
+  end
+
   test "it allows very long passwords with spaces" do
     u = build(:user, password: ("4 l0nG sT!,ng " * 10)[0..127])
     u.valid?
