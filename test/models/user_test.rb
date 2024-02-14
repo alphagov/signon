@@ -538,7 +538,7 @@ class UserTest < ActiveSupport::TestCase
     u = create(:user)
     u.suspended_at = 1.minute.ago
     assert_not u.valid?
-    assert_not_empty u.errors[:reason_for_suspension]
+    assert_includes u.errors[:reason_for_suspension], "can't be blank"
   end
 
   test "suspension revokes all authorisations (`Doorkeeper::AccessToken`s)" do
