@@ -25,10 +25,10 @@
    })
 %>
 
-<%= render "shared/edit_permissions_form", {
-    action: user_application_permissions_path(@user, @application),
-    application: @application,
-    cancel_path: edit_user_path(@user),
-    permissions: @permissions,
-    user: @user,
+<%= render "shared/permissions_forms", {
+  assigned_permissions: @assigned_permissions,
+  unassigned_permission_options: @unassigned_permission_options,
+  permissions: @permissions,
+  shared_permissions_form_locals: @shared_permissions_form_locals,
+  split_assigned_and_unassigned_permissions: @split_assigned_and_unassigned_permissions
 } %>

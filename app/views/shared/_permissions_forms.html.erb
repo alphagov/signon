@@ -1,0 +1,21 @@
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <% unless split_assigned_and_unassigned_permissions %>
+      <%= render "shared/edit_permissions_form", { **shared_permissions_form_locals, permissions: permissions } %>
+    <% else %>
+      <%= render "shared/add_permissions_with_autocomplete_form", {
+        action: shared_permissions_form_locals[:action],
+        cancel_path: shared_permissions_form_locals[:cancel_path],
+        assigned_permissions: assigned_permissions,
+        unassigned_permission_options: unassigned_permission_options
+      } %>
+
+      <%= render "shared/edit_permissions_form", { 
+          **shared_permissions_form_locals,
+          heading: "Current permissions",
+          hint_text: "Clear the checkbox and save changes to remove a permission.",
+          permissions: assigned_permissions
+      } %>
+    <% end %>
+  </div>
+</div>

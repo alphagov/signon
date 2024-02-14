@@ -1,7 +1,8 @@
 <%= form_tag action, method: :patch do |f| %>
   <%= render "govuk_publishing_components/components/checkboxes", {
       name: "application[supported_permission_ids][]",
-      heading: "Permissions",
+      heading: defined?(heading) ? heading : "Permissions",
+      hint_text: defined?(hint_text) ? hint_text : nil,
       items: permissions.map { |permission| { label: permission.name, value: permission.id, checked: user.has_permission?(permission) } },
   } %>
 
