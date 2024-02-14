@@ -515,7 +515,7 @@ class UserTest < ActiveSupport::TestCase
 
     u = build(:user, email: "sherlock.holmes@bakerstreet.com", password: "sherlock holmes baker street")
     assert_not u.valid?
-    assert_not_empty u.errors[:password]
+    assert_includes u.errors[:password], "not strong enough. Consider adding a number, symbols or more letters to make it stronger."
   end
 
   test "unlocking an account should randomise the password" do
