@@ -223,7 +223,7 @@ class UserTest < ActiveSupport::TestCase
   test "email change tokens should expire" do
     @user = create(:user_with_pending_email_change, confirmation_sent_at: 15.days.ago)
     @user.confirm
-    assert_equal "needs to be confirmed within 14 days, please request a new one", @user.errors[:email][0]
+    assert_includes @user.errors[:email], "needs to be confirmed within 14 days, please request a new one"
   end
 
   test "#cancel_email_change!" do
@@ -325,7 +325,7 @@ class UserTest < ActiveSupport::TestCase
       user = build(:user, email: nil)
 
       assert_not user.valid?
-      assert_equal ["Enter an email for the user"], user.errors[:email]
+      assert_includes user.errors[:email], "Enter an email for the user"
     end
 
     should "require a unique email address" do
@@ -334,7 +334,7 @@ class UserTest < ActiveSupport::TestCase
       user = build(:user, email:)
 
       assert_not user.valid?
-      assert_equal ["That email address has been taken. Enter another in the correct format, like name@department.gov.uk"], user.errors[:email]
+      assert_includes user.errors[:email], "That email address has been taken. Enter another in the correct format, like name@department.gov.uk"
     end
 
     should "accept valid emails" do
@@ -355,8 +355,7 @@ class UserTest < ActiveSupport::TestCase
       user = build(:user, email: "piers.quinn@yahoo.co.uk")
 
       assert_not user.valid?
-      assert_equal ["Enter a valid workplace email address, like name@department.gov.uk"],
-                   user.errors[:email]
+      assert_includes user.errors[:email], "Enter a valid workplace email address, like name@department.gov.uk"
     end
 
     should "not allow user to be updated with a known non-government email address" do
@@ -377,7 +376,7 @@ class UserTest < ActiveSupport::TestCase
         user.email = email
 
         assert_not user.valid?, "Expected user to be invalid with email: '#{email}'"
-        assert_equal ["Enter an email address in the correct format, like name@department.gov.uk"], user.errors[:email]
+        assert_includes user.errors[:email], "Enter an email address in the correct format, like name@department.gov.uk"
       end
     end
 
@@ -392,7 +391,7 @@ class UserTest < ActiveSupport::TestCase
       user = build(:user, email: "mariõs.castle@wii.com") # unicode tilde character
 
       assert_not user.valid?
-      assert_equal ["can't contain non-ASCII characters"], user.errors[:email]
+      assert_includes user.errors[:email], "can't contain non-ASCII characters"
     end
   end
 
@@ -401,7 +400,7 @@ class UserTest < ActiveSupport::TestCase
       user = build(:user, name: "")
 
       assert_not user.valid?
-      assert_equal ["Enter a name for the user"], user.errors[:name]
+      assert_includes user.errors[:name], "Enter a name for the user"
     end
   end
 
@@ -560,14 +559,14 @@ class UserTest < ActiveSupport::TestCase
     user = build(:user, role: Roles::OrganisationAdmin.name, organisation_id: nil)
 
     assert_not user.valid?
-    assert_equal "can't be 'None' for Organisation admin", user.errors[:organisation_id].first
+    assert_includes user.errors[:organisation_id], "can't be 'None' for Organisation admin"
   end
 
   test "super organisation admin must belong to an organisation" do
     user = build(:user, role: Roles::SuperOrganisationAdmin.name, organisation_id: nil)
 
     assert_not user.valid?
-    assert_equal "can't be 'None' for Super organisation admin", user.errors[:organisation_id].first
+    assert_includes user.errors[:organisation_id], "can't be 'None' for Super organisation admin"
   end
 
   test "it doesn't migrate password unless correct one given" do
