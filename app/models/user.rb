@@ -430,7 +430,7 @@ private
   end
 
   def user_can_be_exempted_from_2sv
-    errors.add(:reason_for_2sv_exemption, "cannot be present for #{role_display_name} users. Remove the user's exemption to change their role.") if exempt_from_2sv? && role.require_2sv?
+    errors.add(:reason_for_2sv_exemption, :present, role_display_name:) if exempt_from_2sv? && role.require_2sv?
   end
 
   def organisation_admin_belongs_to_organisation

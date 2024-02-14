@@ -36,6 +36,7 @@ en:
               confirmation: "doesn't match %{attribute}"
             reason_for_2sv_exemption:
               blank: "must be present if exemption expiry date is present"
+              present: "cannot be present for %{role_display_name} users. Remove the user's exemption to change their role."
             reason_for_suspension:
               blank: "can't be blank"
             require_2sv:
