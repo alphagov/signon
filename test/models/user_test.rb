@@ -152,6 +152,7 @@ class UserTest < ActiveSupport::TestCase
       organisation = create(:organisation, require_2sv: true)
       user = build(:user, organisation:)
       assert_not user.valid?
+      assert_includes user.errors[:require_2sv], "2-step verification is mandatory for all users from this organisation"
     end
   end
 

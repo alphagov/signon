@@ -449,7 +449,7 @@ private
   end
 
   def organisation_has_mandatory_2sv
-    errors.add(:require_2sv, "2-step verification is mandatory for all users from this organisation") if organisation && organisation.require_2sv? && !require_2sv
+    errors.add(:require_2sv, :blank) if organisation && organisation.require_2sv? && !require_2sv
   end
 
   def fix_apostrophe_in_email

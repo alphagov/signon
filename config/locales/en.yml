@@ -24,6 +24,8 @@ en:
               blank: "Enter a name for the user"
             reason_for_2sv_exemption:
               blank: "must be present if exemption expiry date is present"
+            require_2sv:
+              blank: "2-step verification is mandatory for all users from this organisation"
 
   helpers:
     label:
