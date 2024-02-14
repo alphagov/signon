@@ -3,8 +3,6 @@ class RejectNonGovernmentalEmailAddressesValidator < ActiveModel::EachValidator
     aol btinternet gmail hotmail outlook yahoo
   ].freeze
 
-  MESSAGE = "Enter a valid workplace email address, like name@department.gov.uk".freeze
-
   def validate_each(record, attribute, value)
     return if value.blank?
 
@@ -13,7 +11,7 @@ class RejectNonGovernmentalEmailAddressesValidator < ActiveModel::EachValidator
     return if domain_part.blank?
 
     if keyword_matchers.any? { |keyword| keyword.match?(domain_part) }
-      record.errors.add(attribute, (options[:message] || MESSAGE))
+      record.errors.add(attribute, (options[:message] || :non_government))
     end
   end
 
