@@ -30,12 +30,12 @@ class RolesTest < ActiveSupport::TestCase
 
       should "return true if subject has the #{role.name} role" do
         @subject.role = role
-        assert @subject.send("#{role.name}?")
+        assert @subject.public_send("#{role.name}?")
       end
 
       should "return false if subject does not have #{role.name} role" do
         @subject.role = Roles::Base
-        assert_not @subject.send("#{role.name}?")
+        assert_not @subject.public_send("#{role.name}?")
       end
     end
   end
