@@ -176,7 +176,7 @@ class Users::RolesControllerTest < ActionController::TestCase
         assert_equal Roles::Normal, user.reload.role
 
         assert_select ".govuk-error-summary" do
-          assert_select "li", text: /cannot be blank for #{Roles::OrganisationAdmin.name.humanize} users/
+          assert_select "li", text: /cannot be present for #{Roles::OrganisationAdmin.name.humanize} users/
         end
       end
 

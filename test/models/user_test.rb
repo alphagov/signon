@@ -429,7 +429,7 @@ class UserTest < ActiveSupport::TestCase
           user = build(:admin_user, reason_for_2sv_exemption: "reason")
 
           assert_not user.valid?
-          assert_includes user.errors[:reason_for_2sv_exemption], "cannot be blank for Admin users. Remove the user's exemption to change their role."
+          assert_includes user.errors[:reason_for_2sv_exemption], "cannot be present for Admin users. Remove the user's exemption to change their role."
         end
       end
     end
