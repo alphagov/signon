@@ -471,6 +471,7 @@ class UserTest < ActiveSupport::TestCase
       should "not be valid if 2sv exemption expiry exists without an exemption reason" do
         user = build(:two_step_exempted_user, reason_for_2sv_exemption: nil)
         assert_not user.valid?
+        assert_includes user.errors[:reason_for_2sv_exemption], "must be present if exemption expiry date is present"
       end
 
       should "not be valid if 2sv exemption expiry exists with a blank exemption reason" do

@@ -22,6 +22,8 @@ en:
               blank: "must be present if exemption reason is present"
             name:
               blank: "Enter a name for the user"
+            reason_for_2sv_exemption:
+              blank: "must be present if exemption expiry date is present"
 
   helpers:
     label:
