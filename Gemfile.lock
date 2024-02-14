@@ -160,7 +160,7 @@ GEM
     google-protobuf (3.25.2-x86_64-linux)
     googleapis-common-protos-types (1.12.0)
       google-protobuf (~> 3.18)
-    govuk_app_config (9.8.2)
+    govuk_app_config (9.9.1)
       logstasher (~> 2.1)
       opentelemetry-exporter-otlp (>= 0.25, < 0.27)
       opentelemetry-instrumentation-all (>= 0.39.1, < 0.57.0)
