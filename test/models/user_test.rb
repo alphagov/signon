@@ -484,6 +484,12 @@ class UserTest < ActiveSupport::TestCase
 
   # Password Validation
 
+  test "it requires a password to be entered" do
+    u = build(:user, password: "")
+    assert_not u.valid?
+    assert_includes u.errors[:password], "can't be blank"
+  end
+
   test "it requires a password to be at least 10 characters long" do
     u = build(:user, password: "dNG.c0w5!")
     assert_not u.valid?
