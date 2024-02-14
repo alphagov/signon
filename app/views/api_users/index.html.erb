@@ -39,7 +39,7 @@
         text: application_list(user),
       },
       {
-        text: user.suspended? ? "Yes" : "No",
+        text: user.suspended? ? govuk_tag("Yes", "govuk-tag--grey") : govuk_tag("No", "govuk-tag--green"),
       },
     ]
   end,
