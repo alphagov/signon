@@ -40,6 +40,39 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       assert_not_includes @user.permissions_for(app), "never"
     end
 
+    should "support granting app-specific permissions on apps with greater than eight supported permissions" do
+      app = create(
+        :application,
+        name: "MyApp",
+        with_supported_permissions: %w[pre-existing removing adding never-1 never-2 never-3 never-4 never-5 never-6],
+      )
+      @user.grant_application_signin_permission(app)
+      @user.grant_application_permissions(app, %w[pre-existing removing])
+
+      visit edit_user_path(@user)
+      click_on "Manage permissions"
+      click_on "Update permissions for MyApp"
+      uncheck "removing"
+      click_button "Update permissions"
+      assert_includes @user.permissions_for(app), "pre-existing"
+      %w[removing adding never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
+        assert_not_includes @user.permissions_for(app), permission
+      end
+
+      click_on "Update permissions for MyApp"
+      click_button "Add permission"
+      flash = find("div[role='alert']")
+      assert flash.has_content?("You must select a permission.")
+
+      select "adding"
+      click_button "Add permission"
+      assert_includes @user.permissions_for(app), "pre-existing"
+      assert_includes @user.permissions_for(app), "adding"
+      %w[removing never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
+        assert_not_includes @user.permissions_for(app), permission
+      end
+    end
+
     should "not be able to grant permissions that are not grantable_from_ui" do
       app = create(:application, name: "MyApp", with_supported_permissions: %w[perm], with_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
       @user.grant_application_signin_permission(app)
@@ -90,6 +123,39 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       assert_includes @user.permissions_for(app), "pre-existing"
       assert_includes @user.permissions_for(app), "adding"
       assert_not_includes @user.permissions_for(app), "never"
+    end
+
+    should "support granting app-specific permissions on apps with greater than eight supported permissions" do
+      app = create(
+        :application,
+        name: "MyApp",
+        with_supported_permissions: %w[pre-existing removing adding never-1 never-2 never-3 never-4 never-5 never-6],
+      )
+      @user.grant_application_signin_permission(app)
+      @user.grant_application_permissions(app, %w[pre-existing removing])
+
+      visit edit_user_path(@user)
+      click_on "Manage permissions"
+      click_on "Update permissions for MyApp"
+      uncheck "removing"
+      click_button "Update permissions"
+      assert_includes @user.permissions_for(app), "pre-existing"
+      %w[removing adding never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
+        assert_not_includes @user.permissions_for(app), permission
+      end
+
+      click_on "Update permissions for MyApp"
+      click_button "Add permission"
+      flash = find("div[role='alert']")
+      assert flash.has_content?("You must select a permission.")
+
+      select "adding"
+      click_button "Add permission"
+      assert_includes @user.permissions_for(app), "pre-existing"
+      assert_includes @user.permissions_for(app), "adding"
+      %w[removing never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
+        assert_not_includes @user.permissions_for(app), permission
+      end
     end
 
     should "not be able to grant permissions that are not grantable_from_ui" do
@@ -167,6 +233,40 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       assert_not_includes @user.permissions_for(app), "never"
     end
 
+    should "support granting app-specific permissions on apps with greater than eight supported permissions" do
+      app = create(
+        :application,
+        name: "MyApp",
+        with_supported_permissions: %w[pre-existing removing adding never-1 never-2 never-3 never-4 never-5 never-6],
+      )
+      @super_org_admin.grant_application_signin_permission(app)
+      @user.grant_application_signin_permission(app)
+      @user.grant_application_permissions(app, %w[pre-existing removing])
+
+      visit edit_user_path(@user)
+      click_on "Manage permissions"
+      click_on "Update permissions for MyApp"
+      uncheck "removing"
+      click_button "Update permissions"
+      assert_includes @user.permissions_for(app), "pre-existing"
+      %w[removing adding never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
+        assert_not_includes @user.permissions_for(app), permission
+      end
+
+      click_on "Update permissions for MyApp"
+      click_button "Add permission"
+      flash = find("div[role='alert']")
+      assert flash.has_content?("You must select a permission.")
+
+      select "adding"
+      click_button "Add permission"
+      assert_includes @user.permissions_for(app), "pre-existing"
+      assert_includes @user.permissions_for(app), "adding"
+      %w[removing never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
+        assert_not_includes @user.permissions_for(app), permission
+      end
+    end
+
     should "not be able to grant permissions that are not grantable_from_ui" do
       app = create(:application, name: "MyApp", with_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
       @super_org_admin.grant_application_signin_permission(app)
@@ -235,6 +335,40 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       assert_includes @user.permissions_for(app), "pre-existing"
       assert_includes @user.permissions_for(app), "adding"
       assert_not_includes @user.permissions_for(app), "never"
+    end
+
+    should "support granting app-specific permissions on apps with greater than eight supported permissions" do
+      app = create(
+        :application,
+        name: "MyApp",
+        with_supported_permissions: %w[pre-existing removing adding never-1 never-2 never-3 never-4 never-5 never-6],
+      )
+      @organisation_admin.grant_application_signin_permission(app)
+      @user.grant_application_signin_permission(app)
+      @user.grant_application_permissions(app, %w[pre-existing removing])
+
+      visit edit_user_path(@user)
+      click_on "Manage permissions"
+      click_on "Update permissions for MyApp"
+      uncheck "removing"
+      click_button "Update permissions"
+      assert_includes @user.permissions_for(app), "pre-existing"
+      %w[removing adding never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
+        assert_not_includes @user.permissions_for(app), permission
+      end
+
+      click_on "Update permissions for MyApp"
+      click_button "Add permission"
+      flash = find("div[role='alert']")
+      assert flash.has_content?("You must select a permission.")
+
+      select "adding"
+      click_button "Add permission"
+      assert_includes @user.permissions_for(app), "pre-existing"
+      assert_includes @user.permissions_for(app), "adding"
+      %w[removing never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
+        assert_not_includes @user.permissions_for(app), permission
+      end
     end
 
     should "not be able to grant permissions that are not grantable_from_ui" do

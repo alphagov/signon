@@ -157,20 +157,18 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
   end
 
   context "updating permissions for an app" do
-    setup do
-      @application = create(:application, name: "app-name", description: "app-description", with_supported_permissions: %w[perm1 perm2])
-      @application.signin_permission.update!(delegatable: true)
-    end
-
     %i[superadmin admin super_organisation_admin organisation_admin].each do |user_role|
       context "for #{user_role} users" do
         setup do
           @user = create(:"#{user_role}_user")
-          @user.grant_application_signin_permission(@application)
-          @user.grant_application_permission(@application, "perm1")
         end
 
         should "allow user to update their permissions for apps" do
+          application = create(:application, name: "app-name", description: "app-description", with_supported_permissions: %w[perm1 perm2])
+          application.signin_permission.update!(delegatable: true)
+          @user.grant_application_signin_permission(application)
+          @user.grant_application_permission(application, "perm1")
+
           visit new_user_session_path
           signin_with @user
 
@@ -187,6 +185,42 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
           success_flash = find("div[role='alert']")
           assert success_flash.has_content?("perm1")
           assert success_flash.has_content?("perm2")
+        end
+
+        should "allow user to update their permissions on apps with greater than eight supported permissions" do
+          application_with_9_permissions = create(:application, name: "app-with-9-permissions", description: "app-description", with_supported_permissions: %w[pre-existing removing adding never-1 never-2 never-3 never-4 never-5 never-6])
+          application_with_9_permissions.signin_permission.update!(delegatable: true)
+          @user.grant_application_signin_permission(application_with_9_permissions)
+          @user.grant_application_permissions(application_with_9_permissions, %w[pre-existing removing])
+
+          visit new_user_session_path
+          signin_with @user
+
+          visit account_applications_path
+          click_on "Update permissions for app-with-9-permissions"
+          assert page.has_checked_field?("pre-existing")
+          assert page.has_checked_field?("removing")
+          uncheck "removing"
+          click_button "Update permissions"
+          success_flash = find("div[role='alert']")
+          assert success_flash.has_content?("pre-existing")
+          %w[removing adding never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
+            assert_not success_flash.has_content?(permission)
+          end
+
+          click_on "Update permissions for app-with-9-permissions"
+          click_button "Add permission"
+          flash = find("div[role='alert']")
+          assert flash.has_content?("You must select a permission.")
+
+          select "adding"
+          click_button "Add permission"
+          flash = find("div[role='alert']")
+          assert flash.has_content?("pre-existing")
+          assert flash.has_content?("adding")
+          %w[removing never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
+            assert_not flash.has_content?(permission)
+          end
         end
       end
     end
