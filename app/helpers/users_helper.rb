@@ -5,6 +5,16 @@ module UsersHelper
     user.status.humanize
   end
 
+  def status_with_tag(user)
+    css_classes = if user.status == User::USER_STATUS_ACTIVE
+                    "govuk-tag--green"
+                  else
+                    "govuk-tag--grey"
+                  end
+
+    govuk_tag(status(user), css_classes)
+  end
+
   def two_step_status(user)
     user.two_step_status.humanize.capitalize
   end
@@ -63,8 +73,7 @@ module UsersHelper
   end
 
   def user_name(user)
-    anchor_tag = link_to(user.name, edit_user_path(user), class: "govuk-link")
-    user.suspended? ? content_tag(:del, anchor_tag) : anchor_tag
+    link_to(user.name, edit_user_path(user), class: "govuk-link")
   end
 
   def options_for_role_select(selected: nil)

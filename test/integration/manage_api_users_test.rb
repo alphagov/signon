@@ -20,7 +20,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       assert page.has_selector?("td", text: @api_user.email)
 
       assert page.has_selector?("td", text: @application.name)
-      assert page.has_selector?("td:last-child", text: "No") # suspended?
+      assert page.has_selector?("td:last-child", text: "Active") # status
     end
 
     should "be able to create and edit an API user" do

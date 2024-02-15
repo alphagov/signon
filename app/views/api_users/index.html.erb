@@ -24,7 +24,7 @@
       text: "Apps",
     },
     {
-      text: "Suspended?",
+      text: "Status",
     },
   ],
   rows: @api_users.map do |user|
@@ -39,7 +39,7 @@
         text: application_list(user),
       },
       {
-        text: user.suspended? ? "Yes" : "No",
+        text: status_with_tag(user),
       },
     ]
   end,

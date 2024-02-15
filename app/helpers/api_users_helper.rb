@@ -4,8 +4,7 @@ module ApiUsersHelper
   end
 
   def api_user_name(user)
-    anchor_tag = link_to(user.name, edit_api_user_path(user), class: "govuk-link")
-    user.suspended? ? content_tag(:del, anchor_tag) : anchor_tag
+    link_to(user.name, edit_api_user_path(user), class: "govuk-link")
   end
 
   def application_list(user)
