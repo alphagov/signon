@@ -153,9 +153,8 @@ $table-row-even-background-colour: govuk-colour("light-grey", $legacy: "grey-4")
 
   .govuk-table__cell {
     display: flex;
-    justify-content: space-between;
     min-width: 1px;
-    text-align: right;
+    text-align: left;
   }
 
   @include govuk-media-query($until: $vertical-on-smallscreen-breakpoint) {
