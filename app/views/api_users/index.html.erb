@@ -24,7 +24,7 @@
       text: "Apps",
     },
     {
-      text: "Suspended?",
+      text: "Status",
     },
   ],
   rows: @api_users.map do |user|
@@ -39,7 +39,7 @@
         text: application_list(user),
       },
       {
-        text: user.suspended? ? govuk_tag("Yes", "govuk-tag--grey") : govuk_tag("No", "govuk-tag--green"),
+        text: user.suspended? ? govuk_tag("Suspended", "govuk-tag--grey") : govuk_tag("Active", "govuk-tag--green"),
       },
     ]
   end,
