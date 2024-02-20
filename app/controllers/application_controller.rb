@@ -1,4 +1,5 @@
 require "devise/hooks/two_step_verification"
+require "devise/hooks/set_current_user"
 
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
