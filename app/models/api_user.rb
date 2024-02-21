@@ -14,6 +14,12 @@ class ApiUser < User
     end
   end
 
+  def self.for_sso_push
+    name = "Signon API Client (permission and suspension updater)"
+    email = "signon+permissions@alphagov.co.uk"
+    find_by(email:) || build(name:, email:).tap(&:save!)
+  end
+
 private
 
   def require_2sv_is_false
