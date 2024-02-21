@@ -153,6 +153,7 @@ class UserTest < ActiveSupport::TestCase
       user = build(:user, organisation:)
       assert_not user.valid?
       assert_includes user.errors[:require_2sv], "2-step verification is mandatory for all users from this organisation"
+      assert_includes user.errors.full_messages_for(:require_2sv), "Require 2sv 2-step verification is mandatory for all users from this organisation"
     end
   end
 
@@ -225,6 +226,7 @@ class UserTest < ActiveSupport::TestCase
     @user = create(:user_with_pending_email_change, confirmation_sent_at: 15.days.ago)
     @user.confirm
     assert_includes @user.errors[:email], "needs to be confirmed within 14 days, please request a new one"
+    assert_includes @user.errors.full_messages_for(:email), "Email needs to be confirmed within 14 days, please request a new one"
   end
 
   test "#cancel_email_change!" do
@@ -327,6 +329,7 @@ class UserTest < ActiveSupport::TestCase
 
       assert_not user.valid?
       assert_includes user.errors[:email], "Enter an email for the user"
+      assert_includes user.errors.full_messages_for(:email), "Email Enter an email for the user"
     end
 
     should "require a unique email address" do
@@ -336,6 +339,7 @@ class UserTest < ActiveSupport::TestCase
 
       assert_not user.valid?
       assert_includes user.errors[:email], "That email address has been taken. Enter another in the correct format, like name@department.gov.uk"
+      assert_includes user.errors.full_messages_for(:email), "Email That email address has been taken. Enter another in the correct format, like name@department.gov.uk"
     end
 
     should "accept valid emails" do
@@ -357,6 +361,7 @@ class UserTest < ActiveSupport::TestCase
 
       assert_not user.valid?
       assert_includes user.errors[:email], "Enter a valid workplace email address, like name@department.gov.uk"
+      assert_includes user.errors.full_messages_for(:email), "Email Enter a valid workplace email address, like name@department.gov.uk"
     end
 
     should "not allow user to be updated with a known non-government email address" do
@@ -378,6 +383,7 @@ class UserTest < ActiveSupport::TestCase
 
         assert_not user.valid?, "Expected user to be invalid with email: '#{email}'"
         assert_includes user.errors[:email], "Enter an email address in the correct format, like name@department.gov.uk"
+        assert_includes user.errors.full_messages_for(:email), "Email Enter an email address in the correct format, like name@department.gov.uk"
       end
     end
 
@@ -393,6 +399,7 @@ class UserTest < ActiveSupport::TestCase
 
       assert_not user.valid?
       assert_includes user.errors[:email], "can't contain non-ASCII characters"
+      assert_includes user.errors.full_messages_for(:email), "Email can't contain non-ASCII characters"
     end
   end
 
@@ -402,6 +409,7 @@ class UserTest < ActiveSupport::TestCase
 
       assert_not user.valid?
       assert_includes user.errors[:name], "Enter a name for the user"
+      assert_includes user.errors.full_messages_for(:name), "Name Enter a name for the user"
     end
   end
 
@@ -431,6 +439,7 @@ class UserTest < ActiveSupport::TestCase
 
           assert_not user.valid?
           assert_includes user.errors[:reason_for_2sv_exemption], "cannot be present for Admin users. Remove the user's exemption to change their role."
+          assert_includes user.errors.full_messages_for(:reason_for_2sv_exemption), "Reason for 2sv exemption cannot be present for Admin users. Remove the user's exemption to change their role."
         end
       end
     end
@@ -467,12 +476,14 @@ class UserTest < ActiveSupport::TestCase
         user = build(:two_step_exempted_user, expiry_date_for_2sv_exemption: nil)
         assert_not user.valid?
         assert_includes user.errors[:expiry_date_for_2sv_exemption], "must be present if exemption reason is present"
+        assert_includes user.errors.full_messages_for(:expiry_date_for_2sv_exemption), "Expiry date for 2sv exemption must be present if exemption reason is present"
       end
 
       should "not be valid if 2sv exemption expiry exists without an exemption reason" do
         user = build(:two_step_exempted_user, reason_for_2sv_exemption: nil)
         assert_not user.valid?
         assert_includes user.errors[:reason_for_2sv_exemption], "must be present if exemption expiry date is present"
+        assert_includes user.errors.full_messages_for(:reason_for_2sv_exemption), "Reason for 2sv exemption must be present if exemption expiry date is present"
       end
 
       should "not be valid if 2sv exemption expiry exists with a blank exemption reason" do
@@ -488,24 +499,28 @@ class UserTest < ActiveSupport::TestCase
     u = build(:user, password: "")
     assert_not u.valid?
     assert_includes u.errors[:password], "can't be blank"
+    assert_includes u.errors.full_messages_for(:password), "Password can't be blank"
   end
 
   test "it requires a password to be at least 10 characters long" do
     u = build(:user, password: "dNG.c0w5!")
     assert_not u.valid?
     assert_includes u.errors[:password], "is too short (minimum is 10 characters)"
+    assert_includes u.errors.full_messages_for(:password), "Password is too short (minimum is 10 characters)"
   end
 
   test "it requires a password to be at most 128 characters long" do
     u = build(:user, password: ("4 l0nG sT!,ng " * 10)[0..128])
     assert_not u.valid?
     assert_includes u.errors[:password], "is too long (maximum is 128 characters)"
+    assert_includes u.errors.full_messages_for(:password), "Password is too long (maximum is 128 characters)"
   end
 
   test "it requires a password to be confirmed" do
     u = build(:user, password: "dNG.c0w5!dNG.c0w5!", password_confirmation: "")
     assert_not u.valid?
     assert_includes u.errors[:password_confirmation], "doesn't match Password"
+    assert_includes u.errors.full_messages_for(:password_confirmation), "Password confirmation doesn't match Password"
   end
 
   test "it allows very long passwords with spaces" do
@@ -522,6 +537,7 @@ class UserTest < ActiveSupport::TestCase
     u = build(:user, email: "sherlock.holmes@bakerstreet.com", password: "sherlock holmes baker street")
     assert_not u.valid?
     assert_includes u.errors[:password], "not strong enough. Consider adding a number, symbols or more letters to make it stronger."
+    assert_includes u.errors.full_messages_for(:password), "Password not strong enough. Consider adding a number, symbols or more letters to make it stronger."
   end
 
   test "unlocking an account should randomise the password" do
@@ -539,6 +555,7 @@ class UserTest < ActiveSupport::TestCase
     u.suspended_at = 1.minute.ago
     assert_not u.valid?
     assert_includes u.errors[:reason_for_suspension], "can't be blank"
+    assert_includes u.errors.full_messages_for(:reason_for_suspension), "Reason for suspension can't be blank"
   end
 
   test "suspension revokes all authorisations (`Doorkeeper::AccessToken`s)" do
@@ -581,6 +598,7 @@ class UserTest < ActiveSupport::TestCase
 
     assert_not user.valid?
     assert_includes user.errors[:organisation_id], "can't be 'None' for Organisation admin"
+    assert_includes user.errors.full_messages_for(:organisation_id), "Organisation can't be 'None' for Organisation admin"
   end
 
   test "super organisation admin must belong to an organisation" do
@@ -588,6 +606,7 @@ class UserTest < ActiveSupport::TestCase
 
     assert_not user.valid?
     assert_includes user.errors[:organisation_id], "can't be 'None' for Super organisation admin"
+    assert_includes user.errors.full_messages_for(:organisation_id), "Organisation can't be 'None' for Super organisation admin"
   end
 
   test "it doesn't migrate password unless correct one given" do
