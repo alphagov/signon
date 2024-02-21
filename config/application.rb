@@ -79,5 +79,7 @@ module Signon
     config.assets.css_compressor = nil
 
     config.show_user_research_recruitment_banner = false
+
+    config.active_model.i18n_customize_full_message = true
   end
 end

@@ -13,32 +13,33 @@ en:
     errors:
       models:
         user:
+          format: "%{message}"
           attributes:
             email:
               blank: "Enter an email for the user"
-              confirmation_period_expired: "needs to be confirmed within %{period}, please request a new one"
+              confirmation_period_expired: "%{attribute} needs to be confirmed within %{period}, please request a new one"
               invalid: "Enter an email address in the correct format, like name@department.gov.uk"
-              non_ascii: "can't contain non-ASCII characters"
+              non_ascii: "%{attribute} can't contain non-ASCII characters"
               non_government: "Enter a valid workplace email address, like name@department.gov.uk"
               taken: "That email address has been taken. Enter another in the correct format, like name@department.gov.uk"
             expiry_date_for_2sv_exemption:
-              blank: "must be present if exemption reason is present"
+              blank: "%{attribute} must be present if exemption reason is present"
             name:
               blank: "Enter a name for the user"
             organisation_id:
-              blank: "can't be 'None' for %{role_display_name}"
+              blank: "%{attribute} can't be 'None' for %{role_display_name}"
             password:
-              blank: "can't be blank"
-              too_long: "is too long (maximum is %{count} characters)"
-              too_short: "is too short (minimum is %{count} characters)"
-              weak_password: "not strong enough. Consider adding a number, symbols or more letters to make it stronger."
+              blank: "%{attribute} can't be blank"
+              too_long: "%{attribute} is too long (maximum is %{count} characters)"
+              too_short: "%{attribute} is too short (minimum is %{count} characters)"
+              weak_password: "%{attribute} not strong enough. Consider adding a number, symbols or more letters to make it stronger."
             password_confirmation:
-              confirmation: "doesn't match %{attribute}"
+              confirmation: "%{attribute} confirmation doesn't match %{attribute}"
             reason_for_2sv_exemption:
-              blank: "must be present if exemption expiry date is present"
-              present: "cannot be present for %{role_display_name} users. Remove the user's exemption to change their role."
+              blank: "%{attribute} must be present if exemption expiry date is present"
+              present: "%{attribute} cannot be present for %{role_display_name} users. Remove the user's exemption to change their role."
             reason_for_suspension:
-              blank: "can't be blank"
+              blank: "%{attribute} can't be blank"
             require_2sv:
               blank: "2-step verification is mandatory for all users from this organisation"
 
