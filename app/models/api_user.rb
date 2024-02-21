@@ -32,6 +32,12 @@ class ApiUser < User
     find_by(email:) || build(name:, email:).tap(&:save!)
   end
 
+  def self.for_rake_task
+    name = "Signon rake task"
+    email = "signon+rake@alphagov.co.uk"
+    find_by(email:) || build(name:, email:).tap(&:save!)
+  end
+
 private
 
   def require_2sv_is_false

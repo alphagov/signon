@@ -1,6 +1,6 @@
 namespace :applications do
   desc "Creates an application(OAuth client)"
-  task create: :environment do
+  task create: %i[environment set_current_user] do
     # Create client app
     a = Doorkeeper::Application.create!(
       name: ENV["name"],
@@ -21,7 +21,7 @@ namespace :applications do
   end
 
   desc "Updates domain name for applications, optionally pass CSV of apps to ignore"
-  task :migrate_domain, [:apps_to_ignore] => :environment do |_t, args|
+  task :migrate_domain, [:apps_to_ignore] => %i[environment set_current_user] do |_t, args|
     apps_to_ignore = args.any? ? args[:apps_to_ignore].split(",") : []
     raise "Requires OLD_DOMAIN + NEW_DOMAIN specified in environment" unless ENV["OLD_DOMAIN"] && ENV["NEW_DOMAIN"]
 

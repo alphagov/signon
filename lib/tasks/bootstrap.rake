@@ -5,7 +5,7 @@ namespace :bootstrap do
       bootstrap:all[my-test.publishing.service.gov.uk,my-test-env]
       bootstrap:all[integration.publishing.service.gov.uk]
   "
-  task :all, %i[public_domain resource_prefix] => :environment do |_, args|
+  task :all, %i[public_domain resource_prefix] => %i[environment set_current_user] do |_, args|
     public_domain = args.public_domain
     raise ArgumentError, "Provide a public_domain!" if public_domain.blank?
 

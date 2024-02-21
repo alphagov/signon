@@ -1,6 +1,6 @@
 namespace :event_log do
   desc "Delete all events in the event log older than 2 years"
-  task delete_logs_older_than_two_years: :environment do
+  task delete_logs_older_than_two_years: %i[environment set_current_user] do
     delete_count = EventLog.where("created_at < ?", 2.years.ago).delete_all
     puts "#{delete_count} event log entries deleted"
   end

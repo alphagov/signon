@@ -1,6 +1,6 @@
 namespace :kubernetes do
   desc "Synchronise OAuth Token secrets in Kubernetes"
-  task :sync_token_secrets, %i[config_map_name] => :environment do |_, args|
+  task :sync_token_secrets, %i[config_map_name] => %i[environment set_current_user] do |_, args|
     client = Kubernetes::Client.new
     config_map = client.get_config_map(args[:config_map_name])
 
@@ -25,7 +25,7 @@ namespace :kubernetes do
   end
 
   desc "Synchronise OAuth App secrets in Kubernetes"
-  task :sync_app_secrets, %i[config_map_name] => :environment do |_, args|
+  task :sync_app_secrets, %i[config_map_name] => %i[environment set_current_user] do |_, args|
     client = Kubernetes::Client.new
     config_map = client.get_config_map(args[:config_map_name])
 

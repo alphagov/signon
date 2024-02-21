@@ -2,7 +2,7 @@ require "date"
 
 namespace :users do
   desc "Remind users that their account will get suspended"
-  task send_suspension_reminders: :environment do
+  task send_suspension_reminders: %i[environment set_current_user] do
     include VolatileLock::DSL
 
     with_lock("signon:users:send_suspension_reminders") do
@@ -15,7 +15,7 @@ namespace :users do
   end
 
   desc "Suspend users who have not signed-in for 45 days"
-  task suspend_inactive: :environment do
+  task suspend_inactive: %i[environment set_current_user] do
     include VolatileLock::DSL
 
     with_lock("signon:users:suspend_inactive") do
@@ -25,7 +25,7 @@ namespace :users do
   end
 
   desc "Suspend a user's access to the site (specify email in environment)"
-  task suspend: :environment do
+  task suspend: %i[environment set_current_user] do
     raise "Requires email specified in environment" unless ENV["email"]
 
     user = User.find_by(email: ENV["email"])
@@ -36,7 +36,7 @@ namespace :users do
   end
 
   desc "Unsuspend a user's access to the site (specify email in environment)"
-  task unsuspend: :environment do
+  task unsuspend: %i[environment set_current_user] do
     raise "Requires email specified in environment" unless ENV["email"]
 
     user = User.find_by(email: ENV["email"])
@@ -47,12 +47,12 @@ namespace :users do
   end
 
   desc "Push user permission information to applications used by the user"
-  task push_permissions: :environment do
+  task push_permissions: %i[environment set_current_user] do
     User.find_each { |user| PermissionUpdater.perform_on(user) }
   end
 
   desc "Grant all active and suspended users access to an application, who don't have access"
-  task :grant_application_access, [:application] => :environment do |_t, args|
+  task :grant_application_access, [:application] => %i[environment set_current_user] do |_t, args|
     application = Doorkeeper::Application.find_by(name: args.application)
 
     raise "Couldn't find application: '#{args.application}'" unless application
@@ -64,7 +64,7 @@ namespace :users do
   end
 
   desc "Revoke all permissions for all users of an application"
-  task :revoke_application_access, [:application] => :environment do |_t, args|
+  task :revoke_application_access, [:application] => %i[environment set_current_user] do |_t, args|
     application = Doorkeeper::Application.find_by(name: args.application)
 
     raise "Couldn't find application: '#{args.application}'" unless application
@@ -73,7 +73,7 @@ namespace :users do
   end
 
   desc "Grant all users in an organisation access to an application"
-  task :grant_application_access_for_org, %i[application org] => :environment do |_t, args|
+  task :grant_application_access_for_org, %i[application org] => %i[environment set_current_user] do |_t, args|
     application = Doorkeeper::Application.find_by(name: args.application)
     raise "Couldn't find application: '#{args.application}'" unless application
 
@@ -87,7 +87,7 @@ namespace :users do
   end
 
   desc "Migrates user permissions from source to target application"
-  task migrate_permissions: :environment do
+  task migrate_permissions: %i[environment set_current_user] do
     source_application = ENV["SOURCE"]
     target_application = ENV["TARGET"]
 
@@ -99,7 +99,7 @@ namespace :users do
   end
 
   desc "Sets 2sv on all existing users by organisation"
-  task :set_2sv_by_org, [:org] => :environment do |_t, args|
+  task :set_2sv_by_org, [:org] => %i[environment set_current_user] do |_t, args|
     organisation = Organisation.find_by(slug: args.org)
     raise "Couldn't find organisation: '#{args.org}'" unless organisation
 
@@ -112,7 +112,7 @@ namespace :users do
   end
 
   desc "Sets 2sv on an organisation"
-  task :set_2sv_for_org, [:org] => :environment do |_t, args|
+  task :set_2sv_for_org, [:org] => %i[environment set_current_user] do |_t, args|
     organisation = Organisation.find_by(slug: args.org)
     raise "Couldn't find organisation: '#{args.org}'" unless organisation
 
@@ -122,7 +122,7 @@ namespace :users do
   end
 
   desc "Sets 2sv on all users by email domain"
-  task :set_2sv_by_email_domain, [:domain] => :environment do |_t, args|
+  task :set_2sv_by_email_domain, [:domain] => %i[environment set_current_user] do |_t, args|
     users_to_update = User.where("email LIKE ?", "%#{args.domain}")
                           .where(require_2sv: false)
                           .where(reason_for_2sv_exemption: nil)
@@ -133,7 +133,7 @@ namespace :users do
   end
 
   desc "Sets 2sv on all organisation admin and organisation superadmin users"
-  task set_2sv_for_org_admins: :environment do
+  task set_2sv_for_org_admins: %i[environment set_current_user] do
     org_admin_users = User.where(role: Roles::OrganisationAdmin.name)
     super_org_admin_users = User.where(role: Roles::SuperOrganisationAdmin.name)
 
@@ -143,7 +143,7 @@ namespace :users do
   end
 
   desc "Deletes all web users who've never signed in and were invited at least 90 days ago"
-  task delete_expired_never_signed_in: :environment do
+  task delete_expired_never_signed_in: %i[environment set_current_user] do
     ExpiredNotSignedInUserDeleter.new.delete
   end
 end

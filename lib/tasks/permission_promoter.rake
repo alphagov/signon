@@ -1,6 +1,6 @@
 namespace :permissions_promoter do
   desc "Update anyone with a managing editor permission and a normal role to an org admin role"
-  task promote_managing_editors_to_org_admins: :environment do
+  task promote_managing_editors_to_org_admins: %i[environment set_current_user] do
     managing_editor_permissions = SupportedPermission.where("name REGEXP ?", "managing.*editor").pluck(:id)
     user_application_permissions = UserApplicationPermission.where(supported_permission_id: managing_editor_permissions)
     gds = Organisation.find_by(name: "Government Digital Service")
