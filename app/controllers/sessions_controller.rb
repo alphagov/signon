@@ -28,7 +28,7 @@ private
         user_agent_id: user_agent_record_id,
       )
     else
-      email = params[:user][:email].to_s
+      email = sign_in_params[:email].to_s
       user = User.find_by(email:)
       if user
         EventLog.record_event(

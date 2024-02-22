@@ -23,4 +23,10 @@ class SessionsControllerTest < ActionController::TestCase
 
     assert_not @controller.signed_in?
   end
+
+  should "not raise exception if user param is not present" do
+    post :create, params: {}
+
+    assert_not @controller.signed_in?
+  end
 end
