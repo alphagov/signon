@@ -159,7 +159,7 @@ class Users::TwoStepVerificationMandationsControllerTest < ActionController::Tes
 
       should "display errors if user is not valid" do
         user = User.new(id: 123)
-        user.errors.add(:require_2sv, "is not valid")
+        user.errors.add(:require_2sv, "%{attribute} is not valid")
 
         User.stubs(:find).returns(user)
         UserUpdate.stubs(:new).returns(stub("user-update", call: false))

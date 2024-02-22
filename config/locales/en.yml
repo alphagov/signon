@@ -11,10 +11,15 @@ en:
         password: "Password"
         password_confirmation: "Password confirmation"
     errors:
+      messages:
+        non_government: "not accepted. Please enter a workplace email to continue."
       models:
         user:
           format: "%{message}"
           attributes:
+            current_password:
+              blank: "%{attribute} can't be blank"
+              invalid: "%{attribute} is invalid"
             email:
               blank: "Enter an email for the user"
               confirmation_period_expired: "%{attribute} needs to be confirmed within %{period}, please request a new one"
@@ -24,12 +29,15 @@ en:
               taken: "That email address has been taken. Enter another in the correct format, like name@department.gov.uk"
             expiry_date_for_2sv_exemption:
               blank: "%{attribute} must be present if exemption reason is present"
+            invitation_token:
+              invalid: "%{attribute} is invalid"
             name:
               blank: "Enter a name for the user"
             organisation_id:
               blank: "%{attribute} can't be 'None' for %{role_display_name}"
             password:
               blank: "%{attribute} can't be blank"
+              taken_in_past: "%{attribute} was used previously. Please choose a different one."
               too_long: "%{attribute} is too long (maximum is %{count} characters)"
               too_short: "%{attribute} is too short (minimum is %{count} characters)"
               weak_password: "%{attribute} not strong enough. Consider adding a number, symbols or more letters to make it stronger."
@@ -42,6 +50,10 @@ en:
               blank: "%{attribute} can't be blank"
             require_2sv:
               blank: "2-step verification is mandatory for all users from this organisation"
+            reset_password_token:
+              invalid: "%{attribute} is invalid"
+            role:
+              inclusion: "%{attribute} is not included in the list"
 
   helpers:
     label:
