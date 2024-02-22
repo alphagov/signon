@@ -28,8 +28,7 @@ private
         user_agent_id: user_agent_record_id,
       )
     else
-      # Call to_s to flatten out any unexpected params (eg a hash).
-      email = params[:user][:email].to_s
+      email = sign_in_params[:email].to_s
       user = User.find_by(email:)
       if user
         EventLog.record_event(
