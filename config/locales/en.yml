@@ -10,16 +10,6 @@ en:
         current_password: "Current password"
         password: "Password"
         password_confirmation: "Password confirmation"
-    errors:
-      models:
-        user:
-          attributes:
-            email:
-              blank: "Enter an email for the user"
-              invalid: "Enter an email address in the correct format, like name@department.gov.uk"
-              taken: "That email address has been taken. Enter another in the correct format, like name@department.gov.uk"
-            name:
-              blank: "Enter a name for the user"
 
   helpers:
     label:

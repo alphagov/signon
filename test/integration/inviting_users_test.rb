@@ -195,7 +195,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       fill_in "Name", with: "Fred Bloggs"
       click_button "Create user and send email"
 
-      assert_response_contains("Enter an email for the user")
+      assert_response_contains("Email can't be blank")
     end
   end
 

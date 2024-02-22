@@ -42,7 +42,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         signin_with(@admin)
         admin_changes_email_address(user:, new_email: "")
 
-        assert_response_contains("Enter an email for the user")
+        assert_response_contains("Email can't be blank")
         assert_nil last_email
       end
     end
@@ -140,7 +140,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       fill_in "Email", with: ""
       click_button "Change email"
 
-      assert_response_contains "Enter an email for the user"
+      assert_response_contains "Email can't be blank"
 
       assert_nil last_email
     end
