@@ -17,4 +17,10 @@ class SessionsControllerTest < ActionController::TestCase
 
     assert_not @controller.signed_in?
   end
+
+  should "not raise exception if email param is a Hash" do
+    post :create, params: { user: { email: { foo: "bar" }, password: @user.password } }
+
+    assert_not @controller.signed_in?
+  end
 end
