@@ -27,7 +27,7 @@
       title: "There is a problem",
       items: @user.errors.map do |error|
         {
-          text: error.message,
+          text: error.full_message,
           href: "#user_#{error.attribute}",
         }
       end,
@@ -46,7 +46,7 @@
         id: "user_name",
         value: @user.name,
         autocomplete: "off",
-        error_items: @user.errors.messages_for(:name).map { |message| { text: message } }
+        error_items: @user.errors.full_messages_for(:name).map { |message| { text: message } }
       } %>
       <div class="govuk-button-group">
         <%= render "govuk_publishing_components/components/button", {

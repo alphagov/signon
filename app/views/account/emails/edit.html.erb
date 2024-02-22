@@ -34,7 +34,7 @@
       title: "There is a problem",
       items: current_user.errors.map do |error|
         {
-          text: error.message,
+          text: error.full_message,
           href: "#user_#{error.attribute}",
         }
       end,
@@ -55,7 +55,7 @@
         value: current_user.email,
         hint: "Your email address will not update until you follow a link to confirm the new address.",
         autocomplete: "email",
-        error_items: current_user.errors.messages_for(:email).map { |message| { text: message } }
+        error_items: current_user.errors.full_messages_for(:email).map { |message| { text: message } }
       } %>
       <%= render "govuk_publishing_components/components/button", {
         text: "Change email"

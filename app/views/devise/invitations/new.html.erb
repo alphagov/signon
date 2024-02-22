@@ -24,7 +24,7 @@
           title: "There was a problem with your new user",
           items: f.object.errors.map do |error|
             {
-              text: error.message,
+              text: error.full_message,
               href: "#user_#{error.attribute}",
             }
           end
@@ -35,7 +35,7 @@
         label: { text: "Name" },
         name: "user[name]",
         id: "user_name",
-        error_items: f.object.errors.messages_for(:name).map { |message| { text: message } },
+        error_items: f.object.errors.full_messages_for(:name).map { |message| { text: message } },
         value: f.object.name,
         autocomplete: "off",
       } %>
@@ -44,7 +44,7 @@
         label: { text: "Email" },
         name: "user[email]",
         id: "user_email",
-        error_items: f.object.errors.messages_for(:email).map { |message| { text: message } },
+        error_items: f.object.errors.full_messages_for(:email).map { |message| { text: message } },
         value: f.object.email,
         autocomplete: "off",
       } %>
