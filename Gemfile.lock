@@ -233,7 +233,7 @@ GEM
       rest-client (~> 2.0)
     language_server-protocol (3.17.0.3)
     link_header (0.0.8)
-    listen (3.8.0)
+    listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     llhttp-ffi (0.5.0)
