@@ -90,5 +90,7 @@ module Signon
     # config.eager_load_paths << Rails.root.join("extras")
 
     config.show_user_research_recruitment_banner = false
+
+    config.add_autoload_paths_to_load_path = true
   end
 end
