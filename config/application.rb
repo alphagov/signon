@@ -25,8 +25,16 @@ module Signon
 
     config.active_record.belongs_to_required_by_default = false
 
-    config.active_record.encryption.key_derivation_salt = Rails.application.secrets.active_record_encryption[:key_derivation_salt]
-    config.active_record.encryption.primary_key = Rails.application.secrets.active_record_encryption[:primary_key]
+    # Rails 7 has begun to deprecate Rails.application.credentials in favour
+    # of Rails.application.credentials, but that adds the burden of master key
+    # administration without giving us any benefit (because our production
+    # secrets are handled as env vars, not committed to our repo. Here we
+    # loads the config/secrets.YML values into Rails.application.credentials,
+    # retaining the existing behaviour while dropping deprecated references.
+    Rails.application.credentials.merge!(Rails.application.config_for(:secrets))
+
+    config.active_record.encryption.key_derivation_salt = Rails.application.credentials.dig(:active_record_encryption, :key_derivation_salt)
+    config.active_record.encryption.primary_key = Rails.application.credentials.dig(:active_record_encryption, :primary_key)
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.
@@ -38,7 +46,7 @@ module Signon
     # -- all .rb files in that directory are automatically loaded after loading
 
     config.action_mailer.notify_settings = {
-      api_key: Rails.application.secrets.notify_api_key || "fake-test-api-key",
+      api_key: Rails.application.credentials.notify_api_key || "fake-test-api-key",
     }
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
