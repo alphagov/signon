@@ -21,7 +21,7 @@ Bundler.require(*Rails.groups)
 module Signon
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.0
+    config.load_defaults 7.1
 
     config.active_record.belongs_to_required_by_default = false
 
