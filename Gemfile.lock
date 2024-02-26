@@ -151,10 +151,10 @@ GEM
       rest-client (~> 2.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (3.25.2)
-    google-protobuf (3.25.2-aarch64-linux)
-    google-protobuf (3.25.2-arm64-darwin)
-    google-protobuf (3.25.2-x86_64-linux)
+    google-protobuf (3.25.3)
+    google-protobuf (3.25.3-aarch64-linux)
+    google-protobuf (3.25.3-arm64-darwin)
+    google-protobuf (3.25.3-x86_64-linux)
     googleapis-common-protos-types (1.11.0)
       google-protobuf (~> 3.18)
     govuk_app_config (9.8.2)
@@ -739,4 +739,4 @@ DEPENDENCIES
   whenever
 
 BUNDLED WITH
-   2.4.10
+   2.5.3
