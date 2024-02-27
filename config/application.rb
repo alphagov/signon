@@ -100,5 +100,7 @@ module Signon
     config.show_user_research_recruitment_banner = false
 
     config.add_autoload_paths_to_load_path = true
+
+    config.active_record.encryption.support_sha1_for_non_deterministic_encryption = true
   end
 end
