@@ -21,32 +21,19 @@ Bundler.require(*Rails.groups)
 module Signon
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.1
+    config.load_defaults 7.0
 
     config.active_record.belongs_to_required_by_default = false
 
-    # Rails 7 has begun to deprecate Rails.application.credentials in favour
-    # of Rails.application.credentials, but that adds the burden of master key
-    # administration without giving us any benefit (because our production
-    # secrets are handled as env vars, not committed to our repo. Here we
-    # loads the config/secrets.YML values into Rails.application.credentials,
-    # retaining the existing behaviour while dropping deprecated references.
-    Rails.application.credentials.merge!(Rails.application.config_for(:secrets))
-
-    config.active_record.encryption.key_derivation_salt = Rails.application.credentials.dig(:active_record_encryption, :key_derivation_salt)
-    config.active_record.encryption.primary_key = Rails.application.credentials.dig(:active_record_encryption, :primary_key)
-
-    # Please, add to the `ignore` list any other `lib` subdirectories that do
-    # not contain `.rb` files, or that should not be reloaded or eager loaded.
-    # Common ones are `templates`, `generators`, or `middleware`, for example.
-    config.autoload_lib(ignore: %w[assets tasks])
+    config.active_record.encryption.key_derivation_salt = Rails.application.secrets.active_record_encryption[:key_derivation_salt]
+    config.active_record.encryption.primary_key = Rails.application.secrets.active_record_encryption[:primary_key]
 
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
 
     config.action_mailer.notify_settings = {
-      api_key: Rails.application.credentials.notify_api_key || "fake-test-api-key",
+      api_key: Rails.application.secrets.notify_api_key || "fake-test-api-key",
     }
 
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
@@ -91,14 +78,6 @@ module Signon
     # https://github.com/alphagov/govuk-frontend/issues/1350
     config.assets.css_compressor = nil
 
-    # These settings can be overridden in specific environments using the files
-    # in config/environments, which are processed later.
-    #
-    # config.time_zone = "Central Time (US & Canada)"
-    # config.eager_load_paths << Rails.root.join("extras")
-
     config.show_user_research_recruitment_banner = false
-
-    config.add_autoload_paths_to_load_path = true
   end
 end
