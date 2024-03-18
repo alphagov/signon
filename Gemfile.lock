@@ -168,7 +168,7 @@ GEM
     google-protobuf (3.25.3-aarch64-linux)
     google-protobuf (3.25.3-arm64-darwin)
     google-protobuf (3.25.3-x86_64-linux)
-    googleapis-common-protos-types (1.13.0)
+    googleapis-common-protos-types (1.14.0)
       google-protobuf (~> 3.18)
     govuk_app_config (9.9.2)
       logstasher (~> 2.1)
@@ -185,7 +185,7 @@ GEM
     govuk_personalisation (0.15.0)
       plek (>= 1.9.0)
       rails (>= 6, < 8)
-    govuk_publishing_components (37.8.0)
+    govuk_publishing_components (37.8.1)
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
@@ -608,7 +608,7 @@ GEM
       netrc (~> 0.8)
     rexml (3.2.6)
     rotp (6.3.0)
-    rouge (4.2.0)
+    rouge (4.2.1)
     rqrcode (2.2.0)
       chunky_png (~> 1.0)
       rqrcode_core (~> 1.0)
@@ -664,9 +664,9 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 3.0)
       websocket (~> 1.0)
-    sentry-rails (5.17.0)
+    sentry-rails (5.17.1)
       railties (>= 5.0)
-      sentry-ruby (~> 5.17.0)
+      sentry-ruby (~> 5.17.1)
     sentry-ruby (5.17.1)
       bigdecimal
       concurrent-ruby (~> 1.0, >= 1.0.2)
