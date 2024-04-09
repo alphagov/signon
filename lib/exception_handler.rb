@@ -10,7 +10,9 @@ module ExceptionHandler
   rescue Errno::ETIMEDOUT, Timeout::Error, GdsApi::TimedOutException
     raise SSOPushError.new(@application, message: "Timeout connecting to application.")
   rescue GdsApi::HTTPErrorResponse => e
-    raise SSOPushError.new(@application, response_code: e.code)
+    unless @application.name == "Release"
+      raise SSOPushError.new(@application, response_code: e.code)
+    end
   rescue *network_errors, StandardError => e
     raise SSOPushError.new(@application, message: e.message)
   end
