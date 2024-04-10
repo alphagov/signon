@@ -222,7 +222,7 @@ GEM
     irb (1.12.0)
       rdoc
       reline (>= 0.4.2)
-    json (2.7.1)
+    json (2.7.2)
     jsonpath (1.1.5)
       multi_json
     jwt (2.8.1)
