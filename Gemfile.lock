@@ -341,10 +341,9 @@ GEM
     opentelemetry-instrumentation-active_model_serializers (0.20.1)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-active_record (0.7.0)
+    opentelemetry-instrumentation-active_record (0.7.1)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-      ruby2_keywords
     opentelemetry-instrumentation-active_support (0.5.1)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
