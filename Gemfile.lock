@@ -416,7 +416,7 @@ GEM
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
       opentelemetry-instrumentation-rack (~> 0.21)
-    opentelemetry-instrumentation-graphql (0.28.0)
+    opentelemetry-instrumentation-graphql (0.28.1)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-gruf (0.2.0)
