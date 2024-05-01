@@ -61,7 +61,7 @@
         text: supported_permission.default? ? 'Yes' : 'No',
       },
       {
-        text: link_to('Edit', edit_doorkeeper_application_supported_permission_path(@application, supported_permission)),
+        text: link_to('Edit', edit_doorkeeper_application_supported_permission_path(@application, supported_permission)) + (link_to("Delete", confirm_destroy_doorkeeper_application_supported_permission_path(@application, supported_permission), class: "govuk-link gem-link--destructive govuk-!-margin-left-2")),
       },
     ]
   end,
