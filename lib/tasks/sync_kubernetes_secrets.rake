@@ -1,13 +1,9 @@
 namespace :kubernetes do
   desc "Synchronise OAuth Token secrets in Kubernetes"
-  task :sync_token_secrets, %i[config_map_name] => :environment do |_, args|
+  task sync_token_secrets: :environment do
     client = Kubernetes::Client.new
-    config_map = client.get_config_map(args[:config_map_name])
 
-    emails = JSON.parse(config_map.data["api_user_emails"])
-
-    api_users = ApiUser.where(email: emails)
-    missing_users = emails - api_users.map(&:email)
+    api_users = ApiUser.where(suspended_at: nil)
 
     api_users.each do |api_user|
       api_user.authorisations.not_revoked.each do |token|
@@ -18,21 +14,13 @@ namespace :kubernetes do
         client.apply_secret(name, data)
       end
     end
-
-    if missing_users.any?
-      raise StandardError, "Could not find api users for: #{missing_users.join(', ')}"
-    end
   end
 
   desc "Synchronise OAuth App secrets in Kubernetes"
-  task :sync_app_secrets, %i[config_map_name] => :environment do |_, args|
+  task sync_app_secrets: :environment do
     client = Kubernetes::Client.new
-    config_map = client.get_config_map(args[:config_map_name])
 
-    app_names = JSON.parse(config_map.data["app_names"])
-    apps = Doorkeeper::Application.where(name: app_names)
-
-    missing_apps = app_names - apps.map(&:name)
+    apps = Doorkeeper::Application.where(retired: false)
 
     apps.each do |app|
       name = "signon-app-#{app.name}".parameterize
@@ -40,10 +28,6 @@ namespace :kubernetes do
 
       Rails.logger.info(name)
       client.apply_secret(name, data)
-    end
-
-    if missing_apps.any?
-      raise StandardError, "Could not find apps for: #{missing_apps.join(', ')}"
     end
   end
 end
