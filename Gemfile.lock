@@ -439,7 +439,7 @@ GEM
     opentelemetry-instrumentation-mongo (0.22.2)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-mysql2 (0.27.0)
+    opentelemetry-instrumentation-mysql2 (0.27.1)
       opentelemetry-api (~> 1.0)
       opentelemetry-helpers-mysql
       opentelemetry-helpers-sql-obfuscation
