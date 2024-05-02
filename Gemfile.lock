@@ -436,7 +436,7 @@ GEM
     opentelemetry-instrumentation-lmdb (0.22.1)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-mongo (0.22.2)
+    opentelemetry-instrumentation-mongo (0.22.3)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-mysql2 (0.27.0)
