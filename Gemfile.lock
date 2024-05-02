@@ -500,7 +500,7 @@ GEM
       opentelemetry-common (~> 0.20.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
       opentelemetry-instrumentation-rack (~> 0.21)
-    opentelemetry-instrumentation-trilogy (0.59.2)
+    opentelemetry-instrumentation-trilogy (0.59.3)
       opentelemetry-api (~> 1.0)
       opentelemetry-helpers-mysql
       opentelemetry-helpers-sql-obfuscation
