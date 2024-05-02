@@ -93,7 +93,9 @@ Rails.application.routes.draw do
     member do
       get :users_with_access
     end
-    resources :supported_permissions, only: %i[index new create edit update]
+    resources :supported_permissions, only: %i[index new create edit update destroy] do
+      get :confirm_destroy, on: :member
+    end
   end
 
   resources :api_users, only: %i[new create index edit] do

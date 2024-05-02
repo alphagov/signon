@@ -1,0 +1,42 @@
+<% content_for :title, "Delete #{@supported_permission.name} permission for #{@application.name}" %>
+
+<% content_for :breadcrumbs,
+   render("govuk_publishing_components/components/breadcrumbs", {
+     collapse_on_mobile: true,
+     breadcrumbs: [
+       {
+         title: "Dashboard",
+         url: root_path,
+       },
+       {
+         title: "Applications",
+         url: doorkeeper_applications_path,
+       },
+       {
+         title: @application.name,
+         url: edit_doorkeeper_application_path(@application),
+       },
+       {
+         title: "Permissions",
+         url: doorkeeper_application_supported_permissions_path(@application),
+       }
+     ]
+   })
+%>
+
+<div class="govuk-grid-row">
+  <section class="govuk-grid-column-two-thirds">
+    <%= form_tag doorkeeper_application_supported_permission_path(@application, @supported_permission), method: :delete do %>
+      <p class="govuk-body govuk-!-margin-bottom-6">Are you sure you want to delete the "<%= @supported_permission.name %>" permission for "<%= @application.name %>"?</p>
+
+      <div class="govuk-button-group govuk-!-margin-bottom-6">
+        <%= render "govuk_publishing_components/components/button", {
+          text: "Delete",
+          destructive: true,
+        } %>
+        <%= link_to("Cancel", doorkeeper_application_supported_permissions_path, class: "govuk-link govuk-link--no-visited-state") %>
+      </div>
+    <% end %>
+  </section>
+</div>
+

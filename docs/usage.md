@@ -52,15 +52,13 @@ if you just want to get this working, follow the steps below:
   GDS_SSO_STRATEGY=real bundle exec rails s
   ```
 
-## Creating new permissions
+## Creating, editing and deleting permissions
 
-To create a new permission for an existing app, you first need to have the
-"superadmin" role on your account (or have access to someone who does): you'll
-then be able to access the "Administer applications" menu item. Under the
-application you want to change, follow the "Supported Permissions" link and add
-a new permission from there.
-
-Note that this UI won't let you edit or delete existing permissions.
+To manage permissions for an existing app, you first need to have the "superadmin"
+role on your account (or have access to someone who does): you'll then be able to
+access the "Administer applications" menu item. Under the application you want to
+change, follow the "Supported Permissions" link and add, update or delete the
+permission from there.
 
 ## Creating new organisations
 
