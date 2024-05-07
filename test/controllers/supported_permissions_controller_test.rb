@@ -97,4 +97,27 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
       assert_not perm.default
     end
   end
+
+  context "GET confirm_destroy" do
+    should "render the permission and application names" do
+      application = create(:application, name: "My first app", with_supported_permissions: %w[permission1])
+
+      get :confirm_destroy, params: { doorkeeper_application_id: application.id, id: application.supported_permissions.first.id }
+
+      assert_select "p.govuk-body", "Are you sure you want to delete the \"permission1\" permission for \"My first app\"?"
+    end
+  end
+
+  context "DELETE destroy" do
+    should "delete the permission" do
+      application = create(:application)
+      supported_permission = create(:supported_permission, application:)
+
+      delete :destroy, params: { doorkeeper_application_id: application.id, id: supported_permission.id }
+
+      assert_redirected_to(controller: "supported_permissions", action: :index)
+      assert_equal "Successfully deleted permission #{supported_permission.name}", flash[:notice]
+      assert_not application.supported_permissions.include?(supported_permission)
+    end
+  end
 end

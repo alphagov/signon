@@ -35,6 +35,21 @@ class SupportedPermissionsController < ApplicationController
     end
   end
 
+  def confirm_destroy
+    @supported_permission = supported_permission
+  end
+
+  def destroy
+    permission_name = supported_permission.name
+
+    if supported_permission.destroy!
+      redirect_to doorkeeper_application_supported_permissions_path,
+                  notice: "Successfully deleted permission #{permission_name}"
+    else
+      render :index
+    end
+  end
+
 private
 
   def load_and_authorize_application
