@@ -452,7 +452,7 @@ GEM
       opentelemetry-api (~> 1.0)
       opentelemetry-helpers-sql-obfuscation
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-que (0.8.0)
+    opentelemetry-instrumentation-que (0.8.1)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-racecar (0.3.2)
