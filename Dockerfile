@@ -12,6 +12,8 @@ ENV DEVISE_PEPPER=unused \
 WORKDIR $APP_HOME
 COPY Gemfile* .ruby-version ./
 RUN bundle install
+COPY package.json yarn.lock ./
+RUN yarn install
 COPY . .
 RUN bootsnap precompile --gemfile .
 RUN rails assets:precompile && rm -fr log
