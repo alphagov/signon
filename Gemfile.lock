@@ -186,7 +186,7 @@ GEM
     govuk_personalisation (0.16.0)
       plek (>= 1.9.0)
       rails (>= 6, < 8)
-    govuk_publishing_components (38.1.0)
+    govuk_publishing_components (38.3.0)
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
@@ -289,7 +289,7 @@ GEM
     multi_json (1.15.0)
     mutex_m (0.2.0)
     mysql2 (0.5.6)
-    net-imap (0.4.10)
+    net-imap (0.4.11)
       date
       net-protocol
     net-pop (0.1.2)
@@ -299,7 +299,7 @@ GEM
     net-smtp (0.5.0)
       net-protocol
     netrc (0.11.0)
-    nio4r (2.7.1)
+    nio4r (2.7.3)
     nokogiri (1.16.5)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -381,7 +381,7 @@ GEM
       opentelemetry-instrumentation-sidekiq (~> 0.25.0)
       opentelemetry-instrumentation-sinatra (~> 0.23.1)
       opentelemetry-instrumentation-trilogy (~> 0.59.0)
-    opentelemetry-instrumentation-aws_sdk (0.5.1)
+    opentelemetry-instrumentation-aws_sdk (0.5.2)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-base (0.22.3)
@@ -433,7 +433,7 @@ GEM
       opentelemetry-api (~> 1.0)
       opentelemetry-common (~> 0.21.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-lmdb (0.22.1)
+    opentelemetry-instrumentation-lmdb (0.22.2)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-mongo (0.22.3)
@@ -448,7 +448,7 @@ GEM
       opentelemetry-api (~> 1.0)
       opentelemetry-common (~> 0.21.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-pg (0.27.2)
+    opentelemetry-instrumentation-pg (0.27.3)
       opentelemetry-api (~> 1.0)
       opentelemetry-helpers-sql-obfuscation
       opentelemetry-instrumentation-base (~> 0.22.1)
@@ -470,7 +470,7 @@ GEM
       opentelemetry-instrumentation-active_record (~> 0.7.0)
       opentelemetry-instrumentation-active_support (~> 0.5.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-rake (0.2.1)
+    opentelemetry-instrumentation-rake (0.2.2)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-rdkafka (0.4.5)
@@ -488,7 +488,7 @@ GEM
       opentelemetry-api (~> 1.0)
       opentelemetry-common (~> 0.21.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-ruby_kafka (0.21.0)
+    opentelemetry-instrumentation-ruby_kafka (0.21.1)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-sidekiq (0.25.4)
@@ -594,9 +594,9 @@ GEM
     redis-namespace (1.11.0)
       redis (>= 4)
     regexp_parser (2.9.0)
-    reline (0.5.6)
+    reline (0.5.7)
       io-console (~> 0.5)
-    request_store (1.6.0)
+    request_store (1.7.0)
       rack (>= 1.4)
     responders (3.1.1)
       actionpack (>= 5.2)
@@ -722,7 +722,7 @@ GEM
       chronic (>= 0.6.3)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.6.13)
+    zeitwerk (2.6.14)
     zxcvbn-ruby (1.2.0)
 
 PLATFORMS
