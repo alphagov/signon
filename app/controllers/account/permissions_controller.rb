@@ -13,15 +13,48 @@ class Account::PermissionsController < ApplicationController
 
   def edit
     authorize [:account, @application], :edit_permissions?
+
+    @shared_permissions_form_locals = {
+      action: account_application_permissions_path(@application),
+      application: @application,
+      cancel_path: account_applications_path,
+      user: current_user,
+    }
+
+    @split_assigned_and_unassigned_permissions = @permissions.count > 8
+
+    if @split_assigned_and_unassigned_permissions
+      @assigned_permissions = []
+      @unassigned_permission_options = []
+      @permissions.each do |permission|
+        if current_user.has_permission?(permission)
+          @assigned_permissions.push(permission)
+        else
+          @unassigned_permission_options.push({ text: permission.name, value: permission.id })
+        end
+      end
+    end
   end
 
   def update
     authorize [:account, @application], :edit_permissions?
 
+    selected_permission_ids = []
+
+    if update_params[:supported_permission_ids]
+      selected_permission_ids = update_params[:supported_permission_ids]
+    elsif update_params[:new_permission_id]&.length&.> 0
+      selected_permission_ids.concat(update_params[:current_permission_ids] || [], [update_params[:new_permission_id]])
+    else
+      flash[:alert] = "You must select a permission."
+      redirect_to edit_account_application_permissions_path(@application)
+      return
+    end
+
     supported_permission_ids = UserUpdatePermissionBuilder.new(
       user: current_user,
       updatable_permission_ids: @permissions.pluck(:id),
-      selected_permission_ids: update_params[:supported_permission_ids].map(&:to_i),
+      selected_permission_ids: selected_permission_ids.map(&:to_i),
     ).build
 
     UserUpdate.new(current_user, { supported_permission_ids: }, current_user, user_ip_address).call
@@ -33,7 +66,7 @@ class Account::PermissionsController < ApplicationController
 private
 
   def update_params
-    params.require(:application).permit(supported_permission_ids: [])
+    params.require(:application).permit(:new_permission_id, current_permission_ids: [], supported_permission_ids: [])
   end
 
   def set_application

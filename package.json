@@ -44,5 +44,8 @@
     "selenium-webdriver": "4.17.0",
     "stylelint/strip-ansi": "6.0.1",
     "stylelint/string-width": "4.2.3"
+  },
+  "dependencies": {
+    "accessible-autocomplete": "^2.0.4"
   }
 }

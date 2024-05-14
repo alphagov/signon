@@ -25,20 +25,10 @@
    })
 %>
 
-<%= form_tag user_application_permissions_path(@user, @application), method: :patch do |f| %>
-  <%= render "govuk_publishing_components/components/checkboxes", {
-      name: "application[supported_permission_ids][]",
-      heading: "Permissions",
-      items: @permissions.map { |permission| { label: permission.name, value: permission.id, checked: @user.has_permission?(permission) } },
-  } %>
-
-  <%= hidden_field_tag "application[supported_permission_ids][]", @application.signin_permission.id, id: "checkboxes-signin" %>
-
-  <div class="govuk-button-group">
-    <%= render "govuk_publishing_components/components/button", {
-        text: "Update permissions"
-    } %>
-
-    <%= link_to "Cancel", edit_user_path(@user), class: "govuk-link govuk-link--no-visited-state" %>
-  </div>
-<% end %>
+<%= render "shared/permissions_forms", {
+  assigned_permissions: @assigned_permissions,
+  unassigned_permission_options: @unassigned_permission_options,
+  permissions: @permissions,
+  shared_permissions_form_locals: @shared_permissions_form_locals,
+  split_assigned_and_unassigned_permissions: @split_assigned_and_unassigned_permissions
+} %>
