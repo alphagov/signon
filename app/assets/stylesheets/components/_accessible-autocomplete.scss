@@ -1,18 +1,11 @@
 @import "accessible-autocomplete/dist/accessible-autocomplete.min";
 
 // re: `z-index` on `.autocomplete__wrapper`
-// The styles for the dropdown arrow sets the z-index to -1 that seems to place
-// it behind the autocomplete, this may be a bug, but this is a workaround for
-// us, see: https://github.com/alphagov/accessible-autocomplete/issues/351#issuecomment-582935867
-
-.autocomplete__outer-wrapper {
-  display: flex;
-  align-items: start;
-}
+// The styles for the dropdown arrow set the z-index to -1, which place it
+// behind the autocomplete. Setting the `z-index` on the wrapper seems to fix
+// this. See: https://github.com/alphagov/accessible-autocomplete/issues/351#issuecomment-582935867
 
 .autocomplete__wrapper {
-  flex: 1;
-  margin-right: 1.5rem;
   z-index: 0;
 }
 
@@ -30,15 +23,4 @@
   @media (min-width: 40.0625em) {
     min-height: 1.1875rem;
   }
-}
-
-.autocomplete__clear-button {
-  @include govuk-font($size: 27, $weight: bold, $line-height: 0.8);
-
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-  // stylelint-disable-next-line number-max-precision
-  margin-top: 0.5439375rem;
-  padding: 0;
 }

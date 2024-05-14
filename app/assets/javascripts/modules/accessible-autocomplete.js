@@ -24,7 +24,7 @@ window.GOVUK.Modules = window.GOVUK.Modules || {}
 
     const autocompleteElement = selectElement.parentNode.querySelector('.autocomplete__input')
     resetSelectWhenDesynced(selectElement, autocompleteElement)
-    addClearButton(selectElement, autocompleteElement)
+    enableClearButton(selectElement, autocompleteElement)
   }
 
   Modules.AccessibleAutocomplete = AccessibleAutocomplete
@@ -45,32 +45,20 @@ function resetSelectWhenDesynced (selectElement, autocompleteElement) {
   })
 }
 
-function addClearButton (selectElement, autocompleteElement) {
-  const autocompleteOuterWrapper = autocompleteElement.parentNode.parentNode
-  autocompleteOuterWrapper.className = 'autocomplete__outer-wrapper'
+function enableClearButton (selectElement, autocompleteElement) {
+  const clearButton = document.querySelector('.js-autocomplete__clear-button')
 
-  const clearButton = createClearButton(selectElement, autocompleteElement)
-  autocompleteOuterWrapper.append(clearButton)
-}
-
-function createClearButton (selectElement, autocompleteElement) {
-  const clearButton = document.createElement('button')
-  clearButton.type = 'button'
-  clearButton.innerText = 'X'
-  clearButton.ariaLabel = 'Clear selection'
-  clearButton.className = 'autocomplete__clear-button'
-
-  clearButton.addEventListener('click', function () {
-    resetSelectAndAutocomplete(selectElement, autocompleteElement, clearButton)
-  })
-
-  clearButton.addEventListener('keydown', function (event) {
-    if (event.key === ' ' || event.key === 'Enter') {
+  if (clearButton) {
+    clearButton.addEventListener('click', function () {
       resetSelectAndAutocomplete(selectElement, autocompleteElement, clearButton)
-    }
-  })
+    })
 
-  return clearButton
+    clearButton.addEventListener('keydown', function (event) {
+      if (event.key === ' ' || event.key === 'Enter') {
+        resetSelectAndAutocomplete(selectElement, autocompleteElement, clearButton)
+      }
+    })
+  }
 }
 
 function resetSelectAndAutocomplete (selectElement, autocompleteElement, clearButton) {
