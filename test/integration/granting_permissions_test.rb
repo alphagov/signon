@@ -3,11 +3,11 @@ require "test_helper"
 class GrantingPermissionsTest < ActionDispatch::IntegrationTest
   context "as a super admin" do
     setup do
-      @admin = create(:superadmin_user)
+      admin = create(:superadmin_user)
       @user = create(:user)
 
       visit root_path
-      signin_with(@admin)
+      signin_with(admin)
     end
 
     should "support granting signin permissions" do
@@ -88,11 +88,11 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
 
   context "as an admin" do
     setup do
-      @admin = create(:admin_user)
+      admin = create(:admin_user)
       @user = create(:user)
 
       visit root_path
-      signin_with(@admin)
+      signin_with(admin)
     end
 
     should "support granting signin permissions" do
