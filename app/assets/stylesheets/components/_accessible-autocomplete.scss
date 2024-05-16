@@ -24,3 +24,11 @@
     min-height: 1.1875rem;
   }
 }
+
+.js-autocomplete__clear-button {
+  display: none;
+
+  &--enabled {
+    display: inline-block;
+  }
+}

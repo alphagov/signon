@@ -58,6 +58,8 @@ function enableClearButton (selectElement, autocompleteElement) {
         resetSelectAndAutocomplete(selectElement, autocompleteElement, clearButton)
       }
     })
+
+    clearButton.classList.add('js-autocomplete__clear-button--enabled')
   }
 }
 
