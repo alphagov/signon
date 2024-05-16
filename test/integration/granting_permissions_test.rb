@@ -286,6 +286,69 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       end
     end
 
+    context "when the user already has some permissions" do
+      should "show the new and current permissions forms" do
+        admin = create(:superadmin_user)
+        user = create(:user)
+        visit root_path
+        signin_with(admin)
+
+        app = create(
+          :application,
+          name: "MyApp",
+          with_supported_permissions: %w[pre-existing never-1 never-2 gonna run around and desert you],
+        )
+        user.grant_application_signin_permission(app)
+        user.grant_application_permissions(app, %w[pre-existing])
+
+        # when I visit the path to edit the user's permissions for the app
+        visit edit_user_path(user)
+        click_on "Manage permissions"
+        click_on "Update permissions for MyApp"
+        assert_current_url edit_user_application_permissions_path(user, app)
+
+        # the new permissions form exists
+        assert_selector "#new_permission_id"
+
+        # the current permissions form exists
+        assert_selector "legend", text: "Current permissions"
+        assert_selector ".govuk-hint", text: "Clear the checkbox and save changes to remove a permission."
+        assert_selector ".govuk-label", text: "pre-existing"
+        assert_selector ".govuk-button", text: "Update permissions"
+      end
+    end
+
+    context "when the user has no permissions" do
+      should "only show the new permissions form" do
+        admin = create(:superadmin_user)
+        user = create(:user)
+        visit root_path
+        signin_with(admin)
+
+        app = create(
+          :application,
+          name: "MyApp",
+          with_supported_permissions: %w[never-1 never-2 never-3 never-4 never-5 gonna make you cry],
+        )
+        @adding_permission = SupportedPermission.find_by(name: "adding")
+        user.grant_application_signin_permission(app)
+
+        # when I visit the path to edit the user's permissions for the app
+        visit edit_user_path(user)
+        click_on "Manage permissions"
+        click_on "Update permissions for MyApp"
+        assert_current_url edit_user_application_permissions_path(user, app)
+
+        # the new permissions form exists
+        assert_selector "#new_permission_id", visible: false
+
+        # the current permissions form does not exist
+        assert_no_selector "legend", text: "Current permissions"
+        assert_no_selector ".govuk-hint", text: "Clear the checkbox and save changes to remove a permission."
+        assert_no_selector ".govuk-button", text: "Update permissions"
+      end
+    end
+
     context "with JavaScript enabled" do
       setup do
         use_javascript_driver
