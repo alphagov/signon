@@ -16,7 +16,13 @@
 
   <div class="govuk-button-group">
     <%= render "govuk_publishing_components/components/button", {
-        text: "Add permission",
+        text: "Add permission"
+    } %>
+
+    <%= render "govuk_publishing_components/components/button", {
+        text: "Clear selection",
+        type: "button",
+        classes: "js-autocomplete__clear-button",
         secondary_solid: true
     } %>
   </div>
