@@ -156,72 +156,133 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
     end
   end
 
-  context "updating permissions for an app" do
-    %i[superadmin admin super_organisation_admin organisation_admin].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @user = create(:"#{user_role}_user")
-        end
+  %i[superadmin admin super_organisation_admin organisation_admin].each do |user_role|
+    context "as a #{user_role}" do
+      should "support granting self app-specific permissions" do
+        user = create(:"#{user_role}_user")
+        application = create(:application, name: "app-name", description: "app-description", with_supported_permissions: %w[perm1 perm2])
+        application.signin_permission.update!(delegatable: true)
+        user.grant_application_signin_permission(application)
+        user.grant_application_permission(application, "perm1")
 
-        should "allow user to update their permissions for apps" do
-          application = create(:application, name: "app-name", description: "app-description", with_supported_permissions: %w[perm1 perm2])
-          application.signin_permission.update!(delegatable: true)
-          @user.grant_application_signin_permission(application)
-          @user.grant_application_permission(application, "perm1")
+        visit new_user_session_path
+        signin_with user
 
-          visit new_user_session_path
-          signin_with @user
+        visit account_applications_path
 
-          visit account_applications_path
+        click_on "Update permissions for app-name"
 
-          click_on "Update permissions for app-name"
+        assert page.has_checked_field?("perm1")
+        assert page.has_unchecked_field?("perm2")
 
-          assert page.has_checked_field?("perm1")
-          assert page.has_unchecked_field?("perm2")
+        check "perm2"
+        click_button "Update permissions"
 
-          check "perm2"
-          click_button "Update permissions"
+        success_flash = find("div[role='alert']")
+        assert success_flash.has_content?("perm1")
+        assert success_flash.has_content?("perm2")
+      end
+    end
+  end
 
-          success_flash = find("div[role='alert']")
-          assert success_flash.has_content?("perm1")
-          assert success_flash.has_content?("perm2")
-        end
+  context "with apps that have greater than eight permissions" do
+    should "support granting self app-specific permissions" do
+      user = create(:superadmin_user)
 
-        should "allow user to update their permissions on apps with greater than eight supported permissions" do
-          application_with_9_permissions = create(:application, name: "app-with-9-permissions", description: "app-description", with_supported_permissions: %w[pre-existing removing adding never-1 never-2 never-3 never-4 never-5 never-6])
-          application_with_9_permissions.signin_permission.update!(delegatable: true)
-          @user.grant_application_signin_permission(application_with_9_permissions)
-          @user.grant_application_permissions(application_with_9_permissions, %w[pre-existing removing])
+      app = create(:application, name: "app-with-9-permissions", description: "app-description", with_supported_permissions: %w[pre-existing removing adding never-1 never-2 never-3 never-4 never-5 never-6])
+      app.signin_permission.update!(delegatable: true)
+      user.grant_application_signin_permission(app)
+      user.grant_application_permissions(app, %w[pre-existing removing])
 
-          visit new_user_session_path
-          signin_with @user
+      visit new_user_session_path
+      signin_with user
 
-          visit account_applications_path
-          click_on "Update permissions for app-with-9-permissions"
-          assert page.has_checked_field?("pre-existing")
-          assert page.has_checked_field?("removing")
-          uncheck "removing"
-          click_button "Update permissions"
-          success_flash = find("div[role='alert']")
-          assert success_flash.has_content?("pre-existing")
-          %w[removing adding never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
-            assert_not success_flash.has_content?(permission)
-          end
+      visit account_applications_path
+      click_on "Update permissions for app-with-9-permissions"
+      assert page.has_checked_field?("pre-existing")
+      assert page.has_checked_field?("removing")
+      uncheck "removing"
+      click_button "Update permissions"
+      success_flash = find("div[role='alert']")
+      assert success_flash.has_content?("pre-existing")
+      %w[removing adding never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
+        assert_not success_flash.has_content?(permission)
+      end
 
-          click_on "Update permissions for app-with-9-permissions"
-          click_button "Add permission"
-          flash = find("div[role='alert']")
-          assert flash.has_content?("You must select a permission.")
+      click_on "Update permissions for app-with-9-permissions"
+      click_button "Add permission"
+      flash = find("div[role='alert']")
+      assert flash.has_content?("You must select a permission.")
 
-          select "adding"
-          click_button "Add permission"
-          flash = find("div[role='alert']")
-          assert flash.has_content?("pre-existing")
-          assert flash.has_content?("adding")
-          %w[removing never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
-            assert_not flash.has_content?(permission)
-          end
-        end
+      select "adding"
+      click_button "Add permission"
+      flash = find("div[role='alert']")
+      assert flash.has_content?("pre-existing")
+      assert flash.has_content?("adding")
+      %w[removing never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
+        assert_not flash.has_content?(permission)
+      end
+    end
+
+    context "when the user already has some permissions" do
+      should "show the new and current permissions forms" do
+        user = create(:superadmin_user)
+
+        visit root_path
+        signin_with(user)
+
+        app = create(
+          :application,
+          name: "MyApp",
+          with_supported_permissions: %w[pre-existing never-1 never-2 never-3 never-4 gonna give you up],
+        )
+        app.signin_permission.update!(delegatable: true)
+        user.grant_application_signin_permission(app)
+        user.grant_application_permissions(app, %w[pre-existing])
+
+        # when I visit the path to edit my permissions for the app
+        visit account_applications_path
+        click_on "Update permissions for MyApp"
+        assert_current_url edit_account_application_permissions_path(app)
+
+        # the new permissions form exists with autocomplete and select elements
+        assert_selector "#new_permission_id"
+
+        # the current permissions form does not exist
+        assert_selector "legend", text: "Current permissions"
+        assert_selector ".govuk-hint", text: "Clear the checkbox and save changes to remove a permission."
+        assert_selector ".govuk-label", text: "pre-existing"
+        assert_selector ".govuk-button", text: "Update permissions"
+      end
+    end
+
+    context "when the user has no permissions" do
+      should "only show the new permissions form" do
+        user = create(:superadmin_user)
+
+        visit root_path
+        signin_with(user)
+
+        app = create(
+          :application,
+          name: "MyApp",
+          with_supported_permissions: %w[never-1 never-2 never-3 never-4 never-5 gonna let you down],
+        )
+        app.signin_permission.update!(delegatable: true)
+        user.grant_application_signin_permission(app)
+
+        # when I visit the path to edit my permissions for the app
+        visit account_applications_path
+        click_on "Update permissions for MyApp"
+        assert_current_url edit_account_application_permissions_path(app)
+
+        # the new permissions form exists with autocomplete and select elements
+        assert_selector "#new_permission_id"
+
+        # the current permissions form does not exist
+        assert_no_selector "legend", text: "Current permissions"
+        assert_no_selector ".govuk-hint", text: "Clear the checkbox and save changes to remove a permission."
+        assert_no_selector ".govuk-button", text: "Update permissions"
       end
     end
 
@@ -229,13 +290,11 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
       setup do
         use_javascript_driver
 
-        # when I'm signed in as a user who can edit their own permissions
         @user = create(:superadmin_user)
 
         visit root_path
         signin_with(@user)
 
-        # and I have access to an app with greater than eight supported permissions
         @app = create(
           :application,
           name: "MyApp",

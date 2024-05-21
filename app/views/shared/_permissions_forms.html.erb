@@ -10,12 +10,14 @@
         unassigned_permission_options: unassigned_permission_options
       } %>
 
-      <%= render "shared/edit_permissions_form", { 
-          **shared_permissions_form_locals,
-          heading: "Current permissions",
-          hint_text: "Clear the checkbox and save changes to remove a permission.",
-          permissions: assigned_permissions
-      } %>
+      <% if assigned_permissions.present? %>
+        <%= render "shared/edit_permissions_form", { 
+            **shared_permissions_form_locals,
+            heading: "Current permissions",
+            hint_text: "Clear the checkbox and save changes to remove a permission.",
+            permissions: assigned_permissions
+        } %>
+      <% end %>
     <% end %>
   </div>
 </div>
