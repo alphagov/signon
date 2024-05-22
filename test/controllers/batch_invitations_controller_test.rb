@@ -15,7 +15,7 @@ class BatchInvitationsControllerTest < ActionController::TestCase
   context "GET new" do
     should "render a form" do
       get :new
-      assert_response 200
+      assert_response :ok
       assert_select "input[type=file]"
     end
 
