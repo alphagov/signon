@@ -130,7 +130,7 @@ will return something a JSON response such as:
           "Publisher": ["signin"],
           "Whitehall": ["signin"],
           "Panopticon": ["signin"],
-          "Imminence": ["signin"],
+          "Places Manager": ["signin"],
           "Migratorator": ["signin"]
         }
       }
