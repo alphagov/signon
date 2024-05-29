@@ -21,6 +21,7 @@ class AccountRolesTest < ActionDispatch::IntegrationTest
 
       visit edit_account_role_path
 
+      assert has_select? "Role", selected: "Superadmin"
       select "Normal", from: "Role"
       click_button "Change role"
 
