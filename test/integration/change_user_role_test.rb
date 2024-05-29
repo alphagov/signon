@@ -14,10 +14,11 @@ class ChangeUserRoleTest < ActionDispatch::IntegrationTest
 
   context "when logged in as a super admin" do
     should "be able to change the role of a user who is not exempt from 2SV" do
-      user = create(:user)
+      user = create(:two_step_enabled_organisation_admin)
       sign_in_as_and_edit_user(@super_admin, user)
       click_link "Change Role"
 
+      assert has_select? "Role", selected: "Organisation admin"
       select "Admin", from: "Role"
       click_button "Change role"
 
