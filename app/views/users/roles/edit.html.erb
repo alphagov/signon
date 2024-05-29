@@ -48,7 +48,7 @@
           name: "user[role]",
           label: "Role",
           hint: user_role_select_hint,
-          options: current_user.manageable_roles.map { |role| { text: role.display_name, value: role.name, selected: @user.role == role.name } },
+          options: current_user.manageable_roles.map { |role| { text: role.display_name, value: role.name, selected: @user.role_name == role.name } },
           error_message: @user.errors[:role].any? ? @user.errors.full_messages_for(:role).to_sentence : nil
         } %>
         <div class="govuk-button-group">
