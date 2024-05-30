@@ -1,6 +1,6 @@
 require "test_helper"
 
-class PermissionsPromoterTest < ActiveSupport::TestCase
+class PermissionsTest < ActiveSupport::TestCase
   setup do
     Signon::Application.load_tasks if Rake::Task.tasks.empty?
 
@@ -8,7 +8,7 @@ class PermissionsPromoterTest < ActiveSupport::TestCase
     @org = create(:organisation, name: "Another Department")
     @first_app = create(:application, name: "Cat Publisher", with_supported_permissions: ["Managing Editor", "other"])
     @second_app = create(:application, name: "Dog Publisher", with_supported_permissions: %w[managing_editor other])
-    @task = Rake::Task["permissions_promoter:promote_managing_editors_to_org_admins"]
+    @task = Rake::Task["permissions:promote_managing_editors_to_org_admins"]
     $stdout.stubs(:write)
   end
 
