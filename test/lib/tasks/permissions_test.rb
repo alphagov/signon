@@ -26,43 +26,43 @@ class PermissionsTest < ActiveSupport::TestCase
       assert first_non_gds_user.reload.organisation_admin?
       assert second_non_gds_user.reload.organisation_admin?
     end
-  end
 
-  should "not update a non-GDS user without a managing editor permission" do
-    non_gds_user = user_with_permissions(:user, @org, { @first_app => %w[other], @second_app => %w[other] })
+    should "not update a non-GDS user without a managing editor permission" do
+      non_gds_user = user_with_permissions(:user, @org, { @first_app => %w[other], @second_app => %w[other] })
 
-    @task.invoke
+      @task.invoke
 
-    assert non_gds_user.reload.normal?
-  end
-
-  should "not update a non-GDS user who already has an admin role" do
-    admin_user = user_with_permissions(:admin_user, @org, { @first_app => ["Managing Editor"] })
-
-    @task.invoke
-
-    assert admin_user.reload.admin?
-  end
-
-  should "not update a non-GDS user who is suspended" do
-    user = user_with_permissions(:user, @org, { @first_app => ["Managing Editor"] })
-    user.update!(suspended_at: 1.day.ago, reason_for_suspension: "Dormant account")
-
-    @task.invoke
-
-    assert user.reload.normal?
-  end
-
-  should "not update GDS users" do
-    gds_users = %i[user admin_user].map do |user_type|
-      user_with_permissions(user_type, @gds_org, { @first_app => ["Managing Editor"] })
+      assert non_gds_user.reload.normal?
     end
-    original_roles = gds_users.map(&:role)
 
-    @task.invoke
+    should "not update a non-GDS user who already has an admin role" do
+      admin_user = user_with_permissions(:admin_user, @org, { @first_app => ["Managing Editor"] })
 
-    gds_users.each(&:reload)
-    assert gds_users.map(&:role) == original_roles
+      @task.invoke
+
+      assert admin_user.reload.admin?
+    end
+
+    should "not update a non-GDS user who is suspended" do
+      user = user_with_permissions(:user, @org, { @first_app => ["Managing Editor"] })
+      user.update!(suspended_at: 1.day.ago, reason_for_suspension: "Dormant account")
+
+      @task.invoke
+
+      assert user.reload.normal?
+    end
+
+    should "not update GDS users" do
+      gds_users = %i[user admin_user].map do |user_type|
+        user_with_permissions(user_type, @gds_org, { @first_app => ["Managing Editor"] })
+      end
+      original_roles = gds_users.map(&:role)
+
+      @task.invoke
+
+      gds_users.each(&:reload)
+      assert gds_users.map(&:role) == original_roles
+    end
   end
 
   def user_with_permissions(user_type, organisation, permissions_hash)
