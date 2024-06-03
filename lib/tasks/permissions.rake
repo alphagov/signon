@@ -27,11 +27,21 @@ namespace :permissions do
       supported_permission: whitehall_managing_editor_permission,
       user_id: User.where.not(organisation_id: gds.id),
     ).pluck(:user_id)
-    user_editor_permissions_to_destroy_ids = UserApplicationPermission.where(
+    editor_permissions_to_destroy = UserApplicationPermission.where(
       supported_permission: whitehall_editor_permission,
       user_id: non_gds_users_with_managing_editor_permission_user_ids,
     )
 
-    user_editor_permissions_to_destroy_ids.destroy_all
+    puts "Number of non-GDS users with both managing editor and editor permissions in Whitehall"
+    puts "Before removing permissions: #{editor_permissions_to_destroy.count}"
+
+    editor_permissions_to_destroy.destroy_all
+
+    count_of_remaining_users_with_both_permissions = UserApplicationPermission.where(
+      supported_permission: whitehall_editor_permission,
+      user_id: non_gds_users_with_managing_editor_permission_user_ids,
+    ).count
+
+    puts "After removing permissions: #{count_of_remaining_users_with_both_permissions}"
   end
 end
