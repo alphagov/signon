@@ -137,6 +137,10 @@ class Account::PermissionsControllerTest < ActionController::TestCase
         assert_select "select[name='application[new_permission_id]']"
       end
 
+      should "include a hidden field representing whether the user wants to add more permissions, defaulting to false" do
+        assert_select "input[type='hidden'][name='application[add_more]'][value='false']"
+      end
+
       should "display checkboxes for the existing permissions" do
         assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{@perm_granted_1.id}']"
         assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{@perm_granted_2.id}']"
@@ -270,23 +274,40 @@ class Account::PermissionsControllerTest < ActionController::TestCase
     end
 
     context "when current_permission_ids and new_permission_id are provided instead of supported_permission_ids" do
+      setup do
+        @application = create(:application)
+        @perm_granted_1 = create(:supported_permission, application: @application, name: "perm_granted_1")
+        @perm_granted_2 = create(:supported_permission, application: @application, name: "perm_granted_2")
+        @perm_ungranted = create(:supported_permission, application: @application, name: "perm_ungranted")
+
+        @current_user = create(:admin_user, with_permissions: { @application => ["perm_granted_1", "perm_granted_2", SupportedPermission::SIGNIN_NAME] })
+
+        sign_in @current_user
+
+        stub_policy @current_user, [:account, @application], edit_permissions?: true
+      end
+
       should "use the relevant params to update permissions" do
-        application = create(:application)
-        perm_granted_1 = create(:supported_permission, application:, name: "perm_granted_1")
-        perm_granted_2 = create(:supported_permission, application:, name: "perm_granted_2")
-        perm_ungranted = create(:supported_permission, application:, name: "perm_ungranted")
+        patch :update, params: { application_id: @application.id, application: { current_permission_ids: [@perm_granted_1.id, @perm_granted_2.id], new_permission_id: @perm_ungranted.id } }
 
-        current_user = create(:admin_user, with_permissions: { application => ["perm_granted_1", "perm_granted_2", SupportedPermission::SIGNIN_NAME] })
+        # assert redirected to apps page
+        assert_redirected_to account_applications_path
 
-        sign_in current_user
+        @current_user.reload
 
-        stub_policy current_user, [:account, application], edit_permissions?: true
+        assert_equal [@perm_granted_1, @perm_granted_2, @perm_ungranted, @application.signin_permission], @current_user.supported_permissions
+      end
 
-        patch :update, params: { application_id: application.id, application: { current_permission_ids: [perm_granted_1.id, perm_granted_2.id], new_permission_id: perm_ungranted.id } }
+      context "when the add_more param is 'true'" do
+        should "update permissions then redirect back to the edit page" do
+          patch :update, params: { application_id: @application.id, application: { current_permission_ids: [@perm_granted_1.id, @perm_granted_2.id], new_permission_id: @perm_ungranted.id, add_more: "true" } }
 
-        current_user.reload
+          assert_redirected_to edit_account_application_permissions_path(@application)
 
-        assert_equal [perm_granted_1, perm_granted_2, perm_ungranted, application.signin_permission], current_user.supported_permissions
+          @current_user.reload
+
+          assert_equal [@perm_granted_1, @perm_granted_2, @perm_ungranted, @application.signin_permission], @current_user.supported_permissions
+        end
       end
     end
   end

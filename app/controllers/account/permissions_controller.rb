@@ -59,14 +59,19 @@ class Account::PermissionsController < ApplicationController
 
     UserUpdate.new(current_user, { supported_permission_ids: }, current_user, user_ip_address).call
 
-    flash[:application_id] = @application.id
-    redirect_to account_applications_path
+    if update_params[:add_more] == "true"
+      flash[:new_permission_name] = SupportedPermission.find(update_params[:new_permission_id]).name
+      redirect_to edit_account_application_permissions_path(@application)
+    else
+      flash[:application_id] = @application.id
+      redirect_to account_applications_path
+    end
   end
 
 private
 
   def update_params
-    params.require(:application).permit(:new_permission_id, current_permission_ids: [], supported_permission_ids: [])
+    params.require(:application).permit(:new_permission_id, :add_more, current_permission_ids: [], supported_permission_ids: [])
   end
 
   def set_application

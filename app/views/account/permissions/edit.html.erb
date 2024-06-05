@@ -20,6 +20,15 @@
    })
 %>
 
+<% if flash[:new_permission_name] %>
+  <% content_for(:custom_alerts) do %>
+    <%= render "govuk_publishing_components/components/success_alert", {
+        message: "Permission added",
+        description: "You have successfully added the permission '#{flash[:new_permission_name]}'.",
+    } %>
+  <% end %>
+<% end %>
+
 <%= render "shared/permissions_forms", {
   assigned_permissions: @assigned_permissions,
   unassigned_permission_options: @unassigned_permission_options,

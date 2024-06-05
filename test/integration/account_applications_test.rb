@@ -210,12 +210,12 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
       end
 
       click_on "Update permissions for app-with-9-permissions"
-      click_button "Add permission"
+      click_button "Add and finish"
       flash = find("div[role='alert']")
       assert flash.has_content?("You must select a permission.")
 
       select "adding"
-      click_button "Add permission"
+      click_button "Add and finish"
       flash = find("div[role='alert']")
       assert flash.has_content?("pre-existing")
       assert flash.has_content?("adding")
@@ -366,7 +366,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
 
       should "be able to add permissions" do
         # when I try to add the permission
-        click_button "Add permission"
+        click_button "Add and finish"
 
         # I can see that the permission has been added
         assert_includes @user.permissions_for(@app), "pre-existing"
@@ -374,6 +374,21 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
         %w[never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
           assert_not_includes @user.permissions_for(@app), permission
         end
+
+        assert_current_url account_applications_path
+      end
+
+      should "add permissions then redirect back to the form when clicking 'Add'" do
+        click_button "Add"
+
+        # I can see that the permission has been added
+        assert_includes @user.permissions_for(@app), "pre-existing"
+        assert_includes @user.permissions_for(@app), "adding"
+        %w[never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
+          assert_not_includes @user.permissions_for(@app), permission
+        end
+
+        assert_current_url edit_account_application_permissions_path(@app)
       end
 
       should "reset the value of the select element when it no longer matches what's shown in the autocomplete input" do
@@ -387,7 +402,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
         assert_equal "", @select_element.value
 
         # when I try to add the permission
-        click_button "Add permission"
+        click_button "Add and finish"
 
         # I can see that the permission has not been added
         assert_includes @user.permissions_for(@app), "pre-existing"
@@ -405,7 +420,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
         assert_equal "", @select_element.value
 
         # when I try to add the permission
-        click_button "Add permission"
+        click_button "Add and finish"
 
         # I can see that the permission has not been added
         assert_includes @user.permissions_for(@app), "pre-existing"
@@ -424,7 +439,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
         assert_equal "", @select_element.value
 
         # when I try to add the permission
-        click_button "Add permission"
+        click_button "Add and finish"
 
         # I can see that the permission has not been added
         assert_includes @user.permissions_for(@app), "pre-existing"
@@ -443,7 +458,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
         assert_equal "", @select_element.value
 
         # when I try to add the permission
-        click_button "Add permission"
+        click_button "Add and finish"
 
         # I can see that the permission has not been added
         assert_includes @user.permissions_for(@app), "pre-existing"

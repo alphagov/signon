@@ -14,9 +14,19 @@
     <%= hidden_field_tag "application[current_permission_ids][]", id %>
   <% end %>
 
+  <%= hidden_field_tag "application[add_more]", "false" %>
+
   <div class="govuk-button-group">
     <%= render "govuk_publishing_components/components/button", {
-        text: "Add permission"
+        text: "Add",
+        aria_label: "Add permission",
+        classes: "js-autocomplete__add-button"
+    } %>
+
+    <%= render "govuk_publishing_components/components/button", {
+        text: "Add and finish",
+        aria_label: "Add permission and finish",
+        classes: "js-autocomplete__add-and-finish-button"
     } %>
 
     <%= render "govuk_publishing_components/components/button", {
