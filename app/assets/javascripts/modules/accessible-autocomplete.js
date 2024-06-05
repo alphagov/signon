@@ -23,12 +23,22 @@ window.GOVUK.Modules = window.GOVUK.Modules || {}
     new window.accessibleAutocomplete.enhanceSelectElement(configOptions) // eslint-disable-line no-new, new-cap
 
     const autocompleteElement = selectElement.parentNode.querySelector('.autocomplete__input')
+    enableArrow(autocompleteElement)
     resetSelectWhenDesynced(selectElement, autocompleteElement)
     enableClearButton(selectElement, autocompleteElement)
   }
 
   Modules.AccessibleAutocomplete = AccessibleAutocomplete
 })(window.GOVUK.Modules)
+
+function enableArrow (autocompleteElement) {
+  const arrowElement = autocompleteElement.parentNode.querySelector('.autocomplete__dropdown-arrow-down')
+
+  arrowElement.addEventListener('click', function () {
+    autocompleteElement.click()
+    autocompleteElement.focus()
+  })
+}
 
 function resetSelectWhenDesynced (selectElement, autocompleteElement) {
   // if the autocomplete element's value no longer matches the selected option

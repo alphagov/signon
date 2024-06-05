@@ -12,6 +12,14 @@
   z-index: 0;
 }
 
+.autocomplete__input--focused + .autocomplete__dropdown-arrow-down {
+  display: none;
+}
+
+.autocomplete__dropdown-arrow-down {
+  cursor: pointer;
+}
+
 // This ensures the empty option is the same height as the options with values
 .autocomplete__option {
   min-height: 1rem;
