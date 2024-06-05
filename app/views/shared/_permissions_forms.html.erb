@@ -3,12 +3,14 @@
     <% unless split_assigned_and_unassigned_permissions %>
       <%= render "shared/edit_permissions_form", { **shared_permissions_form_locals, permissions: permissions } %>
     <% else %>
-      <%= render "shared/add_permissions_with_autocomplete_form", {
-        action: shared_permissions_form_locals[:action],
-        cancel_path: shared_permissions_form_locals[:cancel_path],
-        assigned_permissions: assigned_permissions,
-        unassigned_permission_options: unassigned_permission_options
-      } %>
+      <% if unassigned_permission_options.present? %>
+        <%= render "shared/add_permissions_with_autocomplete_form", {
+          action: shared_permissions_form_locals[:action],
+          cancel_path: shared_permissions_form_locals[:cancel_path],
+          assigned_permissions: assigned_permissions,
+          unassigned_permission_options: unassigned_permission_options
+        } %>
+      <% end %>
 
       <% if assigned_permissions.present? %>
         <%= render "shared/edit_permissions_form", { 

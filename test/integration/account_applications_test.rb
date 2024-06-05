@@ -224,7 +224,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
       end
     end
 
-    context "when the user already has some permissions" do
+    context "when the user already has some but not all permissions" do
       should "show the new and current permissions forms" do
         user = create(:superadmin_user)
 
@@ -252,6 +252,37 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
         assert_selector "legend", text: "Current permissions"
         assert_selector ".govuk-hint", text: "Clear the checkbox and save changes to remove a permission."
         assert_selector ".govuk-label", text: "pre-existing"
+        assert_selector ".govuk-button", text: "Update permissions"
+      end
+    end
+
+    context "when the user has all permissions" do
+      should "only show the current permissions form" do
+        user = create(:superadmin_user)
+
+        visit root_path
+        signin_with(user)
+
+        app = create(
+          :application,
+          name: "MyApp",
+          with_supported_permissions: %w[Gotta catch 'em all I know it's my destiny],
+        )
+        app.signin_permission.update!(delegatable: true)
+        user.grant_application_signin_permission(app)
+        user.grant_application_permissions(app, %w[Gotta catch 'em all I know it's my destiny])
+
+        # when I visit the path to edit my permissions for the app
+        visit account_applications_path
+        click_on "Update permissions for MyApp"
+        assert_current_url edit_account_application_permissions_path(app)
+
+        # the new permissions form exists with autocomplete and select elements
+        assert_no_selector "#new_permission_id"
+
+        # the current permissions form does not exist
+        assert_selector "legend", text: "Current permissions"
+        assert_selector ".govuk-hint", text: "Clear the checkbox and save changes to remove a permission."
         assert_selector ".govuk-button", text: "Update permissions"
       end
     end
