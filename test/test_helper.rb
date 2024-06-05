@@ -1,5 +1,5 @@
 ENV["RAILS_ENV"] = "test"
-ENV["GOVUK_ENVIRONMENT_NAME"] = "test"
+ENV["GOVUK_ENVIRONMENT"] = "test"
 
 require "simplecov"
 SimpleCov.start "rails"

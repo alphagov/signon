@@ -38,4 +38,4 @@ Used to configure Google Analytics in the new `app/views/layouts/admin_layout.ht
 
 Used to configure `GovukAdminTemplate` and in `Healthcheck::ApiTokens#expiring_tokens`.
 
-* `GOVUK_ENVIRONMENT_NAME`
+* `GOVUK_ENVIRONMENT`
