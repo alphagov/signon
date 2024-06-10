@@ -273,12 +273,12 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       end
 
       click_on "Update permissions for MyApp"
-      click_button "Add permission"
+      click_button "Add and finish"
       flash = find("div[role='alert']")
       assert flash.has_content?("You must select a permission.")
 
       select "adding"
-      click_button "Add permission"
+      click_button "Add and finish"
       assert_includes user.permissions_for(app), "pre-existing"
       assert_includes user.permissions_for(app), "adding"
       %w[removing never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
@@ -429,7 +429,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
 
       should "be able to add permissions" do
         # when I try to add the permission
-        click_button "Add permission"
+        click_button "Add and finish"
 
         # I can see that the permission has been added
         assert_includes @user.permissions_for(@app), "pre-existing"
@@ -437,6 +437,21 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
         %w[never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
           assert_not_includes @user.permissions_for(@app), permission
         end
+
+        assert_current_url user_applications_path(@user)
+      end
+
+      should "add permissions then redirect back to the form when clicking 'Add'" do
+        click_button "Add"
+
+        # I can see that the permission has been added
+        assert_includes @user.permissions_for(@app), "pre-existing"
+        assert_includes @user.permissions_for(@app), "adding"
+        %w[never-1 never-2 never-3 never-4 never-5 never-6].each do |permission|
+          assert_not_includes @user.permissions_for(@app), permission
+        end
+
+        assert_current_url edit_user_application_permissions_path(@user, @app)
       end
 
       should "reset the value of the select element when it no longer matches what's shown in the autocomplete input" do
@@ -450,7 +465,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
         assert_equal "", @select_element.value
 
         # when I try to add the permission
-        click_button "Add permission"
+        click_button "Add and finish"
 
         # I can see that the permission has not been added
         assert_includes @user.permissions_for(@app), "pre-existing"
@@ -468,7 +483,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
         assert_equal "", @select_element.value
 
         # when I try to add the permission
-        click_button "Add permission"
+        click_button "Add and finish"
 
         # I can see that the permission has not been added
         assert_includes @user.permissions_for(@app), "pre-existing"
@@ -487,7 +502,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
         assert_equal "", @select_element.value
 
         # when I try to add the permission
-        click_button "Add permission"
+        click_button "Add and finish"
 
         # I can see that the permission has not been added
         assert_includes @user.permissions_for(@app), "pre-existing"
@@ -506,7 +521,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
         assert_equal "", @select_element.value
 
         # when I try to add the permission
-        click_button "Add permission"
+        click_button "Add and finish"
 
         # I can see that the permission has not been added
         assert_includes @user.permissions_for(@app), "pre-existing"

@@ -24,6 +24,7 @@ window.GOVUK.Modules = window.GOVUK.Modules || {}
 
     const autocompleteElement = selectElement.parentNode.querySelector('.autocomplete__input')
     enableArrow(autocompleteElement)
+    enableAddButton()
     resetSelectWhenDesynced(selectElement, autocompleteElement)
     enableClearButton(selectElement, autocompleteElement)
   }
@@ -38,6 +39,34 @@ function enableArrow (autocompleteElement) {
     autocompleteElement.click()
     autocompleteElement.focus()
   })
+}
+
+function enableAddButton () {
+  const addButton = document.querySelector('.js-autocomplete__add-button')
+  const addAndFinishButton = document.querySelector('.js-autocomplete__add-and-finish-button')
+  const addMoreInput = document.querySelector('input[name="application[add_more]"]')
+
+  if (addButton) {
+    addAndFinishButton.type = 'button'
+    addMoreInput.value = 'true'
+
+    addAndFinishButton.addEventListener('click', function () {
+      addAndFinish(addMoreInput, addButton)
+    })
+
+    addAndFinishButton.addEventListener('keydown', function (event) {
+      if (event.key === ' ' || event.key === 'Enter') {
+        addAndFinish(addMoreInput, addButton)
+      }
+    })
+
+    addButton.classList.add('js-autocomplete__add-button--enabled')
+  }
+}
+
+function addAndFinish (addMoreInput, addButton) {
+  addMoreInput.value = 'false'
+  addButton.click()
 }
 
 function resetSelectWhenDesynced (selectElement, autocompleteElement) {
