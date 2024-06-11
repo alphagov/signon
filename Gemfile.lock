@@ -609,7 +609,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rexml (3.2.9)
+    rexml (3.3.0)
       strscan
     rotp (6.3.0)
     rouge (4.2.1)
@@ -630,7 +630,7 @@ GEM
       unicode-display_width (>= 2.4.0, < 3.0)
     rubocop-ast (1.31.3)
       parser (>= 3.3.1.0)
-    rubocop-capybara (2.20.0)
+    rubocop-capybara (2.21.0)
       rubocop (~> 1.41)
     rubocop-factory_bot (2.26.0)
       rubocop (~> 1.41)
