@@ -30,14 +30,14 @@ class GovukEnvironmentTest < ActionMailer::TestCase
         Rails.env.stubs(:test?).returns(false)
       end
 
-      should "return value of GOVUK_ENVIRONMENT_NAME if it is set" do
-        ClimateControl.modify(GOVUK_ENVIRONMENT_NAME: "govuk-environment-name") do
+      should "return value of GOVUK_ENVIRONMENT if it is set" do
+        ClimateControl.modify(GOVUK_ENVIRONMENT: "govuk-environment-name") do
           assert_equal "govuk-environment-name", GovukEnvironment.name
         end
       end
 
-      should "fail fast if GOVUK_ENVIRONMENT_NAME is not set" do
-        ClimateControl.modify(GOVUK_ENVIRONMENT_NAME: nil) do
+      should "fail fast if GOVUK_ENVIRONMENT is not set" do
+        ClimateControl.modify(GOVUK_ENVIRONMENT: nil) do
           assert_raises(KeyError) { GovukEnvironment.name }
         end
       end

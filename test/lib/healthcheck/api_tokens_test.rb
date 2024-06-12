@@ -8,7 +8,7 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
     end
 
     should "return 'OK' when tokens for @<env>.publishing.service.gov.uk are expiring" do
-      user = create(:api_user, email: "#{random_str}@#{ENV['GOVUK_ENVIRONMENT_NAME']}.publishing.service.gov.uk")
+      user = create(:api_user, email: "#{random_str}@#{ENV['GOVUK_ENVIRONMENT']}.publishing.service.gov.uk")
 
       make_api_user_token(
         expires_in: Healthcheck::ApiTokens::WARNING_THRESHOLD,
