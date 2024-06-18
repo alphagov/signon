@@ -8,8 +8,8 @@
     ],
     rows: logs.map do |log|
     [ { text: formatted_date(log), format: "event-log-date" },
-      { text: formatted_message(log) } ]
-    end
+      { text: formatted_message(log) } ] unless log.requires_admin? && !current_user.govuk_admin?
+    end.compact
   } %>
 
   <%= paginate(logs, theme: "gds") %>

@@ -31,8 +31,8 @@ class EventLog < ApplicationRecord
     TWO_STEP_PROMPT_DEFERRED = LogEntry.new(id: 26, description: "2-step prompt deferred", require_uid: true),
     API_USER_CREATED = LogEntry.new(id: 27, description: "Account created", require_uid: true, require_initiator: true),
     ACCESS_TOKEN_REGENERATED = LogEntry.new(id: 28, description: "Access token re-generated", require_uid: true, require_application: true), # deprecated
-    ACCESS_TOKEN_GENERATED = LogEntry.new(id: 29, description: "Access token generated", require_uid: true, require_application: true, require_initiator: true),
-    ACCESS_TOKEN_REVOKED = LogEntry.new(id: 30, description: "Access token revoked", require_uid: true, require_application: true, require_initiator: true),
+    ACCESS_TOKEN_GENERATED = LogEntry.new(id: 29, description: "Access token generated", require_uid: true, require_application: true, require_initiator: true, access_limited: true),
+    ACCESS_TOKEN_REVOKED = LogEntry.new(id: 30, description: "Access token revoked", require_uid: true, require_application: true, require_initiator: true, access_limited: true),
     PASSWORD_RESET_LOADED_BUT_TOKEN_EXPIRED = LogEntry.new(id: 31, description: "Password reset page loaded but the token has expired", require_uid: true),
     SUCCESSFUL_PASSWORD_RESET = LogEntry.new(id: 32, description: "Password reset successfully", require_uid: true),
     ROLE_CHANGED = LogEntry.new(id: 33, description: "Role changed", require_uid: true, require_initiator: true),
@@ -45,8 +45,8 @@ class EventLog < ApplicationRecord
     TWO_STEP_EXEMPTION_UPDATED = LogEntry.new(id: 40, description: "2-step verification exemption updated", require_uid: true, require_initiator: true),
     TWO_STEP_EXEMPTION_REMOVED = LogEntry.new(id: 41, description: "Exemption from 2-step verification removed", require_uid: true, require_initiator: true),
     TWO_STEP_MANDATED = LogEntry.new(id: 42, description: "2-step verification setup mandated at next login", require_uid: true, require_initiator: true),
-    ACCESS_GRANTS_DELETED = LogEntry.new(id: 43, description: "Access grants deleted", require_uid: true),
-    ACCESS_TOKENS_DELETED = LogEntry.new(id: 44, description: "Access tokens deleted", require_uid: true),
+    ACCESS_GRANTS_DELETED = LogEntry.new(id: 43, description: "Access grants deleted", require_uid: true, access_limited: true),
+    ACCESS_TOKENS_DELETED = LogEntry.new(id: 44, description: "Access tokens deleted", require_uid: true, access_limited: true),
     ACCOUNT_DELETED = LogEntry.new(id: 45, description: "Account deleted", require_uid: true),
     ORGANISATION_CHANGED = LogEntry.new(id: 46, description: "Organisation changed", require_uid: true, require_initiator: true),
     SUCCESSFUL_USER_APPLICATION_AUTHORIZATION = LogEntry.new(id: 47, description: "Successful user application authorization", require_uid: true, require_application: true),
@@ -55,6 +55,7 @@ class EventLog < ApplicationRecord
   EVENTS_REQUIRING_UID = EVENTS.select(&:require_uid?)
   EVENTS_REQUIRING_INITIATOR = EVENTS.select(&:require_initiator?)
   EVENTS_REQUIRING_APPLICATION = EVENTS.select(&:require_application?)
+  ACCESS_LIMITED_EVENTS = EVENTS.select(&:access_limited?)
 
   VALID_OPTIONS = %i[initiator application application_id trailing_message ip_address user_agent_id user_agent_string user_email_string].freeze
 
@@ -74,6 +75,10 @@ class EventLog < ApplicationRecord
 
   def event
     entry.description
+  end
+
+  def requires_admin?
+    ACCESS_LIMITED_EVENTS.include? entry
   end
 
   def entry
