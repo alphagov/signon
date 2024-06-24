@@ -352,7 +352,7 @@ GEM
     opentelemetry-instrumentation-active_record (0.7.2)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-active_support (0.5.1)
+    opentelemetry-instrumentation-active_support (0.5.3)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-all (0.60.0)
