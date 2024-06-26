@@ -58,14 +58,14 @@ module ApplicationTableHelper
 private
 
   def grant_access_link(application, user = nil)
-    link_path = if user
-                  user_application_signin_permission_path(user, application)
-                else
-                  account_application_signin_permission_path(application)
-                end
+    path = if user
+             user_application_signin_permission_path(user, application)
+           else
+             account_application_signin_permission_path(application)
+           end
 
     button_to(
-      link_path,
+      path,
       class: "govuk-button govuk-!-margin-0",
       data: { module: "govuk-button" },
     ) do
@@ -74,14 +74,14 @@ private
   end
 
   def remove_access_link(application, user = nil)
-    link_path = if user
-                  delete_user_application_signin_permission_path(user, application)
-                else
-                  delete_account_application_signin_permission_path(application)
-                end
+    path = if user
+             delete_user_application_signin_permission_path(user, application)
+           else
+             delete_account_application_signin_permission_path(application)
+           end
 
     link_to(
-      link_path,
+      path,
       class: "govuk-button govuk-button--warning govuk-!-margin-0",
       data: { module: "govuk-button" },
     ) do
@@ -90,13 +90,13 @@ private
   end
 
   def view_permissions_link(application, user = nil)
-    link_path = if user
-                  user_application_permissions_path(user, application)
-                else
-                  account_application_permissions_path(application)
-                end
+    path = if user
+             user_application_permissions_path(user, application)
+           else
+             account_application_permissions_path(application)
+           end
 
-    link_to(link_path, class: "govuk-link") do
+    link_to(path, class: "govuk-link") do
       safe_join(
         ["View permissions",
          content_tag(:span, " for #{application.name}", class: "govuk-visually-hidden")],
@@ -107,15 +107,15 @@ private
   def update_permissions_link(application, user = nil)
     return "" if application.sorted_supported_permissions_grantable_from_ui(include_signin: false).none?
 
-    link_path = if user.nil?
-                  edit_account_application_permissions_path(application)
-                elsif user.api_user?
-                  edit_api_user_application_permissions_path(user, application)
-                else
-                  edit_user_application_permissions_path(user, application)
-                end
+    path = if user.nil?
+             edit_account_application_permissions_path(application)
+           elsif user.api_user?
+             edit_api_user_application_permissions_path(user, application)
+           else
+             edit_user_application_permissions_path(user, application)
+           end
 
-    link_to(link_path, class: "govuk-link") do
+    link_to(path, class: "govuk-link") do
       safe_join(
         ["Update permissions",
          content_tag(:span, " for #{application.name}", class: "govuk-visually-hidden")],
