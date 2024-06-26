@@ -68,9 +68,7 @@ private
       path,
       class: "govuk-button govuk-!-margin-0",
       data: { module: "govuk-button" },
-    ) do
-      safe_join(["Grant access", content_tag(:span, " to #{application.name}", class: "govuk-visually-hidden")])
-    end
+    ) { button_or_link_content("Grant access", "to", application.name) }
   end
 
   def remove_access_link(application, user = nil)
@@ -84,9 +82,7 @@ private
       path,
       class: "govuk-button govuk-button--warning govuk-!-margin-0",
       data: { module: "govuk-button" },
-    ) do
-      safe_join(["Remove access", content_tag(:span, " to #{application.name}", class: "govuk-visually-hidden")])
-    end
+    ) { button_or_link_content("Remove access", "to", application.name) }
   end
 
   def view_permissions_link(application, user = nil)
@@ -96,12 +92,7 @@ private
              account_application_permissions_path(application)
            end
 
-    link_to(path, class: "govuk-link") do
-      safe_join(
-        ["View permissions",
-         content_tag(:span, " for #{application.name}", class: "govuk-visually-hidden")],
-      )
-    end
+    link_to(path, class: "govuk-link") { button_or_link_content("View permissions", "for", application.name) }
   end
 
   def update_permissions_link(application, user = nil)
@@ -115,11 +106,13 @@ private
              edit_user_application_permissions_path(user, application)
            end
 
-    link_to(path, class: "govuk-link") do
-      safe_join(
-        ["Update permissions",
-         content_tag(:span, " for #{application.name}", class: "govuk-visually-hidden")],
-      )
-    end
+    link_to(path, class: "govuk-link") { button_or_link_content("Update permissions", "for", application.name) }
+  end
+
+  def button_or_link_content(visible_text, visually_hidden_join_word, application_name)
+    safe_join([
+      visible_text,
+      content_tag(:span, " #{visually_hidden_join_word} #{application_name}", class: "govuk-visually-hidden"),
+    ])
   end
 end
