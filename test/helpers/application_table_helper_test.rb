@@ -4,39 +4,39 @@ class ApplicationTableHelperTest < ActionView::TestCase
   include PunditHelpers
 
   context "#update_permissions_link" do
-    setup do
-      @user = create(:api_user)
-    end
-
-    should "generate a link to edit the permissions" do
-      application = create(:application, with_supported_permissions: %w[permission])
-
-      assert_includes update_permissions_link(application, @user), edit_api_user_application_permissions_path(@user, application)
-    end
-
-    should "return an empty string when the application has no grantable permissions" do
-      application = create(:application)
-
-      assert update_permissions_link(application, @user).empty?
-    end
-
-    context "for a user" do
+    context "when the application has grantable permissions" do
       setup do
-        @user = create(:user)
+        @application = create(:application, with_supported_permissions: %w[permission])
       end
 
-      should "generate a link to edit the permissions" do
-        application = create(:application, with_supported_permissions: %w[permission])
+      context "when no user is provided" do
+        should "generate a link to edit own permissions" do
+          assert_includes update_permissions_link(@application), edit_account_application_permissions_path(@application)
+        end
+      end
 
-        assert_includes update_permissions_link(application, @user), edit_user_application_permissions_path(@user, application)
+      context "with a given normal user" do
+        should "generate a link to edit the user's permissions" do
+          user = create(:user)
+
+          assert_includes update_permissions_link(@application, user), edit_user_application_permissions_path(user, @application)
+        end
+      end
+
+      context "with a given API user" do
+        should "generate a link to edit the API user's permissions" do
+          user = create(:api_user)
+
+          assert_includes update_permissions_link(@application, user), edit_api_user_application_permissions_path(user, @application)
+        end
       end
     end
 
-    context "when no user is provided" do
-      should "generate a link to edit the permissions" do
-        application = create(:application, with_supported_permissions: %w[permission])
+    context "when the application has no grantable permissions" do
+      should "return an empty string" do
+        application = create(:application)
 
-        assert_includes update_permissions_link(application), edit_account_application_permissions_path(application)
+        assert update_permissions_link(application).empty?
       end
     end
   end
