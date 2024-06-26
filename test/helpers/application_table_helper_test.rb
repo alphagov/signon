@@ -24,20 +24,21 @@ class ApplicationTableHelperTest < ActionView::TestCase
   context "#users_applications_grant_access_link" do
     setup do
       @application = create(:application)
+      @grantee = create(:user)
     end
 
     should "generate a grant access button when the user can create user application permissions" do
-      user = create(:superadmin_user)
-      stubs(:current_user).returns(user)
+      granter = create(:superadmin_user)
+      stubs(:current_user).returns(granter)
 
-      assert_includes users_applications_grant_access_link(@application, user), "Grant access"
+      assert_includes users_applications_grant_access_link(@application, @grantee), "Grant access"
     end
 
     should "return an empty string when the user cannot create user application permissions" do
-      user = create(:user)
-      stubs(:current_user).returns(user)
+      granter = create(:user)
+      stubs(:current_user).returns(granter)
 
-      assert users_applications_grant_access_link(@application, user).empty?
+      assert users_applications_grant_access_link(@application, @grantee).empty?
     end
   end
 
@@ -62,20 +63,21 @@ class ApplicationTableHelperTest < ActionView::TestCase
   context "#users_applications_remove_access_link" do
     setup do
       @application = create(:application, with_supported_permissions: %w[permission])
+      @grantee = create(:user)
     end
 
     should "generate a remove access link when the user can delete permissions" do
-      user = create(:superadmin_user)
-      stubs(:current_user).returns(user)
+      granter = create(:superadmin_user)
+      stubs(:current_user).returns(granter)
 
-      assert_includes users_applications_remove_access_link(@application, user), "Remove access"
+      assert_includes users_applications_remove_access_link(@application, @grantee), "Remove access"
     end
 
     should "return an empty string when the user cannot delete permissions" do
-      user = create(:user)
-      stubs(:current_user).returns(user)
+      granter = create(:user)
+      stubs(:current_user).returns(granter)
 
-      assert users_applications_remove_access_link(@application, user).empty?
+      assert users_applications_remove_access_link(@application, @grantee).empty?
     end
   end
 
@@ -105,30 +107,32 @@ class ApplicationTableHelperTest < ActionView::TestCase
   context "#users_applications_permissions_link" do
     setup do
       @application = create(:application, with_supported_permissions: %w[permission])
+      @grantee = create(:user)
     end
 
     should "generate an update link when the user can edit permissions" do
-      user = create(:superadmin_user)
-      stubs(:current_user).returns(user)
+      granter = create(:superadmin_user)
+      stubs(:current_user).returns(granter)
 
-      assert_includes users_applications_permissions_link(@application, user), "Update permissions"
+      assert_includes users_applications_permissions_link(@application, @grantee), "Update permissions"
     end
 
     should "generate a view link when the user cannot edit permissions" do
-      user = create(:user)
-      stubs(:current_user).returns(user)
+      granter = create(:user)
+      stubs(:current_user).returns(granter)
 
-      assert_includes users_applications_permissions_link(@application, user), "View permissions"
+      assert_includes users_applications_permissions_link(@application, @grantee), "View permissions"
     end
   end
 
   context "#api_users_applications_permissions_link" do
     should "generate an update link when the user can edit permissions" do
       application = create(:application, with_supported_permissions: %w[permission])
-      user = create(:superadmin_user)
-      stubs(:current_user).returns(user)
+      granter = create(:superadmin_user)
+      grantee = create(:api_user)
+      stubs(:current_user).returns(granter)
 
-      assert_includes api_users_applications_permissions_link(application, user), "Update permissions"
+      assert_includes api_users_applications_permissions_link(application, grantee), "Update permissions"
     end
   end
 
