@@ -105,6 +105,8 @@ private
   end
 
   def update_permissions_link(application, user = nil)
+    return "" if application.sorted_supported_permissions_grantable_from_ui(include_signin: false).none?
+
     link_path = if user.nil?
                   edit_account_application_permissions_path(application)
                 elsif user.api_user?
@@ -113,15 +115,11 @@ private
                   edit_user_application_permissions_path(user, application)
                 end
 
-    if application.sorted_supported_permissions_grantable_from_ui(include_signin: false).any?
-      link_to(link_path, class: "govuk-link") do
-        safe_join(
-          ["Update permissions",
-           content_tag(:span, " for #{application.name}", class: "govuk-visually-hidden")],
-        )
-      end
-    else
-      ""
+    link_to(link_path, class: "govuk-link") do
+      safe_join(
+        ["Update permissions",
+         content_tag(:span, " for #{application.name}", class: "govuk-visually-hidden")],
+      )
     end
   end
 end
