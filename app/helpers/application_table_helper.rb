@@ -14,7 +14,7 @@ module ApplicationTableHelper
   end
 
   def users_applications_grant_access_link(application, user)
-    if policy(UserApplicationPermission.for(user, application)).create?
+    if policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).create?
       grant_access_link(application, user)
     else
       ""
@@ -30,7 +30,7 @@ module ApplicationTableHelper
   end
 
   def users_applications_remove_access_link(application, user)
-    if policy(UserApplicationPermission.for(user, application)).delete?
+    if policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).delete?
       remove_access_link(application, user)
     else
       ""
@@ -49,7 +49,7 @@ module ApplicationTableHelper
   def users_applications_permissions_links(application, user)
     links = [view_permissions_link(application, user)]
 
-    if policy(UserApplicationPermission.for(user, application)).edit?
+    if policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).edit?
       links << update_permissions_link(application, user)
     end
 
