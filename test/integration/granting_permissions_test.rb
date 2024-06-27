@@ -340,10 +340,10 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
         click_on "Update permissions for MyApp"
         assert_current_url edit_user_application_permissions_path(user, app)
 
-        # the new permissions form exists
+        # the new permissions does not exist
         assert_no_selector "#new_permission_id", visible: false
 
-        # the current permissions form does not exist
+        # the current permissions form exists
         assert_selector "legend", text: "Current permissions"
         assert_selector ".govuk-hint", text: "Clear the checkbox and save changes to remove a permission."
         assert_selector ".govuk-button", text: "Update permissions"
