@@ -25,7 +25,6 @@
   <% end %>
 <% end %>
 
-<div class="govuk-table--with-actions">
 <%= render "components/table", {
     caption: "Apps you have access to",
     head: [
@@ -37,11 +36,14 @@
     [
       { text: application.name },
       { text: application.description },
-      { text: safe_join([account_applications_permissions_link(application), account_applications_remove_access_link(application)]) },
+      { text: wrap_links_in_actions_markup([
+        account_applications_permissions_link(application), 
+        account_applications_remove_access_link(application)
+        ])
+      },
     ]
     end,
 } %>
-</div>
 
 <div class="govuk-table--with-actions">
 <%= render "components/table", {
@@ -55,7 +57,7 @@
     [
       { text: application.name },
       { text: application.description },
-      { text: account_applications_grant_access_link(application) }
+      { text: wrap_links_in_actions_markup([account_applications_grant_access_link(application)]) }
     ]
     end,
 } %>

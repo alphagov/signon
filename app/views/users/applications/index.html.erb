@@ -30,7 +30,6 @@
   <% end %>
 <% end %>
 
-<div class="govuk-table--with-actions">
 <%= render "components/table", {
     caption: "Apps #{@user.name} has access to",
     head: [
@@ -42,13 +41,15 @@
     [
       { text: application.name },
       { text: application.description },
-      { text: safe_join([users_applications_permissions_link(application, @user), users_applications_remove_access_link(application, @user)]) },
+      { text: wrap_links_in_actions_markup([
+          users_applications_permissions_link(application, @user),
+          users_applications_remove_access_link(application, @user)
+        ])
+      },
     ]
     end,
 } %>
-</div>
 
-<div class="govuk-table--with-actions">
 <%= render "components/table", {
     caption: "Apps #{@user.name} does not have access to",
     head: [
@@ -60,8 +61,7 @@
     [
       { text: application.name },
       { text: application.description },
-      { text: users_applications_grant_access_link(application, @user) }
+      { text: wrap_links_in_actions_markup([users_applications_grant_access_link(application, @user)]) }
     ]
     end,
 } %>
-</div>
