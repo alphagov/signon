@@ -136,33 +136,34 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
         context "editing permissions" do
           setup { @user_application_permission = stub_user_application_permission(@user, @application) }
 
-          should "not display any permissions links when the app only has the signin permission" do
+          should "only display a link to view permissions when the app only has the signin permission" do
             stub_policy @current_user, @user_application_permission, edit?: true
 
             get :index, params: { user_id: @user }
 
-            assert_select "a[href='#{edit_user_application_permissions_path(@user, @application)}']", count: 0
+            assert_select "a[href='#{edit_user_application_permissions_path(@user, @application)}']", text: "Update permissions for app-name", count: 0
+            assert_select "a[href='#{user_application_permissions_path(@user, @application)}']", text: "View permissions for app-name"
           end
 
           context "when the app has non-signin permissions" do
             setup { create(:supported_permission, application: @application) }
 
-            should "display a link to edit permissions when authorised to edit permissions" do
+            should "display links to view and edit permissions when authorised to edit permissions" do
               stub_policy @current_user, @user_application_permission, edit?: true
 
               get :index, params: { user_id: @user }
 
               assert_select "a[href='#{edit_user_application_permissions_path(@user, @application)}']", text: "Update permissions for app-name"
-              assert_select "a[href='#{user_application_permissions_path(@user, @application)}']", text: "View permissions for app-name", count: 0
+              assert_select "a[href='#{user_application_permissions_path(@user, @application)}']", text: "View permissions for app-name"
             end
 
-            should "display a link to view permissions when not authorised to edit permissions" do
+            should "only display a link to view permissions when not authorised to edit permissions" do
               stub_policy @current_user, @user_application_permission, edit?: false
 
               get :index, params: { user_id: @user }
 
-              assert_select "a[href='#{user_application_permissions_path(@user, @application)}']", text: "View permissions for app-name"
               assert_select "a[href='#{edit_user_application_permissions_path(@user, @application)}']", text: "Update permissions for app-name", count: 0
+              assert_select "a[href='#{user_application_permissions_path(@user, @application)}']", text: "View permissions for app-name"
             end
           end
         end

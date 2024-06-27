@@ -97,47 +97,70 @@ class ApplicationTableHelperTest < ActionView::TestCase
     end
   end
 
-  context "#account_applications_permissions_link" do
+  context "#account_applications_permissions_links" do
     setup do
       @user = build(:user)
       stubs(:current_user).returns(@user)
       @application = create(:application, with_supported_permissions: %w[permission])
     end
 
-    should "generate an update link when the user can edit permissions" do
-      stub_policy @user, [:account, @application], edit_permissions?: true
-      assert_includes account_applications_permissions_link(@application), "Update permissions"
+    should "generate both view and update links when the user can both view and edit permissions" do
+      stub_policy @user, [:account, @application], view_permissions?: true, edit_permissions?: true
+
+      result = account_applications_permissions_links(@application)
+
+      assert_includes result, "View permissions"
+      assert_includes result, "Update permissions"
     end
 
-    should "generate a view link when the user can view permissions" do
+    should "only generate a view link when the user can only view permissions" do
       stub_policy @user, [:account, @application], view_permissions?: true
-      assert_includes account_applications_permissions_link(@application), "View permissions"
+
+      result = account_applications_permissions_links(@application)
+
+      assert_includes result, "View permissions"
+      assert_not_includes result, "Update permissions"
+    end
+
+    should "only generate an update link when the user can only edit permissions" do
+      stub_policy @user, [:account, @application], edit_permissions?: true
+
+      result = account_applications_permissions_links(@application)
+
+      assert_not_includes result, "View permissions"
+      assert_includes result, "Update permissions"
     end
 
     should "return an empty string when the user can do neither" do
       stub_policy @user, [:account, @application]
-      assert account_applications_permissions_link(@application).empty?
+      assert account_applications_permissions_links(@application).empty?
     end
   end
 
-  context "#users_applications_permissions_link" do
+  context "#users_applications_permissions_links" do
     setup do
       @application = create(:application, with_supported_permissions: %w[permission])
       @grantee = create(:user)
     end
 
-    should "generate an update link when the user can edit permissions" do
+    should "generate both view and update links when the user can edit permissions" do
       granter = create(:superadmin_user)
       stubs(:current_user).returns(granter)
 
-      assert_includes users_applications_permissions_link(@application, @grantee), "Update permissions"
+      result = users_applications_permissions_links(@application, @grantee)
+
+      assert_includes result, "View permissions"
+      assert_includes result, "Update permissions"
     end
 
-    should "generate a view link when the user cannot edit permissions" do
+    should "only generate a view link when the user cannot edit permissions" do
       granter = create(:user)
       stubs(:current_user).returns(granter)
 
-      assert_includes users_applications_permissions_link(@application, @grantee), "View permissions"
+      result = users_applications_permissions_links(@application, @grantee)
+
+      assert_includes result, "View permissions"
+      assert_not_includes result, "Update permissions"
     end
   end
 
