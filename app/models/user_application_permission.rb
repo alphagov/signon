@@ -8,8 +8,8 @@ class UserApplicationPermission < ApplicationRecord
 
   before_validation :assign_application_id
 
-  def self.for(user, application)
-    new(user:, application:)
+  def self.for(user:, supported_permission:, application: nil)
+    new(user:, supported_permission:, application: application || supported_permission.application)
   end
 
 private

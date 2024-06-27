@@ -5,7 +5,7 @@ class Users::SigninPermissionsController < ApplicationController
 
   def create
     application = Doorkeeper::Application.not_api_only.find(params[:application_id])
-    authorize UserApplicationPermission.for(@user, application)
+    authorize UserApplicationPermission.for(user: @user, supported_permission: application.signin_permission)
 
     params = { supported_permission_ids: @user.supported_permissions.map(&:id) + [application.signin_permission.id] }
     UserUpdate.new(@user, params, current_user, user_ip_address).call
@@ -14,11 +14,11 @@ class Users::SigninPermissionsController < ApplicationController
   end
 
   def delete
-    authorize UserApplicationPermission.for(@user, @application)
+    authorize UserApplicationPermission.for(user: @user, supported_permission: @application.signin_permission)
   end
 
   def destroy
-    authorize UserApplicationPermission.for(@user, @application)
+    authorize UserApplicationPermission.for(user: @user, supported_permission: @application.signin_permission)
 
     params = { supported_permission_ids: @user.supported_permissions.map(&:id) - [@application.signin_permission.id] }
     UserUpdate.new(@user, params, current_user, user_ip_address).call
