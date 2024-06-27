@@ -50,6 +50,7 @@ module Components
 
       def header(str, opt = {})
         classes = %w[govuk-table__header]
+        classes << opt[:classes] if opt[:classes]
         classes << "govuk-table__header--#{opt[:format]}" if opt[:format]
         classes << "govuk-table__header--active" if opt[:sort_direction]
         link_classes = %w[app-table__sort-link]
