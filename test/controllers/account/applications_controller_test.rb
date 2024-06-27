@@ -126,20 +126,40 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
         end
 
         context "editing permissions" do
-          should "not display any permissions links when the app only has the signin permission" do
-            stub_policy @user, [:account, @application], view_permissions?: true, edit_permissions?: true
+          context "when the app only has the signin permission" do
+            should "only display a link to view permissions when authorised to view or edit permissions" do
+              stub_policy @user, [:account, @application], view_permissions?: true, edit_permissions?: true
 
-            get :index
+              get :index
 
-            assert_select "a[href='#{edit_account_application_permissions_path(@application)}']", count: 0
-            assert_select "a[href='#{account_application_permissions_path(@application)}']", count: 0
+              assert_select "a[href='#{edit_account_application_permissions_path(@application)}']", count: 0
+              assert_select "a[href='#{account_application_permissions_path(@application)}']"
+            end
+
+            should "not display links to view or edit permissions when not authorised to view permissions" do
+              stub_policy @user, [:account, @application], view_permissions?: false, edit_permissions?: true
+
+              get :index
+
+              assert_select "a[href='#{edit_account_application_permissions_path(@application)}']", count: 0
+              assert_select "a[href='#{account_application_permissions_path(@application)}']", count: 0
+            end
           end
 
           context "when the app has non-signin permissions" do
             setup { create(:supported_permission, application: @application) }
 
-            should "display a link to edit permissions when authorised to edit permissions" do
+            should "display links to view and edit permissions when authorised to view and edit permissions" do
               stub_policy @user, [:account, @application], view_permissions?: true, edit_permissions?: true
+
+              get :index
+
+              assert_select "a[href='#{edit_account_application_permissions_path(@application)}']"
+              assert_select "a[href='#{account_application_permissions_path(@application)}']"
+            end
+
+            should "only display a link to edit permissions when authorised to edit but not view permissions" do
+              stub_policy @user, [:account, @application], view_permissions?: false, edit_permissions?: true
 
               get :index
 
@@ -147,7 +167,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
               assert_select "a[href='#{account_application_permissions_path(@application)}']", count: 0
             end
 
-            should "display a link to view permissions when not authorised to view but not edit permissions" do
+            should "only display a link to view permissions when not authorised to edit permissions" do
               stub_policy @user, [:account, @application], view_permissions?: true, edit_permissions?: false
 
               get :index

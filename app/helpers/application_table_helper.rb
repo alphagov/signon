@@ -37,22 +37,23 @@ module ApplicationTableHelper
     end
   end
 
-  def account_applications_permissions_link(application)
-    if policy([:account, application]).edit_permissions?
-      update_permissions_link(application)
-    elsif policy([:account, application]).view_permissions?
-      view_permissions_link(application)
-    else
-      ""
-    end
+  def account_applications_permissions_links(application)
+    links = []
+
+    links << view_permissions_link(application) if policy([:account, application]).view_permissions?
+    links << update_permissions_link(application) if policy([:account, application]).edit_permissions?
+
+    safe_join(links)
   end
 
-  def users_applications_permissions_link(application, user)
+  def users_applications_permissions_links(application, user)
+    links = [view_permissions_link(application, user)]
+
     if policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).edit?
-      update_permissions_link(application, user)
-    else
-      view_permissions_link(application, user)
+      links << update_permissions_link(application, user)
     end
+
+    safe_join(links)
   end
 
   def api_users_applications_permissions_link(application, user)
