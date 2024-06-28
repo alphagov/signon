@@ -77,7 +77,7 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
       get :index, params: { user_id: user }
 
       assert_select "table:has( > caption[text()='Apps #{user.name} has access to'])" do
-        assert_select "tr td", text: "app-name"
+        assert_select "tr td", text: /app-name/
       end
     end
 
@@ -94,7 +94,7 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
       get :index, params: { user_id: user }
 
       assert_select "table:has( > caption[text()='Apps #{user.name} does not have access to'])" do
-        assert_select "tr td", text: "app-name"
+        assert_select "tr td", text: /app-name/
       end
     end
 
@@ -232,7 +232,7 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
 
       get :index, params: { user_id: user }
 
-      assert_select "tr td", text: "retired-app-name", count: 0
+      assert_select "tr td", text: /retired-app-name/, count: 0
     end
 
     should "not display an API-only application" do
@@ -247,7 +247,7 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
 
       get :index, params: { user_id: user }
 
-      assert_select "tr td", text: "api-only-app-name", count: 0
+      assert_select "tr td", text: /api-only-app-name/, count: 0
     end
   end
 

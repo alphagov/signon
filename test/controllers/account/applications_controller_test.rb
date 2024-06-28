@@ -35,7 +35,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
         get :index
 
-        assert_select "tr td", text: "app-name"
+        assert_select "tr td", text: /app-name/
         assert_select "form[action='#{account_application_signin_permission_path(application)}']"
       end
 
@@ -46,7 +46,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
         get :index
 
-        assert_select "tr td", text: "app-name"
+        assert_select "tr td", text: /app-name/
         assert_select "a[href='#{delete_account_application_signin_permission_path(application)}']"
       end
 
@@ -57,7 +57,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
         get :index
 
-        assert_select "tr td", text: "app-name"
+        assert_select "tr td", text: /app-name/
         assert_select "a[href='#{edit_account_application_permissions_path(application)}']"
       end
 
@@ -68,7 +68,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
         get :index
 
-        assert_select "tr td", text: "app-name"
+        assert_select "tr td", text: /app-name/
         assert_select "a[href='#{edit_account_application_permissions_path(application)}']", count: 0
       end
 
@@ -78,7 +78,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
         get :index
 
-        assert_select "tr td", text: "retired-app-name", count: 0
+        assert_select "tr td", text: /retired-app-name/, count: 0
       end
 
       should "not display an API-only application" do
@@ -87,7 +87,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
         get :index
 
-        assert_select "tr td", text: "api-only-app-name", count: 0
+        assert_select "tr td", text: /api-only-app-name/, count: 0
       end
     end
 
@@ -102,7 +102,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
         get :index
 
-        assert_select "tr td", text: "app-name"
+        assert_select "tr td", text: /app-name/
         assert_select "form[action='#{account_application_signin_permission_path(@application)}']", count: 0
       end
 
@@ -116,7 +116,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
           get :index
 
-          assert_select "tr td", text: "app-name"
+          assert_select "tr td", text: /app-name/
           assert_select "a[href='#{delete_account_application_signin_permission_path(@application)}']"
         end
 
@@ -127,7 +127,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
           get :index
 
-          assert_select "tr td", text: "app-name"
+          assert_select "tr td", text: /app-name/
           assert_select "a[href='#{edit_account_application_permissions_path(@application)}']"
         end
 
@@ -136,7 +136,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
           get :index
 
-          assert_select "tr td", text: "app-name"
+          assert_select "tr td", text: /app-name/
           assert_select "a[href='#{edit_account_application_permissions_path(@application)}']", count: 0
         end
 
@@ -150,7 +150,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
             get :index
 
-            assert_select "tr td", text: "app-name"
+            assert_select "tr td", text: /app-name/
             assert_select "a[href='#{delete_account_application_signin_permission_path(@application)}']", count: 0
           end
 
@@ -159,7 +159,7 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
             get :index
 
-            assert_select "tr td", text: "app-name"
+            assert_select "tr td", text: /app-name/
             assert_select "a[href='#{account_application_permissions_path(@application)}']"
           end
         end
