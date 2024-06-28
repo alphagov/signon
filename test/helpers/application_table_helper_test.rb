@@ -3,6 +3,22 @@ require "test_helper"
 class ApplicationTableHelperTest < ActionView::TestCase
   include PunditHelpers
 
+  context "#wrap_links_in_actions_markup" do
+    should "wrap an array of links in a container with a class to apply actions styles" do
+      links = [
+        "<a class=\"govuk-link\" href=\"https://www.gov.uk/destination-one\">Destination one</a>",
+        "<a class=\"govuk-link\" href=\"https://www.gov.uk/destination-two\">Destination two</a>",
+      ]
+
+      expected_output = "<div class=\"govuk-table__actions\">
+        <a class=\"govuk-link\" href=\"https://www.gov.uk/destination-one\">Destination one</a>
+        <a class=\"govuk-link\" href=\"https://www.gov.uk/destination-two\">Destination two</a>
+      </div>".gsub(/>\s+</, "><")
+
+      assert_equal expected_output, wrap_links_in_actions_markup(links)
+    end
+  end
+
   context "#account_applications_grant_access_link" do
     setup do
       @user = build(:user)

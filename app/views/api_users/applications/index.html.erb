@@ -30,7 +30,6 @@
   <% end %>
 <% end %>
 
-<div class="govuk-table--with-actions">
 <%= render "components/table", {
     caption: "Apps #{@api_user.name} has access to",
     head: [
@@ -42,8 +41,7 @@
     [
       { text: application.name },
       { text: application.description },
-      { text: api_users_applications_permissions_link(application, @api_user) }
+      { text: wrap_links_in_actions_markup([api_users_applications_permissions_link(application, @api_user)]) }
     ]
     end,
 } %>
-</div>

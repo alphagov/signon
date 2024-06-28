@@ -1,6 +1,10 @@
 module ApplicationTableHelper
   include Pundit::Authorization
 
+  def wrap_links_in_actions_markup(links)
+    "<div class=\"govuk-table__actions\">#{links.join}</div>".html_safe
+  end
+
   def account_applications_grant_access_link(application)
     if policy([:account, Doorkeeper::Application]).grant_signin_permission?
       grant_access_link(application)
