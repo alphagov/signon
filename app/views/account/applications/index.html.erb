@@ -28,8 +28,8 @@
 <%= render "components/table", {
     caption: "Apps you have access to",
     head: [
-      { text: "Name" },
-      { text: "Description" },
+      { text: "Name", classes: "govuk-!-width-one-quarter" },
+      { text: "Description", classes: "govuk-!-width-one-third" },
       { text: content_tag(:span, "Actions", class: "govuk-visually-hidden") },
     ],
     rows: @applications_with_signin.map do |application|
@@ -49,8 +49,8 @@
 <%= render "components/table", {
     caption: "Apps you don't have access to",
     head: [
-      { text: "Name" },
-      { text: "Description" },
+      { text: "Name", classes: "govuk-!-width-one-quarter" },
+      { text: "Description", classes: "govuk-!-width-one-third" },
       { text: content_tag(:span, "Actions", class: "govuk-visually-hidden") }
     ],
     rows: @applications_without_signin.map do |application|

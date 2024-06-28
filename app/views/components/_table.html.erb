@@ -27,6 +27,7 @@
       <%= t.head do %>
         <% head.each_with_index do |item, cellindex| %>
           <%= t.header item[:text], {
+            classes: item[:classes],
             format: item[:format],
             href: item[:href],
             data_attributes: item[:data_attributes],

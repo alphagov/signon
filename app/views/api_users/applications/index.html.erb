@@ -33,8 +33,8 @@
 <%= render "components/table", {
     caption: "Apps #{@api_user.name} has access to",
     head: [
-      { text: "Name" },
-      { text: "Description" },
+      { text: "Name", classes: "govuk-!-width-one-quarter" },
+      { text: "Description", classes: "govuk-!-width-one-third" },
       { text: content_tag(:span, "Actions", class: "govuk-visually-hidden") },
     ],
     rows: @applications.map do |application|
