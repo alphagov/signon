@@ -35,7 +35,7 @@
     head: [
       { text: "Name", classes: "govuk-!-width-one-quarter" },
       { text: "Description", classes: "govuk-!-width-one-third" },
-      { text: content_tag(:span, "Actions", class: "govuk-visually-hidden") },
+      { text: content_tag(:span, "Actions", class: "govuk-visually-hidden"), visually_hidden: true },
     ],
     rows: @applications_with_signin.map do |application|
     [
@@ -48,6 +48,7 @@
       },
     ]
     end,
+    vertical_on_small_screen: true,
 } %>
 
 <%= render "components/table", {
@@ -55,7 +56,7 @@
     head: [
       { text: "Name", classes: "govuk-!-width-one-quarter" },
       { text: "Description", classes: "govuk-!-width-one-third" },
-      { text: content_tag(:span, "Actions", class: "govuk-visually-hidden") }
+      { text: content_tag(:span, "Actions", class: "govuk-visually-hidden"), visually_hidden: true }
     ],
     rows: @applications_without_signin.map do |application|
     [
@@ -64,4 +65,5 @@
       { text: wrap_links_in_actions_markup([users_applications_grant_access_link(application, @user)]) }
     ]
     end,
+    vertical_on_small_screen: true,
 } %>

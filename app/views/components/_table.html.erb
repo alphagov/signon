@@ -31,7 +31,8 @@
             format: item[:format],
             href: item[:href],
             data_attributes: item[:data_attributes],
-            sort_direction: item[:sort_direction]
+            sort_direction: item[:sort_direction],
+            visually_hidden: item[:visually_hidden]
           } %>
         <% end %>
       <% end %>
@@ -48,7 +49,7 @@
               } %>
             <% elsif vertical_on_small_screen && head.any? %>
               <%= t.cell nil, { format: cell[:format] } do %>
-                <span class="app-c-table__duplicate-heading" aria-hidden="true">
+                <span class="app-c-table__duplicate-heading<%= head[cellindex][:visually_hidden] ? " app-c-table__duplicate-heading--visually-hidden" : "" %>" aria-hidden="true">
                   <%= head[cellindex][:text] %>
                 </span>
                 <%= cell[:text] %>

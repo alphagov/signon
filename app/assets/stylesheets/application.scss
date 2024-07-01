@@ -8,6 +8,8 @@ $govuk-page-width: 1140px;
 @import "components/contact-details";
 @import "components/table";
 
+$applications-table-actions-gap: 10px;
+
 // TODO: move into component
 .gem-c-success-alert,
 .gem-c-error-alert {
@@ -88,15 +90,22 @@ $govuk-page-width: 1140px;
   }
 }
 
-.govuk-table__actions {
-  display: flex;
-  flex-direction: column;
-  align-items: end;
-  gap: 10px;
-  
-  @media (min-width: 40.0625em) {
+.govuk-table__actions { 
+  @include govuk-media-query($until: $vertical-on-smallscreen-breakpoint) {
+    .govuk-button, .govuk-link {
+      display: block;
+
+      &:not(:last-child) {
+        margin-bottom: $applications-table-actions-gap;
+      }
+    }
+  }
+
+  @include govuk-media-query($from: $vertical-on-smallscreen-breakpoint) {
+    display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
+    gap: $applications-table-actions-gap;
   }
 }
