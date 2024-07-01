@@ -8,6 +8,7 @@ class Account::ApplicationPolicy < BasePolicy
 
   def grant_signin_permission?
     current_user.govuk_admin?
+    # should this not have `|| (current_user.publishing_manager? && record.signin_permission.delegatable?)`?
   end
 
   def remove_signin_permission?
