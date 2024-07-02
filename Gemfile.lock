@@ -182,7 +182,7 @@ GEM
       rake (>= 13)
     googleapis-common-protos-types (1.15.0)
       google-protobuf (>= 3.18, < 5.a)
-    govuk_app_config (9.12.0)
+    govuk_app_config (9.13.0)
       logstasher (~> 2.1)
       opentelemetry-exporter-otlp (>= 0.25, < 0.29)
       opentelemetry-instrumentation-all (>= 0.39.1, < 0.62.0)
