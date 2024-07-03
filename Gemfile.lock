@@ -500,7 +500,7 @@ GEM
     opentelemetry-instrumentation-restclient (0.22.6)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-ruby_kafka (0.21.1)
+    opentelemetry-instrumentation-ruby_kafka (0.21.2)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-sidekiq (0.25.5)
