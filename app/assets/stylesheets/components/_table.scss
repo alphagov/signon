@@ -176,6 +176,10 @@ $table-row-even-background-colour: govuk-colour("light-grey", $legacy: "grey-4")
     padding-right: 1em;
     text-align: left;
     word-break: initial;
+
+    &--visually-hidden {
+      padding-right: 0;
+    }
   }
 
   @include govuk-media-query($from: $vertical-on-smallscreen-breakpoint) {

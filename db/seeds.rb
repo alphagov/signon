@@ -129,6 +129,7 @@ User.create!(
 
 application = Doorkeeper::Application.create!(
   name: "Test Application 1",
+  description: "A concise description of what this app does",
   redirect_uri: "https://www.gov.uk",
 )
 
@@ -139,6 +140,7 @@ SupportedPermission.create!(
 
 application_with_9_permissions = Doorkeeper::Application.create!(
   name: "Test Application with 9 Permissions",
+  description: "A description which you could characterise as wordier and will most definitely take up considerably more space in the table of applications",
   redirect_uri: "https://www.gov.uk",
 )
 

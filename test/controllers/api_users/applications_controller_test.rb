@@ -37,7 +37,7 @@ class ApiUsers::ApplicationsControllerTest < ActionController::TestCase
       get :index, params: { api_user_id: api_user }
 
       assert_select "table:has( > caption[text()='Apps #{api_user.name} has access to'])" do
-        assert_select "tr td", text: "app-name"
+        assert_select "tr td", text: /app-name/
       end
     end
 
@@ -54,7 +54,7 @@ class ApiUsers::ApplicationsControllerTest < ActionController::TestCase
 
       get :index, params: { api_user_id: api_user }
 
-      assert_select "tr td", text: "revoked-app-name", count: 0
+      assert_select "tr td", text: /revoked-app-name/, count: 0
     end
 
     should "not display a retired application" do
@@ -70,7 +70,7 @@ class ApiUsers::ApplicationsControllerTest < ActionController::TestCase
 
       get :index, params: { api_user_id: api_user }
 
-      assert_select "tr td", text: "retired-app-name", count: 0
+      assert_select "tr td", text: /retired-app-name/, count: 0
     end
 
     should "display a flash message showing the permissions the user has" do
