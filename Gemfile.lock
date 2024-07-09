@@ -418,7 +418,7 @@ GEM
     opentelemetry-instrumentation-dalli (0.25.3)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-delayed_job (0.22.2)
+    opentelemetry-instrumentation-delayed_job (0.22.3)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-ethon (0.21.7)
