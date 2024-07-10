@@ -470,7 +470,7 @@ GEM
     opentelemetry-instrumentation-que (0.8.2)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-racecar (0.3.3)
+    opentelemetry-instrumentation-racecar (0.3.4)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-rack (0.24.5)
