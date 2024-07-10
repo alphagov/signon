@@ -527,7 +527,7 @@ GEM
       opentelemetry-api (~> 1.0)
     orm_adapter (0.5.0)
     parallel (1.25.1)
-    parser (3.3.3.0)
+    parser (3.3.4.0)
       ast (~> 2.4.1)
       racc
     plek (5.2.0)
