@@ -14,7 +14,7 @@ module ApplicationTableHelper
   end
 
   def users_applications_grant_access_link(application, user)
-    if policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).create?
+    if Users::ApplicationPolicy.new(current_user, { application:, user: }).grant_signin_permission?
       grant_access_link(application, user)
     else
       ""

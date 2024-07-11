@@ -81,8 +81,12 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
 
         context "when authorised to grant access" do
           should "display a grant access button" do
-            user_application_permission = stub_user_application_permission(@user, @application)
-            stub_policy @current_user, user_application_permission, create?: true
+            stub_policy(
+              @current_user,
+              { application: @application, user: @user },
+              policy_class: Users::ApplicationPolicy,
+              grant_signin_permission?: true,
+            )
 
             get :index, params: { user_id: @user }
 
@@ -92,8 +96,12 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
 
         context "when not authorised to grant access" do
           should "not display a grant access button" do
-            user_application_permission = stub_user_application_permission(@user, @application)
-            stub_policy @current_user, user_application_permission, create?: false
+            stub_policy(
+              @current_user,
+              { application: @application, user: @user },
+              policy_class: Users::ApplicationPolicy,
+              grant_signin_permission?: false,
+            )
 
             get :index, params: { user_id: @user }
 
