@@ -127,6 +127,8 @@ User.create!(
   require_2sv: false,
 )
 
+SupportedPermission.name # this is a hack - check the commit message for more information
+
 application = Doorkeeper::Application.create!(
   name: "Test Application 1",
   description: "A concise description of what this app does",
