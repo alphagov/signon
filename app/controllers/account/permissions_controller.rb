@@ -1,7 +1,7 @@
 class Account::PermissionsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_application
-  before_action :set_permissions
+  before_action :set_permissions, only: %i[edit update]
 
   def show
     authorize [:account, @application], :view_permissions?
