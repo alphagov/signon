@@ -38,8 +38,8 @@ In this section, the granter and grantee are the same user: this is about managi
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
 |-------------------------|--------------|---------------|------------------|------------------|
 | None                    | ❌            | ❌             | ❌                | ✅                |
-| `signin`                | ❌            | ✅             | ✅                | ✅                |
-| Another permission      | ❌            | ❌             | ❌                | ✅                |
+| `signin`                | ❌            | ✅             | ❌                | ✅                |
+| Another permission      | ❌            | ❌             | ✅                | ✅                |
 
 ### Dependencies by route
 

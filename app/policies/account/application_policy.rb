@@ -17,5 +17,11 @@ class Account::ApplicationPolicy < BasePolicy
         current_user.publishing_manager? && record.signin_permission.delegatable?
       )
   end
-  alias_method :edit_permissions?, :remove_signin_permission?
+
+  def edit_permissions?
+    return false unless current_user.has_access_to?(record)
+    return true if current_user.govuk_admin?
+
+    current_user.publishing_manager? && record.has_delegatable_non_signin_permissions?
+  end
 end

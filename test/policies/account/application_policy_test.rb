@@ -230,9 +230,9 @@ class Account::ApplicationPolicyTest < ActiveSupport::TestCase
             @current_user.grant_application_signin_permission(@application)
           end
 
-          context "and the application has delegatable permissions" do
+          context "and the application has delegatable non-signin permissions" do
             setup do
-              @application.signin_permission.update!(delegatable: true)
+              @application.stubs(:has_delegatable_non_signin_permissions?).returns(true)
             end
 
             should "be permitted" do
@@ -240,9 +240,9 @@ class Account::ApplicationPolicyTest < ActiveSupport::TestCase
             end
           end
 
-          context "and the application does not have delegatable permissions" do
+          context "and the application does not have delegatable non-signin permissions" do
             setup do
-              @application.signin_permission.update!(delegatable: false)
+              @application.stubs(:has_delegatable_non_signin_permissions?).returns(false)
             end
 
             should "not be permitted" do
