@@ -53,6 +53,10 @@ class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/Appli
     end
   end
 
+  def has_delegatable_non_signin_permissions?
+    (supported_permissions.delegatable.grantable_from_ui - [signin_permission]).any?
+  end
+
   def url_without_path
     parsed_url = URI.parse(redirect_uri)
     "#{parsed_url.scheme}://#{parsed_url.host}:#{parsed_url.port}"

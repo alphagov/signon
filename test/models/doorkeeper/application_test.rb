@@ -124,6 +124,27 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
   end
 
+  context "has_delegatable_non_signin_permissions?" do
+    setup do
+      @app = create(:application, with_non_delegatable_supported_permissions: ["perm-1", "perm-2", SupportedPermission::SIGNIN_NAME])
+    end
+
+    should "return false if no permissions are delegatable" do
+      assert_empty @app.supported_permissions.delegatable
+      assert_not @app.has_delegatable_non_signin_permissions?
+    end
+
+    should "return false if only the signin permission is delegatable" do
+      @app.signin_permission.update!(delegatable: true)
+      assert_not @app.has_delegatable_non_signin_permissions?
+    end
+
+    should "return true if any non-signin permissions are delegatable" do
+      @app.supported_permissions.find_by(name: "perm-1").update!(delegatable: true)
+      assert @app.has_delegatable_non_signin_permissions?
+    end
+  end
+
   context ".all (default scope)" do
     setup do
       @app = create(:application)
