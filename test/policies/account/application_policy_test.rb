@@ -83,11 +83,14 @@ class Account::ApplicationPolicyTest < ActiveSupport::TestCase
   end
 
   context "#remove_signin_permission?" do
+    setup do
+      @application = create(:application)
+    end
+
     %i[superadmin admin].each do |user_role|
       context "for #{user_role} users" do
         setup do
           @current_user = create(:"#{user_role}_user")
-          @application = create(:application)
         end
 
         context "when the user has signin permission for the app" do
@@ -112,7 +115,6 @@ class Account::ApplicationPolicyTest < ActiveSupport::TestCase
       context "for #{user_role} users" do
         setup do
           @current_user = create(:"#{user_role}_user")
-          @application = create(:application)
         end
 
         context "when the user has signin permission for the app" do
@@ -156,7 +158,7 @@ class Account::ApplicationPolicyTest < ActiveSupport::TestCase
         end
 
         should "be forbidden" do
-          assert forbid?(@current_user, nil, :remove_signin_permission)
+          assert forbid?(@current_user, @application, :remove_signin_permission)
         end
       end
     end
@@ -189,11 +191,14 @@ class Account::ApplicationPolicyTest < ActiveSupport::TestCase
   end
 
   context "#edit_permissions?" do
+    setup do
+      @application = create(:application)
+    end
+
     %i[superadmin admin].each do |user_role|
       context "for #{user_role} users" do
         setup do
           @current_user = create(:"#{user_role}_user")
-          @application = create(:application)
         end
 
         context "when the user has signin permission for the app" do
@@ -218,7 +223,6 @@ class Account::ApplicationPolicyTest < ActiveSupport::TestCase
       context "for #{user_role} users" do
         setup do
           @current_user = create(:"#{user_role}_user")
-          @application = create(:application)
         end
 
         context "when the user has signin permission for the app" do
@@ -262,7 +266,7 @@ class Account::ApplicationPolicyTest < ActiveSupport::TestCase
         end
 
         should "be forbidden" do
-          assert forbid?(@current_user, nil, :edit_permissions)
+          assert forbid?(@current_user, @application, :edit_permissions)
         end
       end
     end
