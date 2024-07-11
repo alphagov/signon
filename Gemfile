@@ -27,7 +27,7 @@ gem "rotp"
 gem "rqrcode"
 gem "sentry-sidekiq"
 gem "sprockets-rails"
-gem "uglifier"
+gem "terser"
 gem "uuid"
 gem "whenever"
 
