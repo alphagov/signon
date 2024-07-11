@@ -16,50 +16,11 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       application.update!(supports_push_updates: true)
 
       application.reload
-      assert_includes application.supported_permission_strings, "user_update_permission"
+      assert_includes application.supported_permissions.pluck(:name), "user_update_permission"
     end
 
     should "not be created after save if application doesn't support push updates" do
-      assert_not_includes create(:application, supports_push_updates: false).supported_permission_strings, "user_update_permission"
-    end
-  end
-
-  context "supported_permission_strings" do
-    should "return a list of string permissions" do
-      user = create(:user)
-      app = create(:application, with_supported_permissions: %w[write])
-
-      assert_equal [SupportedPermission::SIGNIN_NAME, "write"], app.supported_permission_strings(user)
-    end
-
-    should "only show permissions that super organisation admins themselves have" do
-      app = create(:application, with_delegatable_supported_permissions: %w[write approve])
-      super_org_admin = create(:super_organisation_admin_user, with_permissions: { app => %w[write] })
-
-      assert_equal %w[write], app.supported_permission_strings(super_org_admin)
-    end
-
-    should "only show delegatable permissions to super organisation admins" do
-      super_org_admin = create(:super_organisation_admin_user)
-      app = create(:application, with_delegatable_supported_permissions: %w[write], with_supported_permissions: %w[approve])
-      super_org_admin.grant_application_permissions(app, %w[write approve])
-
-      assert_equal %w[write], app.supported_permission_strings(super_org_admin)
-    end
-
-    should "only show permissions that organisation admins themselves have" do
-      app = create(:application, with_delegatable_supported_permissions: %w[write approve])
-      organisation_admin = create(:organisation_admin_user, with_permissions: { app => %w[write] })
-
-      assert_equal %w[write], app.supported_permission_strings(organisation_admin)
-    end
-
-    should "only show delegatable permissions to organisation admins" do
-      user = create(:organisation_admin_user)
-      app = create(:application, with_delegatable_supported_permissions: %w[write], with_supported_permissions: %w[approve])
-      user.grant_application_permissions(app, %w[write approve])
-
-      assert_equal %w[write], app.supported_permission_strings(user)
+      assert_not_includes create(:application, supports_push_updates: false).supported_permissions.pluck(:name), "user_update_permission"
     end
   end
 

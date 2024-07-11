@@ -38,14 +38,6 @@ class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/Appli
     ApplicationPolicy
   end
 
-  def supported_permission_strings(user = nil)
-    if user && user.publishing_manager?
-      supported_permissions.delegatable.pluck(:name) & user.permissions_for(self)
-    else
-      supported_permissions.pluck(:name)
-    end
-  end
-
   def signin_permission
     supported_permissions.signin.first
   end
