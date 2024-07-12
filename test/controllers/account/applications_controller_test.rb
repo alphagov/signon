@@ -12,10 +12,22 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
       assert_redirected_to "/users/sign_in"
     end
 
-    should "redirect authenticated users to /accounts/applications" do
-      user = create(:admin_user)
-
+    should "prevent unauthorised users" do
+      user = create(:user)
       sign_in user
+
+      stub_policy user, [:account, Doorkeeper::Application], show?: false
+
+      get :show, params: { id: @application.id }
+
+      assert_not_authorised
+    end
+
+    should "redirect authenticated users to the index path" do
+      user = create(:user)
+      sign_in user
+
+      stub_policy user, [:account, Doorkeeper::Application], show?: true
 
       get :show, params: { id: @application.id }
 
@@ -24,57 +36,131 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
   end
 
   context "#index" do
-    context "logged in as a GOV.UK admin" do
+    should "prevent unauthenticated users" do
+      get :index
+
+      assert_redirected_to "/users/sign_in"
+    end
+
+    should "prevent users who are unauthorised to view the page" do
+      user = create(:user)
+      sign_in user
+
+      stub_policy user, [:account, Doorkeeper::Application], index?: false
+
+      get :index
+
+      assert_not_authorised
+    end
+
+    context "when authenticated and authorised to view the page" do
       setup do
-        @user = create(:admin_user)
-      end
-
-      should "display the button to grant access to an application" do
-        application = create(:application, name: "app-name")
+        @user = create(:user)
         sign_in @user
 
-        get :index
+        stub_policy @user, [:account, Doorkeeper::Application], index?: true
 
-        assert_select "tr td", text: /app-name/
-        assert_select "form[action='#{account_application_signin_permission_path(application)}']"
+        @application = create(:application, name: "app-name")
       end
 
-      should "display the button to remove access to an application" do
-        application = create(:application, name: "app-name")
-        @user.grant_application_signin_permission(application)
-        sign_in @user
+      context "for apps the user doesn't have access to" do
+        should "display the applications" do
+          get :index
 
-        get :index
+          assert_select "table:has( > caption[text()='Apps you don\\'t have access to'])" do
+            assert_select "tr td", text: /app-name/
+          end
+        end
 
-        assert_select "tr td", text: /app-name/
-        assert_select "a[href='#{delete_account_application_signin_permission_path(application)}']"
+        context "when authorised to grant access" do
+          should "display a grant access button" do
+            stub_policy @user, [:account, Doorkeeper::Application], index?: true, grant_signin_permission?: true
+
+            get :index
+
+            assert_template :index
+            assert_select "form[action='#{account_application_signin_permission_path(@application)}']"
+          end
+        end
+
+        context "when not authorised to grant access" do
+          should "not display a grant access button" do
+            stub_policy @user, [:account, Doorkeeper::Application], index?: true, grant_signin_permission?: false
+
+            get :index
+
+            assert_select "form[action='#{account_application_signin_permission_path(@application)}']", count: 0
+          end
+        end
       end
 
-      should "display a link to update permissions when the application has more than just a signin permission" do
-        application = create(:application, name: "app-name", with_supported_permissions: %w[permission])
-        @user.grant_application_signin_permission(application)
-        sign_in @user
+      context "for apps the user does have access to" do
+        setup { @user.grant_application_signin_permission(@application) }
 
-        get :index
+        should "display the applications" do
+          stub_policy @user, [:account, @application]
 
-        assert_select "tr td", text: /app-name/
-        assert_select "a[href='#{edit_account_application_permissions_path(application)}']"
-      end
+          get :index
 
-      should "not display a link to update permissions when the application has just a signin permission" do
-        application = create(:application, name: "app-name")
-        @user.grant_application_signin_permission(application)
-        sign_in @user
+          assert_select "table:has( > caption[text()='Apps you have access to'])" do
+            assert_select "tr td", text: /app-name/
+          end
+        end
 
-        get :index
+        context "removing access" do
+          should "display a remove access button when authorised" do
+            stub_policy @user, [:account, @application], remove_signin_permission?: true
 
-        assert_select "tr td", text: /app-name/
-        assert_select "a[href='#{edit_account_application_permissions_path(application)}']", count: 0
+            get :index
+
+            assert_select "a[href='#{delete_account_application_signin_permission_path(@application)}']"
+          end
+
+          should "not display a remove access button when not authorised" do
+            stub_policy @user, [:account, @application], remove_signin_permission?: false
+
+            get :index
+
+            assert_select "a[href='#{delete_account_application_signin_permission_path(@application)}']", count: 0
+          end
+        end
+
+        context "editing permissions" do
+          should "not display any permissions links when the app only has the signin permission" do
+            stub_policy @user, [:account, @application], view_permissions?: true, edit_permissions?: true
+
+            get :index
+
+            assert_select "a[href='#{edit_account_application_permissions_path(@application)}']", count: 0
+            assert_select "a[href='#{account_application_permissions_path(@application)}']", count: 0
+          end
+
+          context "when the app has non-signin permissions" do
+            setup { create(:supported_permission, application: @application) }
+
+            should "display a link to edit permissions when authorised to edit permissions" do
+              stub_policy @user, [:account, @application], view_permissions?: true, edit_permissions?: true
+
+              get :index
+
+              assert_select "a[href='#{edit_account_application_permissions_path(@application)}']"
+              assert_select "a[href='#{account_application_permissions_path(@application)}']", count: 0
+            end
+
+            should "display a link to view permissions when not authorised to view but not edit permissions" do
+              stub_policy @user, [:account, @application], view_permissions?: true, edit_permissions?: false
+
+              get :index
+
+              assert_select "a[href='#{edit_account_application_permissions_path(@application)}']", count: 0
+              assert_select "a[href='#{account_application_permissions_path(@application)}']"
+            end
+          end
+        end
       end
 
       should "not display a retired application" do
         create(:application, name: "retired-app-name", retired: true)
-        sign_in @user
 
         get :index
 
@@ -83,86 +169,10 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
       should "not display an API-only application" do
         create(:application, name: "api-only-app-name", api_only: true)
-        sign_in @user
 
         get :index
 
         assert_select "tr td", text: /api-only-app-name/, count: 0
-      end
-    end
-
-    context "logged in as a publishing manager" do
-      setup do
-        @application = create(:application, name: "app-name")
-        @user = create(:organisation_admin_user)
-      end
-
-      should "not display the button to grant access to an application" do
-        sign_in @user
-
-        get :index
-
-        assert_select "tr td", text: /app-name/
-        assert_select "form[action='#{account_application_signin_permission_path(@application)}']", count: 0
-      end
-
-      context "when the user has signin permissions for the application" do
-        setup do
-          @user.grant_application_signin_permission(@application)
-        end
-
-        should "display the button to remove access to an application" do
-          sign_in @user
-
-          get :index
-
-          assert_select "tr td", text: /app-name/
-          assert_select "a[href='#{delete_account_application_signin_permission_path(@application)}']"
-        end
-
-        should "display a link to update permissions when the application has more than just a signin permission" do
-          create(:supported_permission, application: @application, name: "permission")
-
-          sign_in @user
-
-          get :index
-
-          assert_select "tr td", text: /app-name/
-          assert_select "a[href='#{edit_account_application_permissions_path(@application)}']"
-        end
-
-        should "not display a link to update permissions when the application has just a signin permission" do
-          sign_in @user
-
-          get :index
-
-          assert_select "tr td", text: /app-name/
-          assert_select "a[href='#{edit_account_application_permissions_path(@application)}']", count: 0
-        end
-
-        context "when the application does not have a delegatable signin permission" do
-          setup do
-            @application.signin_permission.update!(delegatable: false)
-          end
-
-          should "not display the button to remove access to an application" do
-            sign_in @user
-
-            get :index
-
-            assert_select "tr td", text: /app-name/
-            assert_select "a[href='#{delete_account_application_signin_permission_path(@application)}']", count: 0
-          end
-
-          should "display a link to view permissions" do
-            sign_in @user
-
-            get :index
-
-            assert_select "tr td", text: /app-name/
-            assert_select "a[href='#{account_application_permissions_path(@application)}']"
-          end
-        end
       end
     end
   end
