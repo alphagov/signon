@@ -2,9 +2,9 @@
 @import "govuk/components/table/table";
 
 $table-border-width: 1px;
-$table-border-colour: govuk-colour("mid-grey", $legacy: "grey-2");
+$table-border-colour: govuk-colour("mid-grey");
 $table-header-border-width: 2px;
-$table-header-background-colour: govuk-colour("light-grey", $legacy: "grey-3");
+$table-header-background-colour: govuk-colour("light-grey");
 $vertical-row-bottom-border-width: 3px;
 $vertical-on-smallscreen-breakpoint: 940px;
 $sort-link-active-colour: govuk-colour("white");
@@ -12,7 +12,7 @@ $sort-link-arrow-size: 14px;
 $sort-link-arrow-size-small: 8px;
 $sort-link-arrow-spacing: calc($sort-link-arrow-size / 2);
 $table-row-hover-background-colour: rgba(43, 140, 196, .2);
-$table-row-even-background-colour: govuk-colour("light-grey", $legacy: "grey-4");
+$table-row-even-background-colour: govuk-colour("light-grey");
 
 /* stylelint-disable */
 .govuk-table__cell:empty,
