@@ -1,3 +1,18 @@
+GIT
+  remote: https://github.com/alphagov/govuk_publishing_components.git
+  revision: 260d49daf5da48d04dd5b29e2d2dd96b19f823fe
+  branch: upgrade-to-govuk-frontend-5.1-gitignore-nodemodules
+  specs:
+    govuk_publishing_components (39.2.2)
+      govuk_app_config
+      govuk_personalisation (>= 0.7.0)
+      kramdown
+      plek
+      rails (>= 6)
+      rouge
+      sprockets (>= 3)
+      sprockets-rails
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -197,15 +212,6 @@ GEM
     govuk_personalisation (0.16.0)
       plek (>= 1.9.0)
       rails (>= 6, < 8)
-    govuk_publishing_components (39.2.3)
-      govuk_app_config
-      govuk_personalisation (>= 0.7.0)
-      kramdown
-      plek
-      rails (>= 6)
-      rouge
-      sprockets (>= 3)
-      sprockets-rails
     govuk_sidekiq (8.0.1)
       gds-api-adapters (>= 19.1.0)
       govuk_app_config (>= 1.1)
@@ -758,7 +764,7 @@ DEPENDENCIES
   factory_bot_rails
   gds-api-adapters
   govuk_app_config
-  govuk_publishing_components
+  govuk_publishing_components!
   govuk_sidekiq
   govuk_test
   json

@@ -34,7 +34,7 @@ gem "whenever"
 # GDS Gems
 gem "gds-api-adapters"
 gem "govuk_app_config"
-gem "govuk_publishing_components"
+gem "govuk_publishing_components", git: "https://github.com/alphagov/govuk_publishing_components.git", branch: "upgrade-to-govuk-frontend-5.1-gitignore-nodemodules"
 gem "govuk_sidekiq"
 gem "plek"
 
