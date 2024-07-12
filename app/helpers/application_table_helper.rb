@@ -47,11 +47,11 @@ module ApplicationTableHelper
   end
 
   def users_applications_permissions_links(application, user)
-    links = [view_permissions_link(application, user)]
+    links = []
+    policy = Users::ApplicationPolicy.new(current_user, { application:, user: })
 
-    if Users::ApplicationPolicy.new(current_user, { application:, user: }).edit_permissions?
-      links << update_permissions_link(application, user)
-    end
+    links << view_permissions_link(application, user) if policy.view_permissions?
+    links << update_permissions_link(application, user) if policy.edit_permissions?
 
     safe_join(links)
   end

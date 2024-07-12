@@ -17,4 +17,8 @@ class Users::ApplicationPolicy < BasePolicy
 
   alias_method :remove_signin_permission?, :grant_signin_permission?
   alias_method :edit_permissions?, :grant_signin_permission?
+
+  def view_permissions?
+    Pundit.policy(current_user, user).edit?
+  end
 end

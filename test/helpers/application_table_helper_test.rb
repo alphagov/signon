@@ -140,12 +140,20 @@ class ApplicationTableHelperTest < ActionView::TestCase
   context "#users_applications_permissions_links" do
     setup do
       @application = create(:application, with_supported_permissions: %w[permission])
+      @current_user = build(:user)
+      stubs(:current_user).returns(@current_user)
       @grantee = create(:user)
+      @record = { application: @application, user: @grantee }
     end
 
-    should "generate both view and update links when the user can edit permissions" do
-      granter = create(:superadmin_user)
-      stubs(:current_user).returns(granter)
+    should "generate both view and update links when the user can both view and edit permissions" do
+      stub_policy(
+        @current_user,
+        @record,
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: true,
+        view_permissions?: true,
+      )
 
       result = users_applications_permissions_links(@application, @grantee)
 
@@ -153,14 +161,48 @@ class ApplicationTableHelperTest < ActionView::TestCase
       assert_includes result, "Update permissions"
     end
 
-    should "only generate a view link when the user cannot edit permissions" do
-      granter = create(:user)
-      stubs(:current_user).returns(granter)
+    should "only generate a view link when the user can only view permissions" do
+      stub_policy(
+        @current_user,
+        @record,
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: false,
+        view_permissions?: true,
+      )
 
       result = users_applications_permissions_links(@application, @grantee)
 
       assert_includes result, "View permissions"
       assert_not_includes result, "Update permissions"
+    end
+
+    should "only generate an edit link when the user can only edit permissions" do
+      stub_policy(
+        @current_user,
+        @record,
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: true,
+        view_permissions?: false,
+      )
+
+      result = users_applications_permissions_links(@application, @grantee)
+
+      assert_not_includes result, "View permissions"
+      assert_includes result, "Update permissions"
+    end
+
+    should "return an empty string when the user can do neither" do
+      stub_policy(
+        @current_user,
+        @record,
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: false,
+        view_permissions?: false,
+      )
+
+      result = users_applications_permissions_links(@application, @grantee)
+
+      assert_empty result
     end
   end
 
