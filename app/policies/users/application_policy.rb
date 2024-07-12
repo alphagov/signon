@@ -14,4 +14,6 @@ class Users::ApplicationPolicy < BasePolicy
 
     current_user.publishing_manager? && current_user.has_access_to?(application) && application.signin_permission.delegatable?
   end
+
+  alias_method :remove_signin_permission?, :grant_signin_permission?
 end

@@ -30,7 +30,7 @@ module ApplicationTableHelper
   end
 
   def users_applications_remove_access_link(application, user)
-    if policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).delete?
+    if Users::ApplicationPolicy.new(current_user, { application:, user: }).remove_signin_permission?
       remove_access_link(application, user)
     else
       ""

@@ -191,7 +191,7 @@ flowchart TD
     E --policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).edit?--> F(UserApplicationPermissionPolicy#edit?)
     F --Pundit.policy(current_user, user).edit?--> G(UserPolicy#edit?)
     C --users_applications_remove_access_link--> H(ApplicationTableHelper#users_applications_remove_access_link)
-    H --policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).delete?--> I(UserApplicationPermissionPolicy#delete?)
+    H --Users::ApplicationPolicy.new(current_user, { application:, user: }).remove_signin_permission?--> I(Users::ApplicationPolicy#remove_signin_permission?)
     I --Pundit.policy(current_user, user).edit?--> G
     C --users_applications_grant_access_link--> J(ApplicationTableHelper#users_applications_grant_access_link)
     J --Users::ApplicationPolicy.new(current_user, { application:, user: }).grant_signin_permission?--> K(Users::ApplicationPolicy#grant_signin_permission?)

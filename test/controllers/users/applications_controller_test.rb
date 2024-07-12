@@ -122,10 +122,13 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
         end
 
         context "removing access" do
-          setup { @user_application_permission = stub_user_application_permission(@user, @application) }
-
           should "display a remove access button when authorised" do
-            stub_policy @current_user, @user_application_permission, delete?: true
+            stub_policy(
+              @current_user,
+              { application: @application, user: @user },
+              policy_class: Users::ApplicationPolicy,
+              remove_signin_permission?: true,
+            )
 
             get :index, params: { user_id: @user }
 
@@ -133,7 +136,12 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
           end
 
           should "not display a remove access button when not authorised" do
-            stub_policy @current_user, @user_application_permission, delete?: false
+            stub_policy(
+              @current_user,
+              { application: @application, user: @user },
+              policy_class: Users::ApplicationPolicy,
+              remove_signin_permission?: false,
+            )
 
             get :index, params: { user_id: @user }
 
