@@ -49,7 +49,7 @@ module ApplicationTableHelper
   def users_applications_permissions_links(application, user)
     links = [view_permissions_link(application, user)]
 
-    if policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).edit?
+    if Users::ApplicationPolicy.new(current_user, { application:, user: }).edit_permissions?
       links << update_permissions_link(application, user)
     end
 

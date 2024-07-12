@@ -5,7 +5,7 @@ class Users::ApplicationPolicyTest < ActiveSupport::TestCase
   include PolicyHelpers
   include PunditHelpers
 
-  %i[grant_signin_permission remove_signin_permission].each do |aliased_method|
+  %i[grant_signin_permission remove_signin_permission edit_permissions].each do |aliased_method|
     context "##{aliased_method}?" do
       setup do
         @current_user = create(:user)
