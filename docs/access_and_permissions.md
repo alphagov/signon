@@ -29,16 +29,16 @@ In this section, the granter and grantee are the same user: this is about managi
 
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
 |-------------------------|--------------|---------------|------------------|------------------|
-| None                    | ✅            | ✅             | ✅                | ❌                |
-| `signin`                | ✅            | ✅             | ✅                | ❌                |
-| Another permission      | ✅            | ✅             | ✅                | ❌                |
+| None                    | ✅            | ✅             | ✅                | ✅                |
+| `signin`                | ✅            | ✅             | ✅                | ✅                |
+| Another permission      | ✅            | ✅             | ✅                | ✅                |
 
 #### As a publishing manager
 
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
 |-------------------------|--------------|---------------|------------------|------------------|
 | None                    | ❌            | ❌             | ❌                | ✅                |
-| `signin`                | ❌            | ✅             | ✅                | ❌                |
+| `signin`                | ❌            | ✅             | ✅                | ✅                |
 | Another permission      | ❌            | ❌             | ❌                | ✅                |
 
 ### Dependencies by route
@@ -131,17 +131,17 @@ In this section, the granter and grantee are different users: this is about mana
 
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
 |-------------------------|--------------|---------------|------------------|------------------|
-| None                    | ✅            | ✅             | ✅                | ❌                |
-| `signin`                | ✅            | ✅             | ✅                | ❌                |
-| Another permission      | ✅            | ✅             | ✅                | ❌                |
+| None                    | ✅            | ✅             | ✅                | ✅                |
+| `signin`                | ✅            | ✅             | ✅                | ✅                |
+| Another permission      | ✅            | ✅             | ✅                | ✅                |
   
 ##### Without access to the app
 
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
 |-------------------------|--------------|---------------|------------------|------------------|
-| None                    | ✅            | ✅             | ✅                | ❌                |
-| `signin`                | ✅            | ✅             | ✅                | ❌                |
-| Another permission      | ✅            | ✅             | ✅                | ❌                |
+| None                    | ✅            | ✅             | ✅                | ✅                |
+| `signin`                | ✅            | ✅             | ✅                | ✅                |
+| Another permission      | ✅            | ✅             | ✅                | ✅                |
 
 #### As a publishing manager
 
@@ -150,7 +150,7 @@ In this section, the granter and grantee are different users: this is about mana
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
 |-------------------------|--------------|---------------|------------------|------------------|
 | None                    | ❌            | ❌             | ❌                | ✅                |
-| `signin`                | ✅            | ✅             | ✅                | ❌                |
+| `signin`                | ✅            | ✅             | ✅                | ✅                |
 | Another permission      | ❌            | ❌             | ❌                | ✅                |
 
 ##### Without access to the app

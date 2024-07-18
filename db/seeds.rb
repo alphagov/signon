@@ -43,6 +43,15 @@ User.create!(
   organisation: gds,
 )
 
+User.create!(
+  name: "Test Normal",
+  email: "test.normal@gov.uk",
+  password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
+  role: Roles::Normal.name,
+  confirmed_at: Time.current,
+  organisation: gds,
+)
+
 test_organisation_without_2sv = Organisation.create!(
   name: "Test Organisation without mandatory 2SV",
   content_id: SecureRandom.uuid,
@@ -60,8 +69,8 @@ test_organisation_with_2sv = Organisation.create!(
 )
 
 User.create!(
-  name: "Test User",
-  email: "test.user@gov.uk",
+  name: "Test User without 2SV from organisation without mandatory 2SV",
+  email: "test.user.2sv.none@gov.uk",
   password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
   role: Roles::Normal.name,
   confirmed_at: Time.current,
@@ -96,8 +105,8 @@ User.create!(
 # █████████████████████████████████████████████████
 
 User.create!(
-  name: "Test User with 2SV enabled",
-  email: "test.user.2sv@gov.uk",
+  name: "Test User with 2SV enabled from organisation without mandatory 2SV",
+  email: "test.user.2sv.user@gov.uk",
   password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
   role: Roles::Normal.name,
   confirmed_at: Time.current,
@@ -107,8 +116,8 @@ User.create!(
 )
 
 User.create!(
-  name: "Test User from organisation with mandatory 2SV",
-  email: "test.user.2sv.organisation@gov.uk",
+  name: "Test User with 2SV enabled from organisation with mandatory 2SV",
+  email: "test.user.2sv.user.organisation@gov.uk",
   password: "6fe552ca-d406-4c54-b7a6-041ed1ade6cd",
   role: Roles::Normal.name,
   confirmed_at: Time.current,
@@ -126,6 +135,8 @@ User.create!(
   confirmed_at: Time.current,
   require_2sv: false,
 )
+
+SupportedPermission.name # this is a hack - check the commit message for more information
 
 application = Doorkeeper::Application.create!(
   name: "Test Application 1",
