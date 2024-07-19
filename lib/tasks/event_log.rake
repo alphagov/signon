@@ -36,11 +36,11 @@ namespace :event_log do
         event_log.trailing_message[1..-2].gsub(',', ';'),
         event_log.initiator_id,
         event_log.initiator.email,
-        event_log.initiator.organisation_name,
+        "\"#{event_log.initiator.organisation_name}\"",
         event_log.initiator.role_name,
         grantee.id,
         grantee.email,
-        grantee.organisation_name,
+        "\"#{grantee.organisation_name}\"",
         grantee.role_name,
       ].join(',')}\n"
     end
