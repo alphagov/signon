@@ -119,7 +119,7 @@ flowchart TD
     F --Pundit.policy_scope(current_user, :user_permission_manageable_application)--> G("UserPermissionManageableApplicationPolicy (scope)")
 ```
 
-## For another user
+## For another existing user
 
 In this section, the granter and grantee are different users: this is about managing another user's access and permissions.
 
@@ -241,6 +241,53 @@ flowchart TD
     E --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids--> F(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
     F --Pundit.policy_scope(current_user, SupportedPermission)--> G("SupportedPermissionPolicy (scope)")
     G --Pundit.policy_scope(current_user, :user_permission_manageable_application)--> H("UserPermissionManageableApplicationPolicy (scope)")
+```
+
+## For a new user
+
+### What can you do?
+
+The following actions are taken in the process of inviting a new user - once the invitation is sent, refer to the [For another existing user](#for-another-existing-user) section.
+
+#### As a GOV.UK admin
+
+| Send invitation | Grant access | Edit permissions |
+|-----------------|--------------|------------------|
+| ✅               | ✅            | ✅                |
+
+#### As a publishing manager
+
+| Send invitation | Grant access | Edit permissions |
+|-----------------|--------------|------------------|
+| ❌               | ❌            | ❌                |
+
+### Dependencies by route
+
+#### Invitations new
+
+These dependencies determine whether a user can:
+
+- access the page
+- see certain apps to which to grant the new user access
+- see certain permissions for those apps to grant the new user
+
+```mermaid
+flowchart TD
+    A(InvitationsController#new) --authorize User--> B(UserPolicy#new?)
+    C(app/views/devise/invitations/new.html.erb) --policy_scope(:user_permission_manageable_application)--> D("UserPermissionManageableApplicationPolicy (scope)")
+    C --"options_for_permission_option_select(application:, user: f.object)"--> E(UsersHelper#options_for_permission_option_select)
+    E --application.sorted_supported_permissions_grantable_from_ui--> F(Doorkeeper::Application#sorted_supported_permissions_grantable_from_ui)
+```
+
+#### Invitations create
+
+These dependencies determine whether a user can:
+
+- complete the controller action
+
+```mermaid
+flowchart TD
+    A(InvitationsController#create) --authorize User--> B(UserPolicy#create?)
 ```
 
 ## Important files
