@@ -306,20 +306,21 @@ flowchart TD
 |----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
 | [Account::ApplicationsController](/app/controllers/account/applications_controller.rb) | Managing own access to apps and accessing own permissions routes                   |
 | [Account::PermissionsController](/app/controllers/account/permissions_controller.rb)   | Managing own permissions                                                           |
+| [InvitationsController](/app/controllers/invitations_controller.rb)                    | Giving users access to apps and permissions while creating their account           |
 | [Users::ApplicationsController](/app/controllers/users/applications_controller.rb)     | Managing other users' access to apps and accessing other users' permissions routes |
 | [Users::PermissionsController](/app/controllers/users/permissions_controller.rb)       | Managing other users' permissions                                                  |
 
 ### Policies
 
-| Class                                                                                                       | Responsibility                                                                   |
-|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
-| [Account::ApplicationPolicy](/app/policies/account/application_policy.rb)                                   | Determining whether granters can see and update their own access and permissions |
-| [SupportedPermissionPolicy](/app/policies/supported_permission_policy.rb)                                   | Determining which permissions can be updated by a given granter                  |
-| [UserPolicy](/app/policies/user_policy.rb)                                                                  | Determining whether a granter can update a grantee's access and permissions*     |
-| [UserApplicationPermissionPolicy](/app/policies/user_application_permission_policy.rb)                      | Determining whether a granter can update a grantee's access and permissions*     |
-| [UserPermissionManageableApplicationPolicy](/app/policies/user_permission_manageable_application_policy.rb) | Determing the apps to/for which a granter can manage access and permissions      |
+| Class                                                                                                       | Responsibility                                                                                                                                                            |
+|-------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Account::ApplicationPolicy](/app/policies/account/application_policy.rb)                                   | Determining whether granters can see and update their own access and permissions                                                                                          |
+| [SupportedPermissionPolicy](/app/policies/supported_permission_policy.rb)                                   | Determining which permissions can be updated by a given granter                                                                                                           |
+| [UserPolicy](/app/policies/user_policy.rb)                                                                  | Determining whether a granter can update a grantee's access and permissions*, and whether they can invite a new user and grant them access and permissions in the process |
+| [UserApplicationPermissionPolicy](/app/policies/user_application_permission_policy.rb)                      | Determining whether a granter can update a grantee's access and permissions*                                                                                              |
+| [UserPermissionManageableApplicationPolicy](/app/policies/user_permission_manageable_application_policy.rb) | Determing the apps to/for which a granter can manage access and permissions                                                                                               |
 
-\* the responsibility of these two policies is hard to distinguish in this context, but as seen in the dependency trees, the `UserApplicationPermissionPolicy` depends on the `UserPolicy`, and in reality the latter is larger in scope
+\* the responsibility of these two policies is hard to distinguish in this context, but as seen in the dependency trees for existing users, the `UserApplicationPermissionPolicy` depends on the `UserPolicy`, and in reality the latter is larger in scope. The `InvitationsController` depends on different parts of the `UserPolicy`, for instance.
 
 ### Others
 
@@ -329,3 +330,4 @@ flowchart TD
 | [SupportedPermissionParameterFilter](/lib/supported_permission_parameter_filter.rb) | Ensuring granters can only change permissions they're authorised to manage                     |
 | [UserUpdate](/app/services/user_update.rb)                                          | Updating a user's permissions                                                                  |
 | [UserUpdatePermissionBuilder](/app/models/user_update_permission_builder.rb)        | Generating a list of updated permissions                                                       |
+| [UsersHelper](/app/helpers/users_helper.rb)                                         | Generating a list of permissions that can be granted when creating a new user                  |
