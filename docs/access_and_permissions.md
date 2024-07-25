@@ -150,8 +150,8 @@ In this section, the granter and grantee are different users: this is about mana
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
 |-------------------------|--------------|---------------|------------------|------------------|
 | None                    | ❌            | ❌             | ❌                | ✅                |
-| `signin`                | ✅            | ✅             | ✅                | ✅                |
-| Another permission      | ❌            | ❌             | ❌                | ✅                |
+| `signin`                | ✅            | ✅             | ❌                | ✅                |
+| Another permission      | ❌            | ❌             | ✅                | ✅                |
 
 ##### Without access to the app
 
