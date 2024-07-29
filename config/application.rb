@@ -49,10 +49,6 @@ module Signon
       api_key: Rails.application.credentials.notify_api_key || "fake-test-api-key",
     }
 
-    # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
-    # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
-    config.time_zone = "London"
-
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
@@ -94,7 +90,6 @@ module Signon
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
-    # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
     config.show_user_research_recruitment_banner = false
