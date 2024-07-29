@@ -188,14 +188,16 @@ flowchart TD
     A(Users::ApplicationsController#index) --authorize @user, :edit?--> B(UserPolicy#edit?)
     C(app/views/users/applications/index.html.erb) --wrap_links_in_actions_markup--> D(ApplicationTableHelper#wrap_links_in_actions_markup)
     C --users_applications_permissions_links--> E(ApplicationTableHelper#users_applications_permissions_links)
-    E --policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).edit?--> F(UserApplicationPermissionPolicy#edit?)
+    E --Users::ApplicationPolicy.new(current_user, { application:, user: }).view_permissions?--> F(Users::ApplicationPolicy#view_permissions?)
     F --Pundit.policy(current_user, user).edit?--> G(UserPolicy#edit?)
-    C --users_applications_remove_access_link--> H(ApplicationTableHelper#users_applications_remove_access_link)
-    H --policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).delete?--> I(UserApplicationPermissionPolicy#delete?)
-    I --Pundit.policy(current_user, user).edit?--> G
-    C --users_applications_grant_access_link--> J(ApplicationTableHelper#users_applications_grant_access_link)
-    J --policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).create?--> K(UserApplicationPermissionPolicy#create?)
-    K --Pundit.policy(current_user, user).edit?--> G
+    E --Users::ApplicationPolicy.new(current_user, { application:, user: }).edit_permissions?--> H(Users::ApplicationPolicy#edit_permissions?)
+    H --Pundit.policy(current_user, user).edit?--> G
+    C --users_applications_remove_access_link--> I(ApplicationTableHelper#users_applications_remove_access_link)
+    I --Users::ApplicationPolicy.new(current_user, { application:, user: }).remove_signin_permission?--> J(Users::ApplicationPolicy#remove_signin_permission?)
+    J --Pundit.policy(current_user, user).edit?--> G
+    C --users_applications_grant_access_link--> K(ApplicationTableHelper#users_applications_grant_access_link)
+    K --Users::ApplicationPolicy.new(current_user, { application:, user: }).grant_signin_permission?--> L(Users::ApplicationPolicy#grant_signin_permission?)
+    L --Pundit.policy(current_user, user).edit?--> G
 ```
 
 #### Users permissions show

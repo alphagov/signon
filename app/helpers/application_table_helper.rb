@@ -14,7 +14,7 @@ module ApplicationTableHelper
   end
 
   def users_applications_grant_access_link(application, user)
-    if policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).create?
+    if Users::ApplicationPolicy.new(current_user, { application:, user: }).grant_signin_permission?
       grant_access_link(application, user)
     else
       ""
@@ -30,7 +30,7 @@ module ApplicationTableHelper
   end
 
   def users_applications_remove_access_link(application, user)
-    if policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).delete?
+    if Users::ApplicationPolicy.new(current_user, { application:, user: }).remove_signin_permission?
       remove_access_link(application, user)
     else
       ""
@@ -47,11 +47,11 @@ module ApplicationTableHelper
   end
 
   def users_applications_permissions_links(application, user)
-    links = [view_permissions_link(application, user)]
+    links = []
+    policy = Users::ApplicationPolicy.new(current_user, { application:, user: })
 
-    if policy(UserApplicationPermission.for(user:, supported_permission: application.signin_permission)).edit?
-      links << update_permissions_link(application, user)
-    end
+    links << view_permissions_link(application, user) if policy.view_permissions?
+    links << update_permissions_link(application, user) if policy.edit_permissions?
 
     safe_join(links)
   end
