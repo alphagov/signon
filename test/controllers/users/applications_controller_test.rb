@@ -245,7 +245,7 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
                 get :index, params: { user_id: @user }
 
                 assert_no_view_permissions_link
-                assert_no_edit_permissions_link\
+                assert_no_edit_permissions_link
               end
             end
           end
