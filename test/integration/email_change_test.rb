@@ -60,7 +60,10 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
           signin_with(@admin)
           admin_changes_email_address(user:, new_email: "new@email.com")
 
-          email = emails_sent_to("new@email.com").detect { |mail| mail.subject == I18n.t("devise.mailer.invitation_instructions.subject") }
+          email = ActionMailer::Base
+            .deliveries
+            .detect { |mail| mail.to.include?("new@email.com") && mail.subject == I18n.t("devise.mailer.invitation_instructions.subject") }
+
           assert email
           assert email.body.include?("/users/invitation/accept?invitation_token=")
           assert user.accept_invitation!
@@ -121,7 +124,12 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         click_link "Change your email"
         fill_in "Email", with: "new@email.com"
         click_button "Change email"
-        confirmation_url = first_email_sent_to("new@email.com").find_link(href: false)[:href].sub(/\)$/, "")
+        confirmation_url = ActionMailer::Base
+          .deliveries
+          .detect { |mail| mail.to.include?("new@email.com") }
+          .body
+          .match(%r{\((https?://\S+)\)})[1]
+
         visit confirmation_url
 
         signout
