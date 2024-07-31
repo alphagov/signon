@@ -322,7 +322,7 @@ GEM
       racc (~> 1.4)
     nokogiri (1.16.7-x86_64-linux)
       racc (~> 1.4)
-    notifications-ruby-client (6.0.0)
+    notifications-ruby-client (6.2.0)
       jwt (>= 1.5, < 3)
     null_logger (0.0.1)
     opentelemetry-api (1.3.0)
