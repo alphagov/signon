@@ -399,7 +399,7 @@ GEM
       opentelemetry-instrumentation-sidekiq (~> 0.25.0)
       opentelemetry-instrumentation-sinatra (~> 0.24.0)
       opentelemetry-instrumentation-trilogy (~> 0.59.0)
-    opentelemetry-instrumentation-aws_lambda (0.1.0)
+    opentelemetry-instrumentation-aws_lambda (0.1.1)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-aws_sdk (0.5.4)
