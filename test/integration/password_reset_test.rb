@@ -74,7 +74,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
 
       signout
 
-      current_email.find_link(href: false).click
+      visit_password_reset_url_in(current_email)
 
       assert_response_contains("Sorry, this link doesn't work")
     end

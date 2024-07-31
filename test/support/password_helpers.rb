@@ -23,7 +23,7 @@ module PasswordHelpers
   end
 
   def visit_password_reset_url_in(email)
-    reset_password_url = /\[Reset your password\.\]\((?<url>http.*)\)/.match(email.body).named_captures["url"]
+    reset_password_url = /\[Reset your password\.\]\((?<url>http.*)\)/.match(email.base.email.body.raw_source).named_captures["url"]
     visit reset_password_url
   end
 end

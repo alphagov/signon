@@ -11,6 +11,6 @@ class NoisyBatchInvitation < ApplicationMailer
     user_count = batch_invitation.batch_invitation_users.count
     subject = "[SIGNON] #{@user.name} created a batch of #{user_count} users"
     subject << " in #{GovukEnvironment.name}" unless GovukEnvironment.production?
-    view_mail(template_id, subject:)
+    view_mail(template_id, to: I18n.t("noisy_batch_invitation_mailer.to"), subject:)
   end
 end
