@@ -75,7 +75,7 @@ class ApiUsers::ApplicationsControllerTest < ActionController::TestCase
 
     should "display a flash message showing the permissions the user has" do
       api_user = create(:api_user)
-      application = create(:application, name: "app-name", with_supported_permissions: %w[foo])
+      application = create(:application, name: "app-name", with_non_delegatable_supported_permissions: %w[foo])
       create(:access_token, application:, resource_owner_id: api_user.id)
 
       current_user = create(:admin_user)
@@ -107,7 +107,7 @@ class ApiUsers::ApplicationsControllerTest < ActionController::TestCase
 
     should "display a link to edit permissions if the user is authorised to edit permissions" do
       api_user = create(:api_user)
-      application = create(:application, name: "app-name", with_supported_permissions: %w[foo])
+      application = create(:application, name: "app-name", with_non_delegatable_supported_permissions: %w[foo])
       create(:access_token, application:, resource_owner_id: api_user.id)
 
       current_user = create(:admin_user)

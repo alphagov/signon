@@ -78,7 +78,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
   context "#users_applications_remove_access_link" do
     setup do
-      @application = create(:application, with_supported_permissions: %w[permission])
+      @application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
       @grantee = create(:user)
     end
 
@@ -101,7 +101,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
     setup do
       @user = build(:user)
       stubs(:current_user).returns(@user)
-      @application = create(:application, with_supported_permissions: %w[permission])
+      @application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
     end
 
     should "generate both view and update links when the user can both view and edit permissions" do
@@ -139,7 +139,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
   context "#users_applications_permissions_links" do
     setup do
-      @application = create(:application, with_supported_permissions: %w[permission])
+      @application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
       @current_user = build(:user)
       stubs(:current_user).returns(@current_user)
       @grantee = create(:user)
@@ -208,7 +208,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
   context "#api_users_applications_permissions_link" do
     should "generate an update link when the user can edit permissions" do
-      application = create(:application, with_supported_permissions: %w[permission])
+      application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
       granter = create(:superadmin_user)
       grantee = create(:api_user)
       stubs(:current_user).returns(granter)
@@ -256,7 +256,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
   context "#view_permissions_link" do
     should "generate a link to view the permissions" do
-      application = create(:application, with_supported_permissions: %w[permission])
+      application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
 
       assert_includes view_permissions_link(application), account_application_permissions_path(application)
     end
@@ -267,7 +267,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
       end
 
       should "generate a link to view the permissions" do
-        application = create(:application, with_supported_permissions: %w[permission])
+        application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
 
         assert_includes view_permissions_link(application, @user), user_application_permissions_path(@user, application)
       end
@@ -277,7 +277,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
   context "#update_permissions_link" do
     context "when the application has grantable permissions" do
       setup do
-        @application = create(:application, with_supported_permissions: %w[permission])
+        @application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
       end
 
       context "when no user is provided" do

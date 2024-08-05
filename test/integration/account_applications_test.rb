@@ -123,7 +123,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
 
   context "viewing permissions for an app" do
     setup do
-      @application = create(:application, name: "app-name", description: "app-description", with_supported_permissions: %w[perm1 perm2])
+      @application = create(:application, name: "app-name", description: "app-description", with_non_delegatable_supported_permissions: %w[perm1 perm2])
       @application.signin_permission.update!(delegatable: false)
     end
 
@@ -160,7 +160,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
     context "as a #{user_role}" do
       should "support granting self app-specific permissions" do
         user = create(:"#{user_role}_user")
-        application = create(:application, name: "app-name", description: "app-description", with_supported_permissions: %w[perm1 perm2])
+        application = create(:application, name: "app-name", description: "app-description", with_non_delegatable_supported_permissions: %w[perm1 perm2])
         application.signin_permission.update!(delegatable: true)
         user.grant_application_signin_permission(application)
         user.grant_application_permission(application, "perm1")
@@ -189,7 +189,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
     should "support granting self app-specific permissions" do
       user = create(:superadmin_user)
 
-      app = create(:application, name: "app-with-9-permissions", description: "app-description", with_supported_permissions: %w[pre-existing removing adding never-1 never-2 never-3 never-4 never-5 never-6])
+      app = create(:application, name: "app-with-9-permissions", description: "app-description", with_non_delegatable_supported_permissions: %w[pre-existing removing adding never-1 never-2 never-3 never-4 never-5 never-6])
       app.signin_permission.update!(delegatable: true)
       user.grant_application_signin_permission(app)
       user.grant_application_permissions(app, %w[pre-existing removing])
@@ -234,7 +234,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
         app = create(
           :application,
           name: "MyApp",
-          with_supported_permissions: %w[pre-existing never-1 never-2 never-3 never-4 gonna give you up],
+          with_non_delegatable_supported_permissions: %w[pre-existing never-1 never-2 never-3 never-4 gonna give you up],
         )
         app.signin_permission.update!(delegatable: true)
         user.grant_application_signin_permission(app)
@@ -266,7 +266,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
         app = create(
           :application,
           name: "MyApp",
-          with_supported_permissions: %w[Gotta catch 'em all I know it's my destiny],
+          with_non_delegatable_supported_permissions: %w[Gotta catch 'em all I know it's my destiny],
         )
         app.signin_permission.update!(delegatable: true)
         user.grant_application_signin_permission(app)
@@ -297,7 +297,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
         app = create(
           :application,
           name: "MyApp",
-          with_supported_permissions: %w[never-1 never-2 never-3 never-4 never-5 gonna let you down],
+          with_non_delegatable_supported_permissions: %w[never-1 never-2 never-3 never-4 never-5 gonna let you down],
         )
         app.signin_permission.update!(delegatable: true)
         user.grant_application_signin_permission(app)
@@ -329,7 +329,7 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
         @app = create(
           :application,
           name: "MyApp",
-          with_supported_permissions: %w[pre-existing adding never-1 never-2 never-3 never-4 never-5 never-6 never-7],
+          with_non_delegatable_supported_permissions: %w[pre-existing adding never-1 never-2 never-3 never-4 never-5 never-6 never-7],
         )
         @app.signin_permission.update!(delegatable: true)
         @adding_permission = SupportedPermission.find_by(name: "adding")

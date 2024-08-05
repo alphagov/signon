@@ -3,7 +3,7 @@ require "test_helper"
 class ApplicationPermissionsHelperTest < ActionView::TestCase
   context "#message_for_success" do
     setup do
-      @application = create(:application, name: "Whitehall", with_supported_permissions: ["Permission 1"])
+      @application = create(:application, name: "Whitehall", with_non_delegatable_supported_permissions: ["Permission 1"])
       user = create(:user, with_permissions: { @application => ["Permission 1", SupportedPermission::SIGNIN_NAME] })
       stubs(:current_user).returns(user)
     end

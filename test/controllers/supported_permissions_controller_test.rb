@@ -24,7 +24,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
   context "GET new" do
     should "render the form" do
-      app = create(:application, name: "My first app", with_supported_permissions: %w[permission1])
+      app = create(:application, name: "My first app", with_non_delegatable_supported_permissions: %w[permission1])
       get :new, params: { doorkeeper_application_id: app.id }
       assert_select "h1", /Add permission/
       assert_select ".govuk-breadcrumbs li", /My first app/
@@ -100,7 +100,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
   context "GET confirm_destroy" do
     should "render the permission and application names" do
-      application = create(:application, name: "My first app", with_supported_permissions: %w[permission1])
+      application = create(:application, name: "My first app", with_non_delegatable_supported_permissions: %w[permission1])
 
       get :confirm_destroy, params: { doorkeeper_application_id: application.id, id: application.supported_permissions.first.id }
 
