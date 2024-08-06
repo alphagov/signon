@@ -54,6 +54,23 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       assert_selector ".govuk-link", text: "Update permissions for MyApp"
     end
 
+    should "be able to grant delegatable and non-delegatable permissions" do
+      app = create(
+        :application,
+        name: "MyApp",
+        with_delegatable_supported_permissions: %w[delegatable_perm],
+        with_non_delegatable_supported_permissions: %w[non_delegatable_perm],
+      )
+      @user.grant_application_signin_permission(app)
+
+      visit edit_user_path(@user)
+      click_link "Manage permissions"
+      click_link "Update permissions for MyApp"
+
+      assert page.has_field?("delegatable_perm")
+      assert page.has_field?("non_delegatable_perm")
+    end
+
     should "not be able to grant permissions that are not grantable_from_ui" do
       app = create(
         :application,
@@ -123,6 +140,23 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       click_link "Manage permissions"
 
       assert_selector ".govuk-link", text: "Update permissions for MyApp"
+    end
+
+    should "be able to grant delegatable and non-delegatable permissions" do
+      app = create(
+        :application,
+        name: "MyApp",
+        with_delegatable_supported_permissions: %w[delegatable_perm],
+        with_non_delegatable_supported_permissions: %w[non_delegatable_perm],
+      )
+      @user.grant_application_signin_permission(app)
+
+      visit edit_user_path(@user)
+      click_link "Manage permissions"
+      click_link "Update permissions for MyApp"
+
+      assert page.has_field?("delegatable_perm")
+      assert page.has_field?("non_delegatable_perm")
     end
 
     should "not be able to grant permissions that are not grantable_from_ui" do
@@ -217,6 +251,24 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       assert_no_selector ".govuk-link", text: "Update permissions for MyApp"
     end
 
+    should "not be able to grant permissions that are non-delegatable" do
+      app = create(
+        :application,
+        name: "MyApp",
+        with_delegatable_supported_permissions: %w[delegatable_perm],
+        with_non_delegatable_supported_permissions: %w[non_delegatable_perm],
+      )
+      @super_org_admin.grant_application_signin_permission(app)
+      @user.grant_application_signin_permission(app)
+
+      visit edit_user_path(@user)
+      click_link "Manage permissions"
+      click_link "Update permissions for MyApp"
+
+      assert page.has_field?("delegatable_perm")
+      assert page.has_no_field?("non_delegatable_perm")
+    end
+
     should "not be able to grant permissions that are not grantable_from_ui" do
       app = create(
         :application,
@@ -308,6 +360,24 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       visit edit_user_path(@user)
       click_link "Manage permissions"
       assert_no_selector ".govuk-link", text: "Update permissions for MyApp"
+    end
+
+    should "not be able to grant permissions that are non-delegatable" do
+      app = create(
+        :application,
+        name: "MyApp",
+        with_delegatable_supported_permissions: %w[delegatable_perm],
+        with_non_delegatable_supported_permissions: %w[non_delegatable_perm],
+      )
+      @organisation_admin.grant_application_signin_permission(app)
+      @user.grant_application_signin_permission(app)
+
+      visit edit_user_path(@user)
+      click_link "Manage permissions"
+      click_link "Update permissions for MyApp"
+
+      assert page.has_field?("delegatable_perm")
+      assert page.has_no_field?("non_delegatable_perm")
     end
 
     should "not be able to grant permissions that are not grantable_from_ui" do
