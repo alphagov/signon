@@ -4,7 +4,7 @@ require "gds_api/base"
 class SSOPushErrorTest < ActiveSupport::TestCase
   def setup
     @user = create(:user)
-    @application = create(:application, redirect_uri: "https://app.com/callback", with_supported_permissions: %w[user_update_permission])
+    @application = create(:application, redirect_uri: "https://app.com/callback", with_non_delegatable_supported_permissions: %w[user_update_permission])
   end
 
   context "rescuing GdsApi::HTTPErrorResponse" do

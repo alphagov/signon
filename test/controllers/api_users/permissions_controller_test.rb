@@ -49,7 +49,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "include a hidden field for the signin permission so that it is not removed" do
-      application = create(:application, with_supported_permissions: ["perm-1", SupportedPermission::SIGNIN_NAME])
+      application = create(:application, with_non_delegatable_supported_permissions: ["perm-1", SupportedPermission::SIGNIN_NAME])
       api_user = create(:api_user, with_permissions: { application => %w[perm-1] })
       create(:access_token, application:, resource_owner_id: api_user.id)
 
@@ -124,7 +124,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "redirect once the permissions have been updated" do
-      application = create(:application, with_supported_permissions: %w[new old])
+      application = create(:application, with_non_delegatable_supported_permissions: %w[new old])
       api_user = create(:api_user, with_permissions: { application => %w[old] })
       create(:access_token, application:, resource_owner_id: api_user.id)
 
@@ -144,7 +144,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       organisation = create(:organisation)
 
       application1 = create(:application)
-      application2 = create(:application, with_supported_permissions: %w[app2-permission])
+      application2 = create(:application, with_non_delegatable_supported_permissions: %w[app2-permission])
 
       api_user = create(:api_user, organisation:)
       create(:access_token, application: application1, resource_owner_id: api_user.id)
@@ -166,7 +166,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "not remove the signin permission from the app when updating other permissions" do
-      application = create(:application, with_supported_permissions: %w[other])
+      application = create(:application, with_non_delegatable_supported_permissions: %w[other])
       api_user = create(:api_user)
       api_user.grant_application_signin_permission(application)
       create(:access_token, application:, resource_owner_id: api_user.id)
@@ -185,7 +185,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "not remove permissions the user already has that are not grantable from ui" do
-      application = create(:application, with_supported_permissions: %w[other], with_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
+      application = create(:application, with_non_delegatable_supported_permissions: %w[other], with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
       api_user = create(:api_user)
       api_user.grant_application_permission(application, "not_from_ui")
       create(:access_token, application:, resource_owner_id: api_user.id)
@@ -206,7 +206,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "prevent permissions being added for other apps" do
-      other_application = create(:application, with_supported_permissions: %w[other])
+      other_application = create(:application, with_non_delegatable_supported_permissions: %w[other])
       application = create(:application)
       api_user = create(:api_user)
       create(:access_token, application:, resource_owner_id: api_user.id)
@@ -226,7 +226,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "prevent permissions being added that are not grantable from the ui" do
-      application = create(:application, with_supported_permissions: %w[other], with_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
+      application = create(:application, with_non_delegatable_supported_permissions: %w[other], with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
       api_user = create(:api_user)
       create(:access_token, application:, resource_owner_id: api_user.id)
 
@@ -245,7 +245,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "assign the application id to the application_id flash" do
-      application = create(:application, with_supported_permissions: %w[permission])
+      application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
       api_user = create(:api_user)
       create(:access_token, application:, resource_owner_id: api_user.id)
 
@@ -290,7 +290,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
     should "push permission changes out to apps" do
       sign_in create(:superadmin_user)
 
-      application = create(:application, with_supported_permissions: %w[permission])
+      application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
       api_user = create(:api_user)
       create(:access_token, resource_owner_id: api_user.id, application:)
 
@@ -316,7 +316,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
     should "include applications with revoked access tokens when there is at least one non-revoked access token" do
       sign_in create(:superadmin_user)
 
-      application = create(:application, with_supported_permissions: %w[permission])
+      application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
       api_user = create(:api_user)
       create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
       create(:access_token, resource_owner_id: api_user.id, application:)

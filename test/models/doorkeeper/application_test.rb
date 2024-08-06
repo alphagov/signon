@@ -88,8 +88,8 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       application = create(
         :application,
         name: "Whitehall",
-        with_supported_permissions: ["Editor", SupportedPermission::SIGNIN_NAME],
-        with_supported_permissions_not_grantable_from_ui: ["Not grantable"],
+        with_non_delegatable_supported_permissions: ["Editor", SupportedPermission::SIGNIN_NAME],
+        with_non_delegatable_supported_permissions_not_grantable_from_ui: ["Not grantable"],
       )
 
       permission_names = application.sorted_supported_permissions_grantable_from_ui.map(&:name)
@@ -103,7 +103,7 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       application = create(
         :application,
         name: "Whitehall",
-        with_supported_permissions: ["Writer", "Editor", SupportedPermission::SIGNIN_NAME],
+        with_non_delegatable_supported_permissions: ["Writer", "Editor", SupportedPermission::SIGNIN_NAME],
       )
 
       permission_names = application.sorted_supported_permissions_grantable_from_ui.map(&:name)
@@ -115,7 +115,7 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       application = create(
         :application,
         name: "Whitehall",
-        with_supported_permissions: ["Writer", "Editor", SupportedPermission::SIGNIN_NAME],
+        with_non_delegatable_supported_permissions: ["Writer", "Editor", SupportedPermission::SIGNIN_NAME],
       )
 
       permission_names = application.sorted_supported_permissions_grantable_from_ui(include_signin: false).map(&:name)
@@ -258,7 +258,7 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
 
     should "not return applications that don't support delegation of signin permission" do
-      create(:application, with_supported_permissions: [SupportedPermission::SIGNIN_NAME])
+      create(:application, with_non_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
 
       assert_empty Doorkeeper::Application.with_signin_delegatable
     end

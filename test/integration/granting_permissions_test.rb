@@ -24,7 +24,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       app = create(
         :application,
         name: "MyApp",
-        with_supported_permissions: %w[pre-existing adding never],
+        with_non_delegatable_supported_permissions: %w[pre-existing adding never],
       )
       @user.grant_application_signin_permission(app)
       @user.grant_application_permission(app, "pre-existing")
@@ -41,7 +41,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "not be able to grant permissions that are not grantable_from_ui" do
-      app = create(:application, name: "MyApp", with_supported_permissions: %w[perm], with_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
+      app = create(:application, name: "MyApp", with_non_delegatable_supported_permissions: %w[perm], with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
       @user.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
@@ -76,7 +76,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       app = create(
         :application,
         name: "MyApp",
-        with_supported_permissions: %w[pre-existing adding never],
+        with_non_delegatable_supported_permissions: %w[pre-existing adding never],
       )
       @user.grant_application_signin_permission(app)
       @user.grant_application_permission(app, "pre-existing")
@@ -93,7 +93,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "not be able to grant permissions that are not grantable_from_ui" do
-      app = create(:application, name: "MyApp", with_supported_permissions: %w[perm], with_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
+      app = create(:application, name: "MyApp", with_non_delegatable_supported_permissions: %w[perm], with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
       @user.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
@@ -114,7 +114,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       signin_with(@super_org_admin)
     end
 
-    should "support granting signin permissions to delegatable apps that the super organisation admin has access to" do
+    should "support granting access to apps with a delegatable signin permission and to which the super organisation admin has access" do
       app = create(:application, name: "MyApp", with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
       @super_org_admin.grant_application_signin_permission(app)
 
@@ -125,10 +125,8 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       assert @user.reload.has_access_to?(app)
     end
 
-    should "not support granting signin permissions to non-delegatable apps that the super organisation admin has access to" do
+    should "not support granting access to apps without a delegatable signin permission" do
       app = create(:application, name: "MyApp")
-      signin_permission = app.signin_permission
-      signin_permission.update!(delegatable: false)
       @super_org_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
@@ -137,7 +135,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       assert page.has_no_button? "Grant access to MyApp?"
     end
 
-    should "not support granting signin permissions to apps that the super organisation admin doesn't have access to" do
+    should "not support granting access to apps to which the super organisation admin doesn't have access" do
       create(:application, name: "MyApp", with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
 
       visit edit_user_path(@user)
@@ -150,7 +148,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       app = create(
         :application,
         name: "MyApp",
-        with_supported_permissions: %w[pre-existing adding never],
+        with_delegatable_supported_permissions: %w[pre-existing adding never],
       )
       @super_org_admin.grant_application_signin_permission(app)
       @user.grant_application_signin_permission(app)
@@ -168,7 +166,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "not be able to grant permissions that are not grantable_from_ui" do
-      app = create(:application, name: "MyApp", with_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
+      app = create(:application, name: "MyApp", with_delegatable_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
       @super_org_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
@@ -220,7 +218,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       app = create(
         :application,
         name: "MyApp",
-        with_supported_permissions: %w[pre-existing adding never],
+        with_delegatable_supported_permissions: %w[pre-existing adding never],
       )
       @organisation_admin.grant_application_signin_permission(app)
       @user.grant_application_signin_permission(app)
@@ -238,7 +236,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "not be able to grant permissions that are not grantable_from_ui" do
-      app = create(:application, name: "MyApp", with_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
+      app = create(:application, name: "MyApp", with_delegatable_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
       @organisation_admin.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
@@ -257,7 +255,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       app = create(
         :application,
         name: "MyApp",
-        with_supported_permissions: %w[pre-existing removing adding never-1 never-2 never-3 never-4 never-5 never-6],
+        with_non_delegatable_supported_permissions: %w[pre-existing removing adding never-1 never-2 never-3 never-4 never-5 never-6],
       )
       user.grant_application_signin_permission(app)
       user.grant_application_permissions(app, %w[pre-existing removing])
@@ -296,7 +294,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
         app = create(
           :application,
           name: "MyApp",
-          with_supported_permissions: %w[pre-existing never-1 never-2 gonna run around and desert you],
+          with_non_delegatable_supported_permissions: %w[pre-existing never-1 never-2 gonna run around and desert you],
         )
         user.grant_application_signin_permission(app)
         user.grant_application_permissions(app, %w[pre-existing])
@@ -328,7 +326,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
         app = create(
           :application,
           name: "MyApp",
-          with_supported_permissions: %w[Gotta catch 'em all I know it's my destiny],
+          with_non_delegatable_supported_permissions: %w[Gotta catch 'em all I know it's my destiny],
         )
         @adding_permission = SupportedPermission.find_by(name: "adding")
         user.grant_application_signin_permission(app)
@@ -360,7 +358,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
         app = create(
           :application,
           name: "MyApp",
-          with_supported_permissions: %w[never-1 never-2 never-3 never-4 never-5 gonna make you cry],
+          with_non_delegatable_supported_permissions: %w[never-1 never-2 never-3 never-4 never-5 gonna make you cry],
         )
         user.grant_application_signin_permission(app)
 
@@ -392,7 +390,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
         @app = create(
           :application,
           name: "MyApp",
-          with_supported_permissions: %w[pre-existing adding never-1 never-2 never-3 never-4 never-5 never-6 never-7],
+          with_non_delegatable_supported_permissions: %w[pre-existing adding never-1 never-2 never-3 never-4 never-5 never-6 never-7],
         )
         @adding_permission = SupportedPermission.find_by(name: "adding")
         @user.grant_application_signin_permission(@app)

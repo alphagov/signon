@@ -2,7 +2,7 @@ require "test_helper"
 
 class SSOPushCredentialTest < ActiveSupport::TestCase
   setup do
-    @application = create(:application, with_supported_permissions: %w[user_update_permission])
+    @application = create(:application, with_non_delegatable_supported_permissions: %w[user_update_permission])
     @user = SSOPushCredential.user
   end
 

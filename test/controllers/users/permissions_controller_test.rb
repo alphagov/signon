@@ -13,8 +13,8 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
     should "exclude permissions that aren't grantable from the UI" do
       application = create(:application,
-                           with_supported_permissions: %w[perm-1],
-                           with_supported_permissions_not_grantable_from_ui: %w[perm-2])
+                           with_non_delegatable_supported_permissions: %w[perm-1],
+                           with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[perm-2])
       user = create(:user, with_signin_permissions_for: [application])
 
       current_user = create(:admin_user)
@@ -64,7 +64,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
     should "order permissions by whether the user has access and then alphabetically" do
       application = create(:application,
-                           with_supported_permissions: %w[aaa bbb ttt uuu])
+                           with_non_delegatable_supported_permissions: %w[aaa bbb ttt uuu])
       user = create(:user,
                     with_signin_permissions_for: [application],
                     with_permissions: { application => %w[aaa ttt] })
@@ -145,7 +145,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "include a hidden field for the signin permission so that it is not removed" do
-      application = create(:application, with_supported_permissions: ["perm-1", SupportedPermission::SIGNIN_NAME])
+      application = create(:application, with_non_delegatable_supported_permissions: ["perm-1", SupportedPermission::SIGNIN_NAME])
       user = create(:user, with_permissions: { application => %w[perm-1] })
       user.grant_application_signin_permission(application)
 
@@ -253,7 +253,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "redirect once the permissions have been updated" do
-      application = create(:application, with_supported_permissions: %w[new old])
+      application = create(:application, with_non_delegatable_supported_permissions: %w[new old])
       user = create(:user, with_permissions: { application => %w[old] })
       user.grant_application_signin_permission(application)
 
@@ -274,7 +274,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       organisation = create(:organisation)
 
       application1 = create(:application)
-      application2 = create(:application, with_supported_permissions: %w[app2-permission])
+      application2 = create(:application, with_delegatable_supported_permissions: %w[app2-permission])
 
       user = create(:user, organisation:)
       user.grant_application_signin_permission(application1)
@@ -296,7 +296,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "not remove the signin permission from the app when updating other permissions" do
-      application = create(:application, with_supported_permissions: %w[other])
+      application = create(:application, with_non_delegatable_supported_permissions: %w[other])
       user = create(:user)
       user.grant_application_signin_permission(application)
 
@@ -315,7 +315,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "not remove permissions the user already has that are not grantable from ui" do
-      application = create(:application, with_supported_permissions: %w[other], with_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
+      application = create(:application, with_non_delegatable_supported_permissions: %w[other], with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
       user = create(:user)
       user.grant_application_signin_permission(application)
       user.grant_application_permission(application, "not_from_ui")
@@ -337,7 +337,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "prevent permissions being added for other apps" do
-      other_application = create(:application, with_supported_permissions: %w[other])
+      other_application = create(:application, with_non_delegatable_supported_permissions: %w[other])
       application = create(:application)
       user = create(:user)
       user.grant_application_signin_permission(application)
@@ -358,7 +358,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "prevent permissions being added that are not grantable from the ui" do
-      application = create(:application, with_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
+      application = create(:application, with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
       user = create(:user)
       user.grant_application_signin_permission(application)
 
@@ -378,7 +378,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "assign the application id to the application_id flash" do
-      application = create(:application, with_supported_permissions: %w[new old])
+      application = create(:application, with_non_delegatable_supported_permissions: %w[new old])
       user = create(:user, with_permissions: { application => %w[old] })
       user.grant_application_signin_permission(application)
 

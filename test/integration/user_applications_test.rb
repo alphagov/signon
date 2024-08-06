@@ -42,7 +42,7 @@ class UserApplicationsTest < ActionDispatch::IntegrationTest
   end
 
   should "allow admins to update users' permissions for apps" do
-    application = create(:application, name: "app-name", with_supported_permissions: %w[perm1 perm2])
+    application = create(:application, name: "app-name", with_non_delegatable_supported_permissions: %w[perm1 perm2])
     application.signin_permission.update!(delegatable: true)
 
     user = create(:admin_user)

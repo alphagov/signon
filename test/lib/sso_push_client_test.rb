@@ -14,7 +14,7 @@ class SSOPushClientTest < ActiveSupport::TestCase
   context "update_user" do
     setup do
       @user = create(:user)
-      @application = create(:application, redirect_uri: "https://app.com/callback", with_supported_permissions: %w[user_update_permission])
+      @application = create(:application, redirect_uri: "https://app.com/callback", with_non_delegatable_supported_permissions: %w[user_update_permission])
       @user_hash = UserOAuthPresenter.new(@user, @application).as_hash
     end
 
@@ -37,7 +37,7 @@ class SSOPushClientTest < ActiveSupport::TestCase
   context "reauth" do
     setup do
       @user = create(:user)
-      @application = create(:application, redirect_uri: "https://app.com/callback", with_supported_permissions: %w[user_update_permission])
+      @application = create(:application, redirect_uri: "https://app.com/callback", with_non_delegatable_supported_permissions: %w[user_update_permission])
     end
 
     should "send an empty POST to the app" do
