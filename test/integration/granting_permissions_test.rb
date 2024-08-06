@@ -41,15 +41,20 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "not be able to grant permissions that are not grantable_from_ui" do
-      app = create(:application, name: "MyApp", with_non_delegatable_supported_permissions: %w[perm], with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
+      app = create(
+        :application,
+        name: "MyApp",
+        with_non_delegatable_supported_permissions: %w[grantable_from_ui_perm],
+        with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[not_grantable_from_ui_perm],
+      )
       @user.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
       click_link "Manage permissions"
       click_link "Update permissions for MyApp"
 
-      assert page.has_field?("perm")
-      assert page.has_no_field?("user_update_permission")
+      assert page.has_field?("grantable_from_ui_perm")
+      assert page.has_no_field?("not_grantable_from_ui_perm")
     end
   end
 
@@ -93,15 +98,20 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "not be able to grant permissions that are not grantable_from_ui" do
-      app = create(:application, name: "MyApp", with_non_delegatable_supported_permissions: %w[perm], with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
+      app = create(
+        :application,
+        name: "MyApp",
+        with_non_delegatable_supported_permissions: %w[grantable_from_ui_perm],
+        with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[not_grantable_from_ui_perm],
+      )
       @user.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
       click_link "Manage permissions"
       click_link "Update permissions for MyApp"
 
-      assert page.has_field?("perm")
-      assert page.has_no_field?("user_update_permission")
+      assert page.has_field?("grantable_from_ui_perm")
+      assert page.has_no_field?("not_grantable_from_ui_perm")
     end
   end
 
@@ -166,12 +176,21 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "not be able to grant permissions that are not grantable_from_ui" do
-      app = create(:application, name: "MyApp", with_delegatable_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
+      app = create(
+        :application,
+        name: "MyApp",
+        with_delegatable_supported_permissions: %w[grantable_from_ui_perm],
+        with_delegatable_supported_permissions_not_grantable_from_ui: %w[not_grantable_from_ui_perm],
+      )
       @super_org_admin.grant_application_signin_permission(app)
+      @user.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
       click_link "Manage permissions"
-      assert page.has_no_select?("Permissions for MyApp", options: %w[user_update_permission])
+      click_link "Update permissions for MyApp"
+
+      assert page.has_field?("grantable_from_ui_perm")
+      assert page.has_no_field?("not_grantable_from_ui_perm")
     end
   end
 
@@ -236,12 +255,21 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
     end
 
     should "not be able to grant permissions that are not grantable_from_ui" do
-      app = create(:application, name: "MyApp", with_delegatable_supported_permissions_not_grantable_from_ui: %w[user_update_permission])
+      app = create(
+        :application,
+        name: "MyApp",
+        with_delegatable_supported_permissions: %w[grantable_from_ui_perm],
+        with_delegatable_supported_permissions_not_grantable_from_ui: %w[not_grantable_from_ui_perm],
+      )
       @organisation_admin.grant_application_signin_permission(app)
+      @user.grant_application_signin_permission(app)
 
       visit edit_user_path(@user)
       click_link "Manage permissions"
-      assert page.has_no_select?("Permissions for MyApp", options: %w[user_update_permission])
+      click_link "Update permissions for MyApp"
+
+      assert page.has_field?("grantable_from_ui_perm")
+      assert page.has_no_field?("not_grantable_from_ui_perm")
     end
   end
 
