@@ -160,7 +160,8 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
     context "as a #{user_role}" do
       should "support granting self app-specific permissions" do
         user = create(:"#{user_role}_user")
-        application = create(:application, name: "app-name", description: "app-description", with_non_delegatable_supported_permissions: %w[perm1 perm2])
+        # do we need a test for delegability here?
+        application = create(:application, name: "app-name", description: "app-description", with_delegatable_supported_permissions: %w[perm1 perm2])
         application.signin_permission.update!(delegatable: true)
         user.grant_application_signin_permission(application)
         user.grant_application_permission(application, "perm1")

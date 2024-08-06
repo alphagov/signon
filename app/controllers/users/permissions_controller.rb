@@ -58,6 +58,11 @@ class Users::PermissionsController < ApplicationController
       selected_permission_ids: selected_permission_ids.map(&:to_i),
     ).build
 
+    # I think the `SupportedPermissionParameterFilter` in combination with the
+    # change to the `SupportedPermissionPolicy` will prevent removing
+    # non-delegatable permissions for publishing managers, so there may not need
+    # to be any further changes to this file, but we'll need to test this carefully
+
     UserUpdate.new(@user, { supported_permission_ids: }, current_user, user_ip_address).call
 
     if update_params[:add_more] == "true"
@@ -84,6 +89,11 @@ private
   end
 
   def set_permissions
-    @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false)
+    # is this the best place to do this?
+    if current_user.govuk_admin?
+      @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false)
+    elsif current_user.publishing_manager?
+      @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false, only_delegatable: true)
+    end
   end
 end
