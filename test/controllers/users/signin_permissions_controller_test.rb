@@ -9,8 +9,12 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
       user = create(:user)
       application = create(:application)
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, create?: true
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        grant_signin_permission?: true,
+      )
 
       expected_params = { supported_permission_ids: [application.signin_permission.id] }
       user_update = stub("user-update").responds_like_instance_of(UserUpdate)
@@ -27,8 +31,12 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
       user = create(:user)
       application = create(:application)
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, create?: true
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        grant_signin_permission?: true,
+      )
 
       post :create, params: { user_id: user, application_id: application.id }
 
@@ -44,15 +52,19 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
       assert_redirected_to "/users/sign_in"
     end
 
-    should "not authorize access if UserApplicationPermissionPolicy#create? returns false" do
+    should "prevent unauthorised users" do
       current_user = create(:admin_user)
       sign_in current_user
 
       user = create(:user)
       application = create(:application)
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, create?: false
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        grant_signin_permission?: false,
+      )
 
       post :create, params: { user_id: user, application_id: application.id }
 
@@ -103,8 +115,12 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
       application = create(:application)
       user.grant_application_signin_permission(application)
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, delete?: true
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        remove_signin_permission?: true,
+      )
 
       get :delete, params: { user_id: user, application_id: application.id }
 
@@ -124,7 +140,7 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
       assert_redirected_to "/users/sign_in"
     end
 
-    should "not authorize access if UserApplicationPermissionPolicy#delete? returns false" do
+    should "prevent authorised users" do
       current_user = create(:admin_user)
       sign_in current_user
 
@@ -132,8 +148,12 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
       application = create(:application)
       user.grant_application_signin_permission(application)
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, delete?: false
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        remove_signin_permission?: false,
+      )
 
       get :delete, params: { user_id: user, application_id: application.id }
 
@@ -194,8 +214,12 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
       application = create(:application)
       user.grant_application_signin_permission(application)
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, destroy?: true
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        remove_signin_permission?: true,
+      )
 
       expected_params = { supported_permission_ids: [] }
       user_update = stub("user-update").responds_like_instance_of(UserUpdate)
@@ -213,8 +237,12 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
       application = create(:application)
       user.grant_application_signin_permission(application)
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, destroy?: true
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        remove_signin_permission?: true,
+      )
 
       delete :destroy, params: { user_id: user, application_id: application.id }
 
@@ -230,7 +258,7 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
       assert_redirected_to "/users/sign_in"
     end
 
-    should "not authorize access if UserApplicationPermissionPolicy#destroy? returns false" do
+    should "prevent unauthorised users" do
       current_user = create(:admin_user)
       sign_in current_user
 
@@ -238,8 +266,12 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
       application = create(:application)
       user.grant_application_signin_permission(application)
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, destroy?: false
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        remove_signin_permission?: false,
+      )
 
       delete :destroy, params: { user_id: user, application_id: application.id }
 
@@ -290,13 +322,5 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
         delete :destroy, params: { user_id: user, application_id: application.id }
       end
     end
-  end
-
-private
-
-  def stub_user_application_permission(user, application)
-    permission = UserApplicationPermission.new
-    UserApplicationPermission.stubs(:for).with(user:, supported_permission: application.signin_permission).returns(permission)
-    permission
   end
 end
