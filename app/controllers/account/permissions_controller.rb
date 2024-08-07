@@ -3,6 +3,8 @@ class Account::PermissionsController < ApplicationController
   before_action :set_application
   before_action :set_permissions, only: %i[edit update]
 
+  include ApplicationPermissionsHelper
+
   def show
     authorize [:account, @application], :view_permissions?
 
@@ -13,6 +15,8 @@ class Account::PermissionsController < ApplicationController
 
   def edit
     authorize [:account, @application], :edit_permissions?
+
+    @notice_about_non_delegatable_permissions = notice_about_non_delegatable_permissions(current_user, @application)
 
     @shared_permissions_form_locals = {
       action: account_application_permissions_path(@application),
