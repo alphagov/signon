@@ -212,6 +212,40 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       assert_select "input[type='hidden'][value='#{application.signin_permission.id}']"
     end
 
+    context "when the current user is a publishing manager" do
+      should "exclude non-delegatable permissions" do
+        application = create(:application)
+        old_delegatable_permission = create(:delegatable_supported_permission, application:)
+        old_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
+        new_delegatable_permission = create(:delegatable_supported_permission, application:)
+        new_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
+
+        user = create(
+          :user,
+          with_signin_permissions_for: [application],
+          with_permissions: { application => [old_delegatable_permission.name, old_non_delegatable_permission.name] },
+        )
+
+        current_user = create(:user)
+        current_user.stubs(:publishing_manager?).returns(true)
+        sign_in current_user
+
+        stub_policy(
+          current_user,
+          { application:, user: },
+          policy_class: Users::ApplicationPolicy,
+          edit_permissions?: true,
+        )
+
+        get :edit, params: { user_id: user, application_id: application }
+
+        assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{old_delegatable_permission.id}']"
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_delegatable_permission.id}']"
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{old_non_delegatable_permission.id}']", count: 0
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_non_delegatable_permission.id}']", count: 0
+      end
+    end
+
     context "for apps with greater than eight supported permissions" do
       setup do
         @application = create(:application)
@@ -456,6 +490,50 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [new_permission.id] } }
 
       assert_equal application.id, flash[:application_id]
+    end
+
+    context "when the current user is a publishing manager with access to the app" do
+      should "prevent adding or removing non-delegatable permissions" do
+        application = create(:application)
+        old_delegatable_permission = create(:delegatable_supported_permission, application:)
+        new_delegatable_permission = create(:delegatable_supported_permission, application:)
+        old_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
+        new_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
+
+        user = create(
+          :user,
+          with_signin_permissions_for: [application],
+          with_permissions: { application => [old_delegatable_permission.name, old_non_delegatable_permission.name] },
+        )
+
+        current_user = create(:user, with_signin_permissions_for: [application])
+        current_user.stubs(:publishing_manager?).returns(true)
+        sign_in current_user
+
+        stub_policy(
+          current_user,
+          { application:, user: },
+          policy_class: Users::ApplicationPolicy,
+          edit_permissions?: true,
+        )
+
+        patch(
+          :update,
+          params: {
+            user_id: user,
+            application_id: application,
+            application: {
+              supported_permission_ids: [new_delegatable_permission.id, new_non_delegatable_permission.id],
+            },
+          },
+        )
+
+        assert_same_elements [
+          old_non_delegatable_permission,
+          new_delegatable_permission,
+          application.signin_permission,
+        ], user.reload.supported_permissions
+      end
     end
 
     context "when current_permission_ids and new_permission_id are provided instead of supported_permission_ids" do
