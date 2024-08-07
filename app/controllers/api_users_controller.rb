@@ -1,9 +1,7 @@
 class ApiUsersController < ApplicationController
-  include UserPermissionsControllerMethods
-
   before_action :authenticate_user!
   before_action :load_and_authorize_api_user, only: %i[edit manage_tokens]
-  helper_method :api_user_applications_and_permissions, :visible_applications
+  helper_method :visible_applications
 
   respond_to :html
 
@@ -50,10 +48,6 @@ private
       user_params: permitted_user_params.to_h,
       current_user_role: current_user.role_name.to_sym,
     ).sanitise
-  end
-
-  def api_user_applications_and_permissions(user)
-    zip_permissions(visible_applications(user), user)
   end
 
   def visible_applications(user)
