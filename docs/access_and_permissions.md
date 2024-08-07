@@ -221,7 +221,7 @@ These dependencies determine whether a user can:
 
 ```mermaid
 flowchart TD
-    A(Users::PermissionsController#edit) --authorize UserApplicationPermission.for(user: @user, supported_permission: @application.signin_permission)--> B(UserApplicationPermissionPolicy#edit?)
+    A(Users::PermissionsController#edit) --authorize [{ application: @application, user: @user }], :edit_permissions?, policy_class: Users::ApplicationPolicy--> B(Users::ApplicationPolicy#edit_permissions?)
     B --Pundit.policy(current_user, user).edit?--> C(UserPolicy#edit?)
     A --@application.sorted_supported_permissions_grantable_from_ui(include_signin: false)--> D(Doorkeeper::Application#sorted_supported_permissions_grantable_from_ui)
 ```
@@ -235,7 +235,7 @@ These dependencies determine whether a user can:
 
 ```mermaid
 flowchart TD
-    A(Users::PermissionsController#update) --authorize UserApplicationPermission.for(user: @user, supported_permission: @application.signin_permission)--> B(UserApplicationPermissionPolicy#update?)
+    A(Users::PermissionsController#update) --authorize [{ application: @application, user: @user }], :edit_permissions?, policy_class: Users::ApplicationPolicy--> B(Users::ApplicationPolicy#edit_permissions?)
     B --Pundit.policy(current_user, user).edit?--> C(UserPolicy#edit?)
     A --UserUpdatePermissionBuilder.new( [...] ).build--> D(UserUpdatePermissionBuilder#build)
     A --UserUpdate.new(@user, { supported_permission_ids: }, current_user, user_ip_address).call--> E(UserUpdate#call)

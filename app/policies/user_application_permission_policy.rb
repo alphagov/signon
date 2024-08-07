@@ -7,8 +7,6 @@ class UserApplicationPermissionPolicy < BasePolicy
   end
   alias_method :destroy?, :create?
   alias_method :delete?, :create?
-  alias_method :update?, :create?
-  alias_method :edit?, :create?
 
   delegate :user, :application, :supported_permission, to: :record
 end
