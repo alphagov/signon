@@ -170,7 +170,8 @@ These dependencies determine whether a user can:
 
 ```mermaid
 flowchart LR
-    A(Users::ApplicationsController#show) --authorize user, :edit?--> B(UserPolicy#edit?)
+    A(Users::ApplicationsController#show) --authorize [{ user: }], policy_class: Users::ApplicationPolicy--> B(Users::ApplicationPolicy#show?)
+    B --Pundit.policy(current_user, user).edit?--> C(UserPolicy#edit?)
 ```
 
 #### Users applications index
@@ -184,19 +185,20 @@ These dependencies determine whether a user can:
 
 ```mermaid
 flowchart TD
-    A(Users::ApplicationsController#index) --authorize @user, :edit?--> B(UserPolicy#edit?)
-    C(app/views/users/applications/index.html.erb) --wrap_links_in_actions_markup--> D(ApplicationTableHelper#wrap_links_in_actions_markup)
-    C --users_applications_permissions_links--> E(ApplicationTableHelper#users_applications_permissions_links)
-    E --Users::ApplicationPolicy.new(current_user, { application:, user: }).view_permissions?--> F(Users::ApplicationPolicy#view_permissions?)
-    F --Pundit.policy(current_user, user).edit?--> G(UserPolicy#edit?)
-    E --Users::ApplicationPolicy.new(current_user, { application:, user: }).edit_permissions?--> H(Users::ApplicationPolicy#edit_permissions?)
-    H --Pundit.policy(current_user, user).edit?--> G
-    C --users_applications_remove_access_link--> I(ApplicationTableHelper#users_applications_remove_access_link)
-    I --Users::ApplicationPolicy.new(current_user, { application:, user: }).remove_signin_permission?--> J(Users::ApplicationPolicy#remove_signin_permission?)
-    J --Pundit.policy(current_user, user).edit?--> G
-    C --users_applications_grant_access_link--> K(ApplicationTableHelper#users_applications_grant_access_link)
-    K --Users::ApplicationPolicy.new(current_user, { application:, user: }).grant_signin_permission?--> L(Users::ApplicationPolicy#grant_signin_permission?)
-    L --Pundit.policy(current_user, user).edit?--> G
+    A(Users::ApplicationsController#index) --authorize [{ user: }], policy_class: Users::ApplicationPolicy--> B(Users::ApplicationPolicy#index?)
+    B --Pundit.policy(current_user, user).edit?--> C(UserPolicy#edit?)
+    D(app/views/users/applications/index.html.erb) --wrap_links_in_actions_markup--> E(ApplicationTableHelper#wrap_links_in_actions_markup)
+    D --users_applications_permissions_links--> F(ApplicationTableHelper#users_applications_permissions_links)
+    F --Users::ApplicationPolicy.new(current_user, { application:, user: }).view_permissions?--> G(Users::ApplicationPolicy#view_permissions?)
+    G --Pundit.policy(current_user, user).edit?--> H(UserPolicy#edit?)
+    F --Users::ApplicationPolicy.new(current_user, { application:, user: }).edit_permissions?--> I(Users::ApplicationPolicy#edit_permissions?)
+    I --Pundit.policy(current_user, user).edit?--> H
+    D --users_applications_remove_access_link--> J(ApplicationTableHelper#users_applications_remove_access_link)
+    J --Users::ApplicationPolicy.new(current_user, { application:, user: }).remove_signin_permission?--> K(Users::ApplicationPolicy#remove_signin_permission?)
+    K --Pundit.policy(current_user, user).edit?--> H
+    D --users_applications_grant_access_link--> L(ApplicationTableHelper#users_applications_grant_access_link)
+    L --Users::ApplicationPolicy.new(current_user, { application:, user: }).grant_signin_permission?--> M(Users::ApplicationPolicy#grant_signin_permission?)
+    M --Pundit.policy(current_user, user).edit?--> H
 ```
 
 #### Users permissions show
