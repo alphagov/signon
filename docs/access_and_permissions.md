@@ -116,7 +116,6 @@ flowchart TD
     A --UserUpdate.new(current_user, { supported_permission_ids: }, current_user, user_ip_address).call--> D(UserUpdate#call)
     D --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids--> E(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
     E --Pundit.policy_scope(current_user, SupportedPermission)--> F("SupportedPermissionPolicy (scope)")
-    F --Pundit.policy_scope(current_user, :user_permission_manageable_application)--> G("UserPermissionManageableApplicationPolicy (scope)")
 ```
 
 ## For another existing user
@@ -242,7 +241,6 @@ flowchart TD
     A --UserUpdate.new(@user, { supported_permission_ids: }, current_user, user_ip_address).call--> E(UserUpdate#call)
     E --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids--> F(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
     F --Pundit.policy_scope(current_user, SupportedPermission)--> G("SupportedPermissionPolicy (scope)")
-    G --Pundit.policy_scope(current_user, :user_permission_manageable_application)--> H("UserPermissionManageableApplicationPolicy (scope)")
 ```
 
 ## For a new user
@@ -276,9 +274,8 @@ These dependencies determine whether a user can:
 ```mermaid
 flowchart TD
     A(InvitationsController#new) --authorize User--> B(UserPolicy#new?)
-    C(app/views/devise/invitations/new.html.erb) --policy_scope(:user_permission_manageable_application)--> D("UserPermissionManageableApplicationPolicy (scope)")
-    C --"options_for_permission_option_select(application:, user: f.object)"--> E(UsersHelper#options_for_permission_option_select)
-    E --application.sorted_supported_permissions_grantable_from_ui--> F(Doorkeeper::Application#sorted_supported_permissions_grantable_from_ui)
+    C(app/views/devise/invitations/new.html.erb) --"options_for_permission_option_select(application:, user: f.object)"--> D(UsersHelper#options_for_permission_option_select)
+    D --application.sorted_supported_permissions_grantable_from_ui--> E(Doorkeeper::Application#sorted_supported_permissions_grantable_from_ui)
 ```
 
 #### Invitations create
@@ -320,7 +317,6 @@ flowchart TD
 | [SupportedPermissionPolicy](/app/policies/supported_permission_policy.rb)                                   | Determining which permissions can be updated by a given granter                                                                                                           |
 | [UserPolicy](/app/policies/user_policy.rb)                                                                  | Determining whether a granter can update a grantee's access and permissions*, and whether they can invite a new user and grant them access and permissions in the process |
 | [UserApplicationPermissionPolicy](/app/policies/user_application_permission_policy.rb)                      | Determining whether a granter can update a grantee's access and permissions*                                                                                              |
-| [UserPermissionManageableApplicationPolicy](/app/policies/user_permission_manageable_application_policy.rb) | Determing the apps to/for which a granter can manage access and permissions                                                                                               |
 
 \* the responsibility of these two policies is hard to distinguish in this context, but as seen in the dependency trees for existing users, the `UserApplicationPermissionPolicy` depends on the `UserPolicy`, and in reality the latter is larger in scope. The `InvitationsController` depends on different parts of the `UserPolicy`, for instance.
 

@@ -4,11 +4,21 @@ class SupportedPermissionPolicy < BasePolicy
       if current_user.govuk_admin?
         scope.all
       elsif current_user.publishing_manager?
-        app_ids = Pundit.policy_scope(current_user, :user_permission_manageable_application).pluck(:id)
-        scope.joins(:application).where(oauth_applications: { id: app_ids })
+        scope.joins(:application).where(oauth_applications: { id: publishing_manager_manageable_application_ids })
       else
         scope.none
       end
+    end
+
+  private
+
+    def publishing_manager_manageable_application_ids
+      Doorkeeper::Application
+        .not_api_only
+        .includes(:supported_permissions)
+        .can_signin(current_user)
+        .with_signin_delegatable
+        .pluck(:id)
     end
   end
 end
