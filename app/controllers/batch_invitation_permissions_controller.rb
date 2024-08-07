@@ -1,5 +1,4 @@
 class BatchInvitationPermissionsController < ApplicationController
-  include UserPermissionsControllerMethods
   before_action :authenticate_user!
   before_action :load_batch_invitation
   before_action :authorise_to_manage_permissions

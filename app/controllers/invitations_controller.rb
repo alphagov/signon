@@ -6,9 +6,6 @@ class InvitationsController < Devise::InvitationsController
   before_action :redirect_if_invitee_already_exists, only: :create
   before_action :configure_permitted_parameters, only: :create
 
-  include UserPermissionsControllerMethods
-  helper_method :applications_and_permissions
-
   def new
     authorize User
 

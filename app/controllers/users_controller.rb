@@ -1,14 +1,12 @@
 require "csv"
 
 class UsersController < ApplicationController
-  include UserPermissionsControllerMethods
-
   before_action :authenticate_user!
   before_action :load_user, except: %i[index]
   before_action :redirect_to_account_page_if_acting_on_own_user, only: %i[edit]
   before_action :authorize_user, except: %i[index]
   before_action :redirect_legacy_filters, only: [:index]
-  helper_method :applications_and_permissions, :filter_params
+  helper_method :filter_params
   respond_to :html
 
   def index

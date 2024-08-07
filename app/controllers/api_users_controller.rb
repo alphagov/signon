@@ -1,6 +1,4 @@
 class ApiUsersController < ApplicationController
-  include UserPermissionsControllerMethods
-
   before_action :authenticate_user!
   before_action :load_and_authorize_api_user, only: %i[edit manage_tokens]
   helper_method :api_user_applications_and_permissions, :visible_applications

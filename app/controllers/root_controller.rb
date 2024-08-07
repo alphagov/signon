@@ -1,12 +1,13 @@
 class RootController < ApplicationController
-  include UserPermissionsControllerMethods
   before_action :authenticate_user!, except: %i[privacy_notice accessibility_statement]
   skip_after_action :verify_authorized
 
   def index
     applications = Doorkeeper::Application.not_api_only.with_home_uri.can_signin(current_user)
 
-    @applications_and_permissions = zip_permissions(applications, current_user)
+    @applications_and_permissions = applications.map do |application|
+      [application, current_user.application_permissions.where(application_id: application.id)]
+    end
   end
 
   def signin_required
