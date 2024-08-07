@@ -275,39 +275,52 @@ class ApplicationTableHelperTest < ActionView::TestCase
   end
 
   context "#update_permissions_link" do
-    context "when the application has grantable permissions" do
-      setup do
-        @application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
-      end
-
-      context "when no user is provided" do
-        should "generate a link to edit own permissions" do
-          assert_includes update_permissions_link(@application), edit_account_application_permissions_path(@application)
-        end
-      end
-
-      context "with a given normal user" do
-        should "generate a link to edit the user's permissions" do
-          user = create(:user)
-
-          assert_includes update_permissions_link(@application, user), edit_user_application_permissions_path(user, @application)
-        end
-      end
-
-      context "with a given API user" do
-        should "generate a link to edit the API user's permissions" do
-          user = create(:api_user)
-
-          assert_includes update_permissions_link(@application, user), edit_api_user_application_permissions_path(user, @application)
-        end
-      end
+    setup do
+      @application = create(:application)
+      @current_user = create(:user)
+      stubs(:current_user).returns(@current_user)
     end
 
-    context "when the application has no grantable permissions" do
-      should "return an empty string" do
-        application = create(:application)
+    [
+      { role_group: "GOV.UK admin", role_method: :govuk_admin?, app_method: :has_non_signin_permissions_grantable_from_ui? },
+      { role_group: "publishing manager", role_method: :publishing_manager?, app_method: :has_delegatable_non_signin_permissions_grantable_from_ui? },
+    ].each do |context_hash|
+      context "when the current user is a #{context_hash[:role_group]}" do
+        setup { @current_user.expects(context_hash[:role_method]).returns(true) }
 
-        assert update_permissions_link(application).empty?
+        context "and there are permissions they can update" do
+          setup { @application.expects(context_hash[:app_method]).returns(true) }
+
+          context "when no user is provided" do
+            should "generate a link to edit own permissions" do
+              assert_includes update_permissions_link(@application), edit_account_application_permissions_path(@application)
+            end
+          end
+
+          context "with a given normal user" do
+            should "generate a link to edit the user's permissions" do
+              user = create(:user)
+
+              assert_includes update_permissions_link(@application, user), edit_user_application_permissions_path(user, @application)
+            end
+          end
+
+          context "with a given API user" do
+            should "generate a link to edit the API user's permissions" do
+              user = create(:api_user)
+
+              assert_includes update_permissions_link(@application, user), edit_api_user_application_permissions_path(user, @application)
+            end
+          end
+        end
+
+        context "and there are no permissions they can update" do
+          should "return an empty string" do
+            @application.expects(context_hash[:app_method]).returns(false)
+
+            assert_empty update_permissions_link(@application)
+          end
+        end
       end
     end
   end

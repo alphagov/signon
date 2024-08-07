@@ -101,7 +101,11 @@ private
   end
 
   def update_permissions_link(application, user = nil)
-    return "" if application.sorted_supported_permissions_grantable_from_ui(include_signin: false).none?
+    if current_user.govuk_admin?
+      return "" unless application.has_non_signin_permissions_grantable_from_ui?
+    elsif current_user.publishing_manager?
+      return "" unless application.has_delegatable_non_signin_permissions_grantable_from_ui?
+    end
 
     path = if user.nil?
              edit_account_application_permissions_path(application)

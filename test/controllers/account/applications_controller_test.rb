@@ -127,22 +127,28 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
 
         context "editing permissions" do
           context "when the app only has the signin permission" do
-            should "only display a link to view permissions when authorised to view or edit permissions" do
-              stub_policy @user, [:account, @application], view_permissions?: true, edit_permissions?: true
+            %w[govuk_admin publishing_manager].each do |role_group|
+              context "as a #{role_group}" do
+                setup { @user.stubs(:"#{role_group}?").returns(true) }
 
-              get :index
+                should "only display a link to view permissions when authorised to view or edit permissions" do
+                  stub_policy @user, [:account, @application], view_permissions?: true, edit_permissions?: true
 
-              assert_select "a[href='#{edit_account_application_permissions_path(@application)}']", count: 0
-              assert_select "a[href='#{account_application_permissions_path(@application)}']"
-            end
+                  get :index
 
-            should "not display links to view or edit permissions when not authorised to view permissions" do
-              stub_policy @user, [:account, @application], view_permissions?: false, edit_permissions?: true
+                  assert_select "a[href='#{edit_account_application_permissions_path(@application)}']", count: 0
+                  assert_select "a[href='#{account_application_permissions_path(@application)}']"
+                end
 
-              get :index
+                should "not display links to view or edit permissions when not authorised to view permissions" do
+                  stub_policy @user, [:account, @application], view_permissions?: false, edit_permissions?: true
 
-              assert_select "a[href='#{edit_account_application_permissions_path(@application)}']", count: 0
-              assert_select "a[href='#{account_application_permissions_path(@application)}']", count: 0
+                  get :index
+
+                  assert_select "a[href='#{edit_account_application_permissions_path(@application)}']", count: 0
+                  assert_select "a[href='#{account_application_permissions_path(@application)}']", count: 0
+                end
+              end
             end
           end
 
