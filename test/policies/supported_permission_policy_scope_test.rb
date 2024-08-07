@@ -6,11 +6,13 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
     @app_two = create(:application, name: "App two")
     @app_three = create(:application, name: "App three")
     @app_four = create(:application, name: "App four")
+    @api_only_app = create(:application, name: "API-only app", api_only: true)
 
     @app_one_signin_permission = @app_one.signin_permission.tap { |s| s.update(delegatable: true) }
     @app_two_signin_permission = @app_two.signin_permission.tap { |s| s.update(delegatable: false) }
     @app_three_signin_permission = @app_three.signin_permission.tap { |s| s.update(delegatable: true) }
     @app_four_signin_permission = @app_four.signin_permission.tap { |s| s.update(delegatable: false) }
+    @api_only_app_signin_permission = @api_only_app.signin_permission.tap { |s| s.update(delegatable: true) }
 
     @app_one_hat_permission = create(:non_delegatable_supported_permission, application: @app_one, name: "hat")
     @app_one_cat_permission = create(:delegatable_supported_permission, application: @app_one, name: "cat")
@@ -23,6 +25,9 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
 
     @app_four_pat_permission = create(:non_delegatable_supported_permission, application: @app_three, name: "pat")
     @app_four_sat_permission = create(:delegatable_supported_permission, application: @app_three, name: "sat")
+
+    @api_only_app_nat_permission = create(:non_delegatable_supported_permission, application: @api_only_app, name: "nat")
+    @api_only_app_mat_permission = create(:delegatable_supported_permission, application: @api_only_app, name: "mat")
   end
 
   context "resolve" do
@@ -45,6 +50,10 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
       assert_includes resolved_scope, @app_four_signin_permission
       assert_includes resolved_scope, @app_four_pat_permission
       assert_includes resolved_scope, @app_four_sat_permission
+
+      assert_includes resolved_scope, @api_only_app_signin_permission
+      assert_includes resolved_scope, @api_only_app_nat_permission
+      assert_includes resolved_scope, @api_only_app_mat_permission
     end
 
     should "include all permissions for admins" do
@@ -66,6 +75,10 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
       assert_includes resolved_scope, @app_four_signin_permission
       assert_includes resolved_scope, @app_four_pat_permission
       assert_includes resolved_scope, @app_four_sat_permission
+
+      assert_includes resolved_scope, @api_only_app_signin_permission
+      assert_includes resolved_scope, @api_only_app_nat_permission
+      assert_includes resolved_scope, @api_only_app_mat_permission
     end
 
     context "super organisation admins" do
@@ -73,12 +86,13 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
         user = create(:super_organisation_admin_user).tap do |u|
           u.grant_application_signin_permission(@app_one)
           u.grant_application_signin_permission(@app_two)
+          u.grant_application_signin_permission(@api_only_app)
         end
 
         @resolved_scope = SupportedPermissionPolicy::Scope.new(user, SupportedPermission.all).resolve
       end
 
-      should "contain all permissions for apps with delegatable signin permission that the super organisation admin has access to" do
+      should "contain all permissions for non-API-only apps with delegatable signin permission that the super organisation admin has access to" do
         assert_includes @resolved_scope, @app_one_signin_permission
         assert_includes @resolved_scope, @app_one_cat_permission
         assert_includes @resolved_scope, @app_one_hat_permission
@@ -99,6 +113,12 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
         assert_not_includes @resolved_scope, @app_four_pat_permission
         assert_not_includes @resolved_scope, @app_four_sat_permission
       end
+
+      should "not contain any permissions for API-only apps" do
+        assert_not_includes @resolved_scope, @api_only_app_signin_permission
+        assert_not_includes @resolved_scope, @api_only_app_nat_permission
+        assert_not_includes @resolved_scope, @api_only_app_mat_permission
+      end
     end
 
     context "organisation admins" do
@@ -106,12 +126,13 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
         user = create(:organisation_admin_user).tap do |u|
           u.grant_application_signin_permission(@app_one)
           u.grant_application_signin_permission(@app_two)
+          u.grant_application_signin_permission(@api_only_app)
         end
 
         @resolved_scope = SupportedPermissionPolicy::Scope.new(user, SupportedPermission.all).resolve
       end
 
-      should "contain all permissions for apps with delegatable signin permission that the organisation admin has access to" do
+      should "contain all permissions for non-API-only apps with delegatable signin permission that the organisation admin has access to" do
         assert_includes @resolved_scope, @app_one_signin_permission
         assert_includes @resolved_scope, @app_one_cat_permission
         assert_includes @resolved_scope, @app_one_hat_permission
@@ -131,6 +152,12 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
         assert_not_includes @resolved_scope, @app_four_signin_permission
         assert_not_includes @resolved_scope, @app_four_pat_permission
         assert_not_includes @resolved_scope, @app_four_sat_permission
+      end
+
+      should "not contain any permissions for API-only apps" do
+        assert_not_includes @resolved_scope, @api_only_app_signin_permission
+        assert_not_includes @resolved_scope, @api_only_app_nat_permission
+        assert_not_includes @resolved_scope, @api_only_app_mat_permission
       end
     end
 
