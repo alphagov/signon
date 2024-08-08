@@ -114,9 +114,12 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       current_user = create(:admin_user)
       sign_in current_user
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, edit?: false
-
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: false,
+      )
       get :edit, params: { user_id: user, application_id: application.id }
 
       assert_not_authorised
@@ -133,8 +136,12 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       current_user = create(:admin_user)
       sign_in current_user
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, edit?: true
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: true,
+      )
 
       get :edit, params: { user_id: user.id, application_id: application.id }
 
@@ -152,8 +159,12 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       current_user = create(:admin_user)
       sign_in current_user
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, edit?: true
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: true,
+      )
 
       get :edit, params: { user_id: user.id, application_id: application.id }
 
@@ -213,8 +224,12 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         current_user = create(:admin_user)
         sign_in current_user
 
-        permission = stub_user_application_permission(user, @application)
-        stub_policy current_user, permission, edit?: true
+        stub_policy(
+          current_user,
+          { application: @application, user: },
+          policy_class: Users::ApplicationPolicy,
+          edit_permissions?: true,
+        )
 
         get :edit, params: { user_id: user, application_id: @application.id }
       end
@@ -252,6 +267,26 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       assert_redirected_to "/users/sign_in"
     end
 
+    should "prevent unauthorized users" do
+      application = create(:application)
+      user = create(:user)
+      user.grant_application_signin_permission(application)
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: false,
+      )
+
+      patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [] } }
+
+      assert_not_authorised
+    end
+
     should "redirect once the permissions have been updated" do
       application = create(:application, with_non_delegatable_supported_permissions: %w[new old])
       user = create(:user, with_permissions: { application => %w[old] })
@@ -260,8 +295,12 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       current_user = create(:admin_user)
       sign_in current_user
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, update?: true
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: true,
+      )
 
       new_permission = application.supported_permissions.find_by(name: "new")
 
@@ -283,8 +322,12 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       current_user.grant_application_signin_permission(application1)
       sign_in current_user
 
-      permission = stub_user_application_permission(user, application1)
-      stub_policy current_user, permission, update?: true
+      stub_policy(
+        current_user,
+        { application: application1, user: },
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: true,
+      )
 
       app2_permission = application2.supported_permissions.find_by!(name: "app2-permission")
 
@@ -303,8 +346,12 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       current_user = create(:admin_user)
       sign_in current_user
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, update?: true
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: true,
+      )
 
       other_permission = application.supported_permissions.find_by(name: "other")
 
@@ -323,8 +370,12 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       current_user = create(:admin_user)
       sign_in current_user
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, update?: true
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: true,
+      )
 
       other_permission = application.supported_permissions.find_by(name: "other")
       not_from_ui_permission = application.supported_permissions.find_by(name: "not_from_ui")
@@ -345,8 +396,12 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       current_user = create(:admin_user)
       sign_in current_user
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, update?: true
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: true,
+      )
 
       other_permission = other_application.supported_permissions.find_by(name: "other")
 
@@ -365,8 +420,12 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       current_user = create(:admin_user)
       sign_in current_user
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, update?: true
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: true,
+      )
 
       not_from_ui_permission = application.supported_permissions.find_by(name: "not_from_ui")
 
@@ -385,8 +444,12 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       current_user = create(:admin_user)
       sign_in current_user
 
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, update?: true
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: true,
+      )
 
       new_permission = application.supported_permissions.find_by(name: "new")
 
@@ -418,22 +481,6 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       end
     end
 
-    should "prevent unauthorised users" do
-      application = create(:application)
-      user = create(:user)
-      user.grant_application_signin_permission(application)
-
-      current_user = create(:admin_user)
-      sign_in current_user
-
-      permission = stub_user_application_permission(user, application)
-      stub_policy current_user, permission, update?: false
-
-      patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [] } }
-
-      assert_not_authorised
-    end
-
     context "when current_permission_ids and new_permission_id are provided instead of supported_permission_ids" do
       setup do
         @application = create(:application)
@@ -447,8 +494,12 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         @current_user = create(:admin_user)
         sign_in @current_user
 
-        permission = stub_user_application_permission(@user, @application)
-        stub_policy @current_user, permission, update?: true
+        stub_policy(
+          @current_user,
+          { application: @application, user: @user },
+          policy_class: Users::ApplicationPolicy,
+          edit_permissions?: true,
+        )
       end
 
       should "use the relevant params to update permissions" do
@@ -473,13 +524,5 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         end
       end
     end
-  end
-
-private
-
-  def stub_user_application_permission(user, application)
-    permission = UserApplicationPermission.new
-    UserApplicationPermission.stubs(:for).with(user:, supported_permission: application.signin_permission).returns(permission)
-    permission
   end
 end

@@ -13,7 +13,7 @@ class Users::PermissionsController < ApplicationController
   end
 
   def edit
-    authorize UserApplicationPermission.for(user: @user, supported_permission: @application.signin_permission)
+    authorize [{ application: @application, user: @user }], :edit_permissions?, policy_class: Users::ApplicationPolicy
 
     @shared_permissions_form_locals = {
       action: user_application_permissions_path(@user, @application),
@@ -38,7 +38,7 @@ class Users::PermissionsController < ApplicationController
   end
 
   def update
-    authorize UserApplicationPermission.for(user: @user, supported_permission: @application.signin_permission)
+    authorize [{ application: @application, user: @user }], :edit_permissions?, policy_class: Users::ApplicationPolicy
 
     selected_permission_ids = []
 

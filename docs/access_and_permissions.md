@@ -221,7 +221,7 @@ These dependencies determine whether a user can:
 
 ```mermaid
 flowchart TD
-    A(Users::PermissionsController#edit) --authorize UserApplicationPermission.for(user: @user, supported_permission: @application.signin_permission)--> B(UserApplicationPermissionPolicy#edit?)
+    A(Users::PermissionsController#edit) --authorize [{ application: @application, user: @user }], :edit_permissions?, policy_class: Users::ApplicationPolicy--> B(Users::ApplicationPolicy#edit_permissions?)
     B --Pundit.policy(current_user, user).edit?--> C(UserPolicy#edit?)
     A --@application.sorted_supported_permissions_grantable_from_ui(include_signin: false)--> D(Doorkeeper::Application#sorted_supported_permissions_grantable_from_ui)
 ```
@@ -235,7 +235,7 @@ These dependencies determine whether a user can:
 
 ```mermaid
 flowchart TD
-    A(Users::PermissionsController#update) --authorize UserApplicationPermission.for(user: @user, supported_permission: @application.signin_permission)--> B(UserApplicationPermissionPolicy#update?)
+    A(Users::PermissionsController#update) --authorize [{ application: @application, user: @user }], :edit_permissions?, policy_class: Users::ApplicationPolicy--> B(Users::ApplicationPolicy#edit_permissions?)
     B --Pundit.policy(current_user, user).edit?--> C(UserPolicy#edit?)
     A --UserUpdatePermissionBuilder.new( [...] ).build--> D(UserUpdatePermissionBuilder#build)
     A --UserUpdate.new(@user, { supported_permission_ids: }, current_user, user_ip_address).call--> E(UserUpdate#call)
@@ -311,14 +311,14 @@ flowchart TD
 
 ### Policies
 
-| Class                                                                                                       | Responsibility                                                                                                                                                            |
-|-------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [Account::ApplicationPolicy](/app/policies/account/application_policy.rb)                                   | Determining whether granters can see and update their own access and permissions                                                                                          |
-| [SupportedPermissionPolicy](/app/policies/supported_permission_policy.rb)                                   | Determining which permissions can be updated by a given granter                                                                                                           |
-| [UserPolicy](/app/policies/user_policy.rb)                                                                  | Determining whether a granter can update a grantee's access and permissions*, and whether they can invite a new user and grant them access and permissions in the process |
-| [UserApplicationPermissionPolicy](/app/policies/user_application_permission_policy.rb)                      | Determining whether a granter can update a grantee's access and permissions*                                                                                              |
+| Class                                                                     | Responsibility                                                                                                                                                            |
+|---------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Account::ApplicationPolicy](/app/policies/account/application_policy.rb) | Determining whether granters can see and update their own access and permissions                                                                                          |
+| [SupportedPermissionPolicy](/app/policies/supported_permission_policy.rb) | Determining which permissions can be updated by a given granter                                                                                                           |
+| [UserPolicy](/app/policies/user_policy.rb)                                | Determining whether a granter can update a grantee's access and permissions*, and whether they can invite a new user and grant them access and permissions in the process |
+| [Users::ApplicationPolicy](/app/policies/users/application_policy.rb)     | Determining whether a granter can see and update a grantee's access and permissions*                                                                                      |
 
-\* the responsibility of these two policies is hard to distinguish in this context, but as seen in the dependency trees for existing users, the `UserApplicationPermissionPolicy` depends on the `UserPolicy`, and in reality the latter is larger in scope. The `InvitationsController` depends on different parts of the `UserPolicy`, for instance.
+\* the responsibility of these two policies is hard to distinguish in this context, but as seen in the dependency trees for existing users, the `Users::ApplicationPolicy` depends on the `UserPolicy`, and in reality the latter is larger in scope. The `InvitationsController` depends on different parts of the `UserPolicy`, for instance.
 
 ### Others
 
