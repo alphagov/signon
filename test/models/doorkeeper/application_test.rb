@@ -24,7 +24,7 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
   end
 
-  context "redirect_uri" do
+  context "#redirect_uri" do
     should "return application redirect uri" do
       application = create(:application)
 
@@ -50,7 +50,7 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
   end
 
-  context "home_uri" do
+  context "#home_uri" do
     should "return application home uri" do
       application = create(:application)
 
@@ -83,43 +83,46 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
   end
 
-  context "sorted_supported_permissions_grantable_from_ui" do
+  context "#sorted_supported_permissions_grantable_from_ui" do
     should "return all of the supported permissions that are grantable from the ui" do
       application = create(
         :application,
-        name: "Whitehall",
-        with_non_delegatable_supported_permissions: ["Editor", SupportedPermission::SIGNIN_NAME],
-        with_non_delegatable_supported_permissions_not_grantable_from_ui: ["Not grantable"],
+        with_delegatable_supported_permissions: %w[delegatable-grantable],
+        with_delegatable_supported_permissions_not_grantable_from_ui: %w[delegatable-non-grantable],
+        with_non_delegatable_supported_permissions: ["non-delegatable-grantable", SupportedPermission::SIGNIN_NAME],
+        with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[non-delegatable-non-grantable],
       )
 
       permission_names = application.sorted_supported_permissions_grantable_from_ui.map(&:name)
 
-      assert permission_names.include?("Editor")
-      assert permission_names.include?(SupportedPermission::SIGNIN_NAME)
-      assert_not permission_names.include?("Not grantable")
+      assert_includes permission_names, "delegatable-grantable"
+      assert_includes permission_names, "non-delegatable-grantable"
+      assert_includes permission_names, SupportedPermission::SIGNIN_NAME
+      assert_not_includes permission_names, "delegatable-non-grantable"
+      assert_not_includes permission_names, "non-delegatable-non-grantable"
     end
 
     should "sort the permissions alphabetically by name, but with the signin permission first" do
       application = create(
         :application,
-        name: "Whitehall",
-        with_non_delegatable_supported_permissions: ["Writer", "Editor", SupportedPermission::SIGNIN_NAME],
+        with_delegatable_supported_permissions: %w[a d],
+        with_non_delegatable_supported_permissions: ["c", "b", SupportedPermission::SIGNIN_NAME],
       )
 
       permission_names = application.sorted_supported_permissions_grantable_from_ui.map(&:name)
 
-      assert_equal [SupportedPermission::SIGNIN_NAME, "Editor", "Writer"], permission_names
+      assert_equal [SupportedPermission::SIGNIN_NAME, "a", "b", "c", "d"], permission_names
     end
 
-    should "remove the signin permission if requested" do
+    should "exclude the signin permission if requested" do
       application = create(
         :application,
-        name: "Whitehall",
         with_non_delegatable_supported_permissions: ["Writer", "Editor", SupportedPermission::SIGNIN_NAME],
       )
 
       permission_names = application.sorted_supported_permissions_grantable_from_ui(include_signin: false).map(&:name)
 
+      assert_not_includes permission_names, SupportedPermission::SIGNIN_NAME
       assert_equal %w[Editor Writer], permission_names
     end
   end
