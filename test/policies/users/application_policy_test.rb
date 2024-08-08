@@ -11,6 +11,22 @@ class Users::ApplicationPolicyTest < ActiveSupport::TestCase
     @application = create(:application)
   end
 
+  %i[show index view_permissions].each do |aliased_method|
+    context "##{aliased_method}?" do
+      setup { @args = [@current_user, { application: @application, user: @user }, aliased_method] }
+
+      context "when the current user can edit the given user" do
+        setup { stub_policy @current_user, @user, edit?: true }
+        should("be permitted") { assert permit?(*@args) }
+      end
+
+      context "when the current user cannot edit the given user" do
+        setup { stub_policy @current_user, @user, edit?: false }
+        should("be forbidden") { assert forbid?(*@args) }
+      end
+    end
+  end
+
   %i[grant_signin_permission remove_signin_permission edit_permissions].each do |aliased_method|
     context "##{aliased_method}?" do
       setup do
@@ -83,26 +99,6 @@ class Users::ApplicationPolicyTest < ActiveSupport::TestCase
           assert forbid?(*@args)
         end
       end
-    end
-  end
-
-  context "#view_permissions?" do
-    setup do
-      @args = [
-        @current_user,
-        { application: @application, user: @user },
-        :view_permissions,
-      ]
-    end
-
-    context "when the current user can edit the given user" do
-      setup { stub_policy @current_user, @user, edit?: true }
-      should("be permitted") { assert permit?(*@args) }
-    end
-
-    context "when the current user cannot edit the given user" do
-      setup { stub_policy @current_user, @user, edit?: false }
-      should("be forbidden") { assert forbid?(*@args) }
     end
   end
 end
