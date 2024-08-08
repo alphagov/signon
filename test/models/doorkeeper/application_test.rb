@@ -24,7 +24,7 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
   end
 
-  context "redirect_uri" do
+  context "#redirect_uri" do
     should "return application redirect uri" do
       application = create(:application)
 
@@ -50,7 +50,7 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
   end
 
-  context "home_uri" do
+  context "#home_uri" do
     should "return application home uri" do
       application = create(:application)
 
@@ -83,7 +83,7 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     end
   end
 
-  context "sorted_supported_permissions_grantable_from_ui" do
+  context "#sorted_supported_permissions_grantable_from_ui" do
     should "return all of the supported permissions that are grantable from the ui" do
       application = create(
         :application,
