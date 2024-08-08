@@ -1,9 +1,9 @@
 class Account::ApplicationPolicy < BasePolicy
-  def index?
+  def show?
     current_user.govuk_admin? || current_user.publishing_manager?
   end
 
-  alias_method :show?, :index?
+  alias_method :index?, :show?
   alias_method :view_permissions?, :index?
 
   def grant_signin_permission?

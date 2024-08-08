@@ -56,7 +56,7 @@ class Users::ApplicationPolicyTest < ActiveSupport::TestCase
             end
           end
 
-          context "when the current user has access to the application but the application's signion permission is not delegatable" do
+          context "when the current user has access to the application but the application's signin permission is not delegatable" do
             should "be forbidden" do
               @current_user.expects(:has_access_to?).with(@application).returns(true)
               @application.signin_permission.update!(delegatable: false)

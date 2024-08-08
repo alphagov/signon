@@ -4,269 +4,116 @@ require "support/policy_helpers"
 class Account::ApplicationPolicyTest < ActiveSupport::TestCase
   include PolicyHelpers
 
-  context "accessing index?" do
-    %i[superadmin admin super_organisation_admin organisation_admin].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @current_user = FactoryBot.build(:"#{user_role}_user")
-        end
-
-        should "be permitted" do
-          assert permit?(@current_user, nil, :index)
-        end
-      end
-    end
-
-    %i[normal].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @current_user = FactoryBot.build(:"#{user_role}_user")
-        end
-
-        should "be forbidden" do
-          assert forbid?(@current_user, nil, :index)
-        end
-      end
-    end
+  setup do
+    @current_user = create(:user)
+    @application = create(:application)
   end
 
-  context "show?" do
-    %i[superadmin admin super_organisation_admin organisation_admin].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @current_user = build(:"#{user_role}_user")
-        end
+  %i[show index view_permissions].each do |aliased_method|
+    context "##{aliased_method}?" do
+      setup { @args = [@current_user, @application, aliased_method] }
 
+      context "when the current user is a GOV.UK admin" do
         should "be permitted" do
-          assert permit?(@current_user, nil, :show)
+          @current_user.expects(:govuk_admin?).returns(true)
+
+          assert permit?(*@args)
         end
       end
-    end
 
-    %i[normal].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @current_user = build(:"#{user_role}_user")
+      context "when the current user is a publishing manager" do
+        should "be permitted" do
+          @current_user.expects(:govuk_admin?).returns(false)
+          @current_user.expects(:publishing_manager?).returns(true)
+
+          assert permit?(*@args)
         end
+      end
 
+      context "when the current user is neither a GOV.UK admin nor a publishing manager" do
         should "be forbidden" do
-          assert forbid?(@current_user, nil, :show)
+          @current_user.expects(:govuk_admin?).returns(false)
+          @current_user.expects(:publishing_manager?).returns(false)
+
+          assert forbid?(*@args)
         end
       end
     end
   end
 
   context "#grant_signin_permission?" do
-    %i[superadmin admin].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @current_user = build(:"#{user_role}_user")
-        end
+    setup { @args = [@current_user, @application, :grant_signin_permission] }
 
-        should "be permitted" do
-          assert permit?(@current_user, nil, :grant_signin_permission)
-        end
+    context "when the current user is a GOV.UK admin" do
+      should "be permitted" do
+        @current_user.expects(:govuk_admin?).returns(true)
+
+        assert permit?(*@args)
       end
     end
 
-    %i[super_organisation_admin organisation_admin normal].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @current_user = build(:"#{user_role}_user")
-        end
+    context "when the current user is not a GOV.UK admin" do
+      should "be forbidden" do
+        @current_user.expects(:govuk_admin?).returns(false)
 
-        should "be forbidden" do
-          assert forbid?(@current_user, nil, :grant_signin_permission)
-        end
+        assert forbid?(*@args)
       end
     end
   end
 
-  context "#remove_signin_permission?" do
-    setup do
-      @application = create(:application)
-    end
+  %i[remove_signin_permission edit_permissions].each do |aliased_method|
+    context "##{aliased_method}?" do
+      setup { @args = [@current_user, @application, aliased_method] }
 
-    %i[superadmin admin].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @current_user = create(:"#{user_role}_user")
-        end
+      context "when the current user has access to the application" do
+        setup { @current_user.expects(:has_access_to?).returns(true) }
 
-        context "when the user has signin permission for the app" do
-          setup do
-            @current_user.grant_application_signin_permission(@application)
-          end
-
+        context "when the current user is a GOV.UK admin" do
           should "be permitted" do
-            assert permit?(@current_user, @application, :remove_signin_permission)
+            @current_user.expects(:govuk_admin?).returns(true)
+
+            assert permit?(*@args)
           end
         end
 
-        context "when the user does not have the signin permission for the app" do
-          should "be forbidden" do
-            assert forbid?(@current_user, @application, :remove_signin_permission)
-          end
-        end
-      end
-    end
-
-    %i[super_organisation_admin organisation_admin].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @current_user = create(:"#{user_role}_user")
-        end
-
-        context "when the user has signin permission for the app" do
+        context "when the current user is a publishing manager" do
           setup do
-            @current_user.grant_application_signin_permission(@application)
+            @current_user.expects(:govuk_admin?).returns(false)
+            @current_user.expects(:publishing_manager?).returns(true)
           end
 
-          context "and the application has delegatable permissions" do
-            setup do
-              @application.signin_permission.update!(delegatable: true)
-            end
-
+          context "when the application's signin permission is delegatable" do
             should "be permitted" do
-              assert permit?(@current_user, @application, :remove_signin_permission)
-            end
-          end
-
-          context "and the application does not have delegatable permissions" do
-            setup do
-              @application.signin_permission.update!(delegatable: false)
-            end
-
-            should "not be permitted" do
-              assert forbid?(@current_user, @application, :remove_signin_permission)
-            end
-          end
-        end
-
-        context "when the user does not have the signin permission for the app" do
-          should "be forbidden" do
-            assert forbid?(@current_user, @application, :remove_signin_permission)
-          end
-        end
-      end
-    end
-
-    %i[normal].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @current_user = build(:"#{user_role}_user")
-        end
-
-        should "be forbidden" do
-          assert forbid?(@current_user, @application, :remove_signin_permission)
-        end
-      end
-    end
-  end
-
-  context "#view_permissions?" do
-    %i[superadmin admin super_organisation_admin organisation_admin].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @current_user = build(:"#{user_role}_user")
-        end
-
-        should "be permitted" do
-          assert permit?(@current_user, nil, :view_permissions)
-        end
-      end
-    end
-
-    %i[normal].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @current_user = build(:"#{user_role}_user")
-        end
-
-        should "be forbidden" do
-          assert forbid?(@current_user, nil, :view_permissions)
-        end
-      end
-    end
-  end
-
-  context "#edit_permissions?" do
-    setup do
-      @application = create(:application)
-    end
-
-    %i[superadmin admin].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @current_user = create(:"#{user_role}_user")
-        end
-
-        context "when the user has signin permission for the app" do
-          setup do
-            @current_user.grant_application_signin_permission(@application)
-          end
-
-          should "be permitted" do
-            assert permit?(@current_user, @application, :edit_permissions)
-          end
-        end
-
-        context "when the user does not have the signin permission for the app" do
-          should "be forbidden" do
-            assert forbid?(@current_user, @application, :edit_permissions)
-          end
-        end
-      end
-    end
-
-    %i[super_organisation_admin organisation_admin].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @current_user = create(:"#{user_role}_user")
-        end
-
-        context "when the user has signin permission for the app" do
-          setup do
-            @current_user.grant_application_signin_permission(@application)
-          end
-
-          context "and the application has delegatable permissions" do
-            setup do
               @application.signin_permission.update!(delegatable: true)
-            end
 
-            should "be permitted" do
-              assert permit?(@current_user, @application, :edit_permissions)
+              assert permit?(*@args)
             end
           end
 
-          context "and the application does not have delegatable permissions" do
-            setup do
+          context "when the application's signin permission is not delegatable" do
+            should "be forbidden" do
               @application.signin_permission.update!(delegatable: false)
-            end
 
-            should "not be permitted" do
-              assert forbid?(@current_user, @application, :edit_permissions)
+              assert forbid?(*@args)
             end
           end
         end
 
-        context "when the user does not have the signin permission for the app" do
+        context "when the current user is neither a GOV.UK admin nor a publishing manager" do
           should "be forbidden" do
-            assert forbid?(@current_user, @application, :edit_permissions)
+            @current_user.expects(:govuk_admin?).returns(false)
+            @current_user.expects(:publishing_manager?).returns(false)
+
+            assert forbid?(*@args)
           end
         end
       end
-    end
 
-    %i[normal].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @current_user = build(:"#{user_role}_user")
-        end
-
+      context "when the current user does not have access to the application" do
         should "be forbidden" do
-          assert forbid?(@current_user, @application, :edit_permissions)
+          @current_user.expects(:has_access_to?).returns(false)
+
+          assert forbid?(*@args)
         end
       end
     end
