@@ -47,7 +47,12 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
       current_user = create(:user)
       sign_in current_user
 
-      stub_policy current_user, @user, edit?: false
+      stub_policy(
+        current_user,
+        { user: @user },
+        policy_class: Users::ApplicationPolicy,
+        show?: false,
+      )
 
       get :show, params: { user_id: @user, id: @application.id }
 
@@ -58,7 +63,12 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
       current_user = create(:user)
       sign_in current_user
 
-      stub_policy current_user, @user, edit?: true
+      stub_policy(
+        current_user,
+        { user: @user },
+        policy_class: Users::ApplicationPolicy,
+        show?: true,
+      )
 
       get :show, params: { user_id: @user, id: @application.id }
 
@@ -75,29 +85,46 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
       assert_redirected_to "/users/sign_in"
     end
 
-    should "prevent users who are unauthorised to edit the user" do
+    should "prevent unauthorised users" do
       user = create(:user)
 
       current_user = create(:admin_user)
       sign_in current_user
 
-      stub_policy current_user, user, edit?: false
+      stub_policy(
+        current_user,
+        { user: },
+        policy_class: Users::ApplicationPolicy,
+        index?: false,
+      )
 
       get :index, params: { user_id: user }
 
       assert_not_authorised
     end
 
-    context "when authenticated and authorised to edit the user" do
+    context "when authenticated and authorised" do
       setup do
         @current_user = create(:user)
         stub_policy_for_navigation_links @current_user
         sign_in @current_user
 
         @user = create(:user)
-        stub_policy @current_user, @user, edit?: true
+
+        stub_policy(
+          @current_user,
+          { user: @user },
+          policy_class: Users::ApplicationPolicy,
+          index?: true,
+        )
 
         @application = create(:application, name: "app-name")
+
+        stub_policy(
+          @current_user,
+          { application: @application, user: @user },
+          policy_class: Users::ApplicationPolicy,
+        )
       end
 
       context "for apps the user doesn't have access to" do
