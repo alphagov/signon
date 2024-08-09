@@ -125,6 +125,142 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       assert_not_includes permission_names, SupportedPermission::SIGNIN_NAME
       assert_equal %w[Editor Writer], permission_names
     end
+
+    should "exclude non-delegatable permissions if requested" do
+      application_1 = create(
+        :application,
+        with_delegatable_supported_permissions: %w[delegatable],
+        with_non_delegatable_supported_permissions: ["non-delegatable", SupportedPermission::SIGNIN_NAME],
+      )
+      application_2 = create(
+        :application,
+        with_delegatable_supported_permissions: ["delegatable", SupportedPermission::SIGNIN_NAME],
+        with_non_delegatable_supported_permissions: %w[non-delegatable],
+      )
+
+      application_1_permission_names = application_1.sorted_supported_permissions_grantable_from_ui(only_delegatable: true).map(&:name)
+      application_2_permission_names = application_2.sorted_supported_permissions_grantable_from_ui(only_delegatable: true).map(&:name)
+
+      assert_equal %w[delegatable], application_1_permission_names
+      assert_equal [SupportedPermission::SIGNIN_NAME, "delegatable"], application_2_permission_names
+    end
+
+    should "exclude non-delegatable signin permission if requested, even when `include_signin == true`" do
+      application = create(
+        :application,
+        with_non_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME],
+      )
+
+      permission_names = application.sorted_supported_permissions_grantable_from_ui(include_signin: true, only_delegatable: true).map(&:name)
+
+      assert_not_includes permission_names, SupportedPermission::SIGNIN_NAME
+      assert_empty permission_names
+    end
+  end
+
+  context "has_non_signin_permissions_grantable_from_ui?" do
+    should "return false if no permissions are grantable from the UI" do
+      app = create(
+        :application,
+        with_delegatable_supported_permissions: [],
+        with_delegatable_supported_permissions_not_grantable_from_ui: %w[non-grantable],
+        with_non_delegatable_supported_permissions: [],
+        with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[non-delegatable-non-grantable],
+      )
+
+      assert_not app.has_non_signin_permissions_grantable_from_ui?
+    end
+
+    should "return false if only the signin permission is grantable from the UI" do
+      app_1 = create(
+        :application,
+        with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME],
+        with_delegatable_supported_permissions_not_grantable_from_ui: %w[non-grantable],
+        with_non_delegatable_supported_permissions: [],
+        with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[non-delegatable-non-grantable],
+      )
+
+      app_2 = create(
+        :application,
+        with_delegatable_supported_permissions: [],
+        with_delegatable_supported_permissions_not_grantable_from_ui: %w[non-grantable],
+        with_non_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME],
+        with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[non-delegatable-non-grantable],
+      )
+
+      assert_not app_1.has_non_signin_permissions_grantable_from_ui?
+      assert_not app_2.has_non_signin_permissions_grantable_from_ui?
+    end
+
+    should "return true if there are non-signin permissions grantable from the UI" do
+      app_1 = create(
+        :application,
+        with_delegatable_supported_permissions: %w[yay!],
+        with_delegatable_supported_permissions_not_grantable_from_ui: %w[non-grantable],
+        with_non_delegatable_supported_permissions: [],
+        with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[non-delegatable-non-grantable],
+      )
+      app_2 = create(
+        :application,
+        with_delegatable_supported_permissions: [],
+        with_delegatable_supported_permissions_not_grantable_from_ui: %w[non-grantable],
+        with_non_delegatable_supported_permissions: %w[yay!],
+        with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[non-delegatable-non-grantable],
+      )
+
+      assert app_1.has_non_signin_permissions_grantable_from_ui?
+      assert app_2.has_non_signin_permissions_grantable_from_ui?
+    end
+  end
+
+  context "has_delegatable_non_signin_permissions_grantable_from_ui?" do
+    should "return false if no permissions are delegatable" do
+      app = create(
+        :application,
+        with_delegatable_supported_permissions: [],
+        with_delegatable_supported_permissions_not_grantable_from_ui: [],
+        with_non_delegatable_supported_permissions: %w[non-delegatable],
+        with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[non-delegatable-non-grantable],
+      )
+
+      assert_not app.has_delegatable_non_signin_permissions_grantable_from_ui?
+    end
+
+    should "return false if no permissions are grantable from the UI" do
+      app = create(
+        :application,
+        with_delegatable_supported_permissions: [],
+        with_delegatable_supported_permissions_not_grantable_from_ui: %w[non-grantable],
+        with_non_delegatable_supported_permissions: [],
+        with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[non-delegatable-non-grantable],
+      )
+
+      assert_not app.has_delegatable_non_signin_permissions_grantable_from_ui?
+    end
+
+    should "return false if only the signin permission is delegatable and grantable from the UI" do
+      app = create(
+        :application,
+        with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME],
+        with_delegatable_supported_permissions_not_grantable_from_ui: %w[non-grantable],
+        with_non_delegatable_supported_permissions: %w[non-delegatable],
+        with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[non-delegatable-non-grantable],
+      )
+
+      assert_not app.has_delegatable_non_signin_permissions_grantable_from_ui?
+    end
+
+    should "return true if there are delegatable non-signin permissions grantable from the UI" do
+      app = create(
+        :application,
+        with_delegatable_supported_permissions: %w[yay!],
+        with_delegatable_supported_permissions_not_grantable_from_ui: %w[non-grantable],
+        with_non_delegatable_supported_permissions: %w[non-delegatable],
+        with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[non-delegatable-non-grantable],
+      )
+
+      assert app.has_delegatable_non_signin_permissions_grantable_from_ui?
+    end
   end
 
   context ".all (default scope)" do

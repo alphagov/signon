@@ -23,5 +23,11 @@ class Users::ApplicationPolicy < BasePolicy
   end
 
   alias_method :remove_signin_permission?, :grant_signin_permission?
-  alias_method :edit_permissions?, :grant_signin_permission?
+
+  def edit_permissions?
+    return false unless Pundit.policy(current_user, user).edit?
+    return true if current_user.govuk_admin?
+
+    current_user.publishing_manager? && current_user.has_access_to?(application)
+  end
 end

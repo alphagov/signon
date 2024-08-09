@@ -2,32 +2,26 @@ require "test_helper"
 
 class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
   setup do
-    @app_one = create(:application, name: "App one")
-    @app_two = create(:application, name: "App two")
-    @app_three = create(:application, name: "App three")
-    @app_four = create(:application, name: "App four")
-    @api_only_app = create(:application, name: "API-only app", api_only: true)
+    @delegatable_signin_app_one = create(:application, with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
+    @delegatable_signin_app_two = create(:application, with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
+    @non_delegatable_signin_app_one = create(:application, with_non_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
+    @non_delegatable_signin_app_two = create(:application, with_non_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
+    @api_only_app = create(:application, name: "API-only app", api_only: true, with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
 
-    @app_one_signin_permission = @app_one.signin_permission.tap { |s| s.update(delegatable: true) }
-    @app_two_signin_permission = @app_two.signin_permission.tap { |s| s.update(delegatable: false) }
-    @app_three_signin_permission = @app_three.signin_permission.tap { |s| s.update(delegatable: true) }
-    @app_four_signin_permission = @app_four.signin_permission.tap { |s| s.update(delegatable: false) }
-    @api_only_app_signin_permission = @api_only_app.signin_permission.tap { |s| s.update(delegatable: true) }
+    @delegatable_signin_app_one_delegatable_permission = create(:delegatable_supported_permission, application: @delegatable_signin_app_one)
+    @delegatable_signin_app_one_non_delegatable_permission = create(:non_delegatable_supported_permission, application: @delegatable_signin_app_one)
 
-    @app_one_hat_permission = create(:non_delegatable_supported_permission, application: @app_one, name: "hat")
-    @app_one_cat_permission = create(:delegatable_supported_permission, application: @app_one, name: "cat")
+    @delegatable_signin_app_two_delegatable_permission = create(:delegatable_supported_permission, application: @delegatable_signin_app_two)
+    @delegatable_signin_app_two_non_delegatable_permission = create(:non_delegatable_supported_permission, application: @delegatable_signin_app_two)
 
-    @app_two_rat_permission = create(:non_delegatable_supported_permission, application: @app_two, name: "rat")
-    @app_two_bat_permission = create(:delegatable_supported_permission, application: @app_two, name: "bat")
+    @non_delegatable_signin_app_one_delegatable_permission = create(:delegatable_supported_permission, application: @non_delegatable_signin_app_one)
+    @non_delegatable_signin_app_one_non_delegatable_permission = create(:non_delegatable_supported_permission, application: @non_delegatable_signin_app_one)
 
-    @app_three_fat_permission = create(:non_delegatable_supported_permission, application: @app_three, name: "fat")
-    @app_three_vat_permission = create(:delegatable_supported_permission, application: @app_three, name: "vat")
+    @non_delegatable_signin_app_two_delegatable_permission = create(:delegatable_supported_permission, application: @non_delegatable_signin_app_two)
+    @non_delegatable_signin_app_two_non_delegatable_permission = create(:non_delegatable_supported_permission, application: @non_delegatable_signin_app_two)
 
-    @app_four_pat_permission = create(:non_delegatable_supported_permission, application: @app_three, name: "pat")
-    @app_four_sat_permission = create(:delegatable_supported_permission, application: @app_three, name: "sat")
-
-    @api_only_app_nat_permission = create(:non_delegatable_supported_permission, application: @api_only_app, name: "nat")
-    @api_only_app_mat_permission = create(:delegatable_supported_permission, application: @api_only_app, name: "mat")
+    @api_only_app_delegatable_permission = create(:delegatable_supported_permission, application: @api_only_app)
+    @api_only_app_non_delegatable_permission = create(:non_delegatable_supported_permission, application: @api_only_app)
   end
 
   context "resolve" do
@@ -36,25 +30,25 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
         user = create(:"#{govuk_admin_role}_user")
         resolved_scope = SupportedPermissionPolicy::Scope.new(user, SupportedPermission.all).resolve
 
-        assert_includes resolved_scope, @app_one_signin_permission
-        assert_includes resolved_scope, @app_one_hat_permission
-        assert_includes resolved_scope, @app_one_cat_permission
+        assert_includes resolved_scope, @delegatable_signin_app_one.signin_permission
+        assert_includes resolved_scope, @delegatable_signin_app_one_delegatable_permission
+        assert_includes resolved_scope, @delegatable_signin_app_one_non_delegatable_permission
 
-        assert_includes resolved_scope, @app_two_signin_permission
-        assert_includes resolved_scope, @app_two_rat_permission
-        assert_includes resolved_scope, @app_two_bat_permission
+        assert_includes resolved_scope, @delegatable_signin_app_two.signin_permission
+        assert_includes resolved_scope, @delegatable_signin_app_two_delegatable_permission
+        assert_includes resolved_scope, @delegatable_signin_app_two_non_delegatable_permission
 
-        assert_includes resolved_scope, @app_three_signin_permission
-        assert_includes resolved_scope, @app_three_fat_permission
-        assert_includes resolved_scope, @app_three_vat_permission
+        assert_includes resolved_scope, @non_delegatable_signin_app_one.signin_permission
+        assert_includes resolved_scope, @non_delegatable_signin_app_one_delegatable_permission
+        assert_includes resolved_scope, @non_delegatable_signin_app_one_non_delegatable_permission
 
-        assert_includes resolved_scope, @app_four_signin_permission
-        assert_includes resolved_scope, @app_four_pat_permission
-        assert_includes resolved_scope, @app_four_sat_permission
+        assert_includes resolved_scope, @non_delegatable_signin_app_two.signin_permission
+        assert_includes resolved_scope, @non_delegatable_signin_app_two_delegatable_permission
+        assert_includes resolved_scope, @non_delegatable_signin_app_two_non_delegatable_permission
 
-        assert_includes resolved_scope, @api_only_app_signin_permission
-        assert_includes resolved_scope, @api_only_app_nat_permission
-        assert_includes resolved_scope, @api_only_app_mat_permission
+        assert_includes resolved_scope, @api_only_app.signin_permission
+        assert_includes resolved_scope, @api_only_app_delegatable_permission
+        assert_includes resolved_scope, @api_only_app_non_delegatable_permission
       end
     end
 
@@ -62,40 +56,42 @@ class SupportedPermissionPolicyScopeTest < ActiveSupport::TestCase
       context "#{publishing_manager_role}s" do
         setup do
           user = create(:"#{publishing_manager_role.tr(' ', '_')}_user").tap do |u|
-            u.grant_application_signin_permission(@app_one)
-            u.grant_application_signin_permission(@app_two)
+            u.grant_application_signin_permission(@delegatable_signin_app_one)
+            u.grant_application_signin_permission(@non_delegatable_signin_app_one)
             u.grant_application_signin_permission(@api_only_app)
           end
 
           @resolved_scope = SupportedPermissionPolicy::Scope.new(user, SupportedPermission.all).resolve
         end
 
-        should "contain all permissions for non-API-only apps with delegatable signin permission that the #{publishing_manager_role} has access to" do
-          assert_includes @resolved_scope, @app_one_signin_permission
-          assert_includes @resolved_scope, @app_one_cat_permission
-          assert_includes @resolved_scope, @app_one_hat_permission
+        should "contain all delegatable permissions for non-API-only apps that the #{publishing_manager_role} has access to" do
+          assert_includes @resolved_scope, @delegatable_signin_app_one.signin_permission
+          assert_includes @resolved_scope, @delegatable_signin_app_one_delegatable_permission
+
+          assert_includes @resolved_scope, @non_delegatable_signin_app_one_delegatable_permission
         end
 
-        should "not contain any permissions for apps with non-delegatable signin permission the #{publishing_manager_role} has access to" do
-          assert_not_includes @resolved_scope, @app_two_signin_permission
-          assert_not_includes @resolved_scope, @app_two_rat_permission
-          assert_not_includes @resolved_scope, @app_two_bat_permission
+        should "not contain any non-delegatable permissions for non-API-only apps the #{publishing_manager_role} has access to" do
+          assert_not_includes @resolved_scope, @delegatable_signin_app_one_non_delegatable_permission
+
+          assert_not_includes @resolved_scope, @non_delegatable_signin_app_one.signin_permission
+          assert_not_includes @resolved_scope, @non_delegatable_signin_app_one_non_delegatable_permission
         end
 
-        should "not contain any permissions for apps the #{publishing_manager_role} does not have access to" do
-          assert_not_includes @resolved_scope, @app_three_signin_permission
-          assert_not_includes @resolved_scope, @app_three_fat_permission
-          assert_not_includes @resolved_scope, @app_three_vat_permission
+        should "not contain any permissions for non-API-only apps the #{publishing_manager_role} does not have access to" do
+          assert_not_includes @resolved_scope, @delegatable_signin_app_two.signin_permission
+          assert_not_includes @resolved_scope, @delegatable_signin_app_two_delegatable_permission
+          assert_not_includes @resolved_scope, @delegatable_signin_app_two_non_delegatable_permission
 
-          assert_not_includes @resolved_scope, @app_four_signin_permission
-          assert_not_includes @resolved_scope, @app_four_pat_permission
-          assert_not_includes @resolved_scope, @app_four_sat_permission
+          assert_not_includes @resolved_scope, @non_delegatable_signin_app_two.signin_permission
+          assert_not_includes @resolved_scope, @non_delegatable_signin_app_two_delegatable_permission
+          assert_not_includes @resolved_scope, @non_delegatable_signin_app_two_non_delegatable_permission
         end
 
         should "not contain any permissions for API-only apps" do
-          assert_not_includes @resolved_scope, @api_only_app_signin_permission
-          assert_not_includes @resolved_scope, @api_only_app_nat_permission
-          assert_not_includes @resolved_scope, @api_only_app_mat_permission
+          assert_not_includes @resolved_scope, @api_only_app.signin_permission
+          assert_not_includes @resolved_scope, @api_only_app_delegatable_permission
+          assert_not_includes @resolved_scope, @api_only_app_non_delegatable_permission
         end
       end
     end
