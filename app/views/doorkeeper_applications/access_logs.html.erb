@@ -1,0 +1,42 @@
+<% content_for :title, "#{@application.name} access log" %>
+
+<% content_for :breadcrumbs,
+               render("govuk_publishing_components/components/breadcrumbs", {
+                 collapse_on_mobile: true,
+                 breadcrumbs: [
+                   {
+                     title: "Dashboard",
+                     url: root_path,
+                   },
+                   {
+                     title: "Applications",
+                     url: doorkeeper_applications_path,
+                   },
+                   {
+                     title: @application.name,
+                     url: edit_doorkeeper_application_path(@application),
+                   }
+                 ]
+               })
+%>
+
+<% if @logs.any? %>
+  <%= render "components/table", {
+    caption: pluralize(number_with_delimiter(@logs.total_count), "event"),
+    caption_classes: "govuk-heading-m",
+    head: [
+      { text: "Time" },
+      { text: "Event" },
+    ],
+    rows: @logs.map do |log|
+      [ { text: formatted_date(log), format: "event-log-date" },
+        { text: "#{formatted_message(log)} for <strong>#{log.user&.name}</strong>".html_safe } ] unless log.requires_admin? && !current_user.govuk_admin?
+    end.compact
+  } %>
+
+  <%= paginate(@logs, theme: "gds") %>
+<% else %>
+  <%= render "govuk_publishing_components/components/notice", {
+    title: "No activity logged"
+  } %>
+<% end %>
