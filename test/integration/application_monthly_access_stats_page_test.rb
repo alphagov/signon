@@ -57,5 +57,4 @@ class ApplicationMonthlyAccessStatsPageIntegrationTest < ActionDispatch::Integra
       end
     end
   end
-
 end
