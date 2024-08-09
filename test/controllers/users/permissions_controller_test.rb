@@ -387,14 +387,12 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         },
       )
 
-      user.reload
-
       assert_same_elements [
         updating_application_new_permission,
         other_application_old_permission,
         updating_application.signin_permission,
         other_application.signin_permission,
-      ], user.supported_permissions
+      ], user.reload.supported_permissions
     end
 
     should "prevent permissions that are not grantable from the UI being added or removed" do
@@ -422,13 +420,11 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
       patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [new_grantable_permission.id, new_non_grantable_permission.id] } }
 
-      user.reload
-
       assert_same_elements [
         old_non_grantable_permission,
         new_grantable_permission,
         application.signin_permission,
-      ], user.supported_permissions
+      ], user.reload.supported_permissions
     end
 
     should "assign the application id to the application_id flash" do
@@ -495,9 +491,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
         assert_redirected_to user_applications_path(@user)
 
-        @current_user.reload
-
-        assert_equal [*@old_permissions, @new_permission, @application.signin_permission], @user.supported_permissions
+        assert_equal [*@old_permissions, @new_permission, @application.signin_permission], @user.reload.supported_permissions
       end
 
       context "when the add_more param is 'true'" do
@@ -517,9 +511,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
           assert_redirected_to edit_user_application_permissions_path(@user, @application)
 
-          @current_user.reload
-
-          assert_equal [*@old_permissions, @new_permission, @application.signin_permission], @user.supported_permissions
+          assert_equal [*@old_permissions, @new_permission, @application.signin_permission], @user.reload.supported_permissions
         end
       end
     end
