@@ -6,7 +6,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       application = create(:application)
       user = create(:user)
 
-      get :show, params: { user_id: user, application_id: application.id }
+      get :show, params: { user_id: user, application_id: application }
 
       assert_redirected_to "/users/sign_in"
     end
@@ -23,7 +23,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       stub_policy_for_navigation_links current_user
       stub_policy current_user, user, edit?: true
 
-      get :show, params: { user_id: user, application_id: application.id }
+      get :show, params: { user_id: user, application_id: application }
 
       assert_select "td", text: "perm-1"
       assert_select "td", text: "perm-2", count: 0
@@ -36,7 +36,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       user = create(:user)
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        get :show, params: { user_id: user, application_id: application.id }
+        get :show, params: { user_id: user, application_id: application }
       end
     end
 
@@ -47,7 +47,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       user = create(:user)
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        get :show, params: { user_id: user, application_id: application.id }
+        get :show, params: { user_id: user, application_id: application }
       end
     end
 
@@ -58,7 +58,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       user = create(:user)
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        get :show, params: { user_id: user, application_id: application.id }
+        get :show, params: { user_id: user, application_id: application }
       end
     end
 
@@ -75,7 +75,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       stub_policy_for_navigation_links current_user
       stub_policy current_user, user, edit?: true
 
-      get :show, params: { user_id: user, application_id: application.id }
+      get :show, params: { user_id: user, application_id: application }
 
       assert_equal %w[signin aaa ttt bbb uuu], assigns(:permissions).map(&:name)
     end
@@ -90,7 +90,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
       stub_policy current_user, user, edit?: false
 
-      get :show, params: { user_id: user, application_id: application.id }
+      get :show, params: { user_id: user, application_id: application }
 
       assert_not_authorised
     end
@@ -101,7 +101,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       application = create(:application)
       user = create(:user)
 
-      get :edit, params: { user_id: user, application_id: application.id }
+      get :edit, params: { user_id: user, application_id: application }
 
       assert_redirected_to "/users/sign_in"
     end
@@ -120,7 +120,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         policy_class: Users::ApplicationPolicy,
         edit_permissions?: false,
       )
-      get :edit, params: { user_id: user, application_id: application.id }
+      get :edit, params: { user_id: user, application_id: application }
 
       assert_not_authorised
     end
@@ -143,7 +143,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         edit_permissions?: true,
       )
 
-      get :edit, params: { user_id: user.id, application_id: application.id }
+      get :edit, params: { user_id: user, application_id: application }
 
       assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{perm1.id}']"
       assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{perm2.id}']"
@@ -166,7 +166,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         edit_permissions?: true,
       )
 
-      get :edit, params: { user_id: user.id, application_id: application.id }
+      get :edit, params: { user_id: user, application_id: application }
 
       assert_select "input[type='hidden'][value='#{application.signin_permission.id}']"
     end
@@ -178,7 +178,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       user = create(:user)
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        get :edit, params: { user_id: user, application_id: application.id }
+        get :edit, params: { user_id: user, application_id: application }
       end
     end
 
@@ -189,7 +189,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       user = create(:user)
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        get :edit, params: { user_id: user, application_id: application.id }
+        get :edit, params: { user_id: user, application_id: application }
       end
     end
 
@@ -201,7 +201,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       sign_in current_user
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        get :edit, params: { user_id: user, application_id: application.id }
+        get :edit, params: { user_id: user, application_id: application }
       end
     end
 
@@ -231,7 +231,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
           edit_permissions?: true,
         )
 
-        get :edit, params: { user_id: user, application_id: @application.id }
+        get :edit, params: { user_id: user, application_id: @application }
       end
 
       should "display a select component for grantable but non-existing permissions" do
@@ -262,7 +262,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       application = create(:application)
       user = create(:user)
 
-      patch :update, params: { user_id: user, application_id: application.id }
+      patch :update, params: { user_id: user, application_id: application }
 
       assert_redirected_to "/users/sign_in"
     end
@@ -282,7 +282,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         edit_permissions?: false,
       )
 
-      patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [] } }
+      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [] } }
 
       assert_not_authorised
     end
@@ -304,7 +304,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
       new_permission = application.supported_permissions.find_by(name: "new")
 
-      patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
+      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [new_permission.id] } }
 
       assert_redirected_to user_applications_path(user)
     end
@@ -355,7 +355,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
       other_permission = application.supported_permissions.find_by(name: "other")
 
-      patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [other_permission.id] } }
+      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [other_permission.id] } }
 
       user.reload
       assert_same_elements [application.signin_permission, other_permission], user.supported_permissions
@@ -380,7 +380,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       other_permission = application.supported_permissions.find_by(name: "other")
       not_from_ui_permission = application.supported_permissions.find_by(name: "not_from_ui")
 
-      patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [other_permission.id] } }
+      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [other_permission.id] } }
 
       user.reload
 
@@ -405,7 +405,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
       other_permission = other_application.supported_permissions.find_by(name: "other")
 
-      patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [other_permission.id] } }
+      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [other_permission.id] } }
 
       user.reload
 
@@ -429,7 +429,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
       not_from_ui_permission = application.supported_permissions.find_by(name: "not_from_ui")
 
-      patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [not_from_ui_permission.id] } }
+      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [not_from_ui_permission.id] } }
 
       user.reload
 
@@ -453,7 +453,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
       new_permission = application.supported_permissions.find_by(name: "new")
 
-      patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
+      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [new_permission.id] } }
 
       assert_equal application.id, flash[:application_id]
     end
@@ -465,7 +465,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       sign_in current_user
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        patch :update, params: { user_id: "unknown-id", application_id: application.id, application: { supported_permission_ids: %w[id] } }
+        patch :update, params: { user_id: "unknown-id", application_id: application, application: { supported_permission_ids: %w[id] } }
       end
     end
 
@@ -477,7 +477,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       sign_in current_user
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        patch :update, params: { user_id: user, application_id: application.id, application: { supported_permission_ids: %w[id] } }
+        patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: %w[id] } }
       end
     end
 
@@ -503,7 +503,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       end
 
       should "use the relevant params to update permissions" do
-        patch :update, params: { user_id: @user, application_id: @application.id, application: { current_permission_ids: [@perm_granted_1.id, @perm_granted_2.id], new_permission_id: @perm_ungranted.id } }
+        patch :update, params: { user_id: @user, application_id: @application, application: { current_permission_ids: [@perm_granted_1.id, @perm_granted_2.id], new_permission_id: @perm_ungranted.id } }
 
         assert_redirected_to user_applications_path(@user)
 
@@ -514,7 +514,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
       context "when the add_more param is 'true'" do
         should "update permissions then redirect back to the edit page" do
-          patch :update, params: { user_id: @user, application_id: @application.id, application: { current_permission_ids: [@perm_granted_1.id, @perm_granted_2.id], new_permission_id: @perm_ungranted.id, add_more: "true" } }
+          patch :update, params: { user_id: @user, application_id: @application, application: { current_permission_ids: [@perm_granted_1.id, @perm_granted_2.id], new_permission_id: @perm_ungranted.id, add_more: "true" } }
 
           assert_redirected_to edit_user_application_permissions_path(@user, @application)
 

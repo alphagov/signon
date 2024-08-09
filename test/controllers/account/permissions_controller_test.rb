@@ -5,7 +5,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
     should "prevent unauthenticated users" do
       application = create(:application)
 
-      get :show, params: { application_id: application.id }
+      get :show, params: { application_id: application }
 
       assert_redirected_to "/users/sign_in"
     end
@@ -18,7 +18,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
       sign_in user
 
-      get :show, params: { application_id: application.id }
+      get :show, params: { application_id: application }
 
       assert_select "td", text: "perm-1"
       assert_select "td", text: "perm-2", count: 0
@@ -30,7 +30,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       application = create(:application, retired: true)
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        get :show, params: { application_id: application.id }
+        get :show, params: { application_id: application }
       end
     end
 
@@ -40,7 +40,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       application = create(:application, api_only: true)
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        get :show, params: { application_id: application.id }
+        get :show, params: { application_id: application }
       end
     end
 
@@ -53,7 +53,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
       sign_in user
 
-      get :show, params: { application_id: application.id }
+      get :show, params: { application_id: application }
 
       assert_equal %w[signin aaa ttt bbb uuu], assigns(:permissions).map(&:name)
     end
@@ -63,7 +63,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
     should "prevent unauthenticated users" do
       application = create(:application)
 
-      get :edit, params: { application_id: application.id }
+      get :edit, params: { application_id: application }
 
       assert_redirected_to "/users/sign_in"
     end
@@ -74,7 +74,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       application = create(:application, retired: true)
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        get :edit, params: { application_id: application.id }
+        get :edit, params: { application_id: application }
       end
     end
 
@@ -84,7 +84,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       application = create(:application, api_only: true)
 
       assert_raises(ActiveRecord::RecordNotFound) do
-        get :edit, params: { application_id: application.id }
+        get :edit, params: { application_id: application }
       end
     end
 
@@ -96,7 +96,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       user = create(:admin_user, with_permissions: { application => ["perm-1", SupportedPermission::SIGNIN_NAME] })
       sign_in user
 
-      get :edit, params: { application_id: application.id }
+      get :edit, params: { application_id: application }
 
       assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{perm1.id}']"
       assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{perm2.id}']"
@@ -109,7 +109,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       user = create(:admin_user, with_permissions: { application => ["perm-1", SupportedPermission::SIGNIN_NAME] })
       sign_in user
 
-      get :edit, params: { application_id: application.id }
+      get :edit, params: { application_id: application }
 
       assert_select "input[type='hidden'][value='#{application.signin_permission.id}']"
     end
@@ -130,7 +130,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
         sign_in user
 
-        get :edit, params: { application_id: @application.id }
+        get :edit, params: { application_id: @application }
       end
 
       should "display a select component for grantable but non-existing permissions" do
@@ -160,7 +160,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
     should "prevent unauthenticated users" do
       application = create(:application)
 
-      patch :update, params: { application_id: application.id }
+      patch :update, params: { application_id: application }
 
       assert_redirected_to "/users/sign_in"
     end
@@ -196,7 +196,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
       other_permission = application.supported_permissions.find_by(name: "other")
 
-      patch :update, params: { application_id: application.id, application: { supported_permission_ids: [other_permission.id] } }
+      patch :update, params: { application_id: application, application: { supported_permission_ids: [other_permission.id] } }
 
       current_user.reload
       assert_same_elements [application.signin_permission, other_permission], current_user.supported_permissions
@@ -216,7 +216,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       other_permission = application.supported_permissions.find_by(name: "other")
       not_from_ui_permission = application.supported_permissions.find_by(name: "not_from_ui")
 
-      patch :update, params: { application_id: application.id, application: { supported_permission_ids: [other_permission.id] } }
+      patch :update, params: { application_id: application, application: { supported_permission_ids: [other_permission.id] } }
 
       current_user.reload
 
@@ -236,7 +236,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
       other_permission = other_application.supported_permissions.find_by(name: "other")
 
-      patch :update, params: { application_id: application.id, application: { supported_permission_ids: [other_permission.id] } }
+      patch :update, params: { application_id: application, application: { supported_permission_ids: [other_permission.id] } }
 
       current_user.reload
 
@@ -254,7 +254,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
       not_from_ui_permission = application.supported_permissions.find_by(name: "not_from_ui")
 
-      patch :update, params: { application_id: application.id, application: { supported_permission_ids: [not_from_ui_permission.id] } }
+      patch :update, params: { application_id: application, application: { supported_permission_ids: [not_from_ui_permission.id] } }
 
       current_user.reload
 
@@ -268,7 +268,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
       new_permission = application.supported_permissions.find_by(name: "new")
 
-      patch :update, params: { application_id: application.id, application: { supported_permission_ids: [new_permission.id] } }
+      patch :update, params: { application_id: application, application: { supported_permission_ids: [new_permission.id] } }
 
       assert_equal application.id, flash[:application_id]
     end
@@ -288,7 +288,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       end
 
       should "use the relevant params to update permissions" do
-        patch :update, params: { application_id: @application.id, application: { current_permission_ids: [@perm_granted_1.id, @perm_granted_2.id], new_permission_id: @perm_ungranted.id } }
+        patch :update, params: { application_id: @application, application: { current_permission_ids: [@perm_granted_1.id, @perm_granted_2.id], new_permission_id: @perm_ungranted.id } }
 
         # assert redirected to apps page
         assert_redirected_to account_applications_path
@@ -300,7 +300,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
       context "when the add_more param is 'true'" do
         should "update permissions then redirect back to the edit page" do
-          patch :update, params: { application_id: @application.id, application: { current_permission_ids: [@perm_granted_1.id, @perm_granted_2.id], new_permission_id: @perm_ungranted.id, add_more: "true" } }
+          patch :update, params: { application_id: @application, application: { current_permission_ids: [@perm_granted_1.id, @perm_granted_2.id], new_permission_id: @perm_ungranted.id, add_more: "true" } }
 
           assert_redirected_to edit_account_application_permissions_path(@application)
 
