@@ -65,7 +65,8 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
     should "order permissions by whether the user has access and then alphabetically" do
       application = create(:application,
-                           with_non_delegatable_supported_permissions: %w[aaa bbb ttt uuu])
+                           with_non_delegatable_supported_permissions: %w[uuu aaa ttt bbb])
+
       user = create(:user,
                     with_signin_permissions_for: [application],
                     with_permissions: { application => %w[aaa ttt] })
