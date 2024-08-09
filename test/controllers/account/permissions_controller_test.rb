@@ -189,7 +189,6 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       current_user = create(:organisation_admin_user, with_signin_permissions_for: [application1])
       sign_in current_user
 
-      stub_policy current_user, [:account, Doorkeeper::Application], index?: true
       stub_policy current_user, [:account, application1], edit_permissions?: true
 
       app2_permission = application2.supported_permissions.find_by!(name: "app2-permission")
