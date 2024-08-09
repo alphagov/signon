@@ -25,12 +25,17 @@ class DoorkeeperApplicationsController < ApplicationController
   end
 
   def access_logs
-    smokey_uids = User.where("name LIKE 'Smokey%'").pluck(:uid)
-    @logs = @application.event_logs
+    relation = @application.event_logs
       .includes(:user)
       .where(event_id: 47)
-      .where.not(uid: smokey_uids)
       .order(created_at: :desc)
+
+    unless params[:include_smokey_users] == "true"
+      smokey_uids = User.where("name LIKE 'Smokey%'").pluck(:uid)
+      relation = relation.where.not(uid: smokey_uids)
+    end
+
+    @logs = relation
       .page(params[:page])
       .per(100)
   end
@@ -55,6 +60,7 @@ private
       :home_uri,
       :supports_push_updates,
       :api_only,
+      :include_smokey_users,
     )
   end
 end
