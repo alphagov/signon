@@ -1,0 +1,61 @@
+<% content_for :title, "Monthly access counts to #{@application.name}" %>
+
+<% content_for :breadcrumbs,
+               render("govuk_publishing_components/components/breadcrumbs", {
+                 collapse_on_mobile: true,
+                 breadcrumbs: [
+                   {
+                     title: "Dashboard",
+                     url: root_path,
+                   },
+                   {
+                     title: "Applications",
+                     url: doorkeeper_applications_path,
+                   },
+                   {
+                     title: @application.name,
+                     url: edit_doorkeeper_application_path(@application),
+                   }
+                 ]
+               })
+%>
+
+
+<form class="govuk-form-group">
+  <%= render "govuk_publishing_components/components/checkboxes", {
+    name: "include_smokey_users",
+    items: [
+      {
+        label: "Include Smokey Users",
+        value: "true",
+        checked: params["include_smokey_users"] == "true"
+      }
+    ]
+  } %>
+  <%= render "govuk_publishing_components/components/button", {
+    text: "Submit"
+  } %>
+</form>
+
+<% if @monthly_access_stats.any? %>
+  <%= render "components/table", {
+    head: [
+      { text: "Month" },
+      { text: "Total authorization count" },
+      { text: "Unique users authorization count" },
+      { text: "Access logs" },
+    ],
+    rows: @monthly_access_stats.map do |month, total_count, unique_users_count|
+      [
+        { text: month },
+        { text: total_count },
+        { text: unique_users_count },
+        { text: link_to("#{month} access logs", access_logs_doorkeeper_application_path(@application, month:), class: "govuk-link")},
+      ]
+    end
+  } %>
+<% else %>
+  <%= render "govuk_publishing_components/components/notice", {
+    title: "No activity logged"
+  } %>
+<% end %>

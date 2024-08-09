@@ -1,0 +1,72 @@
+<% content_for :title, "#{@application.name} access log" %>
+
+<% content_for :breadcrumbs,
+               render("govuk_publishing_components/components/breadcrumbs", {
+                 collapse_on_mobile: true,
+                 breadcrumbs: [
+                   {
+                     title: "Dashboard",
+                     url: root_path,
+                   },
+                   {
+                     title: "Applications",
+                     url: doorkeeper_applications_path,
+                   },
+                   {
+                     title: @application.name,
+                     url: edit_doorkeeper_application_path(@application),
+                   }
+                 ]
+               })
+%>
+
+<form>
+<%= render "govuk_publishing_components/components/checkboxes", {
+  name: "include_smokey_users",
+  items: [
+    {
+      label: "Include Smokey Users",
+      value: "true",
+      checked: params["include_smokey_users"] == "true"
+    }
+  ]
+} %>
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    text: "Month"
+  },
+  name: "month",
+  hint: "In YYYY-mm format",
+  value: params["month"]
+} %>
+<div class="govuk-form-group">
+<%= render "govuk_publishing_components/components/button", {
+  text: "Submit"
+} %>
+</div>
+</form>
+
+<% if @logs.any? %>
+  <%= render "components/table", {
+    caption: pluralize(number_with_delimiter(@logs.total_count), "event"),
+    caption_classes: "govuk-heading-m",
+    head: [
+      { text: "Time" },
+      { text: "Event" },
+    ],
+    rows: @logs.map do |log|
+      next if log.requires_admin? && !current_user.govuk_admin?
+
+      [
+        { text: formatted_date(log), format: "event-log-date" },
+        { text: "#{formatted_message(log)} for #{link_to(log.user.name, log.user, class: "govuk-link")}".html_safe },
+      ]
+    end.compact
+  } %>
+
+  <%= paginate(@logs, theme: "gds") %>
+<% else %>
+  <%= render "govuk_publishing_components/components/notice", {
+    title: "No activity logged"
+  } %>
+<% end %>

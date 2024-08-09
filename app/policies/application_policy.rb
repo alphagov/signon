@@ -6,4 +6,6 @@ class ApplicationPolicy < BasePolicy
   alias_method :update?, :index?
   alias_method :manage_supported_permissions?, :index?
   alias_method :users_with_access?, :index?
+  alias_method :access_logs?, :index?
+  alias_method :monthly_access_stats?, :index?
 end
