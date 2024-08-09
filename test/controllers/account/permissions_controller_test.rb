@@ -306,13 +306,11 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
       patch :update, params: { application_id: application, application: { supported_permission_ids: [new_grantable_permission.id, new_non_grantable_permission.id] } }
 
-      current_user.reload
-
       assert_same_elements [
         old_non_grantable_permission,
         new_grantable_permission,
         application.signin_permission,
-      ], current_user.supported_permissions
+      ], current_user.reload.supported_permissions
     end
 
     should "assign the application id to the application_id flash" do
@@ -355,9 +353,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
         # assert redirected to apps page
         assert_redirected_to account_applications_path
 
-        @current_user.reload
-
-        assert_equal [*@old_permissions, @new_permission, @application.signin_permission], @current_user.supported_permissions
+        assert_equal [*@old_permissions, @new_permission, @application.signin_permission], @current_user.reload.supported_permissions
       end
 
       context "when the add_more param is 'true'" do
@@ -366,9 +362,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
           assert_redirected_to edit_account_application_permissions_path(@application)
 
-          @current_user.reload
-
-          assert_equal [*@old_permissions, @new_permission, @application.signin_permission], @current_user.supported_permissions
+          assert_equal [*@old_permissions, @new_permission, @application.signin_permission], @current_user.reload.supported_permissions
         end
       end
     end
