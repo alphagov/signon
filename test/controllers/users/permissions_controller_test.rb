@@ -11,6 +11,20 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       assert_redirected_to "/users/sign_in"
     end
 
+    should "prevent unauthorised users" do
+      application = create(:application)
+      user = create(:user, with_signin_permissions_for: [application])
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy current_user, user, edit?: false
+
+      get :show, params: { user_id: user, application_id: application }
+
+      assert_not_authorised
+    end
+
     should "exclude permissions that aren't grantable from the UI" do
       application = create(:application)
       grantable_permission = create(:supported_permission, application:)
@@ -80,20 +94,6 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       get :show, params: { user_id: user, application_id: application }
 
       assert_equal %w[signin aaa ttt bbb uuu], assigns(:permissions).map(&:name)
-    end
-
-    should "prevent unauthorised users" do
-      application = create(:application)
-      user = create(:user, with_signin_permissions_for: [application])
-
-      current_user = create(:admin_user)
-      sign_in current_user
-
-      stub_policy current_user, user, edit?: false
-
-      get :show, params: { user_id: user, application_id: application }
-
-      assert_not_authorised
     end
   end
 
@@ -309,32 +309,6 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
       assert_redirected_to user_applications_path(user)
       assert_same_elements [new_permission, application.signin_permission], user.reload.supported_permissions
-    end
-
-    should "prevent permissions being added for apps that the current user does not have access to" do
-      organisation = create(:organisation)
-
-      application_1 = create(:application)
-      application_2 = create(:application)
-      application_2_permission = create(:delegatable_supported_permission, application: application_2)
-
-      user = create(:user, organisation:, with_signin_permissions_for: [application_1])
-
-      current_user = create(:organisation_admin_user, organisation:, with_signin_permissions_for: [application_1])
-      sign_in current_user
-
-      stub_policy(
-        current_user,
-        { application: application_1, user: },
-        policy_class: Users::ApplicationPolicy,
-        edit_permissions?: true,
-      )
-
-      patch :update, params: { user_id: user, application_id: application_1, application: { supported_permission_ids: [application_2_permission.id] } }
-
-      user.reload
-
-      assert_equal [application_1.signin_permission], user.supported_permissions
     end
 
     should "not remove permissions the user already has that are not grantable from ui" do

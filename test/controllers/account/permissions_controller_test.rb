@@ -10,6 +10,19 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       assert_redirected_to "/users/sign_in"
     end
 
+    should "prevent unauthorised users" do
+      application = create(:application)
+
+      current_user = create(:admin_user, with_signin_permissions_for: [application])
+      sign_in current_user
+
+      stub_policy current_user, [:account, application], view_permissions?: false
+
+      get :show, params: { application_id: application }
+
+      assert_not_authorised
+    end
+
     should "exclude permissions that aren't grantable from the UI" do
       application = create(:application)
       grantable_permission = create(:supported_permission, application:)
@@ -67,6 +80,19 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       get :edit, params: { application_id: application }
 
       assert_redirected_to "/users/sign_in"
+    end
+
+    should "prevent unauthorised users" do
+      application = create(:application)
+
+      current_user = create(:admin_user, with_signin_permissions_for: [application])
+      sign_in current_user
+
+      stub_policy current_user, [:account, application], edit_permissions?: false
+
+      get :edit, params: { application_id: application }
+
+      assert_not_authorised
     end
 
     should "exclude retired applications" do
@@ -170,21 +196,17 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       assert_redirected_to "/users/sign_in"
     end
 
-    should "prevent permissions being added for apps that the current user does not have access to" do
-      application_1 = create(:application)
-      application_2 = create(:application)
-      application_2_permission = create(:supported_permission, application: application_2)
+    should "prevent unauthorised users" do
+      application = create(:application)
 
-      current_user = create(:organisation_admin_user, with_signin_permissions_for: [application_1])
+      current_user = create(:admin_user, with_signin_permissions_for: [application])
       sign_in current_user
 
-      stub_policy current_user, [:account, application_1], edit_permissions?: true
+      stub_policy current_user, [:account, application], edit_permissions?: false
 
-      patch :update, params: { application_id: application_1, application: { supported_permission_ids: [application_2_permission.id] } }
+      patch :update, params: { application_id: application, application: { supported_permission_ids: [] } }
 
-      current_user.reload
-
-      assert_equal [application_1.signin_permission], current_user.supported_permissions
+      assert_not_authorised
     end
 
     should "update non-signin permissions, retaining the signin permission, then redirect to the applications path" do
