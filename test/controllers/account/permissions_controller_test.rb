@@ -23,6 +23,24 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       assert_not_authorised
     end
 
+    should "raise an exception if the application is retired" do
+      sign_in create(:admin_user)
+      application = create(:application, retired: true)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :show, params: { application_id: application }
+      end
+    end
+
+    should "raise an exception if the application is API-only" do
+      sign_in create(:admin_user)
+      application = create(:application, api_only: true)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :show, params: { application_id: application }
+      end
+    end
+
     should "exclude permissions that aren't grantable from the UI" do
       application = create(:application)
       grantable_permission = create(:supported_permission, application:)
@@ -36,26 +54,6 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
       assert_select "td", text: grantable_permission.name
       assert_select "td", text: non_grantable_permission.name, count: 0
-    end
-
-    should "exclude retired applications" do
-      sign_in create(:admin_user)
-
-      application = create(:application, retired: true)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        get :show, params: { application_id: application }
-      end
-    end
-
-    should "exclude API-only applications" do
-      sign_in create(:admin_user)
-
-      application = create(:application, api_only: true)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        get :show, params: { application_id: application }
-      end
     end
 
     should "order permissions by whether the user has access and then alphabetically" do
@@ -95,9 +93,8 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       assert_not_authorised
     end
 
-    should "exclude retired applications" do
+    should "raise an exception if the application is retired" do
       sign_in create(:admin_user)
-
       application = create(:application, retired: true)
 
       assert_raises(ActiveRecord::RecordNotFound) do
@@ -105,9 +102,8 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       end
     end
 
-    should "exclude API-only applications" do
+    should "raise an exception if the application is API-only" do
       sign_in create(:admin_user)
-
       application = create(:application, api_only: true)
 
       assert_raises(ActiveRecord::RecordNotFound) do
@@ -207,6 +203,24 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       patch :update, params: { application_id: application, application: { supported_permission_ids: [] } }
 
       assert_not_authorised
+    end
+
+    should "raise an exception if the application is retired" do
+      sign_in create(:admin_user)
+      application = create(:application, retired: true)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        patch :update, params: { application_id: application, application: { supported_permission_ids: [] } }
+      end
+    end
+
+    should "raise an exception if the application is API-only" do
+      sign_in create(:admin_user)
+      application = create(:application, api_only: true)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        patch :update, params: { application_id: application, application: { supported_permission_ids: [] } }
+      end
     end
 
     should "update non-signin permissions, retaining the signin permission, then redirect to the applications path" do

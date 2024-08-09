@@ -30,6 +30,39 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       assert_not_authorised
     end
 
+    should "raise an exception if the user doesn't have access to the application" do
+      sign_in create(:admin_user)
+
+      application = create(:application)
+      user = create(:user)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :show, params: { user_id: user, application_id: application }
+      end
+    end
+
+    should "raise an exception if the application is retired" do
+      sign_in create(:admin_user)
+
+      application = create(:application, retired: true)
+      user = create(:user, with_signin_permissions_for: [application])
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :show, params: { user_id: user, application_id: application }
+      end
+    end
+
+    should "raise an exception if the application is API-only" do
+      sign_in create(:admin_user)
+
+      application = create(:application, api_only: true)
+      user = create(:user, with_signin_permissions_for: [application])
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :show, params: { user_id: user, application_id: application }
+      end
+    end
+
     should "exclude permissions that aren't grantable from the UI" do
       application = create(:application)
       grantable_permission = create(:supported_permission, application:)
@@ -47,39 +80,6 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
       assert_select "td", text: grantable_permission.name
       assert_select "td", text: non_grantable_permission.name, count: 0
-    end
-
-    should "exclude applications that the user doesn't have access to" do
-      sign_in create(:admin_user)
-
-      application = create(:application)
-      user = create(:user)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        get :show, params: { user_id: user, application_id: application }
-      end
-    end
-
-    should "exclude retired applications" do
-      sign_in create(:admin_user)
-
-      application = create(:application, retired: true)
-      user = create(:user)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        get :show, params: { user_id: user, application_id: application }
-      end
-    end
-
-    should "exclude API-only applications" do
-      sign_in create(:admin_user)
-
-      application = create(:application, api_only: true)
-      user = create(:user)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        get :show, params: { user_id: user, application_id: application }
-      end
     end
 
     should "order permissions by whether the user has access and then alphabetically" do
@@ -112,7 +112,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       assert_redirected_to "/users/sign_in"
     end
 
-    should "prevent unauthorized users" do
+    should "prevent unauthorised users" do
       application = create(:application)
       user = create(:user, with_signin_permissions_for: [application])
 
@@ -128,6 +128,39 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       get :edit, params: { user_id: user, application_id: application }
 
       assert_not_authorised
+    end
+
+    should "raise an exception if the user doesn't have access to the application" do
+      sign_in create(:admin_user)
+
+      application = create(:application)
+      user = create(:user)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :edit, params: { user_id: user, application_id: application }
+      end
+    end
+
+    should "raise an exception if the application is retired" do
+      sign_in create(:admin_user)
+
+      application = create(:application, retired: true)
+      user = create(:user, with_signin_permissions_for: [application])
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :edit, params: { user_id: user, application_id: application }
+      end
+    end
+
+    should "raise an exception if the application is API-only" do
+      sign_in create(:admin_user)
+
+      application = create(:application, api_only: true)
+      user = create(:user, with_signin_permissions_for: [application])
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :edit, params: { user_id: user, application_id: application }
+      end
     end
 
     should "display checkboxes for the grantable permissions" do
@@ -177,40 +210,6 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       get :edit, params: { user_id: user, application_id: application }
 
       assert_select "input[type='hidden'][value='#{application.signin_permission.id}']"
-    end
-
-    should "exclude retired applications" do
-      sign_in create(:admin_user)
-
-      application = create(:application, retired: true)
-      user = create(:user)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        get :edit, params: { user_id: user, application_id: application }
-      end
-    end
-
-    should "exclude API-only applications" do
-      sign_in create(:admin_user)
-
-      application = create(:application, api_only: true)
-      user = create(:user)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        get :edit, params: { user_id: user, application_id: application }
-      end
-    end
-
-    should "raise an exception if the signin permission cannot be found" do
-      application = create(:application)
-      user = create(:user)
-
-      current_user = create(:admin_user)
-      sign_in current_user
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        get :edit, params: { user_id: user, application_id: application }
-      end
     end
 
     context "for apps with greater than eight supported permissions" do
@@ -270,7 +269,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       assert_redirected_to "/users/sign_in"
     end
 
-    should "prevent unauthorized users" do
+    should "prevent unauthorised users" do
       application = create(:application)
       user = create(:user, with_signin_permissions_for: [application])
 
@@ -287,6 +286,39 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [] } }
 
       assert_not_authorised
+    end
+
+    should "raise an exception if the user doesn't have access to the application" do
+      sign_in create(:admin_user)
+
+      application = create(:application)
+      user = create(:user)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [] } }
+      end
+    end
+
+    should "raise an exception if the application is retired" do
+      sign_in create(:admin_user)
+
+      application = create(:application, retired: true)
+      user = create(:user, with_signin_permissions_for: [application])
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [] } }
+      end
+    end
+
+    should "raise an exception if the application is API-only" do
+      sign_in create(:admin_user)
+
+      application = create(:application, api_only: true)
+      user = create(:user, with_signin_permissions_for: [application])
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [] } }
+      end
     end
 
     should "update non-signin permissions, retaining the signin permission, then redirect to the applications path" do
@@ -426,29 +458,6 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [new_permission.id] } }
 
       assert_equal application.id, flash[:application_id]
-    end
-
-    should "raise an exception if the user cannot be found" do
-      application = create(:application)
-
-      current_user = create(:admin_user)
-      sign_in current_user
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        patch :update, params: { user_id: "unknown-id", application_id: application, application: { supported_permission_ids: %w[id] } }
-      end
-    end
-
-    should "raise an exception if the signin permission cannot be found" do
-      application = create(:application)
-      user = create(:user)
-
-      current_user = create(:admin_user)
-      sign_in current_user
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: %w[id] } }
-      end
     end
 
     context "when current_permission_ids and new_permission_id are provided instead of supported_permission_ids" do
