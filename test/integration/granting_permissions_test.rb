@@ -203,7 +203,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       signin_with(@organisation_admin)
     end
 
-    should "support granting signin permissions to delegatable apps that the organisation admin has access to" do
+    should "support granting access to apps with a delegatable signin permission and to which the organisation admin has access" do
       app = create(:application, name: "MyApp", with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
       @organisation_admin.grant_application_signin_permission(app)
 
@@ -214,7 +214,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       assert @user.reload.has_access_to?(app)
     end
 
-    should "not support granting signin permissions to non-delegatable apps that the organisation admin has access to" do
+    should "not support granting access to apps without a delegatable signin permission" do
       app = create(:application, name: "MyApp")
       signin_permission = app.signin_permission
       signin_permission.update!(delegatable: false)
@@ -225,7 +225,7 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       assert page.has_no_field? "Has access to MyApp?"
     end
 
-    should "not support granting signin permissions to apps that the organisation admin doesn't have access to" do
+    should "not support granting access to apps to which the super organisation admin doesn't have access" do
       create(:application, name: "MyApp", with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
 
       visit edit_user_path(@user)
