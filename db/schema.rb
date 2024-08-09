@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_04_29_130154) do
+ActiveRecord::Schema[7.1].define(version: 2024_08_09_112119) do
   create_table "batch_invitation_application_permissions", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "batch_invitation_id", null: false
     t.integer "supported_permission_id", null: false
@@ -51,11 +51,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_29_130154) do
     t.integer "user_agent_id"
     t.text "user_agent_string"
     t.string "user_email_string"
+    t.index ["application_id"], name: "index_event_logs_on_application_id"
+    t.index ["event_id"], name: "index_event_logs_on_event_id"
     t.index ["uid", "created_at"], name: "index_event_logs_on_uid_and_created_at"
     t.index ["user_agent_id"], name: "event_logs_user_agent_id_fk"
   end
 
-  create_table "oauth_access_grants", id: :integer, charset: "utf8mb3", collation: "utf8_unicode_ci", force: :cascade do |t|
+  create_table "oauth_access_grants", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "resource_owner_id", null: false
     t.integer "application_id", null: false
     t.string "token", null: false
@@ -69,7 +71,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_29_130154) do
     t.index ["token"], name: "index_oauth_access_grants_on_token", unique: true
   end
 
-  create_table "oauth_access_tokens", id: :integer, charset: "utf8mb3", collation: "utf8_unicode_ci", force: :cascade do |t|
+  create_table "oauth_access_tokens", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.integer "resource_owner_id", null: false
     t.integer "application_id", null: false
     t.string "token", null: false
@@ -154,7 +156,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_04_29_130154) do
     t.index ["user_id", "application_id", "supported_permission_id"], name: "index_app_permissions_on_user_and_app_and_supported_permission", unique: true
   end
 
-  create_table "users", id: :integer, charset: "utf8mb3", collation: "utf8_unicode_ci", force: :cascade do |t|
+  create_table "users", id: :integer, charset: "utf8mb3", collation: "utf8mb3_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: ""
