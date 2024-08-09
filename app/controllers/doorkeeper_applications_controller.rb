@@ -24,6 +24,17 @@ class DoorkeeperApplicationsController < ApplicationController
     @users = query.page(params[:page]).per(100)
   end
 
+  def access_logs
+    smokey_uids = User.where("name LIKE 'Smokey%'").pluck(:uid)
+    @logs = @application.event_logs
+      .includes(:user)
+      .where(event_id: 47)
+      .where.not(uid: smokey_uids)
+      .order(created_at: :desc)
+      .page(params[:page])
+      .per(100)
+  end
+
 private
 
   def load_and_authorize_application
