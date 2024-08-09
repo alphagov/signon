@@ -316,34 +316,6 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       assert_same_elements [new_permission, application.signin_permission], user.reload.supported_permissions
     end
 
-    should "not remove permissions the user already has that are not grantable from ui" do
-      application = create(:application)
-      old_non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
-      new_grantable_permission = create(:supported_permission, application:)
-
-      user = create(
-        :user,
-        with_signin_permissions_for: [application],
-        with_permissions: { application => [old_non_grantable_permission.name] },
-      )
-
-      current_user = create(:admin_user)
-      sign_in current_user
-
-      stub_policy(
-        current_user,
-        { application:, user: },
-        policy_class: Users::ApplicationPolicy,
-        edit_permissions?: true,
-      )
-
-      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [new_grantable_permission.id] } }
-
-      user.reload
-
-      assert_same_elements [old_non_grantable_permission, new_grantable_permission, application.signin_permission], user.supported_permissions
-    end
-
     should "when updating permissions for app A, prevent additionally adding or removing permissions for app B" do
       application_a = create(:application)
       application_a_old_permission = create(:supported_permission, application: application_a)
@@ -396,11 +368,18 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       assert_not_includes user.supported_permissions, application_b_new_permission
     end
 
-    should "prevent permissions being added that are not grantable from the ui" do
+    should "prevent permissions that are not grantable from the UI being added or removed" do
       application = create(:application)
-      non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
+      old_grantable_permission = create(:supported_permission, application:)
+      new_grantable_permission = create(:supported_permission, application:)
+      old_non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
+      new_non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
 
-      user = create(:user, with_signin_permissions_for: [application])
+      user = create(
+        :user,
+        with_signin_permissions_for: [application],
+        with_permissions: { application => [old_grantable_permission.name, old_non_grantable_permission.name] },
+      )
 
       current_user = create(:admin_user)
       sign_in current_user
@@ -412,11 +391,15 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         edit_permissions?: true,
       )
 
-      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [non_grantable_permission.id] } }
+      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [new_grantable_permission.id, new_non_grantable_permission.id] } }
 
       user.reload
 
-      assert_equal [application.signin_permission], user.supported_permissions
+      assert_same_elements [
+        old_non_grantable_permission,
+        new_grantable_permission,
+        application.signin_permission,
+      ], user.supported_permissions
     end
 
     should "assign the application id to the application_id flash" do
