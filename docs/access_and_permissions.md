@@ -210,8 +210,9 @@ These dependencies determine whether a user can:
 
 ```mermaid
 flowchart TD
-    A(Users::PermissionsController#show) --authorize @user, :edit?--> B(UserPolicy#edit?)
-    A --@application.sorted_supported_permissions_grantable_from_ui--> C(Doorkeeper::Application#sorted_supported_permissions_grantable_from_ui)
+    A(Users::PermissionsController#show) --authorize [{ application: @application, user: @user }], :view_permissions?, policy_class: Users::ApplicationPolicy--> B(Users::ApplicationPolicy#view_permissions?)
+    B --Pundit.policy(current_user, user).edit?--> C(UserPolicy#edit?)
+    A --@application.sorted_supported_permissions_grantable_from_ui--> D(Doorkeeper::Application#sorted_supported_permissions_grantable_from_ui)
 ```
 
 #### Users permissions edit
