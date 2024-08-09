@@ -93,7 +93,13 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       perm1 = create(:supported_permission, application:, name: "perm-1")
       perm2 = create(:supported_permission, application:, name: "perm-2")
       perm3 = create(:supported_permission, application:, name: "perm-3", grantable_from_ui: false)
-      user = create(:admin_user, with_permissions: { application => ["perm-1", SupportedPermission::SIGNIN_NAME] })
+
+      user = create(
+        :admin_user,
+        with_signin_permissions_for: [application],
+        with_permissions: { application => %w[perm-1] },
+      )
+
       sign_in user
 
       get :edit, params: { application_id: application }
@@ -105,8 +111,14 @@ class Account::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "include a hidden field for the signin permission so that it is not removed" do
-      application = create(:application, with_non_delegatable_supported_permissions: ["perm-1", SupportedPermission::SIGNIN_NAME])
-      user = create(:admin_user, with_permissions: { application => ["perm-1", SupportedPermission::SIGNIN_NAME] })
+      application = create(:application, with_non_delegatable_supported_permissions: %w[perm-1])
+
+      user = create(
+        :admin_user,
+        with_signin_permissions_for: [application],
+        with_permissions: { application => %w[perm-1] },
+      )
+
       sign_in user
 
       get :edit, params: { application_id: application }
@@ -126,7 +138,12 @@ class Account::PermissionsControllerTest < ActionController::TestCase
         @perm_ungranted_5 = create(:supported_permission, application: @application, name: "perm_ungranted_5")
         @perm_ungranted_6 = create(:supported_permission, application: @application, name: "perm_ungranted_6")
         @perm_ungranted_7 = create(:supported_permission, application: @application, name: "perm_ungranted_7")
-        user = create(:admin_user, with_permissions: { @application => ["perm_granted_1", "perm_granted_2", SupportedPermission::SIGNIN_NAME] })
+
+        user = create(
+          :admin_user,
+          with_signin_permissions_for: [@application],
+          with_permissions: { @application => %w[perm_granted_1 perm_granted_2] },
+        )
 
         sign_in user
 
@@ -169,8 +186,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       application1 = create(:application)
       application2 = create(:application, with_delegatable_supported_permissions: %w[app2-permission])
 
-      current_user = create(:organisation_admin_user)
-      current_user.grant_application_signin_permission(application1)
+      current_user = create(:organisation_admin_user, with_signin_permissions_for: [application1])
       sign_in current_user
 
       stub_policy current_user, [:account, Doorkeeper::Application], index?: true
@@ -188,8 +204,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
     should "not remove the signin permission from the app when updating other permissions" do
       application = create(:application, with_non_delegatable_supported_permissions: %w[other])
 
-      current_user = create(:admin_user)
-      current_user.grant_application_signin_permission(application)
+      current_user = create(:admin_user, with_signin_permissions_for: [application])
       sign_in current_user
 
       stub_policy current_user, [:account, application], edit_permissions?: true
@@ -205,9 +220,11 @@ class Account::PermissionsControllerTest < ActionController::TestCase
     should "not remove permissions the user already has that are not grantable from ui" do
       application = create(:application, with_non_delegatable_supported_permissions: %w[other], with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
 
-      current_user = create(:admin_user)
-      current_user.grant_application_signin_permission(application)
-      current_user.grant_application_permission(application, "not_from_ui")
+      current_user = create(
+        :admin_user,
+        with_signin_permissions_for: [application],
+        with_permissions: { application => %w[not_from_ui] },
+      )
 
       sign_in current_user
 
@@ -227,8 +244,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       other_application = create(:application, with_non_delegatable_supported_permissions: %w[other])
       application = create(:application)
 
-      current_user = create(:admin_user)
-      current_user.grant_application_signin_permission(application)
+      current_user = create(:admin_user, with_signin_permissions_for: [application])
 
       sign_in current_user
 
@@ -246,8 +262,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
     should "prevent permissions being added that are not grantable from the ui" do
       application = create(:application, with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
 
-      current_user = create(:admin_user)
-      current_user.grant_application_signin_permission(application)
+      current_user = create(:admin_user, with_signin_permissions_for: [application])
       sign_in current_user
 
       stub_policy current_user, [:account, application], edit_permissions?: true
@@ -263,7 +278,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
     should "assign the application id to the application_id flash" do
       application = create(:application, with_non_delegatable_supported_permissions: %w[new])
-      user = create(:admin_user, with_permissions: { application => [SupportedPermission::SIGNIN_NAME] })
+      user = create(:admin_user, with_signin_permissions_for: [application])
       sign_in user
 
       new_permission = application.supported_permissions.find_by(name: "new")
@@ -280,7 +295,11 @@ class Account::PermissionsControllerTest < ActionController::TestCase
         @perm_granted_2 = create(:supported_permission, application: @application, name: "perm_granted_2")
         @perm_ungranted = create(:supported_permission, application: @application, name: "perm_ungranted")
 
-        @current_user = create(:admin_user, with_permissions: { @application => ["perm_granted_1", "perm_granted_2", SupportedPermission::SIGNIN_NAME] })
+        @current_user = create(
+          :admin_user,
+          with_signin_permissions_for: [@application],
+          with_permissions: { @application => %w[perm_granted_1 perm_granted_2] },
+        )
 
         sign_in @current_user
 
