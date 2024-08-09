@@ -35,6 +35,10 @@ class DoorkeeperApplicationsController < ApplicationController
       relation = relation.where.not(uid: smokey_uids)
     end
 
+    if params[:month].present?
+      relation = relation.where("DATE_FORMAT(created_at, '%Y-%m')=?", params[:month])
+    end
+
     @logs = relation
       .page(params[:page])
       .per(100)
@@ -61,6 +65,7 @@ private
       :supports_push_updates,
       :api_only,
       :include_smokey_users,
+      :month,
     )
   end
 end

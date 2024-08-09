@@ -1,21 +1,5 @@
 <% content_for :title, "#{@application.name} access log" %>
 
-<form class="govuk-form-group">
-<%= render "govuk_publishing_components/components/checkboxes", {
-  name: "include_smokey_users",
-  items: [
-    {
-      label: "Include Smokey Users",
-      value: "true",
-      checked: params["include_smokey_users"] == "true"
-    }
-  ]
-} %>
-<%= render "govuk_publishing_components/components/button", {
-  text: "Submit"
-} %>
-</form>
-
 <% content_for :breadcrumbs,
                render("govuk_publishing_components/components/breadcrumbs", {
                  collapse_on_mobile: true,
@@ -35,6 +19,32 @@
                  ]
                })
 %>
+
+<form>
+<%= render "govuk_publishing_components/components/checkboxes", {
+  name: "include_smokey_users",
+  items: [
+    {
+      label: "Include Smokey Users",
+      value: "true",
+      checked: params["include_smokey_users"] == "true"
+    }
+  ]
+} %>
+<%= render "govuk_publishing_components/components/input", {
+  label: {
+    text: "Month"
+  },
+  name: "month",
+  hint: "In YYYY-mm format",
+  value: params["month"]
+} %>
+<div class="govuk-form-group">
+<%= render "govuk_publishing_components/components/button", {
+  text: "Submit"
+} %>
+</div>
+</form>
 
 <% if @logs.any? %>
   <%= render "components/table", {
