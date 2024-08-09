@@ -18,7 +18,12 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       current_user = create(:admin_user)
       sign_in current_user
 
-      stub_policy current_user, user, edit?: false
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        view_permissions?: false,
+      )
 
       get :show, params: { user_id: user, application_id: application }
 
