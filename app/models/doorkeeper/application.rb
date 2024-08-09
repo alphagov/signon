@@ -2,6 +2,7 @@ require "doorkeeper/orm/active_record/application"
 
 class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/ApplicationRecord
   has_many :supported_permissions, dependent: :destroy
+  has_many :event_logs, class_name: "EventLog"
 
   default_scope { not_retired.ordered_by_name }
 
