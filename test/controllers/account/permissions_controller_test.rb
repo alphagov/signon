@@ -187,19 +187,25 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       assert_equal [application_1.signin_permission], current_user.supported_permissions
     end
 
-    should "not remove the signin permission from the app when updating other permissions" do
+    should "update non-signin permissions, retaining the signin permission, then redirect to the applications path" do
       application = create(:application)
+      old_permission = create(:supported_permission, application:)
       new_permission = create(:supported_permission, application:)
 
-      current_user = create(:admin_user, with_signin_permissions_for: [application])
+      current_user = create(
+        :admin_user,
+        with_signin_permissions_for: [application],
+        with_permissions: { application => [old_permission.name] },
+      )
+
       sign_in current_user
 
       stub_policy current_user, [:account, application], edit_permissions?: true
 
       patch :update, params: { application_id: application, application: { supported_permission_ids: [new_permission.id] } }
 
-      current_user.reload
-      assert_same_elements [application.signin_permission, new_permission], current_user.supported_permissions
+      assert_redirected_to account_applications_path
+      assert_same_elements [application.signin_permission, new_permission], current_user.reload.supported_permissions
     end
 
     should "not remove permissions the user already has that are not grantable from ui" do
