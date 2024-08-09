@@ -252,22 +252,45 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       assert_same_elements [old_non_grantable_permission, new_grantable_permission, application.signin_permission], current_user.supported_permissions
     end
 
-    should "prevent permissions being added for other apps" do
+    should "prevent permissions for other apps being added or removed" do
       updating_application = create(:application)
+      updating_application_old_permission = create(:supported_permission, application: updating_application)
+      updating_application_new_permission = create(:supported_permission, application: updating_application)
+
       other_application = create(:application)
-      other_application_permission = create(:supported_permission, application: other_application)
+      other_application_old_permission = create(:supported_permission, application: other_application)
+      other_application_new_permission = create(:supported_permission, application: other_application)
 
-      current_user = create(:admin_user, with_signin_permissions_for: [updating_application])
-
+      current_user = create(
+        :admin_user,
+        with_signin_permissions_for: [updating_application, other_application],
+        with_permissions: {
+          updating_application => [updating_application_old_permission.name],
+          other_application => [other_application_old_permission.name],
+        },
+      )
       sign_in current_user
 
-      stub_policy current_user, [:account, updating_application], edit_permissions?: true
+      [updating_application, other_application].each do |application|
+        stub_policy current_user, [:account, application], edit_permissions?: true
+      end
 
-      patch :update, params: { application_id: updating_application, application: { supported_permission_ids: [other_application_permission.id] } }
+      patch(
+        :update,
+        params: {
+          application_id: updating_application,
+          application: { supported_permission_ids: [updating_application_new_permission.id, other_application_new_permission.id] },
+        },
+      )
 
       current_user.reload
 
-      assert_equal [updating_application.signin_permission], current_user.supported_permissions
+      assert_same_elements [
+        updating_application_new_permission,
+        other_application_old_permission,
+        updating_application.signin_permission,
+        other_application.signin_permission,
+      ], current_user.supported_permissions
     end
 
     should "prevent permissions being added that are not grantable from the ui" do
