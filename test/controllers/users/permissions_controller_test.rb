@@ -12,9 +12,10 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "exclude permissions that aren't grantable from the UI" do
-      application = create(:application,
-                           with_non_delegatable_supported_permissions: %w[perm-1],
-                           with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[perm-2])
+      application = create(:application)
+      grantable_permission = create(:supported_permission, application:)
+      non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
+
       user = create(:user, with_signin_permissions_for: [application])
 
       current_user = create(:admin_user)
@@ -25,8 +26,8 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
       get :show, params: { user_id: user, application_id: application }
 
-      assert_select "td", text: "perm-1"
-      assert_select "td", text: "perm-2", count: 0
+      assert_select "td", text: grantable_permission.name
+      assert_select "td", text: non_grantable_permission.name, count: 0
     end
 
     should "exclude applications that the user doesn't have access to" do
@@ -125,13 +126,14 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
     should "display checkboxes for the grantable permissions" do
       application = create(:application)
-      perm1 = create(:supported_permission, application:, name: "perm-1")
-      perm2 = create(:supported_permission, application:, name: "perm-2")
-      perm3 = create(:supported_permission, application:, name: "perm-3", grantable_from_ui: false)
+      old_grantable_permission = create(:supported_permission, application:)
+      new_grantable_permission = create(:supported_permission, application:)
+      new_non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
+
       user = create(
         :user,
         with_signin_permissions_for: [application],
-        with_permissions: { application => %w[perm-1] },
+        with_permissions: { application => [old_grantable_permission.name] },
       )
 
       current_user = create(:admin_user)
@@ -146,9 +148,9 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
       get :edit, params: { user_id: user, application_id: application }
 
-      assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{perm1.id}']"
-      assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{perm2.id}']"
-      assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{perm3.id}']", count: 0
+      assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{old_grantable_permission.id}']"
+      assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_grantable_permission.id}']"
+      assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_non_grantable_permission.id}']", count: 0
       assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{application.signin_permission.id}']", count: 0
     end
 
@@ -212,20 +214,13 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     context "for apps with greater than eight supported permissions" do
       setup do
         @application = create(:application)
-        @perm_granted_1 = create(:supported_permission, application: @application, name: "perm_granted_1")
-        @perm_granted_2 = create(:supported_permission, application: @application, name: "perm_granted_2")
-        @perm_ungranted_1 = create(:supported_permission, application: @application, name: "perm_ungranted_1")
-        @perm_ungranted_2 = create(:supported_permission, application: @application, name: "perm_ungranted_2")
-        @perm_ungranted_3 = create(:supported_permission, application: @application, name: "perm_ungranted_3")
-        @perm_ungranted_4 = create(:supported_permission, application: @application, name: "perm_ungranted_4")
-        @perm_ungranted_5 = create(:supported_permission, application: @application, name: "perm_ungranted_5")
-        @perm_ungranted_6 = create(:supported_permission, application: @application, name: "perm_ungranted_6")
-        @perm_ungranted_7 = create(:supported_permission, application: @application, name: "perm_ungranted_7")
+        @old_permissions = create_list(:supported_permission, 2, application: @application)
+        @new_permissions = create_list(:supported_permission, 7, application: @application)
 
         user = create(
           :user,
           with_signin_permissions_for: [@application],
-          with_permissions: { @application => ["perm_granted_1", "perm_granted_2", SupportedPermission::SIGNIN_NAME] },
+          with_permissions: { @application => @old_permissions.map(&:name) },
         )
 
         current_user = create(:admin_user)
@@ -250,15 +245,14 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       end
 
       should "display checkboxes for the existing permissions" do
-        assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{@perm_granted_1.id}']"
-        assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{@perm_granted_2.id}']"
-        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@perm_ungranted_1.id}']", count: 0
-        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@perm_ungranted_2.id}']", count: 0
-        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@perm_ungranted_3.id}']", count: 0
-        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@perm_ungranted_4.id}']", count: 0
-        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@perm_ungranted_5.id}']", count: 0
-        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@perm_ungranted_6.id}']", count: 0
-        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@perm_ungranted_7.id}']", count: 0
+        @old_permissions.each do |old_permission|
+          assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{old_permission.id}']"
+        end
+
+        @new_permissions.each do |new_permission|
+          assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_permission.id}']", count: 0
+        end
+
         assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{@application.signin_permission.id}']", count: 0
       end
     end
@@ -294,11 +288,14 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "redirect once the permissions have been updated" do
-      application = create(:application, with_non_delegatable_supported_permissions: %w[new old])
+      application = create(:application)
+      old_permission = create(:supported_permission, application:)
+      new_permission = create(:supported_permission, application:)
+
       user = create(
         :user,
         with_signin_permissions_for: [application],
-        with_permissions: { application => %w[old] },
+        with_permissions: { application => [old_permission.name] },
       )
 
       current_user = create(:admin_user)
@@ -310,8 +307,6 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         policy_class: Users::ApplicationPolicy,
         edit_permissions?: true,
       )
-
-      new_permission = application.supported_permissions.find_by(name: "new")
 
       patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [new_permission.id] } }
 
@@ -321,32 +316,33 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     should "prevent permissions being added for apps that the current user does not have access to" do
       organisation = create(:organisation)
 
-      application1 = create(:application)
-      application2 = create(:application, with_delegatable_supported_permissions: %w[app2-permission])
+      application_1 = create(:application)
+      application_2 = create(:application)
+      application_2_permission = create(:delegatable_supported_permission, application: application_2)
 
-      user = create(:user, organisation:, with_signin_permissions_for: [application1])
+      user = create(:user, organisation:, with_signin_permissions_for: [application_1])
 
-      current_user = create(:organisation_admin_user, organisation:, with_signin_permissions_for: [application1])
+      current_user = create(:organisation_admin_user, organisation:, with_signin_permissions_for: [application_1])
       sign_in current_user
 
       stub_policy(
         current_user,
-        { application: application1, user: },
+        { application: application_1, user: },
         policy_class: Users::ApplicationPolicy,
         edit_permissions?: true,
       )
 
-      app2_permission = application2.supported_permissions.find_by!(name: "app2-permission")
-
-      patch :update, params: { user_id: user, application_id: application1, application: { supported_permission_ids: [app2_permission.id] } }
+      patch :update, params: { user_id: user, application_id: application_1, application: { supported_permission_ids: [application_2_permission.id] } }
 
       user.reload
 
-      assert_equal [application1.signin_permission], user.supported_permissions
+      assert_equal [application_1.signin_permission], user.supported_permissions
     end
 
     should "not remove the signin permission from the app when updating other permissions" do
-      application = create(:application, with_non_delegatable_supported_permissions: %w[other])
+      application = create(:application)
+      new_permission = create(:supported_permission, application:)
+
       user = create(:user, with_signin_permissions_for: [application])
 
       current_user = create(:admin_user)
@@ -359,20 +355,21 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         edit_permissions?: true,
       )
 
-      other_permission = application.supported_permissions.find_by(name: "other")
-
-      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [other_permission.id] } }
+      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [new_permission.id] } }
 
       user.reload
-      assert_same_elements [application.signin_permission, other_permission], user.supported_permissions
+      assert_same_elements [application.signin_permission, new_permission], user.supported_permissions
     end
 
     should "not remove permissions the user already has that are not grantable from ui" do
-      application = create(:application, with_non_delegatable_supported_permissions: %w[other], with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
+      application = create(:application)
+      old_non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
+      new_grantable_permission = create(:supported_permission, application:)
+
       user = create(
         :user,
         with_signin_permissions_for: [application],
-        with_permissions: { application => %w[not_from_ui] },
+        with_permissions: { application => [old_non_grantable_permission.name] },
       )
 
       current_user = create(:admin_user)
@@ -385,42 +382,41 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         edit_permissions?: true,
       )
 
-      other_permission = application.supported_permissions.find_by(name: "other")
-      not_from_ui_permission = application.supported_permissions.find_by(name: "not_from_ui")
-
-      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [other_permission.id] } }
+      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [new_grantable_permission.id] } }
 
       user.reload
 
-      assert_same_elements [other_permission, application.signin_permission, not_from_ui_permission], user.supported_permissions
+      assert_same_elements [old_non_grantable_permission, new_grantable_permission, application.signin_permission], user.supported_permissions
     end
 
     should "prevent permissions being added for other apps" do
-      other_application = create(:application, with_non_delegatable_supported_permissions: %w[other])
-      application = create(:application)
-      user = create(:user, with_signin_permissions_for: [application])
+      updating_application = create(:application)
+      other_application = create(:application)
+      other_application_permission = create(:supported_permission, application: other_application)
+
+      user = create(:user, with_signin_permissions_for: [updating_application])
 
       current_user = create(:admin_user)
       sign_in current_user
 
       stub_policy(
         current_user,
-        { application:, user: },
+        { application: updating_application, user: },
         policy_class: Users::ApplicationPolicy,
         edit_permissions?: true,
       )
 
-      other_permission = other_application.supported_permissions.find_by(name: "other")
-
-      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [other_permission.id] } }
+      patch :update, params: { user_id: user, application_id: updating_application, application: { supported_permission_ids: [other_application_permission.id] } }
 
       user.reload
 
-      assert_equal [application.signin_permission], user.supported_permissions
+      assert_equal [updating_application.signin_permission], user.supported_permissions
     end
 
     should "prevent permissions being added that are not grantable from the ui" do
-      application = create(:application, with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
+      application = create(:application)
+      non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
+
       user = create(:user, with_signin_permissions_for: [application])
 
       current_user = create(:admin_user)
@@ -433,9 +429,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         edit_permissions?: true,
       )
 
-      not_from_ui_permission = application.supported_permissions.find_by(name: "not_from_ui")
-
-      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [not_from_ui_permission.id] } }
+      patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [non_grantable_permission.id] } }
 
       user.reload
 
@@ -443,11 +437,14 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "assign the application id to the application_id flash" do
-      application = create(:application, with_non_delegatable_supported_permissions: %w[new old])
+      application = create(:application)
+      old_permission = create(:supported_permission, application:)
+      new_permission = create(:supported_permission, application:)
+
       user = create(
         :user,
         with_signin_permissions_for: [application],
-        with_permissions: { application => %w[old] },
+        with_permissions: { application => [old_permission.name] },
       )
 
       current_user = create(:admin_user)
@@ -459,8 +456,6 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         policy_class: Users::ApplicationPolicy,
         edit_permissions?: true,
       )
-
-      new_permission = application.supported_permissions.find_by(name: "new")
 
       patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [new_permission.id] } }
 
@@ -493,14 +488,13 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     context "when current_permission_ids and new_permission_id are provided instead of supported_permission_ids" do
       setup do
         @application = create(:application)
-        @perm_granted_1 = create(:supported_permission, application: @application, name: "perm_granted_1")
-        @perm_granted_2 = create(:supported_permission, application: @application, name: "perm_granted_2")
-        @perm_ungranted = create(:supported_permission, application: @application, name: "perm_ungranted")
+        @old_permissions = create_list(:supported_permission, 2, application: @application)
+        @new_permission = create(:supported_permission, application: @application)
 
         @user = create(
           :user,
           with_signin_permissions_for: [@application],
-          with_permissions: { @application => ["perm_granted_1", "perm_granted_2", SupportedPermission::SIGNIN_NAME] },
+          with_permissions: { @application => @old_permissions.map(&:name) },
         )
 
         @current_user = create(:admin_user)
@@ -515,24 +509,45 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       end
 
       should "use the relevant params to update permissions" do
-        patch :update, params: { user_id: @user, application_id: @application, application: { current_permission_ids: [@perm_granted_1.id, @perm_granted_2.id], new_permission_id: @perm_ungranted.id } }
+        patch(
+          :update,
+          params: {
+            user_id: @user,
+            application_id: @application,
+            application: {
+              current_permission_ids: @old_permissions.map(&:id),
+              new_permission_id: @new_permission.id,
+            },
+          },
+        )
 
         assert_redirected_to user_applications_path(@user)
 
         @current_user.reload
 
-        assert_equal [@perm_granted_1, @perm_granted_2, @perm_ungranted, @application.signin_permission], @user.supported_permissions
+        assert_equal [*@old_permissions, @new_permission, @application.signin_permission], @user.supported_permissions
       end
 
       context "when the add_more param is 'true'" do
         should "update permissions then redirect back to the edit page" do
-          patch :update, params: { user_id: @user, application_id: @application, application: { current_permission_ids: [@perm_granted_1.id, @perm_granted_2.id], new_permission_id: @perm_ungranted.id, add_more: "true" } }
+          patch(
+            :update,
+            params: {
+              user_id: @user,
+              application_id: @application,
+              application: {
+                current_permission_ids: @old_permissions.map(&:id),
+                new_permission_id: @new_permission.id,
+                add_more: "true",
+              },
+            },
+          )
 
           assert_redirected_to edit_user_application_permissions_path(@user, @application)
 
           @current_user.reload
 
-          assert_equal [@perm_granted_1, @perm_granted_2, @perm_ungranted, @application.signin_permission], @user.supported_permissions
+          assert_equal [*@old_permissions, @new_permission, @application.signin_permission], @user.supported_permissions
         end
       end
     end
