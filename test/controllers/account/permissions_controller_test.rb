@@ -112,13 +112,8 @@ class Account::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "include a hidden field for the signin permission so that it is not removed" do
-      application = create(:application, with_non_delegatable_supported_permissions: %w[perm-1])
-
-      user = create(
-        :admin_user,
-        with_signin_permissions_for: [application],
-        with_permissions: { application => %w[perm-1] },
-      )
+      application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
+      user = create(:admin_user, with_signin_permissions_for: [application])
 
       sign_in user
 
