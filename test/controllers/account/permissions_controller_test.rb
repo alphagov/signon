@@ -350,7 +350,6 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       should "use the relevant params to update permissions" do
         patch :update, params: { application_id: @application, application: { current_permission_ids: [*@old_permissions], new_permission_id: @new_permission.id } }
 
-        # assert redirected to apps page
         assert_redirected_to account_applications_path
 
         assert_equal [*@old_permissions, @new_permission, @application.signin_permission], @current_user.reload.supported_permissions
