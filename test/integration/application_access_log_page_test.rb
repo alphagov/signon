@@ -49,5 +49,4 @@ class ApplicationAccessLogPageIntegrationTest < ActionDispatch::IntegrationTest
       end
     end
   end
-
 end
