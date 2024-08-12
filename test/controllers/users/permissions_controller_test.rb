@@ -163,6 +163,26 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       end
     end
 
+    should "redirect to the applications path if there are no non-signin applications" do
+      application = create(:application)
+      user = create(:user, with_signin_permissions_for: [application])
+
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        edit_permissions?: true,
+      )
+
+      get :edit, params: { user_id: user, application_id: application }
+
+      assert_redirected_to user_applications_path(user)
+      assert_equal "No permissions found for #{application.name} that you are authorised to manage.", flash[:alert]
+    end
+
     should "display checkboxes for the grantable permissions" do
       application = create(:application)
       old_grantable_permission = create(:supported_permission, application:)
@@ -213,6 +233,27 @@ class Users::PermissionsControllerTest < ActionController::TestCase
     end
 
     context "when the current user is a publishing manager" do
+      should "redirect to the applications path if there are no delegatable non-signin applications" do
+        application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
+        user = create(:user, with_signin_permissions_for: [application])
+
+        current_user = create(:user)
+        current_user.stubs(:publishing_manager?).returns(true)
+        sign_in current_user
+
+        stub_policy(
+          current_user,
+          { application:, user: },
+          policy_class: Users::ApplicationPolicy,
+          edit_permissions?: true,
+        )
+
+        get :edit, params: { user_id: user, application_id: application }
+
+        assert_redirected_to user_applications_path(user)
+        assert_equal "No permissions found for #{application.name} that you are authorised to manage.", flash[:alert]
+      end
+
       should "exclude non-delegatable permissions" do
         application = create(:application)
         old_delegatable_permission = create(:delegatable_supported_permission, application:)

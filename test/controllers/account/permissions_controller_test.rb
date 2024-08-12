@@ -111,6 +111,17 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       end
     end
 
+    should "redirect to the applications path if there are no non-signin applications" do
+      application = create(:application)
+      user = create(:admin_user, with_signin_permissions_for: [application])
+      sign_in user
+
+      get :edit, params: { application_id: application }
+
+      assert_redirected_to account_applications_path
+      assert_equal "No permissions found for #{application.name} that you are authorised to manage.", flash[:alert]
+    end
+
     should "display checkboxes for the grantable permissions" do
       application = create(:application)
       old_grantable_permission = create(:supported_permission, application:)
@@ -145,6 +156,19 @@ class Account::PermissionsControllerTest < ActionController::TestCase
     end
 
     context "when the current user is a publishing manager" do
+      should "redirect to the applications path if there are no delegatable non-signin applications" do
+        application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
+
+        current_user = create(:user, with_signin_permissions_for: [application])
+        current_user.stubs(:publishing_manager?).returns(true)
+        sign_in current_user
+
+        get :edit, params: { application_id: application }
+
+        assert_redirected_to account_applications_path
+        assert_equal "No permissions found for #{application.name} that you are authorised to manage.", flash[:alert]
+      end
+
       should "exclude non-delegatable permissions" do
         application = create(:application)
         old_delegatable_permission = create(:delegatable_supported_permission, application:)

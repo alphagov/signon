@@ -14,6 +14,11 @@ class Account::PermissionsController < ApplicationController
   def edit
     authorize [:account, @application], :edit_permissions?
 
+    if @permissions.empty?
+      flash[:alert] = "No permissions found for #{@application.name} that you are authorised to manage."
+      return redirect_to account_applications_path
+    end
+
     @shared_permissions_form_locals = {
       action: account_application_permissions_path(@application),
       application: @application,
