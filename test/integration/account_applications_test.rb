@@ -252,6 +252,8 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
 
         assert page.has_field?("delegatable_perm")
         assert page.has_no_field?("non_delegatable_perm")
+
+        assert_selector ".govuk-inset-text", text: "Below, you will only see permissions that you are authorised to manage. You can also view all the permissions you have for app-name."
       end
 
       should "not be able to grant permissions that are not grantable_from_ui" do

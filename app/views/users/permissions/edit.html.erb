@@ -34,6 +34,14 @@
   <% end %>
 <% end %>
 
+<% if notice = notice_about_non_delegatable_permissions(current_user, @application, @user) %>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <%= render "govuk_publishing_components/components/inset_text", { text: notice } %>
+    </div>
+  </div>
+<% end %>
+
 <%= render "shared/permissions_forms", {
   assigned_permissions: @assigned_permissions,
   unassigned_permission_options: @unassigned_permission_options,
