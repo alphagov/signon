@@ -5,7 +5,7 @@ class Users::PermissionsController < ApplicationController
   before_action :set_permissions, only: %i[edit update]
 
   def show
-    authorize @user, :edit?
+    authorize [{ application: @application, user: @user }], :view_permissions?, policy_class: Users::ApplicationPolicy
 
     @permissions = @application
       .sorted_supported_permissions_grantable_from_ui
