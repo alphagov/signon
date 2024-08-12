@@ -22,4 +22,25 @@ module ApplicationPermissionsHelper
 
     paragraph + list
   end
+
+  def notice_about_non_delegatable_permissions(current_user, application, other_grantee = nil)
+    return nil if current_user.govuk_admin?
+    return nil unless application.has_non_delegatable_non_signin_permissions_grantable_from_ui?
+
+    link = if other_grantee
+             link_to(
+               "view all the permissions #{other_grantee.name} has for #{application.name}",
+               user_application_permissions_path(other_grantee, application),
+               class: "govuk-link",
+             )
+           else
+             link_to(
+               "view all the permissions you have for #{application.name}",
+               account_application_permissions_path(application),
+               class: "govuk-link",
+             )
+           end
+
+    "Below, you will only see permissions that you are authorised to manage. You can also #{link}.".html_safe
+  end
 end

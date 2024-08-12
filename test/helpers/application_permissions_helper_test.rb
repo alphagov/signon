@@ -57,4 +57,61 @@ class ApplicationPermissionsHelperTest < ActionView::TestCase
       end
     end
   end
+
+  context "#notice_about_non_delegatable_permissions" do
+    context "when the current user is a GOV.UK admin" do
+      setup do
+        @current_user = create(:user)
+        @current_user.expects(:govuk_admin?).returns(true)
+      end
+
+      should "return nil" do
+        assert_nil notice_about_non_delegatable_permissions(@current_user, create(:application))
+      end
+    end
+
+    context "when the current user is not a GOV.UK admin" do
+      setup do
+        @current_user = create(:user, name: "Current User")
+        @current_user.expects(:govuk_admin?).returns(false)
+        @application = create(:application, name: "My First App")
+      end
+
+      context "when the app has no non-delegatable non-signin permissions grantable from the UI" do
+        setup { @application.expects(:has_non_delegatable_non_signin_permissions_grantable_from_ui?).returns(false) }
+
+        should "return nil" do
+          assert_nil notice_about_non_delegatable_permissions(@current_user, @application)
+        end
+      end
+
+      context "when the app has some non-delegatable non-signin permissions grantable from the UI" do
+        setup { @application.expects(:has_non_delegatable_non_signin_permissions_grantable_from_ui?).returns(true) }
+
+        context "without another user passed in as the grantee" do
+          should "infer the grantee as the current user and return a notice with a link to the account application permissions path" do
+            link = "<a class=\"govuk-link\" href=\"#{account_application_permissions_path(@application)}\">view all the permissions you have for My First App</a>"
+
+            assert_equal(
+              "Below, you will only see permissions that you are authorised to manage. You can also #{link}.",
+              notice_about_non_delegatable_permissions(@current_user, @application),
+            )
+          end
+        end
+
+        context "with another user passed in as the grantee" do
+          should "return a notice with a link to the user application permissions path for the given grantee" do
+            grantee = create(:user, name: "Another User")
+
+            link = "<a class=\"govuk-link\" href=\"#{user_application_permissions_path(grantee, @application)}\">view all the permissions Another User has for My First App</a>"
+
+            assert_equal(
+              "Below, you will only see permissions that you are authorised to manage. You can also #{link}.",
+              notice_about_non_delegatable_permissions(@current_user, @application, grantee),
+            )
+          end
+        end
+      end
+    end
+  end
 end
