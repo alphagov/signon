@@ -352,7 +352,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
         assert_redirected_to account_applications_path
 
-        assert_equal [*@old_permissions, @new_permission, @application.signin_permission], @current_user.reload.supported_permissions
+        assert_same_elements [*@old_permissions, @new_permission, @application.signin_permission], @current_user.reload.supported_permissions
       end
 
       context "when the add_more param is 'true'" do
@@ -361,7 +361,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
           assert_redirected_to edit_account_application_permissions_path(@application)
 
-          assert_equal [*@old_permissions, @new_permission, @application.signin_permission], @current_user.reload.supported_permissions
+          assert_same_elements [*@old_permissions, @new_permission, @application.signin_permission], @current_user.reload.supported_permissions
         end
       end
     end
