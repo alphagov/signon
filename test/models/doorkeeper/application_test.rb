@@ -84,77 +84,65 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
   end
 
   context "#sorted_supported_permissions_grantable_from_ui" do
-    should "return all of the supported permissions that are grantable from the ui" do
-      application = create(
-        :application,
-        with_delegatable_supported_permissions: %w[delegatable-grantable],
-        with_delegatable_supported_permissions_not_grantable_from_ui: %w[delegatable-non-grantable],
-        with_non_delegatable_supported_permissions: ["non-delegatable-grantable", SupportedPermission::SIGNIN_NAME],
-        with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[non-delegatable-non-grantable],
-      )
+    setup do
+      @application = create(:application)
+      @delegatable_permission = create(:delegatable_supported_permission, application: @application)
+      @delegatable_non_grantable_permission = create(:delegatable_supported_permission, application: @application, grantable_from_ui: false)
+      @non_delegatable_permission = create(:non_delegatable_supported_permission, application: @application)
+      @non_delegatable_non_grantable_permission = create(:non_delegatable_supported_permission, application: @application, grantable_from_ui: false)
 
-      permission_names = application.sorted_supported_permissions_grantable_from_ui.map(&:name)
-
-      assert_includes permission_names, "delegatable-grantable"
-      assert_includes permission_names, "non-delegatable-grantable"
-      assert_includes permission_names, SupportedPermission::SIGNIN_NAME
-      assert_not_includes permission_names, "delegatable-non-grantable"
-      assert_not_includes permission_names, "non-delegatable-non-grantable"
+      @sorted_permissions = "double"
     end
 
-    should "sort the permissions alphabetically by name, but with the signin permission first" do
-      application = create(
-        :application,
-        with_delegatable_supported_permissions: %w[a d],
-        with_non_delegatable_supported_permissions: ["c", "b", SupportedPermission::SIGNIN_NAME],
-      )
+    should "sorts the app's UI-grantable permissions using `SupportedPermission`" do
+      SupportedPermission
+        .expects(:sort_with_signin_first)
+        .with { |value|
+          assert_same_elements(
+            [@application.signin_permission, @delegatable_permission, @non_delegatable_permission],
+            value,
+          )
+        }
+        .returns(@sorted_permissions)
 
-      permission_names = application.sorted_supported_permissions_grantable_from_ui.map(&:name)
-
-      assert_equal [SupportedPermission::SIGNIN_NAME, "a", "b", "c", "d"], permission_names
+      assert_equal @sorted_permissions, @application.sorted_supported_permissions_grantable_from_ui
     end
 
     should "exclude the signin permission if requested" do
-      application = create(
-        :application,
-        with_non_delegatable_supported_permissions: ["Writer", "Editor", SupportedPermission::SIGNIN_NAME],
-      )
+      SupportedPermission
+        .expects(:sort_with_signin_first)
+        .with { |value|
+          assert_same_elements(
+            [@delegatable_permission, @non_delegatable_permission],
+            value,
+          )
+        }
+        .returns(@sorted_permissions)
 
-      permission_names = application.sorted_supported_permissions_grantable_from_ui(include_signin: false).map(&:name)
-
-      assert_not_includes permission_names, SupportedPermission::SIGNIN_NAME
-      assert_equal %w[Editor Writer], permission_names
+      assert_equal @sorted_permissions, @application.sorted_supported_permissions_grantable_from_ui(include_signin: false)
     end
 
     should "exclude non-delegatable permissions if requested" do
-      application_1 = create(
-        :application,
-        with_delegatable_supported_permissions: %w[delegatable],
-        with_non_delegatable_supported_permissions: ["non-delegatable", SupportedPermission::SIGNIN_NAME],
-      )
-      application_2 = create(
-        :application,
-        with_delegatable_supported_permissions: ["delegatable", SupportedPermission::SIGNIN_NAME],
-        with_non_delegatable_supported_permissions: %w[non-delegatable],
-      )
+      SupportedPermission
+        .expects(:sort_with_signin_first)
+        .with { |value|
+          assert_same_elements(
+            [@application.signin_permission, @delegatable_permission],
+            value,
+          )
+        }
+        .returns(@sorted_permissions)
 
-      application_1_permission_names = application_1.sorted_supported_permissions_grantable_from_ui(only_delegatable: true).map(&:name)
-      application_2_permission_names = application_2.sorted_supported_permissions_grantable_from_ui(only_delegatable: true).map(&:name)
-
-      assert_equal %w[delegatable], application_1_permission_names
-      assert_equal [SupportedPermission::SIGNIN_NAME, "delegatable"], application_2_permission_names
+      assert_equal @sorted_permissions, @application.sorted_supported_permissions_grantable_from_ui(only_delegatable: true)
     end
 
-    should "exclude non-delegatable signin permission if requested, even when `include_signin == true`" do
-      application = create(
-        :application,
-        with_non_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME],
-      )
+    should "exclude signin and non-delegatable permissions if requested" do
+      SupportedPermission
+        .expects(:sort_with_signin_first)
+        .with { |value| assert_same_elements([@delegatable_permission], value) }
+        .returns(@sorted_permissions)
 
-      permission_names = application.sorted_supported_permissions_grantable_from_ui(include_signin: true, only_delegatable: true).map(&:name)
-
-      assert_not_includes permission_names, SupportedPermission::SIGNIN_NAME
-      assert_empty permission_names
+      assert_equal @sorted_permissions, @application.sorted_supported_permissions_grantable_from_ui(include_signin: false, only_delegatable: true)
     end
   end
 

@@ -14,10 +14,16 @@ class SupportedPermission < ApplicationRecord
   scope :grantable_from_ui, -> { where(grantable_from_ui: true) }
   scope :default, -> { where(default: true) }
   scope :signin, -> { where(name: SIGNIN_NAME) }
+  scope :excluding_signin, -> { where.not(name: SIGNIN_NAME) }
   scope :excluding_application, ->(application) { where.not(application:) }
 
   def signin?
     name.try(:downcase) == SIGNIN_NAME
+  end
+
+  def self.sort_with_signin_first(supported_permissions)
+    signin_permission = supported_permissions.find(&:signin?)
+    ([signin_permission] + supported_permissions.excluding_signin.order(:name)).compact
   end
 
 private

@@ -43,20 +43,11 @@ class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/Appli
   end
 
   def sorted_supported_permissions_grantable_from_ui(include_signin: true, only_delegatable: false)
-    sorted_permissions = if only_delegatable
-                           supported_permissions.grantable_from_ui.delegatable.order(:name)
-                         else
-                           supported_permissions.grantable_from_ui.order(:name)
-                         end
-    sorted_permissions_without_signin = sorted_permissions - [signin_permission]
+    permissions = supported_permissions.grantable_from_ui
+    permissions = permissions.excluding_signin unless include_signin
+    permissions = permissions.delegatable if only_delegatable
 
-    return sorted_permissions_without_signin unless include_signin
-
-    if only_delegatable && !signin_permission.delegatable
-      sorted_permissions_without_signin
-    else
-      ([signin_permission] + sorted_permissions_without_signin).compact
-    end
+    SupportedPermission.sort_with_signin_first(permissions)
   end
 
   def has_non_signin_permissions_grantable_from_ui?
