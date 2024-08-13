@@ -4,6 +4,8 @@ class Users::PermissionsController < ApplicationController
   before_action :set_application
   before_action :set_permissions, only: %i[edit update]
 
+  include ApplicationPermissionsHelper
+
   def show
     authorize [{ application: @application, user: @user }], :view_permissions?, policy_class: Users::ApplicationPolicy
 
