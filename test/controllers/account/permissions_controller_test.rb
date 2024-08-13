@@ -111,6 +111,17 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       end
     end
 
+    should "redirect to the applications path if there are no non-signin applications" do
+      application = create(:application)
+      user = create(:admin_user, with_signin_permissions_for: [application])
+      sign_in user
+
+      get :edit, params: { application_id: application }
+
+      assert_redirected_to account_applications_path
+      assert_equal "No permissions found for #{application.name} that you are authorised to manage.", flash[:alert]
+    end
+
     should "display checkboxes for the grantable permissions" do
       application = create(:application)
       old_grantable_permission = create(:supported_permission, application:)
@@ -142,6 +153,44 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       get :edit, params: { application_id: application }
 
       assert_select "input[type='hidden'][value='#{application.signin_permission.id}']"
+    end
+
+    context "when the current user is a publishing manager" do
+      should "redirect to the applications path if there are no delegatable non-signin applications" do
+        application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
+
+        current_user = create(:user, with_signin_permissions_for: [application])
+        current_user.stubs(:publishing_manager?).returns(true)
+        sign_in current_user
+
+        get :edit, params: { application_id: application }
+
+        assert_redirected_to account_applications_path
+        assert_equal "No permissions found for #{application.name} that you are authorised to manage.", flash[:alert]
+      end
+
+      should "exclude non-delegatable permissions" do
+        application = create(:application)
+        old_delegatable_permission = create(:delegatable_supported_permission, application:)
+        old_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
+        new_delegatable_permission = create(:delegatable_supported_permission, application:)
+        new_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
+
+        current_user = create(
+          :user,
+          with_signin_permissions_for: [application],
+          with_permissions: { application => [old_delegatable_permission.name, old_non_delegatable_permission.name] },
+        )
+        current_user.stubs(:publishing_manager?).returns(true)
+        sign_in current_user
+
+        get :edit, params: { application_id: application }
+
+        assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{old_delegatable_permission.id}']"
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_delegatable_permission.id}']"
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{old_non_delegatable_permission.id}']", count: 0
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_non_delegatable_permission.id}']", count: 0
+      end
     end
 
     context "for apps with greater than eight supported permissions" do
@@ -328,6 +377,35 @@ class Account::PermissionsControllerTest < ActionController::TestCase
       patch :update, params: { application_id: application, application: { supported_permission_ids: [new_permission.id] } }
 
       assert_equal application.id, flash[:application_id]
+    end
+
+    context "when the current user is a publishing manager with access to the app" do
+      should "prevent adding or removing non-delegatable permissions" do
+        application = create(:application)
+        old_delegatable_permission = create(:delegatable_supported_permission, application:)
+        new_delegatable_permission = create(:delegatable_supported_permission, application:)
+        old_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
+        new_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
+
+        current_user = create(
+          :user,
+          with_signin_permissions_for: [application],
+          with_permissions: { application => [old_delegatable_permission.name, old_non_delegatable_permission.name] },
+        )
+        current_user.stubs(:publishing_manager?).returns(true)
+        current_user.stubs(:organisation_admin_belongs_to_organisation).returns(true)
+        sign_in current_user
+
+        stub_policy current_user, [:account, application], edit_permissions?: true
+
+        patch(:update, params: { application_id: application, application: { supported_permission_ids: [new_delegatable_permission.id, new_non_delegatable_permission.id] } })
+
+        assert_same_elements [
+          old_non_delegatable_permission,
+          new_delegatable_permission,
+          application.signin_permission,
+        ], current_user.reload.supported_permissions
+      end
     end
 
     context "when current_permission_ids and new_permission_id are provided instead of supported_permission_ids" do

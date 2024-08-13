@@ -38,8 +38,10 @@ In this section, the granter and grantee are the same user: this is about managi
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
 |-------------------------|--------------|---------------|------------------|------------------|
 | None                    | ❌            | ❌             | ❌                | ✅                |
-| `signin`                | ❌            | ✅             | ✅                | ✅                |
-| Another permission      | ❌            | ❌             | ❌                | ✅                |
+| `signin`                | ❌            | ✅             | ❌                | ✅                |
+| Another permission      | ❌            | ❌             | ✅*               | ✅                |
+
+\* only delegatable non-signin permissions
 
 ### Dependencies by route
 
@@ -98,8 +100,8 @@ These dependencies determine whether a user can:
 
 ```mermaid
 flowchart TD
-    A(Account::PermissionsController#edit) --authorize [:account, @application], :edit_permissions?--> B(Account::ApplicationPolicy#edit_permissions?)
-    A --@application.sorted_supported_permissions_grantable_from_ui(include_signin: false)--> C(Doorkeeper::Application#sorted_supported_permissions_grantable_from_ui)
+    A(Account::PermissionsController#edit) --@application.sorted_supported_permissions_grantable_from_ui( [...] )--> B(Doorkeeper::Application#sorted_supported_permissions_grantable_from_ui)
+    A --authorize [:account, @application], :edit_permissions?--> C(Account::ApplicationPolicy#edit_permissions?) 
 ```
 
 #### Account permissions update
@@ -111,11 +113,12 @@ These dependencies determine whether a user can:
 
 ```mermaid
 flowchart TD
-    A(Account::PermissionsController#update) --authorize [:account, @application], :edit_permissions?--> B(Account::ApplicationPolicy#edit_permissions?)
-    A --UserUpdatePermissionBuilder.new( [...] ).build--> C(UserUpdatePermissionBuilder#build)
-    A --UserUpdate.new(current_user, { supported_permission_ids: }, current_user, user_ip_address).call--> D(UserUpdate#call)
-    D --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids--> E(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
-    E --Pundit.policy_scope(current_user, SupportedPermission)--> F("SupportedPermissionPolicy (scope)")
+    A(Account::PermissionsController#update) --@application.sorted_supported_permissions_grantable_from_ui( [...] )--> B(Doorkeeper::Application#sorted_supported_permissions_grantable_from_ui)
+    A --authorize [:account, @application], :edit_permissions?--> C(Account::ApplicationPolicy#edit_permissions?)
+    A --UserUpdatePermissionBuilder.new( [...] ).build--> D(UserUpdatePermissionBuilder#build)
+    A --UserUpdate.new(current_user, { supported_permission_ids: }, current_user, user_ip_address).call--> E(UserUpdate#call)
+    E --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids--> F(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
+    D --Pundit.policy_scope(current_user, SupportedPermission)--> G("SupportedPermissionPolicy (scope)")
 ```
 
 ## For another existing user
@@ -126,15 +129,7 @@ In this section, the granter and grantee are different users: this is about mana
 
 #### As a GOV.UK admin
 
-##### With access to the app
-
-| Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
-|-------------------------|--------------|---------------|------------------|------------------|
-| None                    | ✅            | ✅             | ✅                | ✅                |
-| `signin`                | ✅            | ✅             | ✅                | ✅                |
-| Another permission      | ✅            | ✅             | ✅                | ✅                |
-  
-##### Without access to the app
+##### With or without access to the app
 
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
 |-------------------------|--------------|---------------|------------------|------------------|
@@ -149,8 +144,10 @@ In this section, the granter and grantee are different users: this is about mana
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
 |-------------------------|--------------|---------------|------------------|------------------|
 | None                    | ❌            | ❌             | ❌                | ✅                |
-| `signin`                | ✅            | ✅             | ✅                | ✅                |
-| Another permission      | ❌            | ❌             | ❌                | ✅                |
+| `signin`                | ✅            | ✅             | ❌                | ✅                |
+| Another permission      | ❌            | ❌             | ✅*               | ✅                |
+
+\* only delegatable non-signin permissions
 
 ##### Without access to the app
 
@@ -224,9 +221,9 @@ These dependencies determine whether a user can:
 
 ```mermaid
 flowchart TD
-    A(Users::PermissionsController#edit) --authorize [{ application: @application, user: @user }], :edit_permissions?, policy_class: Users::ApplicationPolicy--> B(Users::ApplicationPolicy#edit_permissions?)
-    B --Pundit.policy(current_user, user).edit?--> C(UserPolicy#edit?)
-    A --@application.sorted_supported_permissions_grantable_from_ui(include_signin: false)--> D(Doorkeeper::Application#sorted_supported_permissions_grantable_from_ui)
+    A(Users::PermissionsController#edit) --@application.sorted_supported_permissions_grantable_from_ui( [...] )--> B(Doorkeeper::Application#sorted_supported_permissions_grantable_from_ui)
+    A --authorize [{ application: @application, user: @user }], :edit_permissions?, policy_class: Users::ApplicationPolicy--> C(Users::ApplicationPolicy#edit_permissions?)
+    C --Pundit.policy(current_user, user).edit?--> D(UserPolicy#edit?)
 ```
 
 #### Users permissions update
@@ -238,12 +235,13 @@ These dependencies determine whether a user can:
 
 ```mermaid
 flowchart TD
-    A(Users::PermissionsController#update) --authorize [{ application: @application, user: @user }], :edit_permissions?, policy_class: Users::ApplicationPolicy--> B(Users::ApplicationPolicy#edit_permissions?)
-    B --Pundit.policy(current_user, user).edit?--> C(UserPolicy#edit?)
-    A --UserUpdatePermissionBuilder.new( [...] ).build--> D(UserUpdatePermissionBuilder#build)
-    A --UserUpdate.new(@user, { supported_permission_ids: }, current_user, user_ip_address).call--> E(UserUpdate#call)
-    E --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids--> F(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
-    F --Pundit.policy_scope(current_user, SupportedPermission)--> G("SupportedPermissionPolicy (scope)")
+    A(Users::PermissionsController#update) --@application.sorted_supported_permissions_grantable_from_ui( [...] )--> B(Doorkeeper::Application#sorted_supported_permissions_grantable_from_ui)
+    A --authorize [{ application: @application, user: @user }], :edit_permissions?, policy_class: Users::ApplicationPolicy--> C(Users::ApplicationPolicy#edit_permissions?)
+    C --Pundit.policy(current_user, user).edit?--> D(UserPolicy#edit?)
+    A --UserUpdatePermissionBuilder.new( [...] ).build--> E(UserUpdatePermissionBuilder#build)
+    A --UserUpdate.new(@user, { supported_permission_ids: }, current_user, user_ip_address).call--> F(UserUpdate#call)
+    F --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids--> G(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
+    G --Pundit.policy_scope(current_user, SupportedPermission)--> H("SupportedPermissionPolicy (scope)")
 ```
 
 ## For a new user

@@ -27,7 +27,7 @@ class Users::ApplicationPolicyTest < ActiveSupport::TestCase
     end
   end
 
-  %i[grant_signin_permission remove_signin_permission edit_permissions].each do |aliased_method|
+  %i[grant_signin_permission remove_signin_permission].each do |aliased_method|
     context "##{aliased_method}?" do
       setup do
         @args = [
@@ -98,6 +98,62 @@ class Users::ApplicationPolicyTest < ActiveSupport::TestCase
 
           assert forbid?(*@args)
         end
+      end
+    end
+  end
+
+  context "#edit_permissions?" do
+    setup { @args = [@current_user, { application: @application, user: @user }, :edit_permissions] }
+
+    context "when the current user can edit the given user" do
+      setup { stub_policy @current_user, @user, edit?: true }
+
+      context "when the current user is a GOV.UK admin" do
+        should "be permitted" do
+          @current_user.expects(:govuk_admin?).returns(true)
+
+          assert permit?(*@args)
+        end
+      end
+
+      context "when the current user is a publishing manager" do
+        setup do
+          @current_user.expects(:govuk_admin?).returns(false)
+          @current_user.expects(:publishing_manager?).returns(true)
+        end
+
+        context "and they have access to the application" do
+          should "be permitted" do
+            @current_user.expects(:has_access_to?).with(@application).returns(true)
+
+            assert permit?(*@args)
+          end
+        end
+
+        context "and they don't have access to the application" do
+          should "be forbidden" do
+            @current_user.expects(:has_access_to?).with(@application).returns(false)
+
+            assert forbid?(*@args)
+          end
+        end
+      end
+
+      context "when the current user is neither a GOV.UK admin nor a publishing manager" do
+        should "be forbidden" do
+          @current_user.expects(:govuk_admin?).returns(false)
+          @current_user.expects(:publishing_manager?).returns(false)
+
+          assert forbid?(*@args)
+        end
+      end
+    end
+
+    context "when the current user cannot edit the given user" do
+      should "be forbidden" do
+        stub_policy @current_user, @user, edit?: false
+
+        assert forbid?(*@args)
       end
     end
   end

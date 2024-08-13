@@ -208,71 +208,77 @@ class Users::ApplicationsControllerTest < ActionController::TestCase
 
         context "viewing and editing permissions" do
           context "when there is only a signin permisson" do
-            context "when authorised to view and edit" do
-              should "display only a link to view permissions" do
-                stub_policy(
-                  @current_user,
-                  { application: @application, user: @user },
-                  policy_class: Users::ApplicationPolicy,
-                  edit_permissions?: true,
-                  view_permissions?: true,
-                )
+            %w[govuk_admin publishing_manager].each do |role_group|
+              context "as a #{role_group}" do
+                setup { @current_user.stubs(:"#{role_group}?").returns(true) }
 
-                get :index, params: { user_id: @user }
+                context "when authorised to view and edit" do
+                  should "display only a link to view permissions" do
+                    stub_policy(
+                      @current_user,
+                      { application: @application, user: @user },
+                      policy_class: Users::ApplicationPolicy,
+                      edit_permissions?: true,
+                      view_permissions?: true,
+                    )
 
-                assert_view_permissions_link
-                assert_no_edit_permissions_link
-              end
-            end
+                    get :index, params: { user_id: @user }
 
-            context "when authorised to view but not edit" do
-              should "display only a link to view permissions" do
-                stub_policy(
-                  @current_user,
-                  { application: @application, user: @user },
-                  policy_class: Users::ApplicationPolicy,
-                  edit_permissions?: false,
-                  view_permissions?: true,
-                )
+                    assert_view_permissions_link
+                    assert_no_edit_permissions_link
+                  end
+                end
 
-                get :index, params: { user_id: @user }
+                context "when authorised to view but not edit" do
+                  should "display only a link to view permissions" do
+                    stub_policy(
+                      @current_user,
+                      { application: @application, user: @user },
+                      policy_class: Users::ApplicationPolicy,
+                      edit_permissions?: false,
+                      view_permissions?: true,
+                    )
 
-                assert_view_permissions_link
-                assert_no_edit_permissions_link
-              end
-            end
+                    get :index, params: { user_id: @user }
 
-            context "when authorised to edit but not view" do
-              should "display no links" do
-                stub_policy(
-                  @current_user,
-                  { application: @application, user: @user },
-                  policy_class: Users::ApplicationPolicy,
-                  edit_permissions?: true,
-                  view_permissions?: false,
-                )
+                    assert_view_permissions_link
+                    assert_no_edit_permissions_link
+                  end
+                end
 
-                get :index, params: { user_id: @user }
+                context "when authorised to edit but not view" do
+                  should "display no links" do
+                    stub_policy(
+                      @current_user,
+                      { application: @application, user: @user },
+                      policy_class: Users::ApplicationPolicy,
+                      edit_permissions?: true,
+                      view_permissions?: false,
+                    )
 
-                assert_no_view_permissions_link
-                assert_no_edit_permissions_link
-              end
-            end
+                    get :index, params: { user_id: @user }
 
-            context "when not authorised to edit or view" do
-              should "display no links" do
-                stub_policy(
-                  @current_user,
-                  { application: @application, user: @user },
-                  policy_class: Users::ApplicationPolicy,
-                  edit_permissions?: false,
-                  view_permissions?: false,
-                )
+                    assert_no_view_permissions_link
+                    assert_no_edit_permissions_link
+                  end
+                end
 
-                get :index, params: { user_id: @user }
+                context "when not authorised to edit or view" do
+                  should "display no links" do
+                    stub_policy(
+                      @current_user,
+                      { application: @application, user: @user },
+                      policy_class: Users::ApplicationPolicy,
+                      edit_permissions?: false,
+                      view_permissions?: false,
+                    )
 
-                assert_no_view_permissions_link
-                assert_no_edit_permissions_link
+                    get :index, params: { user_id: @user }
+
+                    assert_no_view_permissions_link
+                    assert_no_edit_permissions_link
+                  end
+                end
               end
             end
           end

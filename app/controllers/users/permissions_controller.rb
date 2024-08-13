@@ -15,6 +15,11 @@ class Users::PermissionsController < ApplicationController
   def edit
     authorize [{ application: @application, user: @user }], :edit_permissions?, policy_class: Users::ApplicationPolicy
 
+    if @permissions.empty?
+      flash[:alert] = "No permissions found for #{@application.name} that you are authorised to manage."
+      return redirect_to user_applications_path(@user)
+    end
+
     @shared_permissions_form_locals = {
       action: user_application_permissions_path(@user, @application),
       application: @application,
@@ -84,6 +89,10 @@ private
   end
 
   def set_permissions
-    @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false)
+    if current_user.govuk_admin?
+      @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false)
+    elsif current_user.publishing_manager?
+      @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false, only_delegatable: true)
+    end
   end
 end

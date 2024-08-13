@@ -4,7 +4,10 @@ class SupportedPermissionPolicy < BasePolicy
       if current_user.govuk_admin?
         scope.all
       elsif current_user.publishing_manager?
-        scope.joins(:application).where(oauth_applications: { id: publishing_manager_manageable_application_ids })
+        scope
+          .delegatable
+          .joins(:application)
+          .where(oauth_applications: { id: publishing_manager_manageable_application_ids })
       else
         scope.none
       end
@@ -17,7 +20,6 @@ class SupportedPermissionPolicy < BasePolicy
         .not_api_only
         .includes(:supported_permissions)
         .can_signin(current_user)
-        .with_signin_delegatable
         .pluck(:id)
     end
   end

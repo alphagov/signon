@@ -156,17 +156,20 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
     end
   end
 
-  %i[superadmin admin super_organisation_admin organisation_admin].each do |user_role|
-    context "as a #{user_role}" do
-      should "support granting self app-specific permissions" do
-        user = create(:"#{user_role}_user")
-        application = create(:application, name: "app-name", description: "app-description", with_non_delegatable_supported_permissions: %w[perm1 perm2])
-        application.signin_permission.update!(delegatable: true)
-        user.grant_application_signin_permission(application)
-        user.grant_application_permission(application, "perm1")
+  %i[superadmin admin].each do |admin_role|
+    context "as a #{admin_role}" do
+      setup do
+        @application = create(:application, name: "app-name")
+        @user = create(:"#{admin_role}_user", with_signin_permissions_for: [@application])
 
         visit new_user_session_path
-        signin_with user
+        signin_with @user
+      end
+
+      should "support granting self app-specific permissions" do
+        create(:supported_permission, application: @application, name: "perm1")
+        create(:supported_permission, application: @application, name: "perm2")
+        @user.grant_application_permission(@application, "perm1")
 
         visit account_applications_path
 
@@ -181,6 +184,86 @@ class AccountApplicationsTest < ActionDispatch::IntegrationTest
         success_flash = find("div[role='alert']")
         assert success_flash.has_content?("perm1")
         assert success_flash.has_content?("perm2")
+      end
+
+      should "be able to grant delegatable and non-delegatable permissions" do
+        create(:delegatable_supported_permission, application: @application, name: "delegatable_perm")
+        create(:non_delegatable_supported_permission, application: @application, name: "non_delegatable_perm")
+
+        visit account_applications_path
+
+        click_link "Update permissions for app-name"
+
+        assert page.has_field?("delegatable_perm")
+        assert page.has_field?("non_delegatable_perm")
+      end
+
+      should "not be able to grant permissions that are not grantable_from_ui" do
+        create(:supported_permission, application: @application, grantable_from_ui: true, name: "grantable_from_ui_perm")
+        create(:supported_permission, application: @application, grantable_from_ui: false, name: "not_grantable_from_ui_perm")
+
+        visit account_applications_path
+
+        click_link "Update permissions for app-name"
+
+        assert page.has_field?("grantable_from_ui_perm")
+        assert page.has_no_field?("not_grantable_from_ui_perm")
+      end
+    end
+  end
+
+  %i[super_organisation_admin organisation_admin].each do |publishing_manager_role|
+    context "as a #{publishing_manager_role}" do
+      setup do
+        @application = create(:application, name: "app-name")
+        @user = create(:"#{publishing_manager_role}_user", with_signin_permissions_for: [@application])
+
+        visit new_user_session_path
+        signin_with @user
+      end
+
+      should "support granting self app-specific permissions" do
+        create(:delegatable_supported_permission, application: @application, name: "perm1")
+        create(:delegatable_supported_permission, application: @application, name: "perm2")
+        @user.grant_application_permission(@application, "perm1")
+
+        visit account_applications_path
+
+        click_on "Update permissions for app-name"
+
+        assert page.has_checked_field?("perm1")
+        assert page.has_unchecked_field?("perm2")
+
+        check "perm2"
+        click_button "Update permissions"
+
+        success_flash = find("div[role='alert']")
+        assert success_flash.has_content?("perm1")
+        assert success_flash.has_content?("perm2")
+      end
+
+      should "not be able to grant permissions that are non-delegatable" do
+        create(:delegatable_supported_permission, application: @application, name: "delegatable_perm")
+        create(:non_delegatable_supported_permission, application: @application, name: "non_delegatable_perm")
+
+        visit account_applications_path
+
+        click_link "Update permissions for app-name"
+
+        assert page.has_field?("delegatable_perm")
+        assert page.has_no_field?("non_delegatable_perm")
+      end
+
+      should "not be able to grant permissions that are not grantable_from_ui" do
+        create(:delegatable_supported_permission, application: @application, grantable_from_ui: true, name: "grantable_from_ui_perm")
+        create(:delegatable_supported_permission, application: @application, grantable_from_ui: false, name: "not_grantable_from_ui_perm")
+
+        visit account_applications_path
+
+        click_link "Update permissions for app-name"
+
+        assert page.has_field?("grantable_from_ui_perm")
+        assert page.has_no_field?("not_grantable_from_ui_perm")
       end
     end
   end
