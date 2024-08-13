@@ -77,4 +77,32 @@ class SupportedPermissionTest < ActiveSupport::TestCase
 
     assert_same_elements ["included-permission", SupportedPermission::SIGNIN_NAME], SupportedPermission.excluding_application(excluded_application).pluck(:name)
   end
+
+  context ".sort_with_signin_first" do
+    setup do
+      @application = create(:application, with_delegatable_supported_permissions: %w[d a c2 b c1])
+    end
+
+    context "without a signin permission" do
+      should "return the permissions, sorted alphanumerically by name" do
+        assert_equal(
+          %w[a b c1 c2 d],
+          SupportedPermission
+            .sort_with_signin_first(@application.supported_permissions.excluding_signin)
+            .map(&:name),
+        )
+      end
+    end
+
+    context "with a signin permission" do
+      should "return the permissions, sorted alphanumerically by name, but with signin first" do
+        assert_equal(
+          %w[signin a b c1 c2 d],
+          SupportedPermission
+          .sort_with_signin_first(@application.supported_permissions)
+          .map(&:name),
+        )
+      end
+    end
+  end
 end
