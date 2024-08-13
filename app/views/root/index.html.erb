@@ -35,13 +35,13 @@
       } %>
     <% end %>
 
-    <% if @applications_and_permissions.empty? %>
+    <% if @applications.empty? %>
       <p class="govuk-body">
         You haven’t been assigned to any applications yet
       </p>
     <% end %>
 
-    <% @applications_and_permissions.each do |application, permissions| %>
+    <% @applications.each do |application| %>
       <div class="app-application-list__item">
         <h3 class="govuk-heading-m govuk-!-margin-bottom-1">
           <%= link_to application.name, application.home_uri, class: "govuk-link" %>

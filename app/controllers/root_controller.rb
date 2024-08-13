@@ -3,11 +3,7 @@ class RootController < ApplicationController
   skip_after_action :verify_authorized
 
   def index
-    applications = Doorkeeper::Application.not_api_only.with_home_uri.can_signin(current_user)
-
-    @applications_and_permissions = applications.map do |application|
-      [application, current_user.application_permissions.where(application_id: application.id)]
-    end
+    @applications = Doorkeeper::Application.not_api_only.with_home_uri.can_signin(current_user)
   end
 
   def signin_required
