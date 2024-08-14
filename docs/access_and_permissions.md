@@ -17,7 +17,7 @@ Each row represents an app with certain permissions set as delegatable, as indic
 
 ### Dependencies by route
 
-Each "Dependencies by route" section provides a breakdown of which actions are determined by dependencies and a tree or trees of relevant depencencies. The aim of this section isn't to go all the way down every node of each dependency tree, but rather to provide enough context on what determines what you can do, and to make it easier to identify shared dependencies. There's a particular focus on the different policies that are hit by each route, since the policies are both fundamental to how everything works and the source of a lot of complexity.
+Each "Dependencies by route" section provides a breakdown of which actions are determined by dependencies and a tree or trees of relevant dependencies. The aim of this section isn't to go all the way down every node of each dependency tree, but rather to provide enough context on what determines what you can do, and to make it easier to identify shared dependencies. There's a particular focus on the different policies that are hit by each route, since the policies are both fundamental to how everything works and the source of a lot of complexity.
 
 ## For the current user (self)
 
