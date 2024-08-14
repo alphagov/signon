@@ -37,11 +37,12 @@ class ApplicationMonthlyAccessStatsPageIntegrationTest < ActionDispatch::Integra
 
     context "when there are matching events" do
       setup do
-        create(:event_log, created_at: Date.new(2020, 1, 1), event_id: 47, application_id: @application.id, uid: @superadmin.uid)
-        create(:event_log, created_at: Date.new(2020, 1, 1), event_id: 47, application_id: @application.id, uid: @superadmin.uid)
-        create(:event_log, created_at: Date.new(2020, 1, 1), event_id: 47, application_id: @application.id, uid: @user.uid)
-        create(:event_log, created_at: Date.new(2020, 2, 1), event_id: 47, application_id: @application.id, uid: @superadmin.uid)
-        create(:event_log, created_at: Date.new(2020, 2, 1), event_id: 47, application_id: @application.id, uid: @user.uid)
+        event_id = EventLog::SUCCESSFUL_USER_APPLICATION_AUTHORIZATION.id
+        create(:event_log, created_at: Date.new(2020, 1, 1), event_id:, application_id: @application.id, uid: @superadmin.uid)
+        create(:event_log, created_at: Date.new(2020, 1, 1), event_id:, application_id: @application.id, uid: @superadmin.uid)
+        create(:event_log, created_at: Date.new(2020, 1, 1), event_id:, application_id: @application.id, uid: @user.uid)
+        create(:event_log, created_at: Date.new(2020, 2, 1), event_id:, application_id: @application.id, uid: @superadmin.uid)
+        create(:event_log, created_at: Date.new(2020, 2, 1), event_id:, application_id: @application.id, uid: @user.uid)
       end
 
       should "see a list of events for the application" do

@@ -37,8 +37,9 @@ class ApplicationAccessLogPageIntegrationTest < ActionDispatch::IntegrationTest
 
     context "when there are matching events" do
       setup do
-        create(:event_log, event_id: 47, application_id: @application.id, uid: @superadmin.uid)
-        create(:event_log, event_id: 47, application_id: @application.id, uid: @user.uid)
+        event_id = 47
+        create(:event_log, event_id:, application_id: @application.id, uid: @superadmin.uid)
+        create(:event_log, event_id:, application_id: @application.id, uid: @user.uid)
       end
 
       should "see a list of events for the application" do

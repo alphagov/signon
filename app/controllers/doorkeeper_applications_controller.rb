@@ -27,7 +27,7 @@ class DoorkeeperApplicationsController < ApplicationController
   def access_logs
     relation = @application.event_logs
       .includes(:user)
-      .where(event_id: 47)
+      .where(event_id: EventLog::SUCCESSFUL_USER_APPLICATION_AUTHORIZATION.id)
       .order(created_at: :desc)
 
     unless params[:include_smokey_users] == "true"
@@ -46,7 +46,7 @@ class DoorkeeperApplicationsController < ApplicationController
 
   def monthly_access_stats
     relation = @application.event_logs
-                .where(event_id: 47)
+                .where(event_id: EventLog::SUCCESSFUL_USER_APPLICATION_AUTHORIZATION.id)
                 .group("DATE_FORMAT(created_at, '%Y-%m')")
                 .order(Arel.sql("DATE_FORMAT(created_at, '%Y-%m') DESC"))
 
