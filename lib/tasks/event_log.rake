@@ -86,7 +86,7 @@ namespace :event_log do
             {
               model_instance:,
               application_id: model_instance.application&.id,
-              permission_names: model_instance.trailing_message[1..-2].split(","),
+              permission_names: model_instance.trailing_message[1..-2].split(", "),
             }
           end
 
