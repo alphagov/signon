@@ -121,6 +121,61 @@ flowchart TD
     D --Pundit.policy_scope(current_user, SupportedPermission)--> G("SupportedPermissionPolicy (scope)")
 ```
 
+#### Account signin permissions create
+
+These dependencies determine whether a user can:
+
+- complete the controller action
+- grant themself access to an app
+
+```mermaid
+flowchart TD
+    A(Account::SigninPermissionsController#create)
+    --authorize [:account, Doorkeeper::Application], :grant_signin_permission?
+    --> B(Account::ApplicationPolicy#grant_signin_permission?)
+
+    A --"UserUpdate.new(current_user, { supported_permission_ids: }, current_user, user_ip_address).call"
+    --> C(UserUpdate#call)
+
+    C --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids
+    --> D(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
+    D --Pundit.policy_scope(current_user, SupportedPermission)--> E("SupportedPermissionPolicy (scope)")
+```
+
+#### Account signin permissions delete
+
+These dependencies determine whether a user can:
+
+- view the confirmation screen for revoking access to a given app
+
+```mermaid
+flowchart TD
+    A(Account::SigninPermissionsController#delete)
+    --authorize [:account, application], :remove_signin_permission?
+    --> B(Account::ApplicationPolicy#remove_signin_permission?)
+```
+
+#### Account signin permissions destroy
+
+These dependencies determine whether a user can:
+
+- complete the controller action
+- revoke access to a given app
+
+```mermaid
+flowchart TD
+    A(Account::SigninPermissionsController#destroy)
+    --authorize [:account, Doorkeeper::Application], :remove_signin_permission?
+    --> B(Account::ApplicationPolicy#remove_signin_permission?)
+
+    A --"UserUpdate.new(current_user, { supported_permission_ids: }, current_user, user_ip_address).call"
+    --> C(UserUpdate#call)
+
+    C --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids
+    --> D(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
+    D --Pundit.policy_scope(current_user, SupportedPermission)--> E("SupportedPermissionPolicy (scope)")
+```
+
 ## For another existing user
 
 In this section, the granter and grantee are different users: this is about managing another user's access and permissions.
@@ -244,6 +299,61 @@ flowchart TD
     G --Pundit.policy_scope(current_user, SupportedPermission)--> H("SupportedPermissionPolicy (scope)")
 ```
 
+#### Users signin permissions create
+
+These dependencies determine whether a user can:
+
+- complete the controller action
+- grant a given user access to an app
+
+```mermaid
+flowchart TD
+    A(Users::SigninPermissionsController#create)
+    --authorize [application, user: @user], :grant_signin_permission?, policy_class: Users::ApplicationPolicy
+    --> B(Users::ApplicationPolicy#grant_signin_permission?)
+
+    A --"UserUpdate.new(@user, { supported_permission_ids: }, current_user, user_ip_address).call"
+    --> C(UserUpdate#call)
+
+    C --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids
+    --> D(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
+    D --Pundit.policy_scope(current_user, SupportedPermission)--> E("SupportedPermissionPolicy (scope)")
+```
+
+#### Users signin permissions delete
+
+These dependencies determine whether a user can:
+
+- view the confirmation screen for revoking access to a given app
+
+```mermaid
+flowchart TD
+    A(Users::SigninPermissionsController#delete)
+    --authorize [application: @application, user: @user], :remove_signin_permission?, policy_class: Users::ApplicationPolicy
+    --> B(Users::ApplicationPolicy#remove_signin_permission?)
+```
+
+#### Users signin permissions destroy
+
+These dependencies determine whether a user can:
+
+- complete the controller action
+- revoke access to a given app
+
+```mermaid
+flowchart TD
+    A(Users::SigninPermissionsController#destroy)
+    --authorize [application, user: @user], :remove_signin_permission?, policy_class: Users::ApplicationPolicy
+    --> B(Users::ApplicationPolicy#remove_signin_permission?)
+
+    A --"UserUpdate.new(@user, { supported_permission_ids: }, current_user, user_ip_address).call"
+    --> C(UserUpdate#call)
+
+    C --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids
+    --> D(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
+    D --Pundit.policy_scope(current_user, SupportedPermission)--> E("SupportedPermissionPolicy (scope)")
+```
+
 ## For a new user
 
 ### What can you do?
@@ -302,13 +412,15 @@ flowchart TD
 
 ### Controllers
 
-| Class                                                                                  | Responsibility                                                                     |
-|----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
-| [Account::ApplicationsController](/app/controllers/account/applications_controller.rb) | Managing own access to apps and accessing own permissions routes                   |
-| [Account::PermissionsController](/app/controllers/account/permissions_controller.rb)   | Managing own permissions                                                           |
-| [InvitationsController](/app/controllers/invitations_controller.rb)                    | Giving users access to apps and permissions while creating their account           |
-| [Users::ApplicationsController](/app/controllers/users/applications_controller.rb)     | Managing other users' access to apps and accessing other users' permissions routes |
-| [Users::PermissionsController](/app/controllers/users/permissions_controller.rb)       | Managing other users' permissions                                                  |
+| Class                                                                                             | Responsibility                                                                     |
+| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| [Account::ApplicationsController](/app/controllers/account/applications_controller.rb)            | Rendering index and individual pages for own app permissions                       |
+| [Account::PermissionsController](/app/controllers/account/permissions_controller.rb)              | Managing own permissions                                                           |
+| [Account::SigninPermissionsController](/app/controllers/account/signin_permissions_controller.rb) | Managing own access to apps                                                        |
+| [InvitationsController](/app/controllers/invitations_controller.rb)                               | Giving users access to apps and permissions while creating their account           |
+| [Users::ApplicationsController](/app/controllers/users/applications_controller.rb)                | Rendering index and individual pages for other users' app permissions              |
+| [Users::PermissionsController](/app/controllers/users/permissions_controller.rb)                  | Managing other users' permissions                                                  |
+| [Users::SigninPermissionsController](/app/controllers/users/signin_permissions_controller.rb)     | Managing other users' access to apps                                               |
 
 ### Policies
 
