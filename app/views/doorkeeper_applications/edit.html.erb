@@ -23,6 +23,14 @@
   doorkeeper_application_supported_permissions_path(@application),
   class: "govuk-link" %>
 
+<%= link_to "View access log",
+            access_logs_doorkeeper_application_path(@application),
+            class: "govuk-link" %>
+
+<%= link_to "View monthly access stats",
+            monthly_access_stats_doorkeeper_application_path(@application),
+            class: "govuk-link" %>
+
 <div class="govuk-grid-row govuk-!-margin-top-5">
   <div class="govuk-grid-column-two-thirds">
     <%= form_for @application do |f| %>

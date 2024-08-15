@@ -1,0 +1,90 @@
+<% content_for :title, "Monthly access counts to #{@application.name}" %>
+
+<% content_for :breadcrumbs,
+               render("govuk_publishing_components/components/breadcrumbs", {
+                 collapse_on_mobile: true,
+                 breadcrumbs: [
+                   {
+                     title: "Dashboard",
+                     url: root_path,
+                   },
+                   {
+                     title: "Applications",
+                     url: doorkeeper_applications_path,
+                   },
+                   {
+                     title: @application.name,
+                     url: edit_doorkeeper_application_path(@application),
+                   }
+                 ]
+               })
+%>
+
+
+<form class="govuk-form-group">
+  <%= render "govuk_publishing_components/components/checkboxes", {
+    name: "include_smokey_users",
+    items: [
+      {
+        label: "Include Smokey Users",
+        value: "true",
+        checked: params["include_smokey_users"] == "true"
+      }
+    ]
+  } %>
+  <%= render "govuk_publishing_components/components/button", {
+    text: "Submit"
+  } %>
+</form>
+
+<%= render "govuk_publishing_components/components/details", {
+  title: "About this data"
+} do %>
+<p class="govuk-body">
+  Signon records a "successful authorization" event whenever a user uses Signon to access one of the publishing
+  applications. This is a monthly count of all of these events for <%= @application.name %>.
+</p>
+<p class="govuk-body">
+  Applications cache authentications for around 20 hours, so if a user clicks an application multiple
+  times a day, they may only appear in the event log once.
+</p>
+<p class="govuk-body">
+  The total authorization count is the total number of events recorded in the log for the month (if a
+  user accesses the same app multiple times, this number will increase).
+</p>
+<p class="govuk-body">
+  The unique users authorization count is the number of distinct users who recorded events in the log for the month
+  (if a user accesses the same app multiple times in a month, this will only count as one unique user).
+</p>
+<p class="govuk-body">
+  <% if DateTime.current.before? DateTime.new(2025, 11, 1)  # This branch can be removed after November 2025 %>
+  Note that authorization data has only been recorded in the Signon event log since November 2023, so it is not
+  possible to view events before that date.
+  <% else %>
+  Note that data in the event log in Signon is only retained for 2 years, so it is not possible to view events
+  before that date.
+  <% end %>
+</p>
+<% end %>
+<% if @monthly_access_stats.any? %>
+  <%= render "components/table", {
+    head: [
+      { text: "Month" },
+      { text: "Total authorization count" },
+      { text: "Unique users authorization count" },
+      { text: "Access logs" },
+    ],
+    rows: @monthly_access_stats.map do |month, total_count, unique_users_count|
+      [
+        { text: month },
+        { text: total_count },
+        { text: unique_users_count },
+        { text: link_to("#{month} access logs", access_logs_doorkeeper_application_path(@application, month:), class: "govuk-link")},
+      ]
+    end
+  } %>
+<% else %>
+  <%= render "govuk_publishing_components/components/notice", {
+    title: "No activity logged"
+  } %>
+<% end %>

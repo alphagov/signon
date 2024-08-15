@@ -66,6 +66,7 @@ class EventLog < ApplicationRecord
   validates :application_id, presence: { if: proc { |event_log| EVENTS_REQUIRING_APPLICATION.include? event_log.entry } }
 
   belongs_to :initiator, class_name: "User"
+  belongs_to :user, class_name: "User", foreign_key: :uid, primary_key: :uid
   belongs_to :application, class_name: "Doorkeeper::Application"
   belongs_to :user_agent
 

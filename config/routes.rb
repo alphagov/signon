@@ -92,6 +92,8 @@ Rails.application.routes.draw do
   resources :doorkeeper_applications, only: %i[index edit update] do
     member do
       get :users_with_access
+      get :access_logs
+      get :monthly_access_stats
     end
     resources :supported_permissions, only: %i[index new create edit update destroy] do
       get :confirm_destroy, on: :member
