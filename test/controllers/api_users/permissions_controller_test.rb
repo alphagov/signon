@@ -49,7 +49,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "include a hidden field for the signin permission so that it is not removed" do
-      application = create(:application, with_non_delegatable_supported_permissions: ["perm-1", SupportedPermission::SIGNIN_NAME])
+      application = create(:application, with_non_delegatable_supported_permissions: %w[perm-1])
       api_user = create(:api_user, with_permissions: { application => %w[perm-1] })
       create(:access_token, application:, resource_owner_id: api_user.id)
 
