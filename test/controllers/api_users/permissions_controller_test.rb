@@ -262,9 +262,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
         application: { supported_permission_ids: [forbidden_application_permission.id] },
       }
 
-      api_user.reload
-
-      assert_equal [], api_user.supported_permissions
+      assert_equal [], api_user.reload.supported_permissions
     end
 
     should "when updating permissions for app A, prevent additionally adding or removing permissions for app B" do
@@ -292,14 +290,12 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
 
       patch :update, params: { api_user_id: api_user, application_id: application_a, application: { supported_permission_ids: [application_a_new_permission.id, application_b_new_permission.id] } }
 
-      api_user.reload
-
       assert_same_elements [
         application_a_new_permission,
         application_b_old_permission,
         application_a.signin_permission,
         application_b.signin_permission,
-      ], api_user.supported_permissions
+      ], api_user.reload.supported_permissions
 
       assert_not_includes current_user.supported_permissions, application_a_old_permission
       assert_not_includes current_user.supported_permissions, application_b_new_permission
@@ -330,13 +326,11 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
         application: { supported_permission_ids: [new_grantable_permission.id, new_non_grantable_permission.id] },
       }
 
-      api_user.reload
-
       assert_same_elements [
         old_non_grantable_permission,
         new_grantable_permission,
         application.signin_permission,
-      ], api_user.supported_permissions
+      ], api_user.reload.supported_permissions
     end
 
     should "assign the application id to the application_id flash" do
