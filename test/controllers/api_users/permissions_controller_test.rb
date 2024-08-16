@@ -147,22 +147,26 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
     should "prevent permissions being added for apps that the current user does not have access to" do
       organisation = create(:organisation)
 
-      application1 = create(:application)
-      application2 = create(:application, with_non_delegatable_supported_permissions: %w[app2-permission])
+      allowed_application = create(:application)
+      forbidden_application = create(:application, with_non_delegatable_supported_permissions: %w[forbidden-permission])
 
       api_user = create(:api_user, organisation:)
-      create(:access_token, application: application1, resource_owner_id: api_user.id)
-      create(:access_token, application: application2, resource_owner_id: api_user.id)
+      create(:access_token, application: allowed_application, resource_owner_id: api_user.id)
+      create(:access_token, application: forbidden_application, resource_owner_id: api_user.id)
 
       current_user = create(:superadmin_user)
-      current_user.grant_application_signin_permission(application1)
+      current_user.grant_application_signin_permission(allowed_application)
       sign_in current_user
 
       stub_policy current_user, api_user, update?: true
 
-      app2_permission = application2.supported_permissions.find_by!(name: "app2-permission")
+      forbidden_application_permission = forbidden_application.supported_permissions.find_by!(name: "forbidden-permission")
 
-      patch :update, params: { api_user_id: api_user, application_id: application1, application: { supported_permission_ids: [app2_permission.id] } }
+      patch :update, params: {
+        api_user_id: api_user,
+        application_id: allowed_application,
+        application: { supported_permission_ids: [forbidden_application_permission.id] },
+      }
 
       api_user.reload
 
