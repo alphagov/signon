@@ -400,7 +400,7 @@ GEM
     opentelemetry-instrumentation-aws_sdk (0.5.4)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-base (0.22.5)
+    opentelemetry-instrumentation-base (0.22.6)
       opentelemetry-api (~> 1.0)
       opentelemetry-common (~> 0.21)
       opentelemetry-registry (~> 0.1)
