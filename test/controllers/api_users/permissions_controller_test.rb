@@ -11,7 +11,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       assert_not_authenticated
     end
 
-    should "prevent unauthorized users" do
+    should "prevent unauthorised users" do
       application = create(:application)
       api_user = create(:api_user)
       create(:access_token, application:, resource_owner_id: api_user.id)
@@ -24,6 +24,69 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       get :edit, params: { api_user_id: api_user, application_id: application }
 
       assert_not_authorised
+    end
+
+    should "raise an exception if the user doesn't have access to the application" do
+      sign_in create(:admin_user)
+
+      application = create(:application)
+      api_user = create(:api_user)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :edit, params: { api_user_id: api_user, application_id: application }
+      end
+    end
+
+    should "raise an exception if the application is retired" do
+      sign_in create(:superadmin_user)
+
+      application = create(:application, retired: true)
+      permission = create(:supported_permission, application:)
+      api_user = create(:api_user,
+                        with_signin_permissions_for: [application],
+                        with_permissions: { application => [permission.name] })
+      create(:access_token, application:, resource_owner_id: api_user.id)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :edit, params: { api_user_id: api_user, application_id: application }
+      end
+    end
+
+    should "raise an exception if the user does not have an access token for the application" do
+      application = create(:application)
+      api_user = create(:api_user)
+
+      current_user = create(:superadmin_user)
+      sign_in current_user
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :edit, params: { api_user_id: api_user, application_id: application }
+      end
+    end
+
+    should "raise an exception when attempting to update with a revoked access token" do
+      sign_in create(:superadmin_user)
+
+      application = create(:application)
+      api_user = create(:api_user)
+      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        get :edit, params: { api_user_id: api_user, application_id: application }
+      end
+    end
+
+    should "include applications with revoked access tokens when there is at least one non-revoked access token" do
+      sign_in create(:superadmin_user)
+
+      application = create(:application)
+      api_user = create(:api_user)
+      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
+      create(:access_token, resource_owner_id: api_user.id, application:)
+
+      get :edit, params: { api_user_id: api_user, application_id: application }
+
+      assert_response :success
     end
 
     should "display checkboxes for the grantable permissions" do
@@ -63,54 +126,6 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
 
       assert_select "input[type='hidden'][value='#{application.signin_permission.id}']"
     end
-
-    should "exclude retired applications" do
-      sign_in create(:superadmin_user)
-
-      application = create(:application, retired: true)
-      api_user = create(:api_user)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        get :edit, params: { api_user_id: api_user, application_id: application }
-      end
-    end
-
-    should "exclude applications with revoked access tokens" do
-      sign_in create(:superadmin_user)
-
-      application = create(:application)
-      api_user = create(:api_user)
-      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        get :edit, params: { api_user_id: api_user, application_id: application }
-      end
-    end
-
-    should "include applications with revoked access tokens when there is at least one non-revoked access token" do
-      sign_in create(:superadmin_user)
-
-      application = create(:application)
-      api_user = create(:api_user)
-      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
-      create(:access_token, resource_owner_id: api_user.id, application:)
-
-      get :edit, params: { api_user_id: api_user, application_id: application }
-
-      assert_response :success
-    end
-
-    should "raise an exception if the user does not have an access token for the application" do
-      application = create(:application)
-      api_user = create(:api_user)
-
-      current_user = create(:superadmin_user)
-      sign_in current_user
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        get :edit, params: { api_user_id: api_user, application_id: application }
-      end
-    end
   end
 
   context "#update" do
@@ -121,6 +136,85 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       patch :update, params: { api_user_id: api_user, application_id: application }
 
       assert_not_authenticated
+    end
+
+    should "prevent unauthorised users" do
+      application = create(:application)
+      api_user = create(:api_user)
+      create(:access_token, application:, resource_owner_id: api_user.id)
+
+      current_user = create(:superadmin_user)
+      sign_in current_user
+
+      stub_policy current_user, api_user, update?: false
+
+      patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [] } }
+
+      assert_not_authorised
+    end
+
+    should "raise an exception if the user doesn't have access to the application" do
+      sign_in create(:admin_user)
+
+      application = create(:application)
+      api_user = create(:api_user)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [] } }
+      end
+    end
+
+    should "raise an exception if the application is retired" do
+      sign_in create(:superadmin_user)
+
+      application = create(:application, retired: true)
+      permission = create(:supported_permission, application:)
+      api_user = create(:api_user,
+                        with_signin_permissions_for: [application],
+                        with_permissions: { application => [permission.name] })
+      create(:access_token, application:, resource_owner_id: api_user.id)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [application.id] } }
+      end
+    end
+
+    should "raise an exception if the user cannot be found" do
+      application = create(:application)
+
+      current_user = create(:superadmin_user)
+      sign_in current_user
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        patch :update, params: { api_user_id: "unknown-id", application_id: application, application: { supported_permission_ids: %w[id] } }
+      end
+    end
+
+    should "raise an exception when attempting to update with a revoked access token" do
+      sign_in create(:superadmin_user)
+
+      application = create(:application)
+      api_user = create(:api_user)
+      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [] } }
+      end
+    end
+
+    should "include applications with revoked access tokens when there is at least one non-revoked access token" do
+      sign_in create(:superadmin_user)
+
+      application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
+      api_user = create(:api_user)
+      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
+      create(:access_token, resource_owner_id: api_user.id, application:)
+
+      permission = application.supported_permissions.find_by(name: "permission")
+
+      assert_nothing_raised do
+        patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [permission.id] } }
+      end
     end
 
     should "update non-signin permissions, retaining the signin permission, then redirect to the API applications path" do
@@ -262,32 +356,6 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       assert_equal application.id, flash[:application_id]
     end
 
-    should "raise an exception if the user cannot be found" do
-      application = create(:application)
-
-      current_user = create(:superadmin_user)
-      sign_in current_user
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        patch :update, params: { api_user_id: "unknown-id", application_id: application, application: { supported_permission_ids: %w[id] } }
-      end
-    end
-
-    should "prevent unauthorised users" do
-      application = create(:application)
-      api_user = create(:api_user)
-      create(:access_token, application:, resource_owner_id: api_user.id)
-
-      current_user = create(:superadmin_user)
-      sign_in current_user
-
-      stub_policy current_user, api_user, update?: false
-
-      patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [] } }
-
-      assert_not_authorised
-    end
-
     should "push permission changes out to apps" do
       sign_in create(:superadmin_user)
 
@@ -300,33 +368,6 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       PermissionUpdater.expects(:perform_on).with(api_user)
 
       patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [permission.id] } }
-    end
-
-    should "exclude applications with revoked access tokens" do
-      sign_in create(:superadmin_user)
-
-      application = create(:application)
-      api_user = create(:api_user)
-      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [] } }
-      end
-    end
-
-    should "include applications with revoked access tokens when there is at least one non-revoked access token" do
-      sign_in create(:superadmin_user)
-
-      application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
-      api_user = create(:api_user)
-      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
-      create(:access_token, resource_owner_id: api_user.id, application:)
-
-      permission = application.supported_permissions.find_by(name: "permission")
-
-      assert_nothing_raised do
-        patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [permission.id] } }
-      end
     end
   end
 end
