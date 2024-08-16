@@ -194,24 +194,42 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       assert_same_elements [other_permission, not_from_ui_permission], api_user.supported_permissions
     end
 
-    should "prevent permissions being added for other apps" do
-      other_application = create(:application, with_non_delegatable_supported_permissions: %w[other])
-      application = create(:application)
-      api_user = create(:api_user)
-      create(:access_token, application:, resource_owner_id: api_user.id)
+    should "when updating permissions for app A, prevent additionally adding or removing permissions for app B" do
+      application_a = create(:application, with_non_delegatable_supported_permissions: %w[other])
+      application_a_old_permission = create(:supported_permission, application: application_a)
+      application_a_new_permission = create(:supported_permission, application: application_a)
+
+      application_b = create(:application)
+      application_b_old_permission = create(:supported_permission, application: application_b)
+      application_b_new_permission = create(:supported_permission, application: application_b)
+
+      api_user = create(:api_user,
+                        with_signin_permissions_for: [application_a, application_b],
+                        with_permissions: {
+                          application_a => [application_a_old_permission.name],
+                          application_b => [application_b_old_permission.name],
+                        })
+
+      create(:access_token, application: application_a, resource_owner_id: api_user.id)
 
       current_user = create(:superadmin_user)
       sign_in current_user
 
       stub_policy current_user, api_user, update?: true
 
-      other_permission = other_application.supported_permissions.find_by(name: "other")
-
-      patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [other_permission.id] } }
+      patch :update, params: { api_user_id: api_user, application_id: application_a, application: { supported_permission_ids: [application_a_new_permission.id, application_b_new_permission.id] } }
 
       api_user.reload
 
-      assert_equal [], api_user.supported_permissions
+      assert_same_elements [
+        application_a_new_permission,
+        application_b_old_permission,
+        application_a.signin_permission,
+        application_b.signin_permission,
+      ], api_user.supported_permissions
+
+      assert_not_includes current_user.supported_permissions, application_a_old_permission
+      assert_not_includes current_user.supported_permissions, application_b_new_permission
     end
 
     should "prevent permissions being added that are not grantable from the ui" do
