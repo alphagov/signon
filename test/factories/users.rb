@@ -12,10 +12,8 @@ FactoryBot.define do
     role { Roles::Normal.name }
 
     after(:create) do |user, evaluator|
-      if evaluator.with_permissions
-        evaluator.with_permissions.each do |app_or_name, permission_names|
-          user.grant_application_permissions(find_application(app_or_name), permission_names)
-        end
+      evaluator.with_permissions.each do |app_or_name, permission_names|
+        user.grant_application_permissions(find_application(app_or_name), permission_names)
       end
 
       evaluator.with_signin_permissions_for.each do |app_or_name|
@@ -124,10 +122,8 @@ FactoryBot.define do
     api_user { true }
 
     after(:create) do |user, evaluator|
-      if evaluator.with_permissions
-        evaluator.with_permissions.each do |app_or_name, permission_names|
-          user.grant_application_permissions(find_application(app_or_name), permission_names)
-        end
+      evaluator.with_permissions.each do |app_or_name, permission_names|
+        user.grant_application_permissions(find_application(app_or_name), permission_names)
       end
     end
   end
