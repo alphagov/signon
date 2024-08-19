@@ -1,4 +1,4 @@
-class OauthUsersController < ApplicationController
+class OauthUsersController < ApplicationController # should this be in API users?
   before_action :doorkeeper_authorize!
   before_action :validate_token_matches_client_id
   skip_after_action :verify_authorized

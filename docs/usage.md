@@ -1,4 +1,4 @@
-# Usage Documentation
+# Usage Documentation <!-- this could do with a good clean up and update >
 
 ## Setup Rake Tasks
 
@@ -22,7 +22,7 @@ itself to another. Say, for instance, you have an API that requires
 authentication and you need to configure a frontend to make requests of it.
 Assuming you have your application set up in Signon under the name
 "Stuff API", follow these steps to create an access token for API clients
-to access your it:
+to access your it: <!-- access your what? -->
 
 * Login to Signon with 'superadmin' role
 * Click 'API Users', followed by 'Create API User'
@@ -32,7 +32,7 @@ to access your it:
 * You should see an access token on the screen, which you must copy as it
   is the only time it'll be displayed on screen.
 
-## Development.
+## Development
 
 More detail is contained in the
 [GDS-SSO Repo](https://github.com/alphagov/gds-sso#use-in-development-mode), but
@@ -42,44 +42,40 @@ if you just want to get this working, follow the steps below:
   to run the following command to make sure your database has got
   OAuth config that matches what the apps use in development mode:
 
-  ```
-  bundle exec ./script/make_oauth_work_in_dev
-  ```
+```
+bundle exec ./script/make_oauth_work_in_dev
+```
+
 * You must then make sure you set an environment variable when you run your
   app. eg:
 
-  ```
-  GDS_SSO_STRATEGY=real bundle exec rails s
-  ```
-
-## Creating, editing and deleting permissions
-
-To manage permissions for an existing app, you first need to have the "superadmin"
-role on your account (or have access to someone who does): you'll then be able to
-access the "Administer applications" menu item. Under the application you want to
-change, follow the "Supported Permissions" link and add, update or delete the
-permission from there.
+```
+GDS_SSO_STRATEGY=real bundle exec rails s
+```
 
 ## Creating new organisations
 
-Instead of creating organisations directly in signon we pull them in from
-whitehall which is the canonical source.  If you run:
+Instead of creating organisations directly in Signon we pull them in from
+Whitehall which is the canonical source. If you run:
 
-    rake organisations:fetch
+```
+rake organisations:fetch
+```
 
-This will communicate with whitehall to get the complete list of orgs and
-the relationships between them.  It then uses this information to make sure
-signon is up to date.
+This will communicate with Whitehall to get the complete list of organisations
+and the relationships between them. It then uses this information to make sure
+Signon is up to date.
 
-One downside to this is that whitehall allows an org to have multiple parents
-whereas signon only allows for a single parent.  Signon's behaviour is
-currently to set the parent of an org with multiple parents to the one that
-appears last in the api response.
+One downside to this is that Whitehall allows an organisation to have multiple
+parents whereas Signon only allows for a single parent. Signon's behaviour is
+currently to set the parent of an organisation with multiple parents to the one
+that appears last in the api response.
 
 On deployed environments this rake task is run nightly at 11pm via jenkins.
-This is configured in [govuk-puppet](https://github.com/alphagov/govuk-puppet).
-If you want orgs and their relationships to be modelled correctly in signon,
-you should do it whitehall and then let this nightly import do its thing.
+This is configured in [govuk-puppet](https://github.com/alphagov/govuk-puppet). <!-- I don't think we use Puppet (or Jenkins?) anymore >
+If you want organisations and their relationships to be modelled correctly in
+Signon, you should do it in Whitehall and then let this nightly import do its
+thing.
 
 ## Implementation Notes
 

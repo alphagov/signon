@@ -59,7 +59,7 @@ Rails.application.routes.draw do
       end
     end
   end
-  get "user", to: "oauth_users#show"
+  get "user", to: "oauth_users#show" # should this be in API users?
 
   resource :account, only: [:show]
   namespace :account do

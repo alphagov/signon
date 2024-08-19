@@ -26,6 +26,11 @@ class AuthorisationsController < ApplicationController
 
   def revoke
     if @authorisation.revoke
+      # where/how do we revoke the signin permission if not here? there's no API users signin permissions controller!
+      # -> seemingly nowhere based on a trawl through UserUpdate calls, so that
+      #    commit message about it being important to pay attention to the
+      #    signin permission for API users is probably outdated, and it looks
+      #    like it might be a good candidate for removal/simplification
       EventLog.record_event(@api_user, EventLog::ACCESS_TOKEN_REVOKED, initiator: current_user, application: @authorisation.application, ip_address: user_ip_address)
       flash[:notice] = "Access for #{@authorisation.application.name} was revoked"
     else

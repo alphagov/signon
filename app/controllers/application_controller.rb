@@ -53,7 +53,8 @@ private
     original_return_value
   end
 
-  def api_user_via_token_has_signin_permission_on_app?
+  def api_user_via_token_has_signin_permission_on_app? # the last commit message for this line is interesting, but see the question below - when do we revoke signin permissions for API users?
+    # access/signin permission is granted when an access token is generated. How/when is it removed? If it's essentially alongside revoking the access token (it's not in the controller action), do we need to use this proxy? Can we just check for an access token instead?
     current_resource_owner && application_making_request && current_resource_owner.has_access_to?(application_making_request)
   end
 
