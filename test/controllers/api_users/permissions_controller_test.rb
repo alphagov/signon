@@ -2,99 +2,103 @@ require "test_helper"
 
 class ApiUsers::PermissionsControllerTest < ActionController::TestCase
   context "#edit" do
-    should "prevent unauthenticated users" do
-      application = create(:application)
-      api_user = create(:api_user)
+    context "when the granting user is authorised to edit another's permissions" do
+      should "render a page with checkboxes for the grantable permissions and a hidden field for the signin permission so that it is not removed" do
+        application = create(:application)
+        old_grantable_permission = create(:supported_permission, application:)
+        new_grantable_permission = create(:supported_permission, application:)
+        new_non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
 
-      get :edit, params: { api_user_id: api_user, application_id: application }
+        api_user = create(:api_user, with_permissions: { application => [old_grantable_permission.name] })
+        create(:access_token, application:, resource_owner_id: api_user.id)
 
-      assert_not_authenticated
-    end
+        current_user = create(:superadmin_user)
+        sign_in current_user
 
-    should "prevent unauthorized users" do
-      application = create(:application)
-      api_user = create(:api_user)
-      create(:access_token, application:, resource_owner_id: api_user.id)
+        stub_policy_for_navigation_links(current_user)
+        stub_policy current_user, api_user, edit?: true
 
-      current_user = create(:superadmin_user)
-      sign_in current_user
-
-      stub_policy current_user, api_user, edit?: false
-
-      get :edit, params: { api_user_id: api_user, application_id: application }
-
-      assert_not_authorised
-    end
-
-    should "render a page with checkboxes for the grantable permissions and a hidden field for the signin permission so that it is not removed" do
-      application = create(:application)
-      old_grantable_permission = create(:supported_permission, application:)
-      new_grantable_permission = create(:supported_permission, application:)
-      new_non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
-
-      api_user = create(:api_user, with_permissions: { application => [old_grantable_permission.name] })
-      create(:access_token, application:, resource_owner_id: api_user.id)
-
-      current_user = create(:superadmin_user)
-      sign_in current_user
-
-      stub_policy_for_navigation_links(current_user)
-      stub_policy current_user, api_user, edit?: true
-
-      get :edit, params: { api_user_id: api_user, application_id: application }
-
-      assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{old_grantable_permission.id}']"
-      assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_grantable_permission.id}']"
-      assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_non_grantable_permission.id}']", count: 0
-      assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{application.signin_permission.id}']", count: 0
-      assert_select "input[type='hidden'][value='#{application.signin_permission.id}']"
-    end
-
-    should "exclude retired applications" do
-      sign_in create(:superadmin_user)
-
-      application = create(:application, retired: true)
-      api_user = create(:api_user)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
         get :edit, params: { api_user_id: api_user, application_id: application }
+
+        assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{old_grantable_permission.id}']"
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_grantable_permission.id}']"
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_non_grantable_permission.id}']", count: 0
+        assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{application.signin_permission.id}']", count: 0
+        assert_select "input[type='hidden'][value='#{application.signin_permission.id}']"
+      end
+
+      should "allow access to users with a revoked access token when there is at least one non-revoked access token" do
+        sign_in create(:superadmin_user)
+
+        application = create(:application)
+        api_user = create(:api_user)
+        create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
+        create(:access_token, resource_owner_id: api_user.id, application:)
+
+        get :edit, params: { api_user_id: api_user, application_id: application }
+
+        assert_response :success
       end
     end
 
-    should "exclude applications with revoked access tokens" do
-      sign_in create(:superadmin_user)
+    context "when the granting user shouldn't be able to edit another's permissions" do
+      should "prevent unauthenticated users" do
+        application = create(:application)
+        api_user = create(:api_user)
 
-      application = create(:application)
-      api_user = create(:api_user)
-      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
         get :edit, params: { api_user_id: api_user, application_id: application }
+
+        assert_not_authenticated
       end
-    end
 
-    should "include applications with revoked access tokens when there is at least one non-revoked access token" do
-      sign_in create(:superadmin_user)
+      should "prevent unauthorised users" do
+        application = create(:application)
+        api_user = create(:api_user)
+        create(:access_token, application:, resource_owner_id: api_user.id)
 
-      application = create(:application)
-      api_user = create(:api_user)
-      create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
-      create(:access_token, resource_owner_id: api_user.id, application:)
+        current_user = create(:superadmin_user)
+        sign_in current_user
 
-      get :edit, params: { api_user_id: api_user, application_id: application }
+        stub_policy current_user, api_user, edit?: false
 
-      assert_response :success
-    end
-
-    should "raise an exception if the user does not have an access token for the application" do
-      application = create(:application)
-      api_user = create(:api_user)
-
-      current_user = create(:superadmin_user)
-      sign_in current_user
-
-      assert_raises(ActiveRecord::RecordNotFound) do
         get :edit, params: { api_user_id: api_user, application_id: application }
+
+        assert_not_authorised
+      end
+
+      should "prevent access if the user does not have an access token for the application" do
+        application = create(:application)
+        api_user = create(:api_user)
+
+        current_user = create(:superadmin_user)
+        sign_in current_user
+
+        assert_raises(ActiveRecord::RecordNotFound) do
+          get :edit, params: { api_user_id: api_user, application_id: application }
+        end
+      end
+
+      should "prevent access if the user has a revoked access token" do
+        sign_in create(:superadmin_user)
+
+        application = create(:application)
+        api_user = create(:api_user)
+        create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
+
+        assert_raises(ActiveRecord::RecordNotFound) do
+          get :edit, params: { api_user_id: api_user, application_id: application }
+        end
+      end
+
+      should "prevent editing permissions for retired applications" do
+        sign_in create(:superadmin_user)
+
+        application = create(:application, retired: true)
+        api_user = create(:api_user)
+
+        assert_raises(ActiveRecord::RecordNotFound) do
+          get :edit, params: { api_user_id: api_user, application_id: application }
+        end
       end
     end
   end
