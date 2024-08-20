@@ -29,14 +29,14 @@ class UsersWithAccessHelperTest < ActionView::TestCase
     assert_equal '<a class="govuk-link" href="/users/1/edit">User Name</a> (access locked)', formatted_user_name(user)
   end
 
-  test "formatted_user_name_class is blank for usable accounts" do
+  test "user_name_format is blank for usable accounts" do
     user = build(:user)
     user.stubs(:unusable_account?).returns(false)
 
     assert user_name_format(user).blank?
   end
 
-  test "formatted_user_name_class strikes through unusable accounts" do
+  test "user_name_format strikes through unusable accounts" do
     user = build(:user)
     user.stubs(:unusable_account?).returns(true)
 
