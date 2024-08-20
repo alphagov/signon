@@ -38,34 +38,53 @@
 </form>
 
 <%= render "govuk_publishing_components/components/details", {
-  title: "About this data"
+  title: "About this data (definitions and caveats)"
 } do %>
-<p class="govuk-body">
-  Signon records a "successful authorization" event whenever a user uses Signon to access one of the publishing
-  applications. This is a monthly count of all of these events for <%= @application.name %>.
-</p>
-<p class="govuk-body">
-  Applications cache authentications for around 20 hours, so if a user clicks an application multiple
-  times a day, they may only appear in the event log once.
-</p>
-<p class="govuk-body">
-  The total authorization count is the total number of events recorded in the log for the month (if a
-  user accesses the same app multiple times, this number will increase).
-</p>
-<p class="govuk-body">
-  The unique users authorization count is the number of distinct users who recorded events in the log for the month
-  (if a user accesses the same app multiple times in a month, this will only count as one unique user).
-</p>
-<p class="govuk-body">
-  <% if DateTime.current.before? DateTime.new(2025, 11, 1)  # This branch can be removed after November 2025 %>
-  Note that authorization data has only been recorded in the Signon event log since November 2023, so it is not
-  possible to view events before that date.
-  <% else %>
-  Note that data in the event log in Signon is only retained for 2 years, so it is not possible to view events
-  before that date.
-  <% end %>
-</p>
+  <h2 class="govuk-heading-m">Definitions</h2>
+  <h3 class="govuk-heading-s">Total authorization count</h3>
+  <p class="govuk-body">
+    The total number of successful "authorization events" recorded for a specific application (e.g. <%= @application.name %>)
+    during a month. Each time a user successfully uses signon to access an application (authorization), an event is
+    logged. If the same user access an application multiple times, each event is counted, increasing the total count.
+  </p>
+  <h3 class="govuk-heading-s">Unique users authorization count</h3>
+  <p class="govuk-body">
+    The number of distinct users who have successfully "authorized" and used signon to access an application at least
+    once. Regardless of how many times a user accesses an application, they are counted only once in this metric.
+  </p>
+  <h2 class="govuk-heading-m">Caveats</h2>
+  <h3 class="govuk-heading-s">Session caching</h3>
+  <p class="govuk-body">
+    Applications cache user authorizations for around 20 hours. This means that if a user accesses the application
+    multiple times within this window, only one "authorization event" may be recorded. Consequently, the total
+    authorization count might underestimate the actual number of logins.
+  </p>
+  <h3 class="govuk-heading-s">User behaviour</h3>
+  <p class="govuk-body">
+    If a user logs out and then logs back in (for example logging out for lunch and returning later), each login will count
+    as a separate authorization event. This could artificially inflate the "total authorization" count depending on
+    user behaviour.
+  </p>
+  <h3 class="govuk-heading-s">Boundary considerations</h3>
+  <p class="govuk-body">
+    Users who initiate a session late in the previous month and continue using the application into the new month
+    might not be counted as a unique user for the new month, even though they technically accessed the application
+    during that time.
+  </p>
+  <h3 class="govuk-heading-s">Data retention</h3>
+  <p class="govuk-body">
+    <% if DateTime.current.before? DateTime.new(2025, 11, 1)  # This branch can be removed after November 2025 %>
+      Note that authorization data has only been recorded in the Signon event log since November 2023, so it is not
+      possible to view events before that date.
+    <% else %>
+      Note that data in the event log in Signon is only retained for 2 years, so it is not possible to view events
+      before that date.
+    <% end %>
+  </p>
 <% end %>
+
+<h2 class="govuk-visually-hidden">Data</h2>
+
 <% if @monthly_access_stats.any? %>
   <%= render "components/table", {
     head: [
