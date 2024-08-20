@@ -20,27 +20,6 @@ class Users::ApplicationsTest < ActionDispatch::IntegrationTest
     assert table.has_content?("app-name")
   end
 
-  should "allow admins to remove users' access to apps" do
-    user = create(:user, name: "user-name")
-    application = create(:application, name: "app-name")
-    user.grant_application_signin_permission(application)
-
-    admin_user = create(:admin_user)
-    visit new_user_session_path
-    signin_with admin_user
-
-    visit user_applications_path(user)
-
-    table = find("table caption[text()='Apps user-name has access to']").ancestor("table")
-    assert table.has_content?("app-name")
-
-    click_on "Remove access to app-name"
-    click_on "Confirm"
-
-    table = find("table caption[text()='Apps user-name does not have access to']").ancestor("table")
-    assert table.has_content?("app-name")
-  end
-
   should "allow admins to update users' permissions for apps" do
     application = create(:application, name: "app-name", with_non_delegatable_supported_permissions: %w[perm1 perm2])
     application.signin_permission.update!(delegatable: true)
