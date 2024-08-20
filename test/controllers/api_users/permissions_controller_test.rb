@@ -95,6 +95,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
 
         application = create(:application, retired: true)
         api_user = create(:api_user)
+        create(:access_token, resource_owner_id: api_user.id, application:)
 
         assert_raises(ActiveRecord::RecordNotFound) do
           get :edit, params: { api_user_id: api_user, application_id: application }
