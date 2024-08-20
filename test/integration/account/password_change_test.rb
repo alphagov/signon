@@ -1,7 +1,7 @@
 require "test_helper"
 require "support/password_helpers"
 
-class PasswordChangeTest < ActionDispatch::IntegrationTest
+class Account::PasswordChangeTest < ActionDispatch::IntegrationTest
   include PasswordHelpers
 
   context "normal user" do

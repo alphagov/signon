@@ -1,6 +1,6 @@
 require "test_helper"
 
-class GrantingPermissionsTest < ActionDispatch::IntegrationTest
+class Users::GrantingPermissionsTest < ActionDispatch::IntegrationTest
   context "as a super admin" do
     setup do
       admin = create(:superadmin_user)

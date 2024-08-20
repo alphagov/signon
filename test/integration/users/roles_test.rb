@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ChangeUserRoleTest < ActionDispatch::IntegrationTest
+class Users::RolesTest < ActionDispatch::IntegrationTest
   setup do
     @super_admin = create(:superadmin_user)
   end

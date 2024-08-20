@@ -1,6 +1,6 @@
 require "test_helper"
 
-class AccountActivitiesTest < ActionDispatch::IntegrationTest
+class Account::ActivitiesTest < ActionDispatch::IntegrationTest
   context "#show" do
     should "list user's EventLogs in table" do
       user = create(:user)

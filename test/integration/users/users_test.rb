@@ -1,6 +1,6 @@
 require "test_helper"
 
-class AdminUserIndexTest < ActionDispatch::IntegrationTest
+class UsersTest < ActionDispatch::IntegrationTest
   context "logged in as an admin" do
     setup do
       use_javascript_driver

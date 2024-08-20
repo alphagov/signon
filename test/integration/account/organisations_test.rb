@@ -1,6 +1,6 @@
 require "test_helper"
 
-class AccountRoleOrganisationsTest < ActionDispatch::IntegrationTest
+class Account::OrganisationsTest < ActionDispatch::IntegrationTest
   context "#show" do
     should "display read-only values for users who aren't GOVUK Admins" do
       organisation = create(:organisation, name: "Department for Viability")

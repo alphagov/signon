@@ -1,6 +1,6 @@
 require "test_helper"
 
-class UserApplicationsTest < ActionDispatch::IntegrationTest
+class Users::ApplicationsTest < ActionDispatch::IntegrationTest
   should "allow admins to grant users access to apps" do
     user = create(:user, name: "user-name")
     create(:application, name: "app-name")

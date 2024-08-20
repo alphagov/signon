@@ -1,6 +1,6 @@
 require "test_helper"
 
-class SuperAdminApplicationUsersTest < ActionDispatch::IntegrationTest
+class ApplicationsUsersWithAccessTest < ActionDispatch::IntegrationTest
   include ActiveJob::TestHelper
 
   context "logged in as an superadmin" do
