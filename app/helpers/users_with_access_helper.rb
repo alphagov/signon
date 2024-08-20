@@ -10,7 +10,7 @@ module UsersWithAccessHelper
                ""
              end
 
-    "#{link_to(user.name, edit_user_path(user))}#{status}".html_safe
+    "#{link_to(user.name, edit_user_path(user), class: 'govuk-link')}#{status}".html_safe
   end
 
   def user_name_format(user)
