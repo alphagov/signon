@@ -71,6 +71,19 @@
     might not be counted as a unique user for the new month, even though they technically accessed the application
     during that time.
   </p>
+  <h2 class="govuk-heading-m">Limitations</h2>
+  <h3 class="govuk-heading-s">User intent</h3>
+  <p class="govuk-body">
+    Some users may access an application (e.g. <%= @application.name %>) just to look around, and not to do any
+    meaningful work. For example, GDS developers might visit Publisher to familiarise themselves with the application,
+    but not to do any publishing work. These metrics do not differentiate between users who actively use application
+    functionality, and users who simply visit the application homepage. For applications with very small numbers (tens)
+    of users, this effect can be significant.
+  </p>
+  <p class="govuk-body">
+    You can check the <%= link_to "raw access logs", access_logs_doorkeeper_application_path(@application), class: "govuk-link" %>
+    to see exactly which people have accessed the application.
+  </p>
   <h3 class="govuk-heading-s">Data retention</h3>
   <p class="govuk-body">
     <% if DateTime.current.before? DateTime.new(2025, 11, 1)  # This branch can be removed after November 2025 %>
