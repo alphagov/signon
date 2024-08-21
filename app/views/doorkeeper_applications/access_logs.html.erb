@@ -46,6 +46,10 @@
 </div>
 </form>
 
+<%= render "govuk_publishing_components/components/warning_text", {
+  text: "Signon doesn't always mirror production databases. This data is for the #{GovukEnvironment.name} environment, it may not reflect production data."
+} unless GovukEnvironment.production? %>
+
 <%= render "govuk_publishing_components/components/details", {
   title: "About this data"
 } do %>
