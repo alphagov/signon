@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ChangeUserNameTest < ActionDispatch::IntegrationTest
+class Users::NameChangeTest < ActionDispatch::IntegrationTest
   context "when signed in as any kind of admin" do
     setup do
       @superadmin = create(:superadmin_user)

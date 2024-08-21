@@ -1,7 +1,7 @@
 require "test_helper"
 require "support/password_helpers"
 
-class UserStatusTest < ActionDispatch::IntegrationTest
+class Users::StatusTest < ActionDispatch::IntegrationTest
   include PasswordHelpers
 
   setup do

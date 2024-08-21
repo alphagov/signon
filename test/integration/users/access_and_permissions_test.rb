@@ -1,6 +1,6 @@
 require "test_helper"
 
-class GrantingPermissionsTest < ActionDispatch::IntegrationTest
+class Users::AccessAndPermissionsTest < ActionDispatch::IntegrationTest
   context "as a super admin" do
     setup do
       admin = create(:superadmin_user)
@@ -18,6 +18,18 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       click_button "Grant access to MyApp"
 
       assert @user.has_access_to?(app)
+    end
+
+    should "support removing signin permissions" do
+      app = create(:application, name: "MyApp")
+      @user.grant_application_signin_permission(app)
+
+      visit edit_user_path(@user)
+      click_link "Manage permissions"
+      click_on "Remove access to MyApp"
+      click_on "Confirm"
+
+      assert_not @user.has_access_to?(app)
     end
 
     should "support granting app-specific permissions" do
@@ -92,6 +104,18 @@ class GrantingPermissionsTest < ActionDispatch::IntegrationTest
       click_button "Grant access to MyApp"
 
       assert @user.has_access_to?(app)
+    end
+
+    should "support removing signin permissions" do
+      app = create(:application, name: "MyApp")
+      @user.grant_application_signin_permission(app)
+
+      visit edit_user_path(@user)
+      click_link "Manage permissions"
+      click_on "Remove access to MyApp"
+      click_on "Confirm"
+
+      assert_not @user.has_access_to?(app)
     end
 
     should "support granting app-specific permissions" do

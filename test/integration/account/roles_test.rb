@@ -1,6 +1,6 @@
 require "test_helper"
 
-class AccountRolesTest < ActionDispatch::IntegrationTest
+class Account::RolesTest < ActionDispatch::IntegrationTest
   context "#show" do
     should "display read-only values for users who aren't GOVUK Admins" do
       non_govuk_admin_user = create(:super_organisation_admin_user)
