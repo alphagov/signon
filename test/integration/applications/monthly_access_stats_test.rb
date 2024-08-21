@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ApplicationMonthlyAccessStatsPageIntegrationTest < ActionDispatch::IntegrationTest
+class ApplicationsMonthlyAccessStatsIntegrationTest < ActionDispatch::IntegrationTest
   setup do
     @application = create(:application, name: "app-name", description: "app-description")
     @user = create(:user, name: "Normal User")

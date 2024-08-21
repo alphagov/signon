@@ -21,7 +21,7 @@ Bundler.require(*Rails.groups)
 module Signon
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.1
+    config.load_defaults 7.2
 
     config.active_record.belongs_to_required_by_default = false
 
@@ -90,6 +90,7 @@ module Signon
     # These settings can be overridden in specific environments using the files
     # in config/environments, which are processed later.
     #
+    # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
     config.show_user_research_recruitment_banner = false

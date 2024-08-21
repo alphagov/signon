@@ -12,24 +12,12 @@ FactoryBot.define do
     role { Roles::Normal.name }
 
     after(:create) do |user, evaluator|
-      if evaluator.with_permissions
-        evaluator.with_permissions.each do |app_or_name, permission_names|
-          app = if app_or_name.is_a?(String)
-                  Doorkeeper::Application.where(name: app_or_name).first!
-                else
-                  app_or_name
-                end
-          user.grant_application_permissions(app, permission_names)
-        end
+      evaluator.with_permissions.each do |app_or_name, permission_names|
+        user.grant_application_permissions(find_application(app_or_name), permission_names)
       end
 
       evaluator.with_signin_permissions_for.each do |app_or_name|
-        app = if app_or_name.is_a?(String)
-                Doorkeeper::Application.where(name: app_or_name).first!
-              else
-                app_or_name
-              end
-        user.grant_application_signin_permission(app)
+        user.grant_application_signin_permission(find_application(app_or_name))
       end
     end
 
@@ -123,6 +111,7 @@ FactoryBot.define do
   factory :api_user do
     transient do
       with_permissions { {} }
+      with_signin_permissions_for { [] }
     end
 
     sequence(:email) { |n| "api-#{n}@example.com" }
@@ -133,15 +122,8 @@ FactoryBot.define do
     api_user { true }
 
     after(:create) do |user, evaluator|
-      if evaluator.with_permissions
-        evaluator.with_permissions.each do |app_or_name, permission_names|
-          app = if app_or_name.is_a?(String)
-                  Doorkeeper::Application.where(name: app_or_name).first!
-                else
-                  app_or_name
-                end
-          user.grant_application_permissions(app, permission_names)
-        end
+      evaluator.with_permissions.each do |app_or_name, permission_names|
+        user.grant_application_permissions(find_application(app_or_name), permission_names)
       end
     end
   end
@@ -155,5 +137,13 @@ def api_user_with_token(name, token_count: 2)
         :access_token, resource_owner_id: api_user.id, application_id: app.id
       )
     end
+  end
+end
+
+def find_application(app_or_name)
+  if app_or_name.is_a?(String)
+    Doorkeeper::Application.where(name: app_or_name).first!
+  else
+    app_or_name
   end
 end

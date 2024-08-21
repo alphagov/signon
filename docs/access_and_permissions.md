@@ -17,7 +17,7 @@ Each row represents an app with certain permissions set as delegatable, as indic
 
 ### Dependencies by route
 
-Each "Dependencies by route" section provides a breakdown of which actions are determined by dependencies and a tree or trees of relevant depencencies. The aim of this section isn't to go all the way down every node of each dependency tree, but rather to provide enough context on what determines what you can do, and to make it easier to identify shared dependencies. There's a particular focus on the different policies that are hit by each route, since the policies are both fundamental to how everything works and the source of a lot of complexity.
+Each "Dependencies by route" section provides a breakdown of which actions are determined by dependencies and a tree or trees of relevant dependencies. The aim of this section isn't to go all the way down every node of each dependency tree, but rather to provide enough context on what determines what you can do, and to make it easier to identify shared dependencies. There's a particular focus on the different policies that are hit by each route, since the policies are both fundamental to how everything works and the source of a lot of complexity.
 
 ## For the current user (self)
 
@@ -28,18 +28,18 @@ In this section, the granter and grantee are the same user: this is about managi
 #### As a GOV.UK admin
 
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
-|-------------------------|--------------|---------------|------------------|------------------|
-| None                    | ✅            | ✅             | ✅                | ✅                |
-| `signin`                | ✅            | ✅             | ✅                | ✅                |
-| Another permission      | ✅            | ✅             | ✅                | ✅                |
+| ----------------------- | ------------ | ------------- | ---------------- | ---------------- |
+| None                    | ✅           | ✅            | ✅               | ✅               |
+| `signin`                | ✅           | ✅            | ✅               | ✅               |
+| Another permission      | ✅           | ✅            | ✅               | ✅               |
 
 #### As a publishing manager
 
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
-|-------------------------|--------------|---------------|------------------|------------------|
-| None                    | ❌            | ❌             | ❌                | ✅                |
-| `signin`                | ❌            | ✅             | ❌                | ✅                |
-| Another permission      | ❌            | ❌             | ✅*               | ✅                |
+| ----------------------- | ------------ | ------------- | ---------------- | ---------------- |
+| None                    | ❌           | ❌            | ❌               | ✅               |
+| `signin`                | ❌           | ✅            | ❌               | ✅               |
+| Another permission      | ❌           | ❌            | ✅\*             | ✅               |
 
 \* only delegatable non-signin permissions
 
@@ -101,7 +101,7 @@ These dependencies determine whether a user can:
 ```mermaid
 flowchart TD
     A(Account::PermissionsController#edit) --@application.sorted_supported_permissions_grantable_from_ui( [...] )--> B(Doorkeeper::Application#sorted_supported_permissions_grantable_from_ui)
-    A --authorize [:account, @application], :edit_permissions?--> C(Account::ApplicationPolicy#edit_permissions?) 
+    A --authorize [:account, @application], :edit_permissions?--> C(Account::ApplicationPolicy#edit_permissions?)
 ```
 
 #### Account permissions update
@@ -121,6 +121,61 @@ flowchart TD
     D --Pundit.policy_scope(current_user, SupportedPermission)--> G("SupportedPermissionPolicy (scope)")
 ```
 
+#### Account signin permissions create
+
+These dependencies determine whether a user can:
+
+- complete the controller action
+- grant themself access to an app
+
+```mermaid
+flowchart TD
+    A(Account::SigninPermissionsController#create)
+    --authorize [:account, Doorkeeper::Application], :grant_signin_permission?
+    --> B(Account::ApplicationPolicy#grant_signin_permission?)
+
+    A --"UserUpdate.new(current_user, { supported_permission_ids: }, current_user, user_ip_address).call"
+    --> C(UserUpdate#call)
+
+    C --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids
+    --> D(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
+    D --Pundit.policy_scope(current_user, SupportedPermission)--> E("SupportedPermissionPolicy (scope)")
+```
+
+#### Account signin permissions delete
+
+These dependencies determine whether a user can:
+
+- view the confirmation screen for revoking access to a given app
+
+```mermaid
+flowchart TD
+    A(Account::SigninPermissionsController#delete)
+    --authorize [:account, application], :remove_signin_permission?
+    --> B(Account::ApplicationPolicy#remove_signin_permission?)
+```
+
+#### Account signin permissions destroy
+
+These dependencies determine whether a user can:
+
+- complete the controller action
+- revoke access to a given app
+
+```mermaid
+flowchart TD
+    A(Account::SigninPermissionsController#destroy)
+    --authorize [:account, Doorkeeper::Application], :remove_signin_permission?
+    --> B(Account::ApplicationPolicy#remove_signin_permission?)
+
+    A --"UserUpdate.new(current_user, { supported_permission_ids: }, current_user, user_ip_address).call"
+    --> C(UserUpdate#call)
+
+    C --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids
+    --> D(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
+    D --Pundit.policy_scope(current_user, SupportedPermission)--> E("SupportedPermissionPolicy (scope)")
+```
+
 ## For another existing user
 
 In this section, the granter and grantee are different users: this is about managing another user's access and permissions.
@@ -132,30 +187,30 @@ In this section, the granter and grantee are different users: this is about mana
 ##### With or without access to the app
 
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
-|-------------------------|--------------|---------------|------------------|------------------|
-| None                    | ✅            | ✅             | ✅                | ✅                |
-| `signin`                | ✅            | ✅             | ✅                | ✅                |
-| Another permission      | ✅            | ✅             | ✅                | ✅                |
+| ----------------------- | ------------ | ------------- | ---------------- | ---------------- |
+| None                    | ✅           | ✅            | ✅               | ✅               |
+| `signin`                | ✅           | ✅            | ✅               | ✅               |
+| Another permission      | ✅           | ✅            | ✅               | ✅               |
 
 #### As a publishing manager
 
 ##### With access to the app
 
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
-|-------------------------|--------------|---------------|------------------|------------------|
-| None                    | ❌            | ❌             | ❌                | ✅                |
-| `signin`                | ✅            | ✅             | ❌                | ✅                |
-| Another permission      | ❌            | ❌             | ✅*               | ✅                |
+| ----------------------- | ------------ | ------------- | ---------------- | ---------------- |
+| None                    | ❌           | ❌            | ❌               | ✅               |
+| `signin`                | ✅           | ✅            | ❌               | ✅               |
+| Another permission      | ❌           | ❌            | ✅\*             | ✅               |
 
 \* only delegatable non-signin permissions
 
 ##### Without access to the app
 
 | Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
-|-------------------------|--------------|---------------|------------------|------------------|
-| None                    | ❌            | ❌             | ❌                | ✅                |
-| `signin`                | ❌            | ❌             | ❌                | ✅                |
-| Another permission      | ❌            | ❌             | ❌                | ✅                |
+| ----------------------- | ------------ | ------------- | ---------------- | ---------------- |
+| None                    | ❌           | ❌            | ❌               | ✅               |
+| `signin`                | ❌           | ❌            | ❌               | ✅               |
+| Another permission      | ❌           | ❌            | ❌               | ✅               |
 
 ### Dependencies by route
 
@@ -244,6 +299,61 @@ flowchart TD
     G --Pundit.policy_scope(current_user, SupportedPermission)--> H("SupportedPermissionPolicy (scope)")
 ```
 
+#### Users signin permissions create
+
+These dependencies determine whether a user can:
+
+- complete the controller action
+- grant a given user access to an app
+
+```mermaid
+flowchart TD
+    A(Users::SigninPermissionsController#create)
+    --authorize [application, user: @user], :grant_signin_permission?, policy_class: Users::ApplicationPolicy
+    --> B(Users::ApplicationPolicy#grant_signin_permission?)
+
+    A --"UserUpdate.new(@user, { supported_permission_ids: }, current_user, user_ip_address).call"
+    --> C(UserUpdate#call)
+
+    C --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids
+    --> D(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
+    D --Pundit.policy_scope(current_user, SupportedPermission)--> E("SupportedPermissionPolicy (scope)")
+```
+
+#### Users signin permissions delete
+
+These dependencies determine whether a user can:
+
+- view the confirmation screen for revoking access to a given app
+
+```mermaid
+flowchart TD
+    A(Users::SigninPermissionsController#delete)
+    --authorize [application: @application, user: @user], :remove_signin_permission?, policy_class: Users::ApplicationPolicy
+    --> B(Users::ApplicationPolicy#remove_signin_permission?)
+```
+
+#### Users signin permissions destroy
+
+These dependencies determine whether a user can:
+
+- complete the controller action
+- revoke access to a given app
+
+```mermaid
+flowchart TD
+    A(Users::SigninPermissionsController#destroy)
+    --authorize [application, user: @user], :remove_signin_permission?, policy_class: Users::ApplicationPolicy
+    --> B(Users::ApplicationPolicy#remove_signin_permission?)
+
+    A --"UserUpdate.new(@user, { supported_permission_ids: }, current_user, user_ip_address).call"
+    --> C(UserUpdate#call)
+
+    C --SupportedPermissionParameterFilter.new(current_user, user, user_params) [...] .filtered_supported_permission_ids
+    --> D(SupportedPermissionParameterFilter#filtered_supported_permission_ids)
+    D --Pundit.policy_scope(current_user, SupportedPermission)--> E("SupportedPermissionPolicy (scope)")
+```
+
 ## For a new user
 
 ### What can you do?
@@ -253,14 +363,14 @@ The following actions are taken in the process of inviting a new user - once the
 #### As a GOV.UK admin
 
 | Send invitation | Grant access | Edit permissions |
-|-----------------|--------------|------------------|
-| ✅               | ✅            | ✅                |
+| --------------- | ------------ | ---------------- |
+| ✅              | ✅           | ✅               |
 
 #### As a publishing manager
 
 | Send invitation | Grant access | Edit permissions |
-|-----------------|--------------|------------------|
-| ❌               | ❌            | ❌                |
+| --------------- | ------------ | ---------------- |
+| ❌              | ❌           | ❌               |
 
 ### Dependencies by route
 
@@ -295,36 +405,38 @@ flowchart TD
 ### Models
 
 | Class                                                                    | Relevant associations                                                                       |
-|--------------------------------------------------------------------------|---------------------------------------------------------------------------------------------|
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------- |
 | [Doorkeeper::Application](/app/models/doorkeeper/application.rb)         | Has many supported permissions                                                              |
 | [SupportedPermission](/app/models/supported_permission.rb)               | Belongs to an app                                                                           |
 | [UserApplicationPermission](/app/models//user_application_permission.rb) | Joins users with supported permissions (and apps), determining what individual users can do |
 
 ### Controllers
 
-| Class                                                                                  | Responsibility                                                                     |
-|----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------|
-| [Account::ApplicationsController](/app/controllers/account/applications_controller.rb) | Managing own access to apps and accessing own permissions routes                   |
-| [Account::PermissionsController](/app/controllers/account/permissions_controller.rb)   | Managing own permissions                                                           |
-| [InvitationsController](/app/controllers/invitations_controller.rb)                    | Giving users access to apps and permissions while creating their account           |
-| [Users::ApplicationsController](/app/controllers/users/applications_controller.rb)     | Managing other users' access to apps and accessing other users' permissions routes |
-| [Users::PermissionsController](/app/controllers/users/permissions_controller.rb)       | Managing other users' permissions                                                  |
+| Class                                                                                             | Responsibility                                                                     |
+| ------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| [Account::ApplicationsController](/app/controllers/account/applications_controller.rb)            | Rendering index and individual pages for own app permissions                       |
+| [Account::PermissionsController](/app/controllers/account/permissions_controller.rb)              | Managing own permissions                                                           |
+| [Account::SigninPermissionsController](/app/controllers/account/signin_permissions_controller.rb) | Managing own access to apps                                                        |
+| [InvitationsController](/app/controllers/invitations_controller.rb)                               | Giving users access to apps and permissions while creating their account           |
+| [Users::ApplicationsController](/app/controllers/users/applications_controller.rb)                | Rendering index and individual pages for other users' app permissions              |
+| [Users::PermissionsController](/app/controllers/users/permissions_controller.rb)                  | Managing other users' permissions                                                  |
+| [Users::SigninPermissionsController](/app/controllers/users/signin_permissions_controller.rb)     | Managing other users' access to apps                                               |
 
 ### Policies
 
-| Class                                                                     | Responsibility                                                                                                                                                            |
-|---------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [Account::ApplicationPolicy](/app/policies/account/application_policy.rb) | Determining whether granters can see and update their own access and permissions                                                                                          |
-| [SupportedPermissionPolicy](/app/policies/supported_permission_policy.rb) | Determining which permissions can be updated by a given granter                                                                                                           |
-| [UserPolicy](/app/policies/user_policy.rb)                                | Determining whether a granter can update a grantee's access and permissions*, and whether they can invite a new user and grant them access and permissions in the process |
-| [Users::ApplicationPolicy](/app/policies/users/application_policy.rb)     | Determining whether a granter can see and update a grantee's access and permissions*                                                                                      |
+| Class                                                                     | Responsibility                                                                                                                                                             |
+| ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Account::ApplicationPolicy](/app/policies/account/application_policy.rb) | Determining whether granters can see and update their own access and permissions                                                                                           |
+| [SupportedPermissionPolicy](/app/policies/supported_permission_policy.rb) | Determining which permissions can be updated by a given granter                                                                                                            |
+| [UserPolicy](/app/policies/user_policy.rb)                                | Determining whether a granter can update a grantee's access and permissions\*, and whether they can invite a new user and grant them access and permissions in the process |
+| [Users::ApplicationPolicy](/app/policies/users/application_policy.rb)     | Determining whether a granter can see and update a grantee's access and permissions\*                                                                                      |
 
 \* the responsibility of these two policies is hard to distinguish in this context, but as seen in the dependency trees for existing users, the `Users::ApplicationPolicy` depends on the `UserPolicy`, and in reality the latter is larger in scope. The `InvitationsController` depends on different parts of the `UserPolicy`, for instance.
 
 ### Others
 
 | Class                                                                               | Responsibility                                                                                 |
-|-------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------|
+| ----------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | [ApplicationTableHelper](/app/helpers/application_table_helper.rb)                  | Generating links to view/manage access and permissions dependent on policy-based authorisation |
 | [SupportedPermissionParameterFilter](/lib/supported_permission_parameter_filter.rb) | Ensuring granters can only change permissions they're authorised to manage                     |
 | [UserUpdate](/app/services/user_update.rb)                                          | Updating a user's permissions                                                                  |

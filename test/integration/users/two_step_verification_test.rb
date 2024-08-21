@@ -1,6 +1,6 @@
 require "test_helper"
 
-class ManagingTwoStepVerificationTest < ActionDispatch::IntegrationTest
+class Users::TwoStepVerificationTest < ActionDispatch::IntegrationTest
   include EmailHelpers
   include ManagingTwoSvHelpers
 

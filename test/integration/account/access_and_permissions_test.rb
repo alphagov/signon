@@ -1,6 +1,6 @@
 require "test_helper"
 
-class AccountApplicationsTest < ActionDispatch::IntegrationTest
+class Account::AccessAndPermissionsTest < ActionDispatch::IntegrationTest
   context "#index" do
     setup do
       @application = create(:application, name: "app-name", description: "app-description")

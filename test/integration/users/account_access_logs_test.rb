@@ -1,7 +1,7 @@
 require "test_helper"
 require "support/password_helpers"
 
-class EventLogPageIntegrationTest < ActionDispatch::IntegrationTest
+class Users::AccountAccessLogsIntegrationTest < ActionDispatch::IntegrationTest
   include PasswordHelpers
 
   setup do

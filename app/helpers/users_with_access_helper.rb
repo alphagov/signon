@@ -1,16 +1,16 @@
 module UsersWithAccessHelper
   def formatted_user_name(user)
     status = if user.invited_but_not_yet_accepted?
-               " (invited)"
+               "(invited)"
              elsif user.suspended?
-               " (suspended)"
+               "(suspended)"
              elsif user.access_locked?
-               " (access locked)"
-             else
-               ""
+               "(access locked)"
              end
 
-    "#{link_to(user.name, edit_user_path(user))}#{status}".html_safe
+    link = link_to(user.name, edit_user_path(user), class: "govuk-link")
+
+    [link, status].compact.join(" ").html_safe
   end
 
   def user_name_format(user)
