@@ -64,11 +64,16 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
       end
 
       context "for apps the user doesn't have access to" do
-        should "display the applications" do
+        should "display the applications, excluding those which are retired or API-only" do
+          create(:application, name: "retired-app-name", retired: true)
+          create(:application, name: "api-only-app-name", api_only: true)
+
           get :index
 
           assert_select "table:has( > caption[text()='Apps you don\\'t have access to'])" do
             assert_select "tr td", text: /app-name/
+            assert_select "tr td", text: /retired-app-name/, count: 0
+            assert_select "tr td", text: /api-only-app-name/, count: 0
           end
         end
 
@@ -97,13 +102,20 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
       context "for apps the user does have access to" do
         setup { @user.grant_application_signin_permission(@application) }
 
-        should "display the applications" do
+        should "display the applications, excluding those which are retired or API-only" do
+          retired_app = create(:application, name: "retired-app-name", retired: true)
+          api_only_app = create(:application, name: "api-only-app-name", api_only: true)
+          @user.grant_application_signin_permission(retired_app)
+          @user.grant_application_signin_permission(api_only_app)
+
           stub_policy @user, [:account, @application]
 
           get :index
 
           assert_select "table:has( > caption[text()='Apps you have access to'])" do
             assert_select "tr td", text: /app-name/
+            assert_select "tr td", text: /retired-app-name/, count: 0
+            assert_select "tr td", text: /api-only-app-name/, count: 0
           end
         end
 
@@ -183,22 +195,6 @@ class Account::ApplicationsControllerTest < ActionController::TestCase
             end
           end
         end
-      end
-
-      should "not display a retired application" do
-        create(:application, name: "retired-app-name", retired: true)
-
-        get :index
-
-        assert_select "tr td", text: /retired-app-name/, count: 0
-      end
-
-      should "not display an API-only application" do
-        create(:application, name: "api-only-app-name", api_only: true)
-
-        get :index
-
-        assert_select "tr td", text: /api-only-app-name/, count: 0
       end
     end
   end
