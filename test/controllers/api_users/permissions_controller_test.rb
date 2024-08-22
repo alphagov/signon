@@ -114,9 +114,14 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       assert_not_authenticated
     end
 
-    should "redirect once the permissions have been updated" do
-      application = create(:application, with_non_delegatable_supported_permissions: %w[new old])
-      api_user = create(:api_user, with_permissions: { application => %w[old] })
+    should "update non-signin permissions, retaining the signin permission, then redirect to the API applications path" do
+      application = create(:application)
+      old_permission = create(:supported_permission, application:)
+      new_permission = create(:supported_permission, application:)
+
+      api_user = create(:api_user,
+                        with_signin_permissions_for: [application],
+                        with_permissions: { application => [old_permission.name] })
       create(:access_token, application:, resource_owner_id: api_user.id)
 
       current_user = create(:superadmin_user)
@@ -124,11 +129,14 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
 
       stub_policy current_user, api_user, update?: true
 
-      new_permission = application.supported_permissions.find_by(name: "new")
-
-      patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [new_permission.id] } }
+      patch :update, params: {
+        api_user_id: api_user,
+        application_id: application,
+        application: { supported_permission_ids: [new_permission.id] },
+      }
 
       assert_redirected_to api_user_applications_path(api_user)
+      assert_same_elements [application.signin_permission, new_permission], api_user.reload.supported_permissions
     end
 
     should "prevent permissions being added for apps that the current user does not have access to" do
@@ -154,25 +162,6 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       api_user.reload
 
       assert_equal [], api_user.supported_permissions
-    end
-
-    should "not remove the signin permission from the app when updating other permissions" do
-      application = create(:application, with_non_delegatable_supported_permissions: %w[other])
-      api_user = create(:api_user)
-      api_user.grant_application_signin_permission(application)
-      create(:access_token, application:, resource_owner_id: api_user.id)
-
-      current_user = create(:superadmin_user)
-      sign_in current_user
-
-      stub_policy current_user, api_user, update?: true
-
-      other_permission = application.supported_permissions.find_by(name: "other")
-
-      patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [other_permission.id] } }
-
-      api_user.reload
-      assert_same_elements [application.signin_permission, other_permission], api_user.supported_permissions
     end
 
     should "not remove permissions the user already has that are not grantable from ui" do
