@@ -313,6 +313,23 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       end
     end
 
+    should "prevent access if the user does not have an access token for the application" do
+      application = create(:application)
+      permission = create(:supported_permission, application:)
+
+      api_user = create(:api_user, with_signin_permissions_for: [application])
+
+      sign_in create(:superadmin_user)
+
+      assert_raises(ActiveRecord::RecordNotFound) do
+        patch :update, params: {
+          api_user_id: api_user,
+          application_id: application,
+          application: { supported_permission_ids: [permission] },
+        }
+      end
+    end
+
     should "prevent updating permissions for retired applications" do
       application = create(:application, retired: true)
       permission = create(:supported_permission, application:)
