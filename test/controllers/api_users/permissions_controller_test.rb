@@ -78,7 +78,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
         end
       end
 
-      should "prevent access if the user has a revoked access token" do
+      should "prevent access if the user only has a revoked access token" do
         sign_in create(:superadmin_user)
 
         application = create(:application)
@@ -214,8 +214,10 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
     end
 
     should "assign the application id to the application_id flash" do
-      application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
-      api_user = create(:api_user)
+      application = create(:application)
+      permission = create(:supported_permission, application:)
+
+      api_user = create(:api_user, with_signin_permissions_for: [application])
       create(:access_token, application:, resource_owner_id: api_user.id)
 
       current_user = create(:superadmin_user)
@@ -223,9 +225,11 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
 
       stub_policy current_user, api_user, update?: true
 
-      permission = application.supported_permissions.find_by(name: "permission")
-
-      patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [permission.id] } }
+      patch :update, params: {
+        api_user_id: api_user,
+        application_id: application,
+        application: { supported_permission_ids: [permission.id] },
+      }
 
       assert_equal application.id, flash[:application_id]
     end
@@ -240,49 +244,77 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
 
       stub_policy current_user, api_user, update?: false
 
-      patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [] } }
+      patch :update, params: {
+        api_user_id: api_user,
+        application_id: application,
+        application: { supported_permission_ids: [] },
+      }
 
       assert_not_authorised
     end
 
     should "push permission changes out to apps" do
-      sign_in create(:superadmin_user)
+      application = create(:application)
+      permission = create(:supported_permission, application:)
 
-      application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
-      api_user = create(:api_user)
-      create(:access_token, resource_owner_id: api_user.id, application:)
+      api_user = create(:api_user, with_signin_permissions_for: [application])
+      create(:access_token, application:, resource_owner_id: api_user.id)
 
-      permission = application.supported_permissions.find_by(name: "permission")
+      current_user = create(:superadmin_user)
+      sign_in current_user
+
+      stub_policy current_user, api_user, update?: true
 
       PermissionUpdater.expects(:perform_on).with(api_user)
 
-      patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [permission.id] } }
+      patch :update, params: {
+        api_user_id: api_user,
+        application_id: application,
+        application: { supported_permission_ids: [permission.id] },
+      }
     end
 
-    should "exclude applications with revoked access tokens" do
-      sign_in create(:superadmin_user)
-
+    should "prevent updating permissions if the user only has a revoked access token" do
       application = create(:application)
-      api_user = create(:api_user)
+      permission = create(:supported_permission, application:)
+
+      api_user = create(:api_user, with_signin_permissions_for: [application])
+
       create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
 
+      current_user = create(:superadmin_user)
+      sign_in current_user
+
+      stub_policy current_user, api_user, update?: true
+
       assert_raises(ActiveRecord::RecordNotFound) do
-        patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [] } }
+        patch :update, params: {
+          api_user_id: api_user,
+          application_id: application,
+          application: { supported_permission_ids: [permission] },
+        }
       end
     end
 
-    should "include applications with revoked access tokens when there is at least one non-revoked access token" do
-      sign_in create(:superadmin_user)
+    should "allow updating when the user has revoked access tokens when there is at least one non-revoked access token" do
+      application = create(:application)
+      permission = create(:supported_permission, application:)
 
-      application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
-      api_user = create(:api_user)
+      api_user = create(:api_user, with_signin_permissions_for: [application])
       create(:access_token, resource_owner_id: api_user.id, application:, revoked_at: Time.current)
       create(:access_token, resource_owner_id: api_user.id, application:)
 
-      permission = application.supported_permissions.find_by(name: "permission")
+      current_user = create(:superadmin_user)
+      sign_in current_user
+
+      stub_policy current_user, api_user, update?: true
 
       assert_nothing_raised do
-        patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [permission.id] } }
+        patch :update, params: {
+          api_user_id: api_user,
+          application_id: application,
+          application: { supported_permission_ids: [permission.id] },
+        }
       end
     end
   end
