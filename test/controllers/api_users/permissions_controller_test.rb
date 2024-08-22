@@ -139,27 +139,6 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       assert_same_elements [application.signin_permission, new_permission], api_user.reload.supported_permissions
     end
 
-    should "not remove permissions the user already has that are not grantable from ui" do
-      application = create(:application, with_non_delegatable_supported_permissions: %w[other], with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
-      api_user = create(:api_user)
-      api_user.grant_application_permission(application, "not_from_ui")
-      create(:access_token, application:, resource_owner_id: api_user.id)
-
-      current_user = create(:superadmin_user)
-      sign_in current_user
-
-      stub_policy current_user, api_user, update?: true
-
-      other_permission = application.supported_permissions.find_by(name: "other")
-      not_from_ui_permission = application.supported_permissions.find_by(name: "not_from_ui")
-
-      patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [other_permission.id] } }
-
-      api_user.reload
-
-      assert_same_elements [other_permission, not_from_ui_permission], api_user.supported_permissions
-    end
-
     should "when updating permissions for app A, prevent additionally adding or removing permissions for app B" do
       application_a = create(:application)
       application_a_old_permission = create(:supported_permission, application: application_a)
@@ -202,9 +181,18 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       assert_not_includes current_user.supported_permissions, application_b_new_permission
     end
 
-    should "prevent permissions being added that are not grantable from the ui" do
-      application = create(:application, with_non_delegatable_supported_permissions: %w[other], with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
-      api_user = create(:api_user)
+    should "prevent permissions that are not grantable from the UI being added or removed" do
+      application = create(:application)
+      old_grantable_permission = create(:supported_permission, application:)
+      new_grantable_permission = create(:supported_permission, application:)
+      old_non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
+      new_non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
+
+      api_user = create(
+        :api_user,
+        with_signin_permissions_for: [application],
+        with_permissions: { application => [old_grantable_permission.name, old_non_grantable_permission.name] },
+      )
       create(:access_token, application:, resource_owner_id: api_user.id)
 
       current_user = create(:superadmin_user)
@@ -212,13 +200,17 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
 
       stub_policy current_user, api_user, update?: true
 
-      not_from_ui_permission = application.supported_permissions.find_by(name: "not_from_ui")
+      patch :update, params: {
+        api_user_id: api_user,
+        application_id: application,
+        application: { supported_permission_ids: [new_grantable_permission.id, new_non_grantable_permission.id] },
+      }
 
-      patch :update, params: { api_user_id: api_user, application_id: application, application: { supported_permission_ids: [not_from_ui_permission.id] } }
-
-      api_user.reload
-
-      assert_equal [], api_user.supported_permissions
+      assert_same_elements [
+        old_non_grantable_permission,
+        new_grantable_permission,
+        application.signin_permission,
+      ], api_user.reload.supported_permissions
     end
 
     should "assign the application id to the application_id flash" do
