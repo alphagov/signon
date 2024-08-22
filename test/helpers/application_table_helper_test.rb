@@ -101,7 +101,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
     setup do
       @user = build(:user)
       stubs(:current_user).returns(@user)
-      @application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
+      @application = create(:application)
     end
 
     should "generate both view and update links when the user can both view and edit permissions" do
@@ -139,7 +139,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
   context "#users_applications_permissions_links" do
     setup do
-      @application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
+      @application = create(:application)
       @current_user = build(:user)
       stubs(:current_user).returns(@current_user)
       @grantee = create(:user)
