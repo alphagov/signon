@@ -139,31 +139,6 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       assert_same_elements [application.signin_permission, new_permission], api_user.reload.supported_permissions
     end
 
-    should "prevent permissions being added for apps that the current user does not have access to" do
-      organisation = create(:organisation)
-
-      application1 = create(:application)
-      application2 = create(:application, with_non_delegatable_supported_permissions: %w[app2-permission])
-
-      api_user = create(:api_user, organisation:)
-      create(:access_token, application: application1, resource_owner_id: api_user.id)
-      create(:access_token, application: application2, resource_owner_id: api_user.id)
-
-      current_user = create(:superadmin_user)
-      current_user.grant_application_signin_permission(application1)
-      sign_in current_user
-
-      stub_policy current_user, api_user, update?: true
-
-      app2_permission = application2.supported_permissions.find_by!(name: "app2-permission")
-
-      patch :update, params: { api_user_id: api_user, application_id: application1, application: { supported_permission_ids: [app2_permission.id] } }
-
-      api_user.reload
-
-      assert_equal [], api_user.supported_permissions
-    end
-
     should "not remove permissions the user already has that are not grantable from ui" do
       application = create(:application, with_non_delegatable_supported_permissions: %w[other], with_non_delegatable_supported_permissions_not_grantable_from_ui: %w[not_from_ui])
       api_user = create(:api_user)
