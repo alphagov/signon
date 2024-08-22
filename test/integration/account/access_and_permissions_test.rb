@@ -41,41 +41,6 @@ class Account::AccessAndPermissionsTest < ActionDispatch::IntegrationTest
     end
   end
 
-  context "viewing permissions for an app" do
-    setup do
-      @application = create(:application, name: "app-name", description: "app-description", with_non_delegatable_supported_permissions: %w[perm1 perm2])
-      @application.signin_permission.update!(delegatable: false)
-    end
-
-    %i[super_organisation_admin organisation_admin].each do |user_role|
-      context "for #{user_role} users" do
-        setup do
-          @user = create(:"#{user_role}_user")
-          @user.grant_application_signin_permission(@application)
-          @user.grant_application_permission(@application, "perm1")
-        end
-
-        should "allow user to view their permissions for apps" do
-          visit new_user_session_path
-          signin_with @user
-
-          visit account_applications_path
-
-          click_on "View permissions for app-name"
-
-          signin_permission_row = find("table tr td:nth-child(1)", text: "signin").ancestor("tr")
-          assert signin_permission_row.has_content?("Yes")
-
-          perm1_permission_row = find("table tr td:nth-child(1)", text: "perm1").ancestor("tr")
-          assert perm1_permission_row.has_content?("Yes")
-
-          perm2_permission_row = find("table tr td:nth-child(1)", text: "perm2").ancestor("tr")
-          assert perm2_permission_row.has_content?("No")
-        end
-      end
-    end
-  end
-
   %i[superadmin admin].each do |admin_role|
     context "as a #{admin_role}" do
       setup do
