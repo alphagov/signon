@@ -125,6 +125,10 @@ FactoryBot.define do
       evaluator.with_permissions.each do |app_or_name, permission_names|
         user.grant_application_permissions(find_application(app_or_name), permission_names)
       end
+
+      evaluator.with_signin_permissions_for.each do |app_or_name|
+        user.grant_application_signin_permission(find_application(app_or_name))
+      end
     end
   end
 end
