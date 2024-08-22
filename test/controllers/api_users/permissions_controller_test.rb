@@ -136,7 +136,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       }
 
       assert_redirected_to api_user_applications_path(api_user)
-      assert_same_elements [application.signin_permission, new_permission], api_user.reload.supported_permissions
+      assert_same_elements [application.signin_permission, new_permission], api_user.supported_permissions
     end
 
     should "when updating permissions for app A, prevent additionally adding or removing permissions for app B" do
@@ -167,8 +167,6 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
         application_id: application_a,
         application: { supported_permission_ids: [application_a_new_permission.id, application_b_new_permission.id] },
       }
-
-      api_user.reload
 
       assert_same_elements [
         application_a_new_permission,
@@ -210,7 +208,7 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
         old_non_grantable_permission,
         new_grantable_permission,
         application.signin_permission,
-      ], api_user.reload.supported_permissions
+      ], api_user.supported_permissions
     end
 
     should "assign the application id to the application_id flash" do
