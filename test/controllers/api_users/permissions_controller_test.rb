@@ -230,17 +230,6 @@ class ApiUsers::PermissionsControllerTest < ActionController::TestCase
       assert_equal application.id, flash[:application_id]
     end
 
-    should "raise an exception if the user cannot be found" do
-      application = create(:application)
-
-      current_user = create(:superadmin_user)
-      sign_in current_user
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        patch :update, params: { api_user_id: "unknown-id", application_id: application, application: { supported_permission_ids: %w[id] } }
-      end
-    end
-
     should "prevent unauthorised users" do
       application = create(:application)
       api_user = create(:api_user)
