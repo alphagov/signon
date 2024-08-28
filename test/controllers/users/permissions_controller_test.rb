@@ -420,7 +420,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [new_permission.id] } }
 
       assert_redirected_to user_applications_path(user)
-      assert_same_elements [new_permission, application.signin_permission], user.reload.supported_permissions
+      assert_same_elements [new_permission, application.signin_permission], user.supported_permissions
     end
 
     should "when updating permissions for app A, prevent additionally adding or removing permissions for app B" do
@@ -462,8 +462,6 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         },
       )
 
-      user.reload
-
       assert_same_elements [
         application_a_new_permission,
         application_b_old_permission,
@@ -504,7 +502,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         old_non_grantable_permission,
         new_grantable_permission,
         application.signin_permission,
-      ], user.reload.supported_permissions
+      ], user.supported_permissions
     end
 
     should "assign the application id to the application_id flash" do
@@ -573,7 +571,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
           old_non_delegatable_permission,
           new_delegatable_permission,
           application.signin_permission,
-        ], user.reload.supported_permissions
+        ], user.supported_permissions
       end
     end
 
@@ -615,7 +613,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
         assert_redirected_to user_applications_path(@user)
 
-        assert_same_elements [*@old_permissions, @new_permission, @application.signin_permission], @user.reload.supported_permissions
+        assert_same_elements [*@old_permissions, @new_permission, @application.signin_permission], @user.supported_permissions
       end
 
       context "when the add_more param is 'true'" do
@@ -635,7 +633,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
           assert_redirected_to edit_user_application_permissions_path(@user, @application)
 
-          assert_same_elements [*@old_permissions, @new_permission, @application.signin_permission], @user.reload.supported_permissions
+          assert_same_elements [*@old_permissions, @new_permission, @application.signin_permission], @user.supported_permissions
         end
       end
     end
