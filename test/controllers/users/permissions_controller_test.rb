@@ -108,7 +108,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
   context "#edit" do
     context "when a user can edit another's permissions" do
-      should "display checkboxes for the grantable permissions" do
+      should "render a page with checkboxes for the grantable permissions and a hidden field for the signin permission so that it is not removed" do
         application = create(:application)
         old_grantable_permission = create(:supported_permission, application:)
         new_grantable_permission = create(:supported_permission, application:)
@@ -136,24 +136,6 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_grantable_permission.id}']"
         assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_non_grantable_permission.id}']", count: 0
         assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{application.signin_permission.id}']", count: 0
-      end
-
-      should "include a hidden field for the signin permission so that it is not removed" do
-        application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
-        user = create(:user, with_signin_permissions_for: [application])
-
-        current_user = create(:admin_user)
-        sign_in current_user
-
-        stub_policy(
-          current_user,
-          { application:, user: },
-          policy_class: Users::ApplicationPolicy,
-          edit_permissions?: true,
-        )
-
-        get :edit, params: { user_id: user, application_id: application }
-
         assert_select "input[type='hidden'][value='#{application.signin_permission.id}']"
       end
 

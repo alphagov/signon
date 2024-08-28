@@ -77,7 +77,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
 
   context "#edit" do
     context "when a user can edit their permissions" do
-      should "display checkboxes for the grantable permissions" do
+      should "render a page with checkboxes for the grantable permissions and a hidden field for the signin permission so that it is not removed" do
         application = create(:application)
         old_grantable_permission = create(:supported_permission, application:)
         new_grantable_permission = create(:supported_permission, application:)
@@ -97,16 +97,6 @@ class Account::PermissionsControllerTest < ActionController::TestCase
         assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_grantable_permission.id}']"
         assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_non_grantable_permission.id}']", count: 0
         assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{application.signin_permission.id}']", count: 0
-      end
-
-      should "include a hidden field for the signin permission so that it is not removed" do
-        application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
-        user = create(:admin_user, with_signin_permissions_for: [application])
-
-        sign_in user
-
-        get :edit, params: { application_id: application }
-
         assert_select "input[type='hidden'][value='#{application.signin_permission.id}']"
       end
 
