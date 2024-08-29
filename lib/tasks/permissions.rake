@@ -44,4 +44,81 @@ namespace :permissions do
 
     puts "After removing permissions: #{count_of_remaining_users_with_both_permissions}"
   end
+
+  desc "Get permissions by non-GDS user, and who gave them the permission if we have the data"
+  task permissions_by_non_gds_user_and_origin: :environment do
+    CSV.open("tmp/permissions_by_non_gds_user.csv", "w") do |csv|
+      csv << [
+        "Grantee ID",
+        "Grantee email",
+        "Grantee organisation (now)",
+        "Grantee role (now)",
+        "Grantee status (now)",
+        "Grantee created at",
+        "Application",
+        "Permission",
+        "Permission created at",
+        "Permission updated at",
+        "Granter ID",
+        "Granter email",
+        "Granter organisation (now)",
+        "Granter role (now)",
+        "Event log created at",
+        "All permissions added during event",
+        "Event log ID",
+      ]
+
+      gds_organisation_id = Organisation.find_by(content_id: Organisation::GDS_ORG_CONTENT_ID).id
+
+      User.where.not(organisation_id: gds_organisation_id).find_each do |user|
+        event_logs = EventLog
+          .where(event_id: EventLog::PERMISSIONS_ADDED.id, uid: user.uid)
+          .includes(:initiator)
+          .order(created_at: :desc)
+          .map do |model_instance|
+            {
+              model_instance:,
+              application_id: model_instance.application&.id,
+              permission_names: model_instance.trailing_message[1..-2].split(", "),
+            }
+          end
+
+        user.application_permissions.find_each do |user_application_permission|
+          permission_name = user_application_permission.supported_permission.name
+          event_log = event_logs.find do |log|
+            return false unless log[:application_id] == user_application_permission.application_id
+
+            log[:permission_names].include?(permission_name)
+          end
+          event_log_cells = if event_log
+                              [
+                                event_log[:model_instance].initiator_id,
+                                event_log[:model_instance].initiator.email,
+                                "\"#{event_log[:model_instance].initiator.organisation_name}\"",
+                                event_log[:model_instance].initiator.role_name,
+                                event_log[:model_instance].created_at,
+                                event_log[:model_instance].trailing_message[1..-2].gsub(",", ";"),
+                                event_log[:model_instance].id,
+                              ]
+                            else
+                              Array.new(7)
+                            end
+
+          csv << [
+            user.id,
+            user.email,
+            "\"#{user.organisation_name}\"",
+            user.role_name,
+            user.status,
+            user.created_at,
+            user_application_permission.application.name,
+            permission_name,
+            user_application_permission.created_at,
+            user_application_permission.updated_at,
+            *event_log_cells,
+          ]
+        end
+      end
+    end
+  end
 end
