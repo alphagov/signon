@@ -86,7 +86,7 @@ namespace :permissions do
         user.application_permissions.find_each do |user_application_permission|
           permission_name = user_application_permission.supported_permission.name
           event_log = event_logs.find do |log|
-            return false unless log[:application_id] == user_application_permission.application_id
+            next unless log[:application_id] == user_application_permission.application_id
 
             log[:permission_names].include?(permission_name)
           end
