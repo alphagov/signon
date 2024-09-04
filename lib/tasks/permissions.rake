@@ -121,4 +121,75 @@ namespace :permissions do
       end
     end
   end
+
+  desc "Remove inappropriately granted permissions from non-GDS users"
+  task remove_inappropriately_granted_permissions_from_non_gds_users: :environment do
+    supported_permission_ids_to_remove = [
+      { application_name: "Collections publisher", name: SupportedPermission::SIGNIN_NAME },
+      { application_name: "Collections publisher", name: "2i reviewer" },
+      { application_name: "Collections publisher", name: "Coronavirus editor" },
+      { application_name: "Collections publisher", name: "Edit Taxonomy" },
+      { application_name: "Collections publisher", name: "GDS Editor" },
+      { application_name: "Collections publisher", name: "Livestream editor" },
+      { application_name: "Collections publisher", name: "Sidekiq Monitoring" },
+      { application_name: "Collections publisher", name: "Skip review" },
+      { application_name: "Collections publisher", name: "Unreleased feature" },
+      { application_name: "Content Data", name: "view_email_subs" },
+      { application_name: "Content Data", name: "view_siteimprove" },
+      { application_name: "Content Tagger", name: "GDS Editor" },
+      { application_name: "Content Tagger", name: "Tagathon participant" },
+      { application_name: "Content Tagger", name: "Unreleased feature" },
+      { application_name: "Manuals Publisher", name: "gds_editor" },
+      { application_name: "Specialist publisher", name: "gds_editor" },
+      { application_name: "Support", name: "feedex_exporters" },
+      { application_name: "Support", name: "feedex_reviews" },
+    ].map do |application_name_and_name|
+      application_name_and_name => {application_name:, name:}
+      application_id = Doorkeeper::Application.find_by(name: application_name)&.id
+      SupportedPermission.find_by(application_id:, name:)&.id
+    end
+
+    gds_organisation_id = Organisation.find_by(content_id: Organisation::GDS_ORG_CONTENT_ID).id
+    non_gds_user_ids = User.where.not(organisation_id: gds_organisation_id)
+
+    user_application_permissions_to_destroy = UserApplicationPermission.where(
+      user_id: non_gds_user_ids,
+      supported_permission_id: supported_permission_ids_to_remove,
+    )
+
+    number_of_permissions_to_destroy = user_application_permissions_to_destroy.count
+    puts "Number of permissions to remove: #{number_of_permissions_to_destroy}, are you sure? (y)"
+
+    input = $stdin.gets.strip.downcase
+
+    unless input == "y"
+      abort("Aborting")
+    end
+
+    ActiveRecord::Base.transaction do
+      initiator = User.find_by(email: "ynda.jas@digital.cabinet-office.gov.uk")
+
+      puts "Destroying #{number_of_permissions_to_destroy} user application permissions"
+
+      user_application_permissions_to_destroy.each do |user_application_permission|
+        EventLog.record_event(
+          user_application_permission.user,
+          EventLog::PERMISSIONS_REMOVED,
+          initiator:,
+          application_id: user_application_permission.application_id,
+          trailing_message: "(removed inappropriately granted permission from non-GDS user: #{user_application_permission.supported_permission.name})",
+        )
+
+        user_application_permission.destroy!
+      end
+
+      user_application_permissions_remaining = UserApplicationPermission.where(
+        user_id: non_gds_user_ids,
+        supported_permission_id: supported_permission_ids_to_remove,
+      )
+      raise "Failed to destroy given permissions" unless user_application_permissions_remaining.count.zero?
+
+      puts "Destroyed #{number_of_permissions_to_destroy} user application permissions"
+    end
+  end
 end
