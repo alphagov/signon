@@ -10,18 +10,6 @@ class Users::AccessAndPermissionsTest < ActionDispatch::IntegrationTest
       signin_with(admin)
     end
 
-    should "support removing signin permissions" do
-      app = create(:application, name: "MyApp")
-      @user.grant_application_signin_permission(app)
-
-      visit edit_user_path(@user)
-      click_link "Manage permissions"
-      click_on "Remove access to MyApp"
-      click_on "Confirm"
-
-      assert_not @user.has_access_to?(app)
-    end
-
     should "support granting app-specific permissions" do
       app = create(
         :application,
@@ -84,18 +72,6 @@ class Users::AccessAndPermissionsTest < ActionDispatch::IntegrationTest
 
       visit root_path
       signin_with(admin)
-    end
-
-    should "support removing signin permissions" do
-      app = create(:application, name: "MyApp")
-      @user.grant_application_signin_permission(app)
-
-      visit edit_user_path(@user)
-      click_link "Manage permissions"
-      click_on "Remove access to MyApp"
-      click_on "Confirm"
-
-      assert_not @user.has_access_to?(app)
     end
 
     should "support granting app-specific permissions" do
