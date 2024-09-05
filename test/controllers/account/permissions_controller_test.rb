@@ -32,45 +32,45 @@ class Account::PermissionsControllerTest < ActionController::TestCase
         assert_select "td", text: non_grantable_permission.name, count: 0
       end
     end
-  end
 
-  context "when a user cannot view permissions" do
-    should "prevent unauthenticated users" do
-      application = create(:application)
+    context "when a user cannot view permissions" do
+      should "prevent unauthenticated users" do
+        application = create(:application)
 
-      get :show, params: { application_id: application }
-
-      assert_redirected_to "/users/sign_in"
-    end
-
-    should "prevent unauthorised users" do
-      application = create(:application)
-
-      current_user = create(:admin_user, with_signin_permissions_for: [application])
-      sign_in current_user
-
-      stub_policy current_user, [:account, application], view_permissions?: false
-
-      get :show, params: { application_id: application }
-
-      assert_not_authorised
-    end
-
-    should "raise an exception if the application is retired" do
-      sign_in create(:admin_user)
-      application = create(:application, retired: true)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
         get :show, params: { application_id: application }
+
+        assert_redirected_to "/users/sign_in"
       end
-    end
 
-    should "raise an exception if the application is API-only" do
-      sign_in create(:admin_user)
-      application = create(:application, api_only: true)
+      should "prevent unauthorised users" do
+        application = create(:application)
 
-      assert_raises(ActiveRecord::RecordNotFound) do
+        current_user = create(:admin_user, with_signin_permissions_for: [application])
+        sign_in current_user
+
+        stub_policy current_user, [:account, application], view_permissions?: false
+
         get :show, params: { application_id: application }
+
+        assert_not_authorised
+      end
+
+      should "raise an exception if the application is retired" do
+        sign_in create(:admin_user)
+        application = create(:application, retired: true)
+
+        assert_raises(ActiveRecord::RecordNotFound) do
+          get :show, params: { application_id: application }
+        end
+      end
+
+      should "raise an exception if the application is API-only" do
+        sign_in create(:admin_user)
+        application = create(:application, api_only: true)
+
+        assert_raises(ActiveRecord::RecordNotFound) do
+          get :show, params: { application_id: application }
+        end
       end
     end
   end
@@ -231,7 +231,7 @@ class Account::PermissionsControllerTest < ActionController::TestCase
   end
 
   context "#update" do
-    context "when a user can edit their permissions" do
+    context "when a user can update their permissions" do
       should "update non-signin permissions, retaining the signin permission, then redirect to the applications path" do
         application = create(:application)
         old_permission = create(:supported_permission, application:)
@@ -252,195 +252,195 @@ class Account::PermissionsControllerTest < ActionController::TestCase
         assert_redirected_to account_applications_path
         assert_same_elements [application.signin_permission, new_permission], current_user.supported_permissions
       end
-    end
 
-    should "assign the application id to the application_id flash" do
-      application = create(:application)
-      old_permission = create(:supported_permission, application:)
-      new_permission = create(:supported_permission, application:)
+      should "assign the application id to the application_id flash" do
+        application = create(:application)
+        old_permission = create(:supported_permission, application:)
+        new_permission = create(:supported_permission, application:)
 
-      user = create(
-        :admin_user,
-        with_signin_permissions_for: [application],
-        with_permissions: { application => [old_permission.name] },
-      )
-      sign_in user
-
-      patch :update, params: { application_id: application, application: { supported_permission_ids: [new_permission.id] } }
-
-      assert_equal application.id, flash[:application_id]
-    end
-
-    context "when current_permission_ids and new_permission_id are provided instead of supported_permission_ids" do
-      setup do
-        @application = create(:application)
-        @old_permissions = create_list(:supported_permission, 2, application: @application)
-        @new_permission = create(:supported_permission, application: @application)
-
-        @current_user = create(
+        user = create(
           :admin_user,
-          with_signin_permissions_for: [@application],
-          with_permissions: { @application => @old_permissions.map(&:name) },
+          with_signin_permissions_for: [application],
+          with_permissions: { application => [old_permission.name] },
         )
+        sign_in user
 
-        sign_in @current_user
+        patch :update, params: { application_id: application, application: { supported_permission_ids: [new_permission.id] } }
 
-        stub_policy @current_user, [:account, @application], edit_permissions?: true
+        assert_equal application.id, flash[:application_id]
       end
 
-      should "use the relevant params to update permissions" do
-        patch :update, params: { application_id: @application, application: { current_permission_ids: [*@old_permissions], new_permission_id: @new_permission.id } }
+      context "when current_permission_ids and new_permission_id are provided instead of supported_permission_ids" do
+        setup do
+          @application = create(:application)
+          @old_permissions = create_list(:supported_permission, 2, application: @application)
+          @new_permission = create(:supported_permission, application: @application)
 
-        assert_redirected_to account_applications_path
+          @current_user = create(
+            :admin_user,
+            with_signin_permissions_for: [@application],
+            with_permissions: { @application => @old_permissions.map(&:name) },
+          )
 
-        assert_same_elements [*@old_permissions, @new_permission, @application.signin_permission], @current_user.supported_permissions
-      end
+          sign_in @current_user
 
-      context "when the add_more param is 'true'" do
-        should "update permissions then redirect back to the edit page" do
-          patch :update, params: { application_id: @application, application: { current_permission_ids: [*@old_permissions], new_permission_id: @new_permission.id, add_more: "true" } }
+          stub_policy @current_user, [:account, @application], edit_permissions?: true
+        end
 
-          assert_redirected_to edit_account_application_permissions_path(@application)
+        should "use the relevant params to update permissions" do
+          patch :update, params: { application_id: @application, application: { current_permission_ids: [*@old_permissions], new_permission_id: @new_permission.id } }
+
+          assert_redirected_to account_applications_path
 
           assert_same_elements [*@old_permissions, @new_permission, @application.signin_permission], @current_user.supported_permissions
         end
-      end
-    end
-  end
 
-  context "when a user cannot edit their permissions" do
-    should "prevent unauthenticated users" do
-      application = create(:application)
+        context "when the add_more param is 'true'" do
+          should "update permissions then redirect back to the edit page" do
+            patch :update, params: { application_id: @application, application: { current_permission_ids: [*@old_permissions], new_permission_id: @new_permission.id, add_more: "true" } }
 
-      patch :update, params: { application_id: application }
+            assert_redirected_to edit_account_application_permissions_path(@application)
 
-      assert_redirected_to "/users/sign_in"
-    end
-
-    should "prevent unauthorised users" do
-      application = create(:application)
-
-      current_user = create(:admin_user, with_signin_permissions_for: [application])
-      sign_in current_user
-
-      stub_policy current_user, [:account, application], edit_permissions?: false
-
-      patch :update, params: { application_id: application, application: { supported_permission_ids: [] } }
-
-      assert_not_authorised
-    end
-
-    should "raise an exception if the application is retired" do
-      sign_in create(:admin_user)
-      application = create(:application, retired: true)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        patch :update, params: { application_id: application, application: { supported_permission_ids: [] } }
+            assert_same_elements [*@old_permissions, @new_permission, @application.signin_permission], @current_user.supported_permissions
+          end
+        end
       end
     end
 
-    should "raise an exception if the application is API-only" do
-      sign_in create(:admin_user)
-      application = create(:application, api_only: true)
-
-      assert_raises(ActiveRecord::RecordNotFound) do
-        patch :update, params: { application_id: application, application: { supported_permission_ids: [] } }
-      end
-    end
-
-    should "when updating permissions for app A, prevent additionally adding or removing permissions for app B" do
-      application_a = create(:application)
-      application_a_old_permission = create(:supported_permission, application: application_a)
-      application_a_new_permission = create(:supported_permission, application: application_a)
-
-      application_b = create(:application)
-      application_b_old_permission = create(:supported_permission, application: application_b)
-      application_b_new_permission = create(:supported_permission, application: application_b)
-
-      current_user = create(
-        :admin_user,
-        with_signin_permissions_for: [application_a, application_b],
-        with_permissions: {
-          application_a => [application_a_old_permission.name],
-          application_b => [application_b_old_permission.name],
-        },
-      )
-      sign_in current_user
-
-      [application_a, application_b].each do |application|
-        stub_policy current_user, [:account, application], edit_permissions?: true
-      end
-
-      patch(
-        :update,
-        params: {
-          application_id: application_a,
-          application: { supported_permission_ids: [application_a_new_permission.id, application_b_new_permission.id] },
-        },
-      )
-
-      assert_same_elements [
-        application_a_new_permission,
-        application_b_old_permission,
-        application_a.signin_permission,
-        application_b.signin_permission,
-      ], current_user.supported_permissions
-
-      assert_not_includes current_user.supported_permissions, application_a_old_permission
-      assert_not_includes current_user.supported_permissions, application_b_new_permission
-    end
-
-    should "prevent permissions that are not grantable from the UI being added or removed" do
-      application = create(:application)
-      old_grantable_permission = create(:supported_permission, application:)
-      new_grantable_permission = create(:supported_permission, application:)
-      old_non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
-      new_non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
-
-      current_user = create(
-        :admin_user,
-        with_signin_permissions_for: [application],
-        with_permissions: { application => [old_grantable_permission.name, old_non_grantable_permission.name] },
-      )
-      sign_in current_user
-
-      stub_policy current_user, [:account, application], edit_permissions?: true
-
-      patch :update, params: { application_id: application, application: { supported_permission_ids: [new_grantable_permission.id, new_non_grantable_permission.id] } }
-
-      assert_same_elements [
-        old_non_grantable_permission,
-        new_grantable_permission,
-        application.signin_permission,
-      ], current_user.supported_permissions
-    end
-
-    context "when the current user is a publishing manager with access to the app" do
-      should "prevent adding or removing non-delegatable permissions" do
+    context "when a user cannot update their permissions" do
+      should "prevent unauthenticated users" do
         application = create(:application)
-        old_delegatable_permission = create(:delegatable_supported_permission, application:)
-        new_delegatable_permission = create(:delegatable_supported_permission, application:)
-        old_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
-        new_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
+
+        patch :update, params: { application_id: application }
+
+        assert_redirected_to "/users/sign_in"
+      end
+
+      should "prevent unauthorised users" do
+        application = create(:application)
+
+        current_user = create(:admin_user, with_signin_permissions_for: [application])
+        sign_in current_user
+
+        stub_policy current_user, [:account, application], edit_permissions?: false
+
+        patch :update, params: { application_id: application, application: { supported_permission_ids: [] } }
+
+        assert_not_authorised
+      end
+
+      should "raise an exception if the application is retired" do
+        sign_in create(:admin_user)
+        application = create(:application, retired: true)
+
+        assert_raises(ActiveRecord::RecordNotFound) do
+          patch :update, params: { application_id: application, application: { supported_permission_ids: [] } }
+        end
+      end
+
+      should "raise an exception if the application is API-only" do
+        sign_in create(:admin_user)
+        application = create(:application, api_only: true)
+
+        assert_raises(ActiveRecord::RecordNotFound) do
+          patch :update, params: { application_id: application, application: { supported_permission_ids: [] } }
+        end
+      end
+
+      should "when updating permissions for app A, prevent additionally adding or removing permissions for app B" do
+        application_a = create(:application)
+        application_a_old_permission = create(:supported_permission, application: application_a)
+        application_a_new_permission = create(:supported_permission, application: application_a)
+
+        application_b = create(:application)
+        application_b_old_permission = create(:supported_permission, application: application_b)
+        application_b_new_permission = create(:supported_permission, application: application_b)
 
         current_user = create(
-          :user,
-          with_signin_permissions_for: [application],
-          with_permissions: { application => [old_delegatable_permission.name, old_non_delegatable_permission.name] },
+          :admin_user,
+          with_signin_permissions_for: [application_a, application_b],
+          with_permissions: {
+            application_a => [application_a_old_permission.name],
+            application_b => [application_b_old_permission.name],
+          },
         )
-        current_user.stubs(:publishing_manager?).returns(true)
-        current_user.stubs(:organisation_admin_belongs_to_organisation).returns(true)
+        sign_in current_user
+
+        [application_a, application_b].each do |application|
+          stub_policy current_user, [:account, application], edit_permissions?: true
+        end
+
+        patch(
+          :update,
+          params: {
+            application_id: application_a,
+            application: { supported_permission_ids: [application_a_new_permission.id, application_b_new_permission.id] },
+          },
+        )
+
+        assert_same_elements [
+          application_a_new_permission,
+          application_b_old_permission,
+          application_a.signin_permission,
+          application_b.signin_permission,
+        ], current_user.supported_permissions
+
+        assert_not_includes current_user.supported_permissions, application_a_old_permission
+        assert_not_includes current_user.supported_permissions, application_b_new_permission
+      end
+
+      should "prevent permissions that are not grantable from the UI being added or removed" do
+        application = create(:application)
+        old_grantable_permission = create(:supported_permission, application:)
+        new_grantable_permission = create(:supported_permission, application:)
+        old_non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
+        new_non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
+
+        current_user = create(
+          :admin_user,
+          with_signin_permissions_for: [application],
+          with_permissions: { application => [old_grantable_permission.name, old_non_grantable_permission.name] },
+        )
         sign_in current_user
 
         stub_policy current_user, [:account, application], edit_permissions?: true
 
-        patch(:update, params: { application_id: application, application: { supported_permission_ids: [new_delegatable_permission.id, new_non_delegatable_permission.id] } })
+        patch :update, params: { application_id: application, application: { supported_permission_ids: [new_grantable_permission.id, new_non_grantable_permission.id] } }
 
         assert_same_elements [
-          old_non_delegatable_permission,
-          new_delegatable_permission,
+          old_non_grantable_permission,
+          new_grantable_permission,
           application.signin_permission,
         ], current_user.supported_permissions
+      end
+
+      context "when the current user is a publishing manager with access to the app" do
+        should "prevent adding or removing non-delegatable permissions" do
+          application = create(:application)
+          old_delegatable_permission = create(:delegatable_supported_permission, application:)
+          new_delegatable_permission = create(:delegatable_supported_permission, application:)
+          old_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
+          new_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
+
+          current_user = create(
+            :user,
+            with_signin_permissions_for: [application],
+            with_permissions: { application => [old_delegatable_permission.name, old_non_delegatable_permission.name] },
+          )
+          current_user.stubs(:publishing_manager?).returns(true)
+          current_user.stubs(:organisation_admin_belongs_to_organisation).returns(true)
+          sign_in current_user
+
+          stub_policy current_user, [:account, application], edit_permissions?: true
+
+          patch(:update, params: { application_id: application, application: { supported_permission_ids: [new_delegatable_permission.id, new_non_delegatable_permission.id] } })
+
+          assert_same_elements [
+            old_non_delegatable_permission,
+            new_delegatable_permission,
+            application.signin_permission,
+          ], current_user.supported_permissions
+        end
       end
     end
   end
