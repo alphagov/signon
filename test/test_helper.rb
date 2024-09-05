@@ -88,6 +88,7 @@ require "support/user_account_helpers"
 require "support/editing_users_helpers"
 require "support/granting_access_helpers"
 require "support/removing_access_helpers"
+require "support/updating_permissions_helpers"
 
 class ActiveRecord::Base
   mattr_accessor :shared_connection
@@ -113,6 +114,7 @@ class ActionDispatch::IntegrationTest
   include EditingUsersHelpers
   include GrantingAccessHelpers
   include RemovingAccessHelpers
+  include UpdatingPermissionsHelpers
 
   def assert_response_contains(content)
     assert page.has_content?(content), "Expected to find '#{content}' in:\n#{page.text}"
