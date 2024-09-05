@@ -2,7 +2,7 @@ require "test_helper"
 
 class TwoStepVerificationExemptionsControllerTest < ActionController::TestCase
   setup do
-    @gds = create(:organisation, content_id: Organisation::GDS_ORG_CONTENT_ID)
+    @gds = create(:gds_organisation)
     @organisation = create(:organisation)
   end
 

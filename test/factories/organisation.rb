@@ -8,5 +8,6 @@ FactoryBot.define do
 
   factory :gds_organisation, parent: :organisation do
     content_id { Organisation::GDS_ORG_CONTENT_ID }
+    name { "Government Digital Service" }
   end
 end

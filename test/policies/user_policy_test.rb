@@ -9,7 +9,7 @@ class UserPolicyTest < ActiveSupport::TestCase
     @child_organisation = create(:organisation, parent: @parent_organisation)
     @super_org_admin = create(:super_organisation_admin_user, organisation: @parent_organisation)
     @organisation_admin = create(:organisation_admin_user, organisation: @parent_organisation)
-    @gds = create(:organisation, name: "Government Digital Services", content_id: Organisation::GDS_ORG_CONTENT_ID)
+    @gds = create(:gds_organisation)
   end
 
   primary_management_actions = %i[new create assign_organisation]

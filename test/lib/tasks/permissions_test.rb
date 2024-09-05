@@ -4,7 +4,7 @@ class PermissionsTest < ActiveSupport::TestCase
   setup do
     Signon::Application.load_tasks if Rake::Task.tasks.empty?
 
-    @gds_org = create(:organisation, name: "Government Digital Service")
+    @gds_org = create(:gds_organisation)
     @non_gds_org = create(:organisation, name: "Another Department")
     $stdout.stubs(:write)
   end
