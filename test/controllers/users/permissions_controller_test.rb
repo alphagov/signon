@@ -3,42 +3,53 @@ require "test_helper"
 class Users::PermissionsControllerTest < ActionController::TestCase
   context "#show" do
     context "when a user can view another's permissions" do
-      should "order permissions by whether the user has access and then alphabetically" do
-        application = create(:application,
-                             with_non_delegatable_supported_permissions: %w[uuu aaa ttt bbb])
+      %w[govuk_admin publishing_manager].each do |role_group|
+        context "as a #{role_group}" do
+          setup do
+            @application = create(:application)
+            @grantable_permission_user_has = create(:supported_permission, application: @application)
+            @grantable_permission_user_does_not_have = create(:supported_permission, application: @application)
+            @non_grantable_permission_user_has = create(:supported_permission, application: @application, grantable_from_ui: false)
+            @non_grantable_permission_user_does_not_have = create(:supported_permission, application: @application, grantable_from_ui: false)
 
-        user = create(:user,
-                      with_signin_permissions_for: [application],
-                      with_permissions: { application => %w[aaa ttt] })
+            @user = create(
+              :user,
+              with_signin_permissions_for: [@application],
+              with_permissions: {
+                @application => [@grantable_permission_user_has.name, @non_grantable_permission_user_has.name],
+              },
+            )
 
-        current_user = create(:admin_user)
-        sign_in current_user
+            current_user = create(:user)
+            current_user.stubs(:"#{role_group}?").returns(true)
+            stub_policy_for_navigation_links current_user
+            stub_policy current_user, @user, edit?: true
 
-        stub_policy_for_navigation_links current_user
-        stub_policy current_user, user, edit?: true
+            sign_in current_user
+          end
 
-        get :show, params: { user_id: user, application_id: application }
+          should "list permissions that are grantable from the UI" do
+            get :show, params: { user_id: @user, application_id: @application }
 
-        assert_equal %w[signin aaa ttt bbb uuu], assigns(:permissions).map(&:name)
-      end
+            assert_select "tr:nth-child(1)" do
+              assert_select "td:nth-child(1)", text: @application.signin_permission.name
+              assert_select "td:nth-child(2)", text: "Yes"
+            end
 
-      should "exclude permissions that aren't grantable from the UI" do
-        application = create(:application)
-        grantable_permission = create(:supported_permission, application:)
-        non_grantable_permission = create(:supported_permission, application:, grantable_from_ui: false)
+            assert_select "tr:nth-child(2)" do
+              assert_select "td:nth-child(1)", text: @grantable_permission_user_has.name
+              assert_select "td:nth-child(2)", text: "Yes"
+            end
 
-        user = create(:user, with_signin_permissions_for: [application])
+            assert_select "tr:nth-child(3)" do
+              assert_select "td:nth-child(1)", text: @grantable_permission_user_does_not_have.name
+              assert_select "td:nth-child(2)", text: "No"
+            end
 
-        current_user = create(:admin_user)
-        sign_in current_user
-
-        stub_policy_for_navigation_links current_user
-        stub_policy current_user, user, edit?: true
-
-        get :show, params: { user_id: user, application_id: application }
-
-        assert_select "td", text: grantable_permission.name
-        assert_select "td", text: non_grantable_permission.name, count: 0
+            assert_select "td", text: @non_grantable_permission_user_has.name, count: 0
+            assert_select "td", text: @non_grantable_permission_user_does_not_have.name, count: 0
+          end
+        end
       end
     end
 
