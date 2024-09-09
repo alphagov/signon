@@ -14,8 +14,6 @@ module EditingUsersHelpers
   def refute_edit_other_user(other_user)
     visit user_applications_path(other_user)
 
-    failure_flash = find("div[role='alert']")
-
-    assert failure_flash.has_content?("You do not have permission to perform this action.")
+    assert_flash_content("You do not have permission to perform this action.")
   end
 end

@@ -35,17 +35,11 @@ private
 
     click_button "Update permissions"
 
-    success_flash = find("div[role='alert']")
+    assert_flash_content(grant.map(&:name))
+    grant.each { |new_permission| assert grantee.has_permission?(new_permission) }
 
-    grant.each do |new_permission|
-      assert success_flash.has_content?(new_permission.name)
-      assert grantee.has_permission?(new_permission)
-    end
-
-    revoke.each do |old_permission|
-      assert_not success_flash.has_content?(old_permission.name)
-      assert_not grantee.has_permission?(old_permission)
-    end
+    refute_flash_content(revoke.map(&:name))
+    revoke.each { |old_permission| assert_not grantee.has_permission?(old_permission) }
   end
 
   def refute_update_permissions(application, permissions)
