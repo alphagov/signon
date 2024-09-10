@@ -148,7 +148,7 @@ class Users::TwoStepVerificationTest < ActionDispatch::IntegrationTest
   context "Exempting a user from 2sv" do
     context "when logged in as a gds super admin" do
       setup do
-        @gds = create(:organisation, content_id: Organisation::GDS_ORG_CONTENT_ID)
+        @gds = create(:gds_organisation)
         @super_admin = create(:superadmin_user, organisation: @gds)
         @reason_for_exemption = "accessibility reasons"
         @expiry_date = 5.days.from_now.to_date
