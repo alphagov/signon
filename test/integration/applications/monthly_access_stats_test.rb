@@ -11,7 +11,8 @@ class ApplicationsMonthlyAccessStatsIntegrationTest < ActionDispatch::Integratio
     signin_with(@user)
 
     visit monthly_access_stats_doorkeeper_application_path(@application)
-    assert_flash_content("You do not have permission to perform this action.")
+    flash = find("div[role='alert']")
+    assert flash.has_content?("You do not have permission to perform this action.")
   end
 
   context "logged in as an superadmin" do

@@ -26,12 +26,12 @@ class ApplicationTableHelperTest < ActionView::TestCase
       @application = create(:application)
     end
 
-    should "generate a grant access button when the current user can grant the signin permission" do
+    should "generate a grant access button when the user can grant siginin permission" do
       stub_policy @user, [:account, Doorkeeper::Application], grant_signin_permission?: true
       assert_includes account_applications_grant_access_link(@application), "Grant access"
     end
 
-    should "return an empty string when the current user cannot grant the signin permission" do
+    should "return an empty string when the user cannot grant signin permission" do
       stub_policy @user, [:account, Doorkeeper::Application], grant_signin_permission?: false
       assert account_applications_grant_access_link(@application).empty?
     end
@@ -40,30 +40,19 @@ class ApplicationTableHelperTest < ActionView::TestCase
   context "#users_applications_grant_access_link" do
     setup do
       @application = create(:application)
-      @current_user = build(:user)
-      stubs(:current_user).returns(@current_user)
       @grantee = create(:user)
-      @record = { application: @application, user: @grantee }
     end
 
-    should "generate a grant access button when the current user can grant the signin permission" do
-      stub_policy(
-        @current_user,
-        @record,
-        policy_class: Users::ApplicationPolicy,
-        grant_signin_permission?: true,
-      )
+    should "generate a grant access button when the user can create user application permissions" do
+      granter = create(:superadmin_user)
+      stubs(:current_user).returns(granter)
 
       assert_includes users_applications_grant_access_link(@application, @grantee), "Grant access"
     end
 
-    should "return an empty string when the current user cannot grant the signin permission" do
-      stub_policy(
-        @current_user,
-        @record,
-        policy_class: Users::ApplicationPolicy,
-        grant_signin_permission?: false,
-      )
+    should "return an empty string when the user cannot create user application permissions" do
+      granter = create(:user)
+      stubs(:current_user).returns(granter)
 
       assert users_applications_grant_access_link(@application, @grantee).empty?
     end
@@ -76,12 +65,12 @@ class ApplicationTableHelperTest < ActionView::TestCase
       @application = create(:application)
     end
 
-    should "generate a remove access link when the current user can remove the signin permission" do
+    should "generate an update link when the user can remove signing permissions" do
       stub_policy @user, [:account, @application], remove_signin_permission?: true
       assert_includes account_applications_remove_access_link(@application), "Remove access"
     end
 
-    should "return an empty string when the current user cannot remove the signin permission" do
+    should "return an empty string when the user cannot remove sigin permissions" do
       stub_policy @user, [:account, @application], remove_signin_permission?: false
       assert account_applications_remove_access_link(@application).empty?
     end
@@ -89,31 +78,21 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
   context "#users_applications_remove_access_link" do
     setup do
-      @application = create(:application)
-      @current_user = build(:user)
-      stubs(:current_user).returns(@current_user)
+      @application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
       @grantee = create(:user)
-      @record = { application: @application, user: @grantee }
     end
 
-    should "generate a remove access link when the current user can remove the signin permission" do
-      stub_policy(
-        @current_user,
-        @record,
-        policy_class: Users::ApplicationPolicy,
-        remove_signin_permission?: true,
-      )
+    should "generate a remove access link when the user can delete permissions" do
+      granter = create(:superadmin_user)
+      stubs(:current_user).returns(granter)
 
       assert_includes users_applications_remove_access_link(@application, @grantee), "Remove access"
     end
 
-    should "return an empty string when the current user cannot remove the signin permission" do
-      stub_policy(
-        @current_user,
-        @record,
-        policy_class: Users::ApplicationPolicy,
-        remove_signin_permission?: false,
-      )
+    should "return an empty string when the user cannot delete permissions" do
+      granter = create(:user)
+      stubs(:current_user).returns(granter)
+
       assert users_applications_remove_access_link(@application, @grantee).empty?
     end
   end
@@ -122,7 +101,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
     setup do
       @user = build(:user)
       stubs(:current_user).returns(@user)
-      @application = create(:application)
+      @application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
     end
 
     should "generate both view and update links when the user can both view and edit permissions" do
@@ -160,7 +139,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
   context "#users_applications_permissions_links" do
     setup do
-      @application = create(:application)
+      @application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
       @current_user = build(:user)
       stubs(:current_user).returns(@current_user)
       @grantee = create(:user)
