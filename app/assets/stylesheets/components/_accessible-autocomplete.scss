@@ -1,15 +1,15 @@
 @import "accessible-autocomplete/dist/accessible-autocomplete.min";
 
 .autocomplete__wrapper * {
+  // The styles for the dropdown arrow set the z-index to -1, which place it
+  // behind the autocomplete. Setting the `z-index` on the wrapper seems to fix
+  // this. See: https://github.com/alphagov/accessible-autocomplete/issues/351#issuecomment-582935867
+  z-index: 0;
   // This ensures the font family of all children is '"GDS Transport", arial,
   // sans-serif'. Without this (and the universal selector above), the font of
   // the input and options will be nonstandard. For me, Arial and Times
   // respectively. See: https://github.com/alphagov/accessible-autocomplete/issues/285
   @include govuk-typography-common;
-  // The styles for the dropdown arrow set the z-index to -1, which place it
-  // behind the autocomplete. Setting the `z-index` on the wrapper seems to fix
-  // this. See: https://github.com/alphagov/accessible-autocomplete/issues/351#issuecomment-582935867
-  z-index: 0;
 }
 
 .autocomplete__input--focused + .autocomplete__dropdown-arrow-down {
