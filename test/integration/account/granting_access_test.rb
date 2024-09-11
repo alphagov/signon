@@ -1,6 +1,16 @@
 require "test_helper"
 
 class Account::GrantingAccessTest < ActionDispatch::IntegrationTest
+  def assert_grant_access_to_self(application, current_user)
+    assert_edit_self
+    assert_grant_access(application, current_user, grantee_is_self: true)
+  end
+
+  def refute_grant_access_to_self(application)
+    assert_edit_self
+    refute_grant_access(application)
+  end
+
   setup { @application = create(:application) }
 
   %w[superadmin admin].each do |admin_role|

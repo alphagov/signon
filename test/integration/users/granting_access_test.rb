@@ -1,6 +1,16 @@
 require "test_helper"
 
 class Users::GrantingAccessTest < ActionDispatch::IntegrationTest
+  def assert_grant_access_to_other_user(application, other_user)
+    assert_edit_other_user(other_user)
+    assert_grant_access(application, other_user)
+  end
+
+  def refute_grant_access_to_other_user(application, other_user)
+    assert_edit_other_user(other_user)
+    refute_grant_access(application)
+  end
+
   setup do
     @application = create(:application, with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
     @granter = create(:user_in_organisation, with_signin_permissions_for: [@application])

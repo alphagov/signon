@@ -1,6 +1,16 @@
 require "test_helper"
 
 class Users::RemovingAccessTest < ActionDispatch::IntegrationTest
+  def assert_remove_access_from_other_user(application, other_user)
+    assert_edit_other_user(other_user)
+    assert_remove_access(application, other_user)
+  end
+
+  def refute_remove_access_from_other_user(application, other_user)
+    assert_edit_other_user(other_user)
+    refute_remove_access(application)
+  end
+
   setup do
     @application = create(:application, with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
     @granter = create(:user_in_organisation, with_signin_permissions_for: [@application])

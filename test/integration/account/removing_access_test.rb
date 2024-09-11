@@ -1,6 +1,16 @@
 require "test_helper"
 
 class Account::RemovingAccessTest < ActionDispatch::IntegrationTest
+  def assert_remove_access_from_self(application, current_user)
+    assert_edit_self
+    assert_remove_access(application, current_user, grantee_is_self: true)
+  end
+
+  def refute_remove_access_from_self(application)
+    assert_edit_self
+    refute_remove_access(application)
+  end
+
   setup do
     @application = create(:application)
     @user = create(:user_in_organisation, with_signin_permissions_for: [@application])

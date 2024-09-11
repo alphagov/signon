@@ -1,26 +1,4 @@
 module RemovingAccessHelpers
-  def assert_remove_access_from_self(application, current_user)
-    assert_edit_self
-    assert_remove_access(application, current_user, grantee_is_self: true)
-  end
-
-  def assert_remove_access_from_other_user(application, other_user)
-    assert_edit_other_user(other_user)
-    assert_remove_access(application, other_user)
-  end
-
-  def refute_remove_access_from_self(application)
-    assert_edit_self
-    refute_remove_access(application)
-  end
-
-  def refute_remove_access_from_other_user(application, other_user)
-    assert_edit_other_user(other_user)
-    refute_remove_access(application)
-  end
-
-private
-
   def assert_remove_access(application, grantee, grantee_is_self: false)
     click_link "Remove access to #{application.name}"
     click_button "Confirm"
