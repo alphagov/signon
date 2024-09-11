@@ -36,11 +36,11 @@ $table-row-even-background-colour: govuk-colour("light-grey");
     }
 
     .app-table__sort-link {
-      @include govuk-link-style-no-visited-state;
       position: relative;
       padding-right: $sort-link-arrow-size;
       color: $govuk-link-colour;
       text-decoration: none;
+      @include govuk-link-style-no-visited-state;
     }
 
     .app-table__sort-link:focus {
