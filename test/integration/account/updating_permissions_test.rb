@@ -3,6 +3,16 @@ require "test_helper"
 class Account::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
   # See also: UpdatingPermissionsForAppsWithManyPermissionsTest
 
+  def assert_update_permissions_for_self(application, current_user, grant: [], revoke: [])
+    assert_edit_self
+    assert_update_permissions(application, current_user, grant:, revoke:)
+  end
+
+  def refute_update_permissions_for_self(application, permissions)
+    assert_edit_self
+    refute_update_permissions(application, permissions)
+  end
+
   context "for all apps" do
     setup do
       @application = create(:application)
