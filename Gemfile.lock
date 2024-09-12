@@ -164,19 +164,19 @@ GEM
       rest-client (~> 2.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (4.28.0)
+    google-protobuf (4.28.1)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.28.0-aarch64-linux)
+    google-protobuf (4.28.1-aarch64-linux)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.28.0-arm64-darwin)
+    google-protobuf (4.28.1-arm64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.28.0-x86_64-linux)
+    google-protobuf (4.28.1-x86_64-linux)
       bigdecimal
       rake (>= 13)
-    googleapis-common-protos-types (1.15.0)
+    googleapis-common-protos-types (1.16.0)
       google-protobuf (>= 3.18, < 5.a)
     govuk_app_config (9.14.0)
       logstasher (~> 2.1)
