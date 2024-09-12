@@ -120,10 +120,10 @@ accepts@~1.3.8:
     mime-types "~2.1.34"
     negotiator "0.6.3"
 
-accessible-autocomplete@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/accessible-autocomplete/-/accessible-autocomplete-3.0.0.tgz#f66ed03fb22d78f721326d187ee491dddbadec75"
-  integrity sha512-Kpm6EX+jjD0AurWfzSP4EVLEKsLUWCazZwidjum+8FCRtSINeaPzVa3ElKVGWvSqVZN9zjeSBF8cirhYEZjW1A==
+accessible-autocomplete@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/accessible-autocomplete/-/accessible-autocomplete-3.0.1.tgz#8ddf4934d0b4ba6acb28de486dd505e062cdc86e"
+  integrity sha512-xMshgc2LT5addvvfCTGzIkRrvhbOFeylFSnSMfS/PdjvvvElZkakCwxO3/yJYBWyi1hi3tZloqOJQ5kqqJtH4g==
 
 acorn-jsx@^5.2.0:
   version "5.3.1"
