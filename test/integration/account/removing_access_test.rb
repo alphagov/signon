@@ -27,7 +27,9 @@ class Account::RemovingAccessTest < ActionDispatch::IntegrationTest
           signin_with @user
         end
 
-        should("be able to remove access") { assert_remove_access_from_self(@application, @user) }
+        should "be able to remove their own access to the application" do
+          assert_remove_access_from_self(@application, @user)
+        end
       end
     end
   end
@@ -43,7 +45,9 @@ class Account::RemovingAccessTest < ActionDispatch::IntegrationTest
           signin_with @user
         end
 
-        should("be able to remove access") { assert_remove_access_from_self(@application, @user) }
+        should "be able to remove their own access to the application" do
+          assert_remove_access_from_self(@application, @user)
+        end
       end
     end
 
@@ -55,7 +59,9 @@ class Account::RemovingAccessTest < ActionDispatch::IntegrationTest
           signin_with @user
         end
 
-        should("not be able to remove access") { refute_remove_access_from_self(@application) }
+        should "not be able to remove their own access to the application" do
+          refute_remove_access_from_self(@application)
+        end
       end
     end
   end

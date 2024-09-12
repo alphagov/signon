@@ -26,7 +26,9 @@ class Users::RemovingAccessTest < ActionDispatch::IntegrationTest
           signin_with @granter
         end
 
-        should("be able to remove access") { assert_remove_access_from_other_user(@application, @grantee) }
+        should "be able to remove the grantee's access to the application" do
+          assert_remove_access_from_other_user(@application, @grantee)
+        end
       end
     end
   end
@@ -42,7 +44,9 @@ class Users::RemovingAccessTest < ActionDispatch::IntegrationTest
           signin_with @granter
         end
 
-        should("be able to remove access") { assert_remove_access_from_other_user(@application, @grantee) }
+        should "be able to remove the grantee's access to the application" do
+          assert_remove_access_from_other_user(@application, @grantee)
+        end
       end
     end
 
@@ -54,7 +58,9 @@ class Users::RemovingAccessTest < ActionDispatch::IntegrationTest
           signin_with @granter
         end
 
-        should("not be able to remove access") { refute_remove_access_from_other_user(@application, @grantee) }
+        should "not be able to remove the grantee's access to the application" do
+          refute_remove_access_from_other_user(@application, @grantee)
+        end
       end
     end
   end
@@ -70,7 +76,9 @@ class Users::RemovingAccessTest < ActionDispatch::IntegrationTest
           signin_with @granter
         end
 
-        should("be able to remove access") { assert_remove_access_from_other_user(@application, @grantee) }
+        should "be able to remove the grantee's access to the application" do
+          assert_remove_access_from_other_user(@application, @grantee)
+        end
       end
     end
 
@@ -81,12 +89,16 @@ class Users::RemovingAccessTest < ActionDispatch::IntegrationTest
         signin_with @granter
       end
 
-      should("not be able to edit the user") { refute_edit_other_user(@grantee) }
+      should "not be able to edit the grantee from the other organisation" do
+        refute_edit_other_user(@grantee)
+      end
 
-      context "but the grantee's organisation is a child of the granter's" do
+      context "when the grantee's organisation is a child of the granter's" do
         setup { @grantee.update!(organisation: create(:organisation, parent: @granter.organisation)) }
 
-        should("be able to remove access") { assert_remove_access_from_other_user(@application, @grantee) }
+        should "be able to remove the grantee's access to the application" do
+          assert_remove_access_from_other_user(@application, @grantee)
+        end
       end
     end
 
@@ -97,17 +109,21 @@ class Users::RemovingAccessTest < ActionDispatch::IntegrationTest
         signin_with @granter
       end
 
-      should("not be able to edit the user") { refute_edit_other_user(@grantee) }
+      should "not be able to edit the grantee from the other organisation" do
+        refute_edit_other_user(@grantee)
+      end
 
-      context "but the grantee's organisation is a child of the granter's" do
+      context "when the grantee's organisation is a child of the granter's" do
         setup { @grantee.update!(organisation: create(:organisation, parent: @granter.organisation)) }
 
-        should("not be able to edit the user") { refute_edit_other_user(@grantee) }
+        should "not be able to edit the grantee from the other organisation" do
+          refute_edit_other_user(@grantee)
+        end
       end
     end
   end
 
-  context "when the granter does not have access" do
+  context "when the granter does not have access to the application" do
     setup { UserApplicationPermission.find_by(user: @granter, supported_permission: @application.signin_permission).destroy }
 
     %w[superadmin admin].each do |admin_role|
@@ -118,7 +134,9 @@ class Users::RemovingAccessTest < ActionDispatch::IntegrationTest
           signin_with @granter
         end
 
-        should("be able to remove access") { assert_remove_access_from_other_user(@application, @grantee) }
+        should "be able to remove the grantee's access to the application" do
+          assert_remove_access_from_other_user(@application, @grantee)
+        end
       end
     end
 
@@ -130,7 +148,9 @@ class Users::RemovingAccessTest < ActionDispatch::IntegrationTest
           signin_with @granter
         end
 
-        should("not be able to remove access") { refute_remove_access_from_other_user(@application, @grantee) }
+        should "not be able to remove access" do
+          refute_remove_access_from_other_user(@application, @grantee)
+        end
       end
     end
   end

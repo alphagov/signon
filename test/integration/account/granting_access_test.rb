@@ -21,7 +21,9 @@ class Account::GrantingAccessTest < ActionDispatch::IntegrationTest
         signin_with @user
       end
 
-      should("be able to grant access") { assert_grant_access_to_self(@application, @user) }
+      should "be able to grant themselves access to an application" do
+        assert_grant_access_to_self(@application, @user)
+      end
     end
   end
 
@@ -33,7 +35,9 @@ class Account::GrantingAccessTest < ActionDispatch::IntegrationTest
         signin_with @user
       end
 
-      should("not be able to grant access") { refute_grant_access_to_self(@application) }
+      should "not be able to grant themselves access to application" do
+        refute_grant_access_to_self(@application)
+      end
     end
   end
 end

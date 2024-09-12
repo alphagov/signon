@@ -55,7 +55,7 @@ class Account::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
           signin_with @user
         end
 
-        should "be able to grant delegatable non-signin permissions that are grantable from the UI" do
+        should "be able to grant themselves delegatable non-signin permissions that are grantable from the UI" do
           assert_update_permissions_for_self(
             @application, @user,
             grant: [@new_delegatable_grantable_permission],
@@ -78,7 +78,7 @@ class Account::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
           signin_with @user
         end
 
-        should "be able to grant non-delegatable permissions" do
+        should "be able to grant themselves non-delegatable permissions" do
           assert_update_permissions_for_self(
             @application, @user,
             grant: [@new_non_delegatable_grantable_permission],
@@ -96,7 +96,7 @@ class Account::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
           signin_with @user
         end
 
-        should "not be able to grant non-delegatable permissions" do
+        should "not be able to grant themselves non-delegatable permissions" do
           refute_update_permissions_for_self(@application, [
             @new_non_delegatable_grantable_permission,
             @old_non_delegatable_grantable_permission,
