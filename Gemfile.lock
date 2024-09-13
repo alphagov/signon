@@ -705,7 +705,7 @@ GEM
     timeout (0.4.1)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    unicode-display_width (2.5.0)
+    unicode-display_width (2.6.0)
     useragent (0.16.10)
     uuid (2.3.9)
       macaddr (~> 1.0)
