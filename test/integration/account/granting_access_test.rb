@@ -1,16 +1,6 @@
 require "test_helper"
 
 class Account::GrantingAccessTest < ActionDispatch::IntegrationTest
-  def assert_grant_access_to_self(application, current_user)
-    assert_edit_self
-    assert_grant_access(application, current_user, grantee_is_self: true)
-  end
-
-  def refute_grant_access_to_self(application)
-    assert_edit_self
-    refute_grant_access(application)
-  end
-
   setup { @application = create(:application) }
 
   %w[superadmin admin].each do |admin_role|
@@ -22,7 +12,13 @@ class Account::GrantingAccessTest < ActionDispatch::IntegrationTest
       end
 
       should "be able to grant themselves access to an application" do
-        assert_grant_access_to_self(@application, @user)
+        visit account_applications_path
+        click_button "Grant access to #{@application.name}"
+
+        app_with_access_table = find("table caption[text()='Apps you have access to']").ancestor("table")
+
+        assert app_with_access_table.has_content?(@application.name)
+        assert @user.has_access_to?(@application)
       end
     end
   end
@@ -36,7 +32,10 @@ class Account::GrantingAccessTest < ActionDispatch::IntegrationTest
       end
 
       should "not be able to grant themselves access to application" do
-        refute_grant_access_to_self(@application)
+        visit account_applications_path
+        assert page.has_content?("GOV.UK apps")
+
+        assert_not page.has_link?("Grant access to #{@application.name}")
       end
     end
   end
