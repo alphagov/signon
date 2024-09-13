@@ -56,16 +56,28 @@ class Account::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
         end
 
         should "be able to grant themselves delegatable non-signin permissions that are grantable from the UI" do
-          assert_update_permissions_for_self(
-            @application, @user,
-            grant: [@new_delegatable_grantable_permission],
-            revoke: [@old_delegatable_grantable_permission]
-          )
+          visit account_applications_path
 
-          refute_update_permissions_for_self(@application, [
-            @old_delegatable_non_grantable_permission,
-            @new_delegatable_non_grantable_permission,
-          ])
+          click_link "Update permissions for #{@application.name}"
+
+          check @new_delegatable_grantable_permission.name
+          uncheck @old_delegatable_grantable_permission.name
+
+          click_button "Update permissions"
+
+          assert find_flash.has_content?(@new_delegatable_grantable_permission.name)
+          assert @user.has_permission?(@new_delegatable_grantable_permission)
+
+          assert_not find_flash.has_content?(@old_delegatable_grantable_permission.name)
+          assert_not @user.has_permission?(@old_delegatable_grantable_permission)
+
+          visit account_applications_path
+
+          click_link "Update permissions for #{@application.name}"
+
+          [@old_delegatable_non_grantable_permission, @new_delegatable_non_grantable_permission].each do |permission|
+            assert_not page.has_field?(permission.name)
+          end
         end
       end
     end
@@ -79,11 +91,20 @@ class Account::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
         end
 
         should "be able to grant themselves non-delegatable permissions" do
-          assert_update_permissions_for_self(
-            @application, @user,
-            grant: [@new_non_delegatable_grantable_permission],
-            revoke: [@old_non_delegatable_grantable_permission]
-          )
+          visit account_applications_path
+
+          click_link "Update permissions for #{@application.name}"
+
+          check @new_non_delegatable_grantable_permission.name
+          uncheck @old_non_delegatable_grantable_permission.name
+
+          click_button "Update permissions"
+
+          assert find_flash.has_content?(@new_non_delegatable_grantable_permission.name)
+          assert @user.has_permission?(@new_non_delegatable_grantable_permission)
+
+          assert_not find_flash.has_content?(@old_non_delegatable_grantable_permission.name)
+          assert_not @user.has_permission?(@old_non_delegatable_grantable_permission)
         end
       end
     end
@@ -97,10 +118,14 @@ class Account::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
         end
 
         should "not be able to grant themselves non-delegatable permissions" do
-          refute_update_permissions_for_self(@application, [
-            @new_non_delegatable_grantable_permission,
-            @old_non_delegatable_grantable_permission,
-          ])
+          visit account_applications_path
+          assert page.has_content?("GOV.UK apps")
+
+          click_link "Update permissions for #{@application.name}"
+
+          [@old_non_delegatable_grantable_permission, @new_non_delegatable_grantable_permission].each do |permission|
+            assert_not page.has_field?(permission.name)
+          end
         end
       end
     end
