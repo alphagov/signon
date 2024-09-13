@@ -46,6 +46,6 @@
     "stylelint/string-width": "4.2.3"
   },
   "dependencies": {
-    "accessible-autocomplete": "^3.0.0"
+    "accessible-autocomplete": "^3.0.1"
   }
 }
