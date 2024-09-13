@@ -23,11 +23,9 @@
 
 <% if flash[:application_id] %>
   <% content_for(:custom_alerts) do %>
-    <%= render "govuk_publishing_components/components/success_alert", {
-        message: "Permissions updated",
-        description: message_for_success(flash[:application_id], @user),
-    } %>
-  <% end %>
+    <%= render "govuk_publishing_components/components/success_alert",
+      access_and_permissions_granted_params(flash[:application_id], granting_access: flash[:granting_access], user: @user)
+    %>  <% end %>
 <% end %>
 
 <%= render "components/table", {
