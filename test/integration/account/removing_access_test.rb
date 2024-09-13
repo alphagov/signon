@@ -1,16 +1,6 @@
 require "test_helper"
 
 class Account::RemovingAccessTest < ActionDispatch::IntegrationTest
-  def assert_remove_access_from_self(application, current_user)
-    assert_edit_self
-    assert_remove_access(application, current_user, grantee_is_self: true)
-  end
-
-  def refute_remove_access_from_self(application)
-    assert_edit_self
-    refute_remove_access(application)
-  end
-
   setup do
     @application = create(:application)
     @user = create(:user_in_organisation, with_signin_permissions_for: [@application])
@@ -28,7 +18,15 @@ class Account::RemovingAccessTest < ActionDispatch::IntegrationTest
         end
 
         should "be able to remove their own access to the application" do
-          assert_remove_access_from_self(@application, @user)
+          visit account_applications_path
+
+          click_link "Remove access to #{@application.name}"
+          click_button "Confirm"
+
+          apps_without_access_table = find("table caption[text()='Apps you don\\'t have access to']").ancestor("table")
+
+          assert apps_without_access_table.has_content?(@application.name)
+          assert_not @user.has_access_to?(@application)
         end
       end
     end
@@ -46,7 +44,15 @@ class Account::RemovingAccessTest < ActionDispatch::IntegrationTest
         end
 
         should "be able to remove their own access to the application" do
-          assert_remove_access_from_self(@application, @user)
+          visit account_applications_path
+
+          click_link "Remove access to #{@application.name}"
+          click_button "Confirm"
+
+          apps_without_access_table = find("table caption[text()='Apps you don\\'t have access to']").ancestor("table")
+
+          assert apps_without_access_table.has_content?(@application.name)
+          assert_not @user.has_access_to?(@application)
         end
       end
     end
@@ -60,7 +66,10 @@ class Account::RemovingAccessTest < ActionDispatch::IntegrationTest
         end
 
         should "not be able to remove their own access to the application" do
-          refute_remove_access_from_self(@application)
+          visit account_applications_path
+          assert page.has_content?("GOV.UK apps")
+
+          assert_not page.has_link?("Remove access to #{@application.name}")
         end
       end
     end
