@@ -22,10 +22,15 @@
 %>
 
 <% if flash[:application_id] %>
+  <% alert_params = if flash[:removing_access]
+                      access_removed_params(flash[:application_id], user: @user)
+                    else
+                      access_and_permissions_granted_params(flash[:application_id], granting_access: flash[:granting_access], user: @user)
+                    end
+  %>
   <% content_for(:custom_alerts) do %>
-    <%= render "govuk_publishing_components/components/success_alert",
-      access_and_permissions_granted_params(flash[:application_id], granting_access: flash[:granting_access], user: @user)
-    %>  <% end %>
+    <%= render "govuk_publishing_components/components/success_alert", alert_params %>
+  <% end %>
 <% end %>
 
 <%= render "components/table", {

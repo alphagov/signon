@@ -25,4 +25,20 @@ class SuccessAlertHelperTest < ActionView::TestCase
       end
     end
   end
+
+  context "#access_removed_params" do
+    setup do
+      @application = create(:application)
+      stubs(:current_user).returns(create(:user))
+    end
+
+    context "when removing access" do
+      should "return success alert params with the `access_removed_message` text" do
+        stubs(:access_removed_message).returns("You've got no access")
+
+        expected = { message: "Access removed", description: "You've got no access" }
+        assert_equal expected, access_removed_params(@application.id)
+      end
+    end
+  end
 end

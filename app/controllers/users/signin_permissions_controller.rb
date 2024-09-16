@@ -25,6 +25,9 @@ class Users::SigninPermissionsController < ApplicationController
     params = { supported_permission_ids: @user.supported_permissions.map(&:id) - [@application.signin_permission.id] }
     UserUpdate.new(@user, params, current_user, user_ip_address).call
 
+    flash[:application_id] = @application.id
+    flash[:removing_access] = true
+
     redirect_to user_applications_path(@user)
   end
 

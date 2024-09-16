@@ -12,4 +12,11 @@ module SuccessAlertHelper
       }
     end
   end
+
+  def access_removed_params(application_id, user: current_user)
+    {
+      message: "Access removed",
+      description: access_removed_message(application_id, user),
+    }
+  end
 end

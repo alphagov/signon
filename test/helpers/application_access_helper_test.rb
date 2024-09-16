@@ -26,4 +26,25 @@ class ApplicationAccessHelperTest < ActionView::TestCase
       end
     end
   end
+
+  context "#access_removed_message" do
+    context "when the user is removing their own access" do
+      should "return a message informing them that they have access to an application" do
+        assert_equal "Your access to Whitehall has been removed.", access_removed_message(@application)
+      end
+    end
+
+    context "when the user is removing another's access" do
+      should "return a message informing them that the other user have access to an application" do
+        user = create(:user, name: "Gerald")
+        assert_equal "Gerald's access to Whitehall has been removed.", access_removed_message(@application, user)
+      end
+    end
+
+    context "when the application does not exist" do
+      should "return nil" do
+        assert_nil access_removed_message(:made_up_id)
+      end
+    end
+  end
 end
