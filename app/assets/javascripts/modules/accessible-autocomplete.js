@@ -3,7 +3,7 @@
 window.GOVUK = window.GOVUK || {}
 window.GOVUK.Modules = window.GOVUK.Modules || {}
 
-;(function (Modules) {
+; (function (Modules) {
   'use strict'
 
   function AccessibleAutocomplete ($module) {
@@ -23,17 +23,17 @@ window.GOVUK.Modules = window.GOVUK.Modules || {}
     new window.accessibleAutocomplete.enhanceSelectElement(configOptions) // eslint-disable-line no-new, new-cap
 
     const autocompleteElement = selectElement.parentNode.querySelector('.autocomplete__input')
-    enableArrow(autocompleteElement)
-    enableAddButton()
+    enableArrow(this.$module, autocompleteElement)
+    enableAddButton(this.$module)
     resetSelectWhenDesynced(selectElement, autocompleteElement)
-    enableClearButton(selectElement, autocompleteElement)
+    enableClearButton(this.$module, selectElement, autocompleteElement)
   }
 
   Modules.AccessibleAutocomplete = AccessibleAutocomplete
 })(window.GOVUK.Modules)
 
-function enableArrow (autocompleteElement) {
-  const arrowElement = autocompleteElement.parentNode.querySelector('.autocomplete__dropdown-arrow-down')
+function enableArrow (module, autocompleteElement) {
+  const arrowElement = module.querySelector('.autocomplete__dropdown-arrow-down')
 
   arrowElement.addEventListener('click', function () {
     autocompleteElement.click()
@@ -41,10 +41,10 @@ function enableArrow (autocompleteElement) {
   })
 }
 
-function enableAddButton () {
-  const addButton = document.querySelector('.js-autocomplete__add-button')
-  const addAndFinishButton = document.querySelector('.js-autocomplete__add-and-finish-button')
-  const addMoreInput = document.querySelector('input[name="application[add_more]"]')
+function enableAddButton (module) {
+  const addButton = module.querySelector('.js-autocomplete__add-button')
+  const addAndFinishButton = module.querySelector('.js-autocomplete__add-and-finish-button')
+  const addMoreInput = module.querySelector('input[name="application[add_more]"]')
 
   if (addButton) {
     addAndFinishButton.type = 'button'
@@ -84,8 +84,8 @@ function resetSelectWhenDesynced (selectElement, autocompleteElement) {
   })
 }
 
-function enableClearButton (selectElement, autocompleteElement) {
-  const clearButton = document.querySelector('.js-autocomplete__clear-button')
+function enableClearButton (module, selectElement, autocompleteElement) {
+  const clearButton = module.querySelector('.js-autocomplete__clear-button')
 
   if (clearButton) {
     clearButton.addEventListener('click', function () {
