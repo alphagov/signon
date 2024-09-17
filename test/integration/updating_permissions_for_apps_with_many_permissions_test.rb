@@ -26,26 +26,16 @@ class UpdatingPermissionsForAppsWithManyPermissionsTest < ActionDispatch::Integr
 
     click_link "Update permissions for #{@application.name}"
 
-    @autocomplete_input = find(".autocomplete__input")
+    @autocomplete_input_element = find(".autocomplete__input")
     @select_element = find("#new_permission_id-select", visible: false)
-    assert_equal "", @autocomplete_input.value
-    assert_equal "", @select_element.value
 
-    # when I type a few characters from a permission called "adding"
-    @autocomplete_input.fill_in with: "add"
-    autocomplete_option = find(".autocomplete__option")
-
-    # the autcomplete value reflects what I typed, a matching option appears, but the select element remains empty
-    assert_equal "add", @autocomplete_input.value
-    assert_equal @new_permission_to_grant.name, autocomplete_option.text
-    assert_equal "", @select_element.value
-
-    # when I click on the matching option
-    autocomplete_option.click
-
-    # the autocomplete and select elements reflect my selection
-    assert_equal @new_permission_to_grant.name, @autocomplete_input.value
-    assert_equal @new_permission_to_grant.id.to_s, @select_element.value
+    assert_select_with_autocomplete(
+      autocomplete_input_element: @autocomplete_input_element,
+      select_element: @select_element,
+      option_text: @new_permission_to_grant.name,
+      option_value: @new_permission_to_grant.id.to_s,
+      unique_partial_string: "add",
+    )
   end
 
   def assert_permissions_unchanged
@@ -162,14 +152,13 @@ class UpdatingPermissionsForAppsWithManyPermissionsTest < ActionDispatch::Integr
       should "reset the value of the select element when it no longer matches what's shown in the autocomplete input" do
         assert_select_permission_to_grant_with_javascript
 
-        @autocomplete_input.fill_in with: "addin"
-        autocomplete_option = find(".autocomplete__option")
+        assert_resets_select_when_desynced_with_autocomplete(
+          autocomplete_input_element: @autocomplete_input_element,
+          select_element: @select_element,
+          option_text: @new_permission_to_grant.name,
+          unique_partial_string: "addin",
+        )
 
-        assert_equal "addin", @autocomplete_input.value
-        assert_equal @new_permission_to_grant.name, autocomplete_option.text
-        assert_equal "", @select_element.value
-
-        @autocomplete_input.native.send_keys :escape
         click_button "Add and finish"
 
         assert_permissions_unchanged
@@ -179,10 +168,10 @@ class UpdatingPermissionsForAppsWithManyPermissionsTest < ActionDispatch::Integr
       should "clear the value of the select and autocomplete elements when clicking the clear button" do
         assert_select_permission_to_grant_with_javascript
 
-        click_button "Clear selection"
-
-        assert_equal "", @autocomplete_input.value
-        assert_equal "", @select_element.value
+        assert_clear_autocomplete_selection_by_click(
+          autocomplete_input_element: @autocomplete_input_element,
+          select_element: @select_element,
+        )
 
         click_button "Add and finish"
 
@@ -193,11 +182,10 @@ class UpdatingPermissionsForAppsWithManyPermissionsTest < ActionDispatch::Integr
       should "clear the value of the select and autocomplete elements when hitting space on the clear button" do
         assert_select_permission_to_grant_with_javascript
 
-        clear_button = find(".js-autocomplete__clear-button")
-        clear_button.native.send_keys :space
-
-        assert_equal "", @autocomplete_input.value
-        assert_equal "", @select_element.value
+        assert_clear_autocomplete_selection_by_space(
+          autocomplete_input_element: @autocomplete_input_element,
+          select_element: @select_element,
+        )
 
         click_button "Add and finish"
 
@@ -208,11 +196,10 @@ class UpdatingPermissionsForAppsWithManyPermissionsTest < ActionDispatch::Integr
       should "clear the value of the select and autocomplete elements when hitting enter on the clear button" do
         assert_select_permission_to_grant_with_javascript
 
-        clear_button = find(".js-autocomplete__clear-button")
-        clear_button.native.send_keys :enter
-
-        assert_equal "", @autocomplete_input.value
-        assert_equal "", @select_element.value
+        assert_clear_autocomplete_selection_by_enter(
+          autocomplete_input_element: @autocomplete_input_element,
+          select_element: @select_element,
+        )
 
         click_button "Add and finish"
 
