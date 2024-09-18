@@ -20,7 +20,7 @@
   <% content_for(:custom_alerts) do %>
     <%= render "govuk_publishing_components/components/success_alert", {
         message: "Permissions updated",
-        description: message_for_success(flash[:application_id]),
+        description: permissions_updated_description(flash[:application_id]),
     } %>
   <% end %>
 <% end %>

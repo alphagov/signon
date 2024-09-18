@@ -1,7 +1,7 @@
 require "test_helper"
 
 class ApplicationPermissionsHelperTest < ActionView::TestCase
-  context "#message_for_success" do
+  context "#permissions_updated_description" do
     setup do
       @application = create(:application, name: "Whitehall", with_non_delegatable_supported_permissions: ["Permission 1"])
       user = create(:user, with_permissions: { @application => ["Permission 1", SupportedPermission::SIGNIN_NAME] })
@@ -9,20 +9,20 @@ class ApplicationPermissionsHelperTest < ActionView::TestCase
     end
 
     should "include the application name in the message" do
-      assert_includes message_for_success(@application.id), "You now have the following permissions for Whitehall"
+      assert_includes permissions_updated_description(@application.id), "You now have the following permissions for Whitehall"
     end
 
     should "include the users permissions in the message" do
-      assert_includes message_for_success(@application.id), "Permission 1"
+      assert_includes permissions_updated_description(@application.id), "Permission 1"
     end
 
     should "not include the signin permission in the message" do
-      assert_not_includes message_for_success(@application.id), "signin"
+      assert_not_includes permissions_updated_description(@application.id), "signin"
     end
 
     context "when the application does not exist" do
       should "return nil" do
-        assert_nil message_for_success(:made_up_id)
+        assert_nil permissions_updated_description(:made_up_id)
       end
     end
 
@@ -33,7 +33,7 @@ class ApplicationPermissionsHelperTest < ActionView::TestCase
       end
 
       should "indicate that the user has no additional permissions" do
-        assert_includes message_for_success(@application.id), "You can access Whitehall but you do not have any additional permissions."
+        assert_includes permissions_updated_description(@application.id), "You can access Whitehall but you do not have any additional permissions."
       end
     end
 
@@ -43,7 +43,7 @@ class ApplicationPermissionsHelperTest < ActionView::TestCase
       end
 
       should "include the application name in the message" do
-        assert_includes message_for_success(@application.id, @user), "user-name now has the following permissions for Whitehall"
+        assert_includes permissions_updated_description(@application.id, @user), "user-name now has the following permissions for Whitehall"
       end
     end
 
@@ -53,7 +53,7 @@ class ApplicationPermissionsHelperTest < ActionView::TestCase
       end
 
       should "indicate that the user has no additional permissions" do
-        assert_includes message_for_success(@application.id, @user), "user-name can access Whitehall but does not have any additional permissions."
+        assert_includes permissions_updated_description(@application.id, @user), "user-name can access Whitehall but does not have any additional permissions."
       end
     end
   end
