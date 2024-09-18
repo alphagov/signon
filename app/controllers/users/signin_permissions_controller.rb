@@ -3,6 +3,8 @@ class Users::SigninPermissionsController < ApplicationController
   before_action :set_user
   before_action :set_application, except: [:create]
 
+  include ApplicationAccessHelper
+
   def create
     application = Doorkeeper::Application.not_api_only.find(params[:application_id])
     authorize [{ application:, user: @user }], :grant_signin_permission?, policy_class: Users::ApplicationPolicy
@@ -10,6 +12,7 @@ class Users::SigninPermissionsController < ApplicationController
     params = { supported_permission_ids: @user.supported_permissions.map(&:id) + [application.signin_permission.id] }
     UserUpdate.new(@user, params, current_user, user_ip_address).call
 
+    flash[:success_alert] = { message: "Access granted", description: access_granted_description(application.id, @user) }
     redirect_to user_applications_path(@user)
   end
 

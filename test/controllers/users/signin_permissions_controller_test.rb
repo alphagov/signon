@@ -43,6 +43,31 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
       assert_redirected_to user_applications_path(user)
     end
 
+    should "assign the success alert hash to flash" do
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      user = create(:user)
+      application = create(:application)
+
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        grant_signin_permission?: true,
+      )
+
+      Users::SigninPermissionsController
+        .any_instance
+        .expects(:access_granted_description)
+        .with(application.id, user).returns("Granted access to another user")
+
+      post :create, params: { user_id: user, application_id: application.id }
+
+      expected = { message: "Access granted", description: "Granted access to another user" }
+      assert_equal expected, flash[:success_alert]
+    end
+
     should "prevent unauthenticated users" do
       user = create(:user)
       application = create(:application)
