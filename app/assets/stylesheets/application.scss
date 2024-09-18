@@ -90,7 +90,7 @@ $applications-table-actions-gap: 10px;
   }
 }
 
-.govuk-table__actions { 
+.govuk-table__actions {
   @include govuk-media-query($until: $vertical-on-smallscreen-breakpoint) {
     .govuk-button, .govuk-link {
       display: block;
@@ -107,5 +107,17 @@ $applications-table-actions-gap: 10px;
     align-items: center;
     justify-content: flex-end;
     gap: $applications-table-actions-gap;
+  }
+}
+
+$show-button-em-size: 19px;
+$show-button-em-multiplier: 5;
+$show-button-width: calc($show-button-em-size * $show-button-em-multiplier);
+$show-button-left-margin: 5px;
+$show-button-space: calc($show-button-width + $show-button-left-margin);
+
+@include govuk-media-query($from: mobile) {
+  form[action="/users/sign_in"] .govuk-form-group:has(input[name="user[email]"]) {
+    padding-right: $show-button-space;
   }
 }
