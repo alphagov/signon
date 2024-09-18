@@ -1,4 +1,6 @@
 module ApplicationPermissionsHelper
+  include ActionView::Helpers::TagHelper
+
   def permissions_updated_description(application_id, user = current_user)
     application = Doorkeeper::Application.find_by(id: application_id)
     return nil unless application

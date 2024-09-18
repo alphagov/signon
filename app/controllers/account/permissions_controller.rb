@@ -70,7 +70,10 @@ class Account::PermissionsController < ApplicationController
       flash[:new_permission_name] = SupportedPermission.find(update_params[:new_permission_id]).name
       redirect_to edit_account_application_permissions_path(@application)
     else
-      flash[:application_id] = @application.id
+      flash[:success_alert] = {
+        message: "Permissions updated",
+        description: permissions_updated_description(@application.id),
+      }
       redirect_to account_applications_path
     end
   end

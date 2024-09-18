@@ -35,6 +35,7 @@ private
 
     click_button "Update permissions"
 
+    assert_flash_content("Permissions updated")
     assert_flash_content(grant.map(&:name))
     grant.each { |new_permission| assert grantee.has_permission?(new_permission) }
 
