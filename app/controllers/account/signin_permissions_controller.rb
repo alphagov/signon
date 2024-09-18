@@ -23,6 +23,7 @@ class Account::SigninPermissionsController < ApplicationController
     params = { supported_permission_ids: current_user.supported_permissions.map(&:id) - [application.signin_permission.id] }
     UserUpdate.new(current_user, params, current_user, user_ip_address).call
 
+    flash[:success_alert] = { message: "Access removed", description: access_removed_description(application.id) }
     redirect_to account_applications_path
   end
 
