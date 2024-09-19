@@ -384,4 +384,44 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       end
     end
   end
+
+  context "with JavaScript enabled" do
+    setup do
+      use_javascript_driver
+
+      create(:organisation, name: "ABCDEF")
+      create(:organisation, name: "GHIJKL")
+      @organisation = create(:organisation, name: "MNOPQR")
+      create(:organisation, name: "STUVWX")
+      create(:organisation, name: "YZ1234")
+
+      superadmin = create(:superadmin_user)
+      visit root_path
+      signin_with(superadmin)
+    end
+
+    should "be able to invite a user" do
+      visit new_user_invitation_path
+      fill_in "Name", with: "H from Steps"
+      fill_in "Email", with: "h@from.steps"
+      select "Superadmin", from: "Role"
+
+      autocomplete_input_element = find(".autocomplete__input")
+      select_element = find("#user_organisation_id-select", visible: false)
+
+      assert_select_with_autocomplete(
+        autocomplete_input_element:,
+        select_element:,
+        option_text: @organisation.name,
+        option_value: @organisation.id.to_s,
+        unique_partial_string: "MNO",
+      )
+
+      click_button "Create user and send email"
+
+      new_user = User.find_by(email: "h@from.steps", role: Roles::Superadmin.name)
+      assert_not_nil new_user
+      assert_equal new_user.organisation, @organisation
+    end
+  end
 end
