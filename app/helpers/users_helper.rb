@@ -70,14 +70,6 @@ module UsersHelper
     end
   end
 
-  def options_for_organisation_select(selected: nil)
-    [{ text: "None", value: nil }] + policy_scope(Organisation).not_closed.map do |organisation|
-      { text: organisation.name_with_abbreviation, value: organisation.id }.tap do |option|
-        option[:selected] = true if option[:value] == selected
-      end
-    end
-  end
-
   def options_for_permission_option_select(application:, user: nil)
     application.sorted_supported_permissions_grantable_from_ui.map do |permission|
       {

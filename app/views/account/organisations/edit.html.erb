@@ -25,7 +25,7 @@
             id: "user_organisation_id",
             name: "user[organisation_id]",
             label: "Organisation",
-            options: options_for_your_organisation_select(current_user)
+            options: options_for_organisation_select(selected_id: current_user.organisation_id)
           } %>
 
           <div class="govuk-button-group">
