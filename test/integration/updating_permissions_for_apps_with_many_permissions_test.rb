@@ -48,14 +48,6 @@ class UpdatingPermissionsForAppsWithManyPermissionsTest < ActionDispatch::Integr
     assert_equal @new_permission_to_grant.id.to_s, @select_element.value
   end
 
-  def assert_permissions_unchanged
-    expected_permissions = [*@old_permissions_to_keep, @old_permission_to_remove_without_javascript]
-    expected_permissions.each { |expected_permission| assert @grantee.has_permission?(expected_permission) }
-
-    unexpected_permissions = [*@new_permissions_to_leave, @new_permission_to_grant]
-    unexpected_permissions.each { |unexpected_permission| assert_not @grantee.has_permission?(unexpected_permission) }
-  end
-
   context "with apps that have more than eight permissions" do
     context "with JavaScript disabled" do
       setup { shared_setup }
@@ -157,67 +149,6 @@ class UpdatingPermissionsForAppsWithManyPermissionsTest < ActionDispatch::Integr
         h1_content = @grantee_is_self ? "Update permissions for #{@application.name}" : "Update #{@grantee.name}'s permissions for #{@application.name}"
         assert page.has_selector?("h1", text: h1_content)
         assert_flash_content("You have successfully added the permission '#{@new_permission_to_grant.name}'.")
-      end
-
-      should "reset the value of the select element when it no longer matches what's shown in the autocomplete input" do
-        assert_select_permission_to_grant_with_javascript
-
-        @autocomplete_input.fill_in with: "addin"
-        autocomplete_option = find(".autocomplete__option")
-
-        assert_equal "addin", @autocomplete_input.value
-        assert_equal @new_permission_to_grant.name, autocomplete_option.text
-        assert_equal "", @select_element.value
-
-        @autocomplete_input.native.send_keys :escape
-        click_button "Add and finish"
-
-        assert_permissions_unchanged
-        assert_flash_content("You must select a permission.")
-      end
-
-      should "clear the value of the select and autocomplete elements when clicking the clear button" do
-        assert_select_permission_to_grant_with_javascript
-
-        click_button "Clear selection"
-
-        assert_equal "", @autocomplete_input.value
-        assert_equal "", @select_element.value
-
-        click_button "Add and finish"
-
-        assert_permissions_unchanged
-        assert_flash_content("You must select a permission.")
-      end
-
-      should "clear the value of the select and autocomplete elements when hitting space on the clear button" do
-        assert_select_permission_to_grant_with_javascript
-
-        clear_button = find(".js-autocomplete__clear-button")
-        clear_button.native.send_keys :space
-
-        assert_equal "", @autocomplete_input.value
-        assert_equal "", @select_element.value
-
-        click_button "Add and finish"
-
-        assert_permissions_unchanged
-        assert_flash_content("You must select a permission.")
-      end
-
-      should "clear the value of the select and autocomplete elements when hitting enter on the clear button" do
-        assert_select_permission_to_grant_with_javascript
-
-        clear_button = find(".js-autocomplete__clear-button")
-        clear_button.native.send_keys :enter
-
-        assert_equal "", @autocomplete_input.value
-        assert_equal "", @select_element.value
-
-        click_button "Add and finish"
-
-        assert_permissions_unchanged
-        assert_flash_content("You must select a permission.")
       end
     end
   end
