@@ -14,13 +14,8 @@
         autocomplete: "email",
       } %>
 
-      <%= render "govuk_publishing_components/components/input", {
-        label: {
-          text: "Password"
-        },
-        name: "user[password]",
-        type: "password",
-        autocomplete: "current-password"
+      <%= render "govuk_publishing_components/components/password_input", {
+        name: "user[password]"
       } %>
 
       <%= render "govuk_publishing_components/components/button", {
