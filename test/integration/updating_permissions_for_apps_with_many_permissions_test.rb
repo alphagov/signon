@@ -26,26 +26,16 @@ class UpdatingPermissionsForAppsWithManyPermissionsTest < ActionDispatch::Integr
 
     click_link "Update permissions for #{@application.name}"
 
-    @autocomplete_input = find(".autocomplete__input")
+    @autocomplete_input_element = find(".autocomplete__input")
     @select_element = find("#new_permission_id-select", visible: false)
-    assert_equal "", @autocomplete_input.value
-    assert_equal "", @select_element.value
 
-    # when I type a few characters from a permission called "adding"
-    @autocomplete_input.fill_in with: "add"
-    autocomplete_option = find(".autocomplete__option")
-
-    # the autcomplete value reflects what I typed, a matching option appears, but the select element remains empty
-    assert_equal "add", @autocomplete_input.value
-    assert_equal @new_permission_to_grant.name, autocomplete_option.text
-    assert_equal "", @select_element.value
-
-    # when I click on the matching option
-    autocomplete_option.click
-
-    # the autocomplete and select elements reflect my selection
-    assert_equal @new_permission_to_grant.name, @autocomplete_input.value
-    assert_equal @new_permission_to_grant.id.to_s, @select_element.value
+    assert_select_with_autocomplete(
+      autocomplete_input_element: @autocomplete_input_element,
+      select_element: @select_element,
+      option_text: @new_permission_to_grant.name,
+      option_value: @new_permission_to_grant.id.to_s,
+      unique_partial_string: "add",
+    )
   end
 
   context "with apps that have more than eight permissions" do
