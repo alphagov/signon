@@ -11,7 +11,7 @@
   <%= t.body do %>
     <% @organisations.each do |organisation| %>
       <%= t.row do %>
-        <%= t.cell "#{organisation.name} (#{organisation.abbreviation})" %>
+        <%= t.cell "#{organisation.name_with_abbreviation}" %>
         <%= t.cell organisation.organisation_type %>
         <%= t.cell organisation.slug %>
         <td class="govuk-table__cell">
