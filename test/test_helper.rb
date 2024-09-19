@@ -90,6 +90,7 @@ require "support/granting_access_helpers"
 require "support/removing_access_helpers"
 require "support/updating_permissions_helpers"
 require "support/flash_helpers"
+require "support/autocomplete_helper"
 
 class ActiveRecord::Base
   mattr_accessor :shared_connection
