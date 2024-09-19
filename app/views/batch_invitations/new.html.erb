@@ -66,13 +66,23 @@
           column, or the value is blank for a row, the user will be
           assigned to this organisation instead."  } %>
 
-      <%= render "govuk_publishing_components/components/select", {
+      <div data-module="accessible-autocomplete">
+        <%= render "govuk_publishing_components/components/select", {
           id: "batch_invitation_organisation_id",
           name: "batch_invitation[organisation_id]",
           label: "Organisation",
           options: policy_scope(Organisation).not_closed.order(:name).map { |organisation| { text: organisation.name_with_abbreviation, value: organisation.id } }
-          } %>
+        } %>
 
+        <div class="govuk-button-group">
+          <%= render "govuk_publishing_components/components/button", {
+            text: "Clear selection",
+            type: "button",
+            classes: "js-autocomplete__clear-button",
+            secondary_solid: true
+          } %>
+        </div>
+      </div>
     <% end %>
 
     <%= render "govuk_publishing_components/components/button", {

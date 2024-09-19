@@ -34,4 +34,32 @@ class Users::UpdatingOrganisationTest < ActionDispatch::IntegrationTest
     assert page.has_text? "Updated user #{user.email} successfully"
     assert_equal "Postage", user.reload.organisation_name
   end
+
+  context "with JavaScript enabled" do
+    setup do
+      use_javascript_driver
+    end
+
+    should "allow GOV.UK admin users to change their organisation" do
+      current_organisation = create(:organisation, name: "Judiciary")
+      user = create(:admin_user, organisation: current_organisation)
+      admin_user = create(:admin_user)
+
+      create(:organisation, name: "Postage")
+
+      visit new_user_session_path
+      signin_with admin_user
+
+      visit edit_user_organisation_path(user)
+
+      autocomplete_helper = AutocompleteHelper.new
+      autocomplete_helper.clear_selection
+      autocomplete_helper.select_autocomplete_option("Postage")
+      click_button "Change organisation"
+
+      assert_current_url edit_user_path(user)
+      assert page.has_text? "Updated user #{user.email} successfully"
+      assert_equal "Postage", user.reload.organisation_name
+    end
+  end
 end
