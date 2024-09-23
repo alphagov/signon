@@ -29,6 +29,10 @@ private
 
     assert app_with_access_table.has_content?(application.name)
     assert grantee.has_access_to?(application)
+
+    success_alert_description = grantee_is_self ? "You have been granted access to #{application.name}." : "#{grantee.name} has been granted access to #{application.name}."
+    assert_flash_content("Access granted")
+    assert_flash_content(success_alert_description)
   end
 
   def refute_grant_access(application)

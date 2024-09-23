@@ -364,7 +364,7 @@ class Users::PermissionsControllerTest < ActionController::TestCase
         assert_same_elements [new_permission, application.signin_permission], user.supported_permissions
       end
 
-      should "assign the application id to the application_id flash" do
+      should "assign the success alert message to flash" do
         application = create(:application)
         old_permission = create(:supported_permission, application:)
         new_permission = create(:supported_permission, application:)
@@ -385,9 +385,15 @@ class Users::PermissionsControllerTest < ActionController::TestCase
           edit_permissions?: true,
         )
 
+        Users::PermissionsController
+          .any_instance
+          .expects(:permissions_updated_description)
+          .with(application.id, user).returns("Updated some permissions for another user")
+
         patch :update, params: { user_id: user, application_id: application, application: { supported_permission_ids: [new_permission.id] } }
 
-        assert_equal application.id, flash[:application_id]
+        expected = { message: "Permissions updated", description: "Updated some permissions for another user" }
+        assert_equal expected, flash[:success_alert]
       end
 
       context "when current_permission_ids and new_permission_id are provided instead of supported_permission_ids" do

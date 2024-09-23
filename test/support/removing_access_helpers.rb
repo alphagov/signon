@@ -30,6 +30,10 @@ private
 
     assert apps_without_access_table.has_content?(application.name)
     assert_not grantee.has_access_to?(application)
+
+    success_alert_description = grantee_is_self ? "Your access to #{application.name} has been removed." : "#{grantee.name}'s access to #{application.name} has been removed."
+    assert_flash_content("Access removed")
+    assert_flash_content(success_alert_description)
   end
 
   def refute_remove_access(application)
