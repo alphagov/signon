@@ -406,16 +406,7 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
       fill_in "Email", with: "h@from.steps"
       select "Superadmin", from: "Role"
 
-      autocomplete_input_element = find(".autocomplete__input")
-      select_element = find("#user_organisation_id-select", visible: false)
-
-      assert_select_with_autocomplete(
-        autocomplete_input_element:,
-        select_element:,
-        option_text: @organisation.name,
-        option_value: @organisation.id.to_s,
-        unique_partial_string: "MNO",
-      )
+      AutocompleteHelper.new.select_autocomplete_option(@organisation.name)
 
       click_button "Create user and send email"
 
