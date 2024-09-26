@@ -49,12 +49,23 @@
         autocomplete: "off",
       } %>
 
-      <%= render "govuk_publishing_components/components/select", {
-        id: "user_organisation_id",
-        name: "user[organisation_id]",
-        label: "Organisation",
-        options: options_for_organisation_select(selected: f.object.organisation_id)
-      } %>
+      <div data-module="accessible-autocomplete">
+        <%= render "govuk_publishing_components/components/select", {
+          id: "user_organisation_id",
+          name: "user[organisation_id]",
+          label: "Organisation",
+          options: options_for_organisation_select(selected: f.object.organisation_id)
+        } %>
+
+        <div class="govuk-button-group">
+          <%= render "govuk_publishing_components/components/button", {
+            text: "Clear selection",
+            type: "button",
+            classes: "js-autocomplete__clear-button",
+            secondary_solid: true
+          } %>
+        </div>
+      </div>
 
       <% if policy(User).assign_role? %>
         <%= render "govuk_publishing_components/components/select", {
