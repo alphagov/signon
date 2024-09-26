@@ -6,8 +6,8 @@ class CookiesSecurityTest < ActionDispatch::IntegrationTest
     sign_up_with user.email, user.password
     visit new_user_session_path
     response_cookies = Capybara.current_session.driver.response.headers["Set-Cookie"]
-    assert_match "HttpOnly", response_cookies
-    assert_match "SameSite=Lax", response_cookies
+    assert_match "httponly", response_cookies
+    assert_match "samesite=lax", response_cookies
   end
 
   def sign_up_with(email, password)
