@@ -137,7 +137,6 @@ namespace :permissions do
       { application_name: "Content Data", name: "view_email_subs" },
       { application_name: "Content Data", name: "view_siteimprove" },
       { application_name: "Content Tagger", name: "GDS Editor" },
-      { application_name: "Content Tagger", name: "Tagathon participant" },
       { application_name: "Content Tagger", name: "Unreleased feature" },
       { application_name: "Manuals Publisher", name: "gds_editor" },
       { application_name: "Specialist publisher", name: "gds_editor" },

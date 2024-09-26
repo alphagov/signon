@@ -129,7 +129,7 @@ class PermissionsTest < ActiveSupport::TestCase
       )
       @content_tagger = application_with_revoke_and_retain_list(
         name: "Content Tagger",
-        non_signin_permissions_to_revoke: ["GDS Editor", "Tagathon participant", "Unreleased feature"],
+        non_signin_permissions_to_revoke: ["GDS Editor", "Unreleased feature"],
         retain_non_signin_permission: true,
       )
       @manuals_publisher = application_with_revoke_and_retain_list(name: "Manuals Publisher", non_signin_permissions_to_revoke: %w[gds_editor])
