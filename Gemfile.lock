@@ -594,6 +594,8 @@ GEM
     rdoc (6.7.0)
       psych (>= 4.0.0)
     recursive-open-struct (1.2.2)
+    redis (5.3.0)
+      redis-client (>= 0.22.0)
     redis-client (0.22.2)
       connection_pool
     regexp_parser (2.9.2)
@@ -773,6 +775,7 @@ DEPENDENCIES
   rails-controller-testing
   rails-html-sanitizer
   rake
+  redis
   rotp
   rqrcode
   rubocop-govuk
