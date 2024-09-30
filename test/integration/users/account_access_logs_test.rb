@@ -24,7 +24,7 @@ class Users::AccountAccessLogsIntegrationTest < ActionDispatch::IntegrationTest
     visit edit_user_path(@user)
     click_on "View account access log"
 
-    assert_account_access_log_page_content(@user)
+    assert assert_account_access_log_page_content(@user)
   end
 
   test "superadmins have permission to view account access log" do
@@ -36,7 +36,7 @@ class Users::AccountAccessLogsIntegrationTest < ActionDispatch::IntegrationTest
     visit edit_user_path(@user)
     click_on "View account access log"
 
-    assert_account_access_log_page_content(@user)
+    assert assert_account_access_log_page_content(@user)
   end
 
   test "super organisation admins have permission to view access logs of users belonging to their organisation" do
@@ -49,7 +49,7 @@ class Users::AccountAccessLogsIntegrationTest < ActionDispatch::IntegrationTest
     visit edit_user_path(user)
     click_on "View account access log"
 
-    assert_account_access_log_page_content(user)
+    assert assert_account_access_log_page_content(user)
   end
 
   test "super organisation admins have permission to view access logs of users belonging to child organisations" do
@@ -63,7 +63,7 @@ class Users::AccountAccessLogsIntegrationTest < ActionDispatch::IntegrationTest
     visit edit_user_path(user)
     click_on "View account access log"
 
-    assert_account_access_log_page_content(user)
+    assert assert_account_access_log_page_content(user)
   end
 
   test "super organisation admins don't have permission to view access logs of users belonging to another organisation" do
@@ -86,7 +86,7 @@ class Users::AccountAccessLogsIntegrationTest < ActionDispatch::IntegrationTest
     visit edit_user_path(user)
     click_on "View account access log"
 
-    assert_account_access_log_page_content(user)
+    assert assert_account_access_log_page_content(user)
   end
 
   test "organisation admins don't have permission to view access logs of users belonging to another organisation" do
@@ -109,17 +109,17 @@ class Users::AccountAccessLogsIntegrationTest < ActionDispatch::IntegrationTest
 
     visit event_logs_user_path(@user)
 
-    assert_text "Successful login"
+    assert assert_text "Successful login"
 
     first("a[rel=next]").click
 
-    assert_text "Successful login"
+    assert assert_text "Successful login"
   end
 
   def assert_account_access_log_page_content(user)
-    assert_text "Time"
-    assert_text "Event"
-    assert_text "account locked"
+    assert assert_text "Time"
+    assert assert_text "Event"
+    assert assert_text "account locked"
     assert_selector "a", text: user.name
   end
 end

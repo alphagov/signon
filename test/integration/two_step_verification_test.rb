@@ -60,7 +60,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
         click_link "Sign out"
 
-        signin_with(@user)
+        assert signin_with(@user)
       end
     end
 
@@ -162,7 +162,7 @@ class TwoStepVerificationTest < ActionDispatch::IntegrationTest
 
         click_link "Sign out"
 
-        signin_with(@user)
+        assert signin_with(@user)
       end
     end
   end

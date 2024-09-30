@@ -29,8 +29,8 @@ class ApplicationsAccessLogsIntegrationTest < ActionDispatch::IntegrationTest
     context "when there are no matching events" do
       should "see a message stating that there is no activity logged" do
         visit access_logs_doorkeeper_application_path(@application)
-        assert_text "app-name access log"
-        assert_text "No activity logged"
+        assert assert_text "app-name access log"
+        assert assert_text "No activity logged"
       end
     end
 
@@ -43,9 +43,9 @@ class ApplicationsAccessLogsIntegrationTest < ActionDispatch::IntegrationTest
 
       should "see a list of events for the application" do
         visit access_logs_doorkeeper_application_path(@application)
-        assert_text "#{@application.name} access log"
-        assert_text "Successful user application authorization for #{@application.name} for #{@superadmin.name}"
-        assert_text "Successful user application authorization for #{@application.name} for #{@user.name}"
+        assert assert_text "#{@application.name} access log"
+        assert assert_text "Successful user application authorization for #{@application.name} for #{@superadmin.name}"
+        assert assert_text "Successful user application authorization for #{@application.name} for #{@user.name}"
       end
     end
   end

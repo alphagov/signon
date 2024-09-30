@@ -613,7 +613,7 @@ class UserTest < ActiveSupport::TestCase
         user.grant_permission(supported_permission)
         user.save!
 
-        user.has_permission?(supported_permission)
+        assert user.has_permission?(supported_permission)
       end
     end
   end

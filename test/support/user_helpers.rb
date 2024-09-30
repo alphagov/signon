@@ -19,6 +19,8 @@ module UserHelpers
         click_button "Sign in"
       end
     end
+
+    true
   end
 
   def signout

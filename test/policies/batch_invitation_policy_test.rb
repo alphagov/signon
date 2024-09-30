@@ -19,7 +19,7 @@ class BatchInvitationPolicyTest < ActiveSupport::TestCase
     end
 
     should "forbid for normal users" do
-      forbid?(create(:user), BatchInvitation.new, :new)
+      assert forbid?(create(:user), BatchInvitation.new, :new)
     end
   end
 end
