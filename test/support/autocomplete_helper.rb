@@ -3,6 +3,10 @@ require "capybara/rails"
 class AutocompleteHelper
   include Capybara::DSL
 
+  def clear_selection
+    click_button "Clear selection"
+  end
+
   def select_autocomplete_option(option_string)
     autocomplete_input_element = find(".autocomplete__input")
     autocomplete_input_element.fill_in with: option_string

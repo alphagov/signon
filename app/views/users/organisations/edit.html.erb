@@ -38,13 +38,24 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     <%= form_for @user, url: user_organisation_path(@user) do %>
-      <%= render "govuk_publishing_components/components/select", {
-        id: "user_organisation_id",
-        name: "user[organisation_id]",
-        label: "Organisation",
-        options: options_for_organisation_select(selected: @user.organisation_id),
-        error_message: @user.errors[:organisation_id].any? ? @user.errors.full_messages_for(:organisation_id).to_sentence : nil
-      } %>
+      <div data-module="accessible-autocomplete">
+        <%= render "govuk_publishing_components/components/select", {
+          id: "user_organisation_id",
+          name: "user[organisation_id]",
+          label: "Organisation",
+          options: options_for_organisation_select(selected: @user.organisation_id),
+          error_message: @user.errors[:organisation_id].any? ? @user.errors.full_messages_for(:organisation_id).to_sentence : nil
+        } %>
+
+        <div class="govuk-button-group">
+          <%= render "govuk_publishing_components/components/button", {
+            text: "Clear selection",
+            type: "button",
+            classes: "js-autocomplete__clear-button",
+            secondary_solid: true
+          } %>
+        </div>
+      </div>
       <div class="govuk-button-group">
         <%= render "govuk_publishing_components/components/button", {
           text: "Change organisation",

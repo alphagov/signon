@@ -114,6 +114,27 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
     end
   end
 
+  context "with JavaScript enabled" do
+    setup do
+      use_javascript_driver
+    end
+
+    should "allow selecting an organisation and continuing to the next step" do
+      visit root_path
+      signin_with create(:superadmin_user)
+
+      visit new_batch_invitation_path
+      path = Rails.root.join("test/fixtures/users.csv")
+      attach_file("Upload a CSV file", path)
+      AutocompleteHelper.new.select_autocomplete_option(@cabinet_office.name)
+
+      click_button "Manage permissions for new users"
+      assert assert_selector "h1", text: "Manage permissions for new users"
+
+      assert_equal @cabinet_office, BatchInvitation.last.organisation
+    end
+  end
+
   def perform_batch_invite_with_user(user, application, organisation:, fixture_file: "users.csv", user_count: 1)
     perform_enqueued_jobs do
       visit root_path

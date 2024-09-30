@@ -20,12 +20,23 @@
   <div class="govuk-grid-column-two-thirds">
     <% if policy(%i[account organisations]).update? %>
       <%= form_for current_user, url: account_organisation_path do |f| %>
-        <%= render "govuk_publishing_components/components/select", {
+        <div data-module="accessible-autocomplete">
+          <%= render "govuk_publishing_components/components/select", {
             id: "user_organisation_id",
             name: "user[organisation_id]",
             label: "Organisation",
             options: options_for_your_organisation_select(current_user)
+          } %>
+
+          <div class="govuk-button-group">
+            <%= render "govuk_publishing_components/components/button", {
+              text: "Clear selection",
+              type: "button",
+              classes: "js-autocomplete__clear-button",
+              secondary_solid: true
             } %>
+          </div>
+        </div>
         <%= render "govuk_publishing_components/components/button", {
           text: "Change organisation"
         } %>
