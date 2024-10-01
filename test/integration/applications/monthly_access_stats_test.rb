@@ -29,8 +29,8 @@ class ApplicationsMonthlyAccessStatsIntegrationTest < ActionDispatch::Integratio
     context "when there are no matching events" do
       should "see a message stating that there is no activity logged" do
         visit monthly_access_stats_doorkeeper_application_path(@application)
-        assert_text "Monthly access counts to app-name"
-        assert_text "No activity logged"
+        assert assert_text "Monthly access counts to app-name"
+        assert assert_text "No activity logged"
       end
     end
 
@@ -46,14 +46,14 @@ class ApplicationsMonthlyAccessStatsIntegrationTest < ActionDispatch::Integratio
 
       should "see a list of events for the application" do
         visit monthly_access_stats_doorkeeper_application_path(@application)
-        assert_text "Monthly access counts to #{@application.name}"
+        assert assert_text "Monthly access counts to #{@application.name}"
 
-        assert_text "Month Total authorization count Unique users authorization count Access logs"
+        assert assert_text "Month Total authorization count Unique users authorization count Access logs"
         # Test data has two months - these should be sorted in descending order
         # 2020-02 has two events for two different users, so we should get 2 2
-        assert_text "2020-02 2 2 2020-02 access logs"
+        assert assert_text "2020-02 2 2 2020-02 access logs"
         # 2020-01 has three events for two different users, so we should get 3 2
-        assert_text "2020-01 3 2 2020-01 access logs"
+        assert assert_text "2020-01 3 2 2020-01 access logs"
       end
     end
   end

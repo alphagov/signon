@@ -23,7 +23,7 @@ class BatchInvitationTest < ActiveSupport::TestCase
   should "allow multiple supported permissions of the same to be added" do
     @bi.grant_permission(@app.signin_permission)
     @bi.grant_permission(@app.signin_permission)
-    @bi.save!
+    assert @bi.save!
   end
 
   context "#has_permissions?" do

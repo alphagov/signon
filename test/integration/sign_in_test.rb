@@ -276,7 +276,7 @@ class SignInTest < ActionDispatch::IntegrationTest
       signin_with(email: "email@example.com", password: "some password with various $ymb0l$", second_step: false)
       click_link "Sign out"
 
-      assert_text "Sign in to GOV.UK"
+      assert assert_text "Sign in to GOV.UK"
     end
 
     should "not be able to access restricted paths before completing 2SV" do
@@ -312,7 +312,7 @@ class SignInTest < ActionDispatch::IntegrationTest
 
   should "not display a link to resend unlock instructions" do
     visit root_path
-    assert_no_selector "a", text: "Didn't receive unlock instructions?"
+    assert assert_no_selector "a", text: "Didn't receive unlock instructions?"
   end
 
   should "not be able to access the 2SV login page before logging in" do
