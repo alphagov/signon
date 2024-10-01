@@ -74,7 +74,7 @@ class UsersFilter
 
   def organisation_option_select_options(aria_controls_id: nil)
     scope = @current_user.manageable_organisations
-    scope.order(:name).joins(:users).uniq.map do |organisation|
+    scope.joins(:users).uniq.map do |organisation|
       {
         label: organisation.name_with_abbreviation,
         controls: aria_controls_id,

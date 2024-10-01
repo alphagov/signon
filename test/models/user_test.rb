@@ -936,8 +936,8 @@ class UserTest < ActiveSupport::TestCase
       assert_equal [], create(:user, organisation:).manageable_organisations
       assert_equal [organisation], create(:organisation_admin_user, organisation:).manageable_organisations
       assert_equal [organisation, child_organisation], create(:super_organisation_admin_user, organisation:).manageable_organisations
-      assert_equal Organisation.order(:name), create(:admin_user, organisation:).manageable_organisations
-      assert_equal Organisation.order(:name), create(:superadmin_user, organisation:).manageable_organisations
+      assert_equal Organisation.all, create(:admin_user, organisation:).manageable_organisations
+      assert_equal Organisation.all, create(:superadmin_user, organisation:).manageable_organisations
     end
   end
 

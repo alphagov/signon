@@ -27,20 +27,6 @@ module UsersHelper
     end
   end
 
-  def organisation_options(form_builder)
-    accessible_organisations = policy_scope(Organisation)
-    options_from_collection_for_select(
-      accessible_organisations,
-      :id,
-      :name_with_abbreviation,
-      selected: form_builder.object.organisation_id,
-    )
-  end
-
-  def organisation_select_options
-    { include_blank: current_user.publishing_manager? ? false : Organisation::NONE }
-  end
-
   def user_email_tokens(user = current_user)
     [user.email] + DeviseZxcvbn::EmailTokeniser.split(user.email)
   end
@@ -79,14 +65,6 @@ module UsersHelper
   def options_for_role_select(selected: nil)
     current_user.manageable_roles.map do |role|
       { text: role.display_name, value: role.name }.tap do |option|
-        option[:selected] = true if option[:value] == selected
-      end
-    end
-  end
-
-  def options_for_organisation_select(selected: nil)
-    [{ text: "None", value: nil }] + policy_scope(Organisation).not_closed.order(:name).map do |organisation|
-      { text: organisation.name_with_abbreviation, value: organisation.id }.tap do |option|
         option[:selected] = true if option[:value] == selected
       end
     end

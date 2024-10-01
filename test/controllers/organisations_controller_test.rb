@@ -14,7 +14,7 @@ class OrganisationsControllerTest < ActionController::TestCase
     should "list organisations" do
       get :index
       assert_response :ok
-      assert_select "td", "Ministry of Funk (MoF)"
+      assert_select "td", "Ministry of Funk - MoF"
     end
   end
 

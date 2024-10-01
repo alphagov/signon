@@ -316,7 +316,7 @@ class User < ApplicationRecord
   end
 
   def manageable_organisations
-    role.manageable_organisations_for(self).order(:name)
+    role.manageable_organisations_for(self)
   end
 
   # Make devise send all emails using ActiveJob

@@ -43,7 +43,7 @@
           id: "user_organisation_id",
           name: "user[organisation_id]",
           label: "Organisation",
-          options: options_for_organisation_select(selected: @user.organisation_id),
+          options: options_for_organisation_select(selected_id: @user.organisation_id),
           error_message: @user.errors[:organisation_id].any? ? @user.errors.full_messages_for(:organisation_id).to_sentence : nil
         } %>
 

@@ -78,26 +78,6 @@ class UsersHelperTest < ActionView::TestCase
     end
   end
 
-  context "#options_for_organisation_select" do
-    should "return organisation options suitable for select component, sorted alphabetically and exluding closed organisations" do
-      user = create(:admin_user)
-      stubs(:current_user).returns(user)
-
-      organisation1 = create(:organisation, name: "B Organisation")
-      organisation2 = create(:organisation, name: "A Organisation")
-      create(:organisation, name: "Closed Organisation", closed: true)
-
-      options = options_for_organisation_select(selected: organisation2.id)
-
-      expected_options = [
-        { text: "None", value: nil },
-        { text: "A Organisation", value: organisation2.id, selected: true },
-        { text: "B Organisation", value: organisation1.id },
-      ]
-      assert_equal expected_options, options
-    end
-  end
-
   context "#options_for_permission_option_select" do
     should "return permission options suitable for option-select component" do
       application = create(:application)
