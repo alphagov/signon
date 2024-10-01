@@ -61,6 +61,7 @@ module Components
 
       def cell(str, opt = {}, &block)
         classes = %w[govuk-table__cell]
+        classes << opt[:classes] if opt[:classes]
         classes << "govuk-table__cell--#{opt[:format]}" if opt[:format]
         classes << "govuk-table__cell--empty" unless str || block_given?
         str ||= "Not set"
