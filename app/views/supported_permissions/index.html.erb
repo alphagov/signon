@@ -55,7 +55,7 @@
         text: supported_permission.created_at.to_date.to_fs(:govuk_date),
       },
       {
-        text: supported_permission.delegatable? ? 'Yes' : 'No',
+        text: supported_permission.delegated? ? 'Yes' : 'No',
       },
       {
         text: supported_permission.default? ? 'Yes' : 'No',

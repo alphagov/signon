@@ -15,8 +15,8 @@ class PermissionsTest < ActiveSupport::TestCase
 
   context "#promote_managing_editors_to_org_admins" do
     setup do
-      @first_app = create(:application, name: "Cat Publisher", with_non_delegatable_supported_permissions: ["Managing Editor", "other"])
-      @second_app = create(:application, name: "Dog Publisher", with_non_delegatable_supported_permissions: %w[managing_editor other])
+      @first_app = create(:application, name: "Cat Publisher", with_non_delegated_supported_permissions: ["Managing Editor", "other"])
+      @second_app = create(:application, name: "Dog Publisher", with_non_delegated_supported_permissions: %w[managing_editor other])
       @task = Rake::Task["permissions:promote_managing_editors_to_org_admins"]
     end
 
@@ -70,7 +70,7 @@ class PermissionsTest < ActiveSupport::TestCase
 
   context "#remove_editor_permission_from_whitehall_managing_editors" do
     setup do
-      @whitehall_app = create(:application, name: "Whitehall", with_non_delegatable_supported_permissions: ["Editor", "Managing Editor", "Some Other Permission"])
+      @whitehall_app = create(:application, name: "Whitehall", with_non_delegated_supported_permissions: ["Editor", "Managing Editor", "Some Other Permission"])
       @task = Rake::Task["permissions:remove_editor_permission_from_whitehall_managing_editors"]
     end
 
@@ -93,7 +93,7 @@ class PermissionsTest < ActiveSupport::TestCase
     end
 
     should "retain both permissions for other apps" do
-      non_whitehall_app = create(:application, name: "Another App", with_non_delegatable_supported_permissions: ["Editor", "Managing Editor", "Some Other Permission"])
+      non_whitehall_app = create(:application, name: "Another App", with_non_delegated_supported_permissions: ["Editor", "Managing Editor", "Some Other Permission"])
       non_gds_managing_editor_and_editor = user_with_permissions(:user, @non_gds_org, { non_whitehall_app => ["Editor", "Managing Editor", "Some Other Permission"] })
 
       @task.invoke

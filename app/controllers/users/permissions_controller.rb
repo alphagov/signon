@@ -97,7 +97,7 @@ private
     if current_user.govuk_admin?
       @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false)
     elsif current_user.publishing_manager?
-      @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false, only_delegatable: true)
+      @permissions = @application.sorted_supported_permissions_grantable_from_ui(include_signin: false, only_delegated: true)
     end
   end
 end

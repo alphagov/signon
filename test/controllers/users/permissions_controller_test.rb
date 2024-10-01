@@ -279,8 +279,8 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       end
 
       context "when the current user is a publishing manager" do
-        should "redirect to the applications path if there are no delegatable non-signin applications" do
-          application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
+        should "redirect to the applications path if there are no delegated non-signin applications" do
+          application = create(:application, with_non_delegated_supported_permissions: %w[permission])
           user = create(:user, with_signin_permissions_for: [application])
 
           current_user = create(:user)
@@ -300,17 +300,17 @@ class Users::PermissionsControllerTest < ActionController::TestCase
           assert_equal "No permissions found for #{application.name} that you are authorised to manage.", flash[:alert]
         end
 
-        should "exclude non-delegatable permissions" do
+        should "exclude non-delegated permissions" do
           application = create(:application)
-          old_delegatable_permission = create(:delegatable_supported_permission, application:)
-          old_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
-          new_delegatable_permission = create(:delegatable_supported_permission, application:)
-          new_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
+          old_delegated_permission = create(:delegated_supported_permission, application:)
+          old_non_delegated_permission = create(:non_delegated_supported_permission, application:)
+          new_delegated_permission = create(:delegated_supported_permission, application:)
+          new_non_delegated_permission = create(:non_delegated_supported_permission, application:)
 
           user = create(
             :user,
             with_signin_permissions_for: [application],
-            with_permissions: { application => [old_delegatable_permission.name, old_non_delegatable_permission.name] },
+            with_permissions: { application => [old_delegated_permission.name, old_non_delegated_permission.name] },
           )
 
           current_user = create(:user)
@@ -326,10 +326,10 @@ class Users::PermissionsControllerTest < ActionController::TestCase
 
           get :edit, params: { user_id: user, application_id: application }
 
-          assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{old_delegatable_permission.id}']"
-          assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_delegatable_permission.id}']"
-          assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{old_non_delegatable_permission.id}']", count: 0
-          assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_non_delegatable_permission.id}']", count: 0
+          assert_select "input[type='checkbox'][checked='checked'][name='application[supported_permission_ids][]'][value='#{old_delegated_permission.id}']"
+          assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_delegated_permission.id}']"
+          assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{old_non_delegated_permission.id}']", count: 0
+          assert_select "input[type='checkbox'][name='application[supported_permission_ids][]'][value='#{new_non_delegated_permission.id}']", count: 0
         end
       end
     end
@@ -605,17 +605,17 @@ class Users::PermissionsControllerTest < ActionController::TestCase
       end
 
       context "when the current user is a publishing manager with access to the app" do
-        should "prevent adding or removing non-delegatable permissions" do
+        should "prevent adding or removing non-delegated permissions" do
           application = create(:application)
-          old_delegatable_permission = create(:delegatable_supported_permission, application:)
-          new_delegatable_permission = create(:delegatable_supported_permission, application:)
-          old_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
-          new_non_delegatable_permission = create(:non_delegatable_supported_permission, application:)
+          old_delegated_permission = create(:delegated_supported_permission, application:)
+          new_delegated_permission = create(:delegated_supported_permission, application:)
+          old_non_delegated_permission = create(:non_delegated_supported_permission, application:)
+          new_non_delegated_permission = create(:non_delegated_supported_permission, application:)
 
           user = create(
             :user,
             with_signin_permissions_for: [application],
-            with_permissions: { application => [old_delegatable_permission.name, old_non_delegatable_permission.name] },
+            with_permissions: { application => [old_delegated_permission.name, old_non_delegated_permission.name] },
           )
 
           current_user = create(:user, with_signin_permissions_for: [application])
@@ -635,14 +635,14 @@ class Users::PermissionsControllerTest < ActionController::TestCase
               user_id: user,
               application_id: application,
               application: {
-                supported_permission_ids: [new_delegatable_permission.id, new_non_delegatable_permission.id],
+                supported_permission_ids: [new_delegated_permission.id, new_non_delegated_permission.id],
               },
             },
           )
 
           assert_same_elements [
-            old_non_delegatable_permission,
-            new_delegatable_permission,
+            old_non_delegated_permission,
+            new_delegated_permission,
             application.signin_permission,
           ], user.supported_permissions
         end

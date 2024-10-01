@@ -58,7 +58,7 @@ private
   end
 
   def supported_permission_parameters
-    params.require(:supported_permission).permit(:name, :delegatable, :default)
+    params.require(:supported_permission).permit(:name, :delegated, :default)
   end
 
   def supported_permission

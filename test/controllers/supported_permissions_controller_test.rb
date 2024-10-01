@@ -8,7 +8,7 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
   context "GET index" do
     should "render the permissions list" do
-      app = create(:application, name: "My first app", with_delegatable_supported_permissions: %w[permission1])
+      app = create(:application, name: "My first app", with_delegated_supported_permissions: %w[permission1])
 
       get :index, params: { doorkeeper_application_id: app.id }
 
@@ -24,12 +24,12 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
 
   context "GET new" do
     should "render the form" do
-      app = create(:application, name: "My first app", with_non_delegatable_supported_permissions: %w[permission1])
+      app = create(:application, name: "My first app", with_non_delegated_supported_permissions: %w[permission1])
       get :new, params: { doorkeeper_application_id: app.id }
       assert_select "h1", /Add permission/
       assert_select ".govuk-breadcrumbs li", /My first app/
       assert_select "input[name='supported_permission[name]']", true
-      assert_select "input[name='supported_permission[delegatable]']", true
+      assert_select "input[name='supported_permission[delegated]']", true
       assert_select "input[name='supported_permission[default]']", true
     end
   end
@@ -64,16 +64,16 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
         :supported_permission,
         application_id: app.id,
         name: "permission1",
-        delegatable: true,
+        delegated: true,
         default: true,
         created_at: 2.days.ago,
       )
 
-      put :update, params: { doorkeeper_application_id: app.id, id: perm.id, supported_permission: { name: "", delegatable: "0", default: "0" } }
+      put :update, params: { doorkeeper_application_id: app.id, id: perm.id, supported_permission: { name: "", delegated: "0", default: "0" } }
 
       assert_select ".govuk-error-summary ul li", "Name can't be blank"
       perm.reload
-      assert perm.delegatable
+      assert perm.delegated
       assert perm.default
     end
 
@@ -83,24 +83,24 @@ class SupportedPermissionsControllerTest < ActionController::TestCase
         :supported_permission,
         application_id: app.id,
         name: "permission1",
-        delegatable: true,
+        delegated: true,
         default: true,
         created_at: 2.days.ago,
       )
 
-      put :update, params: { doorkeeper_application_id: app.id, id: perm.id, supported_permission: { delegatable: "0", default: "0" } }
+      put :update, params: { doorkeeper_application_id: app.id, id: perm.id, supported_permission: { delegated: "0", default: "0" } }
 
       assert_redirected_to(controller: "supported_permissions", action: :index)
       assert_equal "Successfully updated permission permission1", flash[:notice]
       perm.reload
-      assert_not perm.delegatable
+      assert_not perm.delegated
       assert_not perm.default
     end
   end
 
   context "GET confirm_destroy" do
     should "render the permission and application names" do
-      application = create(:application, name: "My first app", with_non_delegatable_supported_permissions: %w[permission1])
+      application = create(:application, name: "My first app", with_non_delegated_supported_permissions: %w[permission1])
 
       get :confirm_destroy, params: { doorkeeper_application_id: application.id, id: application.supported_permissions.first.id }
 

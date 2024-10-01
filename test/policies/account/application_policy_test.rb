@@ -81,17 +81,17 @@ class Account::ApplicationPolicyTest < ActiveSupport::TestCase
           @current_user.expects(:publishing_manager?).returns(true)
         end
 
-        context "when the application's signin permission is delegatable" do
+        context "when the application's signin permission is delegated" do
           should "be permitted" do
-            @application.signin_permission.update!(delegatable: true)
+            @application.signin_permission.update!(delegated: true)
 
             assert permit?(*@args)
           end
         end
 
-        context "when the application's signin permission is not delegatable" do
+        context "when the application's signin permission is not delegated" do
           should "be forbidden" do
-            @application.signin_permission.update!(delegatable: false)
+            @application.signin_permission.update!(delegated: false)
 
             assert forbid?(*@args)
           end

@@ -5,7 +5,7 @@ class SupportedPermissionPolicy < BasePolicy
         scope.all
       elsif current_user.publishing_manager?
         scope
-          .delegatable
+          .delegated
           .joins(:application)
           .where(oauth_applications: { id: publishing_manager_manageable_application_ids })
       else

@@ -3,7 +3,7 @@ require "test_helper"
 class ApplicationPermissionsHelperTest < ActionView::TestCase
   context "#permissions_updated_description" do
     setup do
-      @application = create(:application, name: "Whitehall", with_non_delegatable_supported_permissions: ["Permission 1"])
+      @application = create(:application, name: "Whitehall", with_non_delegated_supported_permissions: ["Permission 1"])
       user = create(:user, with_permissions: { @application => ["Permission 1", SupportedPermission::SIGNIN_NAME] })
       stubs(:current_user).returns(user)
     end
@@ -58,7 +58,7 @@ class ApplicationPermissionsHelperTest < ActionView::TestCase
     end
   end
 
-  context "#notice_about_non_delegatable_permissions" do
+  context "#notice_about_non_delegated_permissions" do
     context "when the current user is a GOV.UK admin" do
       setup do
         @current_user = create(:user)
@@ -66,7 +66,7 @@ class ApplicationPermissionsHelperTest < ActionView::TestCase
       end
 
       should "return nil" do
-        assert_nil notice_about_non_delegatable_permissions(@current_user, create(:application))
+        assert_nil notice_about_non_delegated_permissions(@current_user, create(:application))
       end
     end
 
@@ -77,16 +77,16 @@ class ApplicationPermissionsHelperTest < ActionView::TestCase
         @application = create(:application, name: "My First App")
       end
 
-      context "when the app has no non-delegatable non-signin permissions grantable from the UI" do
-        setup { @application.expects(:has_non_delegatable_non_signin_permissions_grantable_from_ui?).returns(false) }
+      context "when the app has no non-delegated non-signin permissions grantable from the UI" do
+        setup { @application.expects(:has_non_delegated_non_signin_permissions_grantable_from_ui?).returns(false) }
 
         should "return nil" do
-          assert_nil notice_about_non_delegatable_permissions(@current_user, @application)
+          assert_nil notice_about_non_delegated_permissions(@current_user, @application)
         end
       end
 
-      context "when the app has some non-delegatable non-signin permissions grantable from the UI" do
-        setup { @application.expects(:has_non_delegatable_non_signin_permissions_grantable_from_ui?).returns(true) }
+      context "when the app has some non-delegated non-signin permissions grantable from the UI" do
+        setup { @application.expects(:has_non_delegated_non_signin_permissions_grantable_from_ui?).returns(true) }
 
         context "without another user passed in as the grantee" do
           should "infer the grantee as the current user and return a notice with a link to the account application permissions path" do
@@ -94,7 +94,7 @@ class ApplicationPermissionsHelperTest < ActionView::TestCase
 
             assert_equal(
               "Below, you will only see permissions that you are authorised to manage. You can also #{link}.",
-              notice_about_non_delegatable_permissions(@current_user, @application),
+              notice_about_non_delegated_permissions(@current_user, @application),
             )
           end
         end
@@ -107,7 +107,7 @@ class ApplicationPermissionsHelperTest < ActionView::TestCase
 
             assert_equal(
               "Below, you will only see permissions that you are authorised to manage. You can also #{link}.",
-              notice_about_non_delegatable_permissions(@current_user, @application, grantee),
+              notice_about_non_delegated_permissions(@current_user, @application, grantee),
             )
           end
         end

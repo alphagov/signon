@@ -14,7 +14,7 @@ class Account::ApplicationPolicy < BasePolicy
     current_user.has_access_to?(record) &&
       (
         current_user.govuk_admin? ||
-        current_user.publishing_manager? && record.signin_permission.delegatable?
+        current_user.publishing_manager? && record.signin_permission.delegated?
       )
   end
 
