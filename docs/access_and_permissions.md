@@ -2,9 +2,9 @@
 
 In addition to providing a single sign on solution for the GOV.UK publishing app suite, Signon can be used to manage users' access to apps and the permissions they have for each app. The permissions can then be used within specific non-Signon apps to dictate behaviour. This document provides a primer on key parts of how the management of access and permissions is implemented.
 
-## Section notes
+## Notes
 
-### What can you do?
+### "What can you do?" sections
 
 Each "What can you do?" section provides a breakdown of the actions a given user (a 'granter') can take to manage access to and permissions for an app for a given user (a 'grantee').
 
@@ -13,11 +13,17 @@ The granter is either:
 - a GOV.UK admin, meaning a user with the role "Superadmin" or "Admin"; or
 - a publishing manager, meaning a user with the role "Super organisation admin" or "Organisation admin"
 
-Each row represents an app with certain permissions set as delegatable, as indicated by the "Delegatable permissions" column. The "Grant access" column indicates whether a granter can give a grantee the `signin` permission, and the "Revoke access" column relates to removing the `signin` permission.
+Each row represents an app with certain permissions set as delegated, as indicated by the "Delegated permissions" column. The "Grant access" column indicates whether a granter can give a grantee the `signin` permission, and the "Revoke access" column relates to removing the `signin` permission.
 
-### Dependencies by route
+### "Dependencies by route" sections
 
 Each "Dependencies by route" section provides a breakdown of which actions are determined by dependencies and a tree or trees of relevant dependencies. The aim of this section isn't to go all the way down every node of each dependency tree, but rather to provide enough context on what determines what you can do, and to make it easier to identify shared dependencies. There's a particular focus on the different policies that are hit by each route, since the policies are both fundamental to how everything works and the source of a lot of complexity.
+
+### Delegating vs granting permissions
+
+'Delegating' and 'granting' permissions are separate but related concepts. Permissions are 'granted' to individual users, while they are 'delegated' as grantable by publishing managers.
+
+When a permission is delegated, then, publishing managers have the authority to grant the permission to users they manage. When the 'signin' permission is delegated, publishing managers can grant or remove access to the given application.
 
 ## For the current user (self)
 
@@ -27,7 +33,7 @@ In this section, the granter and grantee are the same user: this is about managi
 
 #### As a GOV.UK admin
 
-| Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
+| Delegated permissions | Grant access | Revoke access | Edit permissions | View permissions |
 | ----------------------- | ------------ | ------------- | ---------------- | ---------------- |
 | None                    | ✅           | ✅            | ✅               | ✅               |
 | `signin`                | ✅           | ✅            | ✅               | ✅               |
@@ -35,13 +41,13 @@ In this section, the granter and grantee are the same user: this is about managi
 
 #### As a publishing manager
 
-| Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
+| Delegated permissions | Grant access | Revoke access | Edit permissions | View permissions |
 | ----------------------- | ------------ | ------------- | ---------------- | ---------------- |
 | None                    | ❌           | ❌            | ❌               | ✅               |
 | `signin`                | ❌           | ✅            | ❌               | ✅               |
 | Another permission      | ❌           | ❌            | ✅\*             | ✅               |
 
-\* only delegatable non-signin permissions
+\* only delegated non-signin permissions
 
 ### Dependencies by route
 
@@ -185,7 +191,7 @@ In this section, the granter and grantee are different users: this is about mana
 
 ##### With or without access to the app
 
-| Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
+| Delegated permissions | Grant access | Revoke access | Edit permissions | View permissions |
 | ----------------------- | ------------ | ------------- | ---------------- | ---------------- |
 | None                    | ✅           | ✅            | ✅               | ✅               |
 | `signin`                | ✅           | ✅            | ✅               | ✅               |
@@ -195,17 +201,17 @@ In this section, the granter and grantee are different users: this is about mana
 
 ##### With access to the app
 
-| Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
+| Delegated permissions | Grant access | Revoke access | Edit permissions | View permissions |
 | ----------------------- | ------------ | ------------- | ---------------- | ---------------- |
 | None                    | ❌           | ❌            | ❌               | ✅               |
 | `signin`                | ✅           | ✅            | ❌               | ✅               |
 | Another permission      | ❌           | ❌            | ✅\*             | ✅               |
 
-\* only delegatable non-signin permissions
+\* only delegated non-signin permissions
 
 ##### Without access to the app
 
-| Delegatable permissions | Grant access | Revoke access | Edit permissions | View permissions |
+| Delegated permissions | Grant access | Revoke access | Edit permissions | View permissions |
 | ----------------------- | ------------ | ------------- | ---------------- | ---------------- |
 | None                    | ❌           | ❌            | ❌               | ✅               |
 | `signin`                | ❌           | ❌            | ❌               | ✅               |
