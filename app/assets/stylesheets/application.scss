@@ -121,3 +121,16 @@ $show-button-space: calc($show-button-width + $show-button-left-margin);
     padding-right: $show-button-space;
   }
 }
+
+.applications-table__remove_access_link {
+  width: auto;
+  min-width: 90px;
+}
+
+.applications-table__permissions-action-links a {
+  display: inline-block;
+
+  &:not(:last-child) {
+    margin-right: 1rem;
+  }
+}

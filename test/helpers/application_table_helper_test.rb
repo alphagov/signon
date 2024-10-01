@@ -3,22 +3,6 @@ require "test_helper"
 class ApplicationTableHelperTest < ActionView::TestCase
   include PunditHelpers
 
-  context "#wrap_links_in_actions_markup" do
-    should "wrap an array of links in a container with a class to apply actions styles" do
-      links = [
-        "<a class=\"govuk-link\" href=\"https://www.gov.uk/destination-one\">Destination one</a>",
-        "<a class=\"govuk-link\" href=\"https://www.gov.uk/destination-two\">Destination two</a>",
-      ]
-
-      expected_output = "<div class=\"govuk-table__actions\">
-        <a class=\"govuk-link\" href=\"https://www.gov.uk/destination-one\">Destination one</a>
-        <a class=\"govuk-link\" href=\"https://www.gov.uk/destination-two\">Destination two</a>
-      </div>".gsub(/>\s+</, "><")
-
-      assert_equal expected_output, wrap_links_in_actions_markup(links)
-    end
-  end
-
   context "#account_applications_grant_access_link" do
     setup do
       @user = build(:user)
@@ -28,7 +12,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
     should "generate a grant access button when the current user can grant the signin permission" do
       stub_policy @user, [:account, Doorkeeper::Application], grant_signin_permission?: true
-      assert_includes account_applications_grant_access_link(@application), "Grant access"
+      assert_includes account_applications_grant_access_link(@application), "Grant"
     end
 
     should "return an empty string when the current user cannot grant the signin permission" do
@@ -54,7 +38,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
         grant_signin_permission?: true,
       )
 
-      assert_includes users_applications_grant_access_link(@application, @grantee), "Grant access"
+      assert_includes users_applications_grant_access_link(@application, @grantee), "Grant"
     end
 
     should "return an empty string when the current user cannot grant the signin permission" do
@@ -78,7 +62,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
     should "generate a remove access link when the current user can remove the signin permission" do
       stub_policy @user, [:account, @application], remove_signin_permission?: true
-      assert_includes account_applications_remove_access_link(@application), "Remove access"
+      assert_includes account_applications_remove_access_link(@application), "Remove"
     end
 
     should "return an empty string when the current user cannot remove the signin permission" do
@@ -104,7 +88,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
         remove_signin_permission?: true,
       )
 
-      assert_includes users_applications_remove_access_link(@application, @grantee), "Remove access"
+      assert_includes users_applications_remove_access_link(@application, @grantee), "Remove"
     end
 
     should "return an empty string when the current user cannot remove the signin permission" do
@@ -130,8 +114,8 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
       result = account_applications_permissions_links(@application)
 
-      assert_includes result, "View permissions"
-      assert_includes result, "Update permissions"
+      assert_includes result, "View"
+      assert_includes result, "Update"
     end
 
     should "only generate a view link when the user can only view permissions" do
@@ -139,8 +123,8 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
       result = account_applications_permissions_links(@application)
 
-      assert_includes result, "View permissions"
-      assert_not_includes result, "Update permissions"
+      assert_includes result, "View"
+      assert_not_includes result, "Update"
     end
 
     should "only generate an update link when the user can only edit permissions" do
@@ -148,8 +132,8 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
       result = account_applications_permissions_links(@application)
 
-      assert_not_includes result, "View permissions"
-      assert_includes result, "Update permissions"
+      assert_not_includes result, "View"
+      assert_includes result, "Update"
     end
 
     should "return an empty string when the user can do neither" do
@@ -178,8 +162,8 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
       result = users_applications_permissions_links(@application, @grantee)
 
-      assert_includes result, "View permissions"
-      assert_includes result, "Update permissions"
+      assert_includes result, "View"
+      assert_includes result, "Update"
     end
 
     should "only generate a view link when the user can only view permissions" do
@@ -193,8 +177,8 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
       result = users_applications_permissions_links(@application, @grantee)
 
-      assert_includes result, "View permissions"
-      assert_not_includes result, "Update permissions"
+      assert_includes result, "View"
+      assert_not_includes result, "Update"
     end
 
     should "only generate an edit link when the user can only edit permissions" do
@@ -208,8 +192,8 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
       result = users_applications_permissions_links(@application, @grantee)
 
-      assert_not_includes result, "View permissions"
-      assert_includes result, "Update permissions"
+      assert_not_includes result, "View"
+      assert_includes result, "Update"
     end
 
     should "return an empty string when the user can do neither" do
@@ -234,7 +218,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
       grantee = create(:api_user)
       stubs(:current_user).returns(granter)
 
-      assert_includes api_users_applications_permissions_link(application, grantee), "Update permissions"
+      assert_includes api_users_applications_permissions_link(application, grantee), "Update"
     end
   end
 
