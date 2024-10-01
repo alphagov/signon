@@ -19,7 +19,7 @@ class Organisation < ApplicationRecord
 
   def name_with_abbreviation
     return_value = if abbreviation.present? && abbreviation != name
-                     "#{name} – #{abbreviation}"
+                     "#{name} - #{abbreviation}"
                    else
                      name
                    end

@@ -23,7 +23,7 @@ class AccountHelperTest < ActionView::TestCase
       current_user = build(:user, organisation:)
       stubs(:current_user).returns(current_user)
 
-      assert_equal "Handling Ministry – HM", current_user_organisation_name
+      assert_equal "Handling Ministry - HM", current_user_organisation_name
     end
 
     should "return helpful message if user has no organisation" do
