@@ -71,7 +71,7 @@ module UsersHelper
   end
 
   def options_for_organisation_select(selected: nil)
-    [{ text: "None", value: nil }] + policy_scope(Organisation).not_closed.order(:name).map do |organisation|
+    [{ text: "None", value: nil }] + policy_scope(Organisation).not_closed.map do |organisation|
       { text: organisation.name_with_abbreviation, value: organisation.id }.tap do |option|
         option[:selected] = true if option[:value] == selected
       end

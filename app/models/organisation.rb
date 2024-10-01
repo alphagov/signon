@@ -15,6 +15,8 @@ class Organisation < ApplicationRecord
 
   scope :not_closed, -> { where(closed: false) }
 
+  default_scope { order(:name) }
+
   def name_with_abbreviation
     return_value = if abbreviation.present? && abbreviation != name
                      "#{name} – #{abbreviation}"
