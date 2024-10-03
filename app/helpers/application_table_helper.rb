@@ -115,7 +115,7 @@ private
     if current_user.govuk_admin?
       return "" unless application.has_non_signin_permissions_grantable_from_ui?
     elsif current_user.publishing_manager?
-      return "" unless application.has_delegatable_non_signin_permissions_grantable_from_ui?
+      return "" unless application.has_delegated_non_signin_permissions_grantable_from_ui?
     end
 
     path = if user.nil?

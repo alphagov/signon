@@ -213,7 +213,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
   context "#api_users_applications_permissions_link" do
     should "generate an update link when the user can edit permissions" do
-      application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
+      application = create(:application, with_non_delegated_supported_permissions: %w[permission])
       granter = create(:superadmin_user)
       grantee = create(:api_user)
       stubs(:current_user).returns(granter)
@@ -261,7 +261,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
   context "#view_permissions_link" do
     should "generate a link to view the permissions" do
-      application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
+      application = create(:application, with_non_delegated_supported_permissions: %w[permission])
 
       assert_includes view_permissions_link(application), account_application_permissions_path(application)
     end
@@ -272,7 +272,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
       end
 
       should "generate a link to view the permissions" do
-        application = create(:application, with_non_delegatable_supported_permissions: %w[permission])
+        application = create(:application, with_non_delegated_supported_permissions: %w[permission])
 
         assert_includes view_permissions_link(application, @user), user_application_permissions_path(@user, application)
       end
@@ -288,7 +288,7 @@ class ApplicationTableHelperTest < ActionView::TestCase
 
     [
       { role_group: "GOV.UK admin", role_method: :govuk_admin?, app_method: :has_non_signin_permissions_grantable_from_ui? },
-      { role_group: "publishing manager", role_method: :publishing_manager?, app_method: :has_delegatable_non_signin_permissions_grantable_from_ui? },
+      { role_group: "publishing manager", role_method: :publishing_manager?, app_method: :has_delegated_non_signin_permissions_grantable_from_ui? },
     ].each do |context_hash|
       context "when the current user is a #{context_hash[:role_group]}" do
         setup { @current_user.expects(context_hash[:role_method]).returns(true) }

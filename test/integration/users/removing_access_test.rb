@@ -2,12 +2,12 @@ require "test_helper"
 
 class Users::RemovingAccessTest < ActionDispatch::IntegrationTest
   setup do
-    @application = create(:application, with_delegatable_supported_permissions: [SupportedPermission::SIGNIN_NAME])
+    @application = create(:application, with_delegated_supported_permissions: [SupportedPermission::SIGNIN_NAME])
     @granter = create(:user_in_organisation, with_signin_permissions_for: [@application])
     @grantee = create(:user, organisation: @granter.organisation, with_signin_permissions_for: [@application])
   end
 
-  context "when the signin permission is delegatable, the grantee is in the same organisation, and the granter has access" do
+  context "when the signin permission is delegated, the grantee is in the same organisation, and the granter has access" do
     %w[superadmin admin super_organisation_admin organisation_admin].each do |role|
       context "as a #{role}" do
         setup do
@@ -21,8 +21,8 @@ class Users::RemovingAccessTest < ActionDispatch::IntegrationTest
     end
   end
 
-  context "when the signin permission is not delegatable" do
-    setup { @application.signin_permission.update!(delegatable: false) }
+  context "when the signin permission is not delegated" do
+    setup { @application.signin_permission.update!(delegated: false) }
 
     %w[superadmin admin].each do |admin_role|
       context "as a #{admin_role}" do

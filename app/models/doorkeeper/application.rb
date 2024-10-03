@@ -14,11 +14,11 @@ class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/Appli
   scope :not_api_only, -> { where(api_only: false) }
   scope :with_home_uri, -> { where.not(home_uri: nil).where.not(home_uri: "") }
   scope :can_signin, ->(user) { with_signin_permission_for(user) }
-  scope :with_signin_delegatable,
+  scope :with_signin_delegated,
         lambda {
           joins(:supported_permissions)
             .merge(SupportedPermission.signin)
-            .merge(SupportedPermission.delegatable)
+            .merge(SupportedPermission.delegated)
         }
   scope :with_signin_permission_for,
         lambda { |user|
@@ -43,10 +43,10 @@ class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/Appli
     supported_permissions.signin.first
   end
 
-  def sorted_supported_permissions_grantable_from_ui(include_signin: true, only_delegatable: false)
+  def sorted_supported_permissions_grantable_from_ui(include_signin: true, only_delegated: false)
     permissions = supported_permissions.grantable_from_ui
     permissions = permissions.excluding_signin unless include_signin
-    permissions = permissions.delegatable if only_delegatable
+    permissions = permissions.delegated if only_delegated
 
     SupportedPermission.sort_with_signin_first(permissions)
   end
@@ -55,12 +55,12 @@ class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/Appli
     (supported_permissions.grantable_from_ui - [signin_permission]).any?
   end
 
-  def has_delegatable_non_signin_permissions_grantable_from_ui?
-    (supported_permissions.delegatable.grantable_from_ui - [signin_permission]).any?
+  def has_delegated_non_signin_permissions_grantable_from_ui?
+    (supported_permissions.delegated.grantable_from_ui - [signin_permission]).any?
   end
 
-  def has_non_delegatable_non_signin_permissions_grantable_from_ui?
-    (supported_permissions.grantable_from_ui.where(delegatable: false) - [signin_permission]).any?
+  def has_non_delegated_non_signin_permissions_grantable_from_ui?
+    (supported_permissions.grantable_from_ui.where(delegated: false) - [signin_permission]).any?
   end
 
   def url_without_path
@@ -100,7 +100,7 @@ private
   end
 
   def create_signin_supported_permission
-    supported_permissions.delegatable.signin.create!
+    supported_permissions.delegated.signin.create!
   end
 
   def create_user_update_supported_permission

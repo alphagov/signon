@@ -3,7 +3,7 @@ require_relative "../test_helper"
 class ManageApiUsersTest < ActionDispatch::IntegrationTest
   context "as Superadmin" do
     setup do
-      @application = create(:application, with_non_delegatable_supported_permissions: %w[write])
+      @application = create(:application, with_non_delegated_supported_permissions: %w[write])
 
       @superadmin = create(:superadmin_user)
       visit new_user_session_path
@@ -44,7 +44,7 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
     end
 
     should "be able to authorise application access and manage permissions for an API user which should get recorded in event log" do
-      create(:application, name: "Whitehall", with_non_delegatable_supported_permissions: ["Managing Editor", SupportedPermission::SIGNIN_NAME])
+      create(:application, name: "Whitehall", with_non_delegated_supported_permissions: ["Managing Editor", SupportedPermission::SIGNIN_NAME])
 
       click_link @api_user.name
       click_link "Manage tokens"

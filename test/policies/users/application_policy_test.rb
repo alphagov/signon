@@ -54,28 +54,28 @@ class Users::ApplicationPolicyTest < ActiveSupport::TestCase
             @current_user.expects(:publishing_manager?).returns(true)
           end
 
-          context "when the current user has access to the application and the application's signin permission is delegatable" do
+          context "when the current user has access to the application and the application's signin permission is delegated" do
             should "be permitted" do
               @current_user.expects(:has_access_to?).with(@application).returns(true)
-              @application.signin_permission.update!(delegatable: true)
+              @application.signin_permission.update!(delegated: true)
 
               assert permit?(*@args)
             end
           end
 
-          context "when the application's signin permission is delegatable but the user doesn't have access to the application" do
+          context "when the application's signin permission is delegated but the user doesn't have access to the application" do
             should "be forbidden" do
               @current_user.expects(:has_access_to?).with(@application).returns(false)
-              @application.signin_permission.update!(delegatable: true)
+              @application.signin_permission.update!(delegated: true)
 
               assert forbid?(*@args)
             end
           end
 
-          context "when the current user has access to the application but the application's signin permission is not delegatable" do
+          context "when the current user has access to the application but the application's signin permission is not delegated" do
             should "be forbidden" do
               @current_user.expects(:has_access_to?).with(@application).returns(true)
-              @application.signin_permission.update!(delegatable: false)
+              @application.signin_permission.update!(delegated: false)
 
               assert forbid?(*@args)
             end

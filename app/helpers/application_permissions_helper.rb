@@ -28,9 +28,9 @@ module ApplicationPermissionsHelper
     end
   end
 
-  def notice_about_non_delegatable_permissions(current_user, application, other_grantee = nil)
+  def notice_about_non_delegated_permissions(current_user, application, other_grantee = nil)
     return nil if current_user.govuk_admin?
-    return nil unless application.has_non_delegatable_non_signin_permissions_grantable_from_ui?
+    return nil unless application.has_non_delegated_non_signin_permissions_grantable_from_ui?
 
     link = if other_grantee
              link_to(

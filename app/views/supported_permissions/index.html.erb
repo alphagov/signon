@@ -26,6 +26,26 @@
   } %>
 </div>
 
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= render "govuk_publishing_components/components/details", {
+      title: "What is a 'delegated' permission?"
+    } do %>
+      <p class="govuk-body">
+        'Delegating' and 'granting' permissions are separate but related
+        concepts. Permissions are 'granted' to individual users, while they are
+        'delegated' as grantable by publishing managers.
+      </p>
+      <p class="govuk-body">
+        When a permission is delegated, then, publishing managers have the
+        authority to grant the permission to users they manage. When the
+        'signin' permission is delegated, publishing managers can grant or
+        remove access to the given application.
+      </p>
+    <% end %>
+  </div>
+</div>
+
 <%= render "components/table", {
   caption: "Permissions for #{@application.name}",
   caption_classes: "govuk-visually-hidden",
@@ -37,7 +57,7 @@
       text: "Created",
     },
     {
-      text: "Can be delegated?",
+      text: "Delegated",
     },
     {
       text: "Is a default permission given to all new users?",
@@ -55,7 +75,7 @@
         text: supported_permission.created_at.to_date.to_fs(:govuk_date),
       },
       {
-        text: supported_permission.delegatable? ? 'Yes' : 'No',
+        text: supported_permission.delegated? ? 'Yes' : 'No',
       },
       {
         text: supported_permission.default? ? 'Yes' : 'No',

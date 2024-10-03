@@ -7,7 +7,7 @@ class BatchInvitationPermissionsControllerTest < ActionController::TestCase
     @user = create(:admin_user)
     sign_in @user
 
-    @app = create(:application, name: "Profound Publisher", with_non_delegatable_supported_permissions: %w[reader])
+    @app = create(:application, name: "Profound Publisher", with_non_delegated_supported_permissions: %w[reader])
 
     @batch_invitation = create(:batch_invitation, user: @user)
     create(

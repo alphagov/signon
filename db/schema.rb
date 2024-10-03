@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_08_09_112119) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_01_140623) do
   create_table "batch_invitation_application_permissions", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "batch_invitation_id", null: false
     t.integer "supported_permission_id", null: false
@@ -133,7 +133,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_08_09_112119) do
     t.string "name"
     t.datetime "created_at", precision: nil
     t.datetime "updated_at", precision: nil
-    t.boolean "delegatable", default: false
+    t.boolean "delegated", default: false
     t.boolean "grantable_from_ui", default: true, null: false
     t.boolean "default", default: false, null: false
     t.index ["application_id", "name"], name: "index_supported_permissions_on_application_id_and_name", unique: true

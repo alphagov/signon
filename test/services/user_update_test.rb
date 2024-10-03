@@ -19,7 +19,7 @@ class UserUpdateTest < ActionView::TestCase
   should "records permission changes" do
     parsed_ip_address = IPAddr.new(ip_address, Socket::AF_INET).to_s
 
-    app = create(:application, name: "App", with_non_delegatable_supported_permissions: ["Editor", SupportedPermission::SIGNIN_NAME, "Something Else"])
+    app = create(:application, name: "App", with_non_delegated_supported_permissions: ["Editor", SupportedPermission::SIGNIN_NAME, "Something Else"])
     affected_user.grant_application_permission(app, "Something Else")
 
     perms = app.supported_permissions.first(2).map(&:id)
@@ -41,7 +41,7 @@ class UserUpdateTest < ActionView::TestCase
 
   should "log the addition of a large number of permissions" do
     permissions = (0..100).map { |i| "permission-#{i}" }
-    app = create(:application, name: "App", with_non_delegatable_supported_permissions: permissions)
+    app = create(:application, name: "App", with_non_delegated_supported_permissions: permissions)
 
     params = { supported_permission_ids: app.supported_permissions.map(&:id) }
     UserUpdate.new(affected_user, params, current_user, ip_address).call

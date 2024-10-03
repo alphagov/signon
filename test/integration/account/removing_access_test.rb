@@ -6,8 +6,8 @@ class Account::RemovingAccessTest < ActionDispatch::IntegrationTest
     @user = create(:user_in_organisation, with_signin_permissions_for: [@application])
   end
 
-  context "when the signin permission is delegatable" do
-    setup { @application.signin_permission.update!(delegatable: true) }
+  context "when the signin permission is delegated" do
+    setup { @application.signin_permission.update!(delegated: true) }
 
     %w[superadmin admin super_organisation_admin organisation_admin].each do |role|
       context "as a #{role}" do
@@ -22,8 +22,8 @@ class Account::RemovingAccessTest < ActionDispatch::IntegrationTest
     end
   end
 
-  context "when the signin permission is not delegatable" do
-    setup { @application.signin_permission.update!(delegatable: false) }
+  context "when the signin permission is not delegated" do
+    setup { @application.signin_permission.update!(delegated: false) }
 
     %w[superadmin admin].each do |admin_role|
       context "as a #{admin_role}" do

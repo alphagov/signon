@@ -27,15 +27,15 @@
     error_items: f.object.errors.full_messages_for(:name).map { |message| { text: message } }
   } %>
 
-  <%= f.hidden_field "delegatable", value: 0 %>
+  <%= f.hidden_field "delegated", value: 0 %>
   <%= render "govuk_publishing_components/components/checkboxes", {
-    id: "supported_permission_delegatable",
-    name: "supported_permission[delegatable]",
+    id: "supported_permission_delegated",
+    name: "supported_permission[delegated]",
     items: [
       {
-        label: t('supported_permissions.form.delegatable'),
+        label: t('supported_permissions.form.delegated'),
         value: 1,
-        checked: f.object.delegatable?,
+        checked: f.object.delegated?,
       }
     ]
   } %>

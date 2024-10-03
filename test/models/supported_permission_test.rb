@@ -35,7 +35,7 @@ class SupportedPermissionTest < ActiveSupport::TestCase
 
   test "associated user application permissions are destroyed when supported permissions are destroyed" do
     user = create(:user)
-    application = create(:application, with_non_delegatable_supported_permissions: %w[managing_editor])
+    application = create(:application, with_non_delegated_supported_permissions: %w[managing_editor])
     managing_editor_permission = application.supported_permissions.where(name: "managing_editor").first
 
     user.grant_application_permission(application, "managing_editor")
@@ -65,22 +65,22 @@ class SupportedPermissionTest < ActiveSupport::TestCase
   end
 
   test ".signin returns all signin permissions" do
-    app1 = create(:application, with_non_delegatable_supported_permissions: %w[app1-permission])
-    app2 = create(:application, with_non_delegatable_supported_permissions: %w[app2-permission])
+    app1 = create(:application, with_non_delegated_supported_permissions: %w[app1-permission])
+    app2 = create(:application, with_non_delegated_supported_permissions: %w[app2-permission])
 
     assert_same_elements [app1.signin_permission, app2.signin_permission], SupportedPermission.signin
   end
 
   test ".excluding_application returns all permissions except for the provided application" do
-    create(:application, with_non_delegatable_supported_permissions: %w[included-permission])
-    excluded_application = create(:application, with_non_delegatable_supported_permissions: %w[excluded-permission])
+    create(:application, with_non_delegated_supported_permissions: %w[included-permission])
+    excluded_application = create(:application, with_non_delegated_supported_permissions: %w[excluded-permission])
 
     assert_same_elements ["included-permission", SupportedPermission::SIGNIN_NAME], SupportedPermission.excluding_application(excluded_application).pluck(:name)
   end
 
   context ".sort_with_signin_first" do
     setup do
-      @application = create(:application, with_delegatable_supported_permissions: %w[d a c2 b c1])
+      @application = create(:application, with_delegated_supported_permissions: %w[d a c2 b c1])
     end
 
     context "without a signin permission" do

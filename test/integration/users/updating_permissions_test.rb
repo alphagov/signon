@@ -7,20 +7,20 @@ class Users::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
     setup do
       @application = create(:application)
 
-      @old_delegatable_grantable_permission,
-      @new_delegatable_grantable_permission = Array.new(2).map do |_|
-        create(:delegatable_supported_permission, application: @application)
+      @old_delegated_grantable_permission,
+      @new_delegated_grantable_permission = Array.new(2).map do |_|
+        create(:delegated_supported_permission, application: @application)
       end
 
-      @old_non_delegatable_grantable_permission,
-      @new_non_delegatable_grantable_permission = Array.new(2).map do |_|
-        create(:non_delegatable_supported_permission, application: @application)
+      @old_non_delegated_grantable_permission,
+      @new_non_delegated_grantable_permission = Array.new(2).map do |_|
+        create(:non_delegated_supported_permission, application: @application)
       end
 
-      @old_delegatable_non_grantable_permission,
-      @new_delegatable_non_grantable_permission = Array.new(2).map do |_|
+      @old_delegated_non_grantable_permission,
+      @new_delegated_non_grantable_permission = Array.new(2).map do |_|
         create(
-          :delegatable_supported_permission,
+          :delegated_supported_permission,
           application: @application,
           grantable_from_ui: false,
         )
@@ -32,9 +32,9 @@ class Users::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
         organisation: @granter.organisation,
         with_signin_permissions_for: [@application],
         with_permissions: { @application => [
-          @old_delegatable_grantable_permission,
-          @old_non_delegatable_grantable_permission,
-          @old_delegatable_non_grantable_permission,
+          @old_delegated_grantable_permission,
+          @old_non_delegated_grantable_permission,
+          @old_delegated_non_grantable_permission,
         ].map(&:name) },
       )
     end
@@ -48,16 +48,16 @@ class Users::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
             signin_with @granter
           end
 
-          should "be able to grant delegatable non-signin permissions that are grantable from the UI" do
+          should "be able to grant delegated non-signin permissions that are grantable from the UI" do
             assert_update_permissions_for_other_user(
               @application, @grantee,
-              grant: [@new_delegatable_grantable_permission],
-              revoke: [@old_delegatable_grantable_permission]
+              grant: [@new_delegated_grantable_permission],
+              revoke: [@old_delegated_grantable_permission]
             )
 
             refute_update_permissions_for_other_user(
               @application,
-              [@old_delegatable_non_grantable_permission, @new_delegatable_non_grantable_permission],
+              [@old_delegated_non_grantable_permission, @new_delegated_non_grantable_permission],
               @grantee,
             )
           end
@@ -72,11 +72,11 @@ class Users::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
             signin_with @granter
           end
 
-          should "be able to grant non-delegatable permissions" do
+          should "be able to grant non-delegated permissions" do
             assert_update_permissions_for_other_user(
               @application, @grantee,
-              grant: [@new_non_delegatable_grantable_permission],
-              revoke: [@old_non_delegatable_grantable_permission]
+              grant: [@new_non_delegated_grantable_permission],
+              revoke: [@old_non_delegated_grantable_permission]
             )
           end
         end
@@ -90,10 +90,10 @@ class Users::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
             signin_with @granter
           end
 
-          should "not be able to grant non-delegatable permissions" do
+          should "not be able to grant non-delegated permissions" do
             refute_update_permissions_for_other_user(
               @application,
-              [@new_non_delegatable_grantable_permission, @old_non_delegatable_grantable_permission],
+              [@new_non_delegated_grantable_permission, @old_non_delegated_grantable_permission],
               @grantee,
             )
           end
@@ -115,8 +115,8 @@ class Users::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
           should "be able to grant permissions" do
             assert_update_permissions_for_other_user(
               @application, @grantee,
-              grant: [@new_delegatable_grantable_permission],
-              revoke: [@old_delegatable_grantable_permission]
+              grant: [@new_delegated_grantable_permission],
+              revoke: [@old_delegated_grantable_permission]
             )
           end
         end
@@ -137,8 +137,8 @@ class Users::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
           should "be able to grant permissions" do
             assert_update_permissions_for_other_user(
               @application, @grantee,
-              grant: [@new_delegatable_grantable_permission],
-              revoke: [@old_delegatable_grantable_permission]
+              grant: [@new_delegated_grantable_permission],
+              revoke: [@old_delegated_grantable_permission]
             )
           end
         end
@@ -175,8 +175,8 @@ class Users::UpdatingPermissionsTest < ActionDispatch::IntegrationTest
           should "be able to grant permissions" do
             assert_update_permissions_for_other_user(
               @application, @grantee,
-              grant: [@new_delegatable_grantable_permission],
-              revoke: [@old_delegatable_grantable_permission]
+              grant: [@new_delegated_grantable_permission],
+              revoke: [@old_delegated_grantable_permission]
             )
           end
         end
