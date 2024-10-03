@@ -45,10 +45,11 @@
             <% if cellindex == 0 && first_cell_is_header %>
               <%= t.header cell[:text], {
                 scope: "row",
+                classes: cell[:classes],
                 format: cell[:format]
               } %>
             <% elsif vertical_on_small_screen && head.any? %>
-              <%= t.cell nil, { format: cell[:format] } do %>
+              <%= t.cell nil, { classes: cell[:classes], format: cell[:format] } do %>
                 <span class="app-c-table__duplicate-heading<%= head[cellindex][:visually_hidden] ? " app-c-table__duplicate-heading--visually-hidden" : "" %>" aria-hidden="true">
                   <%= head[cellindex][:text] %>
                 </span>
@@ -56,6 +57,7 @@
               <% end %>
             <% else %>
               <%= t.cell cell[:text], {
+                classes: cell[:classes],
                 format: cell[:format]
               } %>
             <% end %>

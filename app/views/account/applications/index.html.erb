@@ -29,18 +29,16 @@
     caption: "Apps you have access to",
     head: [
       { text: "Name", classes: "govuk-!-width-one-quarter" },
-      { text: "Description", classes: "govuk-!-width-one-third" },
-      { text: content_tag(:span, "Actions", class: "govuk-visually-hidden"), visually_hidden: true },
+      { text: "Description", classes: "govuk-!-width-one-half" },
+      { text: "Access" },
+      { text: "Permissions" }
     ],
     rows: @applications_with_signin.map do |application|
     [
       { text: application.name },
       { text: application.description },
-      { text: wrap_links_in_actions_markup([
-        account_applications_permissions_links(application), 
-        account_applications_remove_access_link(application)
-        ])
-      },
+      { text: account_applications_remove_access_link(application) },
+      { text: account_applications_permissions_links(application), classes: "applications-table__permissions-action-links" }
     ]
     end,
     vertical_on_small_screen: true,
@@ -51,14 +49,14 @@
     caption: "Apps you don't have access to",
     head: [
       { text: "Name", classes: "govuk-!-width-one-quarter" },
-      { text: "Description", classes: "govuk-!-width-one-third" },
-      { text: content_tag(:span, "Actions", class: "govuk-visually-hidden"), visually_hidden: true }
+      { text: "Description", classes: "govuk-!-width-one-half" },
+      { text: "Access" }
     ],
     rows: @applications_without_signin.map do |application|
     [
       { text: application.name },
       { text: application.description },
-      { text: wrap_links_in_actions_markup([account_applications_grant_access_link(application)]) }
+      { text: account_applications_grant_access_link(application) }
     ]
     end,
     vertical_on_small_screen: true,

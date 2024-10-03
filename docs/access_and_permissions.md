@@ -68,14 +68,13 @@ These dependencies determine whether a user can:
 ```mermaid
 flowchart TD
     A(Account::ApplicationsController#index) --authorize [:account, Doorkeeper::Application]--> B(Account::ApplicationPolicy#index?)
-    C(app/views/account/applications/index.html.erb) --wrap_links_in_actions_markup--> D(ApplicationTableHelper#wrap_links_in_actions_markup)
-    C --account_applications_permissions_links--> E(ApplicationTableHelper#account_applications_permissions_links)
-    E --policy([:account, application]).view_permissions?--> F(Account::ApplicationPolicy#view_permissions?)
-    E --policy([:account, application]).edit_permissions?--> G(Account::ApplicationPolicy#edit_permissions?)
-    C --account_applications_remove_access_link--> H(ApplicationTableHelper#account_applications_remove_access_link)
-    H --policy([:account, application]).remove_signin_permission?--> I(Account::ApplicationPolicy#remove_signin_permission?)
-    C --account_applications_grant_access_link--> J(ApplicationTableHelper#account_applications_grant_access_link)
-    J --policy([:account, Doorkeeper::Application]).grant_signin_permission?--> K(Account::ApplicationPolicy#grant_signin_permission?)
+    C(app/views/account/applications/index.html.erb) --account_applications_permissions_links--> D(ApplicationTableHelper#account_applications_permissions_links)
+    D --policy([:account, application]).view_permissions?--> E(Account::ApplicationPolicy#view_permissions?)
+    D --policy([:account, application]).edit_permissions?--> F(Account::ApplicationPolicy#edit_permissions?)
+    C --account_applications_remove_access_link--> G(ApplicationTableHelper#account_applications_remove_access_link)
+    G --policy([:account, application]).remove_signin_permission?--> H(Account::ApplicationPolicy#remove_signin_permission?)
+    C --account_applications_grant_access_link--> I(ApplicationTableHelper#account_applications_grant_access_link)
+    I --policy([:account, Doorkeeper::Application]).grant_signin_permission?--> J(Account::ApplicationPolicy#grant_signin_permission?)
 ```
 
 #### Account permissions show
@@ -239,18 +238,17 @@ These dependencies determine whether a user can:
 flowchart TD
     A(Users::ApplicationsController#index) --authorize [{ user: }], policy_class: Users::ApplicationPolicy--> B(Users::ApplicationPolicy#index?)
     B --Pundit.policy(current_user, user).edit?--> C(UserPolicy#edit?)
-    D(app/views/users/applications/index.html.erb) --wrap_links_in_actions_markup--> E(ApplicationTableHelper#wrap_links_in_actions_markup)
-    D --users_applications_permissions_links--> F(ApplicationTableHelper#users_applications_permissions_links)
-    F --Users::ApplicationPolicy.new(current_user, { application:, user: }).view_permissions?--> G(Users::ApplicationPolicy#view_permissions?)
-    G --Pundit.policy(current_user, user).edit?--> H(UserPolicy#edit?)
-    F --Users::ApplicationPolicy.new(current_user, { application:, user: }).edit_permissions?--> I(Users::ApplicationPolicy#edit_permissions?)
-    I --Pundit.policy(current_user, user).edit?--> H
-    D --users_applications_remove_access_link--> J(ApplicationTableHelper#users_applications_remove_access_link)
-    J --Users::ApplicationPolicy.new(current_user, { application:, user: }).remove_signin_permission?--> K(Users::ApplicationPolicy#remove_signin_permission?)
-    K --Pundit.policy(current_user, user).edit?--> H
-    D --users_applications_grant_access_link--> L(ApplicationTableHelper#users_applications_grant_access_link)
-    L --Users::ApplicationPolicy.new(current_user, { application:, user: }).grant_signin_permission?--> M(Users::ApplicationPolicy#grant_signin_permission?)
-    M --Pundit.policy(current_user, user).edit?--> H
+    D(app/views/users/applications/index.html.erb) --users_applications_permissions_links--> E(ApplicationTableHelper#users_applications_permissions_links)
+    E --Users::ApplicationPolicy.new(current_user, { application:, user: }).view_permissions?--> F(Users::ApplicationPolicy#view_permissions?)
+    F --Pundit.policy(current_user, user).edit?--> G(UserPolicy#edit?)
+    E --Users::ApplicationPolicy.new(current_user, { application:, user: }).edit_permissions?--> H(Users::ApplicationPolicy#edit_permissions?)
+    H --Pundit.policy(current_user, user).edit?--> G
+    D --users_applications_remove_access_link--> I(ApplicationTableHelper#users_applications_remove_access_link)
+    I --Users::ApplicationPolicy.new(current_user, { application:, user: }).remove_signin_permission?--> J(Users::ApplicationPolicy#remove_signin_permission?)
+    J --Pundit.policy(current_user, user).edit?--> G
+    D --users_applications_grant_access_link--> K(ApplicationTableHelper#users_applications_grant_access_link)
+    K --Users::ApplicationPolicy.new(current_user, { application:, user: }).grant_signin_permission?--> L(Users::ApplicationPolicy#grant_signin_permission?)
+    L --Pundit.policy(current_user, user).edit?--> G
 ```
 
 #### Users permissions show

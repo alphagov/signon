@@ -1,10 +1,6 @@
 module ApplicationTableHelper
   include Pundit::Authorization
 
-  def wrap_links_in_actions_markup(links)
-    "<div class=\"govuk-table__actions\">#{links.join}</div>".html_safe
-  end
-
   def account_applications_grant_access_link(application)
     if policy([:account, Doorkeeper::Application]).grant_signin_permission?
       grant_access_link(application)
@@ -73,7 +69,12 @@ private
       path,
       class: "govuk-button govuk-!-margin-0",
       data: { module: "govuk-button" },
-    ) { button_or_link_content("Grant access", "to", application.name) }
+    ) do
+      button_or_link_content(
+        visible_text: "Grant",
+        visually_hidden_text: "access to #{application.name}",
+      )
+    end
   end
 
   def remove_access_link(application, user = nil)
@@ -85,9 +86,14 @@ private
 
     link_to(
       path,
-      class: "govuk-button govuk-button--warning govuk-!-margin-0",
+      class: "govuk-button govuk-button--warning govuk-!-margin-0 applications-table__remove_access_link",
       data: { module: "govuk-button" },
-    ) { button_or_link_content("Remove access", "to", application.name) }
+    ) do
+      button_or_link_content(
+        visible_text: "Remove",
+        visually_hidden_text: "access to #{application.name}",
+      )
+    end
   end
 
   def view_permissions_link(application, user = nil)
@@ -97,7 +103,12 @@ private
              account_application_permissions_path(application)
            end
 
-    link_to(path, class: "govuk-link") { button_or_link_content("View permissions", "for", application.name) }
+    link_to(path, class: "govuk-link") do
+      button_or_link_content(
+        visible_text: "View",
+        visually_hidden_text: "permissions for #{application.name}",
+      )
+    end
   end
 
   def update_permissions_link(application, user = nil)
@@ -115,13 +126,18 @@ private
              edit_user_application_permissions_path(user, application)
            end
 
-    link_to(path, class: "govuk-link") { button_or_link_content("Update permissions", "for", application.name) }
+    link_to(path, class: "govuk-link") do
+      button_or_link_content(
+        visible_text: "Update",
+        visually_hidden_text: "permissions for #{application.name}",
+      )
+    end
   end
 
-  def button_or_link_content(visible_text, visually_hidden_join_word, application_name)
+  def button_or_link_content(visible_text:, visually_hidden_text:)
     safe_join([
       visible_text,
-      content_tag(:span, " #{visually_hidden_join_word} #{application_name}", class: "govuk-visually-hidden"),
+      content_tag(:span, " #{visually_hidden_text.strip}", class: "govuk-visually-hidden"),
     ])
   end
 end

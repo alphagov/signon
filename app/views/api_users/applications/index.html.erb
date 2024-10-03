@@ -34,14 +34,14 @@
     caption: "Apps #{@api_user.name} has access to",
     head: [
       { text: "Name", classes: "govuk-!-width-one-quarter" },
-      { text: "Description", classes: "govuk-!-width-one-third" },
-      { text: content_tag(:span, "Actions", class: "govuk-visually-hidden"), visually_hidden: true },
+      { text: "Description", classes: "govuk-!-width-one-half" },
+      { text: "Permissions" }
     ],
     rows: @applications.map do |application|
     [
       { text: application.name },
       { text: application.description },
-      { text: wrap_links_in_actions_markup([api_users_applications_permissions_link(application, @api_user)]) }
+      { text: api_users_applications_permissions_link(application, @api_user) }
     ]
     end,
     vertical_on_small_screen: true,
