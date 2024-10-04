@@ -7,14 +7,29 @@ class OrganisationsControllerTest < ActionController::TestCase
   end
 
   context "GET index" do
-    setup do
-      create(:organisation, name: "Ministry of Funk", abbreviation: "MoF")
+    should "list organisations in separate tabs for active and closed" do
+      active_organisation = create(:organisation)
+      closed_organisation = create(:organisation, closed: true)
+
+      get :index
+
+      assert_select "#active td", text: active_organisation.name
+      assert_select "#active td", text: closed_organisation.name, count: 0
+
+      assert_select "#closed td", text: active_organisation.name, count: 0
+      assert_select "#closed td", text: closed_organisation.name
     end
 
-    should "list organisations" do
+    should "list organisations in alphabetical order" do
+      create(:organisation, name: "Government Digital Service")
+      create(:organisation, name: "Cabinet Office")
+      create(:organisation, name: "Department for Education")
+
       get :index
-      assert_response :ok
-      assert_select "td", "Ministry of Funk - MoF"
+
+      assert_select "#active tr:first-child td:first-child", text: /Cabinet Office/
+      assert_select "#active tr:nth-child(2) td:first-child", text: /Department for Education/
+      assert_select "#active tr:last-child td:first-child", text: /Government Digital Service/
     end
   end
 

@@ -1,0 +1,25 @@
+<%= GovukPublishingComponents::AppHelpers::TableHelper.helper(self, "Organisations", { caption_classes: "govuk-visually-hidden" }) do |t| %>
+  <%= t.head do %>
+    <%= t.header "Name" %>
+    <%= t.header "Organisation Type" %>
+    <%= t.header "Slug" %>
+    <%= t.header "2-step verification mandated?"%>
+  <% end %>
+
+  <%= t.body do %>
+    <% organisations.each do |organisation| %>
+      <%= t.row do %>
+        <%= t.cell "#{organisation.name_with_abbreviation(indicate_closed: false)}" %>
+        <%= t.cell organisation.organisation_type %>
+        <%= t.cell organisation.slug %>
+        <td class="govuk-table__cell">
+          <%= organisation.require_2sv %>
+          <% if policy(Organisation).edit? %>
+            <br>
+            <%= link_to("Edit", edit_organisation_path(organisation)) %>
+          <% end %>
+        </td>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

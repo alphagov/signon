@@ -33,6 +33,18 @@ class OrganisationTest < ActiveSupport::TestCase
     end
   end
 
+  context ".closed" do
+    should "only return closed organisations" do
+      active_organisation = create(:organisation)
+      closed_organisation = create(:organisation, closed: true)
+
+      result = Organisation.not_closed.to_a
+
+      assert_not_includes result, active_organisation
+      assert_includes result, closed_organisation
+    end
+  end
+
   context "#name_with_abbreviation" do
     should "use abbreviation when it is not the same as name" do
       organisation = build(:organisation, name: "An Organisation", abbreviation: "ABBR")
@@ -50,9 +62,18 @@ class OrganisationTest < ActiveSupport::TestCase
     end
 
     context "when the organisation is closed" do
-      should "append (closed)" do
-        organisation = build(:organisation, name: "An Organisation", closed: true)
-        assert_equal "An Organisation (closed)", organisation.name_with_abbreviation
+      setup do
+        @organisation = build(:organisation, name: "An Organisation", closed: true)
+      end
+
+      should "append '(closed)'" do
+        assert_equal "An Organisation (closed)", @organisation.name_with_abbreviation
+      end
+
+      context "but we don't want to indicate this" do
+        should "not append '(closed)'" do
+          assert_equal "An Organisation", @organisation.name_with_abbreviation(indicate_closed: false)
+        end
       end
     end
   end
