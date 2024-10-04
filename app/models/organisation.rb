@@ -16,7 +16,7 @@ class Organisation < ApplicationRecord
   scope :closed, -> { where(closed: true) }
   scope :not_closed, -> { where(closed: false) }
 
-  default_scope { order(:name) }
+  default_scope { order(arel_table[:closed].asc, name: :asc) }
 
   def name_with_abbreviation(indicate_closed: true)
     return_value = if abbreviation.present? && abbreviation != name

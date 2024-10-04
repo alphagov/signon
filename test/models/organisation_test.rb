@@ -21,27 +21,47 @@ class OrganisationTest < ActiveSupport::TestCase
     assert_equal "An organisation", organisation.name
   end
 
-  context ".not_closed" do
-    should "exclude closed organisations" do
-      active_organisation = create(:organisation)
-      closed_organisation = create(:organisation, closed: true)
-
-      result = Organisation.not_closed.to_a
-
-      assert_includes result, active_organisation
-      assert_not_includes result, closed_organisation
+  context "scopes" do
+    setup do
+      @closed_organisation_gas = create(:organisation, name: "Government Analogue Service", closed: true)
+      @active_organisation_gds = create(:organisation, name: "Government Digital Service")
+      @active_organisation_co = create(:organisation, name: "Cabinet Office")
+      @closed_organisation_moj = create(:organisation, name: "Ministry of Jazztice", closed: true)
     end
-  end
 
-  context ".closed" do
-    should "only return closed organisations" do
-      active_organisation = create(:organisation)
-      closed_organisation = create(:organisation, closed: true)
+    context ".all (default scope)" do
+      should "return unclosed organisations before closed organisations, then alphabetically" do
+        expected = [
+          @active_organisation_co,
+          @active_organisation_gds,
+          @closed_organisation_gas,
+          @closed_organisation_moj,
+        ]
 
-      result = Organisation.not_closed.to_a
+        assert_equal expected, Organisation.all
+      end
+    end
 
-      assert_not_includes result, active_organisation
-      assert_includes result, closed_organisation
+    context ".not_closed" do
+      should "exclude closed organisations" do
+        result = Organisation.not_closed.to_a
+
+        assert_includes result, @active_organisation_co
+        assert_includes result, @active_organisation_gds
+        assert_not_includes result, @closed_organisation_gas
+        assert_not_includes result, @closed_organisation_moj
+      end
+    end
+
+    context ".closed" do
+      should "only return closed organisations" do
+        result = Organisation.closed.to_a
+
+        assert_not_includes result, @active_organisation_co
+        assert_not_includes result, @active_organisation_gds
+        assert_includes result, @closed_organisation_gas
+        assert_includes result, @closed_organisation_moj
+      end
     end
   end
 
