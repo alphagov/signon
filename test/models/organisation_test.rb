@@ -1,35 +1,39 @@
 require "test_helper"
 
 class OrganisationTest < ActiveSupport::TestCase
-  def setup
-    @organisation = create(:organisation)
-  end
-
-  test "organisation has ancestry" do
+  should "have ancestry" do
     assert_nothing_raised do
       Organisation.new.ancestors
     end
   end
 
-  test "creating a new organisation using an existing slug should raise an exception" do
+  should "raise an exception when creating a new organisation using an existing slug" do
+    existing_organisation = create(:organisation)
+
     assert_raises ActiveRecord::RecordInvalid do
-      create(:organisation, slug: @organisation.slug)
+      create(:organisation, slug: existing_organisation.slug)
     end
   end
 
-  test "strips unwanted whitespace from name" do
+  should "strip unwanted whitespace from name" do
     organisation = create(:organisation, name: "  An organisation ")
 
     assert_equal "An organisation", organisation.name
   end
 
-  test "#not_closed" do
-    create(:organisation, closed: true)
+  context ".not_closed" do
+    should "exclude closed organisations" do
+      active_organisation = create(:organisation)
+      closed_organisation = create(:organisation, closed: true)
 
-    assert_equal [@organisation], Organisation.not_closed.to_a
+      result = Organisation.not_closed.to_a
+
+      assert_includes result, active_organisation
+      assert_not_includes result, closed_organisation
+    end
   end
 
-  context "displaying name with abbreviation" do
+  context "#name_with_abbreviation" do
     should "use abbreviation when it is not the same as name" do
       organisation = build(:organisation, name: "An Organisation", abbreviation: "ABBR")
       assert_equal "An Organisation - ABBR", organisation.name_with_abbreviation
