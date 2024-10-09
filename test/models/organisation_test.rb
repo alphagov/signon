@@ -1,35 +1,71 @@
 require "test_helper"
 
 class OrganisationTest < ActiveSupport::TestCase
-  def setup
-    @organisation = create(:organisation)
-  end
-
-  test "organisation has ancestry" do
+  should "have ancestry" do
     assert_nothing_raised do
       Organisation.new.ancestors
     end
   end
 
-  test "creating a new organisation using an existing slug should raise an exception" do
+  should "raise an exception when creating a new organisation using an existing slug" do
+    existing_organisation = create(:organisation)
+
     assert_raises ActiveRecord::RecordInvalid do
-      create(:organisation, slug: @organisation.slug)
+      create(:organisation, slug: existing_organisation.slug)
     end
   end
 
-  test "strips unwanted whitespace from name" do
+  should "strip unwanted whitespace from name" do
     organisation = create(:organisation, name: "  An organisation ")
 
     assert_equal "An organisation", organisation.name
   end
 
-  test "#not_closed" do
-    create(:organisation, closed: true)
+  context "scopes" do
+    setup do
+      @closed_organisation_gas = create(:organisation, name: "Government Analogue Service", closed: true)
+      @active_organisation_gds = create(:organisation, name: "Government Digital Service")
+      @active_organisation_co = create(:organisation, name: "Cabinet Office")
+      @closed_organisation_moj = create(:organisation, name: "Ministry of Jazztice", closed: true)
+    end
 
-    assert_equal [@organisation], Organisation.not_closed.to_a
+    context ".all (default scope)" do
+      should "return unclosed organisations before closed organisations, then alphabetically" do
+        expected = [
+          @active_organisation_co,
+          @active_organisation_gds,
+          @closed_organisation_gas,
+          @closed_organisation_moj,
+        ]
+
+        assert_equal expected, Organisation.all
+      end
+    end
+
+    context ".not_closed" do
+      should "exclude closed organisations" do
+        result = Organisation.not_closed.to_a
+
+        assert_includes result, @active_organisation_co
+        assert_includes result, @active_organisation_gds
+        assert_not_includes result, @closed_organisation_gas
+        assert_not_includes result, @closed_organisation_moj
+      end
+    end
+
+    context ".closed" do
+      should "only return closed organisations" do
+        result = Organisation.closed.to_a
+
+        assert_not_includes result, @active_organisation_co
+        assert_not_includes result, @active_organisation_gds
+        assert_includes result, @closed_organisation_gas
+        assert_includes result, @closed_organisation_moj
+      end
+    end
   end
 
-  context "displaying name with abbreviation" do
+  context "#name_with_abbreviation" do
     should "use abbreviation when it is not the same as name" do
       organisation = build(:organisation, name: "An Organisation", abbreviation: "ABBR")
       assert_equal "An Organisation - ABBR", organisation.name_with_abbreviation
@@ -46,9 +82,18 @@ class OrganisationTest < ActiveSupport::TestCase
     end
 
     context "when the organisation is closed" do
-      should "append (closed)" do
-        organisation = build(:organisation, name: "An Organisation", closed: true)
-        assert_equal "An Organisation (closed)", organisation.name_with_abbreviation
+      setup do
+        @organisation = build(:organisation, name: "An Organisation", closed: true)
+      end
+
+      should "append '(closed)'" do
+        assert_equal "An Organisation (closed)", @organisation.name_with_abbreviation
+      end
+
+      context "but we don't want to indicate this" do
+        should "not append '(closed)'" do
+          assert_equal "An Organisation", @organisation.name_with_abbreviation(indicate_closed: false)
+        end
       end
     end
   end

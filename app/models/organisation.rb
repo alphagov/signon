@@ -13,18 +13,19 @@ class Organisation < ApplicationRecord
 
   before_save :strip_whitespace_from_name
 
+  scope :closed, -> { where(closed: true) }
   scope :not_closed, -> { where(closed: false) }
 
-  default_scope { order(:name) }
+  default_scope { order(arel_table[:closed].asc, name: :asc) }
 
-  def name_with_abbreviation
+  def name_with_abbreviation(indicate_closed: true)
     return_value = if abbreviation.present? && abbreviation != name
                      "#{name} - #{abbreviation}"
                    else
                      name
                    end
 
-    return_value += " (closed)" if closed?
+    return_value += " (closed)" if indicate_closed && closed?
 
     return_value
   end
