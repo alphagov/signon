@@ -178,7 +178,7 @@ GEM
       rake (>= 13)
     googleapis-common-protos-types (1.16.0)
       google-protobuf (>= 3.18, < 5.a)
-    govuk_app_config (9.14.2)
+    govuk_app_config (9.14.3)
       logstasher (~> 2.1)
       opentelemetry-exporter-otlp (>= 0.25, < 0.30)
       opentelemetry-instrumentation-all (>= 0.39.1, < 0.66.0)
@@ -463,7 +463,7 @@ GEM
       opentelemetry-api (~> 1.0)
       opentelemetry-helpers-sql-obfuscation
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-que (0.8.3)
+    opentelemetry-instrumentation-que (0.8.4)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-racecar (0.3.4)
