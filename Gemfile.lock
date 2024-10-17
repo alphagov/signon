@@ -298,7 +298,7 @@ GEM
     msgpack (1.7.3)
     multi_json (1.15.0)
     mysql2 (0.5.6)
-    net-imap (0.4.17)
+    net-imap (0.5.0)
       date
       net-protocol
     net-pop (0.1.2)
