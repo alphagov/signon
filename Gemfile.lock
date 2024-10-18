@@ -107,6 +107,7 @@ GEM
     capybara-email (3.0.2)
       capybara (>= 2.4, < 4.0)
       mail
+    chartkick (5.1.1)
     chronic (0.10.2)
     chunky_png (1.4.0)
     climate_control (1.2.0)
@@ -193,7 +194,8 @@ GEM
     govuk_personalisation (1.0.0)
       plek (>= 1.9.0)
       rails (>= 6, < 8)
-    govuk_publishing_components (44.3.0)
+    govuk_publishing_components (44.4.1)
+      chartkick
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
