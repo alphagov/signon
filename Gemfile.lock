@@ -107,7 +107,7 @@ GEM
     capybara-email (3.0.2)
       capybara (>= 2.4, < 4.0)
       mail
-    chartkick (5.1.1)
+    chartkick (5.1.2)
     chronic (0.10.2)
     chunky_png (1.4.0)
     climate_control (1.2.0)
