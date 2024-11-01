@@ -158,7 +158,7 @@ GEM
     ffi-compiler (1.3.2)
       ffi (>= 1.15.5)
       rake
-    gds-api-adapters (97.0.0)
+    gds-api-adapters (97.1.0)
       addressable
       link_header
       null_logger
