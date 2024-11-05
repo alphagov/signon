@@ -29,8 +29,12 @@ to access your it:
 * Fill-in a name and email for the API client
 * Once saved, click "Add application token", select "Stuff API" and press
   "Create access token"
-* You should see an access token on the screen, which you must copy as it
-  is the only time it'll be displayed on screen.
+* You should see an access token on the screen. This is the only time it'll be displayed on screen, so make a note of it if you need to.
+
+Once you've created your access token, you'll probably need to:
+
+1. [Synchronise the token with Kubernetes secrets](https://docs.publishing.service.gov.uk/manual/alerts/signon-api-user-token-expires-soon.html#2-update-the-token-in-the-secrets-used-by-the-consuming-application)
+2. Expose the token as an environment variable in govuk-helm-charts ([example](https://github.com/alphagov/govuk-helm-charts/pull/2742))
 
 ## Development.
 
