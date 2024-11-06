@@ -234,7 +234,7 @@ GEM
     irb (1.14.1)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.7.5)
+    json (2.7.6)
     jsonpath (1.1.5)
       multi_json
     jwt (2.9.3)
