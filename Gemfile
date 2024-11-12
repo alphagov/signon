@@ -30,7 +30,6 @@ gem "sentry-sidekiq"
 gem "sprockets-rails"
 gem "terser"
 gem "uuid"
-gem "whenever"
 
 # GDS Gems
 gem "gds-api-adapters"

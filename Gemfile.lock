@@ -110,7 +110,6 @@ GEM
       capybara (>= 2.4, < 4.0)
       mail
     chartkick (5.1.2)
-    chronic (0.10.2)
     chunky_png (1.4.0)
     climate_control (1.2.0)
     coderay (1.1.3)
@@ -728,8 +727,6 @@ GEM
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
-    whenever (1.0.0)
-      chronic (>= 0.6.3)
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.7.1)
@@ -793,7 +790,6 @@ DEPENDENCIES
   timecop
   uuid
   webmock
-  whenever
 
 BUNDLED WITH
    2.4.10
