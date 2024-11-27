@@ -31,6 +31,26 @@ class OrganisationsControllerTest < ActionController::TestCase
       assert_select "#active tr:nth-child(2) td:first-child", text: /Department for Education/
       assert_select "#active tr:last-child td:first-child", text: /Government Digital Service/
     end
+
+    should "include parent organisation when one exists" do
+      parent = create(:organisation, name: "Cabinet Office")
+      create(:organisation, name: "Government Digital Service", parent:)
+
+      get :index
+
+      assert_select "#active tr:last-child td:first-child", text: /Government Digital Service/
+      assert_select "#active tr:last-child td:nth-child(4)", text: /Cabinet Office/
+    end
+
+    should "not include parent organisation when one does not exist" do
+      parent = create(:organisation, name: "Cabinet Office")
+      create(:organisation, name: "Government Digital Service", parent:)
+
+      get :index
+
+      assert_select "#active tr:first-child td:first-child", text: /Cabinet Office/
+      assert_select "#active tr:first-child td:nth-child(4)", text: /No parent/
+    end
   end
 
   context "PUT require 2sv" do

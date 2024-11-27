@@ -3,6 +3,7 @@
     <%= t.header "Name" %>
     <%= t.header "Organisation Type" %>
     <%= t.header "Slug" %>
+    <%= t.header "Parent Organisation" %>
     <%= t.header "2-step verification mandated?"%>
   <% end %>
 
@@ -12,6 +13,11 @@
         <%= t.cell "#{organisation.name_with_abbreviation(indicate_closed: false)}" %>
         <%= t.cell organisation.organisation_type %>
         <%= t.cell organisation.slug %>
+        <% if organisation.parent %>
+          <%= t.cell organisation.parent.name %>
+        <% else %>
+          <%= t.cell "No parent" %>
+        <% end %>
         <td class="govuk-table__cell">
           <%= organisation.require_2sv %>
           <% if policy(Organisation).edit? %>
