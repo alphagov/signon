@@ -459,7 +459,7 @@ GEM
       opentelemetry-helpers-mysql
       opentelemetry-helpers-sql-obfuscation
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-net_http (0.22.7)
+    opentelemetry-instrumentation-net_http (0.22.8)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-pg (0.29.0)
