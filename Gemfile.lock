@@ -715,7 +715,7 @@ GEM
     unicode-display_width (3.1.2)
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
-    useragent (0.16.10)
+    useragent (0.16.11)
     uuid (2.3.9)
       macaddr (~> 1.0)
     warden (1.2.9)
