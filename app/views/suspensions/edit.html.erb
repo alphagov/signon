@@ -37,7 +37,7 @@
 
 <%= form_tag suspension_path(@user), method: "put" do %>
   <%= render "govuk_publishing_components/components/hint", {
-    text: "After the user has been unsuspended, they will need to reset their password."
+    text: "After the user has been unsuspended, they will need to reset their password and log in within seven days."
   } %>
 
   <%= render "govuk_publishing_components/components/checkboxes", {
