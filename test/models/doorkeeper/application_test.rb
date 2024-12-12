@@ -497,4 +497,18 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       assert_equal [application_named_bar, application_named_foo], applications
     end
   end
+
+  context "#signon?" do
+    should "return true if the name is correct" do
+      application = create(:application, name: "Signon API")
+
+      assert application.signon?
+    end
+
+    should "return false if the name is not correct" do
+      application = create(:application, name: "Something else")
+
+      assert_not application.signon?
+    end
+  end
 end
