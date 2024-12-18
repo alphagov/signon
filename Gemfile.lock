@@ -195,7 +195,7 @@ GEM
     govuk_personalisation (1.1.0)
       plek (>= 1.9.0)
       rails (>= 6, < 9)
-    govuk_publishing_components (46.3.1)
+    govuk_publishing_components (46.4.0)
       chartkick
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
@@ -427,7 +427,7 @@ GEM
     opentelemetry-instrumentation-excon (0.22.5)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-faraday (0.24.7)
+    opentelemetry-instrumentation-faraday (0.24.8)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-grape (0.2.0)
