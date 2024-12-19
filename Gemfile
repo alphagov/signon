@@ -45,7 +45,10 @@ group :development do
 end
 
 group :development, :test do
+  gem "database_cleaner"
   gem "govuk_test"
+  gem "pact", require: false
+  gem "pact_broker-client"
   gem "pry-byebug"
   gem "rubocop-govuk"
 end
