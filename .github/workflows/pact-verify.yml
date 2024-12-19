@@ -50,7 +50,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           repository: alphagov/signon
-          ref: ${{ inputs.ref }}
+          ref: content-modelling/783-add-api-adapters-for-signon
 
       - uses: ruby/setup-ruby@v1
         with:
