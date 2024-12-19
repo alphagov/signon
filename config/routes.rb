@@ -127,4 +127,6 @@ Rails.application.routes.draw do
   root to: "root#index"
 
   put "/user-research-recruitment/update" => "user_research_recruitment#update"
+
+  get "/api/users" => "api/users#index"
 end

@@ -76,6 +76,10 @@ class Doorkeeper::Application < ActiveRecord::Base # rubocop:disable Rails/Appli
     ].include?(name)
   end
 
+  def signon?
+    name == "Signon API"
+  end
+
   def redirect_uri
     substituted_uri(self[:redirect_uri])
   end
