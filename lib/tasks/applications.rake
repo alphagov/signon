@@ -7,6 +7,7 @@ namespace :applications do
       redirect_uri: ENV["redirect_uri"],
       description: ENV["description"],
       home_uri: ENV["home_uri"],
+      api_only: ENV["api_only"].present?,
     )
     # Optionally set up supported permissions
     permissions = (ENV["supported_permissions"] || "").split(",")
