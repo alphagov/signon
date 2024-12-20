@@ -24,6 +24,7 @@ bundle exec rake
 - [Environment variables]
 - [Mass password reset]
 - [Troubleshooting]
+- [API]
 
 ## Licence
 
@@ -40,3 +41,4 @@ bundle exec rake
 [Environment variables]: docs/environment-variables.md
 [Mass password reset]: docs/mass_password_reset.md
 [Troubleshooting]: docs/troubleshooting.md
+[API]: docs/api.md
