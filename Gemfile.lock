@@ -724,7 +724,7 @@ GEM
       rubocop (~> 1.61)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
-    rubyzip (2.3.2)
+    rubyzip (2.4.1)
     sass-embedded (1.83.0)
       google-protobuf (~> 4.28)
       rake (>= 13)
