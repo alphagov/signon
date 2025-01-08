@@ -463,7 +463,7 @@ GEM
     opentelemetry-instrumentation-http_client (0.22.8)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
-    opentelemetry-instrumentation-koala (0.20.5)
+    opentelemetry-instrumentation-koala (0.20.6)
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.22.1)
     opentelemetry-instrumentation-lmdb (0.22.3)
