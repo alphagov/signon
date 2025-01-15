@@ -21,7 +21,7 @@ Bundler.require(*Rails.groups)
 module Signon
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.2
+    config.load_defaults 8.0
 
     config.active_record.belongs_to_required_by_default = false
 
@@ -41,6 +41,8 @@ module Signon
     # Common ones are `templates`, `generators`, or `middleware`, for example.
     config.autoload_lib(ignore: %w[assets tasks])
 
+    # Configuration for the application, engines, and railties goes here.
+    #
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
