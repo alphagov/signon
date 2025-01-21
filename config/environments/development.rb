@@ -20,14 +20,13 @@ Rails.application.configure do
   if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
-
-    config.cache_store = :memory_store
     config.public_file_server.headers = { "cache-control" => "public, max-age=#{2.days.to_i}" }
   else
     config.action_controller.perform_caching = false
-
-    config.cache_store = :null_store
   end
+
+  # Change to :null_store to avoid any caching.
+  config.cache_store = :memory_store
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
@@ -63,7 +62,7 @@ Rails.application.configure do
   config.active_record.verbose_query_logs = true
 
   # Append comments with runtime information tags to SQL queries in logs.
-  # config.active_record.query_log_tags_enabled = true
+  config.active_record.query_log_tags_enabled = true
 
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
