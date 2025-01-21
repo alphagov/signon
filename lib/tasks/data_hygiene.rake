@@ -12,4 +12,15 @@ namespace :data_hygiene do
     organisation.update!(closed: true)
     puts "Marked organisation #{organisation.slug} as closed"
   end
+
+  desc "Move all users from one organisation to another"
+  task :bulk_update_user_organisation, %i[old_content_id new_content_id] => :environment do |_, args|
+    old_organisation = Organisation.find_by(content_id: args[:old_content_id])
+    new_organisation = Organisation.find_by(content_id: args[:new_content_id])
+
+    users = User.where(organisation: old_organisation)
+    users.update_all(organisation_id: new_organisation.id)
+
+    puts "Moved #{users.count} users from #{old_organisation.slug} to #{new_organisation.slug}"
+  end
 end
