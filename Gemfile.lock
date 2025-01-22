@@ -245,7 +245,8 @@ GEM
     i18n (1.14.7)
       concurrent-ruby (~> 1.0)
     io-console (0.8.0)
-    irb (1.14.3)
+    irb (1.15.1)
+      pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.9.1)
@@ -585,6 +586,9 @@ GEM
       racc
     parslet (2.0.0)
     plek (5.2.0)
+    pp (0.6.2)
+      prettyprint
+    prettyprint (0.2.0)
     prometheus_exporter (2.2.0)
       webrick
     pry (0.14.2)
