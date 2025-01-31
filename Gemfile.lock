@@ -217,7 +217,7 @@ GEM
       rouge
       sprockets (>= 3)
       sprockets-rails
-    govuk_sidekiq (9.0.4)
+    govuk_sidekiq (9.0.5)
       gds-api-adapters (>= 19.1.0)
       govuk_app_config (>= 1.1)
       redis-client (>= 0.22.2)
