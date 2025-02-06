@@ -1,5 +1,5 @@
 class Api::UsersController < ApplicationController
-  before_action :doorkeeper_authorize!, :check_signon_permissions
+  before_action :authorize_api_access, unless: -> { Rails.env.development? }
   skip_after_action :verify_authorized
 
   def index
@@ -8,6 +8,10 @@ class Api::UsersController < ApplicationController
   end
 
 private
+
+  def authorize_api_access
+    doorkeeper_authorize! && check_signon_permissions
+  end
 
   def check_signon_permissions
     head :unauthorized unless doorkeeper_token&.application&.signon?
