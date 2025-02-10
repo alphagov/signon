@@ -2,7 +2,7 @@ require "test_helper"
 
 class Api::UsersControllerTest < ActionController::TestCase
   setup do
-    @application = create(:application, name: "Signon API")
+    @application = create(:application)
   end
 
   context "as admin user" do
@@ -18,9 +18,21 @@ class Api::UsersControllerTest < ActionController::TestCase
     end
   end
 
+  context "in development environment" do
+    setup do
+      Rails.env.stubs(:development?).returns(true)
+    end
+
+    should "be able to access the API endpoint" do
+      get :index
+
+      assert_equal "200", response.code
+    end
+  end
+
   context "as a user with a valid token" do
     setup do
-      @user = create(:user)
+      @user = create(:user, name: "Signon API")
       @user.grant_application_signin_permission(@application)
       @token = create(:access_token, application: @application, resource_owner_id: @user.id)
 
