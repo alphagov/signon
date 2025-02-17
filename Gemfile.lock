@@ -682,7 +682,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rexml (3.4.0)
+    rexml (3.4.1)
     rotp (6.3.0)
     rouge (4.5.1)
     rqrcode (2.2.0)
