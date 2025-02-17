@@ -761,7 +761,7 @@ GEM
       sentry-ruby (~> 5.22.4)
       sidekiq (>= 3.0)
     shoulda-context (2.0.0)
-    sidekiq (7.3.8)
+    sidekiq (7.3.9)
       base64
       connection_pool (>= 2.3.0)
       logger
