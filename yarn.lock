@@ -905,7 +905,7 @@ etag@~1.8.1:
   resolved "https://registry.yarnpkg.com/etag/-/etag-1.8.1.tgz#41ae2eeb65efa62268aebfea83ac7d79299b0887"
   integrity sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==
 
-express@4.21.2, express@^4.19.2:
+express@4.21.2, express@^5.0.0:
   version "4.21.2"
   resolved "https://registry.yarnpkg.com/express/-/express-4.21.2.tgz#cf250e48362174ead6cea4a566abef0162c1ec32"
   integrity sha512-28HqgMZAmih1Czt9ny7qr6ek2qddF4FclbMzwhCREB6OFfH+rXAnuNCwo1/wFvrtbgsQDb4kSbX9de9lFbrXnA==
@@ -1492,13 +1492,13 @@ jake@^10.8.5:
     filelist "^1.0.4"
     minimatch "^3.1.2"
 
-jasmine-browser-runner@^2.5.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/jasmine-browser-runner/-/jasmine-browser-runner-2.5.0.tgz#7750f065f4373f135b0e3e6844b6491eb972feaf"
-  integrity sha512-CzdvpeZunUu6x1u8G6/vPnfcKVpDaBFfk3tIvm1hoA+EfceQ8FRvsy4o8hEcKYyMt556XFRnP5PjYsxFU8z7Xw==
+jasmine-browser-runner@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/jasmine-browser-runner/-/jasmine-browser-runner-3.0.0.tgz#544bb069bbda52cf25fa080a09c98f15153c949f"
+  integrity sha512-bLfESBhOAdd/8Lkcmi1RO3abPkYxtTMGGLs+ikX/Qv0aQMs0tw7aFWTVKEXDJ+2IEZs+qtBldaRHSA7BaMonUQ==
   dependencies:
     ejs "^3.1.6"
-    express "^4.19.2"
+    express "^5.0.0"
     glob "^10.0.0"
     selenium-webdriver "^4.12.0"
 
