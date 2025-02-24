@@ -77,7 +77,9 @@ jobs:
         run: ls -la tmp/pacts/
 
       - if: inputs.pact_artifact != ''
-        run: bundle exec rake pact:verify:at[tmp/pacts/${{ inputs.pact_artifact_file_to_verify }}]
+        run: |
+          # shellcheck disable=SC2102
+          bundle exec rake pact:verify:at[tmp/pacts/${{ inputs.pact_artifact_file_to_verify }}]
         env:
           RAILS_ENV: test
           TEST_DATABASE_URL: ${{ steps.setup-mysql.outputs.db-url }}
