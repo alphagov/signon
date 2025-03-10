@@ -20,9 +20,7 @@ Pact.configure do |config|
   config.include FactoryBot::Syntax::Methods
 end
 
-def url_encode(str)
-  ERB::Util.url_encode(str)
-end
+delegate :url_encode, to: :'ERB::Util'
 
 def stub_access_token_creation!
   # This stubs Doorkeeper so can ensure the token we generate is predictable, so we can run

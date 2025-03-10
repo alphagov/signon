@@ -59,9 +59,9 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       assert page.has_selector?("div[role='alert'] input[value='#{token}']")
 
       # shows truncated token
-      assert page.has_selector?("code", text: (token[0..7]).to_s)
-      assert_not page.has_selector?("code", text: (token[9..-9]).to_s)
-      assert page.has_selector?("code", text: (token[-8..]).to_s)
+      assert page.has_selector?("code", text: token[0..7].to_s)
+      assert_not page.has_selector?("code", text: token[9..-9].to_s)
+      assert page.has_selector?("code", text: token[-8..].to_s)
 
       click_link @api_user.name
       click_link "Manage permissions"
