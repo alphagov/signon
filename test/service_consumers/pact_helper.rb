@@ -20,8 +20,6 @@ Pact.configure do |config|
   config.include FactoryBot::Syntax::Methods
 end
 
-delegate :url_encode, to: :'ERB::Util'
-
 def stub_access_token_creation!
   # This stubs Doorkeeper so can ensure the token we generate is predictable, so we can run
   # the Pact tests with a dummy bearer token
@@ -31,6 +29,8 @@ def stub_access_token_creation!
 end
 
 Pact.service_provider "Signon API" do
+  include ERB::Util
+
   honours_pact_with "GDS API Adapters" do
     if ENV["PACT_URI"]
       pact_uri(ENV["PACT_URI"])
