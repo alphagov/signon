@@ -79,7 +79,7 @@ GEM
       public_suffix (>= 2.0.2, < 7.0)
     ancestry (4.3.3)
       activerecord (>= 5.2.6)
-    ast (2.4.2)
+    ast (2.4.3)
     awesome_print (1.9.2)
     base64 (0.2.0)
     bcrypt (3.1.20)
