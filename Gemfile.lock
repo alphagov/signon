@@ -296,7 +296,7 @@ GEM
       net-imap
       net-pop
       net-smtp
-    mail-notify (2.0.0)
+    mail-notify (2.1.0)
       actionmailer (>= 5.2.8.1)
       actionpack (>= 5.2.8.1)
       actionview (>= 5.2.8.1)
