@@ -139,7 +139,7 @@ GEM
       warden (~> 1.2.3)
     devise-encryptable (0.2.0)
       devise (>= 2.1.0)
-    devise_invitable (2.0.9)
+    devise_invitable (2.0.10)
       actionmailer (>= 5.0)
       devise (>= 4.6)
     devise_zxcvbn (1.1.2)
@@ -169,7 +169,7 @@ GEM
       ffi (>= 1.15.5)
       rake
     find_a_port (1.0.1)
-    gds-api-adapters (98.4.0)
+    gds-api-adapters (99.0.0)
       addressable
       link_header
       null_logger
@@ -217,7 +217,7 @@ GEM
       rouge
       sprockets (>= 3)
       sprockets-rails
-    govuk_sidekiq (9.0.6)
+    govuk_sidekiq (10.0.0)
       gds-api-adapters (>= 19.1.0)
       govuk_app_config (>= 1.1)
       redis-client (>= 0.22.2)
@@ -309,7 +309,7 @@ GEM
     mime-types (3.6.2)
       logger
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2025.0318)
+    mime-types-data (3.2025.0325)
     mini_mime (1.1.5)
     mini_portile2 (2.8.8)
     minitest (5.25.5)
@@ -587,7 +587,7 @@ GEM
       term-ansicolor (~> 1.7)
       thor (>= 0.20, < 2.0)
     parallel (1.26.3)
-    parser (3.3.7.2)
+    parser (3.3.7.3)
       ast (~> 2.4.1)
       racc
     parslet (2.0.0)
@@ -789,7 +789,7 @@ GEM
     statsd-ruby (1.5.0)
     string_pattern (2.3.0)
       regexp_parser (~> 2.5, >= 2.5.0)
-    stringio (3.1.5)
+    stringio (3.1.6)
     sync (0.5.0)
     systemu (2.6.5)
     table_print (1.5.7)
@@ -892,4 +892,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   2.5.23
+   2.5.22
