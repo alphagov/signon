@@ -192,7 +192,7 @@ GEM
       rake (>= 13)
     googleapis-common-protos-types (1.19.0)
       google-protobuf (>= 3.18, < 5.a)
-    govuk_app_config (9.16.8)
+    govuk_app_config (9.16.9)
       logstasher (~> 2.1)
       opentelemetry-exporter-otlp (>= 0.25, < 0.31)
       opentelemetry-instrumentation-all (>= 0.39.1, < 0.75.0)
@@ -672,7 +672,7 @@ GEM
     redis-client (0.24.0)
       connection_pool
     regexp_parser (2.10.0)
-    reline (0.6.0)
+    reline (0.6.1)
       io-console (~> 0.5)
     request_store (1.7.0)
       rack (>= 1.4)
