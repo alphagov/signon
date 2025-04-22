@@ -538,9 +538,10 @@ GEM
       opentelemetry-api (~> 1.0)
       opentelemetry-instrumentation-base (~> 0.23.0)
       opentelemetry-instrumentation-rack (~> 0.21)
-    opentelemetry-instrumentation-trilogy (0.61.0)
+    opentelemetry-instrumentation-trilogy (0.61.1)
       opentelemetry-api (~> 1.0)
       opentelemetry-helpers-mysql
+      opentelemetry-helpers-sql
       opentelemetry-helpers-sql-obfuscation
       opentelemetry-instrumentation-base (~> 0.23.0)
       opentelemetry-semantic_conventions (>= 1.8.0)
