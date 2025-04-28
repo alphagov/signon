@@ -249,7 +249,7 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
-    json (2.11.0)
+    json (2.11.3)
     jsonpath (1.1.5)
       multi_json
     jwt (2.10.1)
