@@ -13,7 +13,7 @@ class RejectNonGovernmentalEmailAddressesValidator < ActiveModel::EachValidator
     return if domain_part.blank?
 
     if keyword_matchers.any? { |keyword| keyword.match?(domain_part) }
-      record.errors.add(attribute, (options[:message] || MESSAGE))
+      record.errors.add(attribute, options[:message] || MESSAGE)
     end
   end
 
