@@ -190,7 +190,7 @@ GEM
     google-protobuf (4.30.2-x86_64-linux)
       bigdecimal
       rake (>= 13)
-    googleapis-common-protos-types (1.19.0)
+    googleapis-common-protos-types (1.20.0)
       google-protobuf (>= 3.18, < 5.a)
     govuk_app_config (9.17.1)
       logstasher (~> 2.1)
