@@ -143,7 +143,7 @@ namespace :permissions do
       { application_name: "Support", name: "feedex_exporters" },
       { application_name: "Support", name: "feedex_reviews" },
     ].map do |application_name_and_name|
-      application_name_and_name => {application_name:, name:}
+      application_name_and_name => { application_name:, name: }
       application_id = Doorkeeper::Application.find_by(name: application_name)&.id
       SupportedPermission.find_by(application_id:, name:)&.id
     end
