@@ -145,7 +145,7 @@ GEM
     devise_zxcvbn (1.1.2)
       devise
       zxcvbn-ruby (>= 0.0.2)
-    diff-lcs (1.6.1)
+    diff-lcs (1.6.2)
     dig_rb (1.0.1)
     docile (1.4.1)
     domain_name (0.6.20240107)
