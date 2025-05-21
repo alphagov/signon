@@ -151,7 +151,7 @@ GEM
     domain_name (0.6.20240107)
     doorkeeper (5.8.2)
       railties (>= 5)
-    drb (2.2.1)
+    drb (2.2.3)
     erb (5.0.1)
     erubi (1.13.1)
     execjs (2.10.0)
