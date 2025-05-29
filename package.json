@@ -35,7 +35,7 @@
   "devDependencies": {
     "jasmine-browser-runner": "^3.0.0",
     "jasmine-core": "^5.7.1",
-    "postcss": "^8.5.3",
+    "postcss": "^8.5.4",
     "standardx": "^7.0.0",
     "stylelint": "^15.11.0",
     "stylelint-config-gds": "^1.1.1"
