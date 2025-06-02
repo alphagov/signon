@@ -179,16 +179,16 @@ GEM
       rest-client (~> 2.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    google-protobuf (4.31.0)
+    google-protobuf (4.31.1)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.31.0-aarch64-linux-gnu)
+    google-protobuf (4.31.1-aarch64-linux-gnu)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.31.0-arm64-darwin)
+    google-protobuf (4.31.1-arm64-darwin)
       bigdecimal
       rake (>= 13)
-    google-protobuf (4.31.0-x86_64-linux-gnu)
+    google-protobuf (4.31.1-x86_64-linux-gnu)
       bigdecimal
       rake (>= 13)
     googleapis-common-protos-types (1.20.0)
