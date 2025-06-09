@@ -2,20 +2,11 @@
 require_relative "../config/environment"
 
 def application_repo_name(application)
-  case application.name
-  when /Contacts/i
-    "contacts-admin"
-  else
-    application.name.downcase.gsub(/\s/, "-")
-  end
-end
-
-def env_var_directory_name(application)
   application.name.downcase.gsub(/\s/, "-")
 end
 
 def env_var_path_for_app(application)
-  "/etc/govuk/#{env_var_directory_name(application)}/env.d"
+  "/etc/govuk/#{application_repo_name(application)}/env.d"
 end
 
 def config_path_for_app(application)
