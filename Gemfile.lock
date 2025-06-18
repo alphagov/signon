@@ -304,7 +304,7 @@ GEM
       notifications-ruby-client (~> 6.0)
       rack (>= 2.1.4.1)
     marcel (1.0.4)
-    matrix (0.4.2)
+    matrix (0.4.3)
     method_source (1.1.0)
     mime-types (3.7.0)
       logger
