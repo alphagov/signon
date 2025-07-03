@@ -6,6 +6,7 @@ UserOAuthPresenter = Struct.new(:user, :application) do
     {
       user: {
         uid: user.uid,
+        analytics_user_id: user.analytics_user_id,
         name: user.name,
         email: user.email,
         permissions:,

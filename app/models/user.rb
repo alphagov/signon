@@ -160,6 +160,10 @@ class User < ApplicationRecord
     self.uid ||= UUID.generate
   end
 
+  def analytics_user_id
+    "XXX#{uid}XXX"
+  end
+
   def permissions_for(application)
     application_permissions
       .joins(:supported_permission)
