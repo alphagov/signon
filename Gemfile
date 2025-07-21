@@ -7,6 +7,7 @@ gem "addressable"
 gem "ancestry"
 gem "bootsnap", require: false
 gem "browser"
+gem "csv"
 gem "dartsass-rails"
 gem "devise"
 gem "devise-encryptable"
