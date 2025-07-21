@@ -859,6 +859,7 @@ DEPENDENCIES
   capybara
   capybara-email
   climate_control
+  csv
   dartsass-rails
   database_cleaner
   devise
