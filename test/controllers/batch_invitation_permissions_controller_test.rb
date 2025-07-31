@@ -129,7 +129,7 @@ class BatchInvitationPermissionsControllerTest < ActionController::TestCase
           m.to.any? { |to| to =~ /signon-alerts@.*\.gov\.uk/ }
         end
         assert_not_nil email
-        assert_equal "[SIGNON] #{@user.name} created a batch of 2 users in development", email.subject
+        assert_equal "[SIGNON] #{@user.name} created a batch of 2 users in test", email.subject
       end
     end
 

@@ -35,7 +35,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
 
       open_email(user.email)
       assert current_email
-      assert_equal "Cannot reset GOV.UK password on inactive Signon GOV.UK development account", current_email.subject
+      assert_equal "Cannot reset GOV.UK password on inactive Signon GOV.UK test account", current_email.subject
     end
   end
 
@@ -47,7 +47,7 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
 
       open_email(user.email)
       assert current_email
-      assert_equal "Cannot reset password on suspended Signon GOV.UK development account", current_email.subject
+      assert_equal "Cannot reset password on suspended Signon GOV.UK test account", current_email.subject
     end
   end
 

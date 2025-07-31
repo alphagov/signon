@@ -10,7 +10,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
     end
 
     should "come from noreply-signon@" do
-      assert_match(/".* Signon development" <noreply-signon-development@.*\.gov\.uk>/, @email[:from].to_s)
+      assert_match(/".* Signon test" <noreply-signon-test@.*\.gov\.uk>/, @email[:from].to_s)
     end
 
     should "send to noreply-signon@" do

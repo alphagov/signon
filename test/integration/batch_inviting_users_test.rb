@@ -165,7 +165,7 @@ class BatchInvitingUsersTest < ActionDispatch::IntegrationTest
     end
     invite_email = last_email_for(email)
     assert_not_nil invite_email
-    assert_equal "noreply-signon-development@digital.cabinet-office.gov.uk", invite_email.from[0]
+    assert_equal "noreply-signon-test@digital.cabinet-office.gov.uk", invite_email.from[0]
     assert_nil invite_email.reply_to
 
     assert_match I18n.t("devise.mailer.invitation_instructions.subject"), invite_email.subject

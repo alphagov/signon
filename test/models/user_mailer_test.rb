@@ -94,11 +94,11 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "include an instance name in the subject" do
-      assert_match(/Your .* Signon development account/, @email.subject)
+      assert_match(/Your .* Signon test account/, @email.subject)
     end
 
     should "include an instance name in the body" do
-      assert_body_includes "Signon development account, for"
+      assert_body_includes "Signon test account, for"
     end
   end
 
@@ -174,7 +174,7 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "mention that reset is disallowed because their account is suspended" do
-      assert_body_includes "You cannot reset the GOV.UK Signon development password for user@example.com while the account is suspended."
+      assert_body_includes "You cannot reset the GOV.UK Signon test password for user@example.com while the account is suspended."
     end
   end
 end
