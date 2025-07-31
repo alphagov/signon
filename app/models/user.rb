@@ -329,7 +329,7 @@ class User < ApplicationRecord
   end
 
   def set_2sv_for_admin_roles
-    return unless GovukEnvironment.production?
+    return unless GovukEnvironment.current == "production"
 
     self.require_2sv = true if role_changed? && role.require_2sv?
   end

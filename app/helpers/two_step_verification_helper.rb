@@ -28,8 +28,8 @@ private
 
   def otp_secret_key_uri(user:, otp_secret_key:)
     issuer = I18n.t("devise.issuer")
-    unless GovukEnvironment.production?
-      issuer = "#{GovukEnvironment.name.titleize} #{issuer}"
+    unless GovukEnvironment.current == "production"
+      issuer = "#{GovukEnvironment.current.titleize} #{issuer}"
     end
 
     issuer = ERB::Util.url_encode(issuer)
