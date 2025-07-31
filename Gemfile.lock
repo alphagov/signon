@@ -208,7 +208,7 @@ GEM
     govuk_personalisation (1.1.0)
       plek (>= 1.9.0)
       rails (>= 6, < 9)
-    govuk_publishing_components (59.1.1)
+    govuk_publishing_components (59.2.0)
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
       kramdown
@@ -622,7 +622,7 @@ GEM
     pundit (2.5.0)
       activesupport (>= 3.0.0)
     racc (1.8.1)
-    rack (3.1.16)
+    rack (3.2.0)
     rack-attack (6.7.0)
       rack (>= 1.0, < 4)
     rack-proxy (0.7.7)
