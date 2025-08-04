@@ -1,4 +1,4 @@
-You asked to change the email address for your <%= GovukEnvironment.name %> Signon account to <%= @user.unconfirmed_email %>.
+You asked to change the email address for your <%= GovukEnvironment.current %> Signon account to <%= @user.unconfirmed_email %>.
 
 [Confirm your new email address](<%= confirmation_url(@user, :confirmation_token => @token) %>) to complete this change. This link will expire in 2 weeks.
 

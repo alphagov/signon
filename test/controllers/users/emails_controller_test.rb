@@ -175,7 +175,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
 
           put :update, params: { user_id: user, user: { email: "new-user@gov.uk" } }
 
-          expected_subject = "Your GOV.UK Signon development email address has been updated"
+          expected_subject = "Your GOV.UK Signon test email address has been updated"
           emails = ActionMailer::Base.deliveries.select { |e| e.subject = expected_subject }
           assert_equal(%w[user@gov.uk new-user@gov.uk], emails.map { |mail| mail.to.first })
         end
@@ -372,7 +372,7 @@ class Users::EmailsControllerTest < ActionController::TestCase
 
           put :resend_email_change, params: { user_id: user }
 
-          assert_equal "Confirm changes to your GOV.UK Signon development account", ActionMailer::Base.deliveries.last.subject
+          assert_equal "Confirm changes to your GOV.UK Signon test account", ActionMailer::Base.deliveries.last.subject
         end
       end
 

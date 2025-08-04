@@ -10,7 +10,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
     end
 
     should "come from noreply-signon@" do
-      assert_match(/".* Signon development" <noreply-signon-development@.*\.gov\.uk>/, @email[:from].to_s)
+      assert_match(/".* Signon test" <noreply-signon-test@.*\.gov\.uk>/, @email[:from].to_s)
     end
 
     should "send to noreply-signon@" do
@@ -36,8 +36,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
 
   context "make_noise in non-production environment" do
     setup do
-      GovukEnvironment.stubs(:production?).returns(false)
-      GovukEnvironment.stubs(:name).returns("Test Fools")
+      GovukEnvironment.stubs(:current).returns("Test Fools")
 
       user = create(:user, name: "Bob Loblaw")
       @batch_invitation = create(:batch_invitation, user:)
@@ -52,8 +51,7 @@ class NoisyBatchInvitationTest < ActionMailer::TestCase
 
   context "work correctly in production environment" do
     setup do
-      GovukEnvironment.stubs(:production?).returns(true)
-      GovukEnvironment.stubs(:name).returns("production")
+      GovukEnvironment.stubs(:current).returns("production")
 
       user = create(:user, name: "Bob Loblaw")
       @batch_invitation = create(:batch_invitation, user:)

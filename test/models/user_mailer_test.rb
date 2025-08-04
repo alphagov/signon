@@ -22,8 +22,7 @@ class UserMailerTest < ActionMailer::TestCase
 
     context "in a non-production environment" do
       setup do
-        GovukEnvironment.stubs(:production?).returns(false)
-        GovukEnvironment.stubs(:name).returns("foobar")
+        GovukEnvironment.stubs(:current).returns("foobar")
       end
 
       should "include the environment in the subject" do
@@ -37,7 +36,7 @@ class UserMailerTest < ActionMailer::TestCase
 
     context "in the production environment" do
       setup do
-        GovukEnvironment.stubs(:production?).returns(true)
+        GovukEnvironment.stubs(:current).returns("production")
       end
 
       should "not include the environment in the subject" do
@@ -95,11 +94,11 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "include an instance name in the subject" do
-      assert_match(/Your .* Signon development account/, @email.subject)
+      assert_match(/Your .* Signon test account/, @email.subject)
     end
 
     should "include an instance name in the body" do
-      assert_body_includes "Signon development account, for"
+      assert_body_includes "Signon test account, for"
     end
   end
 
@@ -120,8 +119,7 @@ class UserMailerTest < ActionMailer::TestCase
 
   context "email a user to notify of suspension" do
     setup do
-      GovukEnvironment.stubs(:production?).returns(false)
-      GovukEnvironment.stubs(:name).returns("test")
+      GovukEnvironment.stubs(:current).returns("test")
       stub_user = stub(name: "User", email: "user@example.com")
       @email = UserMailer.suspension_notification(stub_user)
     end
@@ -137,8 +135,7 @@ class UserMailerTest < ActionMailer::TestCase
 
   context "on a non-production Signon instance" do
     setup do
-      GovukEnvironment.stubs(:production?).returns(false)
-      GovukEnvironment.stubs(:name).returns("test")
+      GovukEnvironment.stubs(:current).returns("test")
       stub_user = stub(name: "User", email: "user@example.com")
       @email = UserMailer.suspension_reminder(stub_user, 3)
     end
@@ -154,8 +151,7 @@ class UserMailerTest < ActionMailer::TestCase
 
   context "emailing a user to explain why their account is locked" do
     setup do
-      GovukEnvironment.stubs(:production?).returns(false)
-      GovukEnvironment.stubs(:name).returns("test")
+      GovukEnvironment.stubs(:current).returns("test")
       @the_time = Time.zone.parse("2023-10-31 02:00:00")
       user = User.new(name: "User", email: "user@example.com", locked_at: @the_time)
       @email = UserMailer.unlock_instructions(user, "afaketoken")
@@ -178,7 +174,7 @@ class UserMailerTest < ActionMailer::TestCase
     end
 
     should "mention that reset is disallowed because their account is suspended" do
-      assert_body_includes "You cannot reset the GOV.UK Signon development password for user@example.com while the account is suspended."
+      assert_body_includes "You cannot reset the GOV.UK Signon test password for user@example.com while the account is suspended."
     end
   end
 end

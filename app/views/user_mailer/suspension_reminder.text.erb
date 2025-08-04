@@ -1,6 +1,6 @@
 Your <%= t('department.name') %> Signon <%= account_name %>, for <%= @user.email %> will be suspended <%= suspension_time %>.
 
-<% if GovukEnvironment.production? %>
+<% if GovukEnvironment.current == "production" %>
 If this happens you won’t be able to access any of your publishing apps from this account, including Whitehall and Publisher.
 <% else %>
 If this happens you won’t be able to do any training from this account.
@@ -15,7 +15,7 @@ To stop your account being suspended, all you have to do is sign in:
 
 <%= t('department.name') %> Signon accounts are automatically suspended after <%= User::SUSPENSION_THRESHOLD_PERIOD.inspect %> of inactivity.
 
-<% unless GovukEnvironment.production? %>
+<% unless GovukEnvironment.current == "production" %>
 Please note that Integration account suspensions do not suspend Production accounts.
 
 Find about more about the two kinds of accounts on the [How to Publish on GOV.UK page](https://www.gov.uk/guidance/how-to-publish-on-gov-uk/introduction-and-access-to-whitehall-publisher).
