@@ -679,7 +679,7 @@ GEM
       ostruct
     redis (5.4.1)
       redis-client (>= 0.22.0)
-    redis-client (0.25.1)
+    redis-client (0.25.2)
       connection_pool
     regexp_parser (2.11.0)
     reline (0.6.2)
