@@ -22,11 +22,7 @@ individual.
 
 ### Anonymising the user id
 
-#### Option 1 - Use an encryption algorithm like AES
-
-Don't really need an encryption algorithm, but probably easy to do.
-
-#### Option 2 - Use a hashing function like PBKDF2 or SHA2
+#### Use SHA2
 
 ```ruby
 require "openssl"
@@ -38,9 +34,15 @@ require "digest"
 Digest::SHA2.hexdigest(u.uid + ENV["ANONYMISED_USER_ID_SECRET"])[0..20]
 ```
 
-
-
 ### Sending the anonymised user id to other applications
+
+Signon link below includes a pseudo-implementation of anonomysing the User ID, and then presents that to the other applications.
+
+https://github.com/alphagov/signon/compare/spike-user-id-tracking?expand=1
+
+There is an open question about whether the anonomysed user IDs persist in databases.
+
+https://github.com/alphagov/gds-sso/compare/spike-user-id-tracking?expand=1
 
 ### Sending the anonymised user id to the data layer
 
