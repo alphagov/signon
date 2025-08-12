@@ -10,6 +10,15 @@ class RootControllerTest < ActionController::TestCase
     assert_equal "200", response.code
   end
 
+  test "visiting root#index with a really long full path should raise a custom error" do
+    assert_raises(
+      RequestPathLengthError,
+      "Request path exceeds maximum length",
+    ) do
+      get :index, params: { something: "#{'really' * 340}long" }
+    end
+  end
+
   test "visiting root#index should require authentication" do
     get :index
     assert_equal "302", response.code
