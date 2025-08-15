@@ -1,3 +1,5 @@
+class RequestPathLengthError < RuntimeError; end
+
 class RootController < ApplicationController
   before_action :authenticate_user!, except: %i[privacy_notice accessibility_statement]
   skip_after_action :verify_authorized
@@ -15,6 +17,14 @@ class RootController < ApplicationController
   def accessibility_statement; end
 
 private
+
+  def authenticate_user!
+    if request.fullpath.bytesize > ActionDispatch::Cookies::MAX_COOKIE_SIZE / 2
+      raise RequestPathLengthError, "Request path exceeds maximum length"
+    end
+
+    super
+  end
 
   def show_user_research_recruitment_banner?
     Rails.application.config.show_user_research_recruitment_banner &&
