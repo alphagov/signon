@@ -170,7 +170,7 @@ GEM
       ffi (>= 1.15.5)
       rake
     find_a_port (1.0.1)
-    gds-api-adapters (100.0.0)
+    gds-api-adapters (101.0.0)
       addressable
       link_header
       null_logger
