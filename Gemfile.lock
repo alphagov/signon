@@ -605,7 +605,7 @@ GEM
       prettyprint
     prettyprint (0.2.0)
     prism (1.4.0)
-    prometheus_exporter (2.2.0)
+    prometheus_exporter (2.3.0)
       webrick
     pry (0.15.2)
       coderay (~> 1.1)
