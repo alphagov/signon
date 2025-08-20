@@ -38,7 +38,7 @@ Digest::SHA2.hexdigest(JSON.dump([ user.uid, ENV["ANONYMOUS_USER_ID_SECRET"] ]))
 (Note: using JSON.dump to combine values before hashing them is [considered better practice than concatenation](https://jameshfisher.com/2018/01/09/how-to-hash-multiple-values/)
 because the combine function needs to be "injective" to avoid collisions like `hash("ab" + "cd") == hash("a" + "bcd")`).
 
-We chose SHA256 as the hashing algorithm rather than something like BCrypt of PBKDF2 because:
+We chose SHA256 as the hashing algorithm rather than something like BCrypt or PBKDF2 because:
 
 - SHA256 implementations are ubiquitous, including in the ruby standard library without the need for any gems or
   external dependencies such as openssl.
