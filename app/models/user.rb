@@ -418,6 +418,13 @@ class User < ApplicationRecord
     !api_user?
   end
 
+  def anonymous_user_id
+    secret = ENV["ANONYMOUS_USER_ID_SECRET"]
+    return if secret.nil?
+
+    @anonymous_user_id ||= Digest::SHA2.hexdigest([self.uid, secret].to_json)[..16]
+  end
+
 private
 
   def two_step_mandated_changed?
