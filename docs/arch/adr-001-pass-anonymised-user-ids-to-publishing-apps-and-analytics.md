@@ -24,7 +24,8 @@ ID to a named individual.
 
 Signon already generates a unique ID for each user, which is a random UUID. We will combine this with a secret known
 only to the applications, and hash the result using SHA256. We'll truncate the hash to 16 hexadecimal characters, which
-is long enough to avoid collisions while not taking up too much space.
+is long enough to avoid collisions ([source](https://github.com/alphagov/signon/pull/3983#discussion_r2284680904))
+while not taking up too much space.
 
 Calculation of the anonymous user ID will look something like this:
 
