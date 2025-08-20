@@ -813,7 +813,7 @@ GEM
     thor (1.4.0)
     timecop (0.9.10)
     timeout (0.4.3)
-    tins (1.39.1)
+    tins (1.42.0)
       bigdecimal
       sync
     tzinfo (2.0.6)
