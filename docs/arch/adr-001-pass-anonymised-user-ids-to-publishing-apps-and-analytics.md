@@ -38,6 +38,14 @@ Digest::SHA2.hexdigest(JSON.dump([ user.uid, ENV["ANONYMOUS_USER_ID_SECRET"] ]))
 (Note: using JSON.dump to combine values before hashing them is [considered better practice than concatenation](https://jameshfisher.com/2018/01/09/how-to-hash-multiple-values/)
 because the combine function needs to be "injective" to avoid collisions like `hash("ab" + "cd") == hash("a" + "bcd")`).
 
+We chose SHA256 as the hashing algorithm rather than something like BCrypt of PBKDF2 because:
+
+- SHA256 implementations are ubiquitous, including in the ruby standard library without the need for any gems or
+  external dependencies such as openssl.
+- the number of users we have is small, so there's no realistic defence against brute forcing the anonymous ids by
+  calculating them for every user, even with a deliberately slow hash function.
+- SHA256 is fast, and since there's no benefit to being slow, we may as well go fast
+
 ### Providing the anonymised user ID to applications
 
 We could have Signon generate anonymous user IDs, or we could have each application generate the IDs themselves using a
