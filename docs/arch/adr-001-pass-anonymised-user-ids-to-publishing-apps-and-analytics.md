@@ -12,7 +12,7 @@ as specific person.
 ## Problem
 
 The threat model here is primarily internal users, with access to analytics. We do want these people to be able
-to answer questions like "how many unique users have use Whitehall this month?", but we do not want them to be able
+to answer questions like "how many unique users have used Whitehall this month?", but we do not want them to be able
 to answer questions like "which named individual on my team has done the most work this month?"
 
 Anonymising the user IDs should make it reasonably hard (although not impossible) to work backwards from an anonymised
