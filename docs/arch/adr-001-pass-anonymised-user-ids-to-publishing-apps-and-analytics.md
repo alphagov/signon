@@ -30,8 +30,13 @@ while not taking up too much space.
 Calculation of the anonymous user ID will look something like this:
 
 ```ruby
-Digest::SHA2.hexdigest(user.uid + ENV["ANONYMOUS_USER_ID_SECRET"])[..16]
+require "digest"
+require "json"
+
+Digest::SHA2.hexdigest(JSON.dump([ user.uid, ENV["ANONYMOUS_USER_ID_SECRET"] ]))[..16]
 ```
+(Note: using JSON.dump to combine values before hashing them is [considered better practice than concatenation](https://jameshfisher.com/2018/01/09/how-to-hash-multiple-values/)
+because the combine function needs to be "injective" to avoid collisions like `hash("ab" + "cd") == hash("a" + "bcd")`).
 
 ### Providing the anonymised user ID to applications
 
