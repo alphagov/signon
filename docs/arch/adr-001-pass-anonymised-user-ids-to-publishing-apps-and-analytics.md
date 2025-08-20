@@ -52,9 +52,14 @@ We could have Signon generate anonymous user IDs, or we could have each applicat
 shared secret.
 
 The advantage of having Signon generate the ID is that we only need the secret to be available in one application, which
-simplifies the infrastructure and somewhat reduces the risk of the secret leaking. The disadvantages are complexity of
-implementation, and risk that an application may accidentally store the anonymous ID in the database (effectively
-de-anonymising it).
+simplifies the infrastructure and somewhat reduces the risk of the secret leaking.
+
+The disadvantages are complexity of implementation, and risk that an application may accidentally store the anonymous ID
+in the database (effectively de-anonymising it).
+
+Specifically, the implementation would be more complex because we'd have to update the token passed from signon to
+applications, and have the applications handle the token correctly - storing the anonymous id in session, but not the
+database.
 
 On balance, we prefer to have each application generate the IDs using a shared secret - trading off some additional
 complexity in the infrastructure for simplicity of implementation in the code.
