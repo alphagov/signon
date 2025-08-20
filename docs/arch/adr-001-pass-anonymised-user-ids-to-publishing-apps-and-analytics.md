@@ -7,7 +7,7 @@ We want to be able to reason about repeat usage of publishing applications at th
 We don't want to track full user IDs, because that would be bad for privacy.
 
 Instead, we'd like to use "anonymised" IDs, which persist for a given user, but can't easily be traced back to
-as specific person.
+a specific person.
 
 ## Problem
 
