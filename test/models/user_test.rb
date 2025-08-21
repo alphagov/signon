@@ -1291,6 +1291,26 @@ class UserTest < ActiveSupport::TestCase
     end
   end
 
+  context "#anonymous_user_id" do
+    should "be nil if ANONYMOUS_USER_ID_SECRET is unset" do
+      ClimateControl.modify ANONYMOUS_USER_ID_SECRET: nil do
+        assert_nil build(:user).anonymous_user_id
+      end
+    end
+
+    should "be computed based on the uid and ANONYMOUS_USER_ID_SECRET" do
+      ClimateControl.modify ANONYMOUS_USER_ID_SECRET: "some-anonymous-user-id-secret" do
+        assert_equal "8724f603978a3adc0", build(:user, uid: "some-user-id").anonymous_user_id
+        assert_equal "69d0cf995988be2e1", build(:user, uid: "some-other-user-id").anonymous_user_id
+      end
+
+      ClimateControl.modify ANONYMOUS_USER_ID_SECRET: "other-anonymous-user-id-secret" do
+        assert_equal "297069f42a9251c64", build(:user, uid: "some-user-id").anonymous_user_id
+        assert_equal "4a3c66e26f5ec4229", build(:user, uid: "other-user-id").anonymous_user_id
+      end
+    end
+  end
+
   def authenticate_access(user, app)
     Doorkeeper::AccessToken.create!(resource_owner_id: user.id, application_id: app.id)
   end
