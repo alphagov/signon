@@ -19,6 +19,26 @@ class SignInTest < ActionDispatch::IntegrationTest
     assert_user_is_signed_in
   end
 
+  should "return to a reasonable length full path" do
+    visit account_path(something: "short")
+    signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
+    assert_equal "http://www.example.com/account?something=short", page.current_url
+  end
+
+  should "return to root when the full path is too long" do
+    visit account_path(something: "#{'really' * 340}long")
+    signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
+    assert_user_is_signed_in
+    assert_equal "http://www.example.com/", page.current_url
+  end
+
+  should "return to root when directly visiting the sign in page" do
+    visit new_user_session_path
+    signin_with(email: "email@example.com", password: "some password with various $ymb0l$")
+    assert_user_is_signed_in
+    assert_equal "http://www.example.com/", page.current_url
+  end
+
   should "send a GA event including the users org slug when successfully signed-in" do
     use_javascript_driver
     visit root_path
