@@ -1,6 +1,6 @@
 <% content_for :head do %>
-  <%= render "layouts/google_tag_manager" %>
   <%= render "layouts/analytics_meta_tags" %>
+  <%= javascript_include_tag "govuk_publishing_components/load-analytics" %>
 <% end %>
 
 <%= render "govuk_publishing_components/components/layout_for_admin",
