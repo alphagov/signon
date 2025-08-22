@@ -1,9 +1,6 @@
 <% content_for :head do %>
-  <%= render "layouts/google_tag_manager" if ENV["GOOGLE_TAG_MANAGER_ID"] %>
-
-  <% if current_user&.anonymous_user_id %>
-    <%= tag.meta name: "govuk:user-id", content: current_user.anonymous_user_id  %>
-  <% end %>
+  <%= render "layouts/google_tag_manager" %>
+  <%= render "layouts/analytics_meta_tags" %>
 <% end %>
 
 <%= render "govuk_publishing_components/components/layout_for_admin",
