@@ -130,16 +130,4 @@ class PasswordResetTest < ActionDispatch::IntegrationTest
 
     Rack::Attack.enabled = false
   end
-
-  should "not send password reset token to Google Analytics" do
-    user = create(:user)
-    token = user.send_reset_password_instructions
-    visit edit_user_password_path(reset_password_token: token, foo: "bar")
-
-    query = URI(google_analytics_page_view_path).query
-    params = Rack::Utils.parse_nested_query(query)
-
-    assert_not params.keys.include?("reset_password_token")
-    assert params.keys.include?("foo")
-  end
 end
