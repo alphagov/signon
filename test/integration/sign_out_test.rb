@@ -19,14 +19,4 @@ class SignOutTest < ActionDispatch::IntegrationTest
     signout
     assert_response_contains("Sign in")
   end
-
-  should "stop sending the user org slug to GA once signed out" do
-    use_javascript_driver
-    visit root_path
-    signin_with(@user)
-    assert_dimension_is_set(8)
-
-    signout
-    refute_dimension_is_set(8)
-  end
 end

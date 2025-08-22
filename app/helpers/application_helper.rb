@@ -17,6 +17,8 @@ module ApplicationHelper
 
   SENSITIVE_QUERY_PARAMETERS = %w[reset_password_token invitation_token].freeze
 
+  def sensitive_query_parameters = SENSITIVE_QUERY_PARAMETERS
+
   def sensitive_query_parameters?
     (request.query_parameters.keys & SENSITIVE_QUERY_PARAMETERS).any?
   end

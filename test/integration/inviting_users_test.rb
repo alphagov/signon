@@ -31,17 +31,6 @@ class InvitingUsersTest < ActionDispatch::IntegrationTest
     assert_response_contains("Make your account more secure by setting up 2‑step verification.")
   end
 
-  should "not send invitation token to Google Analytics" do
-    user = User.invite!(name: "Jim", email: "jim@web.com")
-    visit accept_user_invitation_path(invitation_token: user.raw_invitation_token, foo: "bar")
-
-    query = URI(google_analytics_page_view_path).query
-    params = Rack::Utils.parse_nested_query(query)
-
-    assert_not params.keys.include?("invitation_token")
-    assert params.keys.include?("foo")
-  end
-
   context "as an admin" do
     setup do
       admin = create(:admin_user)

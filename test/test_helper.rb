@@ -93,7 +93,6 @@ end
 require "support/user_helpers"
 require "support/email_helpers"
 require "support/managing_two_sv_helpers"
-require "support/analytics_helpers"
 require "support/user_account_helpers"
 require "support/editing_users_helpers"
 require "support/granting_access_helpers"
@@ -121,7 +120,6 @@ class ActionDispatch::IntegrationTest
   include UserHelpers
   include EmailHelpers
   include ConfirmationTokenHelpers
-  include AnalyticsHelpers
   include UserAccountHelpers
   include EditingUsersHelpers
   include GrantingAccessHelpers

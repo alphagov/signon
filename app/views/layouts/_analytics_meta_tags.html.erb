@@ -1,0 +1,9 @@
+<%= tag.meta name: "govuk:ga4-strip-query-string-parameters", content: sensitive_query_parameters.join(",") %>
+<%= tag.meta name: "govuk:components_gem_version", content: GovukPublishingComponents::VERSION %>
+
+<% if user_signed_in? %>
+  <%= tag.meta name: "govuk:user-created-at", content: current_user&.created_at&.to_date %>
+  <%= tag.meta name: "govuk:user-organisation-name", content: current_user&.organisation_name %>
+  <%= tag.meta name: "govuk:user-role", content: current_user&.role_name %>
+  <%= tag.meta name: "govuk:user-id", content: current_user&.anonymous_user_id %>
+<% end %>
