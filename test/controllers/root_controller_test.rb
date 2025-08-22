@@ -22,6 +22,16 @@ class RootControllerTest < ActionController::TestCase
     assert_equal "200", response.code
   end
 
+  test "root#index should strip sensitive query parameters from analytics" do
+    sign_in create(:user)
+    get :index
+    assert_equal "200", response.code
+    meta_tags = css_select 'meta[name="govuk:ga4-strip-query-string-parameters"]'
+    assert_equal 1, meta_tags.length
+    meta_tag = meta_tags.first
+    assert_equal "reset_password_token,invitation_token", meta_tag["content"]
+  end
+
   test "sets the X-Frame-Options header to SAMEORIGIN" do
     sign_in create(:user)
     get :index
