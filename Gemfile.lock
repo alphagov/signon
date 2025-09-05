@@ -191,8 +191,8 @@ GEM
     google-protobuf (4.32.0-x86_64-linux-gnu)
       bigdecimal
       rake (>= 13)
-    googleapis-common-protos-types (1.20.0)
-      google-protobuf (>= 3.18, < 5.a)
+    googleapis-common-protos-types (1.21.0)
+      google-protobuf (~> 4.26)
     govuk_app_config (9.20.0)
       logstasher (~> 2.1)
       opentelemetry-exporter-otlp (>= 0.25, < 0.31)
