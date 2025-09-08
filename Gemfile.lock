@@ -228,7 +228,7 @@ GEM
       capybara (>= 3.36)
       puma
       selenium-webdriver (>= 4.0)
-    hashdiff (1.2.0)
+    hashdiff (1.2.1)
     http (5.3.1)
       addressable (~> 2.8)
       http-cookie (~> 1.0)
