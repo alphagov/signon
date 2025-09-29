@@ -344,7 +344,7 @@ GEM
     notifications-ruby-client (6.2.0)
       jwt (>= 1.5, < 3)
     null_logger (0.0.1)
-    opentelemetry-api (1.6.0)
+    opentelemetry-api (1.7.0)
     opentelemetry-common (0.22.0)
       opentelemetry-api (~> 1.0)
     opentelemetry-exporter-otlp (0.30.0)
