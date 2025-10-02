@@ -355,8 +355,8 @@ GEM
       opentelemetry-common (~> 0.20)
       opentelemetry-sdk (~> 1.2)
       opentelemetry-semantic_conventions
-    opentelemetry-helpers-mysql (0.2.0)
-      opentelemetry-api (~> 1.0)
+    opentelemetry-helpers-mysql (0.3.0)
+      opentelemetry-api (~> 1.7)
       opentelemetry-common (~> 0.21)
     opentelemetry-helpers-sql (0.2.0)
       opentelemetry-api (~> 1.7)
