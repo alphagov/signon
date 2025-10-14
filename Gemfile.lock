@@ -436,7 +436,7 @@ GEM
       opentelemetry-instrumentation-base (~> 0.24)
     opentelemetry-instrumentation-ethon (0.24.1)
       opentelemetry-instrumentation-base (~> 0.24)
-    opentelemetry-instrumentation-excon (0.25.1)
+    opentelemetry-instrumentation-excon (0.25.2)
       opentelemetry-instrumentation-base (~> 0.24)
     opentelemetry-instrumentation-faraday (0.29.1)
       opentelemetry-instrumentation-base (~> 0.24)
