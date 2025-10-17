@@ -562,7 +562,7 @@ GEM
     pp (0.6.3)
       prettyprint
     prettyprint (0.2.0)
-    prism (1.5.2)
+    prism (1.6.0)
     prometheus_exporter (2.3.0)
       webrick
     pry (0.15.2)
