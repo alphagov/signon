@@ -291,7 +291,8 @@ GEM
       nokogiri (>= 1.12.0)
     macaddr (1.7.2)
       systemu (~> 2.6.5)
-    mail (2.8.1)
+    mail (2.9.0)
+      logger
       mini_mime (>= 0.1.1)
       net-imap
       net-pop
@@ -311,7 +312,6 @@ GEM
       mime-types-data (~> 3.2025, >= 3.2025.0507)
     mime-types-data (3.2025.0924)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.9)
     minitest (5.26.0)
     mize (0.6.1)
     mocha (2.7.1)
@@ -333,9 +333,6 @@ GEM
       net-protocol
     netrc (0.11.0)
     nio4r (2.7.4)
-    nokogiri (1.18.10)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
     nokogiri (1.18.10-aarch64-linux-gnu)
       racc (~> 1.4)
     nokogiri (1.18.10-arm64-darwin)
@@ -818,7 +815,6 @@ GEM
 PLATFORMS
   aarch64-linux
   arm64-darwin
-  ruby
   x86_64-linux
 
 DEPENDENCIES
