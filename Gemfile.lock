@@ -157,7 +157,7 @@ GEM
     execjs (2.10.0)
     expgen (0.1.1)
       parslet
-    factory_bot (6.5.5)
+    factory_bot (6.5.6)
       activesupport (>= 6.1.0)
     factory_bot_rails (6.5.1)
       factory_bot (~> 6.5)
