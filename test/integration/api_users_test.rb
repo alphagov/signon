@@ -114,13 +114,13 @@ class ManageApiUsersTest < ActionDispatch::IntegrationTest
       fill_in "Reason for suspension", with: "Stole data"
       click_button "Save"
 
-      assert page.has_selector?(".gem-c-success-alert__message", text: "#{@api_user.email} is now suspended.")
+      assert page.has_selector?(".govuk-notification-banner__heading", text: "#{@api_user.email} is now suspended.")
 
       click_link "Unsuspend user"
       uncheck "Suspended?"
       click_button "Save"
 
-      assert page.has_selector?(".gem-c-success-alert__message", text: "#{@api_user.email} is now active.")
+      assert page.has_selector?(".govuk-notification-banner__heading", text: "#{@api_user.email} is now active.")
     end
   end
 
