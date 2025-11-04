@@ -3,7 +3,7 @@ require "test_helper"
 class GlobalPrometheusCollectorTest < ActiveSupport::TestCase
   def setup
     @collector = Collectors::GlobalPrometheusCollector.new
-    @api_user = api_user_with_token("user1", token_count: 4)
+    @api_user = create(:api_user_with_tokens, token_count: 4)
   end
 
   context "#metrics" do
