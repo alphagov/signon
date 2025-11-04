@@ -29,6 +29,25 @@ class KubernetesTaskTest < ActiveSupport::TestCase
 
       Rake::Task["kubernetes:sync_token_secrets"].execute
     end
+
+    should "create token secret for only the longest remaining token for each application" do
+      user = create(:api_user)
+      application = create(:application)
+      token_expiring_in_two_weeks = create(:access_token, application:, expires_in: 2.weeks, resource_owner_id: user.id)
+      token_expiring_in_one_week = create(:access_token, application:, expires_in: 1.week, resource_owner_id: user.id)
+
+      @client.expects(:apply_secret).with(
+        "signon-token-#{user.name}-#{token_expiring_in_two_weeks.application.name}".parameterize,
+        { bearer_token: token_expiring_in_two_weeks.token },
+      )
+
+      @client.expects(:apply_secret).with(
+        "signon-token-#{user.name}-#{token_expiring_in_one_week.application.name}".parameterize,
+        { bearer_token: token_expiring_in_one_week.token },
+      ).never
+
+      Rake::Task["kubernetes:sync_token_secrets"].execute
+    end
   end
 
   context "#sync_app_secrets" do
