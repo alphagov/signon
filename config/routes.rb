@@ -5,8 +5,6 @@ Rails.application.routes.draw do
     GovukHealthcheck::SidekiqRedis,
   )
 
-  get "/healthcheck/api-tokens", to: "healthcheck#api_tokens"
-
   use_doorkeeper do
     controllers authorizations: "signin_required_authorizations"
     skip_controllers :applications, :authorized_applications, :token_info
