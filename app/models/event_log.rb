@@ -50,6 +50,7 @@ class EventLog < ApplicationRecord
     ACCOUNT_DELETED = LogEntry.new(id: 45, description: "Account deleted", require_uid: true),
     ORGANISATION_CHANGED = LogEntry.new(id: 46, description: "Organisation changed", require_uid: true, require_initiator: true),
     SUCCESSFUL_USER_APPLICATION_AUTHORIZATION = LogEntry.new(id: 47, description: "Successful user application authorization", require_uid: true, require_application: true),
+    ACCESS_TOKEN_AUTO_GENERATED = LogEntry.new(id: 48, description: "Access token automatically generated as existing token due to expire in two weeks", require_uid: true, require_application: true, access_limited: true),
   ].freeze
 
   EVENTS_REQUIRING_UID = EVENTS.select(&:require_uid?)
