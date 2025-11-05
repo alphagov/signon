@@ -11,8 +11,8 @@ class KubernetesTaskTest < ActiveSupport::TestCase
   context "#sync_token_secrets" do
     should "create all token secrets for multiple users" do
       api_users = [
-        api_user_with_token("user1", token_count: 2),
-        api_user_with_token("user2", token_count: 1),
+        create(:api_user_with_tokens, token_count: 2),
+        create(:api_user_with_tokens, token_count: 1),
       ]
 
       expect_secret_tokens_created_for_only_users(@client, api_users)
@@ -21,9 +21,9 @@ class KubernetesTaskTest < ActiveSupport::TestCase
     end
 
     should "create token secrets for non-suspended users only" do
-      suspended_user = api_user_with_token("user1", token_count: 1)
+      suspended_user = create(:api_user_with_tokens, token_count: 1)
       suspended_user.suspend("test")
-      expected_user = api_user_with_token("user2", token_count: 2)
+      expected_user = create(:api_user_with_tokens, token_count: 2)
 
       expect_secret_tokens_created_for_only_users(@client, [expected_user])
 
