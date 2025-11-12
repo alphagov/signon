@@ -771,7 +771,7 @@ GEM
     thor (1.4.0)
     timecop (0.9.10)
     timeout (0.4.4)
-    tins (1.45.0)
+    tins (1.46.0)
       bigdecimal
       mize (~> 0.6)
       sync
