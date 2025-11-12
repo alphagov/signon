@@ -1,11 +1,11 @@
 <% content_for :title, "Privacy notice and cookie policy" %>
 <% content_for :page_heading, "GOV.UK Publisher Signon ‒ Privacy Notice and Cookie Policy" %>
 
-<p class="govuk-body">GOV.UK Publisher Signon is provided by the <%= link_to "Government Digital Service", "https://www.gov.uk/government/organisations/government-digital-service", class: "govuk-link" %> (GDS), part of the Cabinet Office.</p>
+<p class="govuk-body">GOV.UK Publisher Signon is provided by the <%= link_to "Government Digital Service", "https://www.gov.uk/government/organisations/government-digital-service", class: "govuk-link" %> (GDS), part of the Department of Science, Innovation and Technology.</p>
 
-<p class="govuk-body">The Cabinet Office is the data controller for GOV.UK Publisher Signon.</p>
+<p class="govuk-body">The Department of Science, Innovation and Technology is the data controller for GOV.UK Publisher Signon.</p>
 
-<p class="govuk-body">A data controller determines how and why personal data is processed. For more information, read the Cabinet Office’s entry in the <%= link_to "Data Protection Public Register", "https://ico.org.uk/ESDWebPages/Entry/Z7414053", class: "govuk-link" %>.</p>
+<p class="govuk-body">A data controller determines how and why personal data is processed. For more information, read the Department for Science, Innovation and Technology’s entry in the <%= link_to "Data Protection Public Register", "https://ico.org.uk/ESDWebPages/Entry/ZB546218", class: "govuk-link" %>.</p>
 
 <%= render "govuk_publishing_components/components/heading", {
   text: "What data we collect",
@@ -257,17 +257,17 @@
 <p class="govuk-body">You can also contact our Data Protection Officer (DPO) in writing at:</p>
 
 <%= render "components/contact_details", {} do %>
-  Data Protection Officer
+  DSIT Data Protection Officer
   <br>
-  <%= mail_to "DPO@cabinetoffice.gov.uk", class: "govuk-link" %>
+  Department for Science, Innovation and Technology
   <br>
-  Cabinet Office
-  <br>
-  70 Whitehall
+  22-26 Whitehall
   <br>
   London
   <br>
-  SW1A 2AS
+  SW1A 2EG
+  <br>
+  <%= mail_to "dataprotection@dsit.gov.uk", class: "govuk-link" %>
 <% end %>
 
 <p class="govuk-body">The DPO provides independent advice and monitoring of our use of personal information.</p>
