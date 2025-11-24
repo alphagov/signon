@@ -47,7 +47,7 @@ jobs:
       - name: Setup Redis
         uses: alphagov/govuk-infrastructure/.github/actions/setup-redis@main
 
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           repository: alphagov/signon
           ref: ${{ inputs.ref }}
