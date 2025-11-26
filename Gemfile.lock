@@ -446,7 +446,7 @@ GEM
       opentelemetry-instrumentation-base (~> 0.25)
     opentelemetry-instrumentation-http_client (0.26.0)
       opentelemetry-instrumentation-base (~> 0.25)
-    opentelemetry-instrumentation-httpx (0.5.0)
+    opentelemetry-instrumentation-httpx (0.5.1)
       opentelemetry-instrumentation-base (~> 0.25)
     opentelemetry-instrumentation-koala (0.23.0)
       opentelemetry-instrumentation-base (~> 0.25)
