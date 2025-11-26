@@ -428,7 +428,7 @@ GEM
       opentelemetry-instrumentation-base (~> 0.25)
     opentelemetry-instrumentation-delayed_job (0.25.1)
       opentelemetry-instrumentation-base (~> 0.25)
-    opentelemetry-instrumentation-ethon (0.25.0)
+    opentelemetry-instrumentation-ethon (0.25.1)
       opentelemetry-instrumentation-base (~> 0.25)
     opentelemetry-instrumentation-excon (0.26.0)
       opentelemetry-instrumentation-base (~> 0.25)
