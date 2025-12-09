@@ -797,7 +797,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.7.3)
-    zxcvbn-ruby (1.2.0)
+    zxcvbn-ruby (1.2.4)
 
 PLATFORMS
   aarch64-linux
