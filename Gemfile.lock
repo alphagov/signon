@@ -768,7 +768,7 @@ GEM
       execjs (>= 0.3.0, < 3)
     thor (1.4.0)
     timecop (0.9.10)
-    timeout (0.5.0)
+    timeout (0.6.0)
     tins (1.48.0)
       bigdecimal
       mize (~> 0.6)
