@@ -263,8 +263,8 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
-    kramdown (2.5.1)
-      rexml (>= 3.3.9)
+    kramdown (2.5.2)
+      rexml (>= 3.4.4)
     kubeclient (4.13.0)
       http (>= 3.0, < 6.0)
       jsonpath (~> 1.0)
