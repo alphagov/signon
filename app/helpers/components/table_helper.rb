@@ -23,9 +23,7 @@ module Components
       attr_reader :tag
 
       def initialize(tag)
-        # rubocop:disable Rails/HelperInstanceVariable
         @tag = tag
-        # rubocop:enable Rails/HelperInstanceVariable
       end
 
       def head
