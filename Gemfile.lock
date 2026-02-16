@@ -323,7 +323,7 @@ GEM
       bigdecimal (>= 3.1, < 5)
     mysql2 (0.5.7)
       bigdecimal
-    net-imap (0.6.2)
+    net-imap (0.6.3)
       date
       net-protocol
     net-pop (0.1.2)
