@@ -41,7 +41,6 @@
     "stylelint-config-gds": "^1.1.1"
   },
   "resolutions": {
-    "express": "4.21.2",
     "selenium-webdriver": "4.17.0",
     "stylelint/strip-ansi": "6.0.1",
     "stylelint/string-width": "4.2.3"
