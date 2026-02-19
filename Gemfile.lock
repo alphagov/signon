@@ -133,7 +133,7 @@ GEM
     database_cleaner-core (2.0.1)
     date (3.5.1)
     debug_inspector (1.2.0)
-    devise (5.0.1)
+    devise (5.0.2)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 7.0)
@@ -805,7 +805,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.7.4)
+    zeitwerk (2.7.5)
     zxcvbn-ruby (1.4.0)
 
 PLATFORMS
