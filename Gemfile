@@ -59,7 +59,7 @@ group :test do
   gem "capybara-email"
   gem "climate_control"
   gem "factory_bot_rails"
-  gem "minitest"
+  gem "minitest", "< 6"
   gem "mocha", require: false
   gem "rails-controller-testing"
   gem "shoulda-context", require: false
