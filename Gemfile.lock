@@ -313,7 +313,9 @@ GEM
       mime-types-data (~> 3.2025, >= 3.2025.0507)
     mime-types-data (3.2026.0224)
     mini_mime (1.1.5)
-    minitest (5.27.0)
+    minitest (6.0.2)
+      drb (~> 2.0)
+      prism (~> 1.5)
     mize (0.6.1)
     mocha (3.0.2)
       ruby2_keywords (>= 0.0.5)
@@ -843,7 +845,7 @@ DEPENDENCIES
   kubeclient
   listen
   mail-notify
-  minitest (< 6)
+  minitest (< 7)
   mocha
   mysql2
   nokogiri
