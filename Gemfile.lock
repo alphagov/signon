@@ -843,7 +843,7 @@ DEPENDENCIES
   kubeclient
   listen
   mail-notify
-  minitest (< 6)
+  minitest (~> 5)
   mocha
   mysql2
   nokogiri
