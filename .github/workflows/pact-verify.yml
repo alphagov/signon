@@ -68,7 +68,7 @@ jobs:
           TEST_DATABASE_URL: ${{ steps.setup-mysql.outputs.db-url }}
 
       - if: inputs.pact_artifact != ''
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v8
         with:
           name: ${{ inputs.pact_artifact }}
           path: tmp/pacts
