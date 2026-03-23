@@ -14,12 +14,33 @@ class PermissionUpdaterTest < ActiveSupport::TestCase
   end
 
   context "perform" do
-    should "update the application with users information" do
-      expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
-      http_request = stub_request(:put, users_url(@application)).with(body: expected_body)
+    context "sends the correct information to the application" do
+      should "update the application with users information" do
+        expected_body = UserOAuthPresenter.new(@user, @application).as_hash.to_json
+        http_request = stub_request(:put, users_url(@application)).with(body: expected_body)
 
-      PermissionUpdater.new.perform(@user.uid, @application.id)
-      assert_requested http_request
+        PermissionUpdater.new.perform(@user.uid, @application.id)
+
+        assert_requested http_request
+      end
+
+      should "queue ReauthEnforcer if the user no longer has the signin permission for the app" do
+        @signin_permission.destroy!
+
+        stub_request(:put, users_url(@application))
+
+        ReauthEnforcer.expects(:perform_later).with(@user.uid, @application.id)
+
+        PermissionUpdater.new.perform(@user.uid, @application.id)
+      end
+
+      should "not queue ReauthEnforcer if the user has the signin permission for the app" do
+        ReauthEnforcer.expects(:perform_later).with(@user.uid, @application.id).never
+
+        stub_request(:put, users_url(@application))
+
+        PermissionUpdater.new.perform(@user.uid, @application.id)
+      end
     end
 
     context "successful update" do
