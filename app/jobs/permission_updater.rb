@@ -12,6 +12,10 @@ class PermissionUpdater < PushUserUpdatesJob
     presenter = UserOAuthPresenter.new(user, application)
     api.update_user(user.uid, presenter.as_hash)
 
+    unless user.permissions_for(application).include?(SupportedPermission::SIGNIN_NAME)
+      ReauthEnforcer.perform_later(uid, application_id)
+    end
+
     user.permissions_synced!(application)
   end
 end
