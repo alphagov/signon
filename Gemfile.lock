@@ -772,7 +772,7 @@ GEM
     table_print (1.5.7)
     term-ansicolor (1.11.3)
       tins (~> 1)
-    terser (1.2.6)
+    terser (1.2.7)
       execjs (>= 0.3.0, < 3)
     thor (1.5.0)
     timecop (0.9.10)
