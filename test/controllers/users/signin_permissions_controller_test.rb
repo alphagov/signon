@@ -231,13 +231,15 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
   end
 
   context "#destroy" do
-    should "remove the user's signin permission for the application" do
+    should "remove the user's permissions for the application" do
       current_user = create(:admin_user)
       sign_in current_user
 
       user = create(:user)
       application = create(:application)
+      extra_permission = create(:supported_permission, application: application)
       user.grant_application_signin_permission(application)
+      user.grant_application_permission(application, extra_permission.name)
 
       stub_policy(
         current_user,
@@ -249,6 +251,28 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
       delete :destroy, params: { user_id: user, application_id: application.id }
 
       assert_empty user.reload.supported_permissions
+    end
+
+    should "not remove the user's permissions for other applications" do
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      user = create(:user)
+      application = create(:application)
+      other_application = create(:application)
+      user.grant_application_signin_permission(application)
+      user.grant_application_signin_permission(other_application)
+
+      stub_policy(
+        current_user,
+        { application:, user: },
+        policy_class: Users::ApplicationPolicy,
+        remove_signin_permission?: true,
+      )
+
+      delete :destroy, params: { user_id: user, application_id: application.id }
+
+      assert_equal [other_application.signin_permission], user.reload.supported_permissions
     end
 
     should "redirect to the edit user path" do
