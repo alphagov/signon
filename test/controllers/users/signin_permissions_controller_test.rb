@@ -231,7 +231,7 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
   end
 
   context "#destroy" do
-    should "call the UserUpdate service to remove the user's access to the application" do
+    should "remove the user's signin permission for the application" do
       current_user = create(:admin_user)
       sign_in current_user
 
@@ -246,12 +246,9 @@ class Users::SigninPermissionsControllerTest < ActionController::TestCase
         remove_signin_permission?: true,
       )
 
-      expected_params = { supported_permission_ids: [] }
-      user_update = stub("user-update").responds_like_instance_of(UserUpdate)
-      user_update.expects(:call)
-      UserUpdate.stubs(:new).with(user, expected_params, current_user, anything).returns(user_update)
-
       delete :destroy, params: { user_id: user, application_id: application.id }
+
+      assert_empty user.reload.supported_permissions
     end
 
     should "redirect to the edit user path" do
