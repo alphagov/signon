@@ -66,6 +66,48 @@ class Account::SigninPermissionsControllerTest < ActionController::TestCase
   end
 
   context "#destroy" do
+    should "remove the user's permissions for the application" do
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      application = create(:application)
+      extra_permission = create(:supported_permission, application: application)
+      current_user.grant_application_signin_permission(application)
+      current_user.grant_application_permission(application, extra_permission.name)
+
+      stub_policy(
+        current_user,
+        application,
+        policy_class: Account::ApplicationPolicy,
+        remove_signin_permission?: true,
+      )
+
+      delete :destroy, params: { application_id: application.id }
+
+      assert_empty current_user.reload.supported_permissions
+    end
+
+    should "not remove the user's permissions for other applications" do
+      current_user = create(:admin_user)
+      sign_in current_user
+
+      application = create(:application)
+      other_application = create(:application)
+      current_user.grant_application_signin_permission(application)
+      current_user.grant_application_signin_permission(other_application)
+
+      stub_policy(
+        current_user,
+        application,
+        policy_class: Account::ApplicationPolicy,
+        remove_signin_permission?: true,
+      )
+
+      delete :destroy, params: { application_id: application.id }
+
+      assert_equal [other_application.signin_permission], current_user.reload.supported_permissions
+    end
+
     should "assign the success alert hash to flash" do
       current_user = create(:admin_user)
       sign_in current_user

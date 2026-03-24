@@ -20,7 +20,7 @@ class Account::SigninPermissionsController < ApplicationController
   def destroy
     authorize [:account, application], :remove_signin_permission?
 
-    params = { supported_permission_ids: current_user.supported_permissions.map(&:id) - [application.signin_permission.id] }
+    params = { supported_permission_ids: current_user.supported_permissions.pluck(:id) - application.supported_permissions.pluck(:id) }
     UserUpdate.new(current_user, params, current_user, user_ip_address).call
 
     flash[:success_alert] = { message: "Access removed", description: access_removed_description(application.id) }
