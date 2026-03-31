@@ -848,7 +848,7 @@ DEPENDENCIES
   mocha
   mysql2
   nokogiri
-  pact
+  pact (~> 1.67)
   pact_broker-client
   plek
   pry-byebug
