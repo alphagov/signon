@@ -18,7 +18,7 @@ Rails.application.configure do
   # Configure public file server for tests with cache-control for performance.
   config.public_file_server.headers = { "cache-control" => "public, max-age=3600" }
 
-  # Show full error reports and disable caching.
+  # Show full error reports.
   config.consider_all_requests_local = true
   config.action_controller.perform_caching = false
   config.cache_store = :null_store
@@ -44,13 +44,7 @@ Rails.application.configure do
   # Print deprecation notices to the stderr.
   config.active_support.deprecation = :stderr
 
-  # Raise exceptions for disallowed deprecations.
-  config.active_support.disallowed_deprecation = :raise
-
   config.active_job.queue_adapter = :test
-
-  # Tell Active Support which deprecation messages to disallow.
-  config.active_support.disallowed_deprecation_warnings = []
 
   # Raises error for missing translations.
   config.i18n.raise_on_missing_translations = true
