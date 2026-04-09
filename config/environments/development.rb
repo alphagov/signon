@@ -31,29 +31,14 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
-  # Send emails to the local MailHog instance
-  config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-    port: 1025,
-  }
-
   # Make template changes take effect immediately.
-  # (Even if Action Controller caching is enabled.)
   config.action_mailer.perform_caching = false
 
   # Set localhost to be used by links generated in mailer templates.
-  # config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
-  #
   config.action_mailer.default_url_options = { host: URI(Plek.external_url_for("signon")).host }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
-
-  # Raise exceptions for disallowed deprecations.
-  config.active_support.disallowed_deprecation = :raise
-
-  # Tell Active Support which deprecation messages to disallow.
-  config.active_support.disallowed_deprecation_warnings = []
 
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
@@ -66,6 +51,9 @@ Rails.application.configure do
 
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
+
+  # Highlight code that triggered redirect in logs.
+  config.action_dispatch.verbose_redirect_logs = true
 
   # Disable digest to see the latest stylesheet changes when running Sass in watch mode
   # See https://guides.rubyonrails.org/v7.1.3/asset_pipeline.html#turning-digests-off

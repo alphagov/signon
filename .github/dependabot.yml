@@ -8,10 +8,6 @@ updates:
       - dependency-type: "all"
     open-pull-requests-limit: 20
     ignore:
-    # TEMPORARY: Ignore minitest 6.x until Rails >= 8.1
-    # Remove this rule when upgrading Rails.
-    - dependency-name: "minitest"
-      versions: [ ">=6.0.0" ]
     - dependency-name: pact
       versions: [ ">=2.0.0" ]
 

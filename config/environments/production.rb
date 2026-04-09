@@ -37,7 +37,6 @@ Rails.application.configure do
   config.assets.version = "1.0"
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
-  # Can be used together with config.force_ssl for Strict-Transport-Security and secure cookies.
   # config.assume_ssl = true
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
@@ -50,14 +49,14 @@ Rails.application.configure do
   config.log_tags = [:request_id]
   config.logger   = ActiveSupport::TaggedLogging.logger($stdout)
 
-  # Change to "debug" to log everything (including potentially personally-identifiable information!)
+  # Change to "debug" to log everything (including potentially personally-identifiable information!).
   config.log_level = ENV.fetch("RAILS_LOG_LEVEL", "info")
 
   # Prevent health checks from clogging up the logs.
-  # config.silence_healthcheck_path = "/up"
+  config.silence_healthcheck_path = "^\/healthcheck"
 
   # Don't log any deprecations.
-  # config.active_support.report_deprecations = false
+  config.active_support.report_deprecations = false
 
   # Replace the default in-process memory cache store with a durable alternative.
   # config.cache_store = :mem_cache_store
@@ -81,7 +80,7 @@ Rails.application.configure do
   }
   config.action_mailer.delivery_method = :notify
 
-  # Specify outgoing SMTP server. Remember to add smtp/* credentials via rails credentials:edit.
+  # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {
   #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
   #   password: Rails.application.credentials.dig(:smtp, :password),

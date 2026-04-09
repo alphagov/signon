@@ -21,7 +21,7 @@ Bundler.require(*Rails.groups)
 module Signon
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 8.0
+    config.load_defaults 8.1
 
     config.active_record.belongs_to_required_by_default = false
 
@@ -42,22 +42,10 @@ module Signon
     config.autoload_lib(ignore: %w[assets tasks])
 
     # Configuration for the application, engines, and railties goes here.
-    #
-    # Settings in config/environments/* take precedence over those specified here.
-    # Application configuration can go into files in config/initializers
-    # -- all .rb files in that directory are automatically loaded after loading
 
     config.action_mailer.notify_settings = {
       api_key: Rails.application.credentials.notify_api_key || "fake-test-api-key",
     }
-
-    # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-    # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
-    # config.i18n.default_locale = :de
-    I18n.config.enforce_available_locales = true
-
-    # Configure the default encoding used in templates for Ruby 1.9.
-    config.encoding = "utf-8"
 
     # Prevent ActionDispatch::RemoteIp::IpSpoofAttackError when the client set a Client-IP
     # header and the request IP was interrogated.
@@ -69,8 +57,6 @@ module Signon
     config.to_prepare do
       Doorkeeper::ApplicationController.layout "application"
     end
-
-    config.eager_load_paths << Rails.root.join("lib")
 
     config.active_job.queue_adapter = :sidekiq
 

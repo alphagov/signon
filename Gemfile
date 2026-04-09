@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-gem "rails", "8.0.5"
+gem "rails", "8.1.3"
 
 gem "activejob-retry"
 gem "addressable"
@@ -59,7 +59,7 @@ group :test do
   gem "capybara-email"
   gem "climate_control"
   gem "factory_bot_rails"
-  gem "minitest", "~> 5"
+  gem "minitest"
   gem "mocha", require: false
   gem "rails-controller-testing"
   gem "shoulda-context", require: false
