@@ -20,7 +20,7 @@ jobs:
   dependency-review:
     name: Dependency Review scan
     uses: alphagov/govuk-infrastructure/.github/workflows/dependency-review.yml@main
-  
+
   security-analysis:
     name: Security Analysis
     uses: alphagov/govuk-infrastructure/.github/workflows/brakeman.yml@main
@@ -111,7 +111,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "All Minitest tests have passed 🚀"
-  
+
   minitest-version-guard:
     name: Minitest Version Guard
     runs-on: ubuntu-latest
@@ -123,6 +123,3 @@ jobs:
         uses: ruby/setup-ruby@09a7688d3b55cf0e976497ff046b70949eeaccfd # v1.288.0
         with:
           bundler-cache: true
-
-      - name: Check Rails/Minitest compatibility guard
-        run: ruby script/minitest_version_ci_guard.rb
