@@ -146,9 +146,9 @@ GEM
     devise_invitable (2.0.11)
       actionmailer (>= 5.0)
       devise (>= 4.6)
-    devise_zxcvbn (1.1.2)
+    devise_zxcvbn (6.0.0)
       devise
-      zxcvbn-ruby (>= 0.0.2)
+      zxcvbn (~> 0.1.7)
     diff-lcs (1.6.2)
     dig_rb (1.0.1)
     docile (1.4.1)
@@ -812,7 +812,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     zeitwerk (2.7.5)
-    zxcvbn-ruby (1.4.0)
+    zxcvbn (0.1.13)
 
 PLATFORMS
   aarch64-linux
@@ -836,7 +836,7 @@ DEPENDENCIES
   devise
   devise-encryptable
   devise_invitable
-  devise_zxcvbn (~> 1.1)
+  devise_zxcvbn (~> 6.0)
   doorkeeper
   factory_bot_rails
   gds-api-adapters
