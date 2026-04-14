@@ -48,6 +48,15 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
 
       assert_equal "https://app.keep.me/callback", application.redirect_uri
     end
+
+    should "return application original redirect uri if it includes replacement pattern" do
+      Rails.application.config.stubs(oauth_apps_uri_sub_pattern: "replace.me")
+      Rails.application.config.stubs(oauth_apps_uri_sub_replacement: "addition.replace.me")
+
+      application = create(:application, redirect_uri: "https://app.replace.me/callback")
+
+      assert_equal "https://app.addition.replace.me/callback", application.redirect_uri
+    end
   end
 
   context "#home_uri" do
@@ -60,7 +69,7 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
     context "when URI substitution is enabled" do
       setup do
         Rails.application.config.stubs(oauth_apps_uri_sub_pattern: "replace.me")
-        Rails.application.config.stubs(oauth_apps_uri_sub_replacement: "new.domain")
+        Rails.application.config.stubs(oauth_apps_uri_sub_replacement: "addition.replace.me")
       end
 
       should "return nil if application home uri is nil" do
@@ -72,7 +81,13 @@ class Doorkeeper::ApplicationTest < ActiveSupport::TestCase
       should "return application substituted home uri if match" do
         application = create(:application, home_uri: "https://app.replace.me/")
 
-        assert_equal "https://app.new.domain/", application.home_uri
+        assert_equal "https://app.addition.replace.me/", application.home_uri
+      end
+
+      should "return application original home uri if it includes replacement pattern" do
+        application = create(:application, home_uri: "https://app.addition.replace.me/")
+
+        assert_equal "https://app.addition.replace.me/", application.home_uri
       end
 
       should "return application original home uri if not matched" do
