@@ -12,6 +12,22 @@ updates:
       versions: [ ">=2.0.0" ]
     cooldown:
       default-days: 3
+    groups:
+      test:
+        patterns:
+        - "capybara*"
+        - "climate_control"
+        - "database_cleaner"
+        - "factory_bot*"
+        - "govuk_test"
+        - "minitest"
+        - "mocha"
+        - "pact*"
+        - "rails-controller-testing"
+        - "shoulda-*"
+        - "simplecov"
+        - "timecop"
+        - "webmock"
 
   - package-ecosystem: npm
     directory: /
@@ -19,6 +35,16 @@ updates:
       default-days: 3
     schedule:
       interval: daily
+    groups:
+      test:
+        patterns:
+          - "jasmine-*"
+          - "selenium-webdriver"
+      lint:
+        patterns:
+          - "standardx"
+          - "stylelint"
+          - "stylelint-*"
 
   - package-ecosystem: github-actions
     directory: /
