@@ -3,7 +3,9 @@ updates:
   - package-ecosystem: bundler
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
+      day: tuesday
+      time: "07:00"
     allow:
       - dependency-type: "all"
     open-pull-requests-limit: 20
@@ -31,10 +33,12 @@ updates:
 
   - package-ecosystem: npm
     directory: /
+    schedule:
+      interval: weekly
+      day: tuesday
+      time: "07:00"
     cooldown:
       default-days: 3
-    schedule:
-      interval: daily
     groups:
       test:
         patterns:
@@ -49,7 +53,9 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: daily
+      interval: weekly
+      day: tuesday
+      time: "07:00"
     cooldown:
       default-days: 3
 
@@ -59,10 +65,12 @@ updates:
   # Dockerfile, although this may change in the future. We hope this
   # config will save a dev from trying to upgrade ruby via Dependabot.
   - package-ecosystem: docker
-    ignore:
-      - dependency-name: ruby
     directory: /
-    cooldown:
-      default-days: 7
     schedule:
       interval: weekly
+      day: tuesday
+      time: "07:00"
+    ignore:
+      - dependency-name: ruby
+    cooldown:
+      default-days: 7
