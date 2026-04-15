@@ -10,9 +10,13 @@ updates:
     ignore:
     - dependency-name: pact
       versions: [ ">=2.0.0" ]
+    cooldown:
+      default-days: 3
 
   - package-ecosystem: npm
     directory: /
+    cooldown:
+      default-days: 3
     schedule:
       interval: daily
 
@@ -20,6 +24,8 @@ updates:
     directory: /
     schedule:
       interval: daily
+    cooldown:
+      default-days: 3
 
   # Ruby needs to be upgraded manually in multiple places, so cannot
   # be upgraded by Dependabot. That effectively makes the below
@@ -30,5 +36,7 @@ updates:
     ignore:
       - dependency-name: ruby
     directory: /
+    cooldown:
+      default-days: 7
     schedule:
       interval: weekly
