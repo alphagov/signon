@@ -7,7 +7,7 @@ updates:
       day: tuesday
       time: "07:00"
     allow:
-      - dependency-type: "all"
+      - dependency-type: direct
     ignore:
     - dependency-name: pact
       versions: [ ">=2.0.0" ]
@@ -37,6 +37,8 @@ updates:
       interval: weekly
       day: tuesday
       time: "07:00"
+    allow:
+      - dependency-type: direct
     cooldown:
       default-days: 3
     open-pull-requests-limit: 25
