@@ -96,7 +96,7 @@ private
     uri_pattern = Rails.configuration.oauth_apps_uri_sub_pattern
     uri_sub = Rails.configuration.oauth_apps_uri_sub_replacement
 
-    if uri_pattern.present? && uri_sub.present?
+    if uri_pattern.present? && uri_sub.present? && !uri.include?(uri_sub)
       uri.sub(uri_pattern, uri_sub)
     else
       uri
