@@ -62,7 +62,7 @@ group :test do
   gem "minitest"
   gem "mocha", require: false
   gem "rails-controller-testing"
-  gem "shoulda-context", require: false
+  gem "shoulda-context", "~> 3.0.0.rc1", require: false
   gem "simplecov"
   gem "timecop"
   gem "webmock"

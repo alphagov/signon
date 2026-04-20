@@ -747,7 +747,7 @@ GEM
     sentry-sidekiq (6.5.0)
       sentry-ruby (~> 6.5.0)
       sidekiq (>= 5.0)
-    shoulda-context (2.0.0)
+    shoulda-context (3.0.0.rc1)
     sidekiq (7.3.10)
       base64
       connection_pool (>= 2.3.0, < 3)
@@ -868,7 +868,7 @@ DEPENDENCIES
   rqrcode
   rubocop-govuk
   sentry-sidekiq
-  shoulda-context
+  shoulda-context (~> 3.0.0.rc1)
   simplecov
   sprockets-rails
   terser
@@ -877,4 +877,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-   4.0.10
+  4.0.10
