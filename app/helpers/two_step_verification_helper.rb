@@ -47,8 +47,8 @@ private
 
   def two_factor_code_input(**args)
     options = {
-      label: { text: "Code from app" },
-      hint: "Enter 6-digit code",
+      label: { text: "Security code" },
+      hint: "Enter 6-digit code from your authenticator app",
       name: "code",
       type: "text",
       autocomplete: "one-time-code",
