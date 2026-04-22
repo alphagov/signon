@@ -29,7 +29,6 @@ class InvitationsController < Devise::InvitationsController
     end
   end
 
-  # rubocop:disable Lint/UselessMethodDefinition
   # Renders app/views/devise/invitations/edit.html.erb
   def edit
     super
@@ -42,7 +41,6 @@ class InvitationsController < Devise::InvitationsController
   def destroy
     super
   end
-  # rubocop:enable Lint/UselessMethodDefinition
 
 private
 
