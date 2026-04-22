@@ -160,7 +160,7 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
       signin_with(@user)
 
       click_link "Change your email"
-      fill_in "Email", with: "new@email.com"
+      fill_in "Email", with: "new@email.com", wait: 3
       click_button "Change email"
 
       confirmation_token = token_sent_to(@user)
