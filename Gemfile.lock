@@ -156,7 +156,7 @@ GEM
     doorkeeper (5.9.0)
       railties (>= 5)
     drb (2.2.3)
-    erb (6.0.3)
+    erb (6.0.4)
     erubi (1.13.1)
     execjs (2.10.1)
     expgen (0.1.1)
