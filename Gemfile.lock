@@ -173,7 +173,7 @@ GEM
       ffi (>= 1.15.5)
       rake
     find_a_port (1.0.1)
-    gds-api-adapters (103.3.0)
+    gds-api-adapters (103.3.1)
       addressable
       link_header
       null_logger
@@ -236,7 +236,7 @@ GEM
       http-form_data (~> 2.2)
       llhttp-ffi (~> 0.5.0)
     http-accept (1.7.0)
-    http-cookie (1.1.4)
+    http-cookie (1.1.6)
       domain_name (~> 0.5)
     http-form_data (2.3.0)
     httparty (0.24.2)
