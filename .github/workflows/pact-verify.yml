@@ -52,7 +52,7 @@ jobs:
           repository: alphagov/signon
           ref: ${{ inputs.ref }}
 
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@v1.305.0
         with:
           bundler-cache: true
 
