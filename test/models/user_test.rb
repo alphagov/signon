@@ -363,6 +363,7 @@ class UserTest < ActiveSupport::TestCase
         "foo@example.com,",
         "foo@example_domain.com",
         "foo@no-dot-domain",
+        "not_an_email",
       ].each do |email|
         user.email = email
 
@@ -383,6 +384,45 @@ class UserTest < ActiveSupport::TestCase
 
       assert_not user.valid?
       assert_equal ["can't contain non-ASCII characters"], user.errors[:email]
+    end
+  end
+
+  context "unconfirmed email validation" do
+    should "accept valid emails" do
+      user = build(:user)
+      [
+        "foo@example.com",
+        "foo_bar@example.COM",
+        "foo@example-domain.com",
+        "user-foo+bar@really.long.domain.co.uk",
+      ].each do |email|
+        user.unconfirmed_email = email
+
+        assert user.valid?, "Expected user to be valid with unconfirmed email: '#{email}'"
+      end
+    end
+
+    should "not allow user to be updated with a known non-government email address" do
+      user = create(:user, email: "alexia.statham@department.gov.uk")
+
+      user.unconfirmed_email = "alexia.statham@yahoo.co.uk"
+
+      assert_not user.valid?
+    end
+
+    should "reject emails with invalid domain parts" do
+      user = build(:user)
+      [
+        "foo@example.com,",
+        "foo@example_domain.com",
+        "foo@no-dot-domain",
+        "not_an_email",
+      ].each do |email|
+        user.unconfirmed_email = email
+
+        assert_not user.valid?, "Expected user to be invalid with unconfirmed email: '#{email}'"
+        assert_equal ["is invalid"], user.errors[:unconfirmed_email]
+      end
     end
   end
 

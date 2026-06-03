@@ -45,6 +45,17 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         assert_response_contains("Email can't be blank")
         assert_nil last_email
       end
+
+      should "show an error and not trigger a notification if the email is invalid" do
+        user = create(:user)
+
+        visit new_user_session_path
+        signin_with(@admin)
+        admin_changes_email_address(user:, new_email: "test@notvalid")
+
+        assert_response_contains("Email is invalid")
+        assert_nil last_email
+      end
     end
 
     context "for a user who hasn't accepted their invite yet" do
