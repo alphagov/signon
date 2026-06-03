@@ -31,7 +31,7 @@ module EventLogHelper
   end
 
   def formatted_trailing_message(log)
-    log.trailing_message
+    sanitize(log.trailing_message)
   end
 
   def formatted_ip_address(log)

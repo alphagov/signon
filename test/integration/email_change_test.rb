@@ -133,11 +133,11 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         signin_with(@user)
 
         click_link "Change your email"
-        fill_in "Email", with: "new@email.com"
+        fill_in "Email", with: "new'email@email.com"
         click_button "Change email"
         confirmation_url = ActionMailer::Base
           .deliveries
-          .detect { |mail| mail.to.include?("new@email.com") }
+          .detect { |mail| mail.to.include?("new'email@email.com") }
           .body
           .match(%r{\((https?://\S+)\)})[1]
 
@@ -146,8 +146,9 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         signout
         signin_with(create(:admin_user))
         visit event_logs_user_path(@user)
-        assert_response_contains "Email change initiated by #{@user.name} from original@email.com to new@email.com"
+        assert_response_contains "Email change initiated by #{@user.name} from original@email.com to new'email@email.com"
         assert_response_contains "Email change confirmed"
+        assert page.html.include?("new&#39;email@email.com")
       end
     end
 
