@@ -45,6 +45,17 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         assert_response_contains("Email can't be blank")
         assert_nil last_email
       end
+
+      should "show an error and not trigger a notification if the email is invalid" do
+        user = create(:user)
+
+        visit new_user_session_path
+        signin_with(@admin)
+        admin_changes_email_address(user:, new_email: "test@notvalid")
+
+        assert_response_contains("Email is invalid")
+        assert_nil last_email
+      end
     end
 
     context "for a user who hasn't accepted their invite yet" do
@@ -122,11 +133,11 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         signin_with(@user)
 
         click_link "Change your email"
-        fill_in "Email", with: "new@email.com"
+        fill_in "Email", with: "new'email@email.com"
         click_button "Change email"
         confirmation_url = ActionMailer::Base
           .deliveries
-          .detect { |mail| mail.to.include?("new@email.com") }
+          .detect { |mail| mail.to.include?("new'email@email.com") }
           .body
           .match(%r{\((https?://\S+)\)})[1]
 
@@ -135,8 +146,9 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         signout
         signin_with(create(:admin_user))
         visit event_logs_user_path(@user)
-        assert_response_contains "Email change initiated by #{@user.name} from original@email.com to new@email.com"
+        assert_response_contains "Email change initiated by #{@user.name} from original@email.com to new'email@email.com"
         assert_response_contains "Email change confirmed"
+        assert page.html.include?("new&#39;email@email.com")
       end
     end
 

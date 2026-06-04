@@ -51,6 +51,7 @@ class User < ApplicationRecord
 
   validates :name, presence: true
   validates :email, reject_non_governmental_email_addresses: true
+  validates :unconfirmed_email, format: { with: Devise.email_regexp }, allow_nil: true, reject_non_governmental_email_addresses: true
   validates :reason_for_suspension, presence: true, if: proc { |u| u.suspended? }
   validates :role, inclusion: { in: Roles.all }
   validate :user_can_be_exempted_from_2sv
