@@ -153,7 +153,7 @@ GEM
     dig_rb (1.0.1)
     docile (1.4.1)
     domain_name (0.6.20240107)
-    doorkeeper (5.9.1)
+    doorkeeper (5.9.2)
       railties (>= 5)
     drb (2.2.3)
     erb (6.0.4)
