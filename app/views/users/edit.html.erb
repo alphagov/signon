@@ -1,20 +1,17 @@
 <% content_for :title_caption, "Manage other users" %>
 <% content_for :title, @user.name %>
 
-<% content_for :breadcrumbs,
-   render("govuk_publishing_components/components/breadcrumbs", {
-     collapse_on_mobile: true,
-     breadcrumbs: [
-       {
-         title: "Dashboard",
-         url: root_path,
-       },
-       {
-         title: "Users",
-         url: users_path,
-       }
-     ]
-   })
+<%
+  @breadcrumbs = [
+    {
+      title: "Dashboard",
+      url: root_path,
+    },
+    {
+      title: "Users",
+      url: users_path,
+    }
+  ]
 %>
 
 <div class="govuk-grid-row">

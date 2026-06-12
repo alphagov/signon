@@ -1,24 +1,21 @@
 <% content_for :title_caption, @user.api_user? ? "Manage API users" : "Manage other users" %>
 <% content_for :title, "Exempt #{@user.name} from 2-step verification".html_safe %>
 
-<% content_for :breadcrumbs,
-   render("govuk_publishing_components/components/breadcrumbs", {
-     collapse_on_mobile: true,
-     breadcrumbs: [
-       {
-         title: "Dashboard",
-         url: root_path,
-       },
-       {
-         title: "Users",
-         url: users_path,
-       },
-       {
-         title: @user.name,
-         url: user_path(@user),
-       }
-     ]
-   })
+<%
+  @breadcrumbs = [
+    {
+      title: "Dashboard",
+      url: root_path,
+    },
+    {
+      title: "Users",
+      url: users_path,
+    },
+    {
+      title: @user.name,
+      url: user_path(@user),
+    }
+  ]
 %>
 
 <% if @exemption.errors.any? %>

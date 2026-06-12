@@ -1,22 +1,19 @@
 <% content_for :title, "Permissions for #{@application.name}" %>
-<% content_for :breadcrumbs,
-   render("govuk_publishing_components/components/breadcrumbs", {
-     collapse_on_mobile: true,
-     breadcrumbs: [
-       {
-         title: "Dashboard",
-         url: root_path,
-       },
-       {
-         title: "Applications",
-         url: doorkeeper_applications_path,
-       },
-       {
-         title: @application.name,
-         url: edit_doorkeeper_application_path(@application),
-       }
-     ]
-   })
+<%
+  @breadcrumbs = [
+    {
+      title: "Dashboard",
+      url: root_path,
+    },
+    {
+      title: "Applications",
+      url: doorkeeper_applications_path,
+    },
+    {
+      title: @application.name,
+      url: edit_doorkeeper_application_path(@application),
+    }
+  ]
 %>
 
 <div class="govuk-form-group">
