@@ -116,6 +116,9 @@ class EmailChangeTest < ActionDispatch::IntegrationTest
         signin_with(@user)
 
         click_link "Change your email"
+        assert has_link?("Dashboard", href: "/", class: "govuk-breadcrumbs__link")
+        assert has_link?("Settings", href: "/account", class: "govuk-breadcrumbs__link")
+
         fill_in "Email", with: "new@email.com"
         click_button "Change email"
 
