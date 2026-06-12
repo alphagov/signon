@@ -1,17 +1,6 @@
 <% content_for :title, role_page_title %>
 
-<%
-  @breadcrumbs = [
-    {
-      title: "Dashboard",
-      url: root_path,
-    },
-    {
-      title: "Settings",
-      url: account_path,
-    }
-  ]
-%>
+<% @breadcrumbs = account_breadcrumbs %>
 
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">

@@ -1,17 +1,6 @@
 <% content_for :title, two_step_verification_page_title %>
 
-<%
-  @breadcrumbs = [
-    {
-      title: "Dashboard",
-      url: root_path,
-    },
-    {
-      title: "Settings",
-      url: account_path,
-    }
-  ]
-%>
+<% @breadcrumbs = account_breadcrumbs %>
 
 <% if flash[:invalid_code].present? %>
   <% content_for :error_summary do %>
