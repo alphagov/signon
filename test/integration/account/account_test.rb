@@ -27,6 +27,60 @@ class AccountTest < ActionDispatch::IntegrationTest
       assert page.has_link?("Your account access log", href: account_activity_path)
     end
 
+    context "linked pages" do
+      setup do
+        user = FactoryBot.create(:admin_user, otp_secret_key: "2SVenabled")
+
+        visit new_user_session_path
+        signin_with user
+
+        visit account_path
+        assert_current_url account_path
+      end
+
+      should "have the correct breadcrumbs on change your email address" do
+        click_link "Change your email address"
+        assert has_link?("Dashboard", href: "/", class: "govuk-breadcrumbs__link")
+        assert has_link?("Settings", href: "/account", class: "govuk-breadcrumbs__link")
+      end
+
+      should "have the correct breadcrumbs on change your password" do
+        click_link "Change your password"
+        assert has_link?("Dashboard", href: "/", class: "govuk-breadcrumbs__link")
+        assert has_link?("Settings", href: "/account", class: "govuk-breadcrumbs__link")
+      end
+
+      should "have the correct breadcrumbs on manage permissions" do
+        click_link "Manage permissions"
+        assert has_link?("Dashboard", href: "/", class: "govuk-breadcrumbs__link")
+        assert has_link?("Settings", href: "/account", class: "govuk-breadcrumbs__link")
+      end
+
+      should "have the correct breadcrumbs on change your 2-step verification phone" do
+        click_link "Change your 2-step verification phone"
+        assert has_link?("Dashboard", href: "/", class: "govuk-breadcrumbs__link")
+        assert has_link?("Settings", href: "/account", class: "govuk-breadcrumbs__link")
+      end
+
+      should "have the correct breadcrumbs on view your role" do
+        click_link "View your role"
+        assert has_link?("Dashboard", href: "/", class: "govuk-breadcrumbs__link")
+        assert has_link?("Settings", href: "/account", class: "govuk-breadcrumbs__link")
+      end
+
+      should "have the correct breadcrumbs on change your organisation" do
+        click_link "Change your organisation"
+        assert has_link?("Dashboard", href: "/", class: "govuk-breadcrumbs__link")
+        assert has_link?("Settings", href: "/account", class: "govuk-breadcrumbs__link")
+      end
+
+      should "have the correct breadcrumbs on your account access log" do
+        click_link "Your account access log"
+        assert has_link?("Dashboard", href: "/", class: "govuk-breadcrumbs__link")
+        assert has_link?("Settings", href: "/account", class: "govuk-breadcrumbs__link")
+      end
+    end
+
     should "link to Change email/password, Change 2SV, role & org for normal users" do
       user = FactoryBot.create(:user, otp_secret_key: "2SVenabled")
 

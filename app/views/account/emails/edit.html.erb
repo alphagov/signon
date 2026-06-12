@@ -1,18 +1,6 @@
 <% content_for :title, "Change your email address" %>
 
-<%
-  @breadcrumbs = [
-    {
-      title: "Dashboard",
-      url: root_path,
-    },
-    {
-      title: "Settings",
-      url: account_path,
-    }
-  ]
-%>
-
+<% @breadcrumbs = account_breadcrumbs %>
 
 <% if current_user.unconfirmed_email.present? %>
   <%= render "govuk_publishing_components/components/notice", {

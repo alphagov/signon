@@ -1,16 +1,5 @@
 <% content_for :title, "Account access log" %>
 
-<%
-  @breadcrumbs = [
-    {
-      title: "Dashboard",
-      url: root_path,
-    },
-    {
-      title: "Settings",
-      url: account_path,
-    }
-  ]
-%>
+<% @breadcrumbs = account_breadcrumbs %>
 
 <%= render "shared/event_logs_table", logs: @logs %>

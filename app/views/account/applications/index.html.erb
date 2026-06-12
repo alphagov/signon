@@ -1,17 +1,6 @@
 <% content_for :title, "GOV.UK apps" %>
 
-<%
-  @breadcrumbs = [
-    {
-      title: "Dashboard",
-      url: root_path,
-    },
-    {
-      title: "Settings",
-      url: account_path,
-    }
-  ]
-%>
+<% @breadcrumbs = account_breadcrumbs %>
 
 <% if flash[:success_alert] %>
   <% content_for(:custom_alerts) do %>
