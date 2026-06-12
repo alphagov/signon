@@ -37,4 +37,17 @@ module ApplicationHelper
     css_classes = ["govuk-tag", classes].compact.join(" ")
     tag.strong(text, class: css_classes)
   end
+
+  def account_breadcrumbs
+    [
+      {
+        title: "Dashboard",
+        url: root_path,
+      },
+      {
+        title: "Settings",
+        url: account_path,
+      },
+    ]
+  end
 end

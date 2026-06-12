@@ -1,18 +1,15 @@
 <% content_for :title, "Require 2-step verification for #{@organisation.name}" %>
-<% content_for :breadcrumbs,
-   render("govuk_publishing_components/components/breadcrumbs", {
-     collapse_on_mobile: true,
-     breadcrumbs: [
-       {
-         title: "Dashboard",
-         url: root_path,
-       },
-       {
-         title: "Organisations",
-         url: organisations_path,
-       }
-     ]
-   })
+<%
+  @breadcrumbs = [
+    {
+      title: "Dashboard",
+      url: root_path,
+    },
+    {
+      title: "Organisations",
+      url: organisations_path,
+    }
+  ]
 %>
 
 <%= form_tag organisation_path(@organisation), method: "put" do %>

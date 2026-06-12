@@ -1,18 +1,15 @@
 <% content_for :title, "Edit #{@application.name}" %>
-<% content_for :breadcrumbs,
-   render("govuk_publishing_components/components/breadcrumbs", {
-     collapse_on_mobile: true,
-     breadcrumbs: [
-       {
-         title: "Dashboard",
-         url: root_path,
-       },
-       {
-         title: "Applications",
-         url: doorkeeper_applications_path,
-       }
-     ]
-   })
+<%
+  @breadcrumbs = [
+    {
+      title: "Dashboard",
+      url: root_path,
+    },
+    {
+      title: "Applications",
+      url: doorkeeper_applications_path,
+    }
+  ]
 %>
 
 <%= link_to "Users with access",
