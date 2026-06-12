@@ -1,19 +1,16 @@
 <% content_for :title, "Change your email address" %>
 
-<% content_for :breadcrumbs,
-   render("govuk_publishing_components/components/breadcrumbs", {
-     collapse_on_mobile: true,
-     breadcrumbs: [
-       {
-         title: "Dashboard",
-         url: root_path,
-       },
-       {
-         title: "Settings",
-         url: account_path,
-       }
-     ]
-   })
+<%
+  @breadcrumbs = [
+    {
+      title: "Dashboard",
+      url: root_path,
+    },
+    {
+      title: "Settings",
+      url: account_path,
+    }
+  ]
 %>
 
 

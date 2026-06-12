@@ -1,18 +1,15 @@
 <% content_for :title, "Create new user" %>
-<% content_for :breadcrumbs,
-   render("govuk_publishing_components/components/breadcrumbs", {
-     collapse_on_mobile: true,
-     breadcrumbs: [
-       {
-         title: "Dashboard",
-         url: root_path,
-       },
-       {
-         title: "Users",
-         url: users_path,
-       }
-     ]
-   })
+<%
+  @breadcrumbs = [
+    {
+      title: "Dashboard",
+      url: root_path,
+    },
+    {
+      title: "Users",
+      url: users_path,
+    }
+  ]
 %>
 
 <div class="govuk-grid-row">

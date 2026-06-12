@@ -1,19 +1,16 @@
 <% content_for :title, "Remove access to #{@application.name}" %>
 
-<% content_for :breadcrumbs,
-   render("govuk_publishing_components/components/breadcrumbs", {
-     collapse_on_mobile: true,
-     breadcrumbs: [
-       {
-         title: "Dashboard",
-         url: root_path,
-       },
-       {
-         title: "GOV.UK apps",
-         url: account_applications_path,
-       }
-     ]
-   })
+<%
+  @breadcrumbs = [
+    {
+      title: "Dashboard",
+      url: root_path,
+    },
+    {
+      title: "GOV.UK apps",
+      url: account_applications_path,
+    }
+  ]
 %>
 
 <p class="govuk-body">Are you sure you want to remove access to <%= @application.name %>?</p>
