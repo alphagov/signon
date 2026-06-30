@@ -67,4 +67,17 @@ module ApplicationHelper
       },
     ]
   end
+
+  def users_breadcrumbs
+    [
+      {
+        title: "Dashboard",
+        url: root_path,
+      },
+      {
+        title: "Users",
+        url: users_path,
+      },
+    ]
+  end
 end

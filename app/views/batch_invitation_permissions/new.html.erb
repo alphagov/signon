@@ -1,16 +1,5 @@
 <% content_for :title, "Manage permissions for new users" %>
-<%
-  @breadcrumbs = [
-    {
-      title: "Dashboard",
-      url: root_path,
-    },
-    {
-      title: "Users",
-      url: users_path,
-    }
-  ]
-%>
+<% @breadcrumbs = users_breadcrumbs %>
 
 <div data-module="clear-selected-permissions">
   <%= render "govuk_publishing_components/components/button", {
