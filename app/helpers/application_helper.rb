@@ -50,4 +50,21 @@ module ApplicationHelper
       },
     ]
   end
+
+  def access_breadcrumbs(application)
+    [
+      {
+        title: "Dashboard",
+        url: root_path,
+      },
+      {
+        title: "Applications",
+        url: doorkeeper_applications_path,
+      },
+      {
+        title: application.name,
+        url: edit_doorkeeper_application_path(application),
+      },
+    ]
+  end
 end
