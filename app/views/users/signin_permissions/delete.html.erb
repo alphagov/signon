@@ -1,28 +1,25 @@
 <% content_for :title_caption, "Manage other users" %>
 <% content_for :title, "Remove #{@user.name}'s access to #{@application.name}" %>
 
-<% content_for :breadcrumbs,
-   render("govuk_publishing_components/components/breadcrumbs", {
-     collapse_on_mobile: true,
-     breadcrumbs: [
-       {
-         title: "Dashboard",
-         url: root_path,
-       },
-       {
-         title: "Users",
-         url: users_path,
-       },
-       {
-         title: @user.name,
-         url: edit_user_path(@user),
-       },
-       {
-         title: "Applications",
-         url: user_applications_path(@user),
-       }
-     ]
-   })
+<%
+  @breadcrumbs = [
+    {
+      title: "Dashboard",
+      url: root_path,
+    },
+    {
+      title: "Users",
+      url: users_path,
+    },
+    {
+      title: @user.name,
+      url: edit_user_path(@user),
+    },
+    {
+      title: "Applications",
+      url: user_applications_path(@user),
+    }
+  ]
 %>
 
 <p class="govuk-body">Are you sure you want to remove <%= @user.name %>'s access to <%= @application.name %>?</p>

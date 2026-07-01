@@ -37,4 +37,47 @@ module ApplicationHelper
     css_classes = ["govuk-tag", classes].compact.join(" ")
     tag.strong(text, class: css_classes)
   end
+
+  def account_breadcrumbs
+    [
+      {
+        title: "Dashboard",
+        url: root_path,
+      },
+      {
+        title: "Settings",
+        url: account_path,
+      },
+    ]
+  end
+
+  def access_breadcrumbs(application)
+    [
+      {
+        title: "Dashboard",
+        url: root_path,
+      },
+      {
+        title: "Applications",
+        url: doorkeeper_applications_path,
+      },
+      {
+        title: application.name,
+        url: edit_doorkeeper_application_path(application),
+      },
+    ]
+  end
+
+  def users_breadcrumbs
+    [
+      {
+        title: "Dashboard",
+        url: root_path,
+      },
+      {
+        title: "Users",
+        url: users_path,
+      },
+    ]
+  end
 end

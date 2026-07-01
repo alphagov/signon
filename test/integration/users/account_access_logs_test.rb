@@ -121,5 +121,7 @@ class Users::AccountAccessLogsIntegrationTest < ActionDispatch::IntegrationTest
     assert assert_text "Event"
     assert assert_text "account locked"
     assert_selector "a", text: user.name
+    assert has_link?("Dashboard", href: "/", class: "govuk-breadcrumbs__link")
+    assert has_link?("Users", href: "/users", class: "govuk-breadcrumbs__link")
   end
 end

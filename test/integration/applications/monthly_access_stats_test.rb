@@ -24,6 +24,8 @@ class ApplicationsMonthlyAccessStatsIntegrationTest < ActionDispatch::Integratio
     should "have permission to view account access log" do
       visit monthly_access_stats_doorkeeper_application_path(@application)
       assert_equal page.title, "Monthly access counts to app-name - GOV.UK Signon"
+      assert has_link?("Dashboard", href: "/", class: "govuk-breadcrumbs__link")
+      assert has_link?("Applications", href: "/doorkeeper_applications", class: "govuk-breadcrumbs__link")
     end
 
     context "when there are no matching events" do
