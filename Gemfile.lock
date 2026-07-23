@@ -119,7 +119,7 @@ GEM
     climate_control (1.2.0)
     coderay (1.1.3)
     concurrent-ruby (1.3.8)
-    connection_pool (2.5.5)
+    connection_pool (3.0.2)
     crack (1.0.1)
       bigdecimal
       rexml
@@ -220,11 +220,11 @@ GEM
       rouge
       sprockets (>= 3)
       sprockets-rails
-    govuk_sidekiq (11.1.2)
+    govuk_sidekiq (12.0.0)
       gds-api-adapters (>= 19.1.0)
       govuk_app_config (>= 1.1)
       redis-client (>= 0.22.2)
-      sidekiq (~> 7.0, < 8)
+      sidekiq (>= 8.1.1, < 9)
     govuk_test (4.1.3)
       brakeman (>= 5.0.2)
       capybara (>= 3.36)
@@ -752,12 +752,12 @@ GEM
       sentry-ruby (~> 6.6.2)
       sidekiq (>= 5.0)
     shoulda-context (3.0.0.rc1)
-    sidekiq (7.3.10)
-      base64
-      connection_pool (>= 2.3.0, < 3)
-      logger
-      rack (>= 2.2.4, < 3.3)
-      redis-client (>= 0.23.0, < 1)
+    sidekiq (8.1.6)
+      connection_pool (>= 3.0.0)
+      json (>= 2.16.0)
+      logger (>= 1.7.0)
+      rack (>= 3.2.0)
+      redis-client (>= 0.29.0)
     simplecov (1.0.1)
     sprockets (4.2.2)
       concurrent-ruby (~> 1.0)
@@ -876,4 +876,4 @@ DEPENDENCIES
   webmock
 
 BUNDLED WITH
-  4.0.10
+  4.0.17
