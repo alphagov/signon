@@ -80,7 +80,7 @@ class InvitationsControllerTest < ActionController::TestCase
         get :new
 
         assert_select "form" do
-          assert_select ".gem-c-option-select[data-filter-element]"
+          assert_select ".gem-c-option-select[data-filter-attributes]"
         end
       end
 
