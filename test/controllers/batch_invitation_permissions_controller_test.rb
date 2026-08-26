@@ -63,7 +63,7 @@ class BatchInvitationPermissionsControllerTest < ActionController::TestCase
       get :new, params: { batch_invitation_id: @batch_invitation.id }
 
       assert_select "form" do
-        assert_select ".gem-c-option-select[data-filter-element]"
+        assert_select ".gem-c-option-select[data-filter-attributes]"
       end
     end
 
