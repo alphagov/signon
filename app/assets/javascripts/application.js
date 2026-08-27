@@ -1,17 +1,12 @@
 //= require govuk_publishing_components/dependencies
 //= require govuk_publishing_components/lib
-//= require govuk_publishing_components/components/button
-//= require govuk_publishing_components/components/checkboxes
 //= require govuk_publishing_components/components/copy-to-clipboard
-//= require govuk_publishing_components/components/error-summary
 //= require govuk_publishing_components/components/file-upload
 //= require govuk_publishing_components/components/govspeak
 //= require govuk_publishing_components/components/option-select
 //= require govuk_publishing_components/components/password-input
 //= require govuk_publishing_components/components/service-navigation
-//= require govuk_publishing_components/components/skip-link
 //= require govuk_publishing_components/components/table
-//= require govuk_publishing_components/components/tabs
 
 //= require ./domain-config
 //= require_tree ./modules
