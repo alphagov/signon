@@ -10,5 +10,8 @@
 //= require govuk_publishing_components/components/button
 //= require govuk_publishing_components/components/checkboxes
 //= require govuk_publishing_components/components/error-summary
+//= require govuk_publishing_components/components/file-upload
+//= require govuk_publishing_components/components/password-input
+//= require govuk_publishing_components/components/service-navigation
 //= require govuk_publishing_components/components/skip-link
 //= require govuk_publishing_components/components/tabs

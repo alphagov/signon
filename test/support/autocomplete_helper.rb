@@ -8,6 +8,8 @@ class AutocompleteHelper
   end
 
   def select_autocomplete_option(option_string)
+    # Ensure module was actually initialised
+    assert_selector("[data-module='accessible-autocomplete'][data-accessible-autocomplete-module-started]")
     autocomplete_input_element = find(".autocomplete__input")
     autocomplete_input_element.fill_in with: option_string
     autocomplete_option = find(".autocomplete__option")
