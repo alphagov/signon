@@ -49,7 +49,7 @@ group :development, :test do
   gem "database_cleaner"
   gem "govuk_test"
   gem "pact", "~> 1.67", require: false
-  gem "pact_broker-client"
+  gem "pact-ffi", "~> 0.4.28", require: false
   gem "pry-byebug"
   gem "rubocop-govuk"
 end
