@@ -45,6 +45,21 @@ end
 
 Pact.provider_states_for "GDS API Adapters" do
   set_up do
+    if ENV["DATABASE_URL"]
+      compose_file = Rails.root.join("../govuk-docker/projects/signon/docker-compose.yml")
+      raise "Cannot build DatabaseCleaner allow list; #{compose_file} not found" unless compose_file.exist?
+
+      compose_yaml = YAML.safe_load(File.read(compose_file), aliases: true)
+
+      database_urls = compose_yaml.fetch("services", {}).flat_map { |_name, service|
+        env = service["environment"] || {}
+        env = env.map { |key, val| "#{key}=#{val}" } if env.is_a?(Hash) # could be hash or list
+        env.grep(/\A(?:TEST_)?DATABASE_URL=/) { _1.split("=", 2).last }
+      }.uniq
+
+      DatabaseCleaner.url_allowlist = database_urls
+    end
+
     DatabaseCleaner.clean_with :truncation
     stub_access_token_creation!
     application = create(:application, name: "Signon API")
