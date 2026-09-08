@@ -6,12 +6,6 @@ require File.expand_path("config/application", __dir__)
 Signon::Application.load_tasks
 
 begin
-  require "pact/tasks"
-rescue LoadError
-  # Pact isn't available in all environments
-end
-
-begin
   require "rspec/core/rake_task"
 
   RSpec::Core::RakeTask.new(:pact_verify_v2) do |task|
@@ -28,4 +22,4 @@ rescue LoadError
 end
 
 Rake::Task[:default].clear_prerequisites
-task default: %i[lint jasmine test]
+task default: %i[lint jasmine test pact:verify_v2]
