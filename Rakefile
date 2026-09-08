@@ -8,18 +8,18 @@ Signon::Application.load_tasks
 begin
   require "rspec/core/rake_task"
 
-  RSpec::Core::RakeTask.new(:pact_verify_v2) do |task|
+  RSpec::Core::RakeTask.new(:pact_verify) do |task|
     task.pattern = "spec/pact/consumers/**/*_spec.rb"
-    task.rspec_opts = "--require rails_helper --tag pact_v2"
+    task.rspec_opts = "--require rails_helper --tag pact"
   end
 
   namespace :pact do
-    desc "Pact v2 verification"
-    task verify_v2: :pact_verify_v2
+    desc "Pact verification"
+    task verify: :pact_verify
   end
 rescue LoadError
   # Pact isn't available in all environments
 end
 
 Rake::Task[:default].clear_prerequisites
-task default: %i[lint jasmine test pact:verify_v2]
+task default: %i[lint jasmine test pact:verify]

@@ -80,7 +80,6 @@ GEM
       uri (>= 0.13.1)
     addressable (2.9.0)
       public_suffix (>= 2.0.2, < 8.0)
-    amazing_print (2.0.0)
     ancestry (5.1.0)
       activerecord (>= 5.2.6)
       logger
@@ -159,8 +158,6 @@ GEM
     erubi (1.13.1)
     execjs (2.10.2)
       json (>= 2)
-    expgen (0.1.1)
-      parslet
     factory_bot (6.6.0)
       activesupport (>= 6.1.0)
     factory_bot_rails (6.5.1)
@@ -175,7 +172,6 @@ GEM
     ffi-compiler (1.4.2)
       ffi (>= 1.15.5)
       rake
-    find_a_port (1.0.1)
     gds-api-adapters (103.5.0)
       addressable
       link_header
@@ -536,52 +532,28 @@ GEM
       opentelemetry-api (~> 1.0)
     orm_adapter (0.5.0)
     ostruct (0.6.3)
-    pact (1.67.5)
-      pact-mock_service (~> 3.0, >= 3.3.1)
-      pact-support (~> 1.21, >= 1.21.2)
+    pact (2.1.0)
+      pact-ffi (~> 0.5.8)
       rack
       rack-proxy
-      rack-test (>= 0.6.3, < 3.0.0)
-      rainbow (~> 3.1)
-      rspec (~> 3.0)
-      thor (>= 0.20, < 2.0)
       webrick (~> 1.8)
       zeitwerk (~> 2.3)
-    pact-ffi (0.4.28.0-aarch64-linux)
+    pact-ffi (0.5.8.1-aarch64-linux)
       ffi (~> 1.15)
-    pact-ffi (0.4.28.0-aarch64-linux-musl)
+    pact-ffi (0.5.8.1-aarch64-linux-musl)
       ffi (~> 1.15)
-    pact-ffi (0.4.28.0-arm64-darwin)
+    pact-ffi (0.5.8.1-arm64-darwin)
       ffi (~> 1.15)
-    pact-ffi (0.4.28.0-x86_64-darwin)
+    pact-ffi (0.5.8.1-x86_64-darwin)
       ffi (~> 1.15)
-    pact-ffi (0.4.28.0-x86_64-linux)
+    pact-ffi (0.5.8.1-x86_64-linux)
       ffi (~> 1.15)
-    pact-ffi (0.4.28.0-x86_64-linux-musl)
+    pact-ffi (0.5.8.1-x86_64-linux-musl)
       ffi (~> 1.15)
-    pact-mock_service (3.12.4)
-      find_a_port (~> 1.0.1)
-      json
-      logger (< 2.0)
-      pact-support (~> 1.16, >= 1.16.4)
-      rack (>= 3.0, < 4.0)
-      rackup (~> 2.0)
-      rspec (>= 2.14)
-      thor (>= 0.19, < 2.0)
-      webrick (~> 1.8)
-    pact-support (1.21.7)
-      amazing_print (~> 2.0)
-      diff-lcs (~> 1.6)
-      expgen (~> 0.1)
-      jsonpath (~> 1.0)
-      logger (< 2.0)
-      rainbow (~> 3.1.1)
-      string_pattern (~> 2.0)
     parallel (1.28.0)
     parser (3.3.12.0)
       ast (~> 2.4.1)
       racc
-    parslet (2.0.0)
     plek (5.3.2)
     pp (0.6.4)
       prettyprint
@@ -787,8 +759,6 @@ GEM
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
     statsd-ruby (1.5.0)
-    string_pattern (2.5.0)
-      regexp_parser (~> 2.5, >= 2.5.0)
     strscan (3.1.8)
     systemu (2.6.5)
     terser (1.2.8)
@@ -867,8 +837,7 @@ DEPENDENCIES
   mocha
   mysql2
   nokogiri
-  pact (~> 1.67)
-  pact-ffi (~> 0.4.28)
+  pact (~> 2.0)
   plek
   pry-byebug
   pundit
@@ -880,6 +849,7 @@ DEPENDENCIES
   redis
   rotp
   rqrcode
+  rspec
   rubocop-govuk
   sentry-sidekiq
   shoulda-context (~> 3.0.0.rc1)
@@ -905,7 +875,6 @@ CHECKSUMS
   activestorage (8.1.3.1) sha256=f555254f387b1cffa499d2fd3115d12635eadc5b15206a8534316a67036163ef
   activesupport (8.1.3.1) sha256=85458765f25ea48b9019c46b6bb3fa5683197bf4280d9f06710a6e8d7a831376
   addressable (2.9.0) sha256=7fdf6ac3660f7f4e867a0838be3f6cf722ace541dd97767fa42bc6cfa980c7af
-  amazing_print (2.0.0) sha256=2e36aba46ac78d37ed27ca0e2056afe3583183bb5c64f157c246b267355e5d6a
   ancestry (5.1.0) sha256=8a073cf6f7e306eeed36af72595abd19602ef4a197bf4beda2f31cf8f55de27b
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
@@ -947,7 +916,6 @@ CHECKSUMS
   erb (6.0.7) sha256=c5ca6dc25b0ef974a44dc8f59fe847577122483b1968a38dec305c60bf91ee92
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
   execjs (2.10.2) sha256=466cf2b49e50c0cfdff8fdb88a7a983dfab7ac0f6185c317ccb434a75c224c88
-  expgen (0.1.1) sha256=4e6a0f65b210a201d6045debb3e62a24e33251a49f81a11b067d303a60d3a239
   factory_bot (6.6.0) sha256=1fc1b3b5620ec980a6a27aec1b6ec8c250ca82962e970e8a40f93e8d388d4b89
   factory_bot_rails (6.5.1) sha256=d3cc4851eae4dea8a665ec4a4516895045e710554d2b5ac9e68b94d351bc6d68
   ffi (1.17.4-aarch64-linux-gnu) sha256=b208f06f91ffd8f5e1193da3cae3d2ccfc27fc36fba577baf698d26d91c080df
@@ -957,7 +925,6 @@ CHECKSUMS
   ffi (1.17.4-x86_64-linux-gnu) sha256=9d3db14c2eae074b382fa9c083fe95aec6e0a1451da249eab096c34002bc752d
   ffi (1.17.4-x86_64-linux-musl) sha256=3fdf9888483de005f8ef8d1cf2d3b20d86626af206cbf780f6a6a12439a9c49e
   ffi-compiler (1.4.2) sha256=a9d69d5d9ced6f64776ddafa535867ad90e5740ad37bed7afb4de6e450da126e
-  find_a_port (1.0.1) sha256=605d6a84b5e6f138da2b06c87c5a4a0231e4fdc9b9a92022d9caa361f77d5ceb
   gds-api-adapters (103.5.0) sha256=92988ac084ef720b0f03f6f678e291795278d8f06620dc59f9b0a42ee4daf14b
   globalid (1.4.0) sha256=037f12fbf1d9d7a014d501c2d5c77356fd4ddd96d7a7991d6700bba96706f427
   google-protobuf (4.36.2-aarch64-linux-gnu) sha256=c3279ec6eaa59f6ed6276eda2a33cffb4306471183ab79a332e698b8564f5169
@@ -1082,18 +1049,15 @@ CHECKSUMS
   opentelemetry-semantic_conventions (1.44.0) sha256=b09b8793422f13b01c08f7a6f29b5f511f47f37bcdb57c0513465a0464168513
   orm_adapter (0.5.0) sha256=aa5d0be5d540cbb46d3a93e88061f4ece6a25f6e97d6a47122beb84fe595e9b9
   ostruct (0.6.3) sha256=95a2ed4a4bd1d190784e666b47b2d3f078e4a9efda2fccf18f84ddc6538ed912
-  pact (1.67.5) sha256=4fba7a343e2e3d5d133a7ee34790eb6e5e3c9c744223344200068836850d048f
-  pact-ffi (0.4.28.0-aarch64-linux) sha256=588266bc6d128ae9c184184a19d2e3959baec83bf5b344c5a9941c50a3cd262e
-  pact-ffi (0.4.28.0-aarch64-linux-musl) sha256=96fc29e5939f4aab092794abc53ffb84957311f7487d1b41f320c9cdc8e57c12
-  pact-ffi (0.4.28.0-arm64-darwin) sha256=e6f7effdfda18ced8b03667e8d645edd0e53a8ca9f60eb727f4bce621fdea1cc
-  pact-ffi (0.4.28.0-x86_64-darwin) sha256=026f770d5ad5af2eb00cc1b3378d55950f2555a5f365244162ddd4e71aff3863
-  pact-ffi (0.4.28.0-x86_64-linux) sha256=7dba00d6d5db75eeeba45e4e111ddf194d65edda24e634e5768db249fd8edbed
-  pact-ffi (0.4.28.0-x86_64-linux-musl) sha256=eef72fa200bb50200e5e611afdcd583acfeae4e2d7c58703c0698edd13f47029
-  pact-mock_service (3.12.4) sha256=e1a727d41102d98b316cc2652d5e45e8c77704c35eb0b37f5e9c0fa9481f8eac
-  pact-support (1.21.7) sha256=1fa9114df45019480b72b0b97e858e4197dcd10c2707f573d30eaee974854bf8
+  pact (2.1.0) sha256=eb99e2d1eb7d605817dd91b0146db89da02cdf2e0471931d2b2ab8b75a3c021a
+  pact-ffi (0.5.8.1-aarch64-linux) sha256=0a42c888b510cd8fdeb1f8a9d758bef75e25919e92a73a8328b79e3fe2e61365
+  pact-ffi (0.5.8.1-aarch64-linux-musl) sha256=82a9b1fd80e1863867b99f976904f2e392055fe2ea357751923b853a7ddeccb7
+  pact-ffi (0.5.8.1-arm64-darwin) sha256=94d0c7b9762acf931a05a9b0ce878b430edc3c13c7ed44a51ac28a6daeff1204
+  pact-ffi (0.5.8.1-x86_64-darwin) sha256=b5f0143185afaaf1151e21847480bb3a725c1b0f145f0ed6e2bbd29520d8f252
+  pact-ffi (0.5.8.1-x86_64-linux) sha256=5fb6ff706fae4e296fd1beb773c5d8f86a4bd689116b0ed3c4d1bcc18991d0c0
+  pact-ffi (0.5.8.1-x86_64-linux-musl) sha256=9e65e7cd0d1bd2e93e21f58eab3f19f3e10d4ecc3458370b4a0fcc8380b60fe9
   parallel (1.28.0) sha256=33e6de1484baf2524792d178b0913fc8eb94c628d6cfe45599ad4458c638c970
   parser (3.3.12.0) sha256=21a6d7f755d5a24dfbdc6e6b772e4e879a52e7631a88bc5a3a134606052c9828
-  parslet (2.0.0) sha256=d45130695d39b43d7e6a91f4d2ec66b388a8d822bae38de9b4de9a5fbde1f606
   plek (5.3.2) sha256=98bacbd22262e742910f29d766b65328a203eb35ba20f9876181dd76ce4c4420
   pp (0.6.4) sha256=dfcb0fce700c41456265922884f9fe195d7fbb0674a3578e6c0f69588e82b570
   prettyprint (0.2.0) sha256=2bc9e15581a94742064a3cc8b0fb9d45aae3d03a1baa6ef80922627a0766f193
@@ -1167,7 +1131,6 @@ CHECKSUMS
   sprockets (4.4.1) sha256=fbd665edad0916de5c7abefef0fc616866a60c5e48ce2846f39ac3fc5df9e184
   sprockets-rails (3.5.2) sha256=a9e88e6ce9f8c912d349aa5401509165ec42326baf9e942a85de4b76dbc4119e
   statsd-ruby (1.5.0) sha256=369ddf09537408e273849e09b84d4edbdac24ac461f5c9b6cacb0e4398190109
-  string_pattern (2.5.0) sha256=41cf6c38c43d7fed5fea64823d229c103d3ff9bf4b29303038bf53ba15a9aab4
   strscan (3.1.8) sha256=aae2db611a225559f21ffbb71765c9a4e60fd262534a9ea84f4f11c7f32f679e
   systemu (2.6.5) sha256=01f7d014b1453b28e5781e15c4d7d63fc9221c29b174b7aae5253207a75ab33e
   terser (1.2.8) sha256=64931851d173bc5be0a90bd4570d751be5e83b2b063ccb750dbdc11a7b1d14db

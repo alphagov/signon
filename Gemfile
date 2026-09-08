@@ -48,9 +48,9 @@ end
 group :development, :test do
   gem "database_cleaner"
   gem "govuk_test"
-  gem "pact", "~> 1.67", require: false
-  gem "pact-ffi", "~> 0.4.28", require: false
+  gem "pact", "~> 2.0", require: false
   gem "pry-byebug"
+  gem "rspec"
   gem "rubocop-govuk"
 end
 
