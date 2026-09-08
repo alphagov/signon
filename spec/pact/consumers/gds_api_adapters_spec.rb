@@ -1,11 +1,10 @@
 require "rails_helper"
 require Rails.root.join("spec/support/pact/database_cleaner")
 require Rails.root.join("spec/support/pact/auth")
-require "pact/v2"
-require "pact/v2/rspec"
+require "pact/rspec"
 
-RSpec.describe "Verify pacts from GDS API Adapter", :pact_v2 do
-  Pact::V2.configure do |config|
+RSpec.describe "Verify pacts from GDS API Adapter", :pact do
+  Pact.configure do |config|
     config.before_provider_state_setup do
       DatabaseCleaner.clean
       PactAuth.stub_access_token_creation!
