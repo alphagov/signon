@@ -37,7 +37,7 @@
     "jasmine-core": "^7.0.2",
     "postcss": "^8.5.26",
     "standardx": "^7.0.0",
-    "stylelint": "^17.14.1",
+    "stylelint": "^17.15.0",
     "stylelint-config-gds": "^3.0.0"
   },
   "resolutions": {
