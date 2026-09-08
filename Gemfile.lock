@@ -758,7 +758,7 @@ GEM
       logger (>= 1.7.0)
       rack (>= 3.2.0)
       redis-client (>= 0.29.0)
-    simplecov (1.1.1)
+    simplecov (1.2.0)
     sprockets (4.2.2)
       concurrent-ruby (~> 1.0)
       logger
@@ -798,7 +798,7 @@ GEM
       macaddr (~> 1.0)
     warden (1.2.9)
       rack (>= 2.0.9)
-    webmock (3.26.3)
+    webmock (3.26.4)
       addressable (>= 2.8.0)
       crack (>= 0.3.2)
       hashdiff (>= 0.4.0, < 2.0.0)
