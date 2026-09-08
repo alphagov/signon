@@ -45,6 +45,11 @@ end
 
 Pact.provider_states_for "GDS API Adapters" do
   set_up do
+    if ENV["DATABASE_URL"]
+      DatabaseCleaner.url_allowlist = [
+        %r{\Amysql2://root:root@mysql-8/signon_(?:development|test)\z},
+      ]
+    end
     DatabaseCleaner.clean_with :truncation
     stub_access_token_creation!
     application = create(:application, name: "Signon API")
