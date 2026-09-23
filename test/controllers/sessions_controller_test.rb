@@ -29,4 +29,28 @@ class SessionsControllerTest < ActionController::TestCase
 
     assert_not @controller.signed_in?
   end
+
+  should "render sign-in form when no params are present" do
+    get :new
+
+    assert_response :success
+  end
+
+  should "sign in user and not raise error if remember_me is posted with valid credentials" do
+    assert_nothing_raised do
+      post :create, params: { user: { email: @user.email, password: @user.password, remember_me: "1" } }
+    end
+
+    assert @controller.signed_in?
+    assert_nil response.cookies["remember_user_token"]
+  end
+
+  should "not raise exception if remember_me is posted and given invalid credentials" do
+    assert_nothing_raised do
+      post :create, params: { user: { email: @user.email, password: "incorrect-password", remember_me: "1" } }
+    end
+
+    assert_not @controller.signed_in?
+    assert_nil response.cookies["remember_user_token"]
+  end
 end
