@@ -182,13 +182,13 @@ GEM
       rest-client (~> 2.0)
     globalid (1.4.0)
       activesupport (>= 6.1)
-    google-protobuf (4.36.1-aarch64-linux-gnu)
+    google-protobuf (4.36.2-aarch64-linux-gnu)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.36.1-arm64-darwin)
+    google-protobuf (4.36.2-arm64-darwin)
       bigdecimal
       rake (~> 13.3)
-    google-protobuf (4.36.1-x86_64-linux-gnu)
+    google-protobuf (4.36.2-x86_64-linux-gnu)
       bigdecimal
       rake (~> 13.3)
     googleapis-common-protos-types (1.23.0)
@@ -209,7 +209,7 @@ GEM
     govuk_personalisation (1.2.0)
       plek (>= 1.9.0)
       rails (>= 6, < 9)
-    govuk_publishing_components (69.0.1)
+    govuk_publishing_components (70.0.1)
       chartkick
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
@@ -246,7 +246,7 @@ GEM
       multi_xml (>= 0.5.2)
     i18n (1.15.2)
       concurrent-ruby (~> 1.0)
-    io-console (0.9.3)
+    io-console (0.9.4)
     irb (1.18.0)
       pp (>= 0.6.0)
       prism (>= 1.3.0)
@@ -333,7 +333,7 @@ GEM
       net-protocol
     net-pop (0.1.2)
       net-protocol
-    net-protocol (0.3.0)
+    net-protocol (0.4.0)
       timeout
     net-smtp (0.5.1)
       net-protocol
@@ -348,7 +348,7 @@ GEM
     notifications-ruby-client (6.3.0)
       jwt (>= 1.5, < 4)
     null_logger (0.0.1)
-    opentelemetry-api (1.11.0)
+    opentelemetry-api (1.11.1)
       logger
     opentelemetry-common (0.25.1)
       opentelemetry-api (~> 1.0)
@@ -470,7 +470,7 @@ GEM
       opentelemetry-helpers-sql
       opentelemetry-helpers-sql-processor
       opentelemetry-instrumentation-base (~> 0.25)
-    opentelemetry-instrumentation-net_http (0.29.0)
+    opentelemetry-instrumentation-net_http (0.29.1)
       opentelemetry-instrumentation-base (~> 0.25)
     opentelemetry-instrumentation-pg (0.37.0)
       opentelemetry-helpers-sql
@@ -515,7 +515,7 @@ GEM
       opentelemetry-semantic_conventions (>= 1.8.0)
     opentelemetry-registry (0.6.3)
       opentelemetry-api (~> 1.1)
-    opentelemetry-sdk (1.13.0)
+    opentelemetry-sdk (1.13.1)
       logger
       opentelemetry-api (~> 1.1)
       opentelemetry-common (~> 0.20)
