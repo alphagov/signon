@@ -27,6 +27,7 @@ test/reports/*
 # yarn
 node_modules
 yarn-error.log
+.yarn/install-state.gz
 
 # Ignore compiled Rails assets
 /public/assets
