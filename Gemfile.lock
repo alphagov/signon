@@ -143,7 +143,7 @@ GEM
       warden (~> 1.2.3)
     devise-encryptable (0.3.0)
       devise (>= 2.1.0)
-    devise_invitable (2.0.12)
+    devise_invitable (2.0.13)
       actionmailer (>= 5.0)
       devise (>= 4.6)
     devise_zxcvbn (1.1.2)
@@ -907,7 +907,7 @@ CHECKSUMS
   debug_inspector (1.2.0) sha256=9bdfa02eebc3da163833e6a89b154084232f5766087e59573b70521c77ea68a2
   devise (5.0.4) sha256=d605f2b85854e74e56ee789e2d398702bc2d06e6bcd894717a670a3199c74cc1
   devise-encryptable (0.3.0) sha256=9dcc8ccb4139e3334906849a71fd07ae5a702fb5161612963fede00395a59d8e
-  devise_invitable (2.0.12) sha256=3ff1cb9dc85b5675e49c733399872916fc0a60b9e8a4c42ac04828d36c114e78
+  devise_invitable (2.0.13) sha256=f6b6e7fc634de2c9b4ee9d550de728fdfec2ed03281af88b66660b67f0c3dca5
   devise_zxcvbn (1.1.2) sha256=8f31c27c7a917c9cb806fa3b2ddc24b6ab310801465fff42d9679ac762d1bb9d
   diff-lcs (1.6.2) sha256=9ae0d2cba7d4df3075fe8cd8602a8604993efc0dfa934cff568969efb1909962
   domain_name (0.6.20260907) sha256=5517a7f82c4464a61fc17133c3f6a02833faa13533c16c07e8f73b11d872cb03
