@@ -151,7 +151,7 @@ GEM
       zxcvbn-ruby (>= 0.0.2)
     diff-lcs (1.6.2)
     domain_name (0.6.20260907)
-    doorkeeper (5.9.7)
+    doorkeeper (5.9.9)
       railties (>= 5)
     drb (2.2.3)
     erb (6.0.7)
@@ -629,7 +629,7 @@ GEM
       logger
       prism (>= 1.6.0)
       tsort
-    rdoc (8.0.0)
+    rdoc (8.1.0)
       erb
       prism (>= 1.6.0)
       rbs (>= 4.0.0)
@@ -911,7 +911,7 @@ CHECKSUMS
   devise_zxcvbn (1.1.2) sha256=8f31c27c7a917c9cb806fa3b2ddc24b6ab310801465fff42d9679ac762d1bb9d
   diff-lcs (1.6.2) sha256=9ae0d2cba7d4df3075fe8cd8602a8604993efc0dfa934cff568969efb1909962
   domain_name (0.6.20260907) sha256=5517a7f82c4464a61fc17133c3f6a02833faa13533c16c07e8f73b11d872cb03
-  doorkeeper (5.9.7) sha256=aa27426a84a1ee0676eee54528e8c247b543a9a441f2571633720617fcb37c11
+  doorkeeper (5.9.9) sha256=691fc87815c2ea7c075518be26855c2343bb3cf6a41400a92a5782f62786ec86
   drb (2.2.3) sha256=0b00d6fdb50995fe4a45dea13663493c841112e4068656854646f418fda13373
   erb (6.0.7) sha256=c5ca6dc25b0ef974a44dc8f59fe847577122483b1968a38dec305c60bf91ee92
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
@@ -1085,7 +1085,7 @@ CHECKSUMS
   rb-fsevent (0.11.2) sha256=43900b972e7301d6570f64b850a5aa67833ee7d87b458ee92805d56b7318aefe
   rb-inotify (0.11.1) sha256=a0a700441239b0ff18eb65e3866236cd78613d6b9f78fea1f9ac47a85e47be6e
   rbs (4.2.0) sha256=51f7b886dcc05bc09e10b901daa6a81829f6adc03101d6ca9ea4aac6103e0674
-  rdoc (8.0.0) sha256=03bf8c08a9639658855a0cfd77c0abca8325c227693f7f33f82957811348c469
+  rdoc (8.1.0) sha256=befc37880a5cfd36dcb176c748b5fd5ee39dd3536a75e81824e4972ce230f60a
   recursive-open-struct (1.3.1) sha256=141b4a9c8817bb30f4275c5adb1b5bebaba41bf9b7dd6d6a75ad394390ad8720
   redis (6.0.0) sha256=de71c10edd106986b759ec7ecdd08b63b9c0ee7414a0d0c1da73d31ba2bccda6
   redis-client (0.30.1) sha256=5151bc5c7bbfe48623732cdae3b900d8a22dc691cc7cdfacfb351ac55116522d
