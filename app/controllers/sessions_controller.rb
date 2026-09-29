@@ -1,5 +1,6 @@
 class SessionsController < Devise::SessionsController
   skip_before_action :handle_two_step_verification
+  before_action :configure_sign_in_params
 
   def destroy
     ReauthEnforcer.perform_on(current_user) if current_user
@@ -51,5 +52,9 @@ private
 
   def user_agent
     request.headers["user-agent"]
+  end
+
+  def configure_sign_in_params
+    devise_parameter_sanitizer.permit(:sign_in, except: [:remember_me])
   end
 end
