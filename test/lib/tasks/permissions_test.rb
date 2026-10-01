@@ -124,7 +124,7 @@ class PermissionsTest < ActiveSupport::TestCase
       )
       @content_data = application_with_revoke_and_retain_list(
         name: "Content Data",
-        non_signin_permissions_to_revoke: %w[view_email_subs view_siteimprove],
+        non_signin_permissions_to_revoke: %w[view_email_subs],
         retain_non_signin_permission: true,
       )
       @content_tagger = application_with_revoke_and_retain_list(
