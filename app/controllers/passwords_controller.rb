@@ -5,10 +5,14 @@ class PasswordsController < Devise::PasswordsController
   def edit
     super
 
-    user = user_from_params
-    unless user && user.reset_password_period_valid?
-      record_reset_page_loaded_token_expired
-      render "devise/passwords/reset_error"
+    respond_to do |format|
+      format.html do
+        user = user_from_params
+        unless user && user.reset_password_period_valid?
+          record_reset_page_loaded_token_expired
+          render "devise/passwords/reset_error"
+        end
+      end
     end
   end
 
