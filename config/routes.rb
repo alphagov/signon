@@ -89,6 +89,9 @@ Rails.application.routes.draw do
       to: "bulk_update/bulk_update_user#index",
       as: :bulk_update_user
 
+  patch "bulk_update/bulk_update_user",
+        to: "bulk_update/bulk_update_user#update"
+
   get "bulk_update/bulk_update_user_organisation",
       to: "bulk_update/bulk_update_user_organisation#index",
       as: :bulk_update_user_organisation
