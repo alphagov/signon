@@ -6,7 +6,19 @@ class BulkUpdate::CloseOrganisationController < ApplicationController
 
   def index; end
 
-  def create; end
+  def create
+    organisation = Organisation.find_by(id: params[:organisation_id])
+    if organisation
+      organisation.update!(closed: true)
+      flash[:success_alert] = {
+        message: "Organisation closed",
+        description: "#{organisation.name} has been marked as closed.",
+      }
+    else
+      flash[:error] = "Organisation does not exist"
+    end
+    render :index and return
+  end
 
 private
 
