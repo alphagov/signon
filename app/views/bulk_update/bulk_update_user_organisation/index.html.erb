@@ -1,0 +1,46 @@
+<% content_for :title, "Move all users from one organisation to another" %>
+
+<% if flash[:error] %>
+  <% content_for(:custom_alerts) do %>
+    <%= render "govuk_publishing_components/components/error_alert", {
+      message: flash[:error],
+    } %>
+  <% end %>
+<% end %>
+
+<% if flash[:success_alert] %>
+  <% content_for(:custom_alerts) do %>
+    <%= render "govuk_publishing_components/components/success_alert", {
+        message: flash[:success_alert][:message],
+        description: sanitize(flash[:success_alert][:description]),
+    } %>
+  <% end %>
+<% end %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with url: bulk_update_user_organisation_path, method: :patch do |f| %>
+      <div data-module="accessible-autocomplete">
+        <%= render "govuk_publishing_components/components/select", {
+          id: "old_organisation_id",
+          name: "old_organisation_id",
+          label: "Organisation to move users from",
+          options: options_for_organisation_select(include_closed: true),
+        } %>
+      </div>
+
+      <div data-module="accessible-autocomplete">
+        <%= render "govuk_publishing_components/components/select", {
+          id: "new_organisation_id",
+          name: "new_organisation_id",
+          label: "Organisation to move users to",
+          options: options_for_organisation_select,
+        } %>
+      </div>
+
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Move users",
+      } %>
+    <% end %>
+  </div>
+</div>
