@@ -1,0 +1,21 @@
+<% content_for :title, "Close an organisation" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with url: close_organisation_update_path, method: :patch do |f| %>
+      <div data-module="accessible-autocomplete">
+        <%= render "govuk_publishing_components/components/select", {
+          id: "organisation_id",
+          name: "organisation_id",
+          label: "Organisation to close",
+          options: options_for_organisation_select
+        } %>
+      </div>
+
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Close organisation",
+        destructive: true
+      } %>
+    <% end %>
+  </div>
+</div>
