@@ -96,6 +96,9 @@ Rails.application.routes.draw do
       to: "bulk_update/bulk_update_user_organisation#index",
       as: :bulk_update_user_organisation
 
+  post "bulk_update/bulk_update_user_organisation",
+       to: "bulk_update/bulk_update_user_organisation#create"
+
   resources :organisations, only: %i[index edit update]
   resources :suspensions, only: %i[edit update]
   resources :two_step_verification_exemptions, only: %i[edit update]
