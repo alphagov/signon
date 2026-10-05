@@ -44,6 +44,10 @@ class UserPolicy < BasePolicy
     current_user.superadmin?
   end
 
+  def bulk_update?
+    current_user.superadmin?
+  end
+
   def exempt_from_two_step_verification?
     current_user.belongs_to_gds? &&
       current_user.govuk_admin? &&
