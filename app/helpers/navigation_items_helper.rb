@@ -22,6 +22,10 @@ module NavigationItemsHelper
       if policy(Organisation).index?
         items << { text: "Orgs", href: organisations_path, active: is_current?(organisations_path) }
       end
+
+      if policy(User).bulk_update?
+        items << { text: "Bulk changes", href: bulk_update_index_path, active: is_current?(bulk_update_index_path) }
+      end
     end
 
     items << { text: current_user.name, href: account_path }
