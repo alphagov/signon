@@ -23,12 +23,15 @@ class OrganisationHelperTest < ActionView::TestCase
   context "when a closed organisation exists" do
     setup do
       @closed = create(:organisation, name: "Prehistoric Government Service", closed: true)
+      @unexpected_closed_option = { text: "#{@closed.name} (closed)", value: @closed.id }
     end
 
-    should "exclude the closed organisation" do
-      unexpected_closed_option = { text: "Prehistoric Government Service", value: @closed.id }
+    should "exclude the closed organisation when include_closed is false" do
+      assert_not_includes options_for_organisation_select(include_closed: false), @unexpected_closed_option
+    end
 
-      assert_not_includes options_for_organisation_select, unexpected_closed_option
+    should "does not exclude the closed organisation when include_closed is true" do
+      assert_includes options_for_organisation_select(include_closed: true), @unexpected_closed_option
     end
   end
 
