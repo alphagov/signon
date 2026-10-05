@@ -35,5 +35,22 @@ class BulkUpdate::CloseOrganisationControllerTest < ActionController::TestCase
         end
       end
     end
+
+    context "PATCH update" do
+      should "mark as closed when organisation exists" do
+        patch :update, params: { organisation_id: @open_organisation }
+
+        assert @open_organisation.reload.closed?
+
+        assert_select "div.govuk-notification-banner__content h3", "Organisation closed"
+        assert_select "div.govuk-notification-banner__content", /#{@open_organisation.name} has been marked as closed/
+      end
+
+      should "show an error when organisation does not exist" do
+        patch :update, params: { organisation_id: (Organisation.pluck(:id).max + 1) }
+
+        assert_select "p.gem-c-error-alert__message", "Organisation does not exist"
+      end
+    end
   end
 end

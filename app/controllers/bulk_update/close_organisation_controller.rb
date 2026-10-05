@@ -7,7 +7,7 @@ class BulkUpdate::CloseOrganisationController < ApplicationController
   def index; end
 
   def update
-    organisation = Organisation.find_by(content_id: params[:organisation_id])
+    organisation = Organisation.find_by(id: params[:organisation_id])
     if organisation
       organisation.update!(closed: true)
       flash[:success_alert] = {
@@ -16,8 +16,8 @@ class BulkUpdate::CloseOrganisationController < ApplicationController
       }
     else
       flash[:error] = "Organisation does not exist"
-      render :index and return
     end
+    render :index and return
   end
 
 private

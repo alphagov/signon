@@ -89,6 +89,9 @@ Rails.application.routes.draw do
       to: "bulk_update/close_organisation#index",
       as: :close_organisation
 
+  patch "bulk_update/close_organisation",
+        to: "bulk_update/close_organisation#update"
+
   resources :organisations, only: %i[index edit update]
   resources :suspensions, only: %i[edit update]
   resources :two_step_verification_exemptions, only: %i[edit update]
