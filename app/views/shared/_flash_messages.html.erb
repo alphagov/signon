@@ -1,0 +1,16 @@
+<% if flash[:error] %>
+  <% content_for(:custom_alerts) do %>
+    <%= render "govuk_publishing_components/components/error_alert", {
+      message: flash[:error],
+    } %>
+  <% end %>
+<% end %>
+
+<% if flash[:success_alert] %>
+  <% content_for(:custom_alerts) do %>
+    <%= render "govuk_publishing_components/components/success_alert", {
+        message: flash[:success_alert][:message],
+        description: sanitize(flash[:success_alert][:description]),
+    } %>
+  <% end %>
+<% end %>
