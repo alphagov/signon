@@ -85,6 +85,13 @@ Rails.application.routes.draw do
 
   resources :bulk_update, only: %i[index]
 
+  get "bulk_update/bulk_update_user_organisation",
+      to: "bulk_update/bulk_update_user_organisation#index",
+      as: :bulk_update_user_organisation
+
+  patch "bulk_update/bulk_update_user_organisation",
+        to: "bulk_update/bulk_update_user_organisation#update"
+
   get "bulk_update/close_organisation",
       to: "bulk_update/close_organisation#index",
       as: :close_organisation
