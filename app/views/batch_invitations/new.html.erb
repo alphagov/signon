@@ -24,7 +24,9 @@
         to the Organisation selected in the drop-down below.  If the
         value is provided, but is not a valid slug, the user will not
         be invited.  You can find the slug for an organisation on
-        <%= link_to 'the list of organisations', organisations_path
+        <%= link_to 'the list of organisations',
+              organisations_path,
+              class: 'govuk-link'
         %>.</p>
 
       <%= render "govuk_publishing_components/components/hint", { text:
