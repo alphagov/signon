@@ -13,6 +13,20 @@ class PermissionsTest < ActiveSupport::TestCase
     @task.reenable # without this, calling `invoke` does nothing after first test
   end
 
+  def write_csv(rows, header: "email", bom: false)
+    file = Tempfile.new("bulk_add_signin.csv")
+    file.write("\uFEFF") if bom
+    file.write(([header] + rows).join("\n"))
+    file.close
+    @tempfiles << file
+    file.path
+  end
+
+  def run_task(path, app_name = @app.name)
+    out, = capture_io { @task.invoke(path, app_name) }
+    out
+  end
+
   context "#promote_managing_editors_to_org_admins" do
     setup do
       @first_app = create(:application, name: "Cat Publisher", with_non_delegated_supported_permissions: ["Managing Editor", "other"])
@@ -181,6 +195,228 @@ class PermissionsTest < ActiveSupport::TestCase
       [@collections_publisher, @manuals_publisher, @specialist_publisher, @support, @app_to_ignore].each do |app_hash|
         assert_equal app_hash[:application].supported_permissions.order(:name).pluck(:name), @gds_user.permissions_for(app_hash[:application])
         refute_event_logs_for_removal(@gds_user.uid, app_hash[:application].supported_permissions)
+      end
+    end
+  end
+
+  context "#add_signin_permission_from_csv" do
+    setup do
+      @app = create(:application, name: "Cat Publisher")
+      @other_app = create(:application, name: "Dog Publisher")
+      @task = Rake::Task["permissions:add_signin_permission_from_csv"]
+      @tempfiles = []
+    end
+
+    teardown do
+      @tempfiles.each(&:unlink)
+    end
+
+    context "granting access" do
+      should "grant signin access to users in the csv who do not have it" do
+        first_user = create(:user)
+        second_user = create(:user)
+
+        run_task(write_csv([first_user.email, second_user.email]))
+
+        assert first_user.reload.has_access_to?(@app)
+        assert second_user.reload.has_access_to?(@app)
+      end
+
+      should "not grant signin access to users not in the csv" do
+        listed_user = create(:user)
+        unlisted_user = create(:user)
+
+        run_task(write_csv([listed_user.email]))
+
+        assert listed_user.reload.has_access_to?(@app)
+        assert_not unlisted_user.reload.has_access_to?(@app)
+      end
+
+      should "only grant access to the named application" do
+        user = create(:user)
+
+        run_task(write_csv([user.email]))
+
+        assert user.reload.has_access_to?(@app)
+        assert_not user.reload.has_access_to?(@other_app)
+      end
+
+      should "not remove existing permissions of a listed user" do
+        listed_user = create(:user)
+        listed_user.grant_application_signin_permission(@other_app)
+
+        run_task(write_csv([listed_user.email]))
+
+        assert listed_user.reload.has_access_to?(@app)
+        assert listed_user.reload.has_access_to?(@other_app)
+      end
+
+      should "only call SigninPermissionGranter with users who need access" do
+        first_user = create(:user)
+        second_user = create(:user)
+        first_user.grant_application_signin_permission(@app)
+
+        SigninPermissionGranter.expects(:call).with(users: [second_user], application: @app)
+
+        run_task(write_csv([first_user.email, second_user.email]))
+      end
+    end
+
+    context "users who are excluded" do
+      should "not grant access to suspended users" do
+        user = create(:user)
+        user.update!(suspended_at: 1.day.ago, reason_for_suspension: "Dormant account")
+
+        run_task(write_csv([user.email]))
+
+        assert_not user.reload.has_access_to?(@app)
+      end
+
+      should "not grant access to api users" do
+        user = create(:api_user)
+
+        run_task(write_csv([user.email]))
+
+        assert_not user.reload.has_access_to?(@app)
+      end
+
+      should "report unknown, suspended and api users as unmatched" do
+        api_user = create(:api_user)
+        suspended_user = create(:user)
+        suspended_user.update!(suspended_at: 1.day.ago, reason_for_suspension: "Dormant account")
+
+        out = run_task(write_csv([api_user.email, suspended_user.email, "nobody@example.com"]))
+
+        assert_match "Not found, suspended or API user: 3", out
+        assert_match " - #{suspended_user.email}", out
+        assert_match " - #{api_user.email}", out
+        assert_match " - nobody@example.com", out
+      end
+    end
+
+    context "when users already have access" do
+      should "not regrant access to users already with access" do
+        new_user = create(:user)
+        existing_user = create(:user)
+        existing_user.grant_application_signin_permission(@app)
+
+        out = run_task(write_csv([new_user.email, existing_user.email]))
+
+        assert_match "Granted access: 1", out
+        assert_match "Already had access: 1", out
+      end
+
+      should "be safe to run twice" do
+        user = create(:user)
+        path = write_csv([user.email])
+
+        run_task(path)
+        @task.reenable
+        out = run_task(path)
+
+        assert user.reload.has_access_to?(@app)
+        assert_match "Granted access: 0", out
+        assert_match "Already had access: 1", out
+      end
+    end
+
+    context "csv parsing" do
+      should "match emails case-insensitively and ignore surrounding whitespace" do
+        user = create(:user, email: "test@example.com")
+
+        run_task(write_csv(["  TEST@examplE.COM     "]))
+
+        assert user.reload.has_access_to?(@app)
+      end
+
+      should "treat duplicate emails as one" do
+        user = create(:user, email: "test@example.com")
+
+        out = run_task(write_csv(["  TEST@examplE.COM     ", "test@example.com"]))
+
+        assert user.reload.has_access_to?(@app)
+        assert_match "CSV email count: 1", out
+        assert_match "Granted access: 1", out
+      end
+
+      should "skip rows with blank emails" do
+        user = create(:user)
+
+        out = run_task(write_csv([user.email, ", Nobody", "   , Nobody Else"], header: "email,name"))
+
+        assert_match "CSV email count: 1", out
+        assert_match "Not found, suspended or API user: 0", out
+      end
+
+      should "handle a UTF-8 BOM and a differently cased header" do
+        user = create(:user)
+
+        run_task(write_csv([user.email], header: " EMAIL ", bom: true))
+
+        assert user.reload.has_access_to?(@app)
+      end
+
+      should "ignore extra columns" do
+        user = create(:user)
+
+        run_task(write_csv(["test,#{user.email}, Some Org"], header: "name,email, organisation"))
+
+        assert user.reload.has_access_to?(@app)
+      end
+
+      should "raise if the CSV has no email column" do
+        path = write_csv(["test@example.com"], header: "name")
+
+        error = assert_raises(RuntimeError) { @task.invoke(path, @app.name) }
+
+        assert_match "CSV must have an 'email' column (found: name)", error.message
+      end
+
+      should "raise an error if the CSV is malformed" do
+        path = write_csv(["\"test@example.com"])
+
+        error = assert_raises(RuntimeError) { @task.invoke(path, @app.name) }
+
+        assert_match "Unclosed quoted field in line 2.", error.message
+      end
+    end
+
+    context "argument validation" do
+      should "raise if no CSV path is given" do
+        error = assert_raises(RuntimeError) { @task.invoke(nil, @app.name) }
+
+        assert_match "Provide a CSV path", error.message
+      end
+
+      should "raise if no app name is given" do
+        path = write_csv(["test@example.com"])
+
+        error = assert_raises(RuntimeError) { @task.invoke(path, nil) }
+
+        assert_match "Provide an application name", error.message
+      end
+
+      should "raise if invalid csv path is given" do
+        error = assert_raises(RuntimeError) { @task.invoke("/no/valid/file.csv", @app.name) }
+
+        assert_match "CSV file not found at /no/valid/file.csv", error.message
+      end
+
+      should "raise if given application cannot be found" do
+        path = write_csv(["test@example.com"])
+
+        error = assert_raises(RuntimeError) { @task.invoke(path, "Fake Application") }
+
+        assert_match "Couldn't find application: 'Fake Application'", error.message
+      end
+
+      should "not grant anything if validation fails" do
+        user = create(:user)
+        path = write_csv([user.email])
+
+        assert_raises(RuntimeError) { @task.invoke(path, "Fake Application") }
+
+        assert_not user.reload.has_access_to?(@app)
       end
     end
   end
