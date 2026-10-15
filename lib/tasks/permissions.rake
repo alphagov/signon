@@ -1,3 +1,5 @@
+require "csv"
+
 namespace :permissions do
   desc "Update anyone with a managing editor permission and a normal role to an org admin role"
   task promote_managing_editors_to_org_admins: :environment do
@@ -188,6 +190,42 @@ namespace :permissions do
       raise "Failed to destroy given permissions" unless user_application_permissions_remaining.count.zero?
 
       puts "Destroyed #{number_of_permissions_to_destroy} user application permissions"
+    end
+  end
+
+  desc "Add signin permission for a specific application to users listed in a CSV using SigninPermissionGranter"
+  task :add_signin_permission_from_csv, %i[csv_path app_name] => :environment do |_task, args|
+    csv_path = args[:csv_path]
+    app_name = args[:app_name]
+
+    raise 'Provide a CSV path (e.g., rake "permissions:add_signin_permission_from_csv[path/to/file.csv,App Name]")' unless csv_path
+    raise 'Provide an application name (e.g., rake "permissions:add_signin_permission_from_csv[path/to/file.csv,App Name]")' unless app_name
+    raise "CSV file not found at #{csv_path}" unless File.exist?(csv_path)
+
+    application = Doorkeeper::Application.find_by(name: args.app_name)
+
+    raise "Couldn't find application: '#{args.app_name}'" unless application
+
+    csv = CSV.read(csv_path, headers: true, header_converters: ->(h) { h.to_s.delete_prefix("\uFEFF").strip.downcase })
+    raise "CSV must have an 'email' column (found: #{csv.headers.join(', ')})" unless csv.headers.include?("email")
+
+    emails = csv.filter_map { |row| row["email"]&.strip&.downcase.presence }.uniq
+
+    users = User.web_users.not_suspended.where(email: emails).to_a
+    unmatched_emails = emails - users.map { |u| u.email.downcase }
+
+    to_grant, already_had_access = users.partition { |user| !user.has_access_to?(application) }
+
+    SigninPermissionGranter.call(users: to_grant, application: application)
+
+    puts "CSV email count: #{emails.size}"
+    puts "Granted access: #{to_grant.size}"
+    puts "Already had access: #{already_had_access.size}"
+    puts "Not found, suspended or API user: #{unmatched_emails.size}"
+
+    if unmatched_emails.any?
+      puts "The following emails were not found, suspended or API user:"
+      unmatched_emails.each { |email| puts " - #{email}" }
     end
   end
 end
