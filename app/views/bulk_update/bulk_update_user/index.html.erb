@@ -1,0 +1,62 @@
+<% content_for :title, "Bulk update user email and organisation from CSV file" %>
+
+<%= render "shared/flash_messages" %>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <%= form_with url: bulk_update_user_path, method: :patch, multipart: true do |f| %>
+      <p class="govuk-body">
+        The CSV file should have the following columns (in any order):
+      </p>
+
+      <%= render "govuk_publishing_components/components/table", {
+        head: [
+          {
+            text: "Column Header",
+          },
+          {
+            text: "Description",
+          },
+        ],
+        rows: [
+          [
+            {
+              text: "Old email"
+            },
+            {
+              text: "The old email address of the user.",
+            },
+          ],
+          [
+            {
+              text: "New email"
+            },
+            {
+              text: "The new email address of the user.",
+            },
+          ],
+          [
+            {
+              text: "New organisation"
+            },
+            {
+              text: "The slug of the new organisations for the user.",
+            },
+          ],
+        ],
+      } %>
+
+      <%= render "govuk_publishing_components/components/file_upload", {
+        id: "csv_file",
+        name: "csv_file",
+        label: {
+          text: "Upload CSV file"
+        },
+      } %>
+
+      <%= render "govuk_publishing_components/components/button", {
+        text: "Move users",
+      } %>
+    <% end %>
+  </div>
+</div>
