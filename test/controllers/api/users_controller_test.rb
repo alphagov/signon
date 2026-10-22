@@ -2,7 +2,7 @@ require "test_helper"
 
 class Api::UsersControllerTest < ActionController::TestCase
   setup do
-    @application = create(:application)
+    @application = create(:application, name: "Signon API")
   end
 
   context "as admin user" do
@@ -30,7 +30,7 @@ class Api::UsersControllerTest < ActionController::TestCase
     end
   end
 
-  context "as a user with a valid token" do
+  context "as a user with a valid token and signin permission for the Signon API" do
     setup do
       @user = create(:user, name: "Signon API")
       @user.grant_application_signin_permission(@application)
@@ -87,12 +87,50 @@ class Api::UsersControllerTest < ActionController::TestCase
     end
   end
 
-  context "with a valid bearer token for another application" do
+  context "with a valid token for another application and signin permission for the Signon API only" do
     setup do
       other_application = create(:application)
       @user = create(:user)
       @user.grant_application_signin_permission(@application)
       @token = create(:access_token, application: other_application, resource_owner_id: @user.id)
+
+      @request.env["HTTP_AUTHORIZATION"] = "Bearer #{@token.token}"
+    end
+
+    should "not succeed" do
+      get :index, params: {
+        format: :json,
+        uuids: [SecureRandom.uuid],
+      }
+
+      assert_equal "401", response.code
+    end
+  end
+
+  context "with a valid token for another application and signin permission for that application" do
+    setup do
+      other_application = create(:application)
+      @user = create(:user)
+      @user.grant_application_signin_permission(other_application)
+      @token = create(:access_token, application: other_application, resource_owner_id: @user.id)
+
+      @request.env["HTTP_AUTHORIZATION"] = "Bearer #{@token.token}"
+    end
+
+    should "not succeed" do
+      get :index, params: {
+        format: :json,
+        uuids: [SecureRandom.uuid],
+      }
+
+      assert_equal "401", response.code
+    end
+  end
+
+  context "with a valid token for the Signon API and no signin permissions" do
+    setup do
+      @user = create(:user)
+      @token = create(:access_token, application: @application, resource_owner_id: @user.id)
 
       @request.env["HTTP_AUTHORIZATION"] = "Bearer #{@token.token}"
     end

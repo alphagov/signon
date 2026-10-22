@@ -10,7 +10,8 @@ class Api::UsersController < ApplicationController
 private
 
   def authorize_api_access
-    doorkeeper_authorize! && check_signon_permissions
+    doorkeeper_authorize!
+    check_signon_permissions unless performed?
   end
 
   def check_signon_permissions
