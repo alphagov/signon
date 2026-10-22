@@ -14,6 +14,17 @@ class BulkUpdate::BulkUpdateUserOrganisationControllerTest < ActionController::T
         assert_not_authorised
       end
     end
+
+    context "POST create" do
+      should "return not authorised response" do
+        post :create, params: {
+          old_organisation_id: "1",
+          new_organisation_id: "2",
+        }
+
+        assert_not_authorised
+      end
+    end
   end
 
   context "as superadmin" do
@@ -55,7 +66,7 @@ class BulkUpdate::BulkUpdateUserOrganisationControllerTest < ActionController::T
         assert_equal @user_from_closed_organisation.reload.organisation, @open_organisation
 
         assert_select "div.govuk-notification-banner__content h3", "Updated users"
-        assert_select "div.govuk-notification-banner__content", /Moved 1 users from #{@closed_organisation.name} to #{@open_organisation.name}/
+        assert_select "div.govuk-notification-banner__content", /Moved 1 user from #{@closed_organisation.name} to #{@open_organisation.name}/
       end
 
       should "create an event log entry for the user when both organisations exist" do
@@ -116,6 +127,39 @@ class BulkUpdate::BulkUpdateUserOrganisationControllerTest < ActionController::T
         }
 
         assert_select "p.gem-c-error-alert__message", "Failed to update user: #{@user_from_closed_organisation.email}"
+        refute_select "div.govuk-notification-banner__content h3", "Updated users"
+      end
+
+      should "roll back all user updates and not show a success message when a user fails validation part-way through" do
+        second_user = create(:user, organisation: @closed_organisation)
+        EventLog.stubs(:record_organisation_change).returns(nil).then.raises(
+          ActiveRecord::RecordInvalid.new(second_user),
+        )
+
+        post :create, params: {
+          old_organisation_id: @closed_organisation,
+          new_organisation_id: @open_organisation,
+        }
+
+        assert_equal @closed_organisation, @user_from_closed_organisation.reload.organisation
+        assert_equal @closed_organisation, second_user.reload.organisation
+        assert_select "p.gem-c-error-alert__message", "Failed to update user: #{second_user.email}"
+        refute_select "div.govuk-notification-banner__content h3", "Updated users"
+      end
+
+      should "roll back and show an error when the event log fails validation" do
+        EventLog.stubs(:record_organisation_change).raises(
+          ActiveRecord::RecordInvalid.new(EventLog.new),
+        )
+
+        post :create, params: {
+          old_organisation_id: @closed_organisation,
+          new_organisation_id: @open_organisation,
+        }
+
+        assert_equal @closed_organisation, @user_from_closed_organisation.reload.organisation
+        assert_select "p.gem-c-error-alert__message", "Failed to record the organisation change"
+        refute_select "div.govuk-notification-banner__content h3", "Updated users"
       end
     end
   end
