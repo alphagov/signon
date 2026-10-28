@@ -49,8 +49,6 @@ jobs:
   pact-tests:
     name: Run Pact tests
     uses: ./.github/workflows/pact-verify.yml
-    with:
-      ref: ${{ github.ref }}
 
   test-javascript:
     name: Test JavaScript

@@ -9,11 +9,6 @@ name: Run Pact tests
 on:
   workflow_call:
     inputs:
-      # The commit / tag of this repo to test against
-      ref:
-        required: false
-        type: string
-        default: main
       # A GitHub Action artifact which contains the pact definition files
       # Publishing API calls this action to test new pacts against this
       # workflow
@@ -50,7 +45,6 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: alphagov/signon
-          ref: ${{ inputs.ref }}
 
       - uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
