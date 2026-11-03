@@ -199,7 +199,7 @@ GEM
     google-protobuf (4.36.2-x86_64-linux-musl)
       bigdecimal
       rake (~> 13.3)
-    googleapis-common-protos-types (1.24.0)
+    googleapis-common-protos-types (1.25.0)
       google-protobuf (~> 4.26)
     govuk_app_config (9.26.0)
       connection_pool (< 4)
@@ -217,7 +217,7 @@ GEM
     govuk_personalisation (1.2.0)
       plek (>= 1.9.0)
       rails (>= 6, < 9)
-    govuk_publishing_components (71.0.0)
+    govuk_publishing_components (71.0.1)
       chartkick
       govuk_app_config
       govuk_personalisation (>= 0.7.0)
@@ -250,7 +250,7 @@ GEM
     http-form_data (2.3.0)
     i18n (1.15.2)
       concurrent-ruby (~> 1.0)
-    io-console (0.9.4)
+    io-console (0.9.5)
     irb (1.18.0)
       pp (>= 0.6.0)
       prism (>= 1.3.0)
@@ -580,7 +580,7 @@ GEM
     pundit (2.5.2)
       activesupport (>= 3.0.0)
     racc (1.8.1)
-    rack (3.2.7)
+    rack (3.2.8)
     rack-attack (6.8.0)
       rack (>= 1.0, < 4)
     rack-proxy (1.0.3)
@@ -939,10 +939,10 @@ CHECKSUMS
   google-protobuf (4.36.2-x86_64-darwin) sha256=8d1bd2a344f7f589703b202ad2ee4cca8ef731b4ced45782ef92d385967384ba
   google-protobuf (4.36.2-x86_64-linux-gnu) sha256=d25a820873e423f1d209ae8c672a4a28b019e2429debd0901d26670a0b4e14db
   google-protobuf (4.36.2-x86_64-linux-musl) sha256=0fa17686c896da96a60a705e56ddc7d4ff56413f52787c655bd4c9fb33ffe14f
-  googleapis-common-protos-types (1.24.0) sha256=f76599ac6eeddf9ed1cc909c2ff6c9f028c50f69cb1696f43101df6a1fe9f106
+  googleapis-common-protos-types (1.25.0) sha256=3eac7998e9e52f506d5a68d944284b8d2f6d65d744ab92a0cdd269198a009d15
   govuk_app_config (9.26.0) sha256=e2da4a2d26a704a35d632cc159ea6c8d29087d272a81b1ff03f7df2a0a126b2d
   govuk_personalisation (1.2.0) sha256=8496e9e30c433846b87547b63ec65c98a64dd92fcf1b46b45e300150a24430b1
-  govuk_publishing_components (71.0.0) sha256=4bb519b578353f111d085ad1bc3a1c84d0bf8b888c76467f61b0ac8ddce375b1
+  govuk_publishing_components (71.0.1) sha256=a0d87950d9e29113b0d96f8476cdeed8884aa17df4fc26afebb757b6e7c63745
   govuk_sidekiq (12.0.0) sha256=378b0741330212d60c5bdd9787fd8122d71523ef9b61dfbf02d1f3ea666b85f2
   govuk_test (4.1.3) sha256=27334f70966fc52ebceff6b90f487ae294b577dd2b4e469ae6b2a32a44dd1bd5
   hashdiff (1.2.1) sha256=9c079dbc513dfc8833ab59c0c2d8f230fa28499cc5efb4b8dd276cf931457cd1
@@ -951,7 +951,7 @@ CHECKSUMS
   http-cookie (1.1.6) sha256=ba4b82be64de61dc281243dac70e3c382c45142f20268ed9276a3670c93feaa9
   http-form_data (2.3.0) sha256=cc4eeb1361d9876821e31d7b1cf0b68f1cf874b201d27903480479d86448a5f3
   i18n (1.15.2) sha256=00f9eb62412fe593b2a65a97daa75300d37abb8f7202ec748e94b6d46a9dd1b5
-  io-console (0.9.4) sha256=a403304f32928ee85e56d457b4612ca43f2703b561a3258844992bd24085fbb1
+  io-console (0.9.5) sha256=83dd9bbf4c4680416629245b39cd4212eb5f4d9a4ea91804870c1f6b846414d5
   irb (1.18.0) sha256=de9454a0703a54704b9811a5ef31a60c86949fbf4013fcf244fabc7c775248e3
   json (2.21.2) sha256=1f1d3b7cf2b3ba1a69beca0bb6db13d5438b80bff3cd54cdaaa620b9b07c1c6a
   jsonpath (1.1.5) sha256=29f70467193a2dc93ab864ec3d3326d54267961acc623f487340eb9c34931dbe
@@ -1077,7 +1077,7 @@ CHECKSUMS
   puma (8.0.2) sha256=c8ed871dfbbe66448ea9ffd46692342d9804d4071522b52b5331b7b6e7b686fb
   pundit (2.5.2) sha256=e374152baa24f90b630428293faf4b4c5468fc3cc010165f7d8fcb44ce108bbd
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
-  rack (3.2.7) sha256=93e13e1c24f93556671d85d2d79fa228c3485815c50d7e2f265b5330c6528fb7
+  rack (3.2.8) sha256=1fecc85e463ebc7a2a945fff829ffcd549babeb1556384796fad946c28dc4ec7
   rack-attack (6.8.0) sha256=f2499fdebf85bcc05573a22dff57d24305ac14ec2e4156cd3c28d47cafeeecf2
   rack-proxy (1.0.3) sha256=136482e77254550e8e52c7c5a3c02845e4c4573c228b300cd83559c5a08338ae
   rack-session (2.1.2) sha256=595434f8c0c3473ae7d7ac56ecda6cc6dfd9d37c0b2b5255330aa1576967ffe8
