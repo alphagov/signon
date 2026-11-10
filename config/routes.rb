@@ -84,6 +84,14 @@ Rails.application.routes.draw do
   end
 
   resources :bulk_update, only: %i[index]
+
+  get "bulk_update/close_organisation",
+      to: "bulk_update/close_organisation#index",
+      as: :close_organisation
+
+  post "bulk_update/close_organisation",
+       to: "bulk_update/close_organisation#create"
+
   resources :organisations, only: %i[index edit update]
   resources :suspensions, only: %i[edit update]
   resources :two_step_verification_exemptions, only: %i[edit update]

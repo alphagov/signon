@@ -6,13 +6,6 @@ namespace :data_hygiene do
     end
   end
 
-  desc "Mark an organisation as closed"
-  task :close_organisation, %i[content_id] => :environment do |_, args|
-    organisation = Organisation.find_by(content_id: args[:content_id])
-    organisation.update!(closed: true)
-    puts "Marked organisation #{organisation.slug} as closed"
-  end
-
   desc "Move all users from one organisation to another"
   task :bulk_update_user_organisation, %i[old_content_id new_content_id] => :environment do |_, args|
     old_organisation = Organisation.find_by(content_id: args[:old_content_id])
