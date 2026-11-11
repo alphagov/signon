@@ -30,14 +30,14 @@
     }
   },
   "stylelint": {
-    "extends": "stylelint-config-gds/scss"
+    "extends": "stylelint-config-gds/scss.js"
   },
   "devDependencies": {
     "jasmine-browser-runner": "^5.0.0",
     "jasmine-core": "^7.0.2",
     "postcss": "^8.5.32",
     "standardx": "^7.0.0",
-    "stylelint": "^17.16.0",
+    "stylelint": "^18.0.0",
     "stylelint-config-gds": "^3.0.0"
   },
   "resolutions": {
