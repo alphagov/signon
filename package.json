@@ -30,7 +30,7 @@
     }
   },
   "stylelint": {
-    "extends": "stylelint-config-gds/scss"
+    "extends": "stylelint-config-gds/scss.js"
   },
   "devDependencies": {
     "jasmine-browser-runner": "^5.0.0",
