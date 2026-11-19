@@ -14,6 +14,14 @@ class BulkUpdate::BulkUpdateUserControllerTest < ActionController::TestCase
         assert_not_authorised
       end
     end
+
+    context "POST create" do
+      should "return not authorised response" do
+        post :create, params: { csv_file: nil }
+
+        assert_not_authorised
+      end
+    end
   end
 
   context "as superadmin" do
@@ -32,7 +40,7 @@ class BulkUpdate::BulkUpdateUserControllerTest < ActionController::TestCase
       end
     end
 
-    context "PATCH update" do
+    context "POST create" do
       should "reject a CSV with users that do not exist" do
         user = create(:user)
 
@@ -82,6 +90,121 @@ class BulkUpdate::BulkUpdateUserControllerTest < ActionController::TestCase
         assert_no_changes -> { user.reload } do
           post :create, params: { csv_file: file }
         end
+
+        assert_select "p.gem-c-error-alert__message", "Email addresses in file that do not exist: (blank), old-2@gov.uk"
+      end
+
+      should "show an error if the CSV is malformed" do
+        csv_content = <<~CSV
+          Old email,New email
+          user@example.gov.uk,"unclosed quote
+        CSV
+
+        file = csv_to_file(csv_content)
+
+        post :create, params: { csv_file: file }
+
+        assert_select "p.gem-c-error-alert__message", /CSV is malformed/
+      end
+
+      should "show an error if the CSV contains no data rows" do
+        csv_content = "Old email,New email\n"
+
+        file = csv_to_file(csv_content)
+
+        post :create, params: { csv_file: file }
+
+        assert_select "p.gem-c-error-alert__message", "CSV file contains no data rows"
+      end
+
+      should "not update users if the CSV moves them to a closed organisation" do
+        user = create(:user)
+        create(:organisation, closed: true, slug: "closed-org")
+
+        csv_content = <<~CSV
+          Old email,New organisation
+          #{user.email},closed-org
+        CSV
+
+        file = csv_to_file(csv_content)
+
+        assert_no_changes -> { user.reload } do
+          post :create, params: { csv_file: file }
+        end
+
+        assert_select "p.gem-c-error-alert__message", "New organisations that are closed: closed-org"
+      end
+
+      should "not update users if the CSV contains the same new email twice" do
+        user_1 = create(:user)
+        user_2 = create(:user)
+
+        csv_content = <<~CSV
+          Old email,New email
+          #{user_1.email},shared@gov.uk
+          #{user_2.email},shared@gov.uk
+        CSV
+
+        file = csv_to_file(csv_content)
+
+        assert_no_changes -> { [user_1.reload, user_2.reload] } do
+          post :create, params: { csv_file: file }
+        end
+
+        assert_select "p.gem-c-error-alert__message", "New email addresses in file more than once: shared@gov.uk"
+      end
+
+      should "not update users or write event logs if a new email is already in use" do
+        user_1 = create(:user)
+        user_2 = create(:user)
+
+        csv_content = <<~CSV
+          Old email,New email
+          #{user_1.email},#{user_2.email}
+        CSV
+
+        file = csv_to_file(csv_content)
+
+        assert_no_changes -> { [user_1.reload, EventLog.count] } do
+          post :create, params: { csv_file: file }
+        end
+
+        assert_select "p.gem-c-error-alert__message", "Failed to update: #{user_1.email}"
+      end
+
+      should "not send notifications for valid users when a later row fails validation" do
+        user_1 = create(:user)
+        user_2 = create(:user)
+        user_3 = create(:user)
+
+        csv_content = <<~CSV
+          Old email,New email
+          #{user_1.email},new-1@gov.uk
+          #{user_2.email},#{user_3.email}
+        CSV
+
+        file = csv_to_file(csv_content)
+
+        assert_no_changes -> { [user_1.reload, user_2.reload, ActiveJob::Base.queue_adapter.enqueued_jobs.count] } do
+          post :create, params: { csv_file: file }
+        end
+
+        assert_select "p.gem-c-error-alert__message", "Failed to update: #{user_2.email}"
+      end
+
+      should "use singular wording when a single user is updated" do
+        user = create(:user)
+
+        csv_content = <<~CSV
+          Old email,New email
+          #{user.email},new-1@gov.uk
+        CSV
+
+        file = csv_to_file(csv_content)
+
+        post :create, params: { csv_file: file }
+
+        assert_select "div.govuk-notification-banner__content", /1 user has been updated/
       end
 
       should "does not update valid users if the CSV contains the same email twice" do
