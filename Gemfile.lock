@@ -569,7 +569,7 @@ GEM
     parser (3.3.12.0)
       ast (~> 2.4.1)
       racc
-    plek (5.3.2)
+    plek (6.0.0)
     pp (0.6.4)
       prettyprint
     prettyprint (0.2.1)
@@ -1082,7 +1082,7 @@ CHECKSUMS
   pact-ffi (0.5.8.1-x86_64-linux-musl) sha256=9e65e7cd0d1bd2e93e21f58eab3f19f3e10d4ecc3458370b4a0fcc8380b60fe9
   parallel (1.28.0) sha256=33e6de1484baf2524792d178b0913fc8eb94c628d6cfe45599ad4458c638c970
   parser (3.3.12.0) sha256=21a6d7f755d5a24dfbdc6e6b772e4e879a52e7631a88bc5a3a134606052c9828
-  plek (5.3.2) sha256=98bacbd22262e742910f29d766b65328a203eb35ba20f9876181dd76ce4c4420
+  plek (6.0.0) sha256=48a3e22b32892f5a30865262573886162ab664b4fb5db8b02043349754e7618d
   pp (0.6.4) sha256=dfcb0fce700c41456265922884f9fe195d7fbb0674a3578e6c0f69588e82b570
   prettyprint (0.2.1) sha256=d555d57ea6d7cf001d4774b693546a6bd88bec1e778ddffb5c60b68ceec4b7d4
   prism (1.9.0) sha256=7b530c6a9f92c24300014919c9dcbc055bf4cdf51ec30aed099b06cd6674ef85
