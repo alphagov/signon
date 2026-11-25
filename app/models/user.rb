@@ -423,7 +423,7 @@ class User < ApplicationRecord
     secret = ENV["ANONYMOUS_USER_ID_SECRET"]
     return if secret.nil?
 
-    @anonymous_user_id ||= Digest::SHA2.hexdigest([self.uid, secret].to_json)[..16]
+    @anonymous_user_id ||= Digest::SHA2.hexdigest([uid, secret].to_json)[..16]
   end
 
 private
