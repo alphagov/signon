@@ -607,7 +607,7 @@ class UserTest < ActiveSupport::TestCase
 
   context "#grant_permission" do
     context "where the user does not have the permission" do
-      should "add the new permission"  do
+      should "add the new permission" do
         user = create(:user)
         application = create(:application)
         supported_permission = create(:supported_permission, application:)
