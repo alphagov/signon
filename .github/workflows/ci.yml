@@ -68,6 +68,7 @@ jobs:
         run: sudo apt-get purge google-chrome-stable
 
       - name: Setup Chrome
+        id: chrome
         uses: browser-actions/setup-chrome@48ad923757ca74d66703209fe939badbdf80f2f4 # v2.2.0
         with:
           chrome-version: 128
@@ -107,6 +108,8 @@ jobs:
           TEST_DATABASE_URL: ${{ steps.setup-mysql.outputs.db-url }}
           CI_NODE_TOTAL: ${{ matrix.ci_node_total }}
           CI_NODE_INDEX: ${{ matrix.ci_node_index }}
+          SE_BROWSER_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          SE_CHROMEDRIVER: ${{ steps.chrome.outputs.chromedriver-path }}
         run: ./script/minitest-ci
 
   test-ruby:
