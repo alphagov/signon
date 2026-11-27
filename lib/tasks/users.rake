@@ -46,6 +46,54 @@ namespace :users do
     puts "User account unsuspended"
   end
 
+  desc "Suspend users who belong to a given organisation, for a given reason (specify organisation and reason in environment)"
+  task :suspend_organisation_users, %i[org_slug reason] => :environment do |_t, args|
+    include VolatileLock::DSL
+
+    raise "Requires organisation specified in environment" unless args.org_slug
+    raise "Requires reason specified in environment" unless args.reason
+
+    organisation = Organisation.find_by(slug: args.org_slug)
+    raise "Organisation not found" unless organisation
+
+    reason_for_suspension = args.reason
+
+    with_lock("signon:users:suspend_organisation_users") do
+      user_scope = User.with_organisation(organisation).not_suspended
+
+      puts "Found #{user_scope.count} non-suspended users"
+
+      OrganisationUsersSuspender.new(organisation:, reason_for_suspension:).suspend
+
+      puts "Suspended users in the organisation #{organisation.name} for the reason #{reason_for_suspension}"
+      puts "#{user_scope.reload.count} non-suspended users remaining"
+    end
+  end
+
+  desc "Unsuspend users who belong to a given organisation, who were suspended for a given reason (specify organisation and reason in environment)"
+  task :unsuspend_organisation_users, %i[org_slug reason] => :environment do |_t, args|
+    include VolatileLock::DSL
+
+    raise "Requires organisation specified in environment" unless args.org_slug
+    raise "Requires reason_for_suspension specified in environment" unless args.reason
+
+    organisation = Organisation.find_by(slug: args.org_slug)
+    raise "Organisation not found" unless organisation
+
+    reason_for_suspension = args.reason
+
+    with_lock("signon:users:unsuspend_organisation_users") do
+      user_scope = User.with_organisation(organisation).suspended.with_suspension_reason(reason_for_suspension)
+
+      puts "Found #{user_scope.count} suspended users with '#{reason_for_suspension}' as the reason"
+
+      OrganisationUsersSuspender.new(organisation:, reason_for_suspension:).unsuspend
+
+      puts "Unsuspended users in the organisation #{organisation.name} who were suspended for the reason #{reason_for_suspension}"
+      puts "#{user_scope.reload.count} suspended users remaining with '#{reason_for_suspension}' as the reason"
+    end
+  end
+
   desc "Push user permission information to applications used by the user"
   task push_permissions: :environment do
     User.find_each { |user| PermissionUpdater.perform_on(user) }
