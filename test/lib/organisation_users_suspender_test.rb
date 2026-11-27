@@ -68,7 +68,7 @@ class OrganisationUsersSuspenderTest < ActiveSupport::TestCase
     create_list(:user, 2, organisation: @organisation)
     suspended_users = OrganisationUsersSuspender.new(organisation: @organisation, reason_for_suspension: @reason_for_suspension).suspend
 
-    assert_equal 2, suspended_users.count 
+    assert_equal 2, suspended_users.count
   end
 
   test "records suspension in event log" do
