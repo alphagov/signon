@@ -92,4 +92,15 @@ class UsersTaskTest < ActiveSupport::TestCase
       assert_equal current_otp_secret_key, user.reload.otp_secret_key
     end
   end
+
+  context "#suspend_org_users" do
+    should "suspend all users in organisation" do
+      organisation = create(:organisation, slug: "department-of-health")
+      users_in_organisation = @user_types.map { |user_type| create(user_type, organisation:) }
+
+      Rake::Task["users:suspend_org"].invoke(organisation.slug)
+
+      assert_equal(users_in_organisation.count, users_in_organisation.suspended.count)
+    end
+  end
 end

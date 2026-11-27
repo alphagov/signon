@@ -35,6 +35,22 @@ namespace :users do
     puts "User account suspended"
   end
 
+  desc "Suspend all users in an organisation"
+  task suspend_org: [:org] => :environment do |_t, args|
+    include VolatileLock::DSL
+
+    with_lock("signon:organisations:suspend") do
+      organisation = Organisation.find_by(slug: args.org)
+      raise "Couldn't find organisation (by slug): '#{args.org}'" unless organisation
+
+      users = User.with_organisation(organisation)
+      users.each do |user|
+        user.suspend
+        puts "User account #{user.email} suspended"
+      end
+    end
+  end
+
   desc "Unsuspend a user's access to the site (specify email in environment)"
   task unsuspend: :environment do
     raise "Requires email specified in environment" unless ENV["email"]
