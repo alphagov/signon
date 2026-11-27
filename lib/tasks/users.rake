@@ -51,11 +51,22 @@ namespace :users do
     include VolatileLock::DSL
 
     raise "Requires organisation specified in environment" unless ENV["organisation"]
-    raise "Requires reason specified in environment" unless ENV["reason"]
+    raise "Requires reason specified in environment" unless ENV["reason_for_suspension"]
+
+    organisation = Organisation.find_by(slug: ENV["organisation"])
+    raise "Organisation not found" unless organisation
+
+    reason_for_suspension = ENV["reason_for_suspension"]
 
     with_lock("signon:users:suspend_organisation_users") do
-      count = OrgUsersSuspender.new(organisation: ENV["organisation"], reason_for_suspension: ENV["reason_for_suspension"]).suspend
-      puts "Suspended #{count} users in the organisation #{ENV['organisation']} for the reason #{ENV['reason']}"
+      user_scope = User.with_organisation(organisation).not_suspended
+
+      puts "Found #{user_scope.count} non-suspended users"
+
+      OrganisationUsersSuspender.new(organisation:, reason_for_suspension:).suspend
+
+      puts "Suspended users in the organisation #{organisation.name} for the reason #{reason_for_suspension}"
+      puts "#{user_scope.reload.count} non-suspended users remaining"
     end
   end
 
@@ -66,9 +77,20 @@ namespace :users do
     raise "Requires organisation specified in environment" unless ENV["organisation"]
     raise "Requires reason_for_suspension specified in environment" unless ENV["reason_for_suspension"]
 
+    organisation = Organisation.find_by(slug: ENV["organisation"])
+    raise "Organisation not found" unless organisation
+
+    reason_for_suspension = ENV["reason_for_suspension"]
+
     with_lock("signon:users:unsuspend_organisation_users") do
-      count = OrgUsersSuspender.new(organisation: ENV["organisation"], reason_for_suspension: ENV["reason_for_suspension"]).unsuspend
-      puts "Unsuspended #{count} users in the organisation #{ENV['organisation']} who were suspended for the reason #{ENV['reason_for_suspension']}"
+      user_scope = User.with_organisation(organisation).suspended.with_suspension_reason(reason_for_suspension)
+
+      puts "Found #{user_scope.count} suspended users with '#{reason_for_suspension}' as the reason"
+
+      OrganisationUsersSuspender.new(organisation:, reason_for_suspension:).unsuspend
+
+      puts "Unsuspended users in the organisation #{organisation.name} who were suspended for the reason #{reason_for_suspension}"
+      puts "#{user_scope.reload.count} suspended users remaining with '#{reason_for_suspension}' as the reason"
     end
   end
 

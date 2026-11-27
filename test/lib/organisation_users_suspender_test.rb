@@ -19,6 +19,17 @@ class OrganisationUsersSuspenderTest < ActiveSupport::TestCase
     assert_equal organisation_user.reason_for_suspension, @reason_for_suspension
   end
 
+  test "unsuspends users who belong to the organisation" do
+    suspended_user = create(:user, organisation: @organisation, suspended_at: Time.zone.today, reason_for_suspension: @reason_for_suspension)
+
+    OrganisationUsersSuspender.new(organisation: @organisation, reason_for_suspension: @reason_for_suspension).unsuspend
+
+    suspended_user.reload
+
+    assert_not suspended_user.suspended?
+    assert_nil suspended_user.reason_for_suspension
+  end
+
   test "doesn't modify users who belong to other organisations" do
     other_reason_for_suspension = "traitor"
 

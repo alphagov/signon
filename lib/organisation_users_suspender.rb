@@ -25,7 +25,11 @@ class OrganisationUsersSuspender
   end
 
   def unsuspend
-    organisation_users = User.with_organisation(organisation).with_suspension_reason(reason_for_suspension).each do |user|
+    organisation_users = User.with_organisation(organisation).suspended.with_suspension_reason(reason_for_suspension).each do |user|
+      user.suspended_at = nil
+      user.reason_for_suspension = nil
+      user.save!(validate: false)
+
       EventLog.record_event(user, EventLog::ACCOUNT_BULK_UNSUSPENDED)
       UserMailer.suspension_notification(user).deliver_now
     end
