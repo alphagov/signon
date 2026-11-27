@@ -92,4 +92,23 @@ class UsersTaskTest < ActiveSupport::TestCase
       assert_equal current_otp_secret_key, user.reload.otp_secret_key
     end
   end
+
+  context "#suspend_organisation_users" do
+    setup do
+      @task = Rake::Task["users:suspend_organisation_users"]
+    end
+
+    teardown do
+      @task.reenable # without this, calling `invoke` does nothing after first test
+    end
+
+    should "call the rake task with the required arguments" do
+      organisation = create(:organisation, slug: "bogus-org")
+      user = create(:user, organisation:)
+      reason_for_suspension = "traitor"
+
+      @task.invoke(organisation.slug, reason_for_suspension)
+      assert user.reload.suspended?
+    end
+  end
 end

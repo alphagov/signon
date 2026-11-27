@@ -47,16 +47,16 @@ namespace :users do
   end
 
   desc "Suspend users who belong to a given organisation, for a given reason (specify organisation and reason in environment)"
-  task suspend_organisation_users: :environment do
+  task :suspend_organisation_users, %i[org_slug reason] => :environment do |_t, args|
     include VolatileLock::DSL
 
-    raise "Requires organisation specified in environment" unless ENV["organisation"]
-    raise "Requires reason specified in environment" unless ENV["reason_for_suspension"]
+    raise "Requires organisation specified in environment" unless args.org_slug
+    raise "Requires reason specified in environment" unless args.reason
 
-    organisation = Organisation.find_by(slug: ENV["organisation"])
+    organisation = Organisation.find_by(slug: args.org_slug)
     raise "Organisation not found" unless organisation
 
-    reason_for_suspension = ENV["reason_for_suspension"]
+    reason_for_suspension = args.reason
 
     with_lock("signon:users:suspend_organisation_users") do
       user_scope = User.with_organisation(organisation).not_suspended
@@ -71,16 +71,16 @@ namespace :users do
   end
 
   desc "Unsuspend users who belong to a given organisation, who were suspended for a given reason (specify organisation and reason in environment)"
-  task unsuspend_organisation_users: :environment do
+  task :unsuspend_organisation_users, %i[org_slug reason] => :environment do |_t, args|
     include VolatileLock::DSL
 
-    raise "Requires organisation specified in environment" unless ENV["organisation"]
-    raise "Requires reason_for_suspension specified in environment" unless ENV["reason_for_suspension"]
+    raise "Requires organisation specified in environment" unless args.org_slug
+    raise "Requires reason_for_suspension specified in environment" unless args.reason
 
-    organisation = Organisation.find_by(slug: ENV["organisation"])
+    organisation = Organisation.find_by(slug: args.org_slug)
     raise "Organisation not found" unless organisation
 
-    reason_for_suspension = ENV["reason_for_suspension"]
+    reason_for_suspension = args.reason
 
     with_lock("signon:users:unsuspend_organisation_users") do
       user_scope = User.with_organisation(organisation).suspended.with_suspension_reason(reason_for_suspension)
