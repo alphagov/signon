@@ -51,6 +51,8 @@ class EventLog < ApplicationRecord
     ORGANISATION_CHANGED = LogEntry.new(id: 46, description: "Organisation changed", require_uid: true, require_initiator: true),
     SUCCESSFUL_USER_APPLICATION_AUTHORIZATION = LogEntry.new(id: 47, description: "Successful user application authorization", require_uid: true, require_application: true),
     ACCESS_TOKEN_AUTO_GENERATED = LogEntry.new(id: 48, description: "Access token automatically generated as existing token due to expire in two weeks", require_uid: true, require_application: true, access_limited: true),
+    ACCOUNT_BULK_SUSPENDED = LogEntry.new(id: 49, description: "Account suspended in a bulk job", require_uid: true),
+    ACCOUNT_BULK_UNSUSPENDED = LogEntry.new(id: 50, description: "Account unsuspended in a bulk job", require_uid: true),
   ].freeze
 
   EVENTS_REQUIRING_UID = EVENTS.select(&:require_uid?)
